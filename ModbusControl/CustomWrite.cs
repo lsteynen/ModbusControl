@@ -1,0 +1,270 @@
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.IO;
+using System.Text;
+using System.Windows.Forms;
+
+using ModbusRegViewSpace;
+using Modbus_net;
+
+namespace ModbusControlSpace
+{
+    public partial class CustomWrite : Form
+    {
+        Form1 mParent;
+        public ModbusInterface mModbus;
+
+        // constructor
+        public CustomWrite(Form1 parent)
+        {
+            InitializeComponent();
+
+            mParent = parent;
+            mModbus = parent.mb;
+        }
+
+        #region properties
+
+        public byte SlaveID
+        {
+            get
+            {
+                return (byte)numericSlaveAddress.Value;
+            }
+            set
+            {
+                numericSlaveAddress.Value = value;
+            }
+        }
+
+        public UInt32 Register
+        {
+            get
+            {
+                return (UInt32)numericRegister.Value;
+            }
+            set
+            {
+                numericRegister.Value = value;
+            }
+        }
+
+        public UInt16 Quantity
+        {
+            get
+            {
+                return (UInt16)numericQuantity.Value;
+            }
+            set
+            {
+                numericQuantity.Value = value;
+            }
+        }
+
+        #endregion
+
+        private void OnFormClosing(object sender, FormClosingEventArgs e)
+        {
+            // Do not close, hide
+            this.Hide();
+            e.Cancel = true; // this cancels the close event.
+
+            // main form will restore the polling
+        }
+
+        private void buttonSend_Click(object sender, EventArgs e)
+        {
+            byte SlaveID;
+            UInt32 Register;
+            UInt16 RegOffset;
+            UInt16 RegQuantity;
+
+            SlaveID = (byte)numericSlaveAddress.Value;
+
+            Register = (UInt32)numericRegister.Value;
+            if ( mParent.TryConvertUniregToOffset(Register, out RegOffset))
+            {
+                // ok
+            }
+            else
+            {
+                textboxLog.AppendText("ERROR: Register is invalid!" + Environment.NewLine);
+                return;
+            }
+
+            RegQuantity = (UInt16)numericQuantity.Value;
+
+            if (radiobuttonSize32bit.Checked && ((RegQuantity & 1) == 1))
+            {
+                textboxLog.AppendText("ERROR: Quantity must be even to write 32-bit values!" + Environment.NewLine);
+                return;
+            }
+
+            bool bValid = true;
+
+            // No of 16-bit registers per data value
+            int RegsPerValue = radiobuttonSize32bit.Checked ? 2 : 1;
+
+            // get data
+            string[] aDataStr = textboxData.Text.Trim().Split(',');
+            int DataCount = aDataStr.Length;
+            // an empty data field is split into 1 empty string
+            if ((aDataStr.Length == 1) && (aDataStr[0] == ""))
+            {
+                DataCount = 0;
+            }
+
+            // Number of data values matches quantity of registers?
+            if ((DataCount * RegsPerValue) == RegQuantity)
+            {
+                // ok
+            }
+            else
+            {
+                textboxLog.AppendText("ERROR: Number of data values does not match quantity! (found " + DataCount + " data values)" + Environment.NewLine);
+                bValid = false;
+            }
+
+            // array of 16-bit values to store binary data
+            short[] a16bitValues = new short[DataCount * RegsPerValue];
+
+            // data values to binary
+            if (radiobuttonSize32bit.Checked)
+            {
+                // get 32-bit values
+                for (int i = 0; i < DataCount; ++i)
+                {
+                    Int32 Value;
+                    bool bIsValid = StringToValueClass.Convert(aDataStr[i].Trim(), false, 0, 32, out Value);
+                    if (bIsValid)
+                    {
+                        a16bitValues[i*2] = mParent.Int32ToRegister0(Value);
+                        a16bitValues[(i*2) + 1] = mParent.Int32ToRegister1(Value);
+                    }
+                    else
+                    {
+                        // error
+                        textboxLog.AppendText("ERROR: Invalid data value! (" + NthItem(1 + i) + " value)" + Environment.NewLine);
+                        bValid = false;
+                        break;
+                    }
+                }
+            }
+            else
+            {
+                // get 16-bit values
+                for (int i = 0; i < DataCount; ++i)
+                {
+                    Int32 Value;
+                    bool bIsValid = StringToValueClass.Convert(aDataStr[i].Trim(), false, 0, 16, out Value);
+                    if (bIsValid)
+                    {
+                        a16bitValues[i] = (short)Value;
+                    }
+                    else
+                    {
+                        // error
+                        textboxLog.AppendText("ERROR: Invalid data value! (" + NthItem(1 + i) + " value)" + Environment.NewLine);
+                        bValid = false;
+                        break;
+                    }
+                }
+            }
+
+            if (bValid)
+            {
+                // write registers 
+
+                // disable SEND button for visual information
+                buttonSend.Enabled = false;
+                // and show waitcursor
+                Cursor.Current = Cursors.WaitCursor;
+
+                if (radiobuttonWriteFC16.Checked)
+                {
+                    // use a single FC16 write
+
+                    // output info
+                    textboxLog.AppendText("Write: " + Register + " #" + RegQuantity + ": ");
+                    string Resulttext = string.Empty;
+
+                    ModbusProtocol.Result result = mModbus.MifWriteMultipleHoldingRegisters(SlaveID, RegOffset, RegQuantity, a16bitValues);
+                    if (result == ModbusProtocol.Result.SUCCESS)
+                    {
+                        Resulttext += "OK";
+                        textboxLog.AppendText(Resulttext + Environment.NewLine);
+                    }
+                    else
+                    {
+                        // error
+                        Resulttext = "ERROR: " + ModbusProtocol.GetResultText(result);
+                        textboxLog.AppendText(Resulttext + Environment.NewLine);
+                    }
+                }
+                else
+                {
+                    // use multiple FC06 writes
+                    for (int i = 0; i < RegQuantity; ++i)
+                    {
+                        // output info, one line per register
+                        textboxLog.AppendText("Write: " + (Register+i) + ": ");
+                        string Resulttext = string.Empty;
+
+                        ModbusProtocol.Result result = mModbus.MifWriteSingleHoldingRegister(SlaveID, (UInt16)(RegOffset + i), a16bitValues[i]);
+                        if (result == ModbusProtocol.Result.SUCCESS)
+                        {
+                            Resulttext = "OK";
+                            textboxLog.AppendText(Resulttext);
+                        }
+                        else
+                        {
+                            // error
+                            Resulttext = "ERROR: " + ModbusProtocol.GetResultText(result);
+                            textboxLog.AppendText(Resulttext);
+                        }
+                        textboxLog.AppendText(Environment.NewLine);
+                    }
+                }
+
+                // re-enable
+                buttonSend.Enabled = true;
+                Cursor.Current = Cursors.Default;
+            }
+        }
+
+        private void buttonClear_Click(object sender, EventArgs e)
+        {
+            textboxLog.Clear();
+            textboxLog.Update();
+        }
+
+        private string NthItem(int N)
+        {
+            if (N == 1)
+            {
+                return "1st";
+            }
+            else if (N == 2)
+            {
+                return "2nd";
+            }
+            return N.ToString() + "th";
+        }
+
+        private void checkboxEnableMainPolling_CheckedChanged(object sender, EventArgs e)
+        {
+            // enable/disable main tabs polling
+            mParent.SetMainPollingEnable(checkboxEnableMainPolling.Checked);
+        }
+
+        private void CustomWrite_Shown(object sender, EventArgs e)
+        {
+            // form is shown: disable polling if unchecked
+            mParent.SetMainPollingEnable(checkboxEnableMainPolling.Checked);
+        }
+
+    }
+}
