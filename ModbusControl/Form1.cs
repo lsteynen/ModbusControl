@@ -553,7 +553,8 @@ namespace ModbusControlSpace
                        || (((Project.Connection.ConnectionType == Global.eConnectionType.ModbusTcp) || (Project.Connection.ConnectionType == Global.eConnectionType.RtuOverTcp))
                            && ((configform.ConnectionIPAddress != Project.Connection.IPAddress)
                                || (configform.ConnectionIPPort != Project.Connection.IPPort)
-                               || (configform.ConnectionTcpConnectMode != Project.Connection.TcpConnectMode))));
+                               || (configform.ConnectionTcpConnectMode != Project.Connection.TcpConnectMode)))
+                       || (configform.ConnectionResponseTimeout != Project.Connection.ResponseTimeout));
 
                 bool ReopenConnection = ConnectionIsOpen && ConnectionChange;
                 bool SavedPollingIsStarted = PollingIsStarted;
