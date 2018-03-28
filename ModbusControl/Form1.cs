@@ -31,6 +31,9 @@ using LST.Helpers;
 //TODO: apart Options scherm: Configuration zit in mbc file, options dinges niet (zoals use local override, autoedit-on-typing, stoponerror...) Zie Settings.cs
 //TODO: instellen EOMTimeout en InterframeDelay: instellen als 0=auto, 'Auto' tonen in numericupdown? <> 0 is fixed milliseconden.
 //      zie ook https://stackoverflow.com/questions/5921446/having-text-inside-numericupdown-control-after-the-number
+//TODO: je kan importeren als er geen project open is?
+//TODO: je kan import/comparen als er geen project open is?
+//TODO: je kan custom read/write/... commands uitvoeren als er geen project open is?
 
 namespace ModbusControlSpace
 {
@@ -77,7 +80,7 @@ namespace ModbusControlSpace
         private readonly object WriteListLock = new object();
 
         // the export form, make it global and use show/hide to keep the settings
-        //TODO Export ExportForm;
+        Export ExportForm;
         // the import form, make it global and use show/hide to keep the settings
         //TODO Import ImportForm;
 
@@ -705,17 +708,18 @@ namespace ModbusControlSpace
                 ReloadToolbutton.Enabled = reloadProjectFileMenuItem.Enabled;
                 editProjectFileMenuItem.Enabled = (!String.IsNullOrEmpty(ProjectPath)) && File.Exists(ProjectPath);
                 saveConfigurationMenuItem.Enabled = ProjectIsOpen;
+                exportRegistersToFileToolStripMenuItem.Enabled = (tabControl1.TabPages.Count > 0);
 
                 // Connection stuff
-                openConnectionMenuItem.Enabled = ProjectIsOpen && !ConnectionInUse;
+                openConnectionMenuItem.Enabled = !ConnectionInUse;
                 OpenConnectionToolbutton.Enabled = openConnectionMenuItem.Enabled;
-                closeConnectionMenuItem.Enabled = ProjectIsOpen && ConnectionIsOpen;
+                closeConnectionMenuItem.Enabled = ConnectionIsOpen;
                 CloseConnectionToolbutton.Enabled = closeConnectionMenuItem.Enabled;
-                startPollingMenuItem.Enabled = ConnectionIsOpen && !PollingIsStarted;
+                startPollingMenuItem.Enabled = ConnectionIsOpen && (tabControl1.TabPages.Count > 0) && !PollingIsStarted;
                 StartPollingToolbutton.Enabled = startPollingMenuItem.Enabled;
                 stopPollingMenuItem.Enabled = ConnectionIsOpen && PollingIsStarted;
                 StopPollingToolbutton.Enabled = stopPollingMenuItem.Enabled;
-                pollOnceMenuItem.Enabled = ConnectionIsOpen && !PollingIsStarted && !PollOnceIsStarted;
+                pollOnceMenuItem.Enabled = ConnectionIsOpen && (tabControl1.TabPages.Count > 0) && !PollingIsStarted && !PollOnceIsStarted;
                 PollOnceToolbutton.Enabled = pollOnceMenuItem.Enabled;
             }
         }
@@ -844,20 +848,6 @@ namespace ModbusControlSpace
 
                 // Zoom callback
                 newRegView.OnZoom += this.OnZoom;
-
-                // Export callback
-                //TODO newRegView.OnExport += this.OnExport;
-                // Import callback
-                //TODO newRegView.OnImport += this.OnImport;
-
-                // Custom read callback
-                //TODO newRegView.OnCustomRead += this.OnCustomRead;
-
-                // Custom write callback
-                //TODO newRegView.OnCustomWrite += this.OnCustomWrite;
-
-                // Custom modbuscommand callback
-                //TODO newRegView.OnCustomModbusCommand += this.OnCustomModbusCommand;
 
                 // ReportErrorMessage callback
                 newRegView.OnReportErrorMessage += this.ReportErrorText;
@@ -1382,7 +1372,7 @@ namespace ModbusControlSpace
                         Logger1.Log(Logger.LogType.Info, "Polling stopped because of 'Stop polling on error' option!");
                     }
 
-                    // if it is an address error? and we tried a group read? then read alls vars of this block with single reads to get per-var errors
+                    // if it is an address error? and we tried a group read? then read alls vars of this group with single reads to get per-var errors
                     // some slaves return eILLEGALDATAVALUE if address+regcount is invalid, some return ILLEGALADDRESSEXCEPTION
                     if (((result == ModbusProtocol.Result.ILLEGALADDRESSEXCEPTION) || (result == ModbusProtocol.Result.ILLEGALDATAVALUEEXCEPTION)) && (LineCount > 1))
                     {
@@ -1589,11 +1579,21 @@ namespace ModbusControlSpace
             UpdateStatusBar();
         }
 
+        /// <summary>
         // Get the current tab page
+        /// </summary>
         // return null if none
         public TabPage GetCurrentTabPage()
         {
             return CurrentTabPage;
+        }
+
+        /// <summary>
+        // Get the number of tab pages
+        /// </summary>
+        public int GetTabPageCount()
+        {
+            return tabControl1.TabPages.Count;
         }
 
         /// <summary>
@@ -1605,7 +1605,7 @@ namespace ModbusControlSpace
             // Select the first page, if any
             if ((Index >= 0) && (tabControl1.TabPages.Count > 0) && (Index < tabControl1.TabPages.Count))
             {
-                CurrentTabPage = tabControl1.TabPages[Index];
+                return tabControl1.TabPages[Index];
             }
 
             return null;
@@ -1836,12 +1836,11 @@ namespace ModbusControlSpace
 
         #endregion
 
-        /* TODO
-        private void OnExport(object sender)
-        {
-            // "Export" callback from RegView
+        #region Import/export
 
-            // create if needed, else show and hide
+        private void exportRegistersToFileToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            // create once, then hide and show to keep settings
             if (ExportForm == null)
             {
                 ExportForm = new Export(this);
@@ -1853,8 +1852,18 @@ namespace ModbusControlSpace
             // make sure main tabs polling is restored
             MainPollingIsEnabled = true;
         }
+
+        /* TODO
+        ContextMenuForDescriptionColumn.Items.Add("Export registers to file...", null, new EventHandler(Menu_Export));
+        ContextMenuForDescriptionColumn.Items.Add("Import registers from file...", null, new EventHandler(Menu_Import));
+        ContextMenuForDescriptionColumn.Items.Add("Custom read...", null, new EventHandler(Menu_CustomRead));
+        ContextMenuForDescriptionColumn.Items.Add("Custom write...", null, new EventHandler(Menu_CustomWrite));
+        ContextMenuForDescriptionColumn.Items.Add("Custom modbus command...", null, new EventHandler(Menu_CustomModbusCommand));
         */
 
+
+
+        #endregion
 
         #region Status bar message system
         // TODO: is dit status bar message systeem okee?
@@ -1943,6 +1952,7 @@ namespace ModbusControlSpace
                 System.Media.SystemSounds.Beep.Play();
             }
         }
+
 
     }
 }

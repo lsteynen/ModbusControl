@@ -15,6 +15,103 @@ namespace LST.Helpers
 {
     public static class ValueToStringClass
     {
+        /// <summary>
+        /// Convert value to string, with a given Format
+        /// Value can be less than 32 bits, given by Size. Use sign-extend if needed
+        /// </summary>
+        /// <param name="Value">Value to convert</param>
+        /// <param name="Size">Width of value in bits</param>
+        /// <param name="Format">Int, Uint, Hex, ...</param>
+        /// <param name="Decimals">number of decimals, for Int/UInt only</param>
+        /// <param name="MinLen">minimum number of digits</param>
+        /// <returns></returns>
+        public static string ValueToString(Int32 Value, int Size, ModbusControlSpace.Global.eFormat Format, int Decimals, int MinLen, bool Ascii16BigEndian)
+        {
+            string Result = string.Empty;
+            UInt32 UValue;
+
+            // check
+            if (!((Size >= 1) && (Size <= 32)))
+            {
+                throw new ArgumentException("Invalid size!", "Size");
+            }
+
+            // convert
+            switch (Format)
+            {
+                case ModbusControlSpace.Global.eFormat.Int:
+                    // signed decimal
+                    Value = ConvertSignedValueTo32bit(Value, Size);
+                    Result = ValueToStringClass.AsInt(Value, Decimals, MinLen);
+                    break;
+                case ModbusControlSpace.Global.eFormat.UInt:
+                    // unsigned decimal
+                    UValue = ConvertUnsignedValueTo32bit((UInt32)Value, Size);
+                    Result = ValueToStringClass.AsUInt(UValue, Decimals, MinLen);
+                    break;
+                case ModbusControlSpace.Global.eFormat.Hex:
+                    // hexadecimal
+                    UValue = ConvertUnsignedValueTo32bit((UInt32)Value, Size);
+                    Result = ValueToStringClass.AsHex(UValue, MinLen);
+                    break;
+                case ModbusControlSpace.Global.eFormat.Bin:
+                    // binary
+                    UValue = ConvertUnsignedValueTo32bit((UInt32)Value, Size);
+                    Result = ValueToStringClass.AsBin(UValue, MinLen);
+                    break;
+                case ModbusControlSpace.Global.eFormat.Float:
+                    // float32
+                    if (!(Size == 32))
+                    {
+                        throw new ArgumentException("Invalid size!", "Size");
+                    }
+                    Result = ValueToStringClass.AsFloat(Value);
+                    break;
+                case ModbusControlSpace.Global.eFormat.ASCII:
+                    Result = ValueToStringClass.AsASCII((UInt32)Value, Size, Ascii16BigEndian);
+	                break;
+                default:
+                    // invalid
+                    throw new ArgumentException("Invalid format enum!", "Format");
+                    //break;
+            }
+
+            return Result;
+        }
+
+        /// <summary>
+        /// Convert a signed value with Width=1..32 to a 32-bit value
+        /// </summary>
+        /// <param name="Value"></param>
+        /// <param name="Size"></param>
+        /// <returns></returns>
+        private static Int32 ConvertSignedValueTo32bit(Int32 Value, int Width)
+        {
+            // if 2 bits or more: convert any n-bit value to a signed 32-bit value
+            if (Width >= 2)
+            {
+                // do a sign-extend
+                Value <<= (32 - Width);
+                Value >>= (32 - Width);
+            }
+
+            return Value;
+        }
+
+        /// <summary>
+        /// Convert an unsigned value with Width=1..32 to a 32-bit value
+        /// </summary>
+        /// <param name="Value"></param>
+        /// <param name="Size"></param>
+        /// <returns></returns>
+        private static UInt32 ConvertUnsignedValueTo32bit(UInt32 Value, int Width)
+        {
+            // add zero's to the left
+            Value <<= (32 - Width);
+            Value >>= (32 - Width);
+            return Value;
+        }
+
         public static string AsInt(Int32 Value, int Decimals, int MinLen)
         {
             // signed decimal

@@ -13,8 +13,9 @@ using LST.Helpers;
 using ModbusRegViewSpace;
 using Modbus_net;
 
-//TODO: export crasht niet als er geen project open is?
-//TODO: export crasht niet als er geen tabs zijn?
+//x TODO: export crasht niet als er geen project open is?
+//x TODO: export crasht niet als er geen connectie is?
+//x TODO: export crasht niet als er geen tabs zijn?
 
 namespace ModbusControlSpace
 {
@@ -87,6 +88,13 @@ namespace ModbusControlSpace
             if (mModbus.IsOpen == false)
             {
                 textboxLog.AppendText("ERROR: Connection is not open!" + Environment.NewLine);
+                return;
+            }
+
+            // check if we have tab pages
+            if( mParent.GetTabPageCount() < 1)
+            {
+                textboxLog.AppendText("ERROR: No tab pages!" + Environment.NewLine);
                 return;
             }
 
@@ -205,7 +213,6 @@ namespace ModbusControlSpace
             // support cancel in the loops
 
             string TabName;
-            int LineIndex = 0;
             UInt16 ReadOffset;
             UInt16 ReadCount;
 
@@ -217,48 +224,56 @@ namespace ModbusControlSpace
             mWorker.ReportProgress(0, "Tab: " + TabName);
 
             // start with first line of this tab
-            LineIndex = 0;
+            int LineIndex = 0;
+            int LineCount = 0;
+            ModbusRegView mrv = Tabpage.Tag as ModbusRegView;
+            List<ModbusRegView.RegEntry> Reglist;
 
-            /*
-            List<Form1.VarEntry> Reglist;
-            while (mParent.GetTabSuccessiveVariablesList(TabIndex, ref LineIndex, mParent.GetMaxRegistersInSingleRead(), true, false, out Reglist) >= 1)
+            while( mrv.GetRegistersListToRead(ref LineIndex, out LineCount, mParent.GetMaxRegistersInSingleRead(), out Reglist) >= 1)
             {
                 // cancel?
                 if (mWorker.CancellationPending)
                     return;
 
-                // get first register and offset
-                ReadOffset = mParent.ConvertUniregToOffset(Reglist[0].Reg);
+                // get first register offset
+                ReadOffset = mParent.GetRegOffset(Reglist[0].Reg);
                 // get number of 16-bit registers to read
                 ReadCount = 0;
-                foreach (Form1.VarEntry elem in Reglist)
+                foreach (ModbusRegView.RegEntry reg in Reglist)
                 {
-                    ReadCount += (ushort)elem.RegCount;
+                    ReadCount += (ushort)(reg.Size/16);
                 }
 
-                // Read a group of registers
+                // Read the group
+                Debug.Print(DateTime.Now.TimeOfDay + ": MifReadHoldingRegisters(" + mSlaveAddress + "," + GetUserReg(ReadOffset) + "," + ReadCount + ")");
                 short[] aValues;
                 ModbusProtocol.Result result = mModbus.MifReadHoldingRegisters(mSlaveAddress, ReadOffset, ReadCount, out aValues);
+                Debug.Print(DateTime.Now.TimeOfDay + ": MifReadHoldingRegisters returned " + result);
                 if (result == ModbusProtocol.Result.SUCCESS)
                 {
                     // success
 
-                    // show values of all registers
-                    foreach (Form1.VarEntry elem in Reglist)
+                    // process value of each register
+                    int ValueOffset = 0;
+                    foreach (ModbusRegView.RegEntry reg in Reglist)
                     {
                         // cancel?
                         if (mWorker.CancellationPending)
                             return;
 
-                        // get 16 or 32-bit value
-                        int Value = aValues[elem.OffsetInValues];
-                        if (elem.RegCount >= 2)
+                        // get the value, 16 or 32-bit
+                        int Value = aValues[ValueOffset];
+                        ValueOffset++;
+                        if (reg.Size == 32)
                         {
+                            //TODO: endian?
                             // make 32-bit value of 2 16-bit registers, respect configured word order
-                            Value = mParent.ToInt32(aValues[elem.OffsetInValues], aValues[elem.OffsetInValues+1]);
+                            //TODO Value = mParent.ToInt32(aValues[0], aValues[1]);
+                            Value |= (((Int32)aValues[ValueOffset]) << 16);
+                            ValueOffset++;
                         }
 
-                        WriteExportLine(elem.Reg, elem.RegCount * 16, elem.Description, elem.Format, elem.isReadable, elem.isWriteable, Value);
+                        WriteExportLine(reg.Reg, reg.Size, reg.Text, reg.Format, reg.Readable, reg.Writeable, Value);
                         ++mSuccessCount;
 
                         Thread.Sleep(mSleeptime);
@@ -267,63 +282,60 @@ namespace ModbusControlSpace
                 else
                 {
                     // error
-
-                    // no response error? 
-                    if (result == ModbusProtocol.Result.NORESPONSE)
+                    // if it is an address error? and we tried a group read? then read alls vars of this group with single reads to get per-var errors
+                    // some slaves return eILLEGALDATAVALUE if address+regcount is invalid, some return ILLEGALADDRESSEXCEPTION
+                    if (((result == ModbusProtocol.Result.ILLEGALADDRESSEXCEPTION) || (result == ModbusProtocol.Result.ILLEGALDATAVALUEEXCEPTION)) && (LineCount > 1))
                     {
-                        // show error for all registers
-                        foreach (Form1.VarEntry elem in Reglist)
+                        foreach (ModbusRegView.RegEntry reg in Reglist)
                         {
                             // cancel?
                             if (mWorker.CancellationPending)
                                 return;
 
-                            WriteExportLineError(elem.Reg, elem.RegCount * 16, elem.Description, elem.Format, elem.isReadable, elem.isWriteable, ModbusProtocol.GetResultText(result));
-                            ++mErrorCount;
-                        }
-                    }
-                    else
-                    {
-                        // other error
-                        // try again all registers one by one
-                        foreach (Form1.VarEntry elem in Reglist)
-                        {
-                            // cancel?
-                            if (mWorker.CancellationPending)
-                                return;
-
-                            // convert register to offset
-                            ReadOffset = mParent.ConvertUniregToOffset(elem.Reg);
-                            result = mModbus.MifReadHoldingRegisters(mSlaveAddress, ReadOffset, (ushort)elem.RegCount, out aValues);
+                            // get first register offset
+                            ReadOffset = mParent.GetRegOffset(reg.Reg);
+                            // get number of 16-bit registers to read
+                            ReadCount = (ushort)(reg.Size / 16);
+                            Debug.Print(DateTime.Now.TimeOfDay + ": MifReadHoldingRegisters(" + mSlaveAddress + "," + GetUserReg(ReadOffset) + "," + ReadCount + ")");
+                            result = mModbus.MifReadHoldingRegisters(mSlaveAddress, ReadOffset, ReadCount, out aValues);
+                            Debug.Print(DateTime.Now.TimeOfDay + ": MifReadHoldingRegisters returned " + result);
                             if (result == ModbusProtocol.Result.SUCCESS)
                             {
-                                // success
-
-                                // show value of this register
-                                // get 16 or 32-bit value
+                                // get the value, 16 or 32-bit
                                 int Value = aValues[0];
-                                if (elem.RegCount >= 2)
+                                if (reg.Size == 32)
                                 {
+                                    //TODO: endian?
                                     // make 32-bit value of 2 16-bit registers, respect configured word order
-                                    Value = mParent.ToInt32(aValues[0], aValues[1]);
+                                    Value |= (((Int32)aValues[1]) << 16);
                                 }
 
-                                WriteExportLine(elem.Reg, elem.RegCount * 16, elem.Description, elem.Format, elem.isReadable, elem.isWriteable, Value);
+                                WriteExportLine(reg.Reg, reg.Size, reg.Text, reg.Format, reg.Readable, reg.Writeable, Value);
                                 ++mSuccessCount;
                             }
                             else
                             {
-                                // error
-
-                                // show error for this register
-                                WriteExportLineError(elem.Reg, elem.RegCount * 16, elem.Description, elem.Format, elem.isReadable, elem.isWriteable, ModbusProtocol.GetResultText(result));
+                                WriteExportLineError(reg.Reg, reg.Size, reg.Text, reg.Format, reg.Readable, reg.Writeable, ModbusProtocol.GetResultText(result));
                                 ++mErrorCount;
                             }
                         }
                     }
+                    else
+                    {
+                        // other errors
+                        // show error for all registers
+                        foreach (ModbusRegView.RegEntry reg in Reglist)
+                        {
+                            // cancel?
+                            if (mWorker.CancellationPending)
+                                return;
+
+                            WriteExportLineError(reg.Reg, reg.Size, reg.Text, reg.Format, reg.Readable, reg.Writeable, ModbusProtocol.GetResultText(result));
+                            ++mErrorCount;
+                        }
+                    }
                 }
             }
-             * */
         }
 
         private bool WriteExportLine(UInt32 Reg, int Size, string Description, Global.eFormat Format, bool isReadable, bool isWriteable, int Value)
@@ -398,7 +410,9 @@ namespace ModbusControlSpace
                 Format = Global.eFormat.Hex;
             }
 
-            return ValueToString(Value, Size, Format, 0, 0);
+            // decimals are not used in export
+            // minlen is not used in export
+            return ValueToStringClass.ValueToString( Value, Size, Format, 0, 0, false);
         }
 
         private string LimitStringLength(string s, int MaxLength)
@@ -435,6 +449,11 @@ namespace ModbusControlSpace
         {
            this.Hide();
            e.Cancel = true; // this cancels the close event.
+        }
+
+        private int GetUserReg(ushort offset)
+        {
+            return mParent.Project.Options.HoldingregistersStart + offset;
         }
 
     }

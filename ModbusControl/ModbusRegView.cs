@@ -156,21 +156,6 @@ namespace ModbusRegViewSpace
             public Int16[] Values;
         }
 
-        public event ExportHandler OnExport;
-        public delegate void ExportHandler(object sender);
-
-        public event ImportHandler OnImport;
-        public delegate void ImportHandler(object sender);
-
-        public event CustomReadHandler OnCustomRead;
-        public delegate void CustomReadHandler(object sender);
-
-        public event CustomWriteHandler OnCustomWrite;
-        public delegate void CustomWriteHandler(object sender);
-
-        public event CustomModbusCommandHandler OnCustomModbusCommand;
-        public delegate void CustomModbusCommandHandler(object sender);
-
         public event BeepHandler OnBeep;
         public delegate void BeepHandler(object sender);
 
@@ -233,14 +218,6 @@ namespace ModbusRegViewSpace
             ContextMenuForDescriptionColumn.Items.Add("Mark this line in blue", BlueIcon, new EventHandler(Menu_SetColorBlue));
             ContextMenuForDescriptionColumn.Items.Add("Mark this line in yellow", YellowIcon, new EventHandler(Menu_SetColorYellow));
             ContextMenuForDescriptionColumn.Items.Add("Remove color mark of this line", WhiteIcon, new EventHandler(Menu_SetColorDefault));
-            ContextMenuForDescriptionColumn.Items.Add("-", null, null);
-            /* TODO
-            ContextMenuForDescriptionColumn.Items.Add("Export registers to file...", null, new EventHandler(Menu_Export));
-            ContextMenuForDescriptionColumn.Items.Add("Import registers from file...", null, new EventHandler(Menu_Import));
-            ContextMenuForDescriptionColumn.Items.Add("Custom read...", null, new EventHandler(Menu_CustomRead));
-            ContextMenuForDescriptionColumn.Items.Add("Custom write...", null, new EventHandler(Menu_CustomWrite));
-            ContextMenuForDescriptionColumn.Items.Add("Custom modbus command...", null, new EventHandler(Menu_CustomModbusCommand));
-             */
             
             // Create context menu for value column
             ContextMenuForValueColumn.MenuItems.Add("Show value as Int", new EventHandler(Menu_SetFormatToInt));
@@ -1085,51 +1062,6 @@ namespace ModbusRegViewSpace
             }
         }
 
-        private void OnExportEvent(object sender, EventArgs e)
-        {
-            // event 
-            if (OnExport != null)
-            {
-                OnExport(this);
-            }
-        }
-
-        private void OnImportEvent(object sender, EventArgs e)
-        {
-            // event 
-            if (OnImport != null)
-            {
-                OnImport(this);
-            }
-        }
-
-        private void OnCustomReadEvent(object sender, EventArgs e)
-        {
-            // event 
-            if (OnCustomRead != null)
-            {
-                OnCustomRead(this);
-            }
-        }
-
-        private void OnCustomWriteEvent(object sender, EventArgs e)
-        {
-            // event 
-            if (OnCustomWrite != null)
-            {
-                OnCustomWrite(this);
-            }
-        }
-
-        private void OnCustomModbusCommandEvent(object sender, EventArgs e)
-        {
-            // event 
-            if (OnCustomModbusCommand != null)
-            {
-                OnCustomModbusCommand(this);
-            }
-        }
-
         /*!
         * Get a group of successive registers to read
         *   LineIndex   in: index of the first line to read
@@ -1254,6 +1186,72 @@ namespace ModbusRegViewSpace
                 this.ResumeLayout();
             }
         }
+
+        /*!
+        * Get a list of successive registers to read
+        *   LineIndex   in: index of the first line to read
+        *               out: index of the first line of which data is read
+        *   LineCount   out: number of lines processed
+        *   FirstReg    out: first modbus register to read
+        *   RegCount    out: number of 16-bit modbus registers to read
+        *   Maximum16bitRegisters   in: the maximum number of 16-bit registers to keep framesize under MaximumFramesize
+        *  
+        * @retval: number of 16-bit registers
+        *          0 if nothing to read
+        */
+        public int GetRegistersListToRead(ref int LineIndex, out int LineCount, int Maximum16bitRegisters, out List<RegEntry> Reglist)
+        {
+            int LineIndexFirst = 0;
+            int Reg16Count = 0;
+            UInt32 NextReg = 0;
+
+            // init return stuff
+            LineCount = 0;
+            Reglist = new List<RegEntry>();
+
+            /* there are lines left? */
+            /* find next line that has bRead set */
+            while ((LineIndex < ListOfReg.Count)
+                  && (ListOfReg[LineIndex].Readable == false))
+            {
+                LineIndex++;
+            }
+            /* found? */
+            if (LineIndex < ListOfReg.Count)
+            {
+                /* found */
+            }
+            else
+            {
+                /* not found */
+                return 0;
+            }
+
+            /* Found first register */
+            Reglist.Add( ListOfReg[LineIndex]);
+            Reg16Count += ListOfReg[LineIndex].Size / 16;
+            NextReg = ListOfReg[LineIndex].Reg + (UInt32)(ListOfReg[LineIndex].Size / 16);
+            LineIndexFirst = LineIndex;
+            LineIndex++;
+            LineCount++;
+
+            /* Find consecutive registers */
+            while ((LineIndex < ListOfReg.Count)        /* not end of of tab? */
+                  && ListOfReg[LineIndex].Readable      /* read? */
+                  && (ListOfReg[LineIndex].Reg == NextReg)  /* consecutive? */
+                  && ((Reg16Count + (ListOfReg[LineIndex].Size / 16)) <= Maximum16bitRegisters)) /* not max length reached? */
+            {
+                /* Add next register */
+                Reglist.Add( ListOfReg[LineIndex]);
+                Reg16Count += ListOfReg[LineIndex].Size / 16;
+                NextReg = ListOfReg[LineIndex].Reg + (UInt32)(ListOfReg[LineIndex].Size / 16);
+                LineIndex++;
+                LineCount++;
+            }
+
+            return Reg16Count;
+        }
+
 
         public string BuildRegisterInfoStr(RegEntry r)
         {

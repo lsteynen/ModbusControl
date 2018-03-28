@@ -46,6 +46,11 @@ namespace ModbusControlSpace
             this.toolStripSeparator6 = new System.Windows.Forms.ToolStripSeparator();
             this.editLocalOverridesMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
+            this.importExportToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.importRegistersFromFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.exportRegistersToFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.compareRegistersWithFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator8 = new System.Windows.Forms.ToolStripSeparator();
             this.exitMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.connectionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openConnectionMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -63,6 +68,7 @@ namespace ModbusControlSpace
             this.optionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.diagnosticsCountersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.loggingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.customCommandsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.checkForUpdateMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -123,6 +129,7 @@ namespace ModbusControlSpace
             this.connectionToolStripMenuItem,
             this.viewToolStripMenuItem,
             this.extraMenuItem,
+            this.customCommandsToolStripMenuItem,
             this.helpMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
@@ -143,6 +150,8 @@ namespace ModbusControlSpace
             this.toolStripSeparator6,
             this.editLocalOverridesMenuItem,
             this.toolStripSeparator5,
+            this.importExportToolStripMenuItem,
+            this.toolStripSeparator8,
             this.exitMenuItem});
             this.fileMenuItem.Name = "fileMenuItem";
             this.fileMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.F)));
@@ -206,6 +215,42 @@ namespace ModbusControlSpace
             // 
             this.toolStripSeparator5.Name = "toolStripSeparator5";
             this.toolStripSeparator5.Size = new System.Drawing.Size(252, 6);
+            // 
+            // importExportToolStripMenuItem
+            // 
+            this.importExportToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.importRegistersFromFileToolStripMenuItem,
+            this.exportRegistersToFileToolStripMenuItem,
+            this.compareRegistersWithFileToolStripMenuItem});
+            this.importExportToolStripMenuItem.Name = "importExportToolStripMenuItem";
+            this.importExportToolStripMenuItem.Size = new System.Drawing.Size(255, 22);
+            this.importExportToolStripMenuItem.Text = "Import && Export...";
+            // 
+            // importRegistersFromFileToolStripMenuItem
+            // 
+            this.importRegistersFromFileToolStripMenuItem.Enabled = false;
+            this.importRegistersFromFileToolStripMenuItem.Name = "importRegistersFromFileToolStripMenuItem";
+            this.importRegistersFromFileToolStripMenuItem.Size = new System.Drawing.Size(224, 22);
+            this.importRegistersFromFileToolStripMenuItem.Text = "Import registers from file...";
+            // 
+            // exportRegistersToFileToolStripMenuItem
+            // 
+            this.exportRegistersToFileToolStripMenuItem.Name = "exportRegistersToFileToolStripMenuItem";
+            this.exportRegistersToFileToolStripMenuItem.Size = new System.Drawing.Size(224, 22);
+            this.exportRegistersToFileToolStripMenuItem.Text = "Export registers to file...";
+            this.exportRegistersToFileToolStripMenuItem.Click += new System.EventHandler(this.exportRegistersToFileToolStripMenuItem_Click);
+            // 
+            // compareRegistersWithFileToolStripMenuItem
+            // 
+            this.compareRegistersWithFileToolStripMenuItem.Enabled = false;
+            this.compareRegistersWithFileToolStripMenuItem.Name = "compareRegistersWithFileToolStripMenuItem";
+            this.compareRegistersWithFileToolStripMenuItem.Size = new System.Drawing.Size(224, 22);
+            this.compareRegistersWithFileToolStripMenuItem.Text = "Compare registers with file...";
+            // 
+            // toolStripSeparator8
+            // 
+            this.toolStripSeparator8.Name = "toolStripSeparator8";
+            this.toolStripSeparator8.Size = new System.Drawing.Size(252, 6);
             // 
             // exitMenuItem
             // 
@@ -347,6 +392,12 @@ namespace ModbusControlSpace
             this.loggingToolStripMenuItem.Size = new System.Drawing.Size(226, 22);
             this.loggingToolStripMenuItem.Text = "&Logging";
             // 
+            // customCommandsToolStripMenuItem
+            // 
+            this.customCommandsToolStripMenuItem.Name = "customCommandsToolStripMenuItem";
+            this.customCommandsToolStripMenuItem.Size = new System.Drawing.Size(124, 20);
+            this.customCommandsToolStripMenuItem.Text = "Custom commands";
+            // 
             // helpMenuItem
             // 
             this.helpMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -427,6 +478,7 @@ namespace ModbusControlSpace
             this.OpenConnectionToolbutton.Name = "OpenConnectionToolbutton";
             this.OpenConnectionToolbutton.Size = new System.Drawing.Size(23, 22);
             this.OpenConnectionToolbutton.Text = "Open connection";
+            this.OpenConnectionToolbutton.ToolTipText = "Open connection";
             this.OpenConnectionToolbutton.Click += new System.EventHandler(this.OpenConnectionToolbutton_Click);
             // 
             // CloseConnectionToolbutton
@@ -438,6 +490,7 @@ namespace ModbusControlSpace
             this.CloseConnectionToolbutton.Name = "CloseConnectionToolbutton";
             this.CloseConnectionToolbutton.Size = new System.Drawing.Size(23, 22);
             this.CloseConnectionToolbutton.Text = "Close connection";
+            this.CloseConnectionToolbutton.ToolTipText = "Close connection";
             this.CloseConnectionToolbutton.Click += new System.EventHandler(this.CloseConnectionToolbutton_Click);
             // 
             // toolStripSeparator4
@@ -514,6 +567,7 @@ namespace ModbusControlSpace
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "Form1";
             this.Text = "ModbusControl";
+            this.toolTip1.SetToolTip(this, "Start polling");
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
             this.Load += new System.EventHandler(this.Form1_Load);
             this.statusStrip.ResumeLayout(false);
@@ -578,6 +632,12 @@ namespace ModbusControlSpace
         private System.Windows.Forms.ToolStripMenuItem zoomInToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem zoomOutToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem resetZoomToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem importExportToolStripMenuItem;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator8;
+        private System.Windows.Forms.ToolStripMenuItem customCommandsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem importRegistersFromFileToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem exportRegistersToFileToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem compareRegistersWithFileToolStripMenuItem;
     }
 }
 
