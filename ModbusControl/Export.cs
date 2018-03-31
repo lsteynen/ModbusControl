@@ -16,6 +16,8 @@ using Modbus_net;
 //x TODO: export crasht niet als er geen project open is?
 //x TODO: export crasht niet als er geen connectie is?
 //x TODO: export crasht niet als er geen tabs zijn?
+//TODO: probleem met formats, ValueToString en endians
+//TODO: alle endians testen
 
 namespace ModbusControlSpace
 {

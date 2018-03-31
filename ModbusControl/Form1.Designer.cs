@@ -41,6 +41,7 @@ namespace ModbusControlSpace
             this.reloadProjectFileMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.editProjectFileMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.recentFilesMenuItem = new RecentsToolStripMenuItem();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.saveConfigurationMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator6 = new System.Windows.Forms.ToolStripSeparator();
@@ -49,7 +50,7 @@ namespace ModbusControlSpace
             this.importExportToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.importRegistersFromFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exportRegistersToFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.compareRegistersWithFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.compareRegistersWithValuesInFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator8 = new System.Windows.Forms.ToolStripSeparator();
             this.exitMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.connectionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -84,7 +85,6 @@ namespace ModbusControlSpace
             this.PollOnceToolbutton = new System.Windows.Forms.ToolStripButton();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.StatusbarTimer = new System.Windows.Forms.Timer(this.components);
-            this.recentFilesMenuItem = new RecentsToolStripMenuItem();
             this.statusStrip.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
@@ -187,6 +187,15 @@ namespace ModbusControlSpace
             this.toolStripSeparator1.Name = "toolStripSeparator1";
             this.toolStripSeparator1.Size = new System.Drawing.Size(252, 6);
             // 
+            // recentFilesMenuItem
+            // 
+            this.recentFilesMenuItem.Enabled = false;
+            this.recentFilesMenuItem.Name = "recentFilesMenuItem";
+            this.recentFilesMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.F)));
+            this.recentFilesMenuItem.Size = new System.Drawing.Size(255, 22);
+            this.recentFilesMenuItem.Text = "Recent project &Files";
+            this.recentFilesMenuItem.ItemClick += new System.EventHandler(this.recentFilesMenuItem_ItemClick);
+            // 
             // toolStripSeparator2
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
@@ -221,17 +230,17 @@ namespace ModbusControlSpace
             this.importExportToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.importRegistersFromFileToolStripMenuItem,
             this.exportRegistersToFileToolStripMenuItem,
-            this.compareRegistersWithFileToolStripMenuItem});
+            this.compareRegistersWithValuesInFileToolStripMenuItem});
             this.importExportToolStripMenuItem.Name = "importExportToolStripMenuItem";
             this.importExportToolStripMenuItem.Size = new System.Drawing.Size(255, 22);
             this.importExportToolStripMenuItem.Text = "Import && Export...";
             // 
             // importRegistersFromFileToolStripMenuItem
             // 
-            this.importRegistersFromFileToolStripMenuItem.Enabled = false;
             this.importRegistersFromFileToolStripMenuItem.Name = "importRegistersFromFileToolStripMenuItem";
             this.importRegistersFromFileToolStripMenuItem.Size = new System.Drawing.Size(224, 22);
             this.importRegistersFromFileToolStripMenuItem.Text = "Import registers from file...";
+            this.importRegistersFromFileToolStripMenuItem.Click += new System.EventHandler(this.importRegistersFromFileToolStripMenuItem_Click);
             // 
             // exportRegistersToFileToolStripMenuItem
             // 
@@ -240,12 +249,12 @@ namespace ModbusControlSpace
             this.exportRegistersToFileToolStripMenuItem.Text = "Export registers to file...";
             this.exportRegistersToFileToolStripMenuItem.Click += new System.EventHandler(this.exportRegistersToFileToolStripMenuItem_Click);
             // 
-            // compareRegistersWithFileToolStripMenuItem
+            // compareRegistersWithValuesInFileToolStripMenuItem
             // 
-            this.compareRegistersWithFileToolStripMenuItem.Enabled = false;
-            this.compareRegistersWithFileToolStripMenuItem.Name = "compareRegistersWithFileToolStripMenuItem";
-            this.compareRegistersWithFileToolStripMenuItem.Size = new System.Drawing.Size(224, 22);
-            this.compareRegistersWithFileToolStripMenuItem.Text = "Compare registers with file...";
+            this.compareRegistersWithValuesInFileToolStripMenuItem.Name = "compareRegistersWithValuesInFileToolStripMenuItem";
+            this.compareRegistersWithValuesInFileToolStripMenuItem.Size = new System.Drawing.Size(224, 22);
+            this.compareRegistersWithValuesInFileToolStripMenuItem.Text = "Compare registers with file...";
+            this.compareRegistersWithValuesInFileToolStripMenuItem.Click += new System.EventHandler(this.compareRegistersWithValuesInFileToolStripMenuItem_Click);
             // 
             // toolStripSeparator8
             // 
@@ -545,15 +554,6 @@ namespace ModbusControlSpace
             // 
             this.StatusbarTimer.Tick += new System.EventHandler(this.StatusbarTimerEvent);
             // 
-            // recentFilesMenuItem
-            // 
-            this.recentFilesMenuItem.Enabled = false;
-            this.recentFilesMenuItem.Name = "recentFilesMenuItem";
-            this.recentFilesMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.F)));
-            this.recentFilesMenuItem.Size = new System.Drawing.Size(255, 22);
-            this.recentFilesMenuItem.Text = "Recent project &Files";
-            this.recentFilesMenuItem.ItemClick += new System.EventHandler(this.recentFilesMenuItem_ItemClick);
-            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
@@ -637,7 +637,7 @@ namespace ModbusControlSpace
         private System.Windows.Forms.ToolStripMenuItem customCommandsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem importRegistersFromFileToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem exportRegistersToFileToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem compareRegistersWithFileToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem compareRegistersWithValuesInFileToolStripMenuItem;
     }
 }
 

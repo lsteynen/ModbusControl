@@ -32,21 +32,17 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Import));
             this.buttonStart = new System.Windows.Forms.Button();
             this.textboxLog = new System.Windows.Forms.TextBox();
-            this.radiobuttonCompare = new System.Windows.Forms.RadioButton();
-            this.radiobuttonImport = new System.Windows.Forms.RadioButton();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.SelectFileButton = new System.Windows.Forms.Button();
-            this.panel1 = new System.Windows.Forms.Panel();
             this.textboxFilename = new System.Windows.Forms.TextBox();
             this.buttonClearLog = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-            this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // buttonStart
             // 
-            this.buttonStart.Location = new System.Drawing.Point(12, 90);
+            this.buttonStart.Location = new System.Drawing.Point(12, 41);
             this.buttonStart.Name = "buttonStart";
             this.buttonStart.Size = new System.Drawing.Size(150, 23);
             this.buttonStart.TabIndex = 30;
@@ -60,38 +56,14 @@
             this.textboxLog.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.textboxLog.Location = new System.Drawing.Point(12, 119);
+            this.textboxLog.Location = new System.Drawing.Point(12, 70);
             this.textboxLog.Multiline = true;
             this.textboxLog.Name = "textboxLog";
             this.textboxLog.ReadOnly = true;
             this.textboxLog.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.textboxLog.Size = new System.Drawing.Size(520, 151);
+            this.textboxLog.Size = new System.Drawing.Size(520, 200);
             this.textboxLog.TabIndex = 99;
             this.textboxLog.WordWrap = false;
-            // 
-            // radiobuttonCompare
-            // 
-            this.radiobuttonCompare.AutoSize = true;
-            this.radiobuttonCompare.Location = new System.Drawing.Point(3, 21);
-            this.radiobuttonCompare.Name = "radiobuttonCompare";
-            this.radiobuttonCompare.Size = new System.Drawing.Size(192, 17);
-            this.radiobuttonCompare.TabIndex = 12;
-            this.radiobuttonCompare.Text = "Compare registers with values in file";
-            this.toolTip1.SetToolTip(this.radiobuttonCompare, "Compare register values in file with values in target");
-            this.radiobuttonCompare.UseVisualStyleBackColor = true;
-            // 
-            // radiobuttonImport
-            // 
-            this.radiobuttonImport.AutoSize = true;
-            this.radiobuttonImport.Checked = true;
-            this.radiobuttonImport.Location = new System.Drawing.Point(3, 3);
-            this.radiobuttonImport.Name = "radiobuttonImport";
-            this.radiobuttonImport.Size = new System.Drawing.Size(177, 17);
-            this.radiobuttonImport.TabIndex = 11;
-            this.radiobuttonImport.TabStop = true;
-            this.radiobuttonImport.Text = "Import registers from file to target";
-            this.toolTip1.SetToolTip(this.radiobuttonImport, "Read register values from file and write to target");
-            this.radiobuttonImport.UseVisualStyleBackColor = true;
             // 
             // openFileDialog1
             // 
@@ -102,7 +74,7 @@
             // 
             // SelectFileButton
             // 
-            this.SelectFileButton.Location = new System.Drawing.Point(12, 61);
+            this.SelectFileButton.Location = new System.Drawing.Point(12, 12);
             this.SelectFileButton.Name = "SelectFileButton";
             this.SelectFileButton.Size = new System.Drawing.Size(75, 23);
             this.SelectFileButton.TabIndex = 20;
@@ -111,21 +83,12 @@
             this.SelectFileButton.UseVisualStyleBackColor = true;
             this.SelectFileButton.Click += new System.EventHandler(this.buttonSelectFile_Click);
             // 
-            // panel1
-            // 
-            this.panel1.Controls.Add(this.radiobuttonImport);
-            this.panel1.Controls.Add(this.radiobuttonCompare);
-            this.panel1.Location = new System.Drawing.Point(12, 12);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(205, 42);
-            this.panel1.TabIndex = 10;
-            // 
             // textboxFilename
             // 
             this.textboxFilename.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.textboxFilename.Location = new System.Drawing.Point(93, 63);
+            this.textboxFilename.Location = new System.Drawing.Point(93, 13);
             this.textboxFilename.Name = "textboxFilename";
             this.textboxFilename.ReadOnly = true;
             this.textboxFilename.Size = new System.Drawing.Size(439, 20);
@@ -134,7 +97,7 @@
             // 
             // buttonClearLog
             // 
-            this.buttonClearLog.Location = new System.Drawing.Point(249, 90);
+            this.buttonClearLog.Location = new System.Drawing.Point(249, 41);
             this.buttonClearLog.Name = "buttonClearLog";
             this.buttonClearLog.Size = new System.Drawing.Size(75, 23);
             this.buttonClearLog.TabIndex = 32;
@@ -146,7 +109,7 @@
             // buttonCancel
             // 
             this.buttonCancel.Enabled = false;
-            this.buttonCancel.Location = new System.Drawing.Point(168, 90);
+            this.buttonCancel.Location = new System.Drawing.Point(168, 41);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 23);
             this.buttonCancel.TabIndex = 31;
@@ -163,7 +126,6 @@
             this.Controls.Add(this.buttonCancel);
             this.Controls.Add(this.buttonClearLog);
             this.Controls.Add(this.textboxFilename);
-            this.Controls.Add(this.panel1);
             this.Controls.Add(this.SelectFileButton);
             this.Controls.Add(this.textboxLog);
             this.Controls.Add(this.buttonStart);
@@ -171,8 +133,6 @@
             this.Name = "Import";
             this.Text = "Import registers from file";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.OnFormClosing);
-            this.panel1.ResumeLayout(false);
-            this.panel1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -182,11 +142,8 @@
 
         private System.Windows.Forms.Button buttonStart;
         private System.Windows.Forms.TextBox textboxLog;
-        private System.Windows.Forms.RadioButton radiobuttonCompare;
-        private System.Windows.Forms.RadioButton radiobuttonImport;
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
         private System.Windows.Forms.Button SelectFileButton;
-        private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.TextBox textboxFilename;
         private System.Windows.Forms.Button buttonClearLog;
         private System.Windows.Forms.Button buttonCancel;

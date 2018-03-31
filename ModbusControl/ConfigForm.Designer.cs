@@ -796,7 +796,7 @@
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "Configuration";
+            this.Text = "Project configuration";
             this.groupboxConnection.ResumeLayout(false);
             this.groupboxConnection.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericMaximumFrameSize)).EndInit();

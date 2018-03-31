@@ -127,6 +127,18 @@
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
     <Compile Include="Global.cs" />
+    <Compile Include="Import.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Import.Designer.cs">
+      <DependentUpon>Import.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ImportCompare.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ImportCompare.Designer.cs">
+      <DependentUpon>ImportCompare.cs</DependentUpon>
+    </Compile>
     <Compile Include="LogFilter.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -197,6 +209,12 @@
     <EmbeddedResource Include="Form1.resx">
       <SubType>Designer</SubType>
       <DependentUpon>Form1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Import.resx">
+      <DependentUpon>Import.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ImportCompare.resx">
+      <DependentUpon>ImportCompare.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="LogFilter.resx">
       <DependentUpon>LogFilter.cs</DependentUpon>

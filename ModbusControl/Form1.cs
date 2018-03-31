@@ -34,6 +34,9 @@ using LST.Helpers;
 //TODO: je kan importeren als er geen project open is?
 //TODO: je kan import/comparen als er geen project open is?
 //TODO: je kan custom read/write/... commands uitvoeren als er geen project open is?
+//TODO  ContextMenuForDescriptionColumn.Items.Add("Custom read...", null, new EventHandler(Menu_CustomRead));
+//TODO  ContextMenuForDescriptionColumn.Items.Add("Custom write...", null, new EventHandler(Menu_CustomWrite));
+//TODO  ContextMenuForDescriptionColumn.Items.Add("Custom modbus command...", null, new EventHandler(Menu_CustomModbusCommand));
 
 namespace ModbusControlSpace
 {
@@ -79,10 +82,12 @@ namespace ModbusControlSpace
         private List<WriteEntry> WriteList = new List<WriteEntry>();
         private readonly object WriteListLock = new object();
 
+        // the import form, make it global and use show/hide to keep the settings
+        Import ImportForm;
         // the export form, make it global and use show/hide to keep the settings
         Export ExportForm;
-        // the import form, make it global and use show/hide to keep the settings
-        //TODO Import ImportForm;
+        // the Importcompare form, make it global and use show/hide to keep the settings
+        Importcompare ImportcompareForm;
 
         // constructor
         public Form1()
@@ -708,7 +713,9 @@ namespace ModbusControlSpace
                 ReloadToolbutton.Enabled = reloadProjectFileMenuItem.Enabled;
                 editProjectFileMenuItem.Enabled = (!String.IsNullOrEmpty(ProjectPath)) && File.Exists(ProjectPath);
                 saveConfigurationMenuItem.Enabled = ProjectIsOpen;
-                exportRegistersToFileToolStripMenuItem.Enabled = (tabControl1.TabPages.Count > 0);
+
+                importExportToolStripMenuItem.Enabled = ConnectionIsOpen;
+                exportRegistersToFileToolStripMenuItem.Enabled = ConnectionIsOpen && ProjectIsOpen && (tabControl1.TabPages.Count > 0);
 
                 // Connection stuff
                 openConnectionMenuItem.Enabled = !ConnectionInUse;
@@ -1433,26 +1440,52 @@ namespace ModbusControlSpace
 
         /// <summary>
         /// Convert holding register number to register offset 0-65536
+        /// Thows exception on error
         /// </summary>
-        /// <returns></returns>
+        /// <returns>Register offset</returns>
         public UInt16 GetRegOffset(UInt32 Regnr)
         {
             // 40000-49999, 40001-49999
             // 400000-465535, 400001-465536
 
+            UInt16 Offset;
+
+            if (TryGetRegOffset(Regnr, out Offset))
+            {
+                return Offset;
+            }
+
+            // failed
+            throw new ArgumentException();
+        }
+
+        /// <summary>
+        /// Convert holding register number to register offset 0-65536
+        /// </summary>
+        /// <returns>true if valid, false if not</returns>
+        public bool TryGetRegOffset(UInt32 Regnr, out UInt16 Offset)
+        {
+            // 40000-49999, 40001-49999
+            // 400000-465535, 400001-465536
+
+            Offset = 0;
+
+            // determine holdingRegistersEnd
             UInt32 holdingRegistersEnd = 49999;
             if (Project.Options.HoldingregistersStart >= 400000)
             {
                 holdingRegistersEnd = (UInt32)(Project.Options.HoldingregistersStart + 65535);
             }
 
+            // check and calculate registeroffset
             if ((Regnr >= Project.Options.HoldingregistersStart) && (Regnr <= holdingRegistersEnd))
             {
-                return (UInt16)(Regnr - Project.Options.HoldingregistersStart);
+                Offset = (UInt16)(Regnr - Project.Options.HoldingregistersStart);
+                return true;
             }
 
             // failed
-            throw new ArgumentException();
+            return false;
         }
 
         public int GetMaxRegistersInSingleRead()
@@ -1681,7 +1714,7 @@ namespace ModbusControlSpace
 
         #region Writes
 
-        // Add a write to the list
+        // Add a write to the writelist
         private void OnRegisterWrite(object sender, ModbusRegView.RegisterWriteEventArgs e)
         {
             WriteEntry w = new WriteEntry();
@@ -1695,6 +1728,7 @@ namespace ModbusControlSpace
             }
         }
 
+        // process the writes in the writelist
         private void DoPendingWrites()
         {
             // do possible pending writes
@@ -1714,43 +1748,7 @@ namespace ModbusControlSpace
             // got a write?
             while (w != null)
             {
-                // use FC6 or FC16?
-                //  #reg    FC6     FC16    auto
-	            //   1	    FC6		FC16#1	FC6
-	            //   >1     N*FC6	FC16#N	FC16#N
-
-                bool useFC16 =   (Project.Connection.WriteHoldingregFunctioncode == Global.eWriteHoldingregFunctionCode.FC16)
-                              || ((Project.Connection.WriteHoldingregFunctioncode == Global.eWriteHoldingregFunctionCode.Auto) && (w.Data.Length >= 2));
-
-                if (useFC16)
-                {
-                    // write multiple registers at once
-                    ModbusProtocol.Result result = ModbusProtocol.Result.SUCCESS;
-                    UInt16 RegOffset = GetRegOffset(w.Reg);
-                    result = mb.MifWriteMultipleHoldingRegisters(Project.Connection.SlaveID, RegOffset, (ushort)w.Data.Length, w.Data);
-
-                    if (result != ModbusProtocol.Result.SUCCESS)
-                    {
-                        ReportErrorText("Write failed: Slave=" + Project.Connection.SlaveID + ", FC16, addr=" + w.Reg + ", quant=" + w.Data.Length + ", Error=" + ModbusProtocol.GetResultText(result));
-                        Beep();
-                    }
-                }
-                else
-                {
-                    // N times write single register
-                    ModbusProtocol.Result result = ModbusProtocol.Result.SUCCESS;
-                    UInt16 RegOffset = GetRegOffset(w.Reg);
-                    for (int i = 0; (i < w.Data.Length) && (result == ModbusProtocol.Result.SUCCESS); ++i)
-                    {
-                        result = mb.MifWriteSingleHoldingRegister(Project.Connection.SlaveID, (UInt16)(RegOffset + i), w.Data[i]);
-                    }
-
-                    if (result != ModbusProtocol.Result.SUCCESS)
-                    {
-                        ReportErrorText("Write failed: Slave=" + Project.Connection.SlaveID + ", FC6, reg=" + w.Reg + ", data=" + w.Data[0] + ", Error=" + ModbusProtocol.GetResultText(result));
-                        Beep();
-                    }
-                }
+                DoWriteHoldingRegs(w.Reg, (UInt16)w.Data.Length, w.Data);
 
                 // get next write request, threadsafe
                 w = null;
@@ -1764,6 +1762,52 @@ namespace ModbusControlSpace
                 }
 
             }
+        }
+
+        // write a variable
+        // can be 1 or more holding registers
+        // use FC6 or FC16 as configured
+        public ModbusProtocol.Result DoWriteHoldingRegs(UInt32 Reg, UInt16 RegCount, Int16[] Values)
+        {
+            ModbusProtocol.Result result = ModbusProtocol.Result.SUCCESS;
+
+            // use FC6 or FC16?
+            //  #reg    FC6     FC16    auto
+            //  1       FC6     FC16#1  FC6
+            //  >1      N*FC6   FC16#N  FC16#N
+
+            bool useFC16 = (Project.Connection.WriteHoldingregFunctioncode == Global.eWriteHoldingregFunctionCode.FC16)
+                            || ((Project.Connection.WriteHoldingregFunctioncode == Global.eWriteHoldingregFunctionCode.Auto) && (RegCount > 1));
+
+            if (useFC16)
+            {
+                // write multiple registers
+                UInt16 RegOffset = GetRegOffset(Reg);
+                result = mb.MifWriteMultipleHoldingRegisters(Project.Connection.SlaveID, RegOffset, RegCount, Values);
+
+                if (result != ModbusProtocol.Result.SUCCESS)
+                {
+                    ReportErrorText("Write failed: Slave=" + Project.Connection.SlaveID + ", FC16, addr=" + Reg + ", quant=" + RegCount + ", Error=" + ModbusProtocol.GetResultText(result));
+                    Beep();
+                }
+            }
+            else
+            {
+                // N times write single register
+                UInt16 RegOffset = GetRegOffset(Reg);
+                for (int i = 0; (i < RegCount) && (result == ModbusProtocol.Result.SUCCESS); ++i)
+                {
+                    result = mb.MifWriteSingleHoldingRegister(Project.Connection.SlaveID, (UInt16)(RegOffset + i), Values[i]);
+                }
+
+                if (result != ModbusProtocol.Result.SUCCESS)
+                {
+                    ReportErrorText("Write failed: Slave=" + Project.Connection.SlaveID + ", FC6, reg=" + Reg + ", data=" + Values[0] + ", Error=" + ModbusProtocol.GetResultText(result));
+                    Beep();
+                }
+            }
+
+            return result;
         }
 
         #endregion
@@ -1838,6 +1882,21 @@ namespace ModbusControlSpace
 
         #region Import/export
 
+        private void importRegistersFromFileToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            // create once, then hide and show to keep settings
+            if (ImportForm == null)
+            {
+                ImportForm = new Import(this);
+            }
+
+            // show modal
+            ImportForm.ShowDialog();
+
+            // make sure main tabs polling is restored
+            MainPollingIsEnabled = true;
+        }
+
         private void exportRegistersToFileToolStripMenuItem_Click(object sender, EventArgs e)
         {
             // create once, then hide and show to keep settings
@@ -1853,13 +1912,20 @@ namespace ModbusControlSpace
             MainPollingIsEnabled = true;
         }
 
-        /* TODO
-        ContextMenuForDescriptionColumn.Items.Add("Export registers to file...", null, new EventHandler(Menu_Export));
-        ContextMenuForDescriptionColumn.Items.Add("Import registers from file...", null, new EventHandler(Menu_Import));
-        ContextMenuForDescriptionColumn.Items.Add("Custom read...", null, new EventHandler(Menu_CustomRead));
-        ContextMenuForDescriptionColumn.Items.Add("Custom write...", null, new EventHandler(Menu_CustomWrite));
-        ContextMenuForDescriptionColumn.Items.Add("Custom modbus command...", null, new EventHandler(Menu_CustomModbusCommand));
-        */
+        private void compareRegistersWithValuesInFileToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            // create once, then hide and show to keep settings
+            if (ImportcompareForm == null)
+            {
+                ImportcompareForm = new Importcompare(this);
+            }
+
+            // show modal
+            ImportcompareForm.ShowDialog();
+
+            // make sure main tabs polling is restored
+            MainPollingIsEnabled = true;
+        }
 
 
 
@@ -1952,7 +2018,6 @@ namespace ModbusControlSpace
                 System.Media.SystemSounds.Beep.Play();
             }
         }
-
 
     }
 }

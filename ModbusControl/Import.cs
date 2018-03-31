@@ -9,9 +9,14 @@ using System.Text;
 using System.Threading;
 using System.Windows.Forms;
 
+using LST.Helpers;
 using ModbusRegViewSpace;
 using Modbus_net;
-using CsvProcessor;
+
+//TODO: FC6/16/both correct gebruiken
+//TODO: probleem met formats, ValueToString en endians
+//TODO: alle endians testen
+//TODO: testen met ongeldig registernummer in importfile
 
 namespace ModbusControlSpace
 {
@@ -21,11 +26,8 @@ namespace ModbusControlSpace
         private byte mSlaveAddress;
         private ModbusInterface mModbus;
         private BackgroundWorker mWorker;
-        private int mNotReadableCount;
         private int mNotWriteableCount;
         private int mWrittenCount;
-        private int mEqualCount;
-        private int mDifferentCount;
         private int mErrorCount;
         private const int mSleeptime = 10;
 
@@ -36,7 +38,7 @@ namespace ModbusControlSpace
             public string Description;
             public bool isReadable;
             public bool isWriteable;
-            public ModbusRegView.eFormat Format;
+            public Global.eFormat Format;
             public string ValueString;
             public Int32 Value;
 
@@ -48,7 +50,7 @@ namespace ModbusControlSpace
                 Description = null;
                 isReadable = true;
                 isWriteable = true;
-                Format = ModbusRegView.eFormat.Int;
+                Format = Global.eFormat.Int;
                 ValueString = null;
                 Value = 0;
             }
@@ -64,7 +66,7 @@ namespace ModbusControlSpace
 
             mParent = parent;
             mModbus = parent.mb;
-            mSlaveAddress = parent.SlaveAddress;
+            mSlaveAddress = parent.Project.Connection.SlaveID;
         }
 
         private void buttonStart_Click(object sender, EventArgs e)
@@ -79,14 +81,7 @@ namespace ModbusControlSpace
                 return;
             }
 
-            if (radiobuttonImport.Checked)
-            {
-                DoImport();
-            }
-            else if (radiobuttonCompare.Checked)
-            {
-                DoCompare();
-            }
+            DoImport();
         }
 
         private void buttonCancel_Click(object sender, EventArgs e)
@@ -125,33 +120,6 @@ namespace ModbusControlSpace
             return true;
         }
 
-        private bool DoCompare()
-        {
-            // Compare registers from file with target
-
-            // get the file
-            Cursor.Current = Cursors.WaitCursor;
-            bool bResult = LoadImportFile(textboxFilename.Text);
-            Cursor.Current = Cursors.Default;
-            if (bResult == false)
-            {
-                // LoadImportFile() has already shown error
-                return false;
-            }
-
-            // check if port is opened
-            if (mModbus.IsOpen == false)
-            {
-                textboxLog.AppendText("ERROR: Connection is not open!" + Environment.NewLine);
-                return false;
-            }
-
-            // process all lines in the file
-            DoCompareWithList();
-
-            return true;
-        }
-
         private void DoImportFromList()
         {
             // Write registers from list to target
@@ -163,7 +131,7 @@ namespace ModbusControlSpace
 
             buttonStart.Enabled = false;
             buttonCancel.Enabled = true;
-            mParent.SetMainPollingEnable(false);
+            mParent.MainPollingIsEnabled = false;
 
             // start backgroundworker to do the import, so we can cancel
             mWorker = new BackgroundWorker();
@@ -197,11 +165,15 @@ namespace ModbusControlSpace
                     continue;
                 }
 
-                // convert register to protocol offset
-                ushort RegOffset = mParent.ConvertUniregToOffset(line.Reg);
+                //TODO: convert value naar short[], hou rekening met juiste endian
+                short[] aValues = new short[2];
+                aValues[0] = (short)(line.Value);
+                aValues[1] = (short)(line.Value>>16);
 
-                // write, use word order, FC06, FC16 as configured
-                ModbusProtocol.Result result = WriteWord(line.Size, RegOffset, line.Value);
+                // write
+                //ModbusProtocol.Result result = WriteWord(line.Size, RegOffset, line.Value);
+                ModbusProtocol.Result result = mParent.DoWriteHoldingRegs(line.Reg, (ushort)(line.Size / 16), aValues);
+
 
                 if (result == ModbusProtocol.Result.SUCCESS)
                 {
@@ -244,10 +216,10 @@ namespace ModbusControlSpace
             buttonStart.Enabled = true;
             buttonCancel.Enabled = false;
 
-            mParent.SetMainPollingEnable(true);
+            mParent.MainPollingIsEnabled = true;
         }
 
-        private bool WriteImportLine(UInt32 Reg, int Size, string Description, ModbusRegView.eFormat Format, bool isReadable, bool isWriteable, string ValueString)
+        private bool WriteImportLine(UInt32 Reg, int Size, string Description, Global.eFormat Format, bool isReadable, bool isWriteable, string ValueString)
         {
             // output 1 import line, all register info, and value
 
@@ -263,7 +235,7 @@ namespace ModbusControlSpace
             return true;
         }
 
-        private bool WriteImportLineError(UInt32 Reg, int Size, string Description, ModbusRegView.eFormat Format, bool isReadable, bool isWriteable, string ValueString, string Error)
+        private bool WriteImportLineError(UInt32 Reg, int Size, string Description, Global.eFormat Format, bool isReadable, bool isWriteable, string ValueString, string Error)
         {
             // output 1 import line, all register info, and error message
 
@@ -277,212 +249,6 @@ namespace ModbusControlSpace
             mWorker.ReportProgress(0, "Write: " + s);
 
             return true;
-        }
-
-        private void DoCompareWithList()
-        {
-            // Compare registers from list with target
-
-            // reset counters
-            mNotReadableCount = 0;
-            mEqualCount = 0;
-            mDifferentCount = 0;
-            mErrorCount = 0;
-
-            buttonStart.Enabled = false;
-            buttonCancel.Enabled = true;
-            mParent.SetMainPollingEnable(false);
-
-            // start backgroundworker to do the compare, so we can cancel
-            mWorker = new BackgroundWorker();
-            mWorker.DoWork += new DoWorkEventHandler(Worker_CompareWithList);
-            mWorker.ProgressChanged += new ProgressChangedEventHandler(Worker_ProgressChanged);
-            mWorker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(Worker_CompareWorkerCompleted);
-            mWorker.WorkerReportsProgress = true;
-            mWorker.WorkerSupportsCancellation = true;
-            mWorker.RunWorkerAsync();
-        }
-        
-        private void Worker_CompareWithList(object sender, DoWorkEventArgs e)
-        {
-            // TODO: try to read multiple registers at once, will be much faster?
-
-            foreach (ImportLine line in ImportList)
-            {
-                // cancel?
-                if (mWorker.CancellationPending)
-                {
-                    e.Cancel = true;
-                    return;
-                }
-
-                // skip lines that are not readable
-                if (line.isReadable == false)
-                {
-                    ++mNotReadableCount;
-                    continue;
-                }
-
-                // convert register to protocol offset
-                ushort RegOffset = mParent.ConvertUniregToOffset(line.Reg);
-
-                // read register(s)
-                ushort RegCount = (ushort)(line.Size / 16);
-                short[] aValues;
-                ModbusProtocol.Result result = mModbus.MifReadHoldingRegisters(mSlaveAddress, RegOffset, RegCount, out aValues);
-
-                if (result == ModbusProtocol.Result.SUCCESS)
-                {
-                    // success
-
-                    // compare 16 or 32-bit?
-                    Int32 TargetValue = 0;
-                    bool bEqual = false;
-                    if (line.Size == 32)
-                    {
-                        // make 32-bit value of 2 16-bit registers, respect configured word order
-                        TargetValue = mParent.ToInt32(aValues[0], aValues[1]);
-                        bEqual = (TargetValue == line.Value);
-                    }
-                    else
-                    {
-                        // compare 16-bit values to avoid signed/unsigned issues
-                        TargetValue = aValues[0];
-                        bEqual = ((UInt16)aValues[0] == (UInt16)line.Value);
-                    }
-
-                    // count
-                    if (bEqual)
-                        ++mEqualCount;
-                    else
-                        ++mDifferentCount;
-
-                    // show result
-                    WriteCompareLine(line.Reg, line.Size, line.Description, line.Format, line.isReadable, line.isWriteable, line.ValueString, bEqual, TargetValue);
-                }
-                else
-                {
-                    // error
-
-                    WriteCompareLineError(line.Reg, line.Size, line.Description, line.Format, line.isReadable, line.isWriteable, line.ValueString, ModbusProtocol.GetResultText(result));
-                    ++mErrorCount;
-                }
-
-                Thread.Sleep(mSleeptime);
-            }
-
-            // complete
-        }
-
-        private void Worker_CompareWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
-        {
-            // completed or canceled?
-            string ResultString = "Done.";
-            if (e.Cancelled)
-            {
-                ResultString = "Cancelled.";
-            }
-
-            // show counters
-            textboxLog.AppendText(ResultString + " " + mEqualCount + " registers were equal. " + mDifferentCount + " registers were different. " + mNotReadableCount + " registers non-readable. " + mErrorCount + " errors. " + Environment.NewLine);
-
-            //Change the status of the buttons on the UI accordingly
-            buttonStart.Enabled = true;
-            buttonCancel.Enabled = false;
-
-            mParent.SetMainPollingEnable(true);
-        }
-
-        private bool WriteCompareLine(UInt32 Reg, int Size, string Description, ModbusRegView.eFormat Format, bool isReadable, bool isWriteable, string ValueString, bool bEqual, Int32 TargetValue)
-        {
-            // output 1 compare line, all register info, and value
-
-            // replace possible " by '
-            Description = Description.Replace('\"', '\'');
-            // make RW string
-            string RWstring = (isReadable ? "r" : "") + (isWriteable ? "w" : "");
-            // make value string (various formats)
-            string TargetValueString = ModbusRegView.ValueToString(TargetValue, Size, Format, 0, 0);
-            // make result string
-            string ResultString = bEqual ? "EQUAL" : "DIFFERENT: target value is " + TargetValueString;
-            // make output string
-            string s = Reg + ";" + Size + ";\"" + Description + "\";" + RWstring + ";" + Format + ";" + ValueString + "   >> " + ResultString;
-
-            mWorker.ReportProgress(0, "Compare: " + s);
-
-            return true;
-        }
-
-        private bool WriteCompareLineError(UInt32 Reg, int Size, string Description, ModbusRegView.eFormat Format, bool isReadable, bool isWriteable, string ValueString, string Error)
-        {
-            // output 1 compare line, all register info, and error message
-
-            // replace possible " by '
-            Description = Description.Replace('\"', '\'');
-            // make RW string
-            string RWstring = (isReadable ? "r" : "") + (isWriteable ? "w" : "");
-            // make output string
-            string s = Reg + ";" + Size + ";\"" + Description + "\";" + RWstring + ";" + Format + ";" + ValueString + "   >> ERROR: " + Error;
-
-            mWorker.ReportProgress(0, "Compare: " + s);
-
-            return true;
-        }
-
-        private ModbusProtocol.Result WriteWord(int Size, UInt16 RegOffset, Int32 Value)
-        {
-            ModbusProtocol.Result result = ModbusProtocol.Result.SUCCESS;
-
-            short[] awValues = new short[2];
-
-            // split 32-bit value into 2 16-bit registers, respect configured word order
-            if (Size == 32)
-            {
-                awValues[0] = mParent.Int32ToRegister0(Value);
-                awValues[1] = mParent.Int32ToRegister1(Value);
-            }
-            else
-            {
-                // 16-bit value in awValues[0]
-                awValues[0] = (short)Value;
-                awValues[1] = 0;
-            }
-
-            // write 32-bit value?
-            if (Size == 32)
-            {
-                // write 32-bit value
-                if (mParent.AllowedToUseFC16())
-                {
-                    // use FC16 for writing a 32-bit register as 2 16-bit registers
-                    result = mModbus.MifWriteMultipleHoldingRegisters(mSlaveAddress, RegOffset, 2, awValues);
-                }
-                else
-                {
-                    // use FC6 twice
-                    result = mModbus.MifWriteSingleHoldingRegister(mSlaveAddress, RegOffset, awValues[0]);
-                    if (result == ModbusProtocol.Result.SUCCESS)
-                    {
-                        result = mModbus.MifWriteSingleHoldingRegister(mSlaveAddress, (ushort)(RegOffset + 1), awValues[1]);
-                    }
-                }
-            }
-            else
-            {
-                // write 16-bit value
-                if (mParent.AllowedToUseFC06())
-                {
-                    // use FC6 for writing 1 register
-                    result = mModbus.MifWriteSingleHoldingRegister(mSlaveAddress, RegOffset, awValues[0]);
-                }
-                else
-                {
-                    // use FC16 for writing 1 register
-                    result = mModbus.MifWriteMultipleHoldingRegisters(mSlaveAddress, RegOffset, 1, awValues);
-                }
-            }
-
-            return result;
         }
 
         private string[] SplitCsvLine(string instring, char separator)
@@ -624,7 +390,7 @@ namespace ModbusControlSpace
                 // we accept 2, 3, 4 ,5, or 6 fields
 
                 // init default value strings
-                // then process 2, 3, 4 ,5 or 6 fields
+                // then process all fields
                 string RegString = "";
                 string SizeString = "16";
                 string DescriptionString = "";
@@ -685,8 +451,9 @@ namespace ModbusControlSpace
                 ImportLine imp = new ImportLine();
 
                 ushort DummyOffset;
+
                 if (   uint.TryParse(RegString, out imp.Reg)
-                    && mParent.TryConvertUniregToOffset(imp.Reg, out DummyOffset))
+                    && mParent.TryGetRegOffset(imp.Reg, out DummyOffset))
                 {
                     // okay
                 }
@@ -719,7 +486,7 @@ namespace ModbusControlSpace
                     bValid = false;
                     continue;
                 }
-                bool bIsFloat = (imp.Format == ModbusRegView.eFormat.Float);
+                bool bIsFloat = (imp.Format == Global.eFormat.Float);
                 if (bIsFloat && (imp.Size!=32))
                 {
                     textboxLog.AppendText("ERROR: line " + csvreader.LineNumber + ": Float format size is not 32-bit!" + Environment.NewLine);
@@ -728,7 +495,7 @@ namespace ModbusControlSpace
                     continue;
                 }
                 imp.ValueString = ValueString;
-                if( StringToValueClass.Convert(ValueString, bIsFloat, 0, imp.Size, out imp.Value) == false)
+                if( StringToValueClass.Convert(ValueString, bIsFloat, imp.Size, 0, false, out imp.Value) == false)
                 {
                     textboxLog.AppendText("ERROR: line " + csvreader.LineNumber + ": Value field is invalid!" + Environment.NewLine);
                     textboxLog.AppendText(csvreader.CurrentLine + Environment.NewLine);
@@ -785,42 +552,42 @@ namespace ModbusControlSpace
             return false;
         }
 
-        private bool GetFormat(string text, out ModbusRegView.eFormat format)
+        private bool GetFormat(string text, out Global.eFormat format)
         {
             text = text.ToLower();
 
             if( text == "int")
             {
-                format = ModbusRegView.eFormat.Int;
+                format = Global.eFormat.Int;
                 return true;
             }
             else if( text == "uint")
             {
-                format = ModbusRegView.eFormat.UInt;
+                format = Global.eFormat.UInt;
                 return true;
             }
             else if( text == "hex")
             {
-                format = ModbusRegView.eFormat.Hex;
+                format = Global.eFormat.Hex;
                 return true;
             }
             else if( text == "bin")
             {
-                format = ModbusRegView.eFormat.Bin;
+                format = Global.eFormat.Bin;
                 return true;
             }
             else if( text == "float")
             {
-                format = ModbusRegView.eFormat.Float;
+                format = Global.eFormat.Float;
                 return true;
             }
             else if( text == "ascii")
             {
-                format = ModbusRegView.eFormat.ASCII;
+                format = Global.eFormat.ASCII;
                 return true;
             }
 
-            format = ModbusRegView.eFormat.Int;
+            format = Global.eFormat.Int;
             return false;
         }
 
