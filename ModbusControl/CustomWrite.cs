@@ -7,6 +7,7 @@ using System.IO;
 using System.Text;
 using System.Windows.Forms;
 
+using LST.Helpers;
 using ModbusRegViewSpace;
 using Modbus_net;
 
@@ -85,7 +86,7 @@ namespace ModbusControlSpace
             SlaveID = (byte)numericSlaveAddress.Value;
 
             Register = (UInt32)numericRegister.Value;
-            if ( mParent.TryConvertUniregToOffset(Register, out RegOffset))
+            if (mParent.TryGetRegOffset(Register, out RegOffset))
             {
                 // ok
             }
@@ -138,11 +139,12 @@ namespace ModbusControlSpace
                 for (int i = 0; i < DataCount; ++i)
                 {
                     Int32 Value;
-                    bool bIsValid = StringToValueClass.Convert(aDataStr[i].Trim(), false, 0, 32, out Value);
+                    bool bIsValid = StringToValueClass.Convert(aDataStr[i].Trim(), false, 32, 0, false, out Value);
+                    //TODO: endian
                     if (bIsValid)
                     {
-                        a16bitValues[i*2] = mParent.Int32ToRegister0(Value);
-                        a16bitValues[(i*2) + 1] = mParent.Int32ToRegister1(Value);
+                        a16bitValues[i*2] = (Int16)Value;
+                        a16bitValues[(i * 2) + 1] = (Int16)(Value>>16);
                     }
                     else
                     {
@@ -159,7 +161,7 @@ namespace ModbusControlSpace
                 for (int i = 0; i < DataCount; ++i)
                 {
                     Int32 Value;
-                    bool bIsValid = StringToValueClass.Convert(aDataStr[i].Trim(), false, 0, 16, out Value);
+                    bool bIsValid = StringToValueClass.Convert(aDataStr[i].Trim(), false, 16, 0, false, out Value);
                     if (bIsValid)
                     {
                         a16bitValues[i] = (short)Value;
@@ -257,13 +259,13 @@ namespace ModbusControlSpace
         private void checkboxEnableMainPolling_CheckedChanged(object sender, EventArgs e)
         {
             // enable/disable main tabs polling
-            mParent.SetMainPollingEnable(checkboxEnableMainPolling.Checked);
+            mParent.MainPollingIsEnabled = checkboxEnableMainPolling.Checked;
         }
 
         private void CustomWrite_Shown(object sender, EventArgs e)
         {
             // form is shown: disable polling if unchecked
-            mParent.SetMainPollingEnable(checkboxEnableMainPolling.Checked);
+            mParent.MainPollingIsEnabled = checkboxEnableMainPolling.Checked;
         }
 
     }

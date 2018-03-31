@@ -70,6 +70,9 @@ namespace ModbusControlSpace
             this.diagnosticsCountersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.loggingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.customCommandsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.customReadToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.custimWriteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.customCommandToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.checkForUpdateMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -403,9 +406,34 @@ namespace ModbusControlSpace
             // 
             // customCommandsToolStripMenuItem
             // 
+            this.customCommandsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.customReadToolStripMenuItem,
+            this.custimWriteToolStripMenuItem,
+            this.customCommandToolStripMenuItem});
             this.customCommandsToolStripMenuItem.Name = "customCommandsToolStripMenuItem";
-            this.customCommandsToolStripMenuItem.Size = new System.Drawing.Size(124, 20);
-            this.customCommandsToolStripMenuItem.Text = "Custom commands";
+            this.customCommandsToolStripMenuItem.Size = new System.Drawing.Size(81, 20);
+            this.customCommandsToolStripMenuItem.Text = "Commands";
+            // 
+            // customReadToolStripMenuItem
+            // 
+            this.customReadToolStripMenuItem.Name = "customReadToolStripMenuItem";
+            this.customReadToolStripMenuItem.Size = new System.Drawing.Size(210, 22);
+            this.customReadToolStripMenuItem.Text = "Send read...";
+            this.customReadToolStripMenuItem.Click += new System.EventHandler(this.customReadToolStripMenuItem_Click);
+            // 
+            // custimWriteToolStripMenuItem
+            // 
+            this.custimWriteToolStripMenuItem.Name = "custimWriteToolStripMenuItem";
+            this.custimWriteToolStripMenuItem.Size = new System.Drawing.Size(210, 22);
+            this.custimWriteToolStripMenuItem.Text = "Send write...";
+            this.custimWriteToolStripMenuItem.Click += new System.EventHandler(this.custimWriteToolStripMenuItem_Click);
+            // 
+            // customCommandToolStripMenuItem
+            // 
+            this.customCommandToolStripMenuItem.Name = "customCommandToolStripMenuItem";
+            this.customCommandToolStripMenuItem.Size = new System.Drawing.Size(210, 22);
+            this.customCommandToolStripMenuItem.Text = "Send custom command...";
+            this.customCommandToolStripMenuItem.Click += new System.EventHandler(this.customCommandToolStripMenuItem_Click);
             // 
             // helpMenuItem
             // 
@@ -638,6 +666,9 @@ namespace ModbusControlSpace
         private System.Windows.Forms.ToolStripMenuItem importRegistersFromFileToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem exportRegistersToFileToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem compareRegistersWithValuesInFileToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem customReadToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem custimWriteToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem customCommandToolStripMenuItem;
     }
 }
 

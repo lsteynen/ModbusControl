@@ -88,6 +88,12 @@ namespace ModbusControlSpace
         Export ExportForm;
         // the Importcompare form, make it global and use show/hide to keep the settings
         Importcompare ImportcompareForm;
+        // the custom-read form, make it global and use show/hide to keep the settings
+        CustomRead CustomreadForm;
+        // the custom-write form, make it global and use show/hide to keep the settings
+        CustomWrite CustomwriteForm;
+        // the custom-modbus-command form, make it global and use show/hide to keep the settings
+        CustomModbusCommand CustommodbuscommandForm;
 
         // constructor
         public Form1()
@@ -707,17 +713,14 @@ namespace ModbusControlSpace
             }
             else
             {
-                // Project stuff
+                // Project items
                 OpenProjectToolbutton.Enabled = true;
                 reloadProjectFileMenuItem.Enabled = !String.IsNullOrEmpty(ProjectPath);
                 ReloadToolbutton.Enabled = reloadProjectFileMenuItem.Enabled;
                 editProjectFileMenuItem.Enabled = (!String.IsNullOrEmpty(ProjectPath)) && File.Exists(ProjectPath);
                 saveConfigurationMenuItem.Enabled = ProjectIsOpen;
 
-                importExportToolStripMenuItem.Enabled = ConnectionIsOpen;
-                exportRegistersToFileToolStripMenuItem.Enabled = ConnectionIsOpen && ProjectIsOpen && (tabControl1.TabPages.Count > 0);
-
-                // Connection stuff
+                // Connection items
                 openConnectionMenuItem.Enabled = !ConnectionInUse;
                 OpenConnectionToolbutton.Enabled = openConnectionMenuItem.Enabled;
                 closeConnectionMenuItem.Enabled = ConnectionIsOpen;
@@ -728,6 +731,13 @@ namespace ModbusControlSpace
                 StopPollingToolbutton.Enabled = stopPollingMenuItem.Enabled;
                 pollOnceMenuItem.Enabled = ConnectionIsOpen && (tabControl1.TabPages.Count > 0) && !PollingIsStarted && !PollOnceIsStarted;
                 PollOnceToolbutton.Enabled = pollOnceMenuItem.Enabled;
+
+                // Action items
+                importExportToolStripMenuItem.Enabled = ConnectionIsOpen;
+                exportRegistersToFileToolStripMenuItem.Enabled = ConnectionIsOpen && ProjectIsOpen && (tabControl1.TabPages.Count > 0);
+                customReadToolStripMenuItem.Enabled = ConnectionIsOpen;
+                custimWriteToolStripMenuItem.Enabled = ConnectionIsOpen;
+                customCommandToolStripMenuItem.Enabled = ConnectionIsOpen;
             }
         }
 
@@ -1927,7 +1937,60 @@ namespace ModbusControlSpace
             MainPollingIsEnabled = true;
         }
 
+        #endregion
 
+        #region Custom commands
+
+        private void customReadToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            // create if needed, else show and hide
+            if (CustomreadForm == null)
+            {
+                CustomreadForm = new CustomRead(this);
+                CustomreadForm.SlaveID = Project.Connection.SlaveID;
+                CustomreadForm.Register = (uint)Project.Options.HoldingregistersStart;
+            }
+
+            // update some parameters
+            CustomreadForm.ShortLivedTcpConnection = false;
+            // show modal
+            CustomreadForm.ShowDialog();
+
+            // make sure main tabs polling is restored
+            MainPollingIsEnabled = true;
+        }
+
+        private void custimWriteToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            // create if needed, else show and hide
+            if (CustomwriteForm == null)
+            {
+                CustomwriteForm = new CustomWrite(this);
+                CustomwriteForm.SlaveID = Project.Connection.SlaveID;
+                CustomwriteForm.Register = (uint)Project.Options.HoldingregistersStart;
+            }
+
+            // show modal
+            CustomwriteForm.ShowDialog();
+
+            // make sure main tabs polling is restored
+            MainPollingIsEnabled = true;
+        }
+
+        private void customCommandToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            // create if needed, else show and hide
+            if (CustommodbuscommandForm == null)
+            {
+                CustommodbuscommandForm = new CustomModbusCommand(this);
+            }
+
+            // show modal
+            CustommodbuscommandForm.ShowDialog();
+
+            // make sure main tabs polling is restored
+            MainPollingIsEnabled = true;
+        }
 
         #endregion
 

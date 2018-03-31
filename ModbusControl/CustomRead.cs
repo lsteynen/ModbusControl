@@ -7,6 +7,7 @@ using System.IO;
 using System.Text;
 using System.Windows.Forms;
 
+using LST.Helpers;
 using ModbusRegViewSpace;
 using Modbus_net;
 
@@ -88,7 +89,7 @@ namespace ModbusControlSpace
             SlaveID = (byte)numericSlaveAddress.Value;
 
             Register = (UInt32)numericRegister.Value;
-            if ( mParent.TryConvertUniregToOffset(Register, out RegOffset))
+            if (mParent.TryGetRegOffset(Register, out RegOffset))
             {
                 // ok
             }
@@ -133,8 +134,8 @@ namespace ModbusControlSpace
                     Value = aValues[i];
                     if (radiobuttonSize32bit.Checked)
                     {
-                        // make 32-bit value of 2 16-bit registers, respect configured word order
-                        Value = mParent.ToInt32(aValues[i], aValues[i+1]);
+                        //TODO: make 32-bit value of 2 16-bit registers, respect configured word order
+                        Value = aValues[i];
                         i++;
                     }
 
@@ -142,22 +143,22 @@ namespace ModbusControlSpace
                     if( radiobuttonAsInt.Checked)
                     {
                         // signed decimal
-                        Result += ValueToStringClass.AsInt(Value, Size, 0, 0);
+                        Result += ValueToStringClass.AsInt(Value, Size, 0);
                     }
                     else if( radiobuttonAsUInt.Checked)
                     {
                         // unsigned decimal
-                        Result += ValueToStringClass.AsUInt( Value, Size, 0, 0);
+                        Result += ValueToStringClass.AsUInt( (uint)Value, Size, 0);
                     }
                     else if( radiobuttonAsHex.Checked)
                     {
                         // hexadecimal
-                        Result += ValueToStringClass.AsHex( Value, Size, 0, 0);
+                        Result += ValueToStringClass.AsHex((uint)Value, 0);
                     }
                     else if (radiobuttonAsFloat.Checked)
                     {
                         // 32-bit float
-                        Result += ValueToStringClass.AsFloat(Value, 32, 0, 0);
+                        Result += ValueToStringClass.AsFloat(Value);
                     }
                     else 
                     {
@@ -206,13 +207,13 @@ namespace ModbusControlSpace
         private void checkboxEnableMainPolling_CheckedChanged(object sender, EventArgs e)
         {
             // enable/disable main tabs polling
-            mParent.SetMainPollingEnable(checkboxEnableMainPolling.Checked);
+            mParent.MainPollingIsEnabled = checkboxEnableMainPolling.Checked;
         }
 
         private void CustomRead_Shown(object sender, EventArgs e)
         {
             // form is shown: disable polling if unchecked
-            mParent.SetMainPollingEnable(checkboxEnableMainPolling.Checked);
+            mParent.MainPollingIsEnabled = checkboxEnableMainPolling.Checked;
         }
 
     }

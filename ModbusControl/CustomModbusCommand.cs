@@ -7,9 +7,9 @@ using System.IO;
 using System.Text;
 using System.Windows.Forms;
 
+using LST.Helpers;
 using ModbusRegViewSpace;
 using Modbus_net;
-using Helper;
 
 namespace ModbusControlSpace
 {
@@ -74,7 +74,7 @@ namespace ModbusControlSpace
             {
                 // we got a valid or exception response, show it
                 textboxResult.AppendText( "Response:" + Environment.NewLine
-                                          + Helper.BytesToString.Convert(ResponseBuffer, ResponseBuffer.Length) + Environment.NewLine);
+                                          + BytesToString.Convert(ResponseBuffer, ResponseBuffer.Length) + Environment.NewLine);
             }
             else
             {
@@ -207,13 +207,13 @@ namespace ModbusControlSpace
         private void checkboxEnableMainPolling_CheckedChanged(object sender, EventArgs e)
         {
             // enable/disable main tabs polling
-            mParent.SetMainPollingEnable(checkboxEnableMainPolling.Checked);
+            mParent.MainPollingIsEnabled = checkboxEnableMainPolling.Checked;
         }
 
         private void CustomModbusCommand_Shown(object sender, EventArgs e)
         {
             // form is shown: disable polling if unchecked
-            mParent.SetMainPollingEnable(checkboxEnableMainPolling.Checked);
+            mParent.MainPollingIsEnabled = checkboxEnableMainPolling.Checked;
         }
     }
 }
