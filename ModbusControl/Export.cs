@@ -151,7 +151,7 @@ namespace ModbusControlSpace
             // export file header info
             mCsvWriter.WriteComment("Export file created by ModbusControl " + Global.VersionString + " - " + DateTime.Now.ToString());
             mCsvWriter.WriteComment("Project file: " + System.IO.Path.GetFileName(mParent.ProjectPath));
-            mCsvWriter.WriteComment("Fields: Register;Size;Description;Read/write;Format;Value");
+            mCsvWriter.WriteComment("Fields: Register;Size;Description;Read/write;Type;Value");
 
             // export registers of all tabs?
             if (mExportMode == ExportMode.AllTabs)

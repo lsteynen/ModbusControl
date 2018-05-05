@@ -11,6 +11,8 @@ using TreeGridViewSpace;
 
 using LST.Helpers;
 
+//TODO: ToInt32 zoeken, moet overal vervangen worden door correcte endian handling
+
 namespace ModbusRegViewSpace
 {
     public class ModbusRegView : TreeGridView
@@ -576,14 +578,15 @@ namespace ModbusRegViewSpace
                 }
                 // convert & check
                 Int32 NewValue;
-                bool bIsValid = StringToValueClass.Convert(OrigString, IsFloat, Width, CurrentEditDecimals, mAscii16BigEndian, out NewValue);
+                CStringToValue.eType Type;
+                bool bIsValid = CStringToValue.Convert(OrigString, IsFloat, Width, CurrentEditDecimals, out NewValue, out Type);
 
                 // if this is a bitfield: insert bitfield value in register value
                 if (bIsValid && (CurrentEditBitfieldIndex >= 0))
                 {
-                        int Position = CurrentEditReg.ListOfBitfields[CurrentEditBitfieldIndex].Position;
-                        NewValue = InsertBitfieldInValue(CurrentEditReg.Value32, NewValue, Position, Width);
-                    }
+                    int Position = CurrentEditReg.ListOfBitfields[CurrentEditBitfieldIndex].Position;
+                    NewValue = InsertBitfieldInValue(CurrentEditReg.Value32, NewValue, Position, Width);
+                }
 
                 // if value is valid: write, otherwise show error
                 if (bIsValid)
@@ -597,30 +600,9 @@ namespace ModbusRegViewSpace
                     // mark the parent register as edited
                     MarkColorAsEditedOfRegEntry(CurrentEditReg, CurrentEditBitfieldIndex);
 
-                    // create the values to write
-                    Int16[] Data = new Int16[CurrentEditReg.Size/16];
-                    // make 32-bit value, watch endian
-                    Data[0] = (Int16)NewValue;
-                    if (CurrentEditReg.Size == 32)
-                    {
-                        switch (CurrentEditReg.Format)
-                        {
-                            case ModbusControlSpace.Global.eFormat.Int:
-                            case ModbusControlSpace.Global.eFormat.UInt:
-                            case ModbusControlSpace.Global.eFormat.Hex:
-                            case ModbusControlSpace.Global.eFormat.Bin:
-                                Int32ToRegs(NewValue, Int32BigEndian, out Data[0], out Data[1]);
-                                break;
-                            case ModbusControlSpace.Global.eFormat.Float:
-                                Int32ToRegs(NewValue, Float32BigEndian, out Data[0], out Data[1]);
-                                break;
-                            case ModbusControlSpace.Global.eFormat.ASCII:
-                                // always lower register first
-                                Int32ToRegs(NewValue, false, out Data[0], out Data[1]);
-                                break;
-                        }
-                    }
-            
+                    // create the modbus values to write
+                    Int16[] Data = CStringToValue.ConvertValueToModbus(NewValue, Type, CurrentEditReg.Size);
+
                     // call write handler
                     if (OnRegisterWrite != null)
                     {
@@ -776,12 +758,12 @@ namespace ModbusRegViewSpace
         }
 
         /// <summary>
-        /// Convert value to string, with a given Format
+        /// Convert value to string, with a given Type
         /// Value can be less than 32 bits, given by Size. Use sign-extend if needed
         /// </summary>
         /// <param name="Value">Value to convert</param>
         /// <param name="Size">Width of value in bits</param>
-        /// <param name="Format">Int, Uint, Hex, ...</param>
+        /// <param name="Type">Int, Uint, Hex, ...</param>
         /// <param name="Decimals">number of decimals, for Int/UInt only</param>
         /// <param name="MinLen">minimum number of digits</param>
         /// <returns></returns>
@@ -832,7 +814,7 @@ namespace ModbusRegViewSpace
 	                break;
                 default:
                     // invalid
-                    throw new ArgumentException("Invalid format enum!", "Format");
+                    throw new ArgumentException("Invalid format enum!", "Type");
                     //break;
             }
 
@@ -1335,29 +1317,6 @@ namespace ModbusRegViewSpace
                 return ((((Int32)Value0) << 16) | (UInt16)Value1);
             else
                 return ((((Int32)Value1) << 16) | (UInt16)Value0);
-        }
-
-        /*
-        private float ToFloat32(Int32 RawValue)
-        {
-            // convert the bytes of the UInt32 into a float
-            byte[] aTmpBytes = BitConverter.GetBytes(RawValue);
-            return BitConverter.ToSingle(aTmpBytes, 0);
-        }
-         * */
-
-        public void Int32ToRegs(Int32 Value, bool BigEndian, out Int16 Reg0, out Int16 Reg1)
-        {
-            if (BigEndian)
-            {
-                Reg0 = (Int16)(Value >> 16);
-                Reg1 = (Int16)Value;
-            }
-            else
-            {
-                Reg0 = (Int16)Value;
-                Reg1 = (Int16)(Value>>16);
-            }
         }
 
         private void OnBeepEvent()

@@ -139,7 +139,8 @@ namespace ModbusControlSpace
                 for (int i = 0; i < DataCount; ++i)
                 {
                     Int32 Value;
-                    bool bIsValid = StringToValueClass.Convert(aDataStr[i].Trim(), false, 32, 0, false, out Value);
+                    CStringToValue.eType Type;
+                    bool bIsValid = CStringToValue.Convert(aDataStr[i].Trim(), false, 32, 0, out Value, out Type);
                     //TODO: endian
                     if (bIsValid)
                     {
@@ -161,7 +162,8 @@ namespace ModbusControlSpace
                 for (int i = 0; i < DataCount; ++i)
                 {
                     Int32 Value;
-                    bool bIsValid = StringToValueClass.Convert(aDataStr[i].Trim(), false, 16, 0, false, out Value);
+                    CStringToValue.eType Type;
+                    bool bIsValid = CStringToValue.Convert(aDataStr[i].Trim(), false, 16, 0, out Value, out Type);
                     if (bIsValid)
                     {
                         a16bitValues[i] = (short)Value;

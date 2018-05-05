@@ -16,12 +16,12 @@ namespace LST.Helpers
     public static class ValueToStringClass
     {
         /// <summary>
-        /// Convert value to string, with a given Format
+        /// Convert value to string, with a given Type
         /// Value can be less than 32 bits, given by Size. Use sign-extend if needed
         /// </summary>
         /// <param name="Value">Value to convert</param>
         /// <param name="Size">Width of value in bits</param>
-        /// <param name="Format">Int, Uint, Hex, ...</param>
+        /// <param name="Type">Int, Uint, Hex, ...</param>
         /// <param name="Decimals">number of decimals, for Int/UInt only</param>
         /// <param name="MinLen">minimum number of digits</param>
         /// <returns></returns>
@@ -72,7 +72,7 @@ namespace LST.Helpers
 	                break;
                 default:
                     // invalid
-                    throw new ArgumentException("Invalid format enum!", "Format");
+                    throw new ArgumentException("Invalid format enum!", "Type");
                     //break;
             }
 

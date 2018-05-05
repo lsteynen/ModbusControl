@@ -603,6 +603,11 @@ namespace ModbusControlSpace
                 Project.ModbusTcpBridge.Enable = configform.ModbusTcpBridgeEnable;
                 Project.ModbusTcpBridge.IPPort = configform.ModbusTcpBridgeIPPort;
 
+                // pass new configuration to CStringToValue
+                CStringToValue.Int32BigEndian = Project.Connection.Int32Endian == Global.eEndian.Big;
+                CStringToValue.Float32BigEndian = Project.Connection.Float32Endian == Global.eEndian.Big;
+                CStringToValue.Ascii16BigEndian = Project.Connection.Ascii16Endian == Global.eEndian.Big;
+
                 // restore connection
                 if (ReopenConnection)
                 {
@@ -812,18 +817,23 @@ namespace ModbusControlSpace
             // Here if load was successful
             ProjectIsOpen = true;
 
-            // Add to MRU list
-            recentFilesMenuItem.AddRecentItem(path);
-
-            // Set the form size
-            this.Width = Project.FormSize.Width;
-            this.Height = Project.FormSize.Height;
+            // pass configuration to CStringToValue
+            CStringToValue.Int32BigEndian = Project.Connection.Int32Endian == Global.eEndian.Big;
+            CStringToValue.Float32BigEndian = Project.Connection.Float32Endian == Global.eEndian.Big;
+            CStringToValue.Ascii16BigEndian = Project.Connection.Ascii16Endian == Global.eEndian.Big;
 
             // Create the tab pages
             LoadProjectInTabs();
 
             // update the modbus/tcp server settings
             UpdateModbusTcpBridge();
+
+            // Set the form size
+            this.Width = Project.FormSize.Width;
+            this.Height = Project.FormSize.Height;
+
+            // Add to MRU list
+            recentFilesMenuItem.AddRecentItem(path);
 
             return true;
         }

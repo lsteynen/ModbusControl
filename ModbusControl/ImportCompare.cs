@@ -504,7 +504,7 @@ namespace ModbusControlSpace
                 }
                 else if (fields.Count == 6)
                 {
-                    // Assume: Reg;Size;Description;Rw;Format;Value
+                    // Assume: Reg;Size;Description;Rw;Type;Value
                     RegString = fields[0];
                     SizeString = fields[1];
                     DescriptionString = fields[2];
@@ -555,7 +555,7 @@ namespace ModbusControlSpace
                 }
                 if( GetFormat(FormatString, out imp.Format) == false)
                 {
-                    textboxLog.AppendText("ERROR: line " + csvreader.LineNumber + ": Format field is invalid!" + Environment.NewLine);
+                    textboxLog.AppendText("ERROR: line " + csvreader.LineNumber + ": Type field is invalid!" + Environment.NewLine);
                     textboxLog.AppendText(csvreader.CurrentLine + Environment.NewLine);
                     bValid = false;
                     continue;
@@ -569,7 +569,8 @@ namespace ModbusControlSpace
                     continue;
                 }
                 imp.ValueString = ValueString;
-                if( StringToValueClass.Convert(ValueString, bIsFloat, imp.Size, 0, false, out imp.Value) == false)
+                CStringToValue.eType Type;
+                if (CStringToValue.Convert(ValueString, bIsFloat, imp.Size, 0, out imp.Value, out Type) == false)
                 {
                     textboxLog.AppendText("ERROR: line " + csvreader.LineNumber + ": Value field is invalid!" + Environment.NewLine);
                     textboxLog.AppendText(csvreader.CurrentLine + Environment.NewLine);
