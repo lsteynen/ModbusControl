@@ -170,6 +170,7 @@
       <DependentUpon>Logger.cs</DependentUpon>
     </Compile>
     <Compile Include="Modbusdecode.cs" />
+    <Compile Include="ModbusEndians.cs" />
     <Compile Include="modbusinterface.cs" />
     <Compile Include="ModbusRegView.cs">
       <SubType>Component</SubType>

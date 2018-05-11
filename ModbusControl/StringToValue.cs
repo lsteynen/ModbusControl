@@ -19,12 +19,6 @@ namespace LST.Helpers
         //      of in een unsigned 4-bit bitveld kan je 4294967295 schrijven, geeft 15
         //TODO: wat gebeurt er in TryEscapedStringToByteArray() met ANSI characters? bvb duitse? ValueToString doet ook alleen ascii. Current ANSI page doen???
 
-        public enum eType { Int, Float, ASCII};
-
-        public static bool Int32BigEndian;
-        public static bool Float32BigEndian;
-        public static bool Ascii16BigEndian;
-
         // convert string to Int32
         //TODO: allow -32768 .. +65535 into a 16-bit field, because it fits
         //TODO: allow -128 .. +255 into an 8-bit field, because it fits
@@ -32,7 +26,7 @@ namespace LST.Helpers
         //TODO: store temporary result in Int64 to distinguish between 4294967293 and -3 being parsed
         // converts ascii formats with first character in low byte
 
-        public static bool Convert(string str, bool IsFloat, int Width, int Decimals, out Int32 Result, out eType Type)
+        public static bool Convert(string str, bool IsFloat, int Width, int Decimals, out Int32 Result, out Endians.eType Type)
         {
             bool IsValid = false;
             Int64 numInt64 = 0;
@@ -40,7 +34,7 @@ namespace LST.Helpers
 
             // never return something undefined
             Result = 0;
-            Type = eType.Int;
+            Type = Endians.eType.Int;
 
             // is it a hex number?
             if (str.StartsWith("0x", StringComparison.OrdinalIgnoreCase))
@@ -54,7 +48,7 @@ namespace LST.Helpers
                 {
                     IsValid = FitsWidth(numUInt32, Width);
                     Result = (Int32)numUInt32;
-                    Type = eType.Int;
+                    Type = Endians.eType.Int;
                 }
             }
             // is it a binary number?
@@ -69,7 +63,7 @@ namespace LST.Helpers
                 {
                     IsValid = FitsWidth(numUInt32, Width);
                     Result = (Int32)numUInt32;
-                    Type = eType.Int;
+                    Type = Endians.eType.Int;
                 }
             }
             // is it an ASCII string? 
@@ -91,7 +85,7 @@ namespace LST.Helpers
                     // convert bytes to UInt32
                     numUInt32 = BitConverter.ToUInt32(aBytes, 0);
                     Result = (Int32)numUInt32;
-                    Type = eType.ASCII;
+                    Type = Endians.eType.ASCII;
                 }
             }
             // is it a float? 
@@ -104,7 +98,7 @@ namespace LST.Helpers
                 {
                     byte[] aTmpBytes = BitConverter.GetBytes(fValue);
                     Result = BitConverter.ToInt32(aTmpBytes, 0);
-                    Type = eType.Float;
+                    Type = Endians.eType.Float;
                 }
             }
             // it is an int or uint 
@@ -134,7 +128,7 @@ namespace LST.Helpers
                     IsValid = FitsWidth(numInt64, Width);
                     Result = (Int32)numInt64;
                 }
-                Type = eType.Int;
+                Type = Endians.eType.Int;
             }
 
             return IsValid;
@@ -331,89 +325,6 @@ namespace LST.Helpers
                 Int64 Min = -(Max/2) - 1;
                 return ((Value >= Min) && (Value <= Max));
             }
-        }
-
-        //TODO
-
-        /// <summary>
-        /// Converteer binaire value (of float of ascii) naar 1 of 2 16-bit modbus registers
-        /// </summary>
-        public static Int16[] ConvertValueToModbus(Int32 Value, CStringToValue.eType Type, int Size)
-        {
-            // Int: size 16: return 1 short
-            //      size 32: return 2 shorts, afh van Int32BigEndian
-            // Float: moet size 32 zijn, return 2 shorts, afh van Float32BigEndian
-            // ASCII: endian is op byte level
-
-            Int16[] result = new Int16[(Size + 15) / 16];
-
-            switch (Type)
-            {
-                case CStringToValue.eType.Int:
-                    if (result.Length >= 2)
-                    {
-                        if (Int32BigEndian)
-                        {
-                            result[0] = (Int16)(Value >> 16);
-                            result[1] = (Int16)Value;
-                        }
-                        else
-                        {
-                            result[0] = (Int16)Value;
-                            result[1] = (Int16)(Value >> 16);
-                        }
-                    }
-                    else
-                    {
-                        result[0] = (Int16)Value;
-                    }
-                    break;
-                case CStringToValue.eType.Float:
-                    if (result.Length == 2)
-                    {
-                        if (Float32BigEndian)
-                        {
-                            result[0] = (Int16)(Value >> 16);
-                            result[1] = (Int16)Value;
-                        }
-                        else
-                        {
-                            result[0] = (Int16)Value;
-                            result[1] = (Int16)(Value >> 16);
-                        }
-                    }
-                    else
-                    {
-                        throw new ArgumentException();
-                    }
-                    break;
-                case CStringToValue.eType.ASCII:
-                    // Ascii16Endian: determines byte order in a 16-bit word
-                    // value holds the string with first char in low byte
-                    //         big_endian  little_endian
-                    // "A":    4100        0041
-                    // "AB":   4142        4241
-                    // "ABC":  4142 4300   4241 0043
-                    // "ABCD": 4142 4344   4241 4443
-                    for (int i = 0; i < result.Length; ++i)
-                    {
-                        if (Ascii16BigEndian)
-                        {
-                            result[i] = (Int16)(((Value >> 8) & 0xFF) | ((Value << 8) & 0xFF00));
-                        }
-                        else
-                        {
-                            result[i] = (Int16)Value;
-                        }
-                        Value >>= 16;
-                    }
-                    break;
-
-                default:
-                    throw new ArgumentException();
-            }
-
-            return result;
         }
 
     }

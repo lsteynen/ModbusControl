@@ -604,9 +604,9 @@ namespace ModbusControlSpace
                 Project.ModbusTcpBridge.IPPort = configform.ModbusTcpBridgeIPPort;
 
                 // pass new configuration to CStringToValue
-                CStringToValue.Int32BigEndian = Project.Connection.Int32Endian == Global.eEndian.Big;
-                CStringToValue.Float32BigEndian = Project.Connection.Float32Endian == Global.eEndian.Big;
-                CStringToValue.Ascii16BigEndian = Project.Connection.Ascii16Endian == Global.eEndian.Big;
+                Endians.Int32BigEndian = Project.Connection.Int32Endian == Global.eEndian.Big;
+                Endians.Float32BigEndian = Project.Connection.Float32Endian == Global.eEndian.Big;
+                Endians.Ascii16BigEndian = Project.Connection.Ascii16Endian == Global.eEndian.Big;
 
                 // restore connection
                 if (ReopenConnection)
@@ -818,9 +818,9 @@ namespace ModbusControlSpace
             ProjectIsOpen = true;
 
             // pass configuration to CStringToValue
-            CStringToValue.Int32BigEndian = Project.Connection.Int32Endian == Global.eEndian.Big;
-            CStringToValue.Float32BigEndian = Project.Connection.Float32Endian == Global.eEndian.Big;
-            CStringToValue.Ascii16BigEndian = Project.Connection.Ascii16Endian == Global.eEndian.Big;
+            Endians.Int32BigEndian = Project.Connection.Int32Endian == Global.eEndian.Big;
+            Endians.Float32BigEndian = Project.Connection.Float32Endian == Global.eEndian.Big;
+            Endians.Ascii16BigEndian = Project.Connection.Ascii16Endian == Global.eEndian.Big;
 
             // Create the tab pages
             LoadProjectInTabs();

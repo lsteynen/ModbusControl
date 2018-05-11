@@ -19,9 +19,9 @@ namespace ModbusRegViewSpace
     {
         public static bool mIsReadOnly = false;
         private bool mShowInfo = false;
-        private bool mInt32BigEndian = false;
+        private bool mInt32BigEndian = false; /* TODO: verwijderen? */
         private bool mFloat32BigEndian = false;
-        private bool mAscii16BigEndian = false;  // compatible with ModbusControl v1
+        private bool mAscii16BigEndian = false;
 
         // properties
 
@@ -94,8 +94,7 @@ namespace ModbusRegViewSpace
             public Color ForeColor;     // the foreground/font color
             public Color BackColor;     // the background color
             public TreeGridNode node;   // TreeGridView node tree
-            public Int16 RawReg0;       // raw value, first 16-bit reg
-            public Int16 RawReg1;       // raw value, first 16-bit reg
+            public Int16[] RawReg;      // raw 16-bit register values
             public Int32 Value32;       // actual value in 32-bit
             public string ValueStr;     // value as a string
 
@@ -112,8 +111,7 @@ namespace ModbusRegViewSpace
                 Writeable = false;
                 ListOfBitfields = null;
                 node = null;
-                RawReg0 = 0;
-                RawReg1 = 0;
+                RawReg = new Int16[2];
                 Value32 = 0;
                 ValueStr = String.Empty;
             }
@@ -358,27 +356,6 @@ namespace ModbusRegViewSpace
 
         public void SetRegValue(RegEntry r)
         {
-            // make 32-bit value, watch endian
-            r.Value32 = r.RawReg0;
-            if (r.Size == 32)
-            {
-                switch( r.Format)
-                {
-                    case ModbusControlSpace.Global.eFormat.Int:
-                    case ModbusControlSpace.Global.eFormat.UInt:
-                    case ModbusControlSpace.Global.eFormat.Hex:
-                    case ModbusControlSpace.Global.eFormat.Bin:
-                        r.Value32 = ToInt32(r.RawReg0, r.RawReg1, Int32BigEndian);
-                        break;
-                    case ModbusControlSpace.Global.eFormat.Float:
-                        r.Value32 = ToInt32(r.RawReg0, r.RawReg1, Float32BigEndian);
-                        break;
-                    case ModbusControlSpace.Global.eFormat.ASCII:
-                        r.Value32 = ToInt32(r.RawReg0, r.RawReg1, false);
-                        break;
-                }
-            }
-            
             // update the value shown in the grid
             r.ValueStr = ValueToString(r.Value32, r.Size, r.Format, r.Decimals, r.MinLen);
             r.node.Cells[2].Value = r.ValueStr;
@@ -400,6 +377,33 @@ namespace ModbusRegViewSpace
             }
         }
 
+        // convert format to type
+        private Endians.eType ConvertFormatToType(ModbusControlSpace.Global.eFormat Format)
+        {
+            Endians.eType Type = Endians.eType.Int;
+
+            switch (Format)
+            {
+                case ModbusControlSpace.Global.eFormat.Int:
+                case ModbusControlSpace.Global.eFormat.UInt:
+                case ModbusControlSpace.Global.eFormat.Hex:
+                case ModbusControlSpace.Global.eFormat.Bin:
+                    Type = Endians.eType.Int;
+                    break;
+                case ModbusControlSpace.Global.eFormat.Float:
+                    Type = Endians.eType.Float;
+                    break;
+                case ModbusControlSpace.Global.eFormat.ASCII:
+                    Type = Endians.eType.ASCII;
+                    break;
+                default:
+                    // invalid
+                    throw new ArgumentException("Invalid format enum!");
+            }
+
+            return Type;
+        }
+        
         internal void MarkColorAsEditedOfRegEntry(RegEntry r, int BitfieldIndex)
         {
             // mark the parent register as edited
@@ -578,7 +582,7 @@ namespace ModbusRegViewSpace
                 }
                 // convert & check
                 Int32 NewValue;
-                CStringToValue.eType Type;
+                Endians.eType Type;
                 bool bIsValid = CStringToValue.Convert(OrigString, IsFloat, Width, CurrentEditDecimals, out NewValue, out Type);
 
                 // if this is a bitfield: insert bitfield value in register value
@@ -601,7 +605,7 @@ namespace ModbusRegViewSpace
                     MarkColorAsEditedOfRegEntry(CurrentEditReg, CurrentEditBitfieldIndex);
 
                     // create the modbus values to write
-                    Int16[] Data = CStringToValue.ConvertValueToModbus(NewValue, Type, CurrentEditReg.Size);
+                    Int16[] Data = Endians.ConvertValueToShorts(NewValue, Type, CurrentEditReg.Size);
 
                     // call write handler
                     if (OnRegisterWrite != null)
@@ -810,7 +814,7 @@ namespace ModbusRegViewSpace
                     Result = ValueToStringClass.AsFloat(Value);
                     break;
                 case ModbusControlSpace.Global.eFormat.ASCII:
-                    Result = ValueToStringClass.AsASCII((UInt32)Value, Size, mAscii16BigEndian);
+                    Result = ValueToStringClass.AsASCII((UInt32)Value, Size);
 	                break;
                 default:
                     // invalid
@@ -1132,12 +1136,19 @@ namespace ModbusRegViewSpace
                     RegEntry r = ListOfReg[i];
 
                     // first 16-bit
-                    r.RawReg0 = data[DataIndex++];
+                    r.RawReg[0] = data[DataIndex++];
+                    r.RawReg[1] = 0;
                     // is it 32-bit?
                     if (r.Size == 32)
                     {
-                        r.RawReg1 = data[DataIndex++];
+                        r.RawReg[1] = data[DataIndex++];
                     }
+
+                    // convert format to type
+                    Endians.eType Type = ConvertFormatToType(r.Format);
+
+                    // make 32-bit value, watch endian
+                    r.Value32 = Endians.ConvertShortsToValue(r.RawReg, Type, r.Size);
 
                     SetRegValue(r);
                 }
@@ -1310,14 +1321,6 @@ namespace ModbusRegViewSpace
             this.ResumeLayout();
         }
 
-
-        public Int32 ToInt32(Int16 Value0, Int16 Value1, bool BigEndian)
-        {
-            if (BigEndian)
-                return ((((Int32)Value0) << 16) | (UInt16)Value1);
-            else
-                return ((((Int32)Value1) << 16) | (UInt16)Value0);
-        }
 
         private void OnBeepEvent()
         {

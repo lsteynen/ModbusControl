@@ -139,7 +139,7 @@ namespace ModbusControlSpace
                 for (int i = 0; i < DataCount; ++i)
                 {
                     Int32 Value;
-                    CStringToValue.eType Type;
+                    Endians.eType Type;
                     bool bIsValid = CStringToValue.Convert(aDataStr[i].Trim(), false, 32, 0, out Value, out Type);
                     //TODO: endian
                     if (bIsValid)
@@ -162,7 +162,7 @@ namespace ModbusControlSpace
                 for (int i = 0; i < DataCount; ++i)
                 {
                     Int32 Value;
-                    CStringToValue.eType Type;
+                    Endians.eType Type;
                     bool bIsValid = CStringToValue.Convert(aDataStr[i].Trim(), false, 16, 0, out Value, out Type);
                     if (bIsValid)
                     {

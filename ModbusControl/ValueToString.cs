@@ -68,7 +68,7 @@ namespace LST.Helpers
                     Result = ValueToStringClass.AsFloat(Value);
                     break;
                 case ModbusControlSpace.Global.eFormat.ASCII:
-                    Result = ValueToStringClass.AsASCII((UInt32)Value, Size, Ascii16BigEndian);
+                    Result = ValueToStringClass.AsASCII((UInt32)Value, Size);
 	                break;
                 default:
                     // invalid
@@ -182,7 +182,7 @@ namespace LST.Helpers
             return TmpFloat.ToString();
         }
             
-        public static string AsASCII(UInt32 Value, int Size, bool bHighByteFirst)
+        public static string AsASCII(UInt32 Value, int Size)
         {
             // ASCII
 
@@ -202,7 +202,7 @@ namespace LST.Helpers
             string Result;
 
             // split value into bytes
-            byte[] aBytes = SplitValueIntoBytes(Value, Size, bHighByteFirst);
+            byte[] aBytes = SplitValueIntoBytes(Value, Size);
 
             Result = "\"";
             for (int i = 0; i < aBytes.Length; ++i)
@@ -227,26 +227,24 @@ namespace LST.Helpers
         }
 
         // Split value into bytes, from lower bits to upper bits 
-        // if bHighByteFirst=false: we do first character in lower bits
-        // if bHighByteFirst=true: first character in upper bits
         // Size in bits
-        private static byte[] SplitValueIntoBytes(UInt32 Value, int Size, bool bHighByteFirst)
+        //TODO: inlinen?
+        private static byte[] SplitValueIntoBytes(UInt32 Value, int Size)
         {
-            //TODO: configurable endian?
-            //          bHighByteFirst=false    bHighByteFirst=true     
-            // xxxxxxx1         1---                   1
-            // xxxxxx41         A---                   A
-            // xxxxx241         A2--                   2A
-            // xxxx4241         AB--                   BA
-            // xxx34241         AB3-                   BA3
-            // xx434241         ABC-                   BAC
-            // x5434241         ABC5                   BA5C
-            // 45434241         ABCE                   BAEC
+            //          bHighByteFirst=false         
+            // xxxxxxx1         1---            
+            // xxxxxx41         A---            
+            // xxxxx241         A2--            
+            // xxxx4241         AB--            
+            // xxx34241         AB3-            
+            // xx434241         ABC-            
+            // x5434241         ABC5            
+            // 45434241         ABCE            
 
-            // 1 byte:  41              or 41
-            // 2 bytes: 41 42           or 42 41
-            // 3 bytes: 41 42 43        or 42 41 43
-            // 4 bytes: 41 42 43 44     or 42 41 44 43
+            // 1 byte:  41          
+            // 2 bytes: 41 42       
+            // 3 bytes: 41 42 43    
+            // 4 bytes: 41 42 43 44 
 
             int NrOfBytes = (Size + 7) / 8;
             byte[] aBytes = new byte[NrOfBytes];
@@ -259,17 +257,6 @@ namespace LST.Helpers
                 aBytes[index++] = (byte)UValue;
                 UValue >>= 8;
                 Size -= 8;
-            }
-
-            // if high byte first: swap bytes
-            if (bHighByteFirst)
-            {
-                for( int i=0; (i+1) < NrOfBytes; i += 2)
-                {
-                    byte b = aBytes[i];
-                    aBytes[i] = aBytes[i+1];
-                    aBytes[i+1] = b;
-                }
             }
 
             return aBytes;
@@ -320,5 +307,6 @@ namespace LST.Helpers
 
             return result;
         }
+
     }
 }
