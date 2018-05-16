@@ -12,8 +12,6 @@ using System.Resources;
 using System.Text;
 
 
-//TODO: CValueToString en CStringToValue in 1 class?
-
 namespace LST.Helpers
 {
     public static class CValueToString
@@ -117,6 +115,10 @@ namespace LST.Helpers
             return Value;
         }
 
+        /// <summary>
+        /// Convert 32-bit binary value unsigned int representation string
+        /// Supports minimum number of decimals
+        /// </summary>
         public static string AsInt(Int32 Value, int Decimals, int MinLen)
         {
             // signed decimal
@@ -141,6 +143,10 @@ namespace LST.Helpers
             return Result;
         }
 
+        /// <summary>
+        /// Convert 32-bit binary value unsigned int representation string
+        /// Supports minimum number of decimals
+        /// </summary>
         public static string AsUInt(UInt32 Value, int Decimals, int MinLen)
         {
             // unsigned decimal
@@ -163,7 +169,10 @@ namespace LST.Helpers
 
             return Result;
         }
-                    
+
+        /// <summary>
+        /// Convert 32-bit binary value hex representation string
+        /// </summary>
         public static string AsHex(UInt32 Value, int MinLen)
         {
             // hexadecimal
@@ -172,12 +181,18 @@ namespace LST.Helpers
             return "0x" + Value.ToString(Formatter);
         }
 
+        /// <summary>
+        /// Convert 32-bit binary value binary representation string
+        /// </summary>
         public static string AsBin(UInt32 Value, int MinLen)
         {
             // binary
             return "0b" + IntToBinaryString(Value, 4, MinLen);
         }
 
+        /// <summary>
+        /// Convert 32-bit float value to string
+        /// </summary>
         public static string AsFloat(Int32 Value)
         {
             // float32
@@ -187,6 +202,10 @@ namespace LST.Helpers
             return TmpFloat.ToString();
         }
             
+        /// <summary>
+        /// Convert binary value to ASCII characters
+        /// Low byte is first character if Ascii16BigEndian==false, or second character if Ascii16BigEndian==true
+        /// </summary>
         public static string AsASCII(UInt32 Value, int Size)
         {
             // ASCII
@@ -244,9 +263,10 @@ namespace LST.Helpers
             return Result;
         }
 
-        // Split value into bytes, from lower bits to upper bits 
-        // Size in bits
-        //TODO: inlinen?
+        /// <summary>
+        /// Split value into bytes, from lower bits to upper bits  
+        /// </summary>
+        /// <param name="Size">Size in bits</param>
         private static byte[] SplitValueIntoBytes(UInt32 Value, int Size)
         {
             //          bHighByteFirst=false         
@@ -280,6 +300,9 @@ namespace LST.Helpers
             return aBytes;
         }
 
+        /// <summary>
+        /// Get value of a part of a binary value
+        /// </summary>
         private static UInt32 GetUnsignedIntValue(Int32 Value, int Size)
         {
             UInt32 ret;
@@ -292,6 +315,9 @@ namespace LST.Helpers
             return ret;
         }
 
+        /// <summary>
+        /// Convert binary value to double, with decimals
+        /// </summary>
         private static double GetDoubleValue(UInt32 Value, int Size, int Decimals)
         {
             Value = ((UInt32)Value) << (32 - Size);
@@ -304,7 +330,12 @@ namespace LST.Helpers
             return (dValue);
         }
 
-        private static string IntToBinaryString(UInt32 n, int grouplen, int Minlen)
+        /// <summary>
+        /// Convert binary value to binary representation in string
+        /// Supports grouping digits with Grouplen, insert '.'
+        /// Supports Minlen to output minimal number of digits
+        /// </summary>
+        private static string IntToBinaryString(UInt32 n, int Grouplen, int Minlen)
         {
             string result = "";
             int grouplencount = 0;
@@ -312,7 +343,7 @@ namespace LST.Helpers
 
             do
             {
-                if (grouplencount >= grouplen)
+                if ((Grouplen > 0) && (grouplencount >= Grouplen))
                 {
                     result = '.' + result;
                     grouplencount = 0;
@@ -326,17 +357,23 @@ namespace LST.Helpers
             return result;
         }
 
-        //TODO: bug in Modbuscontrol v1: in een signed 8bit bitveld in een 32bit register kan je 4294967293 schrijven (is ook -3)
-        //      of in een unsigned 4-bit bitveld kan je 4294967295 schrijven, geeft 15
         //TODO: wat gebeurt er in TryEscapedStringToByteArray() met ANSI characters? bvb duitse? ValueToString doet ook alleen ascii. Current ANSI page doen???
 
         // convert string to Int32
-        //TODO: allow -32768 .. +65535 into a 16-bit field, because it fits
-        //TODO: allow -128 .. +255 into an 8-bit field, because it fits
-        //TODO: allow 0 and 1 into an 1-bit field
-        //TODO: store temporary result in Int64 to distinguish between 4294967293 and -3 being parsed
-        // converts ascii formats with first character in low byte
 
+        /// <summary>
+        /// Convert a string to a binary value, returned as Int32
+        /// Accepts Int, UInt, 0x hex, 0b binary, quoted ASCII string and float formats
+        /// Accepts Int and UInt with decimals, is IsFloat==false and Decimals >= 1
+        /// Accept -32768 .. +65535 into a 16-bit field, because it fits
+        /// Accept -128 .. +255 into an 8-bit field, because it fits
+        /// Accept 0 and 1 into an 1-bit field
+        /// Do not accept 4294967293 in a 8-bit field (was accepted in Modbuscontrol v1 because it is also -3)
+        /// Store temporary result in Int64 to distinguish between 4294967293 and -3 being parsed
+        /// Stores ASCII formats with first character in low byte
+        /// Checks if value fits in Width bits
+        /// Returns Endians.eType Type to show what type/format whas input
+        /// </summary>
         public static bool StringToValue(string str, bool IsFloat, int Width, int Decimals, out Int32 Result, out Endians.eType Type)
         {
             bool IsValid = false;
@@ -461,6 +498,10 @@ namespace LST.Helpers
             return IsValid;
         }
 
+        /// <summary>
+        /// Convert string with 0/1 to binary value
+        /// Allows '.' and ' ' digit separators
+        /// </summary>
         private static bool BinaryStringToUInt32(string binstr, out UInt32 Value)
         {
             bool bRetvalue = false;
@@ -493,6 +534,9 @@ namespace LST.Helpers
             return bRetvalue;
         }
 
+        /// <summary>
+        /// String to float
+        /// </summary>
         private static bool TryParseFloat(string s, out float result)
         {
             // try to parse the float with the current culture settings
@@ -507,6 +551,9 @@ namespace LST.Helpers
             return bIsValid;
         }
 
+        /// <summary>
+        /// String to double
+        /// </summary>
         private static bool TryParseDouble(string s, out double result)
         {
             // try to parse the float with the current culture settings
@@ -521,6 +568,11 @@ namespace LST.Helpers
             return bIsValid;
         }
 
+        /// <summary>
+        /// ASCII String to byte array
+        /// Accepts quoted string
+        /// Accepts escape sequence \xHH where H is hex digit
+        /// </summary>
         private static bool TryEscapedStringToByteArray(string s, out byte[] aResult)
         {
             int Index = 0;
@@ -597,6 +649,10 @@ namespace LST.Helpers
             return true;
         }
 
+        /// <summary>
+        /// Get ASCII value of a hex digit
+        /// Returns 0 for invalid digits
+        /// </summary>
         private static int GetValueOfHexDigit(char c)
         {
             if ((c >= '0') && (c <= '9'))
@@ -615,6 +671,9 @@ namespace LST.Helpers
             return 0;
         }
 
+        /// <summary>
+        /// Convert double to 64-bit int
+        /// </summary>
         private static bool TryDoubleToInt64(double Value, out Int64 Result)
         {
             bool IsValid = false;
@@ -634,11 +693,11 @@ namespace LST.Helpers
         }
 
         /// <summary>
-        /// Check if a value fits in Width bits, range Signed.Min .. Unsigned.Max
-        /// Value of width==1 must be 0 or 1.
+        /// Check if a value fits in Width bits, range is Signed.Min .. Unsigned.Max
+        /// If Width==1: must return 0 or 1
         /// </summary>
         /// <param name="Value">The value</param>
-        /// <param name="Width">Width in bits [1-32]</param>
+        /// <param name="Width">Width in bits, 1 .. 32</param>
         /// <returns></returns>
         private static bool FitsWidth(Int64 Value, int Width)
         {
