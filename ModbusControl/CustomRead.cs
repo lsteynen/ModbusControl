@@ -143,22 +143,22 @@ namespace ModbusControlSpace
                     if( radiobuttonAsInt.Checked)
                     {
                         // signed decimal
-                        Result += ValueToStringClass.AsInt(Value, Size, 0);
+                        Result += CValueToString.AsInt(Value, Size, 0);
                     }
                     else if( radiobuttonAsUInt.Checked)
                     {
                         // unsigned decimal
-                        Result += ValueToStringClass.AsUInt( (uint)Value, Size, 0);
+                        Result += CValueToString.AsUInt( (uint)Value, Size, 0);
                     }
                     else if( radiobuttonAsHex.Checked)
                     {
                         // hexadecimal
-                        Result += ValueToStringClass.AsHex((uint)Value, 0);
+                        Result += CValueToString.AsHex((uint)Value, 0);
                     }
                     else if (radiobuttonAsFloat.Checked)
                     {
                         // 32-bit float
-                        Result += ValueToStringClass.AsFloat(Value);
+                        Result += CValueToString.AsFloat(Value);
                     }
                     else 
                     {

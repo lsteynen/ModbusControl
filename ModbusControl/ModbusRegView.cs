@@ -788,22 +788,22 @@ namespace ModbusRegViewSpace
                 case ModbusControlSpace.Global.eFormat.Int:
                     // signed decimal
                     Value = ConvertSignedValueTo32bit(Value, Size);
-                    Result = ValueToStringClass.AsInt(Value, Decimals, MinLen);
+                    Result = CValueToString.AsInt(Value, Decimals, MinLen);
                     break;
                 case ModbusControlSpace.Global.eFormat.UInt:
                     // unsigned decimal
                     UValue = ConvertUnsignedValueTo32bit((UInt32)Value, Size);
-                    Result = ValueToStringClass.AsUInt(UValue, Decimals, MinLen);
+                    Result = CValueToString.AsUInt(UValue, Decimals, MinLen);
                     break;
                 case ModbusControlSpace.Global.eFormat.Hex:
                     // hexadecimal
                     UValue = ConvertUnsignedValueTo32bit((UInt32)Value, Size);
-                    Result = ValueToStringClass.AsHex(UValue, MinLen);
+                    Result = CValueToString.AsHex(UValue, MinLen);
                     break;
                 case ModbusControlSpace.Global.eFormat.Bin:
                     // binary
                     UValue = ConvertUnsignedValueTo32bit((UInt32)Value, Size);
-                    Result = ValueToStringClass.AsBin(UValue, MinLen);
+                    Result = CValueToString.AsBin(UValue, MinLen);
                     break;
                 case ModbusControlSpace.Global.eFormat.Float:
                     // float32
@@ -811,10 +811,10 @@ namespace ModbusRegViewSpace
                     {
                         throw new ArgumentException("Invalid size!", "Size");
                     }
-                    Result = ValueToStringClass.AsFloat(Value);
+                    Result = CValueToString.AsFloat(Value);
                     break;
                 case ModbusControlSpace.Global.eFormat.ASCII:
-                    Result = ValueToStringClass.AsASCII((UInt32)Value, Size);
+                    Result = CValueToString.AsASCII((UInt32)Value, Size);
 	                break;
                 default:
                     // invalid

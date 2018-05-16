@@ -414,7 +414,7 @@ namespace ModbusControlSpace
 
             // decimals are not used in export
             // minlen is not used in export
-            return ValueToStringClass.ValueToString( Value, Size, Format, 0, 0, false);
+            return CValueToString.ValueToString( Value, Size, Format, 0, 0);
         }
 
         private string LimitStringLength(string s, int MaxLength)

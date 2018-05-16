@@ -11,10 +11,15 @@ using System.Globalization;
 using System.Resources;
 using System.Text;
 
+
+//TODO: CValueToString en CStringToValue in 1 class?
+
 namespace LST.Helpers
 {
-    public static class ValueToStringClass
+    public static class CValueToString
     {
+        public static bool Ascii16BigEndian;
+
         /// <summary>
         /// Convert value to string, with a given Type
         /// Value can be less than 32 bits, given by Size. Use sign-extend if needed
@@ -25,7 +30,7 @@ namespace LST.Helpers
         /// <param name="Decimals">number of decimals, for Int/UInt only</param>
         /// <param name="MinLen">minimum number of digits</param>
         /// <returns></returns>
-        public static string ValueToString(Int32 Value, int Size, ModbusControlSpace.Global.eFormat Format, int Decimals, int MinLen, bool Ascii16BigEndian)
+        public static string ValueToString(Int32 Value, int Size, ModbusControlSpace.Global.eFormat Format, int Decimals, int MinLen)
         {
             string Result = string.Empty;
             UInt32 UValue;
@@ -42,22 +47,22 @@ namespace LST.Helpers
                 case ModbusControlSpace.Global.eFormat.Int:
                     // signed decimal
                     Value = ConvertSignedValueTo32bit(Value, Size);
-                    Result = ValueToStringClass.AsInt(Value, Decimals, MinLen);
+                    Result = CValueToString.AsInt(Value, Decimals, MinLen);
                     break;
                 case ModbusControlSpace.Global.eFormat.UInt:
                     // unsigned decimal
                     UValue = ConvertUnsignedValueTo32bit((UInt32)Value, Size);
-                    Result = ValueToStringClass.AsUInt(UValue, Decimals, MinLen);
+                    Result = CValueToString.AsUInt(UValue, Decimals, MinLen);
                     break;
                 case ModbusControlSpace.Global.eFormat.Hex:
                     // hexadecimal
                     UValue = ConvertUnsignedValueTo32bit((UInt32)Value, Size);
-                    Result = ValueToStringClass.AsHex(UValue, MinLen);
+                    Result = CValueToString.AsHex(UValue, MinLen);
                     break;
                 case ModbusControlSpace.Global.eFormat.Bin:
                     // binary
                     UValue = ConvertUnsignedValueTo32bit((UInt32)Value, Size);
-                    Result = ValueToStringClass.AsBin(UValue, MinLen);
+                    Result = CValueToString.AsBin(UValue, MinLen);
                     break;
                 case ModbusControlSpace.Global.eFormat.Float:
                     // float32
@@ -65,10 +70,10 @@ namespace LST.Helpers
                     {
                         throw new ArgumentException("Invalid size!", "Size");
                     }
-                    Result = ValueToStringClass.AsFloat(Value);
+                    Result = CValueToString.AsFloat(Value);
                     break;
                 case ModbusControlSpace.Global.eFormat.ASCII:
-                    Result = ValueToStringClass.AsASCII((UInt32)Value, Size);
+                    Result = CValueToString.AsASCII((UInt32)Value, Size);
 	                break;
                 default:
                     // invalid
@@ -187,23 +192,37 @@ namespace LST.Helpers
             // ASCII
 
             // Show as ASCII characters, show 1 character for each 8 bits.
-            // We show the 8 lower bits as the first character, the upper bits as the last character.
             // The OPEN MODBUS/TCP SPECIFICATION by Andy Swales states: The first character displayed was the UPPER byte and the second character displayed was the LOWER byte. 
-            // But I implemented first character in the lower bits before I found this specification...
 
-            // 1-8 bits: show 1 character A
-            // 9-16 bits: show 2 characters AB or BA
-            // 17-24 bits: show 3 characters ABC or BAC
-            // 25-32 bits: show 4 characters  ABCD or BADC
-
-            // 0x4142 0x4344    -> ABCD if bHighByteFirst=true
-            //                  -> BADC if bHighByteFirst=false
+			//              			        lowfirst	highfirst
+	        //  1-8 bits	1 byte	0x0041		A			A
+	        //  9-16 bits	2 bytes	0x4241		AB			BA
+	        //  17-24 bits	3 bytes	0x434241	ABC			BAC
+	        //  25-32 bits	4 bytes	0x44434241	ABCD		BADC
 
             string Result;
 
             // split value into bytes
             byte[] aBytes = SplitValueIntoBytes(Value, Size);
 
+            // swap bytes if needed
+            if (Ascii16BigEndian)
+            {
+                if (aBytes.Length >= 2)
+                {
+                    byte b = aBytes[0];
+                    aBytes[0] = aBytes[1];
+                    aBytes[1] = b;
+                }
+                if (aBytes.Length >= 4)
+                {
+                    byte b = aBytes[2];
+                    aBytes[2] = aBytes[3];
+                    aBytes[3] = b;
+                }
+            }
+
+            // convert to characters
             Result = "\"";
             for (int i = 0; i < aBytes.Length; ++i)
             {
@@ -216,7 +235,6 @@ namespace LST.Helpers
                 else 
                 {
                     // print as escape sequence
-
                     //Result += "\\" + aBytes[i].ToString("D3");  // in decimal, 3 digits, is not standard
                     Result += "\\x" + aBytes[i].ToString("X2");  // in hexadecimal, 2 digits, this is standard
                 }

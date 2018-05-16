@@ -15,6 +15,8 @@ namespace LST.Helpers
 {
     public static class CStringToValue
     {
+        public static bool Ascii16BigEndian;
+
         //TODO: bug in Modbuscontrol v1: in een signed 8bit bitveld in een 32bit register kan je 4294967293 schrijven (is ook -3)
         //      of in een unsigned 4-bit bitveld kan je 4294967295 schrijven, geeft 15
         //TODO: wat gebeurt er in TryEscapedStringToByteArray() met ANSI characters? bvb duitse? ValueToString doet ook alleen ascii. Current ANSI page doen???
@@ -82,6 +84,22 @@ namespace LST.Helpers
                 {
                     // make the array 4 bytes
                     Array.Resize(ref aBytes, 4);
+                    // swap bytes if needed
+                    if (Ascii16BigEndian)
+                    {
+                        if (aBytes.Length >= 2)
+                        {
+                            byte b = aBytes[0];
+                            aBytes[0] = aBytes[1];
+                            aBytes[1] = b;
+                        }
+                        if (aBytes.Length >= 4)
+                        {
+                            byte b = aBytes[2];
+                            aBytes[2] = aBytes[3];
+                            aBytes[3] = b;
+                        }
+                    }
                     // convert bytes to UInt32
                     numUInt32 = BitConverter.ToUInt32(aBytes, 0);
                     Result = (Int32)numUInt32;

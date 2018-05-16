@@ -19,7 +19,6 @@ namespace LST.Helpers
 
         public static bool Int32BigEndian;
         public static bool Float32BigEndian;
-        public static bool Ascii16BigEndian;
 
         /// <summary>
         /// Converteer 1 of 2 16-bit modbus registers naar binaire value (of float of ascii)
@@ -30,7 +29,7 @@ namespace LST.Helpers
 
             switch (Type)
             {
-                case eType.Int:
+                case eType.Int: // swap 16-bit words
                     if (Size == 32)
                     {
                         Value = ToInt32(Shorts[0], Shorts[1], Int32BigEndian);
@@ -40,29 +39,17 @@ namespace LST.Helpers
                         Value = Shorts[0];
                     }
                     break;
-                case eType.Float:
+                case eType.Float: // swap 16-bit words
                     Value = ToInt32(Shorts[0], Shorts[1], Float32BigEndian);
                     break;
-                case eType.ASCII:
-                    // Ascii16Endian: determines byte order in a 16-bit word
-                    // value holds the string with first char in low byte
-                    //  big_endian  little_endian   Value
-                    //  4100        0041            "A"
-                    //  4142        4241            "AB"
-                    //  4142 4300   4241 0043       "ABC"
-                    //  4142 4344   4241 4443       "ABCD"
-                    if( Ascii16BigEndian)
-                        Value = UInt16Swab( (UInt16)Shorts[0]);
-                    else
-                        Value = (UInt16)Shorts[0];
+                case eType.ASCII: // no swap
                     if (Size == 32)
                     {
-                        UInt16 Tmp16 = 0;
-                        if (Ascii16BigEndian)
-                            Tmp16 = UInt16Swab((UInt16)Shorts[1]);
-                        else
-                            Tmp16 = (UInt16)Shorts[1];
-                        Value |= (Tmp16 << 16);
+                        Value = ToInt32(Shorts[0], Shorts[1], false);
+                    }
+                    else
+                    {
+                        Value = Shorts[0];
                     }
                     break;
                 default:
@@ -85,11 +72,6 @@ namespace LST.Helpers
         public static UInt32 ToUInt32(UInt16 Value0, UInt16 Value1)
         {
             return ((((UInt32)Value1) << 16) | (UInt32)Value0);
-        }
-
-        public static UInt16 UInt16Swab(UInt16 Value)
-        {
-            return (UInt16)(((Value << 8) & 0xFF00) | ((Value >> 8) & 0xFF));
         }
 
         /// <summary>
@@ -144,25 +126,15 @@ namespace LST.Helpers
                         throw new ArgumentException();
                     }
                     break;
-                case Endians.eType.ASCII:
-                    // Ascii16Endian: determines byte order in a 16-bit word
-                    // value holds the string with first char in low byte
-                    //         big_endian  little_endian
-                    // "A":    4100        0041
-                    // "AB":   4142        4241
-                    // "ABC":  4142 4300   4241 0043
-                    // "ABCD": 4142 4344   4241 4443
-                    if( Ascii16BigEndian)
-                        result[0] = (Int16)UInt16Swab( (UInt16)Value);
-                    else
-                        result[0] = (Int16)(UInt16)Value;
-                    if (result.Length >= 2)
+                case eType.ASCII: // no swap
+                    if (Size == 32)
                     {
-                        UInt16 Tmp16 = (UInt16)(((UInt32)Value) >> 16);
-                        if( Ascii16BigEndian)
-                            result[1] = (Int16)UInt16Swab(Tmp16);
-                        else
-                            result[1] = (Int16)Tmp16;
+                        result[1] = (Int16)(((UInt32)Value) >> 16);
+                        result[0] = (Int16)(UInt16)Value;
+                    }
+                    else
+                    {
+                        result[0] = (Int16)(UInt16)Value;
                     }
                     break;
 
