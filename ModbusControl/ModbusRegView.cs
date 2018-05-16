@@ -583,7 +583,7 @@ namespace ModbusRegViewSpace
                 // convert & check
                 Int32 NewValue;
                 Endians.eType Type;
-                bool bIsValid = CStringToValue.Convert(OrigString, IsFloat, Width, CurrentEditDecimals, out NewValue, out Type);
+                bool bIsValid = CValueToString.StringToValue(OrigString, IsFloat, Width, CurrentEditDecimals, out NewValue, out Type);
 
                 // if this is a bitfield: insert bitfield value in register value
                 if (bIsValid && (CurrentEditBitfieldIndex >= 0))
@@ -761,6 +761,7 @@ namespace ModbusRegViewSpace
             return Newvalue;
         }
 
+        //TODO: ValueToString hier verwijderen??
         /// <summary>
         /// Convert value to string, with a given Type
         /// Value can be less than 32 bits, given by Size. Use sign-extend if needed

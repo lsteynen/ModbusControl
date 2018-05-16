@@ -570,7 +570,7 @@ namespace ModbusControlSpace
                 }
                 imp.ValueString = ValueString;
                 Endians.eType Type;
-                if (CStringToValue.Convert(ValueString, bIsFloat, imp.Size, 0, out imp.Value, out Type) == false)
+                if (CValueToString.StringToValue(ValueString, bIsFloat, imp.Size, 0, out imp.Value, out Type) == false)
                 {
                     textboxLog.AppendText("ERROR: line " + csvreader.LineNumber + ": Value field is invalid!" + Environment.NewLine);
                     textboxLog.AppendText(csvreader.CurrentLine + Environment.NewLine);

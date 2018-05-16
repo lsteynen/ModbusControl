@@ -203,7 +203,6 @@
       <DependentUpon>SaveConfigurationForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Settings.cs" />
-    <Compile Include="StringToValue.cs" />
     <Compile Include="TreeGridView.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

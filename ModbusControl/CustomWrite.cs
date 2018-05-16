@@ -140,7 +140,7 @@ namespace ModbusControlSpace
                 {
                     Int32 Value;
                     Endians.eType Type;
-                    bool bIsValid = CStringToValue.Convert(aDataStr[i].Trim(), false, 32, 0, out Value, out Type);
+                    bool bIsValid = CValueToString.StringToValue(aDataStr[i].Trim(), false, 32, 0, out Value, out Type);
                     //TODO: endian
                     if (bIsValid)
                     {
@@ -163,7 +163,7 @@ namespace ModbusControlSpace
                 {
                     Int32 Value;
                     Endians.eType Type;
-                    bool bIsValid = CStringToValue.Convert(aDataStr[i].Trim(), false, 16, 0, out Value, out Type);
+                    bool bIsValid = CValueToString.StringToValue(aDataStr[i].Trim(), false, 16, 0, out Value, out Type);
                     if (bIsValid)
                     {
                         a16bitValues[i] = (short)Value;

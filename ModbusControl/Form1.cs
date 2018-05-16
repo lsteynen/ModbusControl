@@ -607,7 +607,6 @@ namespace ModbusControlSpace
                 Endians.Int32BigEndian = Project.Connection.Int32Endian == Global.eEndian.Big;
                 Endians.Float32BigEndian = Project.Connection.Float32Endian == Global.eEndian.Big;
                 CValueToString.Ascii16BigEndian = Project.Connection.Ascii16Endian == Global.eEndian.Big;
-                CStringToValue.Ascii16BigEndian = Project.Connection.Ascii16Endian == Global.eEndian.Big;
 
                 // restore connection
                 if (ReopenConnection)
@@ -822,7 +821,6 @@ namespace ModbusControlSpace
             Endians.Int32BigEndian = Project.Connection.Int32Endian == Global.eEndian.Big;
             Endians.Float32BigEndian = Project.Connection.Float32Endian == Global.eEndian.Big;
             CValueToString.Ascii16BigEndian = Project.Connection.Ascii16Endian == Global.eEndian.Big;
-            CStringToValue.Ascii16BigEndian = Project.Connection.Ascii16Endian == Global.eEndian.Big;
 
             // Create the tab pages
             LoadProjectInTabs();
