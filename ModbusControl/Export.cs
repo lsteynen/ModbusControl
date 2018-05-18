@@ -152,7 +152,7 @@ namespace ModbusControlSpace
             // export file header info
             mCsvWriter.WriteComment("Export file created by ModbusControl " + Global.VersionString + " - " + DateTime.Now.ToString());
             mCsvWriter.WriteComment("Project file: " + System.IO.Path.GetFileName(mParent.ProjectPath));
-            mCsvWriter.WriteComment("Fields: Register;Size;Description;Read/write;Type;Value");
+            mCsvWriter.WriteComment("Fields: Register;Size;Description;Read/write;Format;Value");
 
             // export registers of all tabs?
             if (mExportMode == ExportMode.AllTabs)
@@ -265,16 +265,20 @@ namespace ModbusControlSpace
                             return;
 
                         // get the value, 16 or 32-bit
-                        int Value = aValues[ValueOffset];
-                        ValueOffset++;
+
+                        // convert format to type
+                        Endians.eType Type = ConvertFormatToType(reg.Format);
+
+                        // make 32-bit value, watch size and endian
+                        short[] aTmpRegs = new short[2];
+                        aTmpRegs[0] = aValues[ValueOffset++];
+                        aTmpRegs[1] = 0;
+                        // is it 32-bit?
                         if (reg.Size == 32)
                         {
-                            //TODO: endian?
-                            // make 32-bit value of 2 16-bit registers, respect configured word order
-                            //TODO Value = mParent.ToInt32(aValues[0], aValues[1]);
-                            Value |= (((Int32)aValues[ValueOffset]) << 16);
-                            ValueOffset++;
+                            aTmpRegs[1] = aValues[ValueOffset++];
                         }
+                        Int32 Value = Endians.ConvertShortsToValue(aTmpRegs, Type, reg.Size);
 
                         WriteExportLine(reg.Reg, reg.Size, reg.Text, reg.Format, reg.Readable, reg.Writeable, Value);
                         ++mSuccessCount;
@@ -305,13 +309,20 @@ namespace ModbusControlSpace
                             if (result == ModbusProtocol.Result.SUCCESS)
                             {
                                 // get the value, 16 or 32-bit
-                                int Value = aValues[0];
+
+                                // convert format to type
+                                Endians.eType Type = ConvertFormatToType(reg.Format);
+
+                                // make 32-bit value, watch size and endian
+                                short[] aTmpRegs = new short[2];
+                                aTmpRegs[0] = aValues[0];
+                                aTmpRegs[1] = 0;
+                                // is it 32-bit?
                                 if (reg.Size == 32)
                                 {
-                                    //TODO: endian?
-                                    // make 32-bit value of 2 16-bit registers, respect configured word order
-                                    Value |= (((Int32)aValues[1]) << 16);
+                                    aTmpRegs[1] = aValues[1];
                                 }
+                                Int32 Value = Endians.ConvertShortsToValue(aTmpRegs, Type, reg.Size);
 
                                 WriteExportLine(reg.Reg, reg.Size, reg.Text, reg.Format, reg.Readable, reg.Writeable, Value);
                                 ++mSuccessCount;
@@ -457,6 +468,33 @@ namespace ModbusControlSpace
         private int GetUserReg(ushort offset)
         {
             return mParent.Project.Options.HoldingregistersStart + offset;
+        }
+
+        // convert format to type
+        private Endians.eType ConvertFormatToType(ModbusControlSpace.Global.eFormat Format)
+        {
+            Endians.eType Type = Endians.eType.Int;
+
+            switch (Format)
+            {
+                case ModbusControlSpace.Global.eFormat.Int:
+                case ModbusControlSpace.Global.eFormat.UInt:
+                case ModbusControlSpace.Global.eFormat.Hex:
+                case ModbusControlSpace.Global.eFormat.Bin:
+                    Type = Endians.eType.Int;
+                    break;
+                case ModbusControlSpace.Global.eFormat.Float:
+                    Type = Endians.eType.Float;
+                    break;
+                case ModbusControlSpace.Global.eFormat.ASCII:
+                    Type = Endians.eType.ASCII;
+                    break;
+                default:
+                    // invalid
+                    throw new ArgumentException("Invalid format enum!");
+            }
+
+            return Type;
         }
 
     }
