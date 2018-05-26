@@ -13,12 +13,7 @@ using LST.Helpers;
 using ModbusRegViewSpace;
 using Modbus_net;
 
-//x TODO: export crasht niet als er geen project open is?
-//x TODO: export crasht niet als er geen connectie is?
-//x TODO: export crasht niet als er geen tabs zijn?
-//TODO: probleem met formats, ValueToString en endians
-//TODO: ValueToString hier verwijderen
-//TODO: alle endians testen
+//TODO: export as in grid: ascii als int hex kunnen
 
 namespace ModbusControlSpace
 {
@@ -358,8 +353,37 @@ namespace ModbusControlSpace
 
             // make RW string
             string RWstring = (isReadable ? "r" : "") + (isWriteable ? "w" : "");
-            // make value string (various formats)
-            string ValueString = ValueToString(Value, Size, Format);
+
+            // override export format?
+            if (radiobuttonAsInGrid.Checked)
+            {
+                // As in grid
+                // ASCII is exported in hex value to avoid csv format problems
+                if (Format == Global.eFormat.ASCII)
+                {
+                    Format = Global.eFormat.Hex;
+                }
+            }
+            else if (radiobuttonAsInt.Checked)
+            {
+                // All to Int
+                Format = Global.eFormat.Int;
+            }
+            else if (radiobuttonAsUInt.Checked)
+            {
+                // All to UInt
+                Format = Global.eFormat.UInt;
+            }
+            else if (radiobuttonAsHex.Checked)
+            {
+                // All to Hex
+                Format = Global.eFormat.Hex;
+            }
+
+            // make value string
+            // decimals are not used in export
+            // minlen is not used in export
+            string ValueString = CValueToString.ValueToString(Value, Size, Format, 0, 0);
 
             // output to file
             string[] fields = new string[] { Reg.ToString(), Size.ToString(), Description, RWstring, Format.ToString(), ValueString};
@@ -388,60 +412,6 @@ namespace ModbusControlSpace
             mWorker.ReportProgress(0, "Read: " + s);
 
             return true;
-        }
-
-        private string ValueToString(int Value, int Size, Global.eFormat Format)
-        {
-            // override format?
-            if (radiobuttonAsInGrid.Checked)
-            {
-                // As in grid
-                // Possible formats are: Int, UInt, Hex, Bin, Float, ASCII.
-                // Int =  −32768 to 32767,  −2147483648 to 2147483647
-                // UInt = 0 to 65535, 0 to 4294967295
-                // Hex = 0x0 to 0xFFFF, 0x to 0xFFFFFFFF
-                // Bin = 0b0 to 0b1111111111111111, 0b0 to 0b11111111111111111111111111111111
-                // Float = +/- 0 to 3.40282*10^38
-                // ASCII is exported in hex value to avoid csv format problems
-                if (Format == Global.eFormat.ASCII)
-                {
-                    Format = Global.eFormat.Hex;
-                }
-            }
-            else if (radiobuttonAsInt.Checked)
-            {
-                // All to Int
-                Format = Global.eFormat.Int;
-            }
-            else if (radiobuttonAsUInt.Checked)
-            {
-                // All to UInt
-                Format = Global.eFormat.UInt;
-            }
-            else if (radiobuttonAsHex.Checked)
-            {
-                // All to Hex
-                Format = Global.eFormat.Hex;
-            }
-
-            // decimals are not used in export
-            // minlen is not used in export
-            return CValueToString.ValueToString( Value, Size, Format, 0, 0);
-        }
-
-        private string LimitStringLength(string s, int MaxLength)
-        {
-            if (MaxLength < 2)
-            {
-                MaxLength = 2;
-            }
-
-            if (s.Length >= MaxLength)
-            {
-                s = s.Substring(0, MaxLength - 2) + "..";
-            }
-
-            return s;
         }
 
         private void buttonSelectFile_Click(object sender, EventArgs e)

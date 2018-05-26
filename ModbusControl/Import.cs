@@ -251,81 +251,6 @@ namespace ModbusControlSpace
             return true;
         }
 
-        private string[] SplitCsvLine(string instring, char separator)
-        {
-            // split a string (CSV line) by a separator
-            // lines normally do not end with separator, lines ending with separator have a blank last field
-            // the fields can be quoted, the quotes are not returned in the output
-            // non-quoted fields are space-trimmed
-            // quoted fields can contain heading and trailing spaces and the separator
-            // spaces before or after the quoted part are ignored
-            // garbage before or after the quoted part is returned in the output
-
-            List<string> Result = new List<string>();
-            string Part = string.Empty;
-            bool PartQuoted = false;
-            bool bInQuotes = false;
-
-            for (int i = 0; i < instring.Length; i++)
-            {
-                if (bInQuotes)
-                {
-                    if (instring[i] == '"')
-                    {
-                        bInQuotes = false;
-                        // end quote, ignore spaces after the quote
-                        while (((i + 1) < instring.Length) && (instring[i + 1] == ' ')) { ++i; }
-                    }
-                    else
-                        Part += instring[i];
-                }
-                else
-                {
-                    if (instring[i] == separator)
-                    {
-                        if (PartQuoted == false)
-                            Part = Part.Trim();
-                        Result.Add(Part);
-                        Part = string.Empty;
-                        PartQuoted = false;
-                    }
-                    else if (instring[i] == '"')
-                    {
-                        // start quote, remove spaces before the quote
-                        Part = Part.TrimStart(' ');
-                        PartQuoted = true;
-                        bInQuotes = true;
-                    }
-                    else
-                    {
-                        Part += instring[i];
-                    }
-                }
-            }
-
-            // last field
-            if (PartQuoted == false)
-                Part = Part.Trim();
-            Result.Add(Part);
-
-            return Result.ToArray();
-        }
-
-        private string LimitStringLength(string s, int MaxLength)
-        {
-            if (MaxLength < 2)
-            {
-                MaxLength = 2;
-            }
-
-            if (s.Length >= MaxLength)
-            {
-                s = s.Substring(0, MaxLength - 2) + "..";
-            }
-
-            return s;
-        }
-
         private void buttonSelectFile_Click(object sender, EventArgs e)
         {
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
@@ -381,8 +306,8 @@ namespace ModbusControlSpace
             }
 
             // process all lines in the file
-            bool bValid = true;
             List<string> fields;
+            bool bValid = true;
 
             while ((csvreader.ReadRow(out fields) == CsvReader.Result.Data) && bValid)
             {
