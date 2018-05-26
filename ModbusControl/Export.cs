@@ -39,6 +39,8 @@ namespace ModbusControlSpace
             mParent = parent;
             mModbus = parent.mb;
             mSlaveAddress = parent.Project.Connection.SlaveID;
+
+            UpdateFormatAsciiPanel();
         }
 
         private void buttonStart_Click(object sender, EventArgs e)
@@ -354,14 +356,15 @@ namespace ModbusControlSpace
             // make RW string
             string RWstring = (isReadable ? "r" : "") + (isWriteable ? "w" : "");
 
-            // override export format?
+            // Export format as in grid or override?
             if (radiobuttonAsInGrid.Checked)
             {
                 // As in grid
-                // ASCII is exported in hex value to avoid csv format problems
+                // ASCII can be exported as Int or Hex to avoid csv format problems
                 if (Format == Global.eFormat.ASCII)
                 {
-                    Format = Global.eFormat.Hex;
+                    if (radExportAsciiAsInt.Checked) Format = Global.eFormat.Int;
+                    if (radExportAsciiAsHex.Checked) Format = Global.eFormat.Hex;
                 }
             }
             else if (radiobuttonAsInt.Checked)
@@ -465,6 +468,17 @@ namespace ModbusControlSpace
             }
 
             return Type;
+        }
+
+        private void radiobuttonFormat_CheckedChanged(object sender, EventArgs e)
+        {
+            UpdateFormatAsciiPanel();
+        }
+
+        private void UpdateFormatAsciiPanel()
+        {
+            // Ascii format selection is only valid with 'format as in grid'
+            FormatAsciiPanel.Enabled = radiobuttonAsInGrid.Checked;
         }
 
     }
