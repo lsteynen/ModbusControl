@@ -13,7 +13,6 @@ using LST.Helpers;
 using ModbusRegViewSpace;
 using Modbus_net;
 
-//TODO: export as in grid: ascii als int hex kunnen
 
 namespace ModbusControlSpace
 {

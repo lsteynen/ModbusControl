@@ -47,7 +47,7 @@
             this.buttonStart.Size = new System.Drawing.Size(150, 23);
             this.buttonStart.TabIndex = 30;
             this.buttonStart.Text = "Start";
-            this.toolTip1.SetToolTip(this.buttonStart, "Start the import or compare");
+            this.toolTip1.SetToolTip(this.buttonStart, "Start the import");
             this.buttonStart.UseVisualStyleBackColor = true;
             this.buttonStart.Click += new System.EventHandler(this.buttonStart_Click);
             // 
@@ -79,7 +79,7 @@
             this.SelectFileButton.Size = new System.Drawing.Size(75, 23);
             this.SelectFileButton.TabIndex = 20;
             this.SelectFileButton.Text = "Select file...";
-            this.toolTip1.SetToolTip(this.SelectFileButton, "Select the file to import or compare with");
+            this.toolTip1.SetToolTip(this.SelectFileButton, "Select the file to import");
             this.SelectFileButton.UseVisualStyleBackColor = true;
             this.SelectFileButton.Click += new System.EventHandler(this.buttonSelectFile_Click);
             // 
@@ -93,7 +93,7 @@
             this.textboxFilename.ReadOnly = true;
             this.textboxFilename.Size = new System.Drawing.Size(439, 20);
             this.textboxFilename.TabIndex = 21;
-            this.toolTip1.SetToolTip(this.textboxFilename, "The file to import or compare with");
+            this.toolTip1.SetToolTip(this.textboxFilename, "The file to import");
             // 
             // buttonClearLog
             // 

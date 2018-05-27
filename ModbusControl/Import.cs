@@ -13,11 +13,6 @@ using LST.Helpers;
 using ModbusRegViewSpace;
 using Modbus_net;
 
-//TODO: FC6/16/both correct gebruiken
-//TODO: probleem met formats, ValueToString en endians
-//TODO: alle endians testen
-//TODO: testen met ongeldig registernummer in importfile
-
 namespace ModbusControlSpace
 {
     public partial class Import : Form
@@ -165,15 +160,14 @@ namespace ModbusControlSpace
                     continue;
                 }
 
-                //TODO: convert value naar short[], hou rekening met juiste endian
-                short[] aValues = new short[2];
-                aValues[0] = (short)(line.Value);
-                aValues[1] = (short)(line.Value>>16);
+                // convert format to type
+                Endians.eType Type = ConvertFormatToType(line.Format);
+
+                // create the modbus values to write
+                Int16[] Data = Endians.ConvertValueToShorts(line.Value, Type, line.Size);
 
                 // write
-                //ModbusProtocol.Result result = WriteWord(line.Size, RegOffset, line.Value);
-                ModbusProtocol.Result result = mParent.DoWriteHoldingRegs(line.Reg, (ushort)(line.Size / 16), aValues);
-
+                ModbusProtocol.Result result = mParent.DoWriteHoldingRegs(line.Reg, (ushort)(line.Size / 16), Data);
 
                 if (result == ModbusProtocol.Result.SUCCESS)
                 {
@@ -517,49 +511,32 @@ namespace ModbusControlSpace
             return false;
         }
 
-#if false
-        //TODO: verwijderen?
-        /*!
-         * Get a list of successive variables/registers from ImportList
-         * Each can be 16/32 bits
-         * @retval 1 if we got registers to read (List will have entries)
-         * @retval 0 if we got no more registers to read (List will be empty)
-         * @retval -1 if register invalid
-        */
-        private int GetSuccessiveRegisters(int ListIndex, int Max16bitRegisters, bool bMustBeReadable, bool bMustBeWriteable, out int RegCount)
+        // convert format to type
+        private Endians.eType ConvertFormatToType(ModbusControlSpace.Global.eFormat Format)
         {
-            RegCount = 0;
-            int LineCount = 0;
-            UInt32 NextRegister = 0;
-            bool GotNextRegister = false;
+            Endians.eType Type = Endians.eType.Int;
 
-            /* there are lines left? */
-            while (ListIndex < ImportList.Count)
+            switch (Format)
             {
-                // bMustBeReadable and bMustBeWriteable match?
-                if (((bMustBeReadable == false) || ImportList[ListIndex].isReadable)
-                   && ((bMustBeWriteable == false) || ImportList[ListIndex].isWriteable))
-                {
-                    // max register count reached?
-                    if ((RegCount + ImportList[ListIndex].Size/16) > Max16bitRegisters)
-                        break;
-
-                    // not successive?
-                    if (GotNextRegister && (ImportList[ListIndex].Reg != NextRegister))
-                        break;
-
-                    RegCount += ImportList[ListIndex].Size/16;
-
-                    NextRegister = (UInt32)(ImportList[ListIndex].Reg + ImportList[ListIndex].Size/16);
-
-                    LineCount++;
-                }
-
-                ListIndex++;
+                case ModbusControlSpace.Global.eFormat.Int:
+                case ModbusControlSpace.Global.eFormat.UInt:
+                case ModbusControlSpace.Global.eFormat.Hex:
+                case ModbusControlSpace.Global.eFormat.Bin:
+                    Type = Endians.eType.Int;
+                    break;
+                case ModbusControlSpace.Global.eFormat.Float:
+                    Type = Endians.eType.Float;
+                    break;
+                case ModbusControlSpace.Global.eFormat.ASCII:
+                    Type = Endians.eType.ASCII;
+                    break;
+                default:
+                    // invalid
+                    throw new ArgumentException("Invalid format enum!");
             }
 
-            return LineCount;
+            return Type;
         }
-#endif
+
     }
 }

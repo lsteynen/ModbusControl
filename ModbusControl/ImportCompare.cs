@@ -16,6 +16,7 @@ using Modbus_net;
 //TODO: probleem met formats, ValueToString en endians
 //TODO: alle endians testen
 //TODO: testen met ongeldig registernummer in importfile
+//TODO: hints controleren
 
 namespace ModbusControlSpace
 {
