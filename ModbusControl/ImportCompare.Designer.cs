@@ -47,7 +47,7 @@
             this.buttonStart.Size = new System.Drawing.Size(150, 23);
             this.buttonStart.TabIndex = 30;
             this.buttonStart.Text = "Start";
-            this.toolTip1.SetToolTip(this.buttonStart, "Start the import or compare");
+            this.toolTip1.SetToolTip(this.buttonStart, "Start the compare");
             this.buttonStart.UseVisualStyleBackColor = true;
             this.buttonStart.Click += new System.EventHandler(this.buttonStart_Click);
             // 
@@ -61,7 +61,7 @@
             this.textboxLog.Name = "textboxLog";
             this.textboxLog.ReadOnly = true;
             this.textboxLog.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.textboxLog.Size = new System.Drawing.Size(520, 200);
+            this.textboxLog.Size = new System.Drawing.Size(520, 280);
             this.textboxLog.TabIndex = 99;
             this.textboxLog.WordWrap = false;
             // 
@@ -79,7 +79,7 @@
             this.SelectFileButton.Size = new System.Drawing.Size(75, 23);
             this.SelectFileButton.TabIndex = 20;
             this.SelectFileButton.Text = "Select file...";
-            this.toolTip1.SetToolTip(this.SelectFileButton, "Select the file to import or compare with");
+            this.toolTip1.SetToolTip(this.SelectFileButton, "Select the file to compare with target");
             this.SelectFileButton.UseVisualStyleBackColor = true;
             this.SelectFileButton.Click += new System.EventHandler(this.buttonSelectFile_Click);
             // 
@@ -93,7 +93,6 @@
             this.textboxFilename.ReadOnly = true;
             this.textboxFilename.Size = new System.Drawing.Size(439, 20);
             this.textboxFilename.TabIndex = 21;
-            this.toolTip1.SetToolTip(this.textboxFilename, "The file to import or compare with");
             // 
             // buttonClearLog
             // 
@@ -122,7 +121,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(544, 282);
+            this.ClientSize = new System.Drawing.Size(544, 362);
             this.Controls.Add(this.buttonCancel);
             this.Controls.Add(this.buttonClearLog);
             this.Controls.Add(this.textboxFilename);

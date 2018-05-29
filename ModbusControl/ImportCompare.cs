@@ -13,11 +13,6 @@ using LST.Helpers;
 using ModbusRegViewSpace;
 using Modbus_net;
 
-//TODO: probleem met formats, ValueToString en endians
-//TODO: alle endians testen
-//TODO: testen met ongeldig registernummer in importfile
-//TODO: hints controleren
-
 namespace ModbusControlSpace
 {
     public partial class Importcompare : Form
@@ -121,12 +116,6 @@ namespace ModbusControlSpace
             return true;
         }
 
-        private void Worker_ProgressChanged(object sender, ProgressChangedEventArgs e)
-        {
-            // ProgressChanged callback is used to display progress strings in textboxLog
-            textboxLog.AppendText( (e.UserState as String) + Environment.NewLine);
-        }
-
         private void DoCompareWithList()
         {
             // Compare registers from list with target
@@ -150,9 +139,11 @@ namespace ModbusControlSpace
             mWorker.WorkerSupportsCancellation = true;
             mWorker.RunWorkerAsync();
         }
-        
+
         private void Worker_CompareWithList(object sender, DoWorkEventArgs e)
         {
+            // background worker thread
+
             // TODO: try to read multiple registers at once, will be much faster?
 
             foreach (ImportLine line in ImportList)
@@ -171,35 +162,40 @@ namespace ModbusControlSpace
                     continue;
                 }
 
+                // convert format to type
+                Endians.eType Type = ConvertFormatToType(line.Format);
+
+                // convert value in file to modbus shorts[], watching endians
+                Int16[] aFileValues = Endians.ConvertValueToShorts(line.Value, Type, line.Size);
+
                 // convert register to protocol offset
                 ushort RegOffset = mParent.GetRegOffset(line.Reg);
 
                 // read register(s)
                 ushort RegCount = (ushort)(line.Size / 16);
-                short[] aValues;
-                ModbusProtocol.Result result = mModbus.MifReadHoldingRegisters(mSlaveAddress, RegOffset, RegCount, out aValues);
+                short[] aReadValues;
+                ModbusProtocol.Result result = mModbus.MifReadHoldingRegisters(mSlaveAddress, RegOffset, RegCount, out aReadValues);
 
                 if (result == ModbusProtocol.Result.SUCCESS)
                 {
                     // success
 
+                    // compare binary values to avoid 16/32bit signed/unsigned issues
                     // compare 16 or 32-bit?
-                    // compare same size values to avoid signed/unsigned issues
-                    Int32 TargetValue = 0;
+                    Int32 TargetValue = 0; // store target value for logging
                     bool bEqual = false;
                     if (line.Size == 32)
                     {
-                        // make 32-bit value of 2 16-bit registers, respect configured word order
-                        //TODO: endian
-                        //TargetValue = (Int32)( ((UInt32)(aValues[0])) | (((UInt32)aValues[1]) << 16));
-                        TargetValue = (Int32)(UInt16)aValues[0] | (Int32)((UInt16)aValues[1] << 16);
-                        bEqual = (TargetValue == line.Value);
+                        // compare 32-bit
+                        bEqual = (aReadValues[0] == aFileValues[0]) && (aReadValues[1] == aFileValues[1]);
+                        // get the 32-bit value for printing it later
+                        TargetValue = Endians.ConvertShortsToValue(aReadValues, Type, 32);
                     }
                     else
                     {
                         // compare 16-bit
-                        TargetValue = aValues[0];
-                        bEqual = ((UInt16)aValues[0] == (UInt16)line.Value);
+                        bEqual = (aReadValues[0] == aFileValues[0]);
+                        TargetValue = aReadValues[0];
                     }
 
                     // count
@@ -223,6 +219,12 @@ namespace ModbusControlSpace
             }
 
             // complete
+        }
+
+        private void Worker_ProgressChanged(object sender, ProgressChangedEventArgs e)
+        {
+            // ProgressChanged callback is used to display progress strings in textboxLog
+            textboxLog.AppendText( (e.UserState as String) + Environment.NewLine);
         }
 
         private void Worker_CompareWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
@@ -280,127 +282,6 @@ namespace ModbusControlSpace
             return true;
         }
 
-        private ModbusProtocol.Result WriteWord(int Size, UInt16 RegOffset, Int32 Value)
-        {
-            ModbusProtocol.Result result = ModbusProtocol.Result.SUCCESS;
-
-            short[] awValues = new short[2];
-
-            // split 32-bit value into 2 16-bit registers, respect configured word order
-            //TODO: endian?
-            if (Size == 32)
-            {
-                awValues[0] = (short)(Value);
-                awValues[1] = (short)(Value>>16);
-            }
-            else
-            {
-                // 16-bit value in awValues[0]
-                awValues[0] = (short)Value;
-                awValues[1] = 0;
-            }
-
-            // use FC6 or FC16?
-            //  #reg    FC6     FC16    auto
-            //   1	    FC6		FC16#1	FC6
-            //   >1     N*FC6	FC16#N	FC16#N
-
-            bool useFC16 = (mParent.Project.Connection.WriteHoldingregFunctioncode == Global.eWriteHoldingregFunctionCode.FC16)
-                          || ((mParent.Project.Connection.WriteHoldingregFunctioncode == Global.eWriteHoldingregFunctionCode.Auto) && (Size > 16));
-            if (useFC16) 
-            {
-                // write multiple registers at once
-                ushort regcount = (ushort)(Size/16);
-                result = mModbus.MifWriteMultipleHoldingRegisters(mSlaveAddress, RegOffset, regcount, awValues);
-            }
-            else
-            {
-                // N times write single register
-                ushort regcount = (ushort)(Size/16);
-                for (int i = 0; (i < regcount) && (result == ModbusProtocol.Result.SUCCESS); ++i)
-                {
-                    result = mModbus.MifWriteSingleHoldingRegister(mSlaveAddress, (UInt16)(RegOffset + i), awValues[0]);
-                }
-            }
-
-            return result;
-        }
-
-        private string[] SplitCsvLine(string instring, char separator)
-        {
-            // split a string (CSV line) by a separator
-            // lines normally do not end with separator, lines ending with separator have a blank last field
-            // the fields can be quoted, the quotes are not returned in the output
-            // non-quoted fields are space-trimmed
-            // quoted fields can contain heading and trailing spaces and the separator
-            // spaces before or after the quoted part are ignored
-            // garbage before or after the quoted part is returned in the output
-
-            List<string> Result = new List<string>();
-            string Part = string.Empty;
-            bool PartQuoted = false;
-            bool bInQuotes = false;
-
-            for (int i = 0; i < instring.Length; i++)
-            {
-                if (bInQuotes)
-                {
-                    if (instring[i] == '"')
-                    {
-                        bInQuotes = false;
-                        // end quote, ignore spaces after the quote
-                        while (((i + 1) < instring.Length) && (instring[i + 1] == ' ')) { ++i; }
-                    }
-                    else
-                        Part += instring[i];
-                }
-                else
-                {
-                    if (instring[i] == separator)
-                    {
-                        if (PartQuoted == false)
-                            Part = Part.Trim();
-                        Result.Add(Part);
-                        Part = string.Empty;
-                        PartQuoted = false;
-                    }
-                    else if (instring[i] == '"')
-                    {
-                        // start quote, remove spaces before the quote
-                        Part = Part.TrimStart(' ');
-                        PartQuoted = true;
-                        bInQuotes = true;
-                    }
-                    else
-                    {
-                        Part += instring[i];
-                    }
-                }
-            }
-
-            // last field
-            if (PartQuoted == false)
-                Part = Part.Trim();
-            Result.Add(Part);
-
-            return Result.ToArray();
-        }
-
-        private string LimitStringLength(string s, int MaxLength)
-        {
-            if (MaxLength < 2)
-            {
-                MaxLength = 2;
-            }
-
-            if (s.Length >= MaxLength)
-            {
-                s = s.Substring(0, MaxLength - 2) + "..";
-            }
-
-            return s;
-        }
-
         private void buttonSelectFile_Click(object sender, EventArgs e)
         {
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
@@ -456,8 +337,8 @@ namespace ModbusControlSpace
             }
 
             // process all lines in the file
-            bool bValid = true;
             List<string> fields;
+            bool bValid = true;
 
             while ((csvreader.ReadRow(out fields) == CsvReader.Result.Data) && bValid)
             {
@@ -667,48 +548,32 @@ namespace ModbusControlSpace
             return false;
         }
 
-#if false
-        /*!
-         * Get a list of successive variables/registers from ImportList
-         * Each can be 16/32 bits
-         * @retval 1 if we got registers to read (List will have entries)
-         * @retval 0 if we got no more registers to read (List will be empty)
-         * @retval -1 if register invalid
-        */
-        private int GetSuccessiveRegisters(int ListIndex, int Max16bitRegisters, bool bMustBeReadable, bool bMustBeWriteable, out int RegCount)
+        // convert format to type
+        private Endians.eType ConvertFormatToType(ModbusControlSpace.Global.eFormat Format)
         {
-            RegCount = 0;
-            int LineCount = 0;
-            UInt32 NextRegister = 0;
-            bool GotNextRegister = false;
+            Endians.eType Type = Endians.eType.Int;
 
-            /* there are lines left? */
-            while (ListIndex < ImportList.Count)
+            switch (Format)
             {
-                // bMustBeReadable and bMustBeWriteable match?
-                if (((bMustBeReadable == false) || ImportList[ListIndex].isReadable)
-                   && ((bMustBeWriteable == false) || ImportList[ListIndex].isWriteable))
-                {
-                    // max register count reached?
-                    if ((RegCount + ImportList[ListIndex].Size/16) > Max16bitRegisters)
-                        break;
-
-                    // not successive?
-                    if (GotNextRegister && (ImportList[ListIndex].Reg != NextRegister))
-                        break;
-
-                    RegCount += ImportList[ListIndex].Size/16;
-
-                    NextRegister = (UInt32)(ImportList[ListIndex].Reg + ImportList[ListIndex].Size/16);
-
-                    LineCount++;
-                }
-
-                ListIndex++;
+                case ModbusControlSpace.Global.eFormat.Int:
+                case ModbusControlSpace.Global.eFormat.UInt:
+                case ModbusControlSpace.Global.eFormat.Hex:
+                case ModbusControlSpace.Global.eFormat.Bin:
+                    Type = Endians.eType.Int;
+                    break;
+                case ModbusControlSpace.Global.eFormat.Float:
+                    Type = Endians.eType.Float;
+                    break;
+                case ModbusControlSpace.Global.eFormat.ASCII:
+                    Type = Endians.eType.ASCII;
+                    break;
+                default:
+                    // invalid
+                    throw new ArgumentException("Invalid format enum!");
             }
 
-            return LineCount;
+            return Type;
         }
-#endif
+
     }
 }

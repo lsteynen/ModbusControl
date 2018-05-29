@@ -66,7 +66,7 @@
             this.textboxLog.Name = "textboxLog";
             this.textboxLog.ReadOnly = true;
             this.textboxLog.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.textboxLog.Size = new System.Drawing.Size(516, 145);
+            this.textboxLog.Size = new System.Drawing.Size(516, 165);
             this.textboxLog.TabIndex = 13;
             this.toolTip1.SetToolTip(this.textboxLog, "The result of the command is shown here. Or an error message.");
             this.textboxLog.WordWrap = false;
@@ -280,7 +280,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(544, 342);
+            this.ClientSize = new System.Drawing.Size(544, 362);
             this.Controls.Add(this.numericQuantity);
             this.Controls.Add(this.numericRegister);
             this.Controls.Add(this.numericSlaveAddress);

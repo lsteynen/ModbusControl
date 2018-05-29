@@ -232,22 +232,22 @@ namespace ModbusControlSpace
             // importRegistersFromFileToolStripMenuItem
             // 
             this.importRegistersFromFileToolStripMenuItem.Name = "importRegistersFromFileToolStripMenuItem";
-            this.importRegistersFromFileToolStripMenuItem.Size = new System.Drawing.Size(248, 22);
-            this.importRegistersFromFileToolStripMenuItem.Text = "Import registers from CSV file...";
+            this.importRegistersFromFileToolStripMenuItem.Size = new System.Drawing.Size(224, 22);
+            this.importRegistersFromFileToolStripMenuItem.Text = "Import registers from file...";
             this.importRegistersFromFileToolStripMenuItem.Click += new System.EventHandler(this.importRegistersFromFileToolStripMenuItem_Click);
             // 
             // exportRegistersToFileToolStripMenuItem
             // 
             this.exportRegistersToFileToolStripMenuItem.Name = "exportRegistersToFileToolStripMenuItem";
-            this.exportRegistersToFileToolStripMenuItem.Size = new System.Drawing.Size(248, 22);
-            this.exportRegistersToFileToolStripMenuItem.Text = "Export registers to CSV file...";
+            this.exportRegistersToFileToolStripMenuItem.Size = new System.Drawing.Size(224, 22);
+            this.exportRegistersToFileToolStripMenuItem.Text = "Export registers to file...";
             this.exportRegistersToFileToolStripMenuItem.Click += new System.EventHandler(this.exportRegistersToFileToolStripMenuItem_Click);
             // 
             // compareRegistersWithValuesInFileToolStripMenuItem
             // 
             this.compareRegistersWithValuesInFileToolStripMenuItem.Name = "compareRegistersWithValuesInFileToolStripMenuItem";
-            this.compareRegistersWithValuesInFileToolStripMenuItem.Size = new System.Drawing.Size(248, 22);
-            this.compareRegistersWithValuesInFileToolStripMenuItem.Text = "Compare registers with CSV file...";
+            this.compareRegistersWithValuesInFileToolStripMenuItem.Size = new System.Drawing.Size(224, 22);
+            this.compareRegistersWithValuesInFileToolStripMenuItem.Text = "Compare registers with file...";
             this.compareRegistersWithValuesInFileToolStripMenuItem.Click += new System.EventHandler(this.compareRegistersWithValuesInFileToolStripMenuItem_Click);
             // 
             // toolStripSeparator8

@@ -77,7 +77,7 @@
             this.textboxLog.Name = "textboxLog";
             this.textboxLog.ReadOnly = true;
             this.textboxLog.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.textboxLog.Size = new System.Drawing.Size(520, 146);
+            this.textboxLog.Size = new System.Drawing.Size(520, 222);
             this.textboxLog.TabIndex = 99;
             this.textboxLog.WordWrap = false;
             // 
@@ -141,7 +141,6 @@
             this.textboxFilename.ReadOnly = true;
             this.textboxFilename.Size = new System.Drawing.Size(439, 20);
             this.textboxFilename.TabIndex = 31;
-            this.toolTip1.SetToolTip(this.textboxFilename, "The file to export to");
             // 
             // buttonClearLog
             // 
@@ -289,7 +288,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(544, 286);
+            this.ClientSize = new System.Drawing.Size(544, 362);
             this.Controls.Add(this.groupboxExportFormat);
             this.Controls.Add(this.buttonCancel);
             this.Controls.Add(this.buttonClearLog);

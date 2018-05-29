@@ -94,7 +94,7 @@
             this.textboxResult.Multiline = true;
             this.textboxResult.Name = "textboxResult";
             this.textboxResult.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.textboxResult.Size = new System.Drawing.Size(516, 101);
+            this.textboxResult.Size = new System.Drawing.Size(516, 181);
             this.textboxResult.TabIndex = 6;
             this.toolTip1.SetToolTip(this.textboxResult, "The result of the command is shown here. Or an error message.");
             // 
@@ -127,7 +127,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(544, 282);
+            this.ClientSize = new System.Drawing.Size(544, 362);
             this.Controls.Add(this.checkboxEnableMainPolling);
             this.Controls.Add(this.buttonClear);
             this.Controls.Add(this.textboxResult);
