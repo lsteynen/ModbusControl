@@ -106,6 +106,7 @@
             this.radiobuttonSize16bit.Text = "16-bit";
             this.toolTip1.SetToolTip(this.radiobuttonSize16bit, "Handle all registers as 16-bit values");
             this.radiobuttonSize16bit.UseVisualStyleBackColor = true;
+            this.radiobuttonSize16bit.CheckedChanged += new System.EventHandler(this.radiobuttonSize16bit_CheckedChanged);
             // 
             // radiobuttonSize32bit
             // 
@@ -117,6 +118,7 @@
             this.radiobuttonSize32bit.Text = "32-bit";
             this.toolTip1.SetToolTip(this.radiobuttonSize32bit, "Handle all registers as 32-bit values (2 registers per value)");
             this.radiobuttonSize32bit.UseVisualStyleBackColor = true;
+            this.radiobuttonSize32bit.CheckedChanged += new System.EventHandler(this.radiobuttonSize32bit_CheckedChanged);
             // 
             // groupBox1
             // 
@@ -134,6 +136,7 @@
             // radiobuttonAsFloat
             // 
             this.radiobuttonAsFloat.AutoSize = true;
+            this.radiobuttonAsFloat.Enabled = false;
             this.radiobuttonAsFloat.Location = new System.Drawing.Point(80, 30);
             this.radiobuttonAsFloat.Name = "radiobuttonAsFloat";
             this.radiobuttonAsFloat.Size = new System.Drawing.Size(48, 17);
@@ -141,7 +144,6 @@
             this.radiobuttonAsFloat.Text = "Float";
             this.toolTip1.SetToolTip(this.radiobuttonAsFloat, "Show all values as 32-bit floating point");
             this.radiobuttonAsFloat.UseVisualStyleBackColor = true;
-            this.radiobuttonAsFloat.CheckedChanged += new System.EventHandler(this.radiobuttonAsFloat_CheckedChanged);
             // 
             // radiobuttonAsHex
             // 

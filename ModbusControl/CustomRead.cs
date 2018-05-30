@@ -100,6 +100,10 @@ namespace ModbusControlSpace
             }
 
             RegQuantity = (UInt16)numericQuantity.Value;
+            if (radiobuttonSize32bit.Checked)
+            {
+                RegQuantity *= 2;
+            }
 
             if( radiobuttonSize32bit.Checked && ((RegQuantity & 1) == 1))
             {
@@ -130,41 +134,50 @@ namespace ModbusControlSpace
 
                     if (i > 0) Result += cSeparator + " ";
 
-                    // get 16 or 32-bit value
-                    Value = aValues[i];
-                    if (radiobuttonSize32bit.Checked)
+                    // get desired format
+                    Global.eFormat Format = Global.eFormat.Int;
+                    if (radiobuttonAsInt.Checked)
                     {
-                        //TODO: make 32-bit value of 2 16-bit registers, respect configured word order
-                        Value = aValues[i];
-                        i++;
+                        // All to Int
+                        Format = Global.eFormat.Int;
                     }
-
-                    int Size = radiobuttonSize32bit.Checked ? 32 : 16;
-                    if( radiobuttonAsInt.Checked)
+                    else if (radiobuttonAsUInt.Checked)
                     {
-                        // signed decimal
-                        Result += CValueToString.AsInt(Value, Size, 0);
+                        // All to UInt
+                        Format = Global.eFormat.UInt;
                     }
-                    else if( radiobuttonAsUInt.Checked)
+                    else if (radiobuttonAsHex.Checked)
                     {
-                        // unsigned decimal
-                        Result += CValueToString.AsUInt( (uint)Value, Size, 0);
-                    }
-                    else if( radiobuttonAsHex.Checked)
-                    {
-                        // hexadecimal
-                        Result += CValueToString.AsHex((uint)Value, 0);
+                        // All to Hex
+                        Format = Global.eFormat.Hex;
                     }
                     else if (radiobuttonAsFloat.Checked)
                     {
-                        // 32-bit float
-                        Result += CValueToString.AsFloat(Value);
+                        // All to Hex
+                        Format = Global.eFormat.Float;
                     }
-                    else 
+
+                    // convert format to type
+                    Endians.eType Type = ConvertFormatToType(Format);
+
+                    // 16 or 32-bit?
+                    int Size = radiobuttonSize32bit.Checked ? 32 : 16;
+
+                    // make 32-bit value, watch size and endian
+                    short[] aTmpRegs = new short[2];
+                    aTmpRegs[0] = aValues[i];
+                    aTmpRegs[1] = 0;
+                    // is it 32-bit?
+                    if (Size == 32)
                     {
-                        // should not get here
-                        Result += Value.ToString();
+                        aTmpRegs[1] = aValues[++i];
                     }
+                    Value = Endians.ConvertShortsToValue(aTmpRegs, Type, Size);
+
+                    // make value string
+                    // decimals are not used
+                    // minlen is not used
+                    Result += CValueToString.ValueToString(Value, Size, Format, 0, 0);
                 }
 
                 if (RegQuantity == 0) Result += "(no data)";
@@ -195,13 +208,18 @@ namespace ModbusControlSpace
             textboxLog.Update();
         }
 
-        private void radiobuttonAsFloat_CheckedChanged(object sender, EventArgs e)
+        private void radiobuttonSize16bit_CheckedChanged(object sender, EventArgs e)
         {
-            // block 16-bit if float is selected
-            radiobuttonSize16bit.Enabled = !radiobuttonAsFloat.Checked;
+            radiobuttonAsFloat.Enabled = false;
+            if (radiobuttonAsFloat.Checked)
+            {
+                radiobuttonAsInt.Checked = true;
+            }
+        }
 
-            // switch to 32-bit if float is selected
-            if (radiobuttonAsFloat.Checked) radiobuttonSize32bit.Checked = true;
+        private void radiobuttonSize32bit_CheckedChanged(object sender, EventArgs e)
+        {
+            radiobuttonAsFloat.Enabled = true;
         }
 
         private void checkboxEnableMainPolling_CheckedChanged(object sender, EventArgs e)
@@ -214,6 +232,33 @@ namespace ModbusControlSpace
         {
             // form is shown: disable polling if unchecked
             mParent.MainPollingIsEnabled = checkboxEnableMainPolling.Checked;
+        }
+
+        // convert format to type
+        private Endians.eType ConvertFormatToType(ModbusControlSpace.Global.eFormat Format)
+        {
+            Endians.eType Type = Endians.eType.Int;
+
+            switch (Format)
+            {
+                case ModbusControlSpace.Global.eFormat.Int:
+                case ModbusControlSpace.Global.eFormat.UInt:
+                case ModbusControlSpace.Global.eFormat.Hex:
+                case ModbusControlSpace.Global.eFormat.Bin:
+                    Type = Endians.eType.Int;
+                    break;
+                case ModbusControlSpace.Global.eFormat.Float:
+                    Type = Endians.eType.Float;
+                    break;
+                case ModbusControlSpace.Global.eFormat.ASCII:
+                    Type = Endians.eType.ASCII;
+                    break;
+                default:
+                    // invalid
+                    throw new ArgumentException("Invalid format enum!");
+            }
+
+            return Type;
         }
 
     }
