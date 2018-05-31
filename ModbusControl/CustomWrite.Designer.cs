@@ -61,19 +61,19 @@
             this.textboxLog.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.textboxLog.Location = new System.Drawing.Point(16, 185);
+            this.textboxLog.Location = new System.Drawing.Point(16, 218);
             this.textboxLog.Multiline = true;
             this.textboxLog.Name = "textboxLog";
             this.textboxLog.ReadOnly = true;
             this.textboxLog.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.textboxLog.Size = new System.Drawing.Size(516, 165);
+            this.textboxLog.Size = new System.Drawing.Size(516, 159);
             this.textboxLog.TabIndex = 13;
             this.toolTip1.SetToolTip(this.textboxLog, "The result of the command is shown here. Or an error message.");
             this.textboxLog.WordWrap = false;
             // 
             // buttonClear
             // 
-            this.buttonClear.Location = new System.Drawing.Point(172, 156);
+            this.buttonClear.Location = new System.Drawing.Point(172, 189);
             this.buttonClear.Name = "buttonClear";
             this.buttonClear.Size = new System.Drawing.Size(75, 23);
             this.buttonClear.TabIndex = 12;
@@ -84,7 +84,7 @@
             // 
             // buttonSend
             // 
-            this.buttonSend.Location = new System.Drawing.Point(16, 156);
+            this.buttonSend.Location = new System.Drawing.Point(16, 189);
             this.buttonSend.Name = "buttonSend";
             this.buttonSend.Size = new System.Drawing.Size(150, 23);
             this.buttonSend.TabIndex = 11;
@@ -136,7 +136,7 @@
             this.textboxData.Multiline = true;
             this.textboxData.Name = "textboxData";
             this.textboxData.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.textboxData.Size = new System.Drawing.Size(421, 46);
+            this.textboxData.Size = new System.Drawing.Size(421, 75);
             this.textboxData.TabIndex = 10;
             this.toolTip1.SetToolTip(this.textboxData, "Enter the decimal or hex values to be writtten, 16 or 32-bit values, comma separa" +
         "ted. Must match quantity.");
@@ -280,7 +280,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(544, 362);
+            this.ClientSize = new System.Drawing.Size(544, 389);
             this.Controls.Add(this.numericQuantity);
             this.Controls.Add(this.numericRegister);
             this.Controls.Add(this.numericSlaveAddress);

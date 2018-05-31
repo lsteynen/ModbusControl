@@ -98,12 +98,6 @@ namespace ModbusControlSpace
 
             RegQuantity = (UInt16)numericQuantity.Value;
 
-            if (radiobuttonSize32bit.Checked && ((RegQuantity & 1) == 1))
-            {
-                textboxLog.AppendText("ERROR: Quantity must be even to write 32-bit values!" + Environment.NewLine);
-                return;
-            }
-
             bool bValid = true;
 
             // No of 16-bit registers per data value
@@ -125,8 +119,8 @@ namespace ModbusControlSpace
             }
             else
             {
-                textboxLog.AppendText("ERROR: Number of data values does not match quantity! (found " + DataCount + " data values)" + Environment.NewLine);
-                bValid = false;
+                textboxLog.AppendText("ERROR: Number of data values does not match quantity! (found " + DataCount + " data values, quantity is " + RegQuantity + " 16-bit registers)" + Environment.NewLine);
+                return;
             }
 
             // array of 16-bit values to store binary data
@@ -141,11 +135,14 @@ namespace ModbusControlSpace
                     Int32 Value;
                     Endians.eType Type;
                     bool bIsValid = CValueToString.StringToValue(aDataStr[i].Trim(), false, 32, 0, out Value, out Type);
-                    //TODO: endian
+
                     if (bIsValid)
                     {
-                        a16bitValues[i*2] = (Int16)Value;
-                        a16bitValues[(i * 2) + 1] = (Int16)(Value>>16);
+                        // create the modbus values to write
+                        Int16[] TmpsShorts = Endians.ConvertValueToShorts(Value, Type, 32);
+
+                        a16bitValues[i * 2] = TmpsShorts[0];
+                        a16bitValues[(i * 2) + 1] = TmpsShorts[1];
                     }
                     else
                     {
@@ -164,9 +161,13 @@ namespace ModbusControlSpace
                     Int32 Value;
                     Endians.eType Type;
                     bool bIsValid = CValueToString.StringToValue(aDataStr[i].Trim(), false, 16, 0, out Value, out Type);
+
                     if (bIsValid)
                     {
-                        a16bitValues[i] = (short)Value;
+                        // create the modbus values to write
+                        Int16[] TmpsShorts = Endians.ConvertValueToShorts(Value, Type, 16);
+
+                        a16bitValues[i] = TmpsShorts[0];
                     }
                     else
                     {
