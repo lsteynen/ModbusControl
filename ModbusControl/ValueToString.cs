@@ -357,8 +357,6 @@ namespace LST.Helpers
             return result;
         }
 
-        //TODO: wat gebeurt er in TryEscapedStringToByteArray() met ANSI characters? bvb duitse? ValueToString doet ook alleen ascii. Current ANSI page doen???
-
         // convert string to Int32
 
         /// <summary>
