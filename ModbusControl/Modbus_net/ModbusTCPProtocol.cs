@@ -118,7 +118,7 @@ namespace Modbus_net
             // expectedlength is not used here, the MBAP header has the length
 
             byte[] header = new byte[6];    // buffer for MBAP header
-            response = new byte[300];       // buffer for response
+            response = new byte[1000];       // buffer for response
             int readCnt = 0;                // nr of bytes received
 
             // read MBAP header, always 6 bytes

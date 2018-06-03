@@ -114,8 +114,8 @@ namespace Modbus_net
         {
             // expectedlength is used for serial channels to receive the expected number of bytes without waiting for and end-of-message timeout
 
-            response = new byte[300];       // buffer for response
-            byte[] tmpresponse = new byte[300];  // buffer for response part 2
+            response = new byte[1000];       // buffer for response
+            byte[] tmpresponse = new byte[1000];  // buffer for response part 2
             int byteCnt = 0;                // nr of bytes received
 
             // get first 2 bytes (then we know if it is the expected response or an exception)
