@@ -161,7 +161,7 @@
             this.numericResponseTimeout.Name = "numericResponseTimeout";
             this.numericResponseTimeout.Size = new System.Drawing.Size(62, 20);
             this.numericResponseTimeout.TabIndex = 9;
-            this.toolTip1.SetToolTip(this.numericResponseTimeout, "Response timeout in milliseconds");
+            this.toolTip1.SetToolTip(this.numericResponseTimeout, "Response timeout, in milliseconds");
             this.numericResponseTimeout.Value = new decimal(new int[] {
             1000,
             0,
@@ -227,7 +227,7 @@
             this.numericIpPort.Name = "numericIpPort";
             this.numericIpPort.Size = new System.Drawing.Size(102, 20);
             this.numericIpPort.TabIndex = 3;
-            this.toolTip1.SetToolTip(this.numericIpPort, "TCP port number (usually 502)");
+            this.toolTip1.SetToolTip(this.numericIpPort, "TCP port number, usually 502");
             this.numericIpPort.Value = new decimal(new int[] {
             502,
             0,
@@ -314,7 +314,7 @@
             this.numericSerialEomTimeout.Name = "numericSerialEomTimeout";
             this.numericSerialEomTimeout.Size = new System.Drawing.Size(71, 20);
             this.numericSerialEomTimeout.TabIndex = 7;
-            this.toolTip1.SetToolTip(this.numericSerialEomTimeout, "Serial port response end-of-message timeout (character timeout) in milliseconds");
+            this.toolTip1.SetToolTip(this.numericSerialEomTimeout, "Response end-of-message timeout, or character timeout, in milliseconds");
             this.numericSerialEomTimeout.Value = new decimal(new int[] {
             100,
             0,
@@ -384,7 +384,7 @@
             this.comboSerialParity.Name = "comboSerialParity";
             this.comboSerialParity.Size = new System.Drawing.Size(91, 21);
             this.comboSerialParity.TabIndex = 5;
-            this.toolTip1.SetToolTip(this.comboSerialParity, "Serial port parity");
+            this.toolTip1.SetToolTip(this.comboSerialParity, "Parity");
             // 
             // comboSerialBaudrate
             // 
@@ -403,7 +403,7 @@
             this.comboSerialBaudrate.Name = "comboSerialBaudrate";
             this.comboSerialBaudrate.Size = new System.Drawing.Size(91, 21);
             this.comboSerialBaudrate.TabIndex = 3;
-            this.toolTip1.SetToolTip(this.comboSerialBaudrate, "Serial port baudrate (bits per second)");
+            this.toolTip1.SetToolTip(this.comboSerialBaudrate, "Baudrate, bits per second");
             // 
             // comboSerialPort
             // 
@@ -413,7 +413,7 @@
             this.comboSerialPort.Name = "comboSerialPort";
             this.comboSerialPort.Size = new System.Drawing.Size(91, 21);
             this.comboSerialPort.TabIndex = 1;
-            this.toolTip1.SetToolTip(this.comboSerialPort, "Serial port name (dropdown shows existing ports)");
+            this.toolTip1.SetToolTip(this.comboSerialPort, "Serial port name. Dropdown shows existing ports");
             this.comboSerialPort.DropDown += new System.EventHandler(this.comboSerialPort_DropDown);
             // 
             // labelConnection
@@ -642,7 +642,7 @@
             this.radiobuttonAsciiLittleEndian.Size = new System.Drawing.Size(68, 17);
             this.radiobuttonAsciiLittleEndian.TabIndex = 1;
             this.radiobuttonAsciiLittleEndian.Text = "Low byte";
-            this.toolTip1.SetToolTip(this.radiobuttonAsciiLittleEndian, "Register with value 0x4142 is shown as \'BA\'");
+            this.toolTip1.SetToolTip(this.radiobuttonAsciiLittleEndian, "Register with value 0x4241 is shown as \'AB\'");
             this.radiobuttonAsciiLittleEndian.UseVisualStyleBackColor = true;
             // 
             // radiobuttonAsciiBigEndian
@@ -655,7 +655,7 @@
             this.radiobuttonAsciiBigEndian.TabIndex = 2;
             this.radiobuttonAsciiBigEndian.TabStop = true;
             this.radiobuttonAsciiBigEndian.Text = "High byte";
-            this.toolTip1.SetToolTip(this.radiobuttonAsciiBigEndian, "Register with value 0x4142 is shown as \'AB\'");
+            this.toolTip1.SetToolTip(this.radiobuttonAsciiBigEndian, "Register with value 0x4241 is shown as \'BA\'");
             this.radiobuttonAsciiBigEndian.UseVisualStyleBackColor = true;
             // 
             // label14
@@ -742,7 +742,7 @@
             this.label5.Size = new System.Drawing.Size(98, 13);
             this.label5.TabIndex = 8;
             this.label5.Text = "Holding registers #:";
-            this.toolTip1.SetToolTip(this.label5, "Virtual address of first holding register (usually 40001, 400000 or 400001)");
+            this.toolTip1.SetToolTip(this.label5, "Numbering convention of first holding register (usually 40001, 400000 or 400001)");
             // 
             // buttonOK
             // 

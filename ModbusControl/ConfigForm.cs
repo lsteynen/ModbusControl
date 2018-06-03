@@ -8,14 +8,7 @@ using System.Text;
 using System.Windows.Forms;
 using System.IO.Ports;
 
-//TODO: tab order
-//TODO: tooltips
-//TODO: vergelijken met oude code welke validatie-handlers er waren
-//TODO: always/never/as-in-projectfile or override?
-//      of default instellen in config maar override door projectfile/localoverride?
-//      modbus bridge parameters?
-//      showinfo?
-//TODO: logging configureren? aan/uit, maxaantal,...
+//TODO: logging configureren? aan/uit, maxaantal,... niet hier, in logging form?
 
 namespace ModbusControlSpace
 {
@@ -237,10 +230,6 @@ namespace ModbusControlSpace
                 checkboxShowInfo.Checked = value;
             }
         }
-
-        //TODO? public bool OptionsAutostartEnable
-
-        //TODO? public string OptionsAutostartTabpage
 
         public bool ModbusTcpBridgeEnable
         {

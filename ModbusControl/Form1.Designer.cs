@@ -535,6 +535,7 @@ namespace ModbusControlSpace
             this.StartPollingToolbutton.Name = "StartPollingToolbutton";
             this.StartPollingToolbutton.Size = new System.Drawing.Size(23, 22);
             this.StartPollingToolbutton.Text = "Start polling";
+            this.StartPollingToolbutton.ToolTipText = "Start polling";
             this.StartPollingToolbutton.Click += new System.EventHandler(this.StartPollingToolbutton_Click);
             // 
             // StopPollingToolbutton
@@ -546,6 +547,7 @@ namespace ModbusControlSpace
             this.StopPollingToolbutton.Name = "StopPollingToolbutton";
             this.StopPollingToolbutton.Size = new System.Drawing.Size(23, 22);
             this.StopPollingToolbutton.Text = "Stop polling";
+            this.StopPollingToolbutton.ToolTipText = "Stop polling";
             this.StopPollingToolbutton.Click += new System.EventHandler(this.StopPollingToolbutton_Click);
             // 
             // PollOnceToolbutton
@@ -557,6 +559,7 @@ namespace ModbusControlSpace
             this.PollOnceToolbutton.Name = "PollOnceToolbutton";
             this.PollOnceToolbutton.Size = new System.Drawing.Size(23, 22);
             this.PollOnceToolbutton.Text = "Poll current tab once";
+            this.PollOnceToolbutton.ToolTipText = "Poll once";
             this.PollOnceToolbutton.Click += new System.EventHandler(this.PollOnceToolbutton_Click);
             // 
             // tabControl1
