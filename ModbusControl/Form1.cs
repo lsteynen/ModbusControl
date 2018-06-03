@@ -23,20 +23,11 @@ using TreeGridViewSpace;
 using LoggerSpace;
 using LST.Helpers;
 
-//TODO: consistent maken: load project of open project
-//TODO: hoe holdingregisterend aansturen? niet in Cproject of options?
 //TODO: localoverrides file in user/doc of %programdata%?
 //TODO: manuals in user/doc of in C:\Users\Public\Documents of in %programdata%?
 //TODO: string2/4/6... implementeren
-//TODO: apart Options scherm: Configuration zit in mbc file, options dinges niet (zoals use local override, autoedit-on-typing, stoponerror...) Zie Settings.cs
 //TODO: instellen EOMTimeout en InterframeDelay: instellen als 0=auto, 'Auto' tonen in numericupdown? <> 0 is fixed milliseconden.
 //      zie ook https://stackoverflow.com/questions/5921446/having-text-inside-numericupdown-control-after-the-number
-//TODO: je kan importeren als er geen project open is?
-//TODO: je kan import/comparen als er geen project open is?
-//TODO: je kan custom read/write/... commands uitvoeren als er geen project open is?
-//TODO  ContextMenuForDescriptionColumn.Items.Add("Custom read...", null, new EventHandler(Menu_CustomRead));
-//TODO  ContextMenuForDescriptionColumn.Items.Add("Custom write...", null, new EventHandler(Menu_CustomWrite));
-//TODO  ContextMenuForDescriptionColumn.Items.Add("Custom modbus command...", null, new EventHandler(Menu_CustomModbusCommand));
 
 namespace ModbusControlSpace
 {
@@ -228,9 +219,6 @@ namespace ModbusControlSpace
                 UpdaterThread = null;
             }
             */
-
-            //TODO: heeft dit zin? we closen
-            //Cursor.Current = Cursors.Default;
 
             Debug.Print(DateTime.Now.TimeOfDay + ": Form1_FormClosing()-5");
             // Update the current settings
@@ -547,8 +535,6 @@ namespace ModbusControlSpace
             configform.OptionsHoldingregistersStart = Project.Options.HoldingregistersStart;
             configform.OptionsSamplerate = Project.Options.Samplerate;
             configform.OptionsShowInfo = Project.Options.ShowInfo;
-            //TODO? configform.OptionsAutostartEnable = Project.Options.AutostartEnable;
-            //TODO? configform.OptionsAutostartTabpage = Project.Options.AutostartTabpage;
             configform.ModbusTcpBridgeEnable = Project.ModbusTcpBridge.Enable;
             configform.ModbusTcpBridgeIPPort = Project.ModbusTcpBridge.IPPort;
 
@@ -598,8 +584,6 @@ namespace ModbusControlSpace
                 Project.Connection.Ascii16Endian = configform.ConnectionAscii16Endian;
                 Project.Options.Samplerate = configform.OptionsSamplerate;
                 Project.Options.ShowInfo = configform.OptionsShowInfo;
-                //TODO? Project.Options.AutostartEnable = configform.OptionsAutostartEnable;
-                //TODO? Project.Options.AutostartTabpage = configform.OptionsAutostartTabpage;
                 Project.ModbusTcpBridge.Enable = configform.ModbusTcpBridgeEnable;
                 Project.ModbusTcpBridge.IPPort = configform.ModbusTcpBridgeIPPort;
 
@@ -850,10 +834,8 @@ namespace ModbusControlSpace
 
                 // init new tabpage
                 newTab.SuspendLayout();
-                newTab.Location = new System.Drawing.Point(4, 22); //TODO
+                newTab.Location = new System.Drawing.Point(4, 22); 
                 newTab.Name = ptab.Name;
-                //newTab.Padding = new Padding(3);
-                //newTab.Size = new System.Drawing.Size(624, 401);//TODO
                 newTab.TabIndex = 1;
                 newTab.Padding = new Padding(0);
                 newTab.Text = ptab.Name;
@@ -863,9 +845,6 @@ namespace ModbusControlSpace
 
                 // init new ModbusRegView
                 newRegView.Dock = System.Windows.Forms.DockStyle.Fill;
-                newRegView.Int32BigEndian = (Project.Connection.Int32Endian == Global.eEndian.Big);
-                newRegView.Float32BigEndian = (Project.Connection.Float32Endian == Global.eEndian.Big);
-                newRegView.Ascii16BigEndian = (Project.Connection.Ascii16Endian == Global.eEndian.Big);
                 newRegView.OnRegisterWrite += new ModbusRegView.RegisterWriteHandler(this.OnRegisterWrite);
                 newRegView.OnBeep += new ModbusRegView.BeepHandler(this.BeepHandler);
 
@@ -930,9 +909,6 @@ namespace ModbusControlSpace
             {
                 ModbusRegView mrv = (ModbusRegView)tab.Tag;
                 mrv.showInfo = Project.Options.ShowInfo;
-                mrv.Int32BigEndian = (Project.Connection.Int32Endian == Global.eEndian.Big);
-                mrv.Float32BigEndian = (Project.Connection.Float32Endian == Global.eEndian.Big);
-                mrv.Ascii16BigEndian = (Project.Connection.Ascii16Endian == Global.eEndian.Big);
             }
         }
 
@@ -2005,7 +1981,6 @@ namespace ModbusControlSpace
         #endregion
 
         #region Status bar message system
-        // TODO: is dit status bar message systeem okee?
 
         public void ReportErrorText(string ErrorText)
         {
@@ -2026,7 +2001,7 @@ namespace ModbusControlSpace
             {
                 StatusbarTimer.Enabled = false;
                 this.lblStatus.Text = text;
-                StatusbarTimer.Interval = 2000;
+                StatusbarTimer.Interval = 3000;
                 StatusbarTimer.Enabled = true;
                 lblStatus.ToolTipText = "Last message: " + text;
             }

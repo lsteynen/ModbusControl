@@ -81,6 +81,7 @@
             this.buttonOK = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.textboxHoldingRegistersStart = new System.Windows.Forms.TextBox();
+            this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
             this.groupboxConnection.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericMaximumFrameSize)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericResponseTimeout)).BeginInit();
@@ -879,6 +880,7 @@
         private System.Windows.Forms.RadioButton radiobuttonAsciiBigEndian;
         private System.Windows.Forms.Label label14;
         private System.Windows.Forms.TextBox textboxHoldingRegistersStart;
+        private System.ComponentModel.BackgroundWorker backgroundWorker1;
 
     }
 }

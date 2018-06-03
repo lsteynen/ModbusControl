@@ -41,6 +41,7 @@ namespace ModbusControlSpace
             this.reloadProjectFileMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.editProjectFileMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.recentFilesMenuItem = new RecentsToolStripMenuItem();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.saveConfigurationMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator6 = new System.Windows.Forms.ToolStripSeparator();
@@ -87,7 +88,6 @@ namespace ModbusControlSpace
             this.PollOnceToolbutton = new System.Windows.Forms.ToolStripButton();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.StatusbarTimer = new System.Windows.Forms.Timer(this.components);
-            this.recentFilesMenuItem = new RecentsToolStripMenuItem();
             this.statusStrip.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
@@ -189,6 +189,15 @@ namespace ModbusControlSpace
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
             this.toolStripSeparator1.Size = new System.Drawing.Size(252, 6);
+            // 
+            // recentFilesMenuItem
+            // 
+            this.recentFilesMenuItem.Enabled = false;
+            this.recentFilesMenuItem.Name = "recentFilesMenuItem";
+            this.recentFilesMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.F)));
+            this.recentFilesMenuItem.Size = new System.Drawing.Size(255, 22);
+            this.recentFilesMenuItem.Text = "Recent project &files";
+            this.recentFilesMenuItem.ItemClick += new System.EventHandler(this.recentFilesMenuItem_ItemClick);
             // 
             // toolStripSeparator2
             // 
@@ -575,15 +584,6 @@ namespace ModbusControlSpace
             // StatusbarTimer
             // 
             this.StatusbarTimer.Tick += new System.EventHandler(this.StatusbarTimerEvent);
-            // 
-            // recentFilesMenuItem
-            // 
-            this.recentFilesMenuItem.Enabled = false;
-            this.recentFilesMenuItem.Name = "recentFilesMenuItem";
-            this.recentFilesMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.F)));
-            this.recentFilesMenuItem.Size = new System.Drawing.Size(255, 22);
-            this.recentFilesMenuItem.Text = "Recent project &Files";
-            this.recentFilesMenuItem.ItemClick += new System.EventHandler(this.recentFilesMenuItem_ItemClick);
             // 
             // Form1
             // 

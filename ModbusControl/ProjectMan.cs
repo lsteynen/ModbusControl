@@ -12,20 +12,9 @@ using System.Linq;
 
 using LST.Helpers;
 
-// x TODO: lijnnummers bij XML file fouten? 
-// x TODO: proberen alle xml tags ook in lowercase te aanvaarden
-// x TODO: error als single-element meer dan 1 keer voorkomt
-// x TODO: intern holdingregisters altijd nummeren vanaf 400001.
-// x TODO: testen: tab zonder vars
-// x TODO: waar we bij een error XML printen: de lengte beperken
-// x TODO: XML exceptions: als element not found: melden met camelcase of lowercase? > lowercase
-// x TODO: bij schrijven int32endian maken en Value32BitEndian verwijderen
-// x TODO: vooraan in tab: default voor vars: minlen, rw, fcol, bcol, decimals, expandfields 
-// x TODO: write FC: auto ipv both gebruiken
 // - TODO: testen: allerlei defaults voor tags die ontbreken, in <modbus>, in <var>
 // - TODO: controleren: is het logisch wat er required is en wat optioneel?
 // - TODO: Mbc file manual nog eens helemaal vergelijken met de XML tags hier (+voorbeeld van expand)
-// x TODO: is default ascii volgorde hetzelfde als vroeger?
 // - TODO: Endofmessagetimeout: ook auto doen? 3.5ch timeout met minimum van 100ms
 // - TODO: Inter-frame delay: auto of een getal in ms. auto = Tchar*3.5, ook 0 toelaten? is -1 dan auto?
 

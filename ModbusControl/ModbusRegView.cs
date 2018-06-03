@@ -11,7 +11,6 @@ using TreeGridViewSpace;
 
 using LST.Helpers;
 
-//TODO: ToInt32 zoeken, moet overal vervangen worden door correcte endian handling
 
 namespace ModbusRegViewSpace
 {
@@ -19,9 +18,6 @@ namespace ModbusRegViewSpace
     {
         public static bool mIsReadOnly = false;
         private bool mShowInfo = false;
-        private bool mInt32BigEndian = false; /* TODO: verwijderen? */
-        private bool mFloat32BigEndian = false;
-        private bool mAscii16BigEndian = false;
 
         // properties
 
@@ -35,36 +31,6 @@ namespace ModbusRegViewSpace
                     mShowInfo = value;
                     UpdateDescriptionInfo();
                 }
-            }
-        }
-
-        public bool Int32BigEndian
-        {
-            get { return mInt32BigEndian; }
-            set
-            {
-                mInt32BigEndian = value;
-                //TODO: repaint als endian wijzigt?
-            }
-        }
-
-        public bool Float32BigEndian
-        {
-            get { return mFloat32BigEndian; }
-            set
-            {
-                mFloat32BigEndian = value;
-                //TODO: repaint als endian wijzigt?
-            }
-        }
-
-        public bool Ascii16BigEndian
-        {
-            get { return mAscii16BigEndian; }
-            set
-            {
-                //TODO: repaint als endian wijzigt
-                mAscii16BigEndian = value;
             }
         }
 
@@ -357,7 +323,7 @@ namespace ModbusRegViewSpace
         public void SetRegValue(RegEntry r)
         {
             // update the value shown in the grid
-            r.ValueStr = ValueToString(r.Value32, r.Size, r.Format, r.Decimals, r.MinLen);
+            r.ValueStr = CValueToString.ValueToString(r.Value32, r.Size, r.Format, r.Decimals, r.MinLen);
             r.node.Cells[2].Value = r.ValueStr;
             r.node.Cells[2].Style.ForeColor = Color.Black;
 
@@ -371,7 +337,7 @@ namespace ModbusRegViewSpace
                     // store our value
                     bf.Value = NewFieldValue;
                     // update the value shown in the grid
-                    r.node.Nodes[i].Cells[2].Value = ValueToString(NewFieldValue, bf.Size, bf.Format, 0, bf.MinLen);
+                    r.node.Nodes[i].Cells[2].Value = CValueToString.ValueToString(NewFieldValue, bf.Size, bf.Format, 0, bf.MinLen);
                     r.node.Nodes[i].Cells[2].Style.ForeColor = Color.Black;
                 }
             }
@@ -761,105 +727,6 @@ namespace ModbusRegViewSpace
             return Newvalue;
         }
 
-        //TODO: ValueToString hier verwijderen??
-        /// <summary>
-        /// Convert value to string, with a given Type
-        /// Value can be less than 32 bits, given by Size. Use sign-extend if needed
-        /// </summary>
-        /// <param name="Value">Value to convert</param>
-        /// <param name="Size">Width of value in bits</param>
-        /// <param name="Type">Int, Uint, Hex, ...</param>
-        /// <param name="Decimals">number of decimals, for Int/UInt only</param>
-        /// <param name="MinLen">minimum number of digits</param>
-        /// <returns></returns>
-        public string ValueToString(Int32 Value, int Size, ModbusControlSpace.Global.eFormat Format, int Decimals, int MinLen)
-        {
-            string Result = string.Empty;
-            UInt32 UValue;
-
-            // check
-            if (!((Size >= 1) && (Size <= 32)))
-            {
-                throw new ArgumentException("Invalid size!", "Size");
-            }
-
-            // convert
-            switch (Format)
-            {
-                case ModbusControlSpace.Global.eFormat.Int:
-                    // signed decimal
-                    Value = ConvertSignedValueTo32bit(Value, Size);
-                    Result = CValueToString.AsInt(Value, Decimals, MinLen);
-                    break;
-                case ModbusControlSpace.Global.eFormat.UInt:
-                    // unsigned decimal
-                    UValue = ConvertUnsignedValueTo32bit((UInt32)Value, Size);
-                    Result = CValueToString.AsUInt(UValue, Decimals, MinLen);
-                    break;
-                case ModbusControlSpace.Global.eFormat.Hex:
-                    // hexadecimal
-                    UValue = ConvertUnsignedValueTo32bit((UInt32)Value, Size);
-                    Result = CValueToString.AsHex(UValue, MinLen);
-                    break;
-                case ModbusControlSpace.Global.eFormat.Bin:
-                    // binary
-                    UValue = ConvertUnsignedValueTo32bit((UInt32)Value, Size);
-                    Result = CValueToString.AsBin(UValue, MinLen);
-                    break;
-                case ModbusControlSpace.Global.eFormat.Float:
-                    // float32
-                    if (!(Size == 32))
-                    {
-                        throw new ArgumentException("Invalid size!", "Size");
-                    }
-                    Result = CValueToString.AsFloat(Value);
-                    break;
-                case ModbusControlSpace.Global.eFormat.ASCII:
-                    Result = CValueToString.AsASCII((UInt32)Value, Size);
-	                break;
-                default:
-                    // invalid
-                    throw new ArgumentException("Invalid format enum!", "Type");
-                    //break;
-            }
-
-            return Result;
-        }
-
-        /// <summary>
-        /// Convert a signed value with Width=1..32 to a 32-bit value
-        /// </summary>
-        /// <param name="Value"></param>
-        /// <param name="Size"></param>
-        /// <returns></returns>
-        private Int32 ConvertSignedValueTo32bit(Int32 Value, int Width)
-        {
-            // if 2 bits or more: convert any n-bit value to a signed 32-bit value
-            if (Width >= 2)
-            {
-                // do a sign-extend
-                Value <<= (32 - Width);
-                Value >>= (32 - Width);
-            }
-
-            return Value;
-        }
-
-        /// <summary>
-        /// Convert an unsigned value with Width=1..32 to a 32-bit value
-        /// </summary>
-        /// <param name="Value"></param>
-        /// <param name="Size"></param>
-        /// <returns></returns>
-        private UInt32 ConvertUnsignedValueTo32bit(UInt32 Value, int Width)
-        {
-            // add zero's to the left
-            Value <<= (32 - Width);
-            Value >>= (32 - Width);
-            return Value;
-        }
-
-
         /* Zoom 
          */
         public void SetFontZoomFactor( float Factor)
@@ -1011,14 +878,14 @@ namespace ModbusRegViewSpace
 
                 f.Format = Format;
                 // update the value shown in the grid
-                r.node.Nodes[BitfieldIndex].Cells[2].Value = ValueToString(f.Value, f.Size, f.Format, 0, f.MinLen);
+                r.node.Nodes[BitfieldIndex].Cells[2].Value = CValueToString.ValueToString(f.Value, f.Size, f.Format, 0, f.MinLen);
             }
             else
             {
                 // register
                 r.Format = Format;
                 // update the value shown in the grid
-                r.node.Cells[2].Value = ValueToString(r.Value32, r.Size, r.Format, r.Decimals, r.MinLen);
+                r.node.Cells[2].Value = CValueToString.ValueToString(r.Value32, r.Size, r.Format, r.Decimals, r.MinLen);
             }
         }
 
