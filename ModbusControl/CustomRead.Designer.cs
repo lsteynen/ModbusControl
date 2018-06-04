@@ -214,7 +214,6 @@
             this.textboxLog.ScrollBars = System.Windows.Forms.ScrollBars.Both;
             this.textboxLog.Size = new System.Drawing.Size(517, 221);
             this.textboxLog.TabIndex = 11;
-            this.toolTip1.SetToolTip(this.textboxLog, "The result of the command is shown here. Or an error message.");
             this.textboxLog.WordWrap = false;
             // 
             // checkboxEnableMainPolling

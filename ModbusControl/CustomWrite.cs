@@ -119,7 +119,16 @@ namespace ModbusControlSpace
             }
             else
             {
-                textboxLog.AppendText("ERROR: Number of data values does not match quantity! (found " + DataCount + " data values, quantity is " + RegQuantity + " 16-bit registers)" + Environment.NewLine);
+                string Str = String.Empty;
+                if (radiobuttonSize32bit.Checked)
+                {
+                    Str = "ERROR: Number of data values does not match quantity! (found " + DataCount + " 32-bit data values, quantity is " + RegQuantity + " 16-bit registers)";
+                }
+                else
+                {
+                    Str = "ERROR: Number of data values does not match quantity! (found " + DataCount + " data values, quantity is " + RegQuantity + " registers)";
+                }
+                textboxLog.AppendText( Str + Environment.NewLine);
                 return;
             }
 

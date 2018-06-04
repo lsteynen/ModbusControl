@@ -96,7 +96,6 @@
             this.textboxResult.ScrollBars = System.Windows.Forms.ScrollBars.Both;
             this.textboxResult.Size = new System.Drawing.Size(516, 181);
             this.textboxResult.TabIndex = 6;
-            this.toolTip1.SetToolTip(this.textboxResult, "The result of the command is shown here. Or an error message.");
             // 
             // buttonClear
             // 

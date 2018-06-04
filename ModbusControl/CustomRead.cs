@@ -100,15 +100,14 @@ namespace ModbusControlSpace
             }
 
             RegQuantity = (UInt16)numericQuantity.Value;
+
             if (radiobuttonSize32bit.Checked)
             {
-                RegQuantity *= 2;
-            }
-
-            if( radiobuttonSize32bit.Checked && ((RegQuantity & 1) == 1))
-            {
-                textboxLog.AppendText("ERROR: Quantity must be even to read 32-bit values!" + Environment.NewLine);
-                return;
+                if (radiobuttonSize32bit.Checked && ((RegQuantity & 1) == 1))
+                {
+                    textboxLog.AppendText("ERROR: Quantity must be multiple of 2 to read 32-bit values!" + Environment.NewLine);
+                    return;
+                }
             }
 
             // output info
