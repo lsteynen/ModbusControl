@@ -139,6 +139,12 @@ namespace ModbusControlSpace
             // start a form timer (is GUI threadsafe) to update the diagnostics counters
             DiagnosticsTimer.Interval = 200;
             DiagnosticsTimer.Enabled = true;
+
+            // allow drag and drop of an mbc file
+            // activate drag and drop on the tab control, that is almost the whole form
+            tabControl1.AllowDrop = true;
+            tabControl1.DragEnter += new DragEventHandler(Form1_DragEnter);
+            tabControl1.DragDrop += new DragEventHandler(Form1_DragDrop);
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -2067,5 +2073,48 @@ namespace ModbusControlSpace
             }
         }
 
+        #region Drag & drop support
+
+        // Drag & drop a .mbc file on this app
+        void Form1_DragEnter(object sender, DragEventArgs e)
+        {
+            // dropping file(s)? and only 1 file?
+            if (e.Data.GetDataPresent(DataFormats.FileDrop) && (((string[])e.Data.GetData(DataFormats.FileDrop)).Length == 1))
+            {
+                e.Effect = DragDropEffects.Copy;
+            }
+        }
+
+        void Form1_DragDrop(object sender, DragEventArgs e)
+        {
+            string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
+            // we accept only 1 file
+            string file = files[0];
+            Debug.Print(DateTime.Now.TimeOfDay + ": Form1_DragDrop(): file=" + file);
+            if (Path.GetExtension(file).ToLower() == ".mbc")
+            {
+                // Stop comms
+                StopAllComms();
+                // Reset some stuff
+                ResetBeforeLoad();
+                // open new project
+                LoadProject(file);
+                // Update program's title
+                UpdateTitle();
+                // Enable/disable menu items and toolbar buttons
+                UpdateMenus();
+
+                // autostart communication
+                // if configured in mbc or override: use that
+                // if not configured: no autostart
+                CheckAutoStart(false, false);
+            }
+            else
+            {
+                MessageBox.Show("Only .mbc files are accepted!", System.Reflection.Assembly.GetExecutingAssembly().GetName().Name, MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+        }
+
+        #endregion
     }
 }
