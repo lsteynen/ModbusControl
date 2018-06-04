@@ -104,7 +104,7 @@ namespace ModbusControlSpace
             int RegsPerValue = radiobuttonSize32bit.Checked ? 2 : 1;
 
             // get data
-            string[] aDataStr = textboxData.Text.Trim().Split(',');
+            string[] aDataStr = textboxData.Text.Split(',');
             int DataCount = aDataStr.Length;
             // an empty data field is split into 1 empty string
             if ((aDataStr.Length == 1) && (aDataStr[0] == ""))
@@ -181,6 +181,13 @@ namespace ModbusControlSpace
                     else
                     {
                         // error
+                        // color the invalid value
+                        // calc starting point
+                        int StartPos = 0;
+                        for (int j = 0; j < i; ++j) StartPos += aDataStr[j].Length + 1;
+                        textboxData.SelectionStart = StartPos;
+                        textboxData.SelectionLength = aDataStr[i].Length;
+                        textboxData.Focus();
                         textboxLog.AppendText("ERROR: Invalid data value! (" + NthItem(1 + i) + " value)" + Environment.NewLine);
                         bValid = false;
                         break;
