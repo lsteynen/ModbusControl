@@ -276,6 +276,24 @@ namespace ModbusControlSpace
         }
 
         /// <summary>
+        /// Open windows explorer at the project file's directory
+        /// </summary>
+        private void openFileLocationToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            string DirName = System.IO.Path.GetDirectoryName(ProjectPath);
+            if (!String.IsNullOrEmpty(DirName))
+            {
+                System.Diagnostics.Process.Start(
+                    new System.Diagnostics.ProcessStartInfo()
+                    {
+                        FileName = DirName,
+                        UseShellExecute = true,
+                        Verb = "open"
+                    });
+            }
+        }
+
+        /// <summary>
         /// Open recent file
         /// </summary>
         private void recentFilesMenuItem_ItemClick(object sender, EventArgs e)
@@ -713,6 +731,7 @@ namespace ModbusControlSpace
                 reloadProjectFileMenuItem.Enabled = !String.IsNullOrEmpty(ProjectPath);
                 ReloadToolbutton.Enabled = reloadProjectFileMenuItem.Enabled;
                 editProjectFileMenuItem.Enabled = (!String.IsNullOrEmpty(ProjectPath)) && File.Exists(ProjectPath);
+                openFileLocationToolStripMenuItem.Enabled = !String.IsNullOrEmpty(System.IO.Path.GetDirectoryName(ProjectPath));
                 saveConfigurationMenuItem.Enabled = ProjectIsOpen;
 
                 // Connection items
@@ -2116,5 +2135,6 @@ namespace ModbusControlSpace
         }
 
         #endregion
+
     }
 }

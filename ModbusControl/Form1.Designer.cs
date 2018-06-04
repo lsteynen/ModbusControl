@@ -53,6 +53,7 @@ namespace ModbusControlSpace
             this.compareRegistersWithValuesInFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator8 = new System.Windows.Forms.ToolStripSeparator();
             this.exitMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.openFileLocationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.connectionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openConnectionMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.closeConnectionMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -146,6 +147,7 @@ namespace ModbusControlSpace
             this.openProjectFileMenuItem,
             this.reloadProjectFileMenuItem,
             this.editProjectFileMenuItem,
+            this.openFileLocationToolStripMenuItem,
             this.toolStripSeparator1,
             this.recentFilesMenuItem,
             this.toolStripSeparator2,
@@ -165,7 +167,7 @@ namespace ModbusControlSpace
             // 
             this.openProjectFileMenuItem.Name = "openProjectFileMenuItem";
             this.openProjectFileMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.O)));
-            this.openProjectFileMenuItem.Size = new System.Drawing.Size(255, 22);
+            this.openProjectFileMenuItem.Size = new System.Drawing.Size(266, 22);
             this.openProjectFileMenuItem.Text = "&Open project file...";
             this.openProjectFileMenuItem.Click += new System.EventHandler(this.openProjectFileMenuItem_Click);
             // 
@@ -173,7 +175,7 @@ namespace ModbusControlSpace
             // 
             this.reloadProjectFileMenuItem.Name = "reloadProjectFileMenuItem";
             this.reloadProjectFileMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.R)));
-            this.reloadProjectFileMenuItem.Size = new System.Drawing.Size(255, 22);
+            this.reloadProjectFileMenuItem.Size = new System.Drawing.Size(266, 22);
             this.reloadProjectFileMenuItem.Text = "&Reload project file";
             this.reloadProjectFileMenuItem.Click += new System.EventHandler(this.reloadProjectFileMenuItem_Click);
             // 
@@ -181,52 +183,52 @@ namespace ModbusControlSpace
             // 
             this.editProjectFileMenuItem.Name = "editProjectFileMenuItem";
             this.editProjectFileMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.E)));
-            this.editProjectFileMenuItem.Size = new System.Drawing.Size(255, 22);
+            this.editProjectFileMenuItem.Size = new System.Drawing.Size(266, 22);
             this.editProjectFileMenuItem.Text = "&Edit project file";
             this.editProjectFileMenuItem.Click += new System.EventHandler(this.editProjectFileMenuItem_Click);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(252, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(263, 6);
             // 
             // recentFilesMenuItem
             // 
             this.recentFilesMenuItem.Enabled = false;
             this.recentFilesMenuItem.Name = "recentFilesMenuItem";
             this.recentFilesMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.F)));
-            this.recentFilesMenuItem.Size = new System.Drawing.Size(255, 22);
+            this.recentFilesMenuItem.Size = new System.Drawing.Size(266, 22);
             this.recentFilesMenuItem.Text = "Recent project &files";
             this.recentFilesMenuItem.ItemClick += new System.EventHandler(this.recentFilesMenuItem_ItemClick);
             // 
             // toolStripSeparator2
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(252, 6);
+            this.toolStripSeparator2.Size = new System.Drawing.Size(263, 6);
             // 
             // saveConfigurationMenuItem
             // 
             this.saveConfigurationMenuItem.Name = "saveConfigurationMenuItem";
-            this.saveConfigurationMenuItem.Size = new System.Drawing.Size(255, 22);
+            this.saveConfigurationMenuItem.Size = new System.Drawing.Size(266, 22);
             this.saveConfigurationMenuItem.Text = "Save configuration to project file...";
             this.saveConfigurationMenuItem.Click += new System.EventHandler(this.saveConfigurationMenuItem_Click);
             // 
             // toolStripSeparator6
             // 
             this.toolStripSeparator6.Name = "toolStripSeparator6";
-            this.toolStripSeparator6.Size = new System.Drawing.Size(252, 6);
+            this.toolStripSeparator6.Size = new System.Drawing.Size(263, 6);
             // 
             // editLocalOverridesMenuItem
             // 
             this.editLocalOverridesMenuItem.Name = "editLocalOverridesMenuItem";
-            this.editLocalOverridesMenuItem.Size = new System.Drawing.Size(255, 22);
+            this.editLocalOverridesMenuItem.Size = new System.Drawing.Size(266, 22);
             this.editLocalOverridesMenuItem.Text = "Edit local overrides file";
             this.editLocalOverridesMenuItem.Click += new System.EventHandler(this.editLocalOverridesMenuItem_Click);
             // 
             // toolStripSeparator5
             // 
             this.toolStripSeparator5.Name = "toolStripSeparator5";
-            this.toolStripSeparator5.Size = new System.Drawing.Size(252, 6);
+            this.toolStripSeparator5.Size = new System.Drawing.Size(263, 6);
             // 
             // importExportToolStripMenuItem
             // 
@@ -235,7 +237,7 @@ namespace ModbusControlSpace
             this.exportRegistersToFileToolStripMenuItem,
             this.compareRegistersWithValuesInFileToolStripMenuItem});
             this.importExportToolStripMenuItem.Name = "importExportToolStripMenuItem";
-            this.importExportToolStripMenuItem.Size = new System.Drawing.Size(255, 22);
+            this.importExportToolStripMenuItem.Size = new System.Drawing.Size(266, 22);
             this.importExportToolStripMenuItem.Text = "Import && Export CSV files...";
             // 
             // importRegistersFromFileToolStripMenuItem
@@ -262,15 +264,22 @@ namespace ModbusControlSpace
             // toolStripSeparator8
             // 
             this.toolStripSeparator8.Name = "toolStripSeparator8";
-            this.toolStripSeparator8.Size = new System.Drawing.Size(252, 6);
+            this.toolStripSeparator8.Size = new System.Drawing.Size(263, 6);
             // 
             // exitMenuItem
             // 
             this.exitMenuItem.Name = "exitMenuItem";
             this.exitMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.X)));
-            this.exitMenuItem.Size = new System.Drawing.Size(255, 22);
+            this.exitMenuItem.Size = new System.Drawing.Size(266, 22);
             this.exitMenuItem.Text = "E&xit";
             this.exitMenuItem.Click += new System.EventHandler(this.exitMenuItem_Click);
+            // 
+            // openFileLocationToolStripMenuItem
+            // 
+            this.openFileLocationToolStripMenuItem.Name = "openFileLocationToolStripMenuItem";
+            this.openFileLocationToolStripMenuItem.Size = new System.Drawing.Size(266, 22);
+            this.openFileLocationToolStripMenuItem.Text = "Open project file location in Explorer";
+            this.openFileLocationToolStripMenuItem.Click += new System.EventHandler(this.openFileLocationToolStripMenuItem_Click);
             // 
             // connectionToolStripMenuItem
             // 
@@ -672,6 +681,7 @@ namespace ModbusControlSpace
         private System.Windows.Forms.ToolStripMenuItem customReadToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem custimWriteToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem customCommandToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem openFileLocationToolStripMenuItem;
     }
 }
 
