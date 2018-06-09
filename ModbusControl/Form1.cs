@@ -62,6 +62,8 @@ namespace ModbusControlSpace
         private float ZoomFactor = 1.0F;
         private ModbusServer.ModbusServer TcpBridge;
         private bool StopOnErrorIsArmed;
+        private Thread UpdaterThread;   // Updater thread
+        private Object UpdaterLock = new Object();  // lock for safely terminating the updater thread
 
         // a write entry
         private class WriteEntry
@@ -145,6 +147,11 @@ namespace ModbusControlSpace
             tabControl1.AllowDrop = true;
             tabControl1.DragEnter += new DragEventHandler(Form1_DragEnter);
             tabControl1.DragDrop += new DragEventHandler(Form1_DragDrop);
+
+            // Start updater thread
+            // do the update check after a few seconds
+            UpdaterThread = new Thread(UpdaterThread_Work);
+            UpdaterThread.Start();
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -213,18 +220,19 @@ namespace ModbusControlSpace
             // stop the timer so we don't get an event calling non-existant objects
             StatusbarTimer.Enabled = false;
 
-            // stop all comms stuff
-            StopAllComms();
-
-            /*TODO
             // Stop the updater thread
             if (UpdaterThread != null)
             {
-                UpdaterThread.Interrupt();
-                UpdaterThread.Join();
-                UpdaterThread = null;
+                lock (UpdaterLock)
+                {
+                    UpdaterThread.Interrupt();
+                    UpdaterThread.Join();
+                    UpdaterThread = null;
+                }
             }
-            */
+
+            // stop all comms stuff
+            StopAllComms();
 
             Debug.Print(DateTime.Now.TimeOfDay + ": Form1_FormClosing()-5");
             // Update the current settings
@@ -2136,5 +2144,38 @@ namespace ModbusControlSpace
 
         #endregion
 
+        #region auto-update
+
+        // Thread that starts the updater tool after a delay
+        private void UpdaterThread_Work()
+        {
+            // Catch unhandled exceptions in this non-GUI thread
+            try
+            {
+                // Do a delay before checking for update
+                Thread.Sleep(10000);
+
+                // Start the updater
+                lock (UpdaterLock)
+                {
+                    // Make sure it's our Updater.exe in our directory
+                    ProcessStartInfo psi = new ProcessStartInfo();
+                    psi.FileName = Path.Combine(Application.StartupPath, "Updater.exe");
+                    psi.Arguments = "-v " + Application.ProductVersion.ToString();
+                    psi.UseShellExecute = false;
+                    Process.Start(psi);
+                }
+            }
+#if DEBUGX
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Exception");
+            }
+#else
+            catch { }
+#endif
+        }
+
+        #endregion
     }
 }
