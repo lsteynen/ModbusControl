@@ -40,6 +40,15 @@ namespace ModbusControlSpace
             }
         }
 
+        public bool CheckForUpdates
+        {
+            get { return CheckboxCheckForUpdates.Checked; }
+            set
+            {
+                CheckboxCheckForUpdates.Checked = value;
+            }
+        }
+
         public OptionsForm()
         {
             InitializeComponent();

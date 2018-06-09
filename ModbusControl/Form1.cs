@@ -38,6 +38,7 @@ namespace ModbusControlSpace
             public bool StopOnError;
             public bool UseLocalOverrides;
             public bool BeepOnInputError;
+            public bool CheckForUpdates;
         }
 
         private Settings Settings1;
@@ -157,13 +158,15 @@ namespace ModbusControlSpace
             Options.StopOnError = Settings1.Values.stoponerror;
             Options.UseLocalOverrides = Settings1.Values.uselocaloverrides;
             Options.BeepOnInputError = Settings1.Values.beeponinputerror;
+            Options.CheckForUpdates = Settings1.Values.checkforupdates;
             recentFilesMenuItem.LoadList(Settings1.Values.mbcmrulist);
 
             // Start updater thread
-            // but only once per day, check if this is 1 day later
-            DateTime LastCheckTime = Settings1.Values.lastcheckforupdate;
-            DateTime NextCheckTime = LastCheckTime.AddDays(1);
-            if (DateTime.Now >= NextCheckTime)
+            // if auto-update enabled
+            // and only once per day, check if this is 1 day later
+            DateTime LastCheckDate = Settings1.Values.lastcheckforupdate.Date;
+            DateTime NextCheckDate = LastCheckDate.AddDays(1);
+            if( Options.CheckForUpdates && (DateTime.Now >= NextCheckDate))
             {
                 // do the update check after a few seconds
                 UpdaterThread = new Thread(UpdaterThread_Work);
@@ -246,6 +249,7 @@ namespace ModbusControlSpace
             Settings1.Values.stoponerror = Options.StopOnError;
             Settings1.Values.uselocaloverrides = Options.UseLocalOverrides;
             Settings1.Values.beeponinputerror = Options.BeepOnInputError;
+            Settings1.Values.checkforupdates = Options.CheckForUpdates;
             // And save
             Settings1.Save();
         }
@@ -659,6 +663,7 @@ namespace ModbusControlSpace
             optionsForm.StopOnError = Options.StopOnError;
             optionsForm.UseLocalOverrides = Options.UseLocalOverrides;
             optionsForm.BeepOnInputError = Options.BeepOnInputError;
+            optionsForm.CheckForUpdates = Options.CheckForUpdates;
 
             if (optionsForm.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
@@ -666,6 +671,7 @@ namespace ModbusControlSpace
                 Options.StopOnError = optionsForm.StopOnError;
                 Options.UseLocalOverrides = optionsForm.UseLocalOverrides;
                 Options.BeepOnInputError = optionsForm.BeepOnInputError;
+                Options.CheckForUpdates = optionsForm.CheckForUpdates;
             }
         }
 
@@ -2198,7 +2204,7 @@ namespace ModbusControlSpace
 
             // run updater only once per day
             // remember day updater was run
-            Settings1.Values.lastcheckforupdate = DateTime.Now.Date;
+            Settings1.Values.lastcheckforupdate = DateTime.Now;
         }
 
         #endregion

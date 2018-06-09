@@ -28,6 +28,10 @@ namespace ModbusControlSpace
             public bool beeponinputerror
             { get; set; }
 
+            [XmlElement("checkforupdates")]
+            public bool checkforupdates
+            { get; set; }
+
             [XmlElement("lastcheckforupdate")]
             public DateTime lastcheckforupdate
             { get; set; }
@@ -61,6 +65,7 @@ namespace ModbusControlSpace
             Values.stoponerror = false;
             Values.uselocaloverrides = true;
             Values.beeponinputerror = true;
+            Values.checkforupdates = true;
             Values.mbcmrulist.Clear();
 
             // Load the stored settings

@@ -33,12 +33,13 @@
             this.checkboxUseLocalOverrides = new System.Windows.Forms.CheckBox();
             this.checkboxStopOnCommsError = new System.Windows.Forms.CheckBox();
             this.checkboxBeepOnInputError = new System.Windows.Forms.CheckBox();
+            this.CheckboxCheckForUpdates = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // buttonCancel
             // 
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.buttonCancel.Location = new System.Drawing.Point(126, 95);
+            this.buttonCancel.Location = new System.Drawing.Point(127, 118);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 23);
             this.buttonCancel.TabIndex = 7;
@@ -48,7 +49,7 @@
             // buttonOK
             // 
             this.buttonOK.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.buttonOK.Location = new System.Drawing.Point(45, 95);
+            this.buttonOK.Location = new System.Drawing.Point(46, 118);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(75, 23);
             this.buttonOK.TabIndex = 6;
@@ -88,13 +89,25 @@
             this.checkboxBeepOnInputError.Text = "Beep on input error";
             this.checkboxBeepOnInputError.UseVisualStyleBackColor = true;
             // 
+            // CheckboxCheckForUpdates
+            // 
+            this.CheckboxCheckForUpdates.AutoSize = true;
+            this.CheckboxCheckForUpdates.Location = new System.Drawing.Point(23, 79);
+            this.CheckboxCheckForUpdates.Name = "CheckboxCheckForUpdates";
+            this.CheckboxCheckForUpdates.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.CheckboxCheckForUpdates.Size = new System.Drawing.Size(154, 17);
+            this.CheckboxCheckForUpdates.TabIndex = 16;
+            this.CheckboxCheckForUpdates.Text = "Check for program updates";
+            this.CheckboxCheckForUpdates.UseVisualStyleBackColor = true;
+            // 
             // OptionsForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.CancelButton = this.buttonCancel;
-            this.ClientSize = new System.Drawing.Size(246, 131);
+            this.ClientSize = new System.Drawing.Size(246, 153);
             this.ControlBox = false;
+            this.Controls.Add(this.CheckboxCheckForUpdates);
             this.Controls.Add(this.checkboxBeepOnInputError);
             this.Controls.Add(this.checkboxUseLocalOverrides);
             this.Controls.Add(this.checkboxStopOnCommsError);
@@ -118,5 +131,6 @@
         private System.Windows.Forms.CheckBox checkboxUseLocalOverrides;
         private System.Windows.Forms.CheckBox checkboxStopOnCommsError;
         private System.Windows.Forms.CheckBox checkboxBeepOnInputError;
+        private System.Windows.Forms.CheckBox CheckboxCheckForUpdates;
     }
 }
