@@ -147,11 +147,6 @@ namespace ModbusControlSpace
             tabControl1.AllowDrop = true;
             tabControl1.DragEnter += new DragEventHandler(Form1_DragEnter);
             tabControl1.DragDrop += new DragEventHandler(Form1_DragDrop);
-
-            // Start updater thread
-            // do the update check after a few seconds
-            UpdaterThread = new Thread(UpdaterThread_Work);
-            UpdaterThread.Start();
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -163,6 +158,17 @@ namespace ModbusControlSpace
             Options.UseLocalOverrides = Settings1.Values.uselocaloverrides;
             Options.BeepOnInputError = Settings1.Values.beeponinputerror;
             recentFilesMenuItem.LoadList(Settings1.Values.mbcmrulist);
+
+            // Start updater thread
+            // but only once per day, check if this is 1 day later
+            DateTime LastCheckTime = Settings1.Values.lastcheckforupdate;
+            DateTime NextCheckTime = LastCheckTime.AddDays(1);
+            if (DateTime.Now >= NextCheckTime)
+            {
+                // do the update check after a few seconds
+                UpdaterThread = new Thread(UpdaterThread_Work);
+                UpdaterThread.Start();
+            }
 
             // get a list of PDF files, assume these are Modbuscontrol manuals
             string[] fileEntries = Directory.GetFiles(Global.MyDocumentsPath, "*.pdf");
@@ -1593,6 +1599,12 @@ namespace ModbusControlSpace
             Process.Start(tmi.Tag.ToString());
         }
 
+        private void checkForUpdateMenuItem_Click(object sender, EventArgs e)
+        {
+            // Start the updater
+            StartUpdater();
+        }
+
         private void formtimer1_Tick(object sender, EventArgs e)
         {
             if ((DiagnosticscountersForm1 != null) && DiagnosticscountersForm1.Visible)
@@ -2153,18 +2165,10 @@ namespace ModbusControlSpace
             try
             {
                 // Do a delay before checking for update
-                Thread.Sleep(10000);
+                Thread.Sleep(5000);
 
                 // Start the updater
-                lock (UpdaterLock)
-                {
-                    // Make sure it's our Updater.exe in our directory
-                    ProcessStartInfo psi = new ProcessStartInfo();
-                    psi.FileName = Path.Combine(Application.StartupPath, "Updater.exe");
-                    psi.Arguments = "-v " + Application.ProductVersion.ToString();
-                    psi.UseShellExecute = false;
-                    Process.Start(psi);
-                }
+                StartUpdater();
             }
 #if DEBUGX
             catch (Exception ex)
@@ -2176,6 +2180,28 @@ namespace ModbusControlSpace
 #endif
         }
 
+        /// <summary>
+        /// Start the updater process
+        /// Updater.exe is limited to 1 instance
+        /// </summary>
+        private void StartUpdater()
+        {
+            lock (UpdaterLock)
+            {
+                // Make sure it's our Updater.exe in our directory
+                ProcessStartInfo psi = new ProcessStartInfo();
+                psi.FileName = Path.Combine(Application.StartupPath, "Updater.exe");
+                psi.Arguments = "-v " + Application.ProductVersion.ToString();
+                psi.UseShellExecute = false;
+                Process.Start(psi);
+            }
+
+            // run updater only once per day
+            // remember day updater was run
+            Settings1.Values.lastcheckforupdate = DateTime.Now.Date;
+        }
+
         #endregion
+
     }
 }

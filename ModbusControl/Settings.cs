@@ -28,6 +28,10 @@ namespace ModbusControlSpace
             public bool beeponinputerror
             { get; set; }
 
+            [XmlElement("lastcheckforupdate")]
+            public DateTime lastcheckforupdate
+            { get; set; }
+
             [XmlArray("mbcmrulist")]
             [XmlArrayItem("file")]
             public List<string> mbcmrulist

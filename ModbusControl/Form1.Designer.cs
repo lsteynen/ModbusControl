@@ -40,6 +40,7 @@ namespace ModbusControlSpace
             this.openProjectFileMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.reloadProjectFileMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.editProjectFileMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.openFileLocationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.recentFilesMenuItem = new RecentsToolStripMenuItem();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
@@ -53,7 +54,6 @@ namespace ModbusControlSpace
             this.compareRegistersWithValuesInFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator8 = new System.Windows.Forms.ToolStripSeparator();
             this.exitMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.openFileLocationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.connectionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openConnectionMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.closeConnectionMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -187,6 +187,13 @@ namespace ModbusControlSpace
             this.editProjectFileMenuItem.Text = "&Edit project file";
             this.editProjectFileMenuItem.Click += new System.EventHandler(this.editProjectFileMenuItem_Click);
             // 
+            // openFileLocationToolStripMenuItem
+            // 
+            this.openFileLocationToolStripMenuItem.Name = "openFileLocationToolStripMenuItem";
+            this.openFileLocationToolStripMenuItem.Size = new System.Drawing.Size(266, 22);
+            this.openFileLocationToolStripMenuItem.Text = "Open project file location in Explorer";
+            this.openFileLocationToolStripMenuItem.Click += new System.EventHandler(this.openFileLocationToolStripMenuItem_Click);
+            // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
@@ -273,13 +280,6 @@ namespace ModbusControlSpace
             this.exitMenuItem.Size = new System.Drawing.Size(266, 22);
             this.exitMenuItem.Text = "E&xit";
             this.exitMenuItem.Click += new System.EventHandler(this.exitMenuItem_Click);
-            // 
-            // openFileLocationToolStripMenuItem
-            // 
-            this.openFileLocationToolStripMenuItem.Name = "openFileLocationToolStripMenuItem";
-            this.openFileLocationToolStripMenuItem.Size = new System.Drawing.Size(266, 22);
-            this.openFileLocationToolStripMenuItem.Text = "Open project file location in Explorer";
-            this.openFileLocationToolStripMenuItem.Click += new System.EventHandler(this.openFileLocationToolStripMenuItem_Click);
             // 
             // connectionToolStripMenuItem
             // 
@@ -459,6 +459,7 @@ namespace ModbusControlSpace
             this.checkForUpdateMenuItem.Name = "checkForUpdateMenuItem";
             this.checkForUpdateMenuItem.Size = new System.Drawing.Size(194, 22);
             this.checkForUpdateMenuItem.Text = "Check for &Updates";
+            this.checkForUpdateMenuItem.Click += new System.EventHandler(this.checkForUpdateMenuItem_Click);
             // 
             // aboutMenuItem
             // 
