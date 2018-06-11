@@ -65,11 +65,12 @@ namespace ModbusControlSpace
             this.zoomInToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.zoomOutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.resetZoomToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator9 = new System.Windows.Forms.ToolStripSeparator();
+            this.diagnosticsCountersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.loggingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.extraMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.configurationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.optionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.diagnosticsCountersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.loggingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.customCommandsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.customReadToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.customWriteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -339,7 +340,10 @@ namespace ModbusControlSpace
             this.viewToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.zoomInToolStripMenuItem,
             this.zoomOutToolStripMenuItem,
-            this.resetZoomToolStripMenuItem});
+            this.resetZoomToolStripMenuItem,
+            this.toolStripSeparator9,
+            this.diagnosticsCountersToolStripMenuItem,
+            this.loggingToolStripMenuItem});
             this.viewToolStripMenuItem.Name = "viewToolStripMenuItem";
             this.viewToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
             this.viewToolStripMenuItem.Text = "&View";
@@ -349,7 +353,7 @@ namespace ModbusControlSpace
             this.zoomInToolStripMenuItem.Name = "zoomInToolStripMenuItem";
             this.zoomInToolStripMenuItem.ShortcutKeyDisplayString = "Ctrl+ +";
             this.zoomInToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Oemplus)));
-            this.zoomInToolStripMenuItem.Size = new System.Drawing.Size(178, 22);
+            this.zoomInToolStripMenuItem.Size = new System.Drawing.Size(222, 22);
             this.zoomInToolStripMenuItem.Text = "Zoom &in";
             this.zoomInToolStripMenuItem.Click += new System.EventHandler(this.zoomInToolStripMenuItem_Click);
             // 
@@ -358,7 +362,7 @@ namespace ModbusControlSpace
             this.zoomOutToolStripMenuItem.Name = "zoomOutToolStripMenuItem";
             this.zoomOutToolStripMenuItem.ShortcutKeyDisplayString = "Ctrl+ -";
             this.zoomOutToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.OemMinus)));
-            this.zoomOutToolStripMenuItem.Size = new System.Drawing.Size(178, 22);
+            this.zoomOutToolStripMenuItem.Size = new System.Drawing.Size(222, 22);
             this.zoomOutToolStripMenuItem.Text = "Zoom &out";
             this.zoomOutToolStripMenuItem.Click += new System.EventHandler(this.zoomOutToolStripMenuItem_Click);
             // 
@@ -367,17 +371,36 @@ namespace ModbusControlSpace
             this.resetZoomToolStripMenuItem.Name = "resetZoomToolStripMenuItem";
             this.resetZoomToolStripMenuItem.ShortcutKeyDisplayString = "Ctrl+ 0";
             this.resetZoomToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.NumPad0)));
-            this.resetZoomToolStripMenuItem.Size = new System.Drawing.Size(178, 22);
+            this.resetZoomToolStripMenuItem.Size = new System.Drawing.Size(222, 22);
             this.resetZoomToolStripMenuItem.Text = "&Reset zoom";
             this.resetZoomToolStripMenuItem.Click += new System.EventHandler(this.resetZoomToolStripMenuItem_Click);
+            // 
+            // toolStripSeparator9
+            // 
+            this.toolStripSeparator9.Name = "toolStripSeparator9";
+            this.toolStripSeparator9.Size = new System.Drawing.Size(219, 6);
+            // 
+            // diagnosticsCountersToolStripMenuItem
+            // 
+            this.diagnosticsCountersToolStripMenuItem.Name = "diagnosticsCountersToolStripMenuItem";
+            this.diagnosticsCountersToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.D)));
+            this.diagnosticsCountersToolStripMenuItem.Size = new System.Drawing.Size(222, 22);
+            this.diagnosticsCountersToolStripMenuItem.Text = "&Diagnostics counters";
+            this.diagnosticsCountersToolStripMenuItem.Click += new System.EventHandler(this.diagnosticsCountersToolStripMenuItem_Click);
+            // 
+            // loggingToolStripMenuItem
+            // 
+            this.loggingToolStripMenuItem.Name = "loggingToolStripMenuItem";
+            this.loggingToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.L)));
+            this.loggingToolStripMenuItem.Size = new System.Drawing.Size(222, 22);
+            this.loggingToolStripMenuItem.Text = "&Logging";
+            this.loggingToolStripMenuItem.Click += new System.EventHandler(this.loggingToolStripMenuItem_Click);
             // 
             // extraMenuItem
             // 
             this.extraMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.configurationToolStripMenuItem,
-            this.optionsToolStripMenuItem,
-            this.diagnosticsCountersToolStripMenuItem,
-            this.loggingToolStripMenuItem});
+            this.optionsToolStripMenuItem});
             this.extraMenuItem.Name = "extraMenuItem";
             this.extraMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.X)));
             this.extraMenuItem.Size = new System.Drawing.Size(44, 20);
@@ -397,21 +420,6 @@ namespace ModbusControlSpace
             this.optionsToolStripMenuItem.Size = new System.Drawing.Size(226, 22);
             this.optionsToolStripMenuItem.Text = "&Options";
             this.optionsToolStripMenuItem.Click += new System.EventHandler(this.optionsToolStripMenuItem_Click);
-            // 
-            // diagnosticsCountersToolStripMenuItem
-            // 
-            this.diagnosticsCountersToolStripMenuItem.Name = "diagnosticsCountersToolStripMenuItem";
-            this.diagnosticsCountersToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.D)));
-            this.diagnosticsCountersToolStripMenuItem.Size = new System.Drawing.Size(226, 22);
-            this.diagnosticsCountersToolStripMenuItem.Text = "&Diagnostics counters";
-            this.diagnosticsCountersToolStripMenuItem.Click += new System.EventHandler(this.diagnosticsCountersToolStripMenuItem_Click);
-            // 
-            // loggingToolStripMenuItem
-            // 
-            this.loggingToolStripMenuItem.Name = "loggingToolStripMenuItem";
-            this.loggingToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.L)));
-            this.loggingToolStripMenuItem.Size = new System.Drawing.Size(226, 22);
-            this.loggingToolStripMenuItem.Text = "&Logging";
             // 
             // customCommandsToolStripMenuItem
             // 
@@ -656,8 +664,6 @@ namespace ModbusControlSpace
         private System.Windows.Forms.TabControl tabControl1;
         private System.Windows.Forms.ToolStripMenuItem extraMenuItem;
         private System.Windows.Forms.ToolStripMenuItem configurationToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem diagnosticsCountersToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem loggingToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator6;
         private System.Windows.Forms.ToolStripMenuItem editLocalOverridesMenuItem;
         private System.Windows.Forms.ToolStripMenuItem connectionToolStripMenuItem;
@@ -683,6 +689,9 @@ namespace ModbusControlSpace
         private System.Windows.Forms.ToolStripMenuItem customWriteToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem customCommandToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem openFileLocationToolStripMenuItem;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator9;
+        private System.Windows.Forms.ToolStripMenuItem diagnosticsCountersToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem loggingToolStripMenuItem;
     }
 }
 

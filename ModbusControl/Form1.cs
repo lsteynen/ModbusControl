@@ -1595,6 +1595,14 @@ namespace ModbusControlSpace
             DiagnosticscountersForm1.Activate();
         }
 
+        private void loggingToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            // show the logger
+            Logger1.Show();
+            Logger1.WindowState = FormWindowState.Normal;
+            Logger1.BringToFront();
+        }
+
         private void ToolStrip1_HelpManualMenuItemClick(object sender, EventArgs e)
         {
             ToolStripMenuItem tmi = sender as ToolStripMenuItem;
@@ -2200,5 +2208,6 @@ namespace ModbusControlSpace
 
         #endregion
 
+        
     }
 }
