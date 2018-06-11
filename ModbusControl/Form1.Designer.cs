@@ -72,7 +72,7 @@ namespace ModbusControlSpace
             this.loggingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.customCommandsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.customReadToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.custimWriteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.customWriteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.customCommandToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.checkForUpdateMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -417,7 +417,7 @@ namespace ModbusControlSpace
             // 
             this.customCommandsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.customReadToolStripMenuItem,
-            this.custimWriteToolStripMenuItem,
+            this.customWriteToolStripMenuItem,
             this.customCommandToolStripMenuItem});
             this.customCommandsToolStripMenuItem.Name = "customCommandsToolStripMenuItem";
             this.customCommandsToolStripMenuItem.Size = new System.Drawing.Size(81, 20);
@@ -430,12 +430,12 @@ namespace ModbusControlSpace
             this.customReadToolStripMenuItem.Text = "Send read...";
             this.customReadToolStripMenuItem.Click += new System.EventHandler(this.customReadToolStripMenuItem_Click);
             // 
-            // custimWriteToolStripMenuItem
+            // customWriteToolStripMenuItem
             // 
-            this.custimWriteToolStripMenuItem.Name = "custimWriteToolStripMenuItem";
-            this.custimWriteToolStripMenuItem.Size = new System.Drawing.Size(210, 22);
-            this.custimWriteToolStripMenuItem.Text = "Send write...";
-            this.custimWriteToolStripMenuItem.Click += new System.EventHandler(this.custimWriteToolStripMenuItem_Click);
+            this.customWriteToolStripMenuItem.Name = "customWriteToolStripMenuItem";
+            this.customWriteToolStripMenuItem.Size = new System.Drawing.Size(210, 22);
+            this.customWriteToolStripMenuItem.Text = "Send write...";
+            this.customWriteToolStripMenuItem.Click += new System.EventHandler(this.customWriteToolStripMenuItem_Click);
             // 
             // customCommandToolStripMenuItem
             // 
@@ -680,7 +680,7 @@ namespace ModbusControlSpace
         private System.Windows.Forms.ToolStripMenuItem exportRegistersToFileToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem compareRegistersWithValuesInFileToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem customReadToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem custimWriteToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem customWriteToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem customCommandToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem openFileLocationToolStripMenuItem;
     }

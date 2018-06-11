@@ -44,7 +44,6 @@
             this.buttonClear = new System.Windows.Forms.Button();
             this.buttonSend = new System.Windows.Forms.Button();
             this.textboxLog = new System.Windows.Forms.TextBox();
-            this.checkboxEnableMainPolling = new System.Windows.Forms.CheckBox();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.numericSlaveAddress = new System.Windows.Forms.NumericUpDown();
             this.numericRegister = new System.Windows.Forms.NumericUpDown();
@@ -216,20 +215,6 @@
             this.textboxLog.TabIndex = 11;
             this.textboxLog.WordWrap = false;
             // 
-            // checkboxEnableMainPolling
-            // 
-            this.checkboxEnableMainPolling.AutoSize = true;
-            this.checkboxEnableMainPolling.Checked = true;
-            this.checkboxEnableMainPolling.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkboxEnableMainPolling.Location = new System.Drawing.Point(396, 14);
-            this.checkboxEnableMainPolling.Name = "checkboxEnableMainPolling";
-            this.checkboxEnableMainPolling.Size = new System.Drawing.Size(140, 17);
-            this.checkboxEnableMainPolling.TabIndex = 6;
-            this.checkboxEnableMainPolling.Text = "Enable main form polling";
-            this.toolTip1.SetToolTip(this.checkboxEnableMainPolling, "Enable or disable the polling in the main form tabs.");
-            this.checkboxEnableMainPolling.UseVisualStyleBackColor = true;
-            this.checkboxEnableMainPolling.CheckedChanged += new System.EventHandler(this.checkboxEnableMainPolling_CheckedChanged);
-            // 
             // numericSlaveAddress
             // 
             this.numericSlaveAddress.Location = new System.Drawing.Point(64, 13);
@@ -287,7 +272,6 @@
             this.Controls.Add(this.numericQuantity);
             this.Controls.Add(this.numericRegister);
             this.Controls.Add(this.numericSlaveAddress);
-            this.Controls.Add(this.checkboxEnableMainPolling);
             this.Controls.Add(this.textboxLog);
             this.Controls.Add(this.buttonClear);
             this.Controls.Add(this.buttonSend);
@@ -330,7 +314,6 @@
         private System.Windows.Forms.Button buttonSend;
         private System.Windows.Forms.TextBox textboxLog;
         private System.Windows.Forms.RadioButton radiobuttonAsFloat;
-        private System.Windows.Forms.CheckBox checkboxEnableMainPolling;
         private System.Windows.Forms.ToolTip toolTip1;
         private System.Windows.Forms.NumericUpDown numericSlaveAddress;
         private System.Windows.Forms.NumericUpDown numericRegister;

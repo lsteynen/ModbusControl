@@ -204,16 +204,8 @@ namespace ModbusControlSpace
             textboxResult.Clear();
         }
 
-        private void checkboxEnableMainPolling_CheckedChanged(object sender, EventArgs e)
-        {
-            // enable/disable main tabs polling
-            mParent.MainPollingIsEnabled = checkboxEnableMainPolling.Checked;
-        }
-
         private void CustomModbusCommand_Shown(object sender, EventArgs e)
         {
-            // form is shown: disable polling if unchecked
-            mParent.MainPollingIsEnabled = checkboxEnableMainPolling.Checked;
         }
     }
 }

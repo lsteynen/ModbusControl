@@ -769,9 +769,6 @@ namespace ModbusControlSpace
                 // Action items
                 importExportToolStripMenuItem.Enabled = ConnectionIsOpen;
                 exportRegistersToFileToolStripMenuItem.Enabled = ConnectionIsOpen && ProjectIsOpen && (tabControl1.TabPages.Count > 0);
-                customReadToolStripMenuItem.Enabled = ConnectionIsOpen;
-                custimWriteToolStripMenuItem.Enabled = ConnectionIsOpen;
-                customCommandToolStripMenuItem.Enabled = ConnectionIsOpen;
             }
         }
 
@@ -1990,14 +1987,13 @@ namespace ModbusControlSpace
 
             // update some parameters
             CustomreadForm.ShortLivedTcpConnection = false;
-            // show modal
-            CustomreadForm.ShowDialog();
 
-            // make sure main tabs polling is restored
-            MainPollingIsEnabled = true;
+            // show
+            CustomreadForm.Show();
+            CustomreadForm.Activate();
         }
 
-        private void custimWriteToolStripMenuItem_Click(object sender, EventArgs e)
+        private void customWriteToolStripMenuItem_Click(object sender, EventArgs e)
         {
             // create if needed, else show and hide
             if (CustomwriteForm == null)
@@ -2007,11 +2003,9 @@ namespace ModbusControlSpace
                 CustomwriteForm.Register = (uint)Project.Options.HoldingregistersStart;
             }
 
-            // show modal
-            CustomwriteForm.ShowDialog();
-
-            // make sure main tabs polling is restored
-            MainPollingIsEnabled = true;
+            // show
+            CustomwriteForm.Show();
+            CustomwriteForm.Activate();
         }
 
         private void customCommandToolStripMenuItem_Click(object sender, EventArgs e)
@@ -2023,10 +2017,8 @@ namespace ModbusControlSpace
             }
 
             // show modal
-            CustommodbuscommandForm.ShowDialog();
-
-            // make sure main tabs polling is restored
-            MainPollingIsEnabled = true;
+            CustommodbuscommandForm.Show();
+            CustommodbuscommandForm.Activate();
         }
 
         #endregion

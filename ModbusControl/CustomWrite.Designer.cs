@@ -45,7 +45,6 @@
             this.numericQuantity = new System.Windows.Forms.NumericUpDown();
             this.numericRegister = new System.Windows.Forms.NumericUpDown();
             this.numericSlaveAddress = new System.Windows.Forms.NumericUpDown();
-            this.checkboxEnableMainPolling = new System.Windows.Forms.CheckBox();
             this.label5 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
@@ -234,20 +233,6 @@
             0,
             0});
             // 
-            // checkboxEnableMainPolling
-            // 
-            this.checkboxEnableMainPolling.AutoSize = true;
-            this.checkboxEnableMainPolling.Checked = true;
-            this.checkboxEnableMainPolling.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkboxEnableMainPolling.Location = new System.Drawing.Point(396, 14);
-            this.checkboxEnableMainPolling.Name = "checkboxEnableMainPolling";
-            this.checkboxEnableMainPolling.Size = new System.Drawing.Size(140, 17);
-            this.checkboxEnableMainPolling.TabIndex = 6;
-            this.checkboxEnableMainPolling.Text = "Enable main form polling";
-            this.toolTip1.SetToolTip(this.checkboxEnableMainPolling, "Enable or disable the polling in the main form tabs.");
-            this.checkboxEnableMainPolling.UseVisualStyleBackColor = true;
-            this.checkboxEnableMainPolling.CheckedChanged += new System.EventHandler(this.checkboxEnableMainPolling_CheckedChanged);
-            // 
             // label5
             // 
             this.label5.AutoSize = true;
@@ -283,7 +268,6 @@
             this.Controls.Add(this.numericQuantity);
             this.Controls.Add(this.numericRegister);
             this.Controls.Add(this.numericSlaveAddress);
-            this.Controls.Add(this.checkboxEnableMainPolling);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.label6);
             this.Controls.Add(this.label7);
@@ -328,7 +312,6 @@
         private System.Windows.Forms.NumericUpDown numericQuantity;
         private System.Windows.Forms.NumericUpDown numericRegister;
         private System.Windows.Forms.NumericUpDown numericSlaveAddress;
-        private System.Windows.Forms.CheckBox checkboxEnableMainPolling;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Label label7;

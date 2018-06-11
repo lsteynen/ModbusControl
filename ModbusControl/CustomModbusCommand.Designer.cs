@@ -36,7 +36,6 @@
             this.label1 = new System.Windows.Forms.Label();
             this.textboxResult = new System.Windows.Forms.TextBox();
             this.buttonClear = new System.Windows.Forms.Button();
-            this.checkboxEnableMainPolling = new System.Windows.Forms.CheckBox();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.SuspendLayout();
             // 
@@ -108,26 +107,11 @@
             this.buttonClear.UseVisualStyleBackColor = true;
             this.buttonClear.Click += new System.EventHandler(this.buttonClear_Click);
             // 
-            // checkboxEnableMainPolling
-            // 
-            this.checkboxEnableMainPolling.AutoSize = true;
-            this.checkboxEnableMainPolling.Checked = true;
-            this.checkboxEnableMainPolling.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkboxEnableMainPolling.Location = new System.Drawing.Point(396, 14);
-            this.checkboxEnableMainPolling.Name = "checkboxEnableMainPolling";
-            this.checkboxEnableMainPolling.Size = new System.Drawing.Size(140, 17);
-            this.checkboxEnableMainPolling.TabIndex = 1;
-            this.checkboxEnableMainPolling.Text = "Enable main form polling";
-            this.toolTip1.SetToolTip(this.checkboxEnableMainPolling, "Enable or disable the polling in the main form tabs.\r\n");
-            this.checkboxEnableMainPolling.UseVisualStyleBackColor = true;
-            this.checkboxEnableMainPolling.CheckedChanged += new System.EventHandler(this.checkboxEnableMainPolling_CheckedChanged);
-            // 
             // CustomModbusCommand
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.ClientSize = new System.Drawing.Size(544, 362);
-            this.Controls.Add(this.checkboxEnableMainPolling);
             this.Controls.Add(this.buttonClear);
             this.Controls.Add(this.textboxResult);
             this.Controls.Add(this.label1);
@@ -152,7 +136,6 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TextBox textboxResult;
         private System.Windows.Forms.Button buttonClear;
-        private System.Windows.Forms.CheckBox checkboxEnableMainPolling;
         private System.Windows.Forms.ToolTip toolTip1;
     }
 }
