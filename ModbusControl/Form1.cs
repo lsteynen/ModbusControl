@@ -1611,8 +1611,8 @@ namespace ModbusControlSpace
 
         private void checkForUpdateMenuItem_Click(object sender, EventArgs e)
         {
-            // Start the updater
-            StartUpdater();
+            // Start the updater, user-initiated
+            StartUpdater(true);
         }
 
         private void formtimer1_Tick(object sender, EventArgs e)
@@ -2172,8 +2172,8 @@ namespace ModbusControlSpace
                 // Do a delay before checking for update
                 Thread.Sleep(5000);
 
-                // Start the updater
-                StartUpdater();
+                // Start the updater, silent auto-check
+                StartUpdater(false);
             }
 #if DEBUGX
             catch (Exception ex)
@@ -2189,7 +2189,7 @@ namespace ModbusControlSpace
         /// Start the updater process
         /// Updater.exe is limited to 1 instance
         /// </summary>
-        private void StartUpdater()
+        private void StartUpdater(bool bUserInterface)
         {
             lock (UpdaterLock)
             {
@@ -2197,6 +2197,10 @@ namespace ModbusControlSpace
                 ProcessStartInfo psi = new ProcessStartInfo();
                 psi.FileName = Path.Combine(Application.StartupPath, "Updater.exe");
                 psi.Arguments = "-v " + Application.ProductVersion.ToString();
+                if (bUserInterface)
+                {
+                    psi.Arguments += " -n -e";
+                }
                 psi.UseShellExecute = false;
                 Process.Start(psi);
             }
