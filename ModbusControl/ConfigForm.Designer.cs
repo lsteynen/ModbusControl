@@ -113,14 +113,14 @@
             this.groupboxConnection.Controls.Add(this.label7);
             this.groupboxConnection.Location = new System.Drawing.Point(12, 12);
             this.groupboxConnection.Name = "groupboxConnection";
-            this.groupboxConnection.Size = new System.Drawing.Size(194, 352);
+            this.groupboxConnection.Size = new System.Drawing.Size(194, 348);
             this.groupboxConnection.TabIndex = 0;
             this.groupboxConnection.TabStop = false;
             this.groupboxConnection.Text = "Connection / Protocol";
             // 
             // numericMaximumFrameSize
             // 
-            this.numericMaximumFrameSize.Location = new System.Drawing.Point(125, 296);
+            this.numericMaximumFrameSize.Location = new System.Drawing.Point(125, 320);
             this.numericMaximumFrameSize.Maximum = new decimal(new int[] {
             256,
             0,
@@ -148,7 +148,7 @@
             0,
             0,
             0});
-            this.numericResponseTimeout.Location = new System.Drawing.Point(124, 320);
+            this.numericResponseTimeout.Location = new System.Drawing.Point(124, 296);
             this.numericResponseTimeout.Maximum = new decimal(new int[] {
             9999999,
             0,
@@ -444,7 +444,7 @@
             // label8
             // 
             this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(6, 322);
+            this.label8.Location = new System.Drawing.Point(6, 298);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(117, 13);
             this.label8.TabIndex = 8;
@@ -462,7 +462,7 @@
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(6, 298);
+            this.label7.Location = new System.Drawing.Point(6, 322);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(104, 13);
             this.label7.TabIndex = 6;
@@ -778,7 +778,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.CancelButton = this.buttonCancel;
-            this.ClientSize = new System.Drawing.Size(629, 370);
+            this.ClientSize = new System.Drawing.Size(629, 367);
             this.ControlBox = false;
             this.Controls.Add(this.textboxHoldingRegistersStart);
             this.Controls.Add(this.buttonCancel);

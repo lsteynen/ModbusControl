@@ -1918,23 +1918,23 @@ namespace ModbusControlSpace
                 XmlRootNode.Add(xeBridge);
             }
 
-            // Find Samplerate node, or create it
-            XElement xe = GetSingleElement(xeBridge, "SampleRate", eReq.Optional);
-            if (xe == null)
-            {
-                xe = new XElement("samplerate");
-                xeBridge.Add(xe);
-            }
-            xe.Value = Options.Samplerate.ToString();
-
             // Find showinfo node, or create it
-            xe = GetSingleElement(xeBridge, "ShowInfo", eReq.Optional);
+            XElement xe = GetSingleElement(xeBridge, "ShowInfo", eReq.Optional);
             if (xe == null)
             {
                 xe = new XElement("showinfo");
                 xeBridge.Add(xe);
             }
             xe.Value = Options.ShowInfo.ToString();
+
+            // Find Samplerate node, or create it
+            xe = GetSingleElement(xeBridge, "SampleRate", eReq.Optional);
+            if (xe == null)
+            {
+                xe = new XElement("samplerate");
+                xeBridge.Add(xe);
+            }
+            xe.Value = Options.Samplerate.ToString();
 
             // And write the file
             XmlDoc.Save(Path);
