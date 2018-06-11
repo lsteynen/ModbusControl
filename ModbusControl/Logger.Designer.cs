@@ -1,4 +1,4 @@
-﻿namespace LoggerSpace
+﻿namespace LST.Helpers
 {
     partial class Logger
     {
@@ -35,7 +35,7 @@
             this.toolStripStatusLabel2 = new System.Windows.Forms.ToolStripStatusLabel();
             this.panel1 = new System.Windows.Forms.Panel();
             this.buttonStop = new System.Windows.Forms.Button();
-            this.logFilter = new ModbusControlSpace.LogFilter();
+            this.logFilter = new LogFilter();
             this.Loggrid = new SourceGrid.DataGrid();
             this.buttonClear = new System.Windows.Forms.Button();
             this.buttonCopyToClipboard = new System.Windows.Forms.Button();
@@ -185,7 +185,7 @@
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel2;
         private System.Windows.Forms.Button buttonClear;
         private SourceGrid.DataGrid Loggrid;
-        private ModbusControlSpace.LogFilter logFilter;
+        private LogFilter logFilter;
         private System.Windows.Forms.ToolTip toolTip1;
         private System.Windows.Forms.Button buttonStop;
     }

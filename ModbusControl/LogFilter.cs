@@ -8,7 +8,7 @@ using System.Text;
 using System.Windows.Forms;
 using UControls;
 
-namespace ModbusControlSpace
+namespace LST.Helpers
 {
     public partial class LogFilter : DropDownControl
     {

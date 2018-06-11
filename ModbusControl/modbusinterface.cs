@@ -7,7 +7,6 @@ using System.Net;
 using System.Net.Sockets;
 
 using Modbus_net;
-using LoggerSpace;
 using LST.Helpers;
 
 namespace ModbusControlSpace

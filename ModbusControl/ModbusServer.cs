@@ -8,7 +8,7 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 
-using LoggerSpace;
+using LST.Helpers;
 
 namespace ModbusServer
 {

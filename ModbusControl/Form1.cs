@@ -20,7 +20,6 @@ using System.Xml;
 using Modbus_net;
 using ModbusRegViewSpace;
 using TreeGridViewSpace;
-using LoggerSpace;
 using LST.Helpers;
 
 //TODO: localoverrides file in user/doc of %programdata%?

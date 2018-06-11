@@ -218,7 +218,7 @@
     <value>logFilter</value>
   </data>
   <data name="&gt;&gt;logFilter.Type" xml:space="preserve">
-    <value>ModbusControlSpace.LogFilter, ModbusControl, Version=1.8.6.0, Culture=neutral, PublicKeyToken=null</value>
+    <value>LST.Helpers.LogFilter, ModbusControl, Version=1.8.6.0, Culture=neutral, PublicKeyToken=null</value>
   </data>
   <data name="&gt;&gt;logFilter.Parent" xml:space="preserve">
     <value>panel1</value>

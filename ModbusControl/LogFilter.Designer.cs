@@ -1,4 +1,4 @@
-﻿namespace ModbusControlSpace
+﻿namespace LST.Helpers
 {
     partial class LogFilter
     {

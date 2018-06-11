@@ -9,7 +9,6 @@ using System.Text;
 using System.Threading;
 
 using Modbus_net;
-using LoggerSpace;
 using LST.Helpers;
 
 namespace ModbusServer
