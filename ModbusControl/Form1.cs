@@ -1591,16 +1591,13 @@ namespace ModbusControlSpace
             }
 
             UpdateDiagnosticsCounters();
-            DiagnosticscountersForm1.Show();
-            DiagnosticscountersForm1.Activate();
+            ShowForm( DiagnosticscountersForm1);
         }
 
         private void loggingToolStripMenuItem_Click(object sender, EventArgs e)
         {
             // show the logger
-            Logger1.Show();
-            Logger1.WindowState = FormWindowState.Normal;
-            Logger1.BringToFront();
+            ShowForm(Logger1);
         }
 
         private void ToolStrip1_HelpManualMenuItemClick(object sender, EventArgs e)
@@ -1996,8 +1993,7 @@ namespace ModbusControlSpace
             CustomreadForm.ShortLivedTcpConnection = false;
 
             // show
-            CustomreadForm.Show();
-            CustomreadForm.Activate();
+            ShowForm(CustomreadForm);
         }
 
         private void customWriteToolStripMenuItem_Click(object sender, EventArgs e)
@@ -2011,8 +2007,7 @@ namespace ModbusControlSpace
             }
 
             // show
-            CustomwriteForm.Show();
-            CustomwriteForm.Activate();
+            ShowForm( CustomwriteForm);
         }
 
         private void customCommandToolStripMenuItem_Click(object sender, EventArgs e)
@@ -2024,11 +2019,20 @@ namespace ModbusControlSpace
             }
 
             // show modal
-            CustommodbuscommandForm.Show();
-            CustommodbuscommandForm.Activate();
+            ShowForm(CustommodbuscommandForm);
         }
 
         #endregion
+
+        private void ShowForm(Form f)
+        {
+            f.Show();
+            if (f.WindowState == FormWindowState.Minimized)
+            {
+                f.WindowState = FormWindowState.Normal;
+            }
+            f.BringToFront();
+        }
 
         #region Status bar message system
 
