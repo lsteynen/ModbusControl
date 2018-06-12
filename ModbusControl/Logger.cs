@@ -102,7 +102,7 @@ namespace LST.Helpers
             }
         }
 
-        public int MaxLines
+        public int CapacityLines
         {
             get
             {
@@ -110,7 +110,10 @@ namespace LST.Helpers
             }
             set
             {
+                if (value < 1000) value = 1000;
+                AdjustLoggerSize(value);
                 mMaxLines = value;
+                RefreshView();
             }
         }
 
@@ -226,6 +229,31 @@ namespace LST.Helpers
             timerView.Enabled = false;
         }
 
+        private void AdjustLoggerSize( int NewSize)
+        {
+            if( NewSize < mMaxLines)
+            {
+                // must eliminate oldest entries?
+                // threadsafe
+                lock (LogListLock)
+                {
+                    if (NewSize < LogList.Count)
+                    {
+                        LogList.RemoveRange(0, LogList.Count - NewSize);
+                    }
+                }
+
+                // set changed flag
+                mLogAdded = 1;
+            }
+            else if( NewSize > mMaxLines)
+            {
+                // simply set new size
+                mMaxLines = NewSize;
+            }
+        }
+
+
 #if false
         private void listView1_RetrieveVirtualItem(object sender, RetrieveVirtualItemEventArgs e)
         {
@@ -295,10 +323,10 @@ namespace LST.Helpers
             }
             else
             {
-                StatusStr = "Disabled";
+                StatusStr = "Stopped";
             }
             toolStripStatusLabel2.Text = StatusStr + " - " 
-                               + LogList.Count.ToString() + "/"
+                               + LogList.Count.ToString() + " / "
                                + mMaxLines.ToString();
         }
 
@@ -466,6 +494,19 @@ namespace LST.Helpers
                 }
 
                 mLogAdded = 1;
+            }
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            LoggerSettings form = new LoggerSettings();
+
+            form.CapacityLines = CapacityLines;
+
+            if (form.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                // Save new settings
+                CapacityLines = form.CapacityLines;
             }
         }
 

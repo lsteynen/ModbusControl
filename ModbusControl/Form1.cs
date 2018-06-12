@@ -120,7 +120,7 @@ namespace ModbusControlSpace
             // Create logger
             Logger1 = new Logger();
             Logger1.Text = "ModbusControl log";
-            Logger1.MaxLines = 5000;
+            Logger1.CapacityLines = 5000;
             Logger1.ViewUpdateInterval = 200;
 
             // Create modbus interface
@@ -158,6 +158,7 @@ namespace ModbusControlSpace
             Options.UseLocalOverrides = Settings1.Values.uselocaloverrides;
             Options.BeepOnInputError = Settings1.Values.beeponinputerror;
             Options.CheckForUpdates = Settings1.Values.checkforupdates;
+            Logger1.CapacityLines = Settings1.Values.loggercapacity;
             recentFilesMenuItem.LoadList(Settings1.Values.mbcmrulist);
 
             // Start updater thread
@@ -249,6 +250,7 @@ namespace ModbusControlSpace
             Settings1.Values.uselocaloverrides = Options.UseLocalOverrides;
             Settings1.Values.beeponinputerror = Options.BeepOnInputError;
             Settings1.Values.checkforupdates = Options.CheckForUpdates;
+            Settings1.Values.loggercapacity = Logger1.CapacityLines;
             // And save
             Settings1.Save();
         }

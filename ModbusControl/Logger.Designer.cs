@@ -35,7 +35,7 @@
             this.toolStripStatusLabel2 = new System.Windows.Forms.ToolStripStatusLabel();
             this.panel1 = new System.Windows.Forms.Panel();
             this.buttonStop = new System.Windows.Forms.Button();
-            this.logFilter = new LogFilter();
+            this.logFilter = new LST.Helpers.LogFilter();
             this.Loggrid = new SourceGrid.DataGrid();
             this.buttonClear = new System.Windows.Forms.Button();
             this.buttonCopyToClipboard = new System.Windows.Forms.Button();
@@ -44,6 +44,7 @@
             this.buttonFirst = new System.Windows.Forms.Button();
             this.timerView = new System.Windows.Forms.Timer(this.components);
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            this.button1 = new System.Windows.Forms.Button();
             this.statusStrip1.SuspendLayout();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
@@ -69,6 +70,7 @@
             // 
             // panel1
             // 
+            this.panel1.Controls.Add(this.button1);
             this.panel1.Controls.Add(this.buttonStop);
             this.panel1.Controls.Add(this.logFilter);
             this.panel1.Controls.Add(this.Loggrid);
@@ -155,6 +157,13 @@
             this.timerView.Interval = 150;
             this.timerView.Tick += new System.EventHandler(this.timerView_Tick);
             // 
+            // button1
+            // 
+            resources.ApplyResources(this.button1, "button1");
+            this.button1.Name = "button1";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
             // Logger
             // 
             resources.ApplyResources(this, "$this");
@@ -188,6 +197,7 @@
         private LogFilter logFilter;
         private System.Windows.Forms.ToolTip toolTip1;
         private System.Windows.Forms.Button buttonStop;
+        private System.Windows.Forms.Button button1;
     }
 }
 

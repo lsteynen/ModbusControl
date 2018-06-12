@@ -466,7 +466,7 @@ namespace ModbusControlSpace
             // 
             this.checkForUpdateMenuItem.Name = "checkForUpdateMenuItem";
             this.checkForUpdateMenuItem.Size = new System.Drawing.Size(194, 22);
-            this.checkForUpdateMenuItem.Text = "Check for &Updates";
+            this.checkForUpdateMenuItem.Text = "Check for &updates";
             this.checkForUpdateMenuItem.Click += new System.EventHandler(this.checkForUpdateMenuItem_Click);
             // 
             // aboutMenuItem

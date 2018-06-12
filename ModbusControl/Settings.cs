@@ -36,6 +36,10 @@ namespace ModbusControlSpace
             public DateTime lastcheckforupdate
             { get; set; }
 
+            [XmlElement("loggercapacity")]
+            public int loggercapacity
+            { get; set; }
+
             [XmlArray("mbcmrulist")]
             [XmlArrayItem("file")]
             public List<string> mbcmrulist
@@ -44,11 +48,18 @@ namespace ModbusControlSpace
             // constructor
             public CValues()
             {
+                // sets default values
+                stoponerror = false;
+                uselocaloverrides = true;
+                beeponinputerror = true;
+                checkforupdates = true;
+                lastcheckforupdate = DateTime.MinValue;
+                loggercapacity = 5000;
                 mbcmrulist = new List<string>();
             }
         };
 
-        public CValues Values = new CValues();
+        public CValues Values;
         public string StorePath = "Settings.xml";
 
         /// <summary>
@@ -61,13 +72,6 @@ namespace ModbusControlSpace
             // Create the directory tree if it doesn't exists yet
             Directory.CreateDirectory(Path.GetDirectoryName(StorePath));
 
-            // Set defaults
-            Values.stoponerror = false;
-            Values.uselocaloverrides = true;
-            Values.beeponinputerror = true;
-            Values.checkforupdates = true;
-            Values.mbcmrulist.Clear();
-
             // Load the stored settings
             // Do not throw exception if file does not exist, that's normal on first use
             try
@@ -78,7 +82,9 @@ namespace ModbusControlSpace
             }
             catch
             {
-                // Ignore exception
+                // On exception
+                // Create a Values object with defaults
+                Values = new CValues();
             }
             finally
             {
