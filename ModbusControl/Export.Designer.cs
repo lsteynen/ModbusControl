@@ -155,14 +155,14 @@
             // 
             // groupboxExportFormat
             // 
-            this.groupboxExportFormat.Controls.Add(this.FormatAsciiPanel);
             this.groupboxExportFormat.Controls.Add(this.radiobuttonAsInGrid);
             this.groupboxExportFormat.Controls.Add(this.radiobuttonAsHex);
             this.groupboxExportFormat.Controls.Add(this.radiobuttonAsInt);
             this.groupboxExportFormat.Controls.Add(this.radiobuttonAsUInt);
+            this.groupboxExportFormat.Controls.Add(this.FormatAsciiPanel);
             this.groupboxExportFormat.Location = new System.Drawing.Point(223, 10);
             this.groupboxExportFormat.Name = "groupboxExportFormat";
-            this.groupboxExportFormat.Size = new System.Drawing.Size(269, 56);
+            this.groupboxExportFormat.Size = new System.Drawing.Size(272, 58);
             this.groupboxExportFormat.TabIndex = 20;
             this.groupboxExportFormat.TabStop = false;
             this.groupboxExportFormat.Text = "Export values format:";

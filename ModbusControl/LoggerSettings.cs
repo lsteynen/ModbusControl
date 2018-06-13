@@ -24,7 +24,7 @@ namespace LST.Helpers
         {
             InitializeComponent();
 
-            // limit number of digits that can be typed
+            // limit number of digits that can be typed in numericupdown
             ((TextBox)numericLoggerMaxLines.Controls[1]).MaxLength = numericLoggerMaxLines.Maximum.ToString().Length;
         }
     }

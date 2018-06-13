@@ -1509,15 +1509,8 @@ namespace ModbusControlSpace
 
             Offset = 0;
 
-            // determine holdingRegistersEnd
-            UInt32 holdingRegistersEnd = 49999;
-            if (Project.Options.HoldingregistersStart >= 400000)
-            {
-                holdingRegistersEnd = (UInt32)(Project.Options.HoldingregistersStart + 65535);
-            }
-
             // check and calculate registeroffset
-            if ((Regnr >= Project.Options.HoldingregistersStart) && (Regnr <= holdingRegistersEnd))
+            if ((Regnr >= Project.Options.HoldingregistersStart) && (Regnr <= GetHoldingRegistersEnd()))
             {
                 Offset = (UInt16)(Regnr - Project.Options.HoldingregistersStart);
                 return true;
@@ -1525,6 +1518,22 @@ namespace ModbusControlSpace
 
             // failed
             return false;
+        }
+
+        public UInt32 GetHoldingRegistersStart()
+        {
+            return (UInt32)Project.Options.HoldingregistersStart;
+        }
+
+        public UInt32 GetHoldingRegistersEnd()
+        {
+            // determine holdingRegistersEnd
+            UInt32 holdingRegistersEnd = 49999;
+            if (Project.Options.HoldingregistersStart >= 400000)
+            {
+                holdingRegistersEnd = (UInt32)(Project.Options.HoldingregistersStart + 65535);
+            }
+            return holdingRegistersEnd;
         }
 
         public int GetMaxRegistersInSingleRead()

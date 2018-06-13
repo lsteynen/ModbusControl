@@ -256,6 +256,15 @@ namespace ModbusControlSpace
         {
             InitializeComponent();
 
+            // limit number of digits that can be typed in numericupdown
+            ((TextBox)numericMaximumFrameSize.Controls[1]).MaxLength = numericMaximumFrameSize.Maximum.ToString().Length;
+            ((TextBox)numericResponseTimeout.Controls[1]).MaxLength = numericResponseTimeout.Maximum.ToString().Length;
+            ((TextBox)numericSlaveAddress.Controls[1]).MaxLength = numericSlaveAddress.Maximum.ToString().Length;
+            ((TextBox)numericIpPort.Controls[1]).MaxLength = numericIpPort.Maximum.ToString().Length;
+            ((TextBox)numericSerialEomTimeout.Controls[1]).MaxLength = numericSerialEomTimeout.Maximum.ToString().Length;
+            ((TextBox)numericTcpServerPort.Controls[1]).MaxLength = numericTcpServerPort.Maximum.ToString().Length;
+            ((TextBox)numericSamplerate.Controls[1]).MaxLength = numericSamplerate.Maximum.ToString().Length;
+
             // fill listbox with available serial ports
             comboSerialPort.Items.Clear();
             comboSerialPort.Text = string.Empty;

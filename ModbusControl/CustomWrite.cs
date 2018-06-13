@@ -23,6 +23,11 @@ namespace ModbusControlSpace
         {
             InitializeComponent();
 
+            // limit number of digits that can be typed in numericupdown
+            ((TextBox)numericQuantity.Controls[1]).MaxLength = numericQuantity.Maximum.ToString().Length;
+            ((TextBox)numericRegister.Controls[1]).MaxLength = numericRegister.Maximum.ToString().Length;
+            ((TextBox)numericSlaveAddress.Controls[1]).MaxLength = numericSlaveAddress.Maximum.ToString().Length;
+
             mParent = parent;
             mModbus = parent.mb;
         }
@@ -92,7 +97,11 @@ namespace ModbusControlSpace
             }
             else
             {
-                textboxLog.AppendText("ERROR: Register is invalid!" + Environment.NewLine);
+                textboxLog.AppendText("ERROR: Register is invalid! "
+                    + "Must be " + mParent.GetHoldingRegistersStart().ToString()
+                    + " - " + mParent.GetHoldingRegistersEnd().ToString() + "."
+                    + Environment.NewLine);
+                
                 return;
             }
 

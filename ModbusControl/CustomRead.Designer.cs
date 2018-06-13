@@ -237,7 +237,7 @@
             // 
             this.numericRegister.Location = new System.Drawing.Point(175, 13);
             this.numericRegister.Maximum = new decimal(new int[] {
-            -1,
+            999999,
             0,
             0,
             0});
@@ -250,7 +250,7 @@
             // 
             this.numericQuantity.Location = new System.Drawing.Point(315, 13);
             this.numericQuantity.Maximum = new decimal(new int[] {
-            125,
+            255,
             0,
             0,
             0});

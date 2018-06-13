@@ -130,11 +130,11 @@
             // 
             this.textboxData.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.textboxData.Location = new System.Drawing.Point(111, 104);
+            this.textboxData.Location = new System.Drawing.Point(116, 104);
             this.textboxData.Multiline = true;
             this.textboxData.Name = "textboxData";
             this.textboxData.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.textboxData.Size = new System.Drawing.Size(421, 75);
+            this.textboxData.Size = new System.Drawing.Size(416, 75);
             this.textboxData.TabIndex = 10;
             this.toolTip1.SetToolTip(this.textboxData, "Enter the decimal or hex values to be writtten, 16 or 32-bit values, comma separa" +
         "ted. Must match quantity.");
@@ -188,7 +188,7 @@
             // 
             this.numericQuantity.Location = new System.Drawing.Point(315, 13);
             this.numericQuantity.Maximum = new decimal(new int[] {
-            65535,
+            255,
             0,
             0,
             0});
@@ -206,7 +206,7 @@
             // 
             this.numericRegister.Location = new System.Drawing.Point(175, 13);
             this.numericRegister.Maximum = new decimal(new int[] {
-            -1,
+            999999,
             0,
             0,
             0});
