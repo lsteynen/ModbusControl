@@ -896,7 +896,7 @@ namespace ModbusControlSpace
                 newRegView.OnZoom += this.OnZoom;
 
                 // ReportErrorMessage callback
-                newRegView.OnReportErrorMessage += this.ReportErrorText;
+                newRegView.OnReportErrorMessage += this.ReportInputError;
 
                 // add info to Description?
                 // populate grid
@@ -1447,7 +1447,7 @@ namespace ModbusControlSpace
                                 mrv.SetRegistersReadError(LineIndex, 1, ModbusProtocol.GetResultText(result));
 
                                 // show the error in the status bar
-                                ReportErrorText("Read failed: Slave=" + Project.Connection.SlaveID + ", reg=" + FirstReg + ", quant=" + RegCount + ", Error=" + ModbusProtocol.GetResultText(result));
+                                SetStatusBarErrorText("Read failed: Slave=" + Project.Connection.SlaveID + ", reg=" + FirstReg + ", quant=" + RegCount + ", Error=" + ModbusProtocol.GetResultText(result));
                             }
 
                             // for each line of this group
@@ -1465,7 +1465,7 @@ namespace ModbusControlSpace
                         mrv.SetRegistersReadError(LineIndex, LineCount, ModbusProtocol.GetResultText(result));
 
                         // show the error in the status bar
-                        ReportErrorText("Read failed: Slave=" + Project.Connection.SlaveID + ", reg=" + FirstReg + ", quant=" + RegCount + ", Error=" + ModbusProtocol.GetResultText(result));
+                        SetStatusBarErrorText("Read failed: Slave=" + Project.Connection.SlaveID + ", reg=" + FirstReg + ", quant=" + RegCount + ", Error=" + ModbusProtocol.GetResultText(result));
 
                         // next group
                         LineIndex += LineCount;
@@ -1771,6 +1771,14 @@ namespace ModbusControlSpace
             }
         }
 
+        // Report an input error
+        // In the logger, on the status bar
+        public void ReportInputError(string ErrorText)
+        {
+            Logger1.Log(Logger.LogType.Error, ErrorText);
+            SetStatusBarErrorText(ErrorText);
+        }
+
         #region Writes
 
         // Add a write to the writelist
@@ -1846,7 +1854,7 @@ namespace ModbusControlSpace
 
                 if (result != ModbusProtocol.Result.SUCCESS)
                 {
-                    ReportErrorText("Write failed: Slave=" + Project.Connection.SlaveID + ", FC16, addr=" + Reg + ", quant=" + RegCount + ", Error=" + ModbusProtocol.GetResultText(result));
+                    SetStatusBarErrorText("Write failed: Slave=" + Project.Connection.SlaveID + ", FC16, addr=" + Reg + ", quant=" + RegCount + ", Error=" + ModbusProtocol.GetResultText(result));
                     Beep();
                 }
             }
@@ -1861,7 +1869,7 @@ namespace ModbusControlSpace
 
                 if (result != ModbusProtocol.Result.SUCCESS)
                 {
-                    ReportErrorText("Write failed: Slave=" + Project.Connection.SlaveID + ", FC6, reg=" + Reg + ", data=" + Values[0] + ", Error=" + ModbusProtocol.GetResultText(result));
+                    SetStatusBarErrorText("Write failed: Slave=" + Project.Connection.SlaveID + ", FC6, reg=" + Reg + ", data=" + Values[0] + ", Error=" + ModbusProtocol.GetResultText(result));
                     Beep();
                 }
             }
@@ -2047,7 +2055,8 @@ namespace ModbusControlSpace
 
         #region Status bar message system
 
-        public void ReportErrorText(string ErrorText)
+        //  show error in the status bar
+        public void SetStatusBarErrorText(string ErrorText)
         {
             SetStatusBarMessage( ErrorText);
         }

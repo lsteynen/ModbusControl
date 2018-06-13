@@ -506,7 +506,7 @@ namespace ModbusRegViewSpace
         {
             CurrentEditIsEscaped = false;
 
-            /* dot not allow editing if we're not polling */
+            // dot not allow editing if we're not polling 
             if (mIsReadOnly)
             {
                 e.Cancel = true;
@@ -517,10 +517,10 @@ namespace ModbusRegViewSpace
         {
             string OrigString;
 
-            /* check if this edit was entered, not canceled by ESC */
+            // check if this edit was entered, not canceled by ESC 
             if (CurrentEditIsEscaped == false)
             {
-                /* get the value string, watch out for null if value is empty */
+                // get the value string, watch out for null if value is empty
                 if (this.Rows[e.RowIndex].Cells[e.ColumnIndex].Value != null)
                 {
                     OrigString = this.Rows[e.RowIndex].Cells[e.ColumnIndex].Value.ToString().Trim();
@@ -594,7 +594,7 @@ namespace ModbusRegViewSpace
                     // Show it in red
                     this.Rows[e.RowIndex].Cells[e.ColumnIndex].Style.ForeColor = Color.Red;
                     // report error on status bar
-                    OnReportErrorMessage("Invalid value entered: " + OrigString);
+                    OnReportErrorMessageEvent("Input error: invalid value entered for register " + CurrentEditReg.Reg.ToString() + ": value: " + OrigString);
                     // beep
                     OnBeepEvent();
                 }
