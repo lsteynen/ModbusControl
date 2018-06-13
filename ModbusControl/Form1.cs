@@ -61,7 +61,6 @@ namespace ModbusControlSpace
         private bool TabIsChanged;
         private float ZoomFactor = 1.0F;
         private ModbusServer.ModbusServer TcpBridge;
-        private bool StopOnErrorIsArmed;
         private Thread UpdaterThread;   // Updater thread
         private Object UpdaterLock = new Object();  // lock for safely terminating the updater thread
 
@@ -447,14 +446,12 @@ namespace ModbusControlSpace
         private void StartPolling()
         {
             PollingIsStarted = true;
-            StopOnErrorIsArmed = Options.StopOnError;
             UpdateMenus();
         }
 
         private void StopPolling()
         {
             PollingIsStarted = false;
-            StopOnErrorIsArmed = false;
             UpdateMenus();
         }
 
@@ -1408,19 +1405,22 @@ namespace ModbusControlSpace
                     // error
 
                     // stop on error?
-                    if (Options.StopOnError && StopOnErrorIsArmed)
+                    if (Options.StopOnError)
                     {
+                        // stop polling immediately
+                        PollingIsStarted = false;
+                        PollOnceIsStarted = false;
+                        // tell the user
                         string msg = "Polling stopped because of 'Stop polling on error' option!" + Environment.NewLine
                                    + "Read failed: Slave=" + Project.Connection.SlaveID + ", reg=" + FirstReg + ", quant=" + RegCount + Environment.NewLine
                                    + "Error: " + ModbusProtocol.GetResultText(result);
                         StopOnError(msg);
-                        StopOnErrorIsArmed = false;
                         Logger1.Log(Logger.LogType.Info, "Polling stopped because of 'Stop polling on error' option!");
                     }
 
                     // if it is an address error? and we tried a group read? then read alls vars of this group with single reads to get per-var errors
                     // some slaves return eILLEGALDATAVALUE if address+regcount is invalid, some return ILLEGALADDRESSEXCEPTION
-                    if (((result == ModbusProtocol.Result.ILLEGALADDRESSEXCEPTION) || (result == ModbusProtocol.Result.ILLEGALDATAVALUEEXCEPTION)) && (LineCount > 1))
+                    if (((result == ModbusProtocol.Result.ILLEGALADDRESSEXCEPTION) || (result == ModbusProtocol.Result.ILLEGALDATAVALUEEXCEPTION)) && (LineCount > 1) && ContinuePolling())
                     {
                         // read the vars per line, to detect the error per line
                         int DummyLineCount;

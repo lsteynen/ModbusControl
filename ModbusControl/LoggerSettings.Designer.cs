@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(LoggerSettings));
             this.buttonCancel = new System.Windows.Forms.Button();
             this.buttonOK = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
@@ -100,8 +101,9 @@
             this.Controls.Add(this.buttonOK);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.numericLoggerMaxLines);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "LoggerSettings";
-            this.Text = "LoggerSettings";
+            this.Text = "Logger settings";
             ((System.ComponentModel.ISupportInitialize)(this.numericLoggerMaxLines)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
