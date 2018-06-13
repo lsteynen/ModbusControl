@@ -82,6 +82,7 @@
             this.buttonCancel = new System.Windows.Forms.Button();
             this.textboxHoldingRegistersStart = new System.Windows.Forms.TextBox();
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
+            this.groupBox5 = new System.Windows.Forms.GroupBox();
             this.groupboxConnection.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericMaximumFrameSize)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericResponseTimeout)).BeginInit();
@@ -473,7 +474,7 @@
             this.checkboxShowInfo.AutoSize = true;
             this.checkboxShowInfo.Checked = true;
             this.checkboxShowInfo.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkboxShowInfo.Location = new System.Drawing.Point(439, 69);
+            this.checkboxShowInfo.Location = new System.Drawing.Point(466, 68);
             this.checkboxShowInfo.Name = "checkboxShowInfo";
             this.checkboxShowInfo.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.checkboxShowInfo.Size = new System.Drawing.Size(138, 17);
@@ -572,9 +573,9 @@
             this.groupboxModbusTcpServer.Controls.Add(this.numericTcpServerPort);
             this.groupboxModbusTcpServer.Controls.Add(this.checkboxTcpServerEnable);
             this.groupboxModbusTcpServer.Controls.Add(this.label13);
-            this.groupboxModbusTcpServer.Location = new System.Drawing.Point(428, 167);
+            this.groupboxModbusTcpServer.Location = new System.Drawing.Point(466, 285);
             this.groupboxModbusTcpServer.Name = "groupboxModbusTcpServer";
-            this.groupboxModbusTcpServer.Size = new System.Drawing.Size(189, 75);
+            this.groupboxModbusTcpServer.Size = new System.Drawing.Size(178, 75);
             this.groupboxModbusTcpServer.TabIndex = 11;
             this.groupboxModbusTcpServer.TabStop = false;
             this.groupboxModbusTcpServer.Text = "Modbus/TCP bridge server";
@@ -710,7 +711,7 @@
             0,
             0,
             0});
-            this.numericSamplerate.Location = new System.Drawing.Point(530, 19);
+            this.numericSamplerate.Location = new System.Drawing.Point(557, 18);
             this.numericSamplerate.Maximum = new decimal(new int[] {
             99999999,
             0,
@@ -729,7 +730,7 @@
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(436, 21);
+            this.label6.Location = new System.Drawing.Point(463, 20);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(88, 13);
             this.label6.TabIndex = 6;
@@ -738,7 +739,7 @@
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(436, 47);
+            this.label5.Location = new System.Drawing.Point(463, 46);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(98, 13);
             this.label5.TabIndex = 8;
@@ -748,7 +749,7 @@
             // buttonOK
             // 
             this.buttonOK.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.buttonOK.Location = new System.Drawing.Point(461, 341);
+            this.buttonOK.Location = new System.Drawing.Point(250, 366);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(75, 23);
             this.buttonOK.TabIndex = 13;
@@ -758,7 +759,7 @@
             // buttonCancel
             // 
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.buttonCancel.Location = new System.Drawing.Point(542, 341);
+            this.buttonCancel.Location = new System.Drawing.Point(339, 366);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 23);
             this.buttonCancel.TabIndex = 14;
@@ -767,19 +768,28 @@
             // 
             // textboxHoldingRegistersStart
             // 
-            this.textboxHoldingRegistersStart.Location = new System.Drawing.Point(534, 44);
+            this.textboxHoldingRegistersStart.Location = new System.Drawing.Point(561, 43);
             this.textboxHoldingRegistersStart.Name = "textboxHoldingRegistersStart";
             this.textboxHoldingRegistersStart.ReadOnly = true;
             this.textboxHoldingRegistersStart.Size = new System.Drawing.Size(83, 20);
             this.textboxHoldingRegistersStart.TabIndex = 9;
+            // 
+            // groupBox5
+            // 
+            this.groupBox5.Location = new System.Drawing.Point(438, 12);
+            this.groupBox5.Name = "groupBox5";
+            this.groupBox5.Size = new System.Drawing.Size(10, 348);
+            this.groupBox5.TabIndex = 16;
+            this.groupBox5.TabStop = false;
             // 
             // ConfigForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.CancelButton = this.buttonCancel;
-            this.ClientSize = new System.Drawing.Size(629, 367);
+            this.ClientSize = new System.Drawing.Size(664, 396);
             this.ControlBox = false;
+            this.Controls.Add(this.groupBox5);
             this.Controls.Add(this.textboxHoldingRegistersStart);
             this.Controls.Add(this.buttonCancel);
             this.Controls.Add(this.buttonOK);
@@ -881,6 +891,7 @@
         private System.Windows.Forms.Label label14;
         private System.Windows.Forms.TextBox textboxHoldingRegistersStart;
         private System.ComponentModel.BackgroundWorker backgroundWorker1;
+        private System.Windows.Forms.GroupBox groupBox5;
 
     }
 }
