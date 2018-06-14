@@ -25,7 +25,7 @@ using LST.Helpers;
 //TODO: localoverrides file in user/doc of %programdata%?
 //TODO: manuals in user/doc of in C:\Users\Public\Documents of in %programdata%?
 //TODO: string2/4/6... implementeren
-//TODO: instellen EOMTimeout en InterframeDelay: instellen als 0=auto, 'Auto' tonen in numericupdown? <> 0 is fixed milliseconden.
+//TODO: instellen EndOfMessageTimeout en InterframeDelay: instellen als 0=auto, 'Auto' tonen in numericupdown? <> 0 is fixed milliseconden.
 //      zie ook https://stackoverflow.com/questions/5921446/having-text-inside-numericupdown-control-after-the-number
 
 namespace ModbusControlSpace
@@ -606,7 +606,7 @@ namespace ModbusControlSpace
             configform.ConnectionSerialPort = Project.Connection.SerialPort;
             configform.ConnectionSerialBaudrate = Project.Connection.SerialBaudrate;
             configform.ConnectionSerialParity = Project.Connection.SerialParity;
-            configform.ConnectionSerialEomTimeout = Project.Connection.SerialEndOfMessageTimeout;
+            configform.ConnectionSerialEndOfMessageTimeout = Project.Connection.SerialEndOfMessageTimeout;
             configform.ConnectionSerialOneWireEchoSuppression = Project.Connection.SerialOneWireEchoSuppression;
             configform.ConnectionIPAddress = Project.Connection.IPAddress;
             configform.ConnectionIPPort = Project.Connection.IPPort;
@@ -634,7 +634,7 @@ namespace ModbusControlSpace
                            && ((configform.ConnectionSerialPort != Project.Connection.SerialPort)
                                || (configform.ConnectionSerialBaudrate != Project.Connection.SerialBaudrate)
                                || (configform.ConnectionSerialParity != Project.Connection.SerialParity)
-                               || (configform.ConnectionSerialEomTimeout != Project.Connection.SerialEndOfMessageTimeout)
+                               || (configform.ConnectionSerialEndOfMessageTimeout != Project.Connection.SerialEndOfMessageTimeout)
                                || (configform.ConnectionSerialOneWireEchoSuppression != Project.Connection.SerialOneWireEchoSuppression)))
                        || (((Project.Connection.ConnectionType == Global.eConnectionType.ModbusTcp) || (Project.Connection.ConnectionType == Global.eConnectionType.RtuOverTcp))
                            && ((configform.ConnectionIPAddress != Project.Connection.IPAddress)
@@ -656,7 +656,7 @@ namespace ModbusControlSpace
                 Project.Connection.SerialPort = configform.ConnectionSerialPort;
                 Project.Connection.SerialBaudrate = configform.ConnectionSerialBaudrate;
                 Project.Connection.SerialParity = configform.ConnectionSerialParity;
-                Project.Connection.SerialEndOfMessageTimeout = configform.ConnectionSerialEomTimeout;
+                Project.Connection.SerialEndOfMessageTimeout = configform.ConnectionSerialEndOfMessageTimeout;
                 Project.Connection.SerialOneWireEchoSuppression = configform.ConnectionSerialOneWireEchoSuppression;
                 Project.Connection.IPAddress = configform.ConnectionIPAddress;
                 Project.Connection.IPPort = configform.ConnectionIPPort;

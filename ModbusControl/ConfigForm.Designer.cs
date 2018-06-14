@@ -41,7 +41,7 @@
             this.label11 = new System.Windows.Forms.Label();
             this.label10 = new System.Windows.Forms.Label();
             this.groupBoxSerialInterface = new System.Windows.Forms.GroupBox();
-            this.numericSerialEomTimeout = new System.Windows.Forms.NumericUpDown();
+            this.numericSerialEndOfMessageTimeout = new System.Windows.Forms.NumericUpDown();
             this.checkboxSerialOneWireEchoSuppression = new System.Windows.Forms.CheckBox();
             this.label12 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
@@ -90,7 +90,7 @@
             this.groupBoxTcpInterface.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericIpPort)).BeginInit();
             this.groupBoxSerialInterface.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericSerialEomTimeout)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericSerialEndOfMessageTimeout)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupboxModbusTcpServer.SuspendLayout();
@@ -279,7 +279,7 @@
             // 
             // groupBoxSerialInterface
             // 
-            this.groupBoxSerialInterface.Controls.Add(this.numericSerialEomTimeout);
+            this.groupBoxSerialInterface.Controls.Add(this.numericSerialEndOfMessageTimeout);
             this.groupBoxSerialInterface.Controls.Add(this.checkboxSerialOneWireEchoSuppression);
             this.groupBoxSerialInterface.Controls.Add(this.label12);
             this.groupBoxSerialInterface.Controls.Add(this.label1);
@@ -295,29 +295,29 @@
             this.groupBoxSerialInterface.TabStop = false;
             this.groupBoxSerialInterface.Text = "Serial interface";
             // 
-            // numericSerialEomTimeout
+            // numericSerialEndOfMessageTimeout
             // 
-            this.numericSerialEomTimeout.Increment = new decimal(new int[] {
+            this.numericSerialEndOfMessageTimeout.Increment = new decimal(new int[] {
             10,
             0,
             0,
             0});
-            this.numericSerialEomTimeout.Location = new System.Drawing.Point(115, 85);
-            this.numericSerialEomTimeout.Maximum = new decimal(new int[] {
+            this.numericSerialEndOfMessageTimeout.Location = new System.Drawing.Point(115, 85);
+            this.numericSerialEndOfMessageTimeout.Maximum = new decimal(new int[] {
             9999999,
             0,
             0,
             0});
-            this.numericSerialEomTimeout.Minimum = new decimal(new int[] {
+            this.numericSerialEndOfMessageTimeout.Minimum = new decimal(new int[] {
             1,
             0,
             0,
             0});
-            this.numericSerialEomTimeout.Name = "numericSerialEomTimeout";
-            this.numericSerialEomTimeout.Size = new System.Drawing.Size(71, 20);
-            this.numericSerialEomTimeout.TabIndex = 7;
-            this.toolTip1.SetToolTip(this.numericSerialEomTimeout, "Response end-of-message timeout, or character timeout, in milliseconds");
-            this.numericSerialEomTimeout.Value = new decimal(new int[] {
+            this.numericSerialEndOfMessageTimeout.Name = "numericSerialEndOfMessageTimeout";
+            this.numericSerialEndOfMessageTimeout.Size = new System.Drawing.Size(71, 20);
+            this.numericSerialEndOfMessageTimeout.TabIndex = 7;
+            this.toolTip1.SetToolTip(this.numericSerialEndOfMessageTimeout, "Response end-of-message timeout, or character timeout, in milliseconds");
+            this.numericSerialEndOfMessageTimeout.Value = new decimal(new int[] {
             100,
             0,
             0,
@@ -818,7 +818,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.numericIpPort)).EndInit();
             this.groupBoxSerialInterface.ResumeLayout(false);
             this.groupBoxSerialInterface.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericSerialEomTimeout)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericSerialEndOfMessageTimeout)).EndInit();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.groupBox2.ResumeLayout(false);
@@ -850,7 +850,7 @@
         private System.Windows.Forms.Label label11;
         private System.Windows.Forms.Label label10;
         private System.Windows.Forms.GroupBox groupBoxSerialInterface;
-        private System.Windows.Forms.NumericUpDown numericSerialEomTimeout;
+        private System.Windows.Forms.NumericUpDown numericSerialEndOfMessageTimeout;
         private System.Windows.Forms.CheckBox checkboxSerialOneWireEchoSuppression;
         private System.Windows.Forms.Label label12;
         private System.Windows.Forms.Label label1;
