@@ -326,12 +326,12 @@
             // checkboxSerialOneWireEchoSuppression
             // 
             this.checkboxSerialOneWireEchoSuppression.AutoSize = true;
-            this.checkboxSerialOneWireEchoSuppression.Location = new System.Drawing.Point(18, 107);
+            this.checkboxSerialOneWireEchoSuppression.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.checkboxSerialOneWireEchoSuppression.Location = new System.Drawing.Point(29, 107);
             this.checkboxSerialOneWireEchoSuppression.Name = "checkboxSerialOneWireEchoSuppression";
-            this.checkboxSerialOneWireEchoSuppression.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.checkboxSerialOneWireEchoSuppression.Size = new System.Drawing.Size(157, 17);
             this.checkboxSerialOneWireEchoSuppression.TabIndex = 8;
-            this.checkboxSerialOneWireEchoSuppression.Text = ":One-wire echo suppression";
+            this.checkboxSerialOneWireEchoSuppression.Text = "One-wire echo suppression:";
             this.checkboxSerialOneWireEchoSuppression.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.toolTip1.SetToolTip(this.checkboxSerialOneWireEchoSuppression, "Suppress the echo of the command on 1-wire connections");
             this.checkboxSerialOneWireEchoSuppression.UseVisualStyleBackColor = true;

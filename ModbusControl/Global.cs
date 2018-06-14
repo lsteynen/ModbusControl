@@ -5,6 +5,7 @@ using System.IO.Ports;
 using System.Net;
 using System.Text;
 using System.Xml;
+using System.Windows.Forms;
 
 // Windows special folders: https://blogs.msdn.microsoft.com/patricka/2010/03/18/where-should-i-store-my-data-and-configuration-files-if-i-target-multiple-os-versions
 
@@ -22,9 +23,10 @@ namespace ModbusControlSpace
         public enum eFormat { Int = 0, UInt, Hex, Bin, Float, ASCII };
         public static string[] FormatText = { "int", "uint", "hex", "bin", "float", "ASCII" };
 
-        public static string VersionString; 
-        public static string MyDocumentsPath; 
-        public static string CommonApplicationDataPath; 
+        public static string VersionString;
+        public static string ApplicationStartupPath;
+        public static string CommonApplicationDataPath;
+        public static string MyDocumentsPath;
         public static float SystemDpiX = 96.0F;
         public static float SystemDpiY = 96.0F;
 
@@ -36,8 +38,9 @@ namespace ModbusControlSpace
             if (v.Revision > 0) VersionString += "." + v.Revision;
 
             // Get Special Folders paths
-            MyDocumentsPath = Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments), "ModbusControl");
+            ApplicationStartupPath = Application.StartupPath;
             CommonApplicationDataPath = Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.CommonApplicationData), "E.D.&A", "ModbusControl");
+            MyDocumentsPath = Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments), "ModbusControl");
         }
 
 

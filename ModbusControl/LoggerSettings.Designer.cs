@@ -103,6 +103,7 @@
             this.Controls.Add(this.numericLoggerMaxLines);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "LoggerSettings";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Logger settings";
             ((System.ComponentModel.ISupportInitialize)(this.numericLoggerMaxLines)).EndInit();
             this.ResumeLayout(false);

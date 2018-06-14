@@ -96,7 +96,8 @@ namespace ModbusControlSpace
             CProject.DefaultFormSize.Width = this.Width;
             CProject.DefaultFormSize.Height = this.Height;
 
-            // This app is DPI-aware, get system DPI (we do not support per-monitor-DPI yet)
+            // This app is DPI-aware, get system DPI
+            // We support system DPI. We do not support per-monitor-DPI yet.
             // Store it in the Global class
             Graphics g = this.CreateGraphics();
             Global.SystemDpiX = g.DpiX;
@@ -172,20 +173,56 @@ namespace ModbusControlSpace
                 UpdaterThread.Start();
             }
 
-            // get a list of PDF files, assume these are Modbuscontrol manuals
-            string[] fileEntries = Directory.GetFiles(Global.MyDocumentsPath, "*.pdf");
-            // add PDF files to Help menu, if any
-            if (fileEntries.Length > 0)
+            // Optionally add PDF files to the help menu, if any
+            // Got to keep in insert counter for all files
+            int InsertIndex = 0;
+            try
             {
-                for (int i = 0; i < fileEntries.Length; ++i)
+                // throws exception if directory does not exist
+                string[] files = Directory.GetFiles(Global.ApplicationStartupPath, "*.pdf");
+                // add PDF files to help menu, if any
+                if (files.Length > 0)
                 {
-                    ToolStripMenuItem tmi = new ToolStripMenuItem();
-                    tmi.Text = System.IO.Path.GetFileName(fileEntries[i]);
-                    tmi.Tag = fileEntries[i];
-                    tmi.Click += ToolStrip1_HelpManualMenuItemClick;
-                    helpMenuItem.DropDownItems.Insert(i, tmi);
+                    for (int i = 0; i < files.Length; ++i)
+                    {
+                        ToolStripMenuItem tmi = new ToolStripMenuItem();
+                        tmi.Text = System.IO.Path.GetFileName(files[i]);
+                        tmi.Tag = files[i];
+                        tmi.Click += ToolStrip1_HelpFileMenuItemClick;
+                        helpMenuItem.DropDownItems.Insert(InsertIndex, tmi);
+                        ++InsertIndex;
+                    }
+                    helpMenuItem.DropDownItems.Insert(InsertIndex, new ToolStripSeparator());
+                    ++InsertIndex;
                 }
-                helpMenuItem.DropDownItems.Insert(2, new ToolStripSeparator());
+            }
+            catch (Exception)
+            {
+            }
+
+            // Optionally add demo mbc files to the help menu, if any
+            try
+            {
+                // throws exception if directory does not exist
+                string[] files = Directory.GetFiles(Global.ApplicationStartupPath, "*.mbc");
+                // add mbc files to help menu, if any
+                if (files.Length > 0)
+                {
+                    for (int i = 0; i < files.Length; ++i)
+                    {
+                        ToolStripMenuItem tmi = new ToolStripMenuItem();
+                        tmi.Text = "Open demo project " + System.IO.Path.GetFileName(files[i]);
+                        tmi.Tag = files[i];
+                        tmi.Click += ToolStrip1_HelpFileMenuItemClick;
+                        helpMenuItem.DropDownItems.Insert(InsertIndex, tmi);
+                        ++InsertIndex;
+                    }
+                    helpMenuItem.DropDownItems.Insert(InsertIndex, new ToolStripSeparator());
+                    ++InsertIndex;
+                }
+            }
+            catch (Exception)
+            {
             }
 
             // got command line parameters?
@@ -301,13 +338,22 @@ namespace ModbusControlSpace
             string DirName = System.IO.Path.GetDirectoryName(ProjectPath);
             if (!String.IsNullOrEmpty(DirName))
             {
-                System.Diagnostics.Process.Start(
-                    new System.Diagnostics.ProcessStartInfo()
-                    {
-                        FileName = DirName,
-                        UseShellExecute = true,
-                        Verb = "open"
-                    });
+                // throws exception if dir does not exist
+                try
+                {
+                    System.Diagnostics.Process.Start(
+                        new System.Diagnostics.ProcessStartInfo()
+                        {
+                            FileName = DirName,
+                            UseShellExecute = true,
+                            Verb = "open"
+                        });
+                }
+                catch (Exception ex)
+                {
+                    string msg = ex.Message + Environment.NewLine + DirName;
+                    MessageBox.Show(msg, this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             }
         }
 
@@ -827,15 +873,25 @@ namespace ModbusControlSpace
                     bool IsLocalOverrideUsed = Project.LoadLocalOverride(System.IO.Path.GetFileName(ProjectPath));
                     LocalOverrideUsed = Project.LocalOverrideName;
                 }
+                catch (DirectoryNotFoundException)
+                {
+                    // ignore
+                }
+                catch (FileNotFoundException)
+                {
+                    // ignore
+                }
                 catch (Exception ex)
                 {
-                    string msg = "Error: Cannot load localoverrides file: " + Environment.NewLine 
-                                + ex.Message;
+                    // report exception
+                    string msg = "Error: Cannot load localoverrides file: " + Environment.NewLine
+                                + ex.Message
+                                + Environment.NewLine
+                                + "Continuing without localoverrides."; 
                     MessageBox.Show(msg, "ModbusControl - Load of localoverride failed",
-                        MessageBoxButtons.OK, MessageBoxIcon.Error);
-
-                    // continue without localoverrides
+                                    MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
+                // on error: continue without localoverrides
             }
 
             // Here if load was successful
@@ -1611,10 +1667,43 @@ namespace ModbusControlSpace
             ShowForm(Logger1);
         }
 
-        private void ToolStrip1_HelpManualMenuItemClick(object sender, EventArgs e)
+        private void ToolStrip1_HelpFileMenuItemClick(object sender, EventArgs e)
         {
             ToolStripMenuItem tmi = sender as ToolStripMenuItem;
-            Process.Start(tmi.Tag.ToString());
+            string file = tmi.Tag.ToString();
+
+            // mbc file: open it
+            // other file: start windows associated process
+            if (Path.GetExtension(file).ToLower() == ".mbc")
+            {
+                // Stop comms
+                StopAllComms();
+                // Reset some stuff
+                ResetBeforeLoad();
+                // open new project
+                LoadProject(file);
+                // Update program's title
+                UpdateTitle();
+                // Enable/disable menu items and toolbar buttons
+                UpdateMenus();
+
+                // autostart communication
+                // if configured in mbc or override: use that
+                // if not configured: no autostart
+                CheckAutoStart(false, false);
+            }
+            else
+            {
+                try
+                {
+                    Process.Start(tmi.Tag.ToString());
+                }
+                catch (Exception ex)
+                {
+                    string msg = ex.Message + Environment.NewLine + tmi.Tag;
+                    MessageBox.Show(msg, this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
         }
 
         private void checkForUpdateMenuItem_Click(object sender, EventArgs e)
@@ -2217,7 +2306,7 @@ namespace ModbusControlSpace
         {
             lock (UpdaterLock)
             {
-                // Make sure it's our Updater.exe in our directory
+                // Make sure we start Updater.exe in our directory
                 ProcessStartInfo psi = new ProcessStartInfo();
                 psi.FileName = Path.Combine(Application.StartupPath, "Updater.exe");
                 psi.Arguments = "-v " + Application.ProductVersion.ToString();
@@ -2226,7 +2315,15 @@ namespace ModbusControlSpace
                     psi.Arguments += " -n -e";
                 }
                 psi.UseShellExecute = false;
-                Process.Start(psi);
+                try
+                {
+                    Process.Start(psi);
+                }
+                catch( Exception ex)
+                {
+                    string msg = ex.Message + Environment.NewLine + psi.FileName;
+                    MessageBox.Show(msg, this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             }
 
             // run updater only once per day
