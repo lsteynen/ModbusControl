@@ -122,10 +122,10 @@
   </metadata>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   <data name="statusStrip1.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 340</value>
+    <value>0, 343</value>
   </data>
   <data name="statusStrip1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>544, 22</value>
+    <value>542, 22</value>
   </data>
   <assembly alias="mscorlib" name="mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="statusStrip1.TabIndex" type="System.Int32, mscorlib">
@@ -156,8 +156,38 @@
   <data name="toolStripStatusLabel2.Size" type="System.Drawing.Size, System.Drawing">
     <value>0, 17</value>
   </data>
-  <data name="button1.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
-    <value>Top, Right</value>
+  <data name="button2.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="button2.Location" type="System.Drawing.Point, System.Drawing">
+    <value>394, 9</value>
+  </data>
+  <data name="button2.Size" type="System.Drawing.Size, System.Drawing">
+    <value>92, 23</value>
+  </data>
+  <data name="button2.TabIndex" type="System.Int32, mscorlib">
+    <value>10</value>
+  </data>
+  <data name="button2.Text" xml:space="preserve">
+    <value>Save to file...</value>
+  </data>
+  <metadata name="toolTip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>232, 7</value>
+  </metadata>
+  <data name="button2.ToolTip" xml:space="preserve">
+    <value>Save all logs to file</value>
+  </data>
+  <data name="&gt;&gt;button2.Name" xml:space="preserve">
+    <value>button2</value>
+  </data>
+  <data name="&gt;&gt;button2.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;button2.Parent" xml:space="preserve">
+    <value>panel1</value>
+  </data>
+  <data name="&gt;&gt;button2.ZOrder" xml:space="preserve">
+    <value>0</value>
   </data>
   <data name="button1.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
@@ -171,13 +201,16 @@
 </value>
   </data>
   <data name="button1.Location" type="System.Drawing.Point, System.Drawing">
-    <value>509, 9</value>
+    <value>492, 9</value>
   </data>
   <data name="button1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>24, 24</value>
+    <value>38, 23</value>
   </data>
   <data name="button1.TabIndex" type="System.Int32, mscorlib">
     <value>8</value>
+  </data>
+  <data name="button1.ToolTip" xml:space="preserve">
+    <value>Logger settings</value>
   </data>
   <data name="&gt;&gt;button1.Name" xml:space="preserve">
     <value>button1</value>
@@ -189,15 +222,12 @@
     <value>panel1</value>
   </data>
   <data name="&gt;&gt;button1.ZOrder" xml:space="preserve">
-    <value>0</value>
+    <value>1</value>
   </data>
-  <metadata name="toolTip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>232, 7</value>
-  </metadata>
   <data name="buttonStop.BackgroundImage" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAAK/INwWK6QAAAAlwSFlzAAAO
-        wAAADsABataJCQAAABl0RVh0U29mdHdhcmUAcGFpbnQubmV0IDQuMC4xNkRpr/UAAACrSURBVDhPY/j/
+        vwAADr8BOAVTJAAAABl0RVh0U29mdHdhcmUAcGFpbnQubmV0IDQuMC4xNkRpr/UAAACrSURBVDhPY/j/
         /z9FGKsgKRirICkYhbNx7/X/K7Zd/j9/3fn/05ef+t87/+j/lukH/1dP2PO/qGPH/8yGzf8TKtYBleIw
         gBjN4YWrgEpxGECMZr+sZUClOAwgRrNL4kKgUhwGEKPZOmoOUCkOA4jRbBw0A6gUhwHEaNbyngxUisMA
         YjQrOPcBleIwgBjN4tZdQKU4DCBGM59JK1ApDgPIwVgFScFYBYnH/xkAzS7OndvXTyMAAAAASUVORK5C
@@ -235,7 +265,7 @@
     <value>panel1</value>
   </data>
   <data name="&gt;&gt;buttonStop.ZOrder" xml:space="preserve">
-    <value>1</value>
+    <value>2</value>
   </data>
   <data name="logFilter.Location" type="System.Drawing.Point, System.Drawing">
     <value>118, 10</value>
@@ -259,7 +289,7 @@
     <value>panel1</value>
   </data>
   <data name="&gt;&gt;logFilter.ZOrder" xml:space="preserve">
-    <value>2</value>
+    <value>3</value>
   </data>
   <data name="Loggrid.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
     <value>Top, Bottom, Left, Right</value>
@@ -268,7 +298,7 @@
     <value>3, 37</value>
   </data>
   <data name="Loggrid.Size" type="System.Drawing.Size, System.Drawing">
-    <value>538, 300</value>
+    <value>536, 303</value>
   </data>
   <data name="Loggrid.TabIndex" type="System.Int32, mscorlib">
     <value>7</value>
@@ -283,7 +313,7 @@
     <value>panel1</value>
   </data>
   <data name="&gt;&gt;Loggrid.ZOrder" xml:space="preserve">
-    <value>3</value>
+    <value>4</value>
   </data>
   <data name="buttonClear.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
@@ -292,7 +322,7 @@
     <value>221, 9</value>
   </data>
   <data name="buttonClear.Size" type="System.Drawing.Size, System.Drawing">
-    <value>65, 23</value>
+    <value>52, 23</value>
   </data>
   <data name="buttonClear.TabIndex" type="System.Int32, mscorlib">
     <value>5</value>
@@ -313,16 +343,16 @@
     <value>panel1</value>
   </data>
   <data name="&gt;&gt;buttonClear.ZOrder" xml:space="preserve">
-    <value>4</value>
+    <value>5</value>
   </data>
   <data name="buttonCopyToClipboard.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
   </data>
   <data name="buttonCopyToClipboard.Location" type="System.Drawing.Point, System.Drawing">
-    <value>290, 9</value>
+    <value>279, 9</value>
   </data>
   <data name="buttonCopyToClipboard.Size" type="System.Drawing.Size, System.Drawing">
-    <value>103, 23</value>
+    <value>109, 23</value>
   </data>
   <data name="buttonCopyToClipboard.TabIndex" type="System.Int32, mscorlib">
     <value>6</value>
@@ -343,12 +373,12 @@
     <value>panel1</value>
   </data>
   <data name="&gt;&gt;buttonCopyToClipboard.ZOrder" xml:space="preserve">
-    <value>5</value>
+    <value>6</value>
   </data>
   <data name="buttonRecord.BackgroundImage" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAAK/INwWK6QAAAAlwSFlzAAAO
-        vwAADr8BOAVTJAAAABl0RVh0U29mdHdhcmUAcGFpbnQubmV0IDQuMC4xNkRpr/UAAAEASURBVDhPpYxL
+        vgAADr4B6kKxwAAAABl0RVh0U29mdHdhcmUAcGFpbnQubmV0IDQuMC4xNkRpr/UAAAEASURBVDhPpYxL
         b0FRFEb9lTLCRLQDrxRVzxKqqkqpV+IRCWVQNeKXr+57nTS5HCe9MVgnOSt7fR7gKrTSDVrpBq20tQ55
         TzkTttrv4XsLyxVMJtDrQfNVnTvvHR/7ezjA9gdWVjyFzz603qBahXxOJaaB3Q7WXzCdwWAgcQtqNYkL
         cJ9UiWlgs4b5HIZDaL9L/AxFiVMpiERUYhpYSDySuNOGeh1KRUinIRaFUEglpoHxGD46Er/AUwkeMhLH
@@ -384,7 +414,7 @@
     <value>panel1</value>
   </data>
   <data name="&gt;&gt;buttonRecord.ZOrder" xml:space="preserve">
-    <value>6</value>
+    <value>7</value>
   </data>
   <data name="buttonLast.BackgroundImage" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
@@ -426,7 +456,7 @@
     <value>panel1</value>
   </data>
   <data name="&gt;&gt;buttonLast.ZOrder" xml:space="preserve">
-    <value>7</value>
+    <value>8</value>
   </data>
   <data name="buttonFirst.BackgroundImage" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
@@ -468,7 +498,7 @@
     <value>panel1</value>
   </data>
   <data name="&gt;&gt;buttonFirst.ZOrder" xml:space="preserve">
-    <value>8</value>
+    <value>9</value>
   </data>
   <data name="panel1.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
     <value>Fill</value>
@@ -477,7 +507,7 @@
     <value>0, 0</value>
   </data>
   <data name="panel1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>544, 340</value>
+    <value>542, 343</value>
   </data>
   <data name="panel1.TabIndex" type="System.Int32, mscorlib">
     <value>0</value>
@@ -497,9 +527,6 @@
   <metadata name="timerView.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>126, 7</value>
   </metadata>
-  <metadata name="toolTip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>232, 7</value>
-  </metadata>
   <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </metadata>
@@ -507,7 +534,7 @@
     <value>96, 96</value>
   </data>
   <data name="$this.ClientSize" type="System.Drawing.Size, System.Drawing">
-    <value>544, 362</value>
+    <value>542, 365</value>
   </data>
   <data name="$this.Icon" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>

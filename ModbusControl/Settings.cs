@@ -36,13 +36,49 @@ namespace ModbusControlSpace
             public DateTime lastcheckforupdate
             { get; set; }
 
+            [XmlArray("mbcmrulist")]
+            [XmlArrayItem("file")]
+            public List<string> mbcmrulist
+            { get; set; }
+
             [XmlElement("loggercapacity")]
             public int loggercapacity
             { get; set; }
 
-            [XmlArray("mbcmrulist")]
-            [XmlArrayItem("file")]
-            public List<string> mbcmrulist
+            [XmlElement("loggerlogerrors")]
+            public bool loggerlogerrors
+            { get; set; }
+
+            [XmlElement("loggerlogwarnings")]
+            public bool loggerlogwarnings
+            { get; set; }
+
+            [XmlElement("loggerloginfo")]
+            public bool loggerloginfo
+            { get; set; }
+
+            [XmlElement("loggerlogtrace")]
+            public bool loggerlogtrace
+            { get; set; }
+
+            [XmlElement("loggerlogreads")]
+            public bool loggerlogreads
+            { get; set; }
+
+            [XmlElement("loggerlogwrites")]
+            public bool loggerlogwrites
+            { get; set; }
+
+            [XmlElement("loggerlogbridgeinfo")]
+            public bool loggerlogbridgeinfo
+            { get; set; }
+
+            [XmlElement("loggerlogbridgedata")]
+            public bool loggerlogbridgedata
+            { get; set; }
+
+            [XmlElement("loggerlogbridgedecode")]
+            public bool loggerlogbridgedecode
             { get; set; }
 
             // constructor
@@ -54,8 +90,17 @@ namespace ModbusControlSpace
                 beeponinputerror = true;
                 checkforupdates = true;
                 lastcheckforupdate = DateTime.MinValue;
-                loggercapacity = 5000;
                 mbcmrulist = new List<string>();
+                loggercapacity = 5000;
+                loggerlogerrors = true;
+                loggerlogwarnings = true;
+                loggerloginfo = true;
+                loggerlogtrace = false;
+                loggerlogreads = false;
+                loggerlogwrites = false;
+                loggerlogbridgeinfo = false;
+                loggerlogbridgedata = false;
+                loggerlogbridgedecode = false;
             }
         };
 

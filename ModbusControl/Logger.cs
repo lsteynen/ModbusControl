@@ -201,6 +201,14 @@ namespace LST.Helpers
             }
         }
 
+        public LogFilter TheLogFilter
+        {
+            get
+            {
+                return logFilter;
+            }
+        }
+
         #endregion
 
         private void Form1_Load(object sender, EventArgs e)
