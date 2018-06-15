@@ -41,44 +41,67 @@ namespace ModbusControlSpace
             public List<string> mbcmrulist
             { get; set; }
 
-            [XmlElement("loggercapacity")]
-            public int loggercapacity
-            { get; set; }
+            public class CLoggerValues
+            {
+                [XmlElement("capacity")]
+                public int capacity
+                { get; set; }
 
-            [XmlElement("loggerlogerrors")]
-            public bool loggerlogerrors
-            { get; set; }
+                [XmlElement("logerrors")]
+                public bool logerrors
+                { get; set; }
 
-            [XmlElement("loggerlogwarnings")]
-            public bool loggerlogwarnings
-            { get; set; }
+                [XmlElement("logwarnings")]
+                public bool logwarnings
+                { get; set; }
 
-            [XmlElement("loggerloginfo")]
-            public bool loggerloginfo
-            { get; set; }
+                [XmlElement("loginfo")]
+                public bool loginfo
+                { get; set; }
 
-            [XmlElement("loggerlogtrace")]
-            public bool loggerlogtrace
-            { get; set; }
+                [XmlElement("logtrace")]
+                public bool logtrace
+                { get; set; }
 
-            [XmlElement("loggerlogreads")]
-            public bool loggerlogreads
-            { get; set; }
+                [XmlElement("logreads")]
+                public bool logreads
+                { get; set; }
 
-            [XmlElement("loggerlogwrites")]
-            public bool loggerlogwrites
-            { get; set; }
+                [XmlElement("logwrites")]
+                public bool logwrites
+                { get; set; }
 
-            [XmlElement("loggerlogbridgeinfo")]
-            public bool loggerlogbridgeinfo
-            { get; set; }
+                [XmlElement("logbridgeinfo")]
+                public bool logbridgeinfo
+                { get; set; }
 
-            [XmlElement("loggerlogbridgedata")]
-            public bool loggerlogbridgedata
-            { get; set; }
+                [XmlElement("logbridgedata")]
+                public bool logbridgedata
+                { get; set; }
 
-            [XmlElement("loggerlogbridgedecode")]
-            public bool loggerlogbridgedecode
+                [XmlElement("logbridgedecode")]
+                public bool logbridgedecode
+                { get; set; }
+
+                // constructor
+                public CLoggerValues()
+                {
+                    // sets default values
+                    capacity = 5000;
+                    logerrors = true;
+                    logwarnings = true;
+                    loginfo = true;
+                    logtrace = false;
+                    logreads = false;
+                    logwrites = false;
+                    logbridgeinfo = false;
+                    logbridgedata = false;
+                    logbridgedecode = false;
+                }
+            }
+
+            [XmlElement("logger")]
+            public CLoggerValues logger
             { get; set; }
 
             // constructor
@@ -91,16 +114,7 @@ namespace ModbusControlSpace
                 checkforupdates = true;
                 lastcheckforupdate = DateTime.MinValue;
                 mbcmrulist = new List<string>();
-                loggercapacity = 5000;
-                loggerlogerrors = true;
-                loggerlogwarnings = true;
-                loggerloginfo = true;
-                loggerlogtrace = false;
-                loggerlogreads = false;
-                loggerlogwrites = false;
-                loggerlogbridgeinfo = false;
-                loggerlogbridgedata = false;
-                loggerlogbridgedecode = false;
+                logger = new CLoggerValues();
             }
         };
 

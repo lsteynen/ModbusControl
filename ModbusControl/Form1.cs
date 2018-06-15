@@ -159,16 +159,16 @@ namespace ModbusControlSpace
             Options.BeepOnInputError = Settings1.Values.beeponinputerror;
             Options.CheckForUpdates = Settings1.Values.checkforupdates;
             recentFilesMenuItem.LoadList(Settings1.Values.mbcmrulist);
-            Logger1.CapacityLines = Settings1.Values.loggercapacity;
-            Logger1.TheLogFilter.LogErrors = Settings1.Values.loggerlogerrors;
-            Logger1.TheLogFilter.LogWarnings = Settings1.Values.loggerlogwarnings;
-            Logger1.TheLogFilter.LogInfo = Settings1.Values.loggerloginfo;
-            Logger1.TheLogFilter.LogTrace = Settings1.Values.loggerlogtrace;
-            Logger1.TheLogFilter.LogReads = Settings1.Values.loggerlogreads;
-            Logger1.TheLogFilter.LogWrites = Settings1.Values.loggerlogwrites;
-            Logger1.TheLogFilter.LogBridgeInfo = Settings1.Values.loggerlogbridgeinfo;
-            Logger1.TheLogFilter.LogBridgeData = Settings1.Values.loggerlogbridgedata;
-            Logger1.TheLogFilter.LogBridgeDecode = Settings1.Values.loggerlogbridgedecode;
+            Logger1.CapacityLines = Settings1.Values.logger.capacity;
+            Logger1.TheLogFilter.LogErrors = Settings1.Values.logger.logerrors;
+            Logger1.TheLogFilter.LogWarnings = Settings1.Values.logger.logwarnings;
+            Logger1.TheLogFilter.LogInfo = Settings1.Values.logger.loginfo;
+            Logger1.TheLogFilter.LogTrace = Settings1.Values.logger.logtrace;
+            Logger1.TheLogFilter.LogReads = Settings1.Values.logger.logreads;
+            Logger1.TheLogFilter.LogWrites = Settings1.Values.logger.logwrites;
+            Logger1.TheLogFilter.LogBridgeInfo = Settings1.Values.logger.logbridgeinfo;
+            Logger1.TheLogFilter.LogBridgeData = Settings1.Values.logger.logbridgedata;
+            Logger1.TheLogFilter.LogBridgeDecode = Settings1.Values.logger.logbridgedecode;
 
             // Start updater thread
             // if auto-update enabled
@@ -295,16 +295,16 @@ namespace ModbusControlSpace
             Settings1.Values.uselocaloverrides = Options.UseLocalOverrides;
             Settings1.Values.beeponinputerror = Options.BeepOnInputError;
             Settings1.Values.checkforupdates = Options.CheckForUpdates;
-            Settings1.Values.loggercapacity = Logger1.CapacityLines;
-            Settings1.Values.loggerlogerrors = Logger1.TheLogFilter.LogErrors;
-            Settings1.Values.loggerlogwarnings = Logger1.TheLogFilter.LogWarnings;
-            Settings1.Values.loggerloginfo = Logger1.TheLogFilter.LogInfo;
-            Settings1.Values.loggerlogtrace = Logger1.TheLogFilter.LogTrace;
-            Settings1.Values.loggerlogreads = Logger1.TheLogFilter.LogReads;
-            Settings1.Values.loggerlogwrites = Logger1.TheLogFilter.LogWrites;
-            Settings1.Values.loggerlogbridgeinfo = Logger1.TheLogFilter.LogBridgeInfo;
-            Settings1.Values.loggerlogbridgedata = Logger1.TheLogFilter.LogBridgeData;
-            Settings1.Values.loggerlogbridgedecode = Logger1.TheLogFilter.LogBridgeDecode;
+            Settings1.Values.logger.capacity = Logger1.CapacityLines;
+            Settings1.Values.logger.logerrors = Logger1.TheLogFilter.LogErrors;
+            Settings1.Values.logger.logwarnings = Logger1.TheLogFilter.LogWarnings;
+            Settings1.Values.logger.loginfo = Logger1.TheLogFilter.LogInfo;
+            Settings1.Values.logger.logtrace = Logger1.TheLogFilter.LogTrace;
+            Settings1.Values.logger.logreads = Logger1.TheLogFilter.LogReads;
+            Settings1.Values.logger.logwrites = Logger1.TheLogFilter.LogWrites;
+            Settings1.Values.logger.logbridgeinfo = Logger1.TheLogFilter.LogBridgeInfo;
+            Settings1.Values.logger.logbridgedata = Logger1.TheLogFilter.LogBridgeData;
+            Settings1.Values.logger.logbridgedecode = Logger1.TheLogFilter.LogBridgeDecode;
 
             // And save
             Settings1.Save();
