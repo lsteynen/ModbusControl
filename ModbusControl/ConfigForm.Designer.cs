@@ -326,13 +326,11 @@
             // checkboxSerialOneWireEchoSuppression
             // 
             this.checkboxSerialOneWireEchoSuppression.AutoSize = true;
-            this.checkboxSerialOneWireEchoSuppression.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.checkboxSerialOneWireEchoSuppression.Location = new System.Drawing.Point(29, 107);
+            this.checkboxSerialOneWireEchoSuppression.Location = new System.Drawing.Point(22, 108);
             this.checkboxSerialOneWireEchoSuppression.Name = "checkboxSerialOneWireEchoSuppression";
-            this.checkboxSerialOneWireEchoSuppression.Size = new System.Drawing.Size(157, 17);
+            this.checkboxSerialOneWireEchoSuppression.Size = new System.Drawing.Size(154, 17);
             this.checkboxSerialOneWireEchoSuppression.TabIndex = 8;
-            this.checkboxSerialOneWireEchoSuppression.Text = "One-wire echo suppression:";
-            this.checkboxSerialOneWireEchoSuppression.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.checkboxSerialOneWireEchoSuppression.Text = "One-wire echo suppression";
             this.toolTip1.SetToolTip(this.checkboxSerialOneWireEchoSuppression, "Suppress the echo of the command on 1-wire connections");
             this.checkboxSerialOneWireEchoSuppression.UseVisualStyleBackColor = true;
             // 
@@ -606,12 +604,11 @@
             // checkboxTcpServerEnable
             // 
             this.checkboxTcpServerEnable.AutoSize = true;
-            this.checkboxTcpServerEnable.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.checkboxTcpServerEnable.Location = new System.Drawing.Point(7, 20);
+            this.checkboxTcpServerEnable.Location = new System.Drawing.Point(12, 20);
             this.checkboxTcpServerEnable.Name = "checkboxTcpServerEnable";
-            this.checkboxTcpServerEnable.Size = new System.Drawing.Size(74, 17);
+            this.checkboxTcpServerEnable.Size = new System.Drawing.Size(59, 17);
             this.checkboxTcpServerEnable.TabIndex = 0;
-            this.checkboxTcpServerEnable.Text = "Enable:    ";
+            this.checkboxTcpServerEnable.Text = "Enable";
             this.toolTip1.SetToolTip(this.checkboxTcpServerEnable, "Enable the Modbus/TCP bridge");
             this.checkboxTcpServerEnable.UseVisualStyleBackColor = true;
             // 

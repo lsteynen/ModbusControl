@@ -59,8 +59,7 @@
             // checkboxUseLocalOverrides
             // 
             this.checkboxUseLocalOverrides.AutoSize = true;
-            this.checkboxUseLocalOverrides.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.checkboxUseLocalOverrides.Location = new System.Drawing.Point(106, 35);
+            this.checkboxUseLocalOverrides.Location = new System.Drawing.Point(112, 35);
             this.checkboxUseLocalOverrides.Name = "checkboxUseLocalOverrides";
             this.checkboxUseLocalOverrides.Size = new System.Drawing.Size(116, 17);
             this.checkboxUseLocalOverrides.TabIndex = 1;
@@ -70,8 +69,7 @@
             // checkboxStopOnCommsError
             // 
             this.checkboxStopOnCommsError.AutoSize = true;
-            this.checkboxStopOnCommsError.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.checkboxStopOnCommsError.Location = new System.Drawing.Point(102, 12);
+            this.checkboxStopOnCommsError.Location = new System.Drawing.Point(112, 12);
             this.checkboxStopOnCommsError.Name = "checkboxStopOnCommsError";
             this.checkboxStopOnCommsError.Size = new System.Drawing.Size(120, 17);
             this.checkboxStopOnCommsError.TabIndex = 0;
@@ -81,8 +79,7 @@
             // checkboxBeepOnInputError
             // 
             this.checkboxBeepOnInputError.AutoSize = true;
-            this.checkboxBeepOnInputError.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.checkboxBeepOnInputError.Location = new System.Drawing.Point(106, 58);
+            this.checkboxBeepOnInputError.Location = new System.Drawing.Point(112, 58);
             this.checkboxBeepOnInputError.Name = "checkboxBeepOnInputError";
             this.checkboxBeepOnInputError.Size = new System.Drawing.Size(116, 17);
             this.checkboxBeepOnInputError.TabIndex = 2;
@@ -92,8 +89,7 @@
             // CheckboxCheckForUpdates
             // 
             this.CheckboxCheckForUpdates.AutoSize = true;
-            this.CheckboxCheckForUpdates.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.CheckboxCheckForUpdates.Location = new System.Drawing.Point(109, 97);
+            this.CheckboxCheckForUpdates.Location = new System.Drawing.Point(112, 97);
             this.CheckboxCheckForUpdates.Name = "CheckboxCheckForUpdates";
             this.CheckboxCheckForUpdates.Size = new System.Drawing.Size(113, 17);
             this.CheckboxCheckForUpdates.TabIndex = 3;
