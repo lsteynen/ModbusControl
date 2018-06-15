@@ -212,6 +212,7 @@
             this.label9.Size = new System.Drawing.Size(37, 13);
             this.label9.TabIndex = 4;
             this.label9.Text = "Mode:";
+            this.label9.Visible = false;
             // 
             // numericIpPort
             // 
@@ -249,6 +250,7 @@
             this.comboTcpConnectMode.Size = new System.Drawing.Size(125, 21);
             this.comboTcpConnectMode.TabIndex = 5;
             this.toolTip1.SetToolTip(this.comboTcpConnectMode, "Type of TCP connection:");
+            this.comboTcpConnectMode.Visible = false;
             // 
             // textboxIpAddress
             // 
