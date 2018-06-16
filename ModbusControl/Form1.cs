@@ -160,6 +160,8 @@ namespace ModbusControlSpace
             Options.CheckForUpdates = Settings1.Values.checkforupdates;
             recentFilesMenuItem.LoadList(Settings1.Values.mbcmrulist);
             Logger1.CapacityLines = Settings1.Values.logger.capacity;
+            // export settings taken when form is created
+            // compare settings taken when form is created
             Logger1.TheLogFilter.LogErrors = Settings1.Values.logger.logerrors;
             Logger1.TheLogFilter.LogWarnings = Settings1.Values.logger.logwarnings;
             Logger1.TheLogFilter.LogInfo = Settings1.Values.logger.loginfo;
@@ -295,6 +297,18 @@ namespace ModbusControlSpace
             Settings1.Values.uselocaloverrides = Options.UseLocalOverrides;
             Settings1.Values.beeponinputerror = Options.BeepOnInputError;
             Settings1.Values.checkforupdates = Options.CheckForUpdates;
+            if (ExportForm != null)
+            {
+                // save settings if form exists
+                Settings1.Values.export.tabs = ExportForm.TabSelect;
+                Settings1.Values.export.exportformat = ExportForm.ExportFormatSelect;
+                Settings1.Values.export.asciiformat = ExportForm.AsciiFormatSelect;
+            }
+            if (ImportcompareForm != null)
+            {
+                // save settings if form exists
+                Settings1.Values.compare.showequal = ImportcompareForm.ShowEquals;
+            }
             Settings1.Values.logger.capacity = Logger1.CapacityLines;
             Settings1.Values.logger.logerrors = Logger1.TheLogFilter.LogErrors;
             Settings1.Values.logger.logwarnings = Logger1.TheLogFilter.LogWarnings;
@@ -2078,6 +2092,10 @@ namespace ModbusControlSpace
             if (ExportForm == null)
             {
                 ExportForm = new Export(this);
+                // load settings
+                ExportForm.TabSelect = Settings1.Values.export.tabs;
+                ExportForm.ExportFormatSelect = Settings1.Values.export.exportformat;
+                ExportForm.AsciiFormatSelect = Settings1.Values.export.asciiformat;
             }
 
             // show modal
@@ -2093,6 +2111,8 @@ namespace ModbusControlSpace
             if (ImportcompareForm == null)
             {
                 ImportcompareForm = new Importcompare(this);
+                // load settings
+                ImportcompareForm.ShowEquals = Settings1.Values.compare.showequal;
             }
 
             // show modal

@@ -29,6 +29,29 @@ namespace ModbusControlSpace
 
         private enum ExportMode { CurrentTab = 0, AllTabs };
 
+        // properties
+
+        public string TabSelect
+        {
+            // uses Radiobutton.Tag
+            get { return GetRadioGroupTag( panelTab); }
+            set { SetRadioGroupByTag(panelTab, value); }
+        }
+
+        public string ExportFormatSelect
+        {
+            // uses Radiobutton.Tag
+            get { return GetRadioGroupTag(groupboxExportFormat); }
+            set { SetRadioGroupByTag(groupboxExportFormat, value); }
+        }
+
+        public string AsciiFormatSelect
+        {
+            // uses Radiobutton.Tag
+            get { return GetRadioGroupTag(FormatAsciiPanel); }
+            set { SetRadioGroupByTag(FormatAsciiPanel, value); }
+        }
+
         // constructor
         public Export(Form1 parent)
         {
@@ -479,5 +502,29 @@ namespace ModbusControlSpace
             FormatAsciiPanel.Enabled = radiobuttonAsInGrid.Checked;
         }
 
+        private string GetRadioGroupTag(Control Container)
+        {
+            foreach (Control c in Container.Controls)
+            {
+                if ((c is RadioButton) && (c as RadioButton).Checked)
+                {
+                    return (string)(c as RadioButton).Tag;
+                }
+            }
+
+            return String.Empty;
+        }
+
+        private void SetRadioGroupByTag(Control Container, string Tag)
+        {
+            foreach (Control c in Container.Controls)
+            {
+                if ((c is RadioButton) && ((string)((c as RadioButton).Tag)) == Tag)
+                {
+                    (c as RadioButton).Checked = true;
+                    break;
+                }
+            }
+        }
     }
 }

@@ -55,6 +55,15 @@ namespace ModbusControlSpace
         // here's where the import file is stored
         List<ImportLine> ImportList = new List<ImportLine>();
 
+        // properties
+
+        public bool ShowEquals
+        {
+            // uses Radiobutton.Tag
+            get { return checkboxShowEquals.Checked; }
+            set { checkboxShowEquals.Checked = value; }
+        }
+
         // constructor
         public Importcompare(Form1 parent)
         {
@@ -261,7 +270,14 @@ namespace ModbusControlSpace
             // make output string
             string s = Reg + ";" + Size + ";\"" + Description + "\";" + RWstring + ";" + Format + ";" + ValueString + "   >> " + ResultString;
 
-            mWorker.ReportProgress(0, "Compare: " + s);
+            if (bEqual && (checkboxShowEquals.Checked == false))
+            {
+                // not show
+            }
+            else
+            {
+                mWorker.ReportProgress(0, "Compare: " + s);
+            }
 
             return true;
         }

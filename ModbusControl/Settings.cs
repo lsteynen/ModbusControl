@@ -41,6 +41,52 @@ namespace ModbusControlSpace
             public List<string> mbcmrulist
             { get; set; }
 
+            public class CCompare
+            {
+                [XmlElement("showequal")]
+                public bool showequal
+                { get; set; }
+
+                // constructor
+                public CCompare()
+                {
+                    // sets default values
+                    showequal = true;
+                }
+            }
+
+            [XmlElement("export")]
+            public CExport export
+            { get; set; }
+
+            [XmlElement("compare")]
+            public CCompare compare
+            { get; set; }
+
+            public class CExport
+            {
+                [XmlElement("tabs")]
+                public string tabs
+                { get; set; }
+
+                [XmlElement("exportformat")]
+                public string exportformat
+                { get; set; }
+
+                [XmlElement("asciiformat")]
+                public string asciiformat
+                { get; set; }
+
+                // constructor
+                public CExport()
+                {
+                    // sets default values
+                    tabs = "current";
+                    exportformat = "grid";
+                    asciiformat = "ascii";
+                }
+            }
+
             public class CLoggerValues
             {
                 [XmlElement("capacity")]
@@ -114,6 +160,8 @@ namespace ModbusControlSpace
                 checkforupdates = true;
                 lastcheckforupdate = DateTime.MinValue;
                 mbcmrulist = new List<string>();
+                export = new CExport();
+                compare = new CCompare();
                 logger = new CLoggerValues();
             }
         };

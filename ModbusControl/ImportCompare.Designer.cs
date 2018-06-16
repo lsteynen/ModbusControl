@@ -38,6 +38,7 @@
             this.buttonClearLog = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            this.checkboxShowEquals = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // buttonStart
@@ -117,11 +118,24 @@
             this.buttonCancel.UseVisualStyleBackColor = true;
             this.buttonCancel.Click += new System.EventHandler(this.buttonCancel_Click);
             // 
+            // checkboxShowEquals
+            // 
+            this.checkboxShowEquals.AutoSize = true;
+            this.checkboxShowEquals.Checked = true;
+            this.checkboxShowEquals.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkboxShowEquals.Location = new System.Drawing.Point(340, 45);
+            this.checkboxShowEquals.Name = "checkboxShowEquals";
+            this.checkboxShowEquals.Size = new System.Drawing.Size(163, 17);
+            this.checkboxShowEquals.TabIndex = 100;
+            this.checkboxShowEquals.Text = "Show registers that are equal";
+            this.checkboxShowEquals.UseVisualStyleBackColor = true;
+            // 
             // Importcompare
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.ClientSize = new System.Drawing.Size(544, 362);
+            this.Controls.Add(this.checkboxShowEquals);
             this.Controls.Add(this.buttonCancel);
             this.Controls.Add(this.buttonClearLog);
             this.Controls.Add(this.textboxFilename);
@@ -147,6 +161,7 @@
         private System.Windows.Forms.Button buttonClearLog;
         private System.Windows.Forms.Button buttonCancel;
         private System.Windows.Forms.ToolTip toolTip1;
+        private System.Windows.Forms.CheckBox checkboxShowEquals;
 
     }
 }
