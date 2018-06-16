@@ -802,6 +802,7 @@
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.checkboxShowInfo);
             this.Controls.Add(this.groupboxConnection);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Name = "ConfigForm";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;

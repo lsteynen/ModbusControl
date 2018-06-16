@@ -101,6 +101,7 @@
             this.Controls.Add(this.buttonOK);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.numericLoggerMaxLines);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "LoggerSettings";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;

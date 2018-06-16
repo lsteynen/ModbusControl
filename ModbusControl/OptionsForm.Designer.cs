@@ -109,6 +109,7 @@
             this.Controls.Add(this.checkboxStopOnCommsError);
             this.Controls.Add(this.buttonCancel);
             this.Controls.Add(this.buttonOK);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Name = "OptionsForm";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;

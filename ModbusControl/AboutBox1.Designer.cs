@@ -42,8 +42,9 @@
             // 
             // okButton
             // 
+            this.okButton.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.okButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.okButton.Location = new System.Drawing.Point(190, 138);
+            this.okButton.Location = new System.Drawing.Point(140, 137);
             this.okButton.Name = "okButton";
             this.okButton.Size = new System.Drawing.Size(75, 23);
             this.okButton.TabIndex = 5;
@@ -149,7 +150,8 @@
             this.AcceptButton = this.okButton;
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(454, 184);
+            this.AutoSize = true;
+            this.ClientSize = new System.Drawing.Size(355, 172);
             this.Controls.Add(this.labelLocalOverride);
             this.Controls.Add(this.labelCommonApplicationData);
             this.Controls.Add(this.labelName);
@@ -159,6 +161,7 @@
             this.Controls.Add(this.labelFormSize);
             this.Controls.Add(this.logoPictureBox);
             this.Controls.Add(this.okButton);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.MinimizeBox = false;

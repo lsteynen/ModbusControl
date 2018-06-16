@@ -62,7 +62,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(12, 17);
+            this.label1.Location = new System.Drawing.Point(16, 17);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(281, 13);
             this.label1.TabIndex = 0;
@@ -81,7 +81,7 @@
             // 
             // buttonSave
             // 
-            this.buttonSave.Location = new System.Drawing.Point(105, 128);
+            this.buttonSave.Location = new System.Drawing.Point(83, 128);
             this.buttonSave.Name = "buttonSave";
             this.buttonSave.Size = new System.Drawing.Size(75, 23);
             this.buttonSave.TabIndex = 4;
@@ -92,7 +92,7 @@
             // buttonCancel
             // 
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.buttonCancel.Location = new System.Drawing.Point(186, 128);
+            this.buttonCancel.Location = new System.Drawing.Point(166, 128);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 23);
             this.buttonCancel.TabIndex = 5;
@@ -116,7 +116,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.CancelButton = this.buttonCancel;
-            this.ClientSize = new System.Drawing.Size(367, 163);
+            this.ClientSize = new System.Drawing.Size(324, 163);
             this.ControlBox = false;
             this.Controls.Add(this.checkboxBridge);
             this.Controls.Add(this.buttonCancel);
@@ -125,6 +125,7 @@
             this.Controls.Add(this.label1);
             this.Controls.Add(this.checkboxConnection);
             this.Controls.Add(this.checkboxFormSize);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Name = "SaveConfigurationForm";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
