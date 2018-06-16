@@ -34,9 +34,9 @@
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripStatusLabel2 = new System.Windows.Forms.ToolStripStatusLabel();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.button1 = new System.Windows.Forms.Button();
+            this.buttonSaveToFile = new System.Windows.Forms.Button();
+            this.buttonSettings = new System.Windows.Forms.Button();
             this.buttonStop = new System.Windows.Forms.Button();
-            this.logFilter = new LST.Helpers.LogFilter();
             this.Loggrid = new SourceGrid.DataGrid();
             this.buttonClear = new System.Windows.Forms.Button();
             this.buttonCopyToClipboard = new System.Windows.Forms.Button();
@@ -45,7 +45,8 @@
             this.buttonFirst = new System.Windows.Forms.Button();
             this.timerView = new System.Windows.Forms.Timer(this.components);
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-            this.button2 = new System.Windows.Forms.Button();
+            this.SaveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
+            this.logFilter = new LST.Helpers.LogFilter();
             this.statusStrip1.SuspendLayout();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
@@ -71,8 +72,8 @@
             // 
             // panel1
             // 
-            this.panel1.Controls.Add(this.button2);
-            this.panel1.Controls.Add(this.button1);
+            this.panel1.Controls.Add(this.buttonSaveToFile);
+            this.panel1.Controls.Add(this.buttonSettings);
             this.panel1.Controls.Add(this.buttonStop);
             this.panel1.Controls.Add(this.logFilter);
             this.panel1.Controls.Add(this.Loggrid);
@@ -84,13 +85,21 @@
             resources.ApplyResources(this.panel1, "panel1");
             this.panel1.Name = "panel1";
             // 
-            // button1
+            // buttonSaveToFile
             // 
-            resources.ApplyResources(this.button1, "button1");
-            this.button1.Name = "button1";
-            this.toolTip1.SetToolTip(this.button1, resources.GetString("button1.ToolTip"));
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            resources.ApplyResources(this.buttonSaveToFile, "buttonSaveToFile");
+            this.buttonSaveToFile.Name = "buttonSaveToFile";
+            this.toolTip1.SetToolTip(this.buttonSaveToFile, resources.GetString("buttonSaveToFile.ToolTip"));
+            this.buttonSaveToFile.UseVisualStyleBackColor = true;
+            this.buttonSaveToFile.Click += new System.EventHandler(this.buttonSaveToFile_Click);
+            // 
+            // buttonSettings
+            // 
+            resources.ApplyResources(this.buttonSettings, "buttonSettings");
+            this.buttonSettings.Name = "buttonSettings";
+            this.toolTip1.SetToolTip(this.buttonSettings, resources.GetString("buttonSettings.ToolTip"));
+            this.buttonSettings.UseVisualStyleBackColor = true;
+            this.buttonSettings.Click += new System.EventHandler(this.buttonSettings_Click);
             // 
             // buttonStop
             // 
@@ -99,16 +108,6 @@
             this.toolTip1.SetToolTip(this.buttonStop, resources.GetString("buttonStop.ToolTip"));
             this.buttonStop.UseVisualStyleBackColor = true;
             this.buttonStop.Click += new System.EventHandler(this.buttonStop_Click);
-            // 
-            // logFilter
-            // 
-            this.logFilter.AnchorSize = new System.Drawing.Size(94, 21);
-            this.logFilter.BackColor = System.Drawing.Color.White;
-            this.logFilter.DockSide = UControls.DropDownControl.eDockSide.Left;
-            resources.ApplyResources(this.logFilter, "logFilter");
-            this.logFilter.Name = "logFilter";
-            this.logFilter.Tag = "What to log";
-            this.toolTip1.SetToolTip(this.logFilter, resources.GetString("logFilter.ToolTip"));
             // 
             // Loggrid
             // 
@@ -167,12 +166,30 @@
             this.timerView.Interval = 150;
             this.timerView.Tick += new System.EventHandler(this.timerView_Tick);
             // 
-            // button2
+            // SaveFileDialog1
             // 
-            resources.ApplyResources(this.button2, "button2");
-            this.button2.Name = "button2";
-            this.toolTip1.SetToolTip(this.button2, resources.GetString("button2.ToolTip"));
-            this.button2.UseVisualStyleBackColor = true;
+            this.SaveFileDialog1.AddExtension = false;
+            this.SaveFileDialog1.DefaultExt = "csv";
+            resources.ApplyResources(this.SaveFileDialog1, "SaveFileDialog1");
+            // 
+            // logFilter
+            // 
+            this.logFilter.AnchorSize = new System.Drawing.Size(94, 21);
+            this.logFilter.BackColor = System.Drawing.Color.White;
+            this.logFilter.DockSide = UControls.DropDownControl.eDockSide.Left;
+            resources.ApplyResources(this.logFilter, "logFilter");
+            this.logFilter.LogBridgeData = false;
+            this.logFilter.LogBridgeDecode = false;
+            this.logFilter.LogBridgeInfo = false;
+            this.logFilter.LogErrors = true;
+            this.logFilter.LogInfo = true;
+            this.logFilter.LogReads = false;
+            this.logFilter.LogTrace = true;
+            this.logFilter.LogWarnings = true;
+            this.logFilter.LogWrites = false;
+            this.logFilter.Name = "logFilter";
+            this.logFilter.Tag = "What to log";
+            this.toolTip1.SetToolTip(this.logFilter, resources.GetString("logFilter.ToolTip"));
             // 
             // Logger
             // 
@@ -207,8 +224,9 @@
         private LogFilter logFilter;
         private System.Windows.Forms.ToolTip toolTip1;
         private System.Windows.Forms.Button buttonStop;
-        private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.Button buttonSettings;
+        private System.Windows.Forms.Button buttonSaveToFile;
+        private System.Windows.Forms.SaveFileDialog SaveFileDialog1;
     }
 }
 

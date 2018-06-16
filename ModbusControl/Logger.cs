@@ -14,6 +14,7 @@ namespace LST.Helpers
         private int mMaxLines = 1000;
         private int mLogAdded;
         private bool mIsPauseView;
+        private bool mTemporaryNoRemove;
         
         public enum LogType
         {
@@ -243,6 +244,7 @@ namespace LST.Helpers
             {
                 // must eliminate oldest entries?
                 // threadsafe
+                // can ignore mTemporaryNoRemove here, uszer can't change size while exporting
                 lock (LogListLock)
                 {
                     if (NewSize < LogList.Count)
@@ -460,7 +462,7 @@ namespace LST.Helpers
                 // threadsafe
                 lock (LogListLock)
                 {
-                    if (LogList.Count >= mMaxLines)
+                    if ((LogList.Count >= mMaxLines) && (mTemporaryNoRemove == false))
                     {
                         LogList.RemoveAt(0);
                         if (LogList.Count >= mMaxLines)
@@ -487,7 +489,7 @@ namespace LST.Helpers
                 // threadsafe
                 lock (LogListLock)
                 {
-                    if (LogList.Count >= mMaxLines)
+                    if ((LogList.Count >= mMaxLines) && (mTemporaryNoRemove == false))
                     {
                         LogList.RemoveAt(0);
                         LogList.RemoveAt(0);
@@ -505,7 +507,75 @@ namespace LST.Helpers
             }
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void buttonSaveToFile_Click(object sender, EventArgs e)
+        {
+            if (SaveFileDialog1.ShowDialog() == DialogResult.OK)
+            {
+                SaveLogbufferToCsvFile( SaveFileDialog1.FileName);
+            }
+        }
+
+        /// <summary>
+        /// Save logbuffer to a file, CSV format
+        /// </summary>
+        private void SaveLogbufferToCsvFile(string filename)
+        {
+            CsvWriter mCsvWriter;
+
+            // open file to write to
+            try
+            {
+                // open output file
+                // Use Windows's current ANSI codepage encoding, this allows easy import in Excel.
+                // ANSI encoding is 1 byte per character, 0-127 is ASCII, 128-255 is per codepage.
+
+                mCsvWriter = new CsvWriter(filename, System.Text.Encoding.Default);
+            }
+            catch (Exception ex)
+            {
+                // open failed
+                string msg = ex.Message + Environment.NewLine + filename;
+                MessageBox.Show(msg, this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            // make sure the file is closed
+            // and mTemporaryNoRemove is reset
+            try
+            {
+                // settings
+                mCsvWriter.CommentHeader = "#";
+                mCsvWriter.Separator = ';';
+
+                // export file header info
+                mCsvWriter.WriteComment("Modbuscontrol logger export - " + DateTime.Now.ToString());
+                mCsvWriter.WriteComment("Fields: Time;Type;Text");
+
+                // do not remove oldest lines while exporting, may cause missing lines
+                mTemporaryNoRemove = true;
+
+                // export logger lines
+                LogEntry rLog;
+                string[] fields;
+                for (int i = 0; i < LogList.Count; ++i)
+                {
+                    // get logs from LogList in a threadsafe way
+                    lock (LogListLock)
+                    {
+                        rLog = LogList[i];
+                    }
+                    fields = new string[] { rLog.Time.ToString(), rLog.Type.ToString(), rLog.Text };
+                    mCsvWriter.WriteRow(fields);
+                }
+            }
+            finally
+            {
+                mTemporaryNoRemove = false;
+                mCsvWriter.Close();
+            }
+        }
+
+        private void buttonSettings_Click(object sender, EventArgs e)
         {
             LoggerSettings form = new LoggerSettings();
 

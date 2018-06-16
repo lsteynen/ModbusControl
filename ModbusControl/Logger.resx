@@ -156,40 +156,40 @@
   <data name="toolStripStatusLabel2.Size" type="System.Drawing.Size, System.Drawing">
     <value>0, 17</value>
   </data>
-  <data name="button2.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="button2.Location" type="System.Drawing.Point, System.Drawing">
-    <value>394, 9</value>
-  </data>
-  <data name="button2.Size" type="System.Drawing.Size, System.Drawing">
-    <value>92, 23</value>
-  </data>
-  <data name="button2.TabIndex" type="System.Int32, mscorlib">
-    <value>10</value>
-  </data>
-  <data name="button2.Text" xml:space="preserve">
-    <value>Save to file...</value>
-  </data>
   <metadata name="toolTip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>232, 7</value>
   </metadata>
-  <data name="button2.ToolTip" xml:space="preserve">
-    <value>Save all logs to file</value>
+  <data name="buttonSaveToFile.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
   </data>
-  <data name="&gt;&gt;button2.Name" xml:space="preserve">
-    <value>button2</value>
+  <data name="buttonSaveToFile.Location" type="System.Drawing.Point, System.Drawing">
+    <value>394, 9</value>
   </data>
-  <data name="&gt;&gt;button2.Type" xml:space="preserve">
+  <data name="buttonSaveToFile.Size" type="System.Drawing.Size, System.Drawing">
+    <value>92, 23</value>
+  </data>
+  <data name="buttonSaveToFile.TabIndex" type="System.Int32, mscorlib">
+    <value>10</value>
+  </data>
+  <data name="buttonSaveToFile.Text" xml:space="preserve">
+    <value>Save to file...</value>
+  </data>
+  <data name="buttonSaveToFile.ToolTip" xml:space="preserve">
+    <value>Save logbuffer to CSV file</value>
+  </data>
+  <data name="&gt;&gt;buttonSaveToFile.Name" xml:space="preserve">
+    <value>buttonSaveToFile</value>
+  </data>
+  <data name="&gt;&gt;buttonSaveToFile.Type" xml:space="preserve">
     <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;button2.Parent" xml:space="preserve">
+  <data name="&gt;&gt;buttonSaveToFile.Parent" xml:space="preserve">
     <value>panel1</value>
   </data>
-  <data name="&gt;&gt;button2.ZOrder" xml:space="preserve">
+  <data name="&gt;&gt;buttonSaveToFile.ZOrder" xml:space="preserve">
     <value>0</value>
   </data>
-  <data name="button1.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+  <data name="buttonSettings.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
         YQUAAAEqSURBVDhPlZM9SgRBEEbbwF8QvIeCBrreQUzEwB8QAw3E2NQFNdLECwh6BBHEUDFWz+R7XdPu
@@ -200,34 +200,37 @@
         55S+AYfUNo/V/pmSAAAAAElFTkSuQmCC
 </value>
   </data>
-  <data name="button1.Location" type="System.Drawing.Point, System.Drawing">
+  <data name="buttonSettings.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="buttonSettings.Location" type="System.Drawing.Point, System.Drawing">
     <value>492, 9</value>
   </data>
-  <data name="button1.Size" type="System.Drawing.Size, System.Drawing">
+  <data name="buttonSettings.Size" type="System.Drawing.Size, System.Drawing">
     <value>38, 23</value>
   </data>
-  <data name="button1.TabIndex" type="System.Int32, mscorlib">
+  <data name="buttonSettings.TabIndex" type="System.Int32, mscorlib">
     <value>8</value>
   </data>
-  <data name="button1.ToolTip" xml:space="preserve">
+  <data name="buttonSettings.ToolTip" xml:space="preserve">
     <value>Logger settings</value>
   </data>
-  <data name="&gt;&gt;button1.Name" xml:space="preserve">
-    <value>button1</value>
+  <data name="&gt;&gt;buttonSettings.Name" xml:space="preserve">
+    <value>buttonSettings</value>
   </data>
-  <data name="&gt;&gt;button1.Type" xml:space="preserve">
+  <data name="&gt;&gt;buttonSettings.Type" xml:space="preserve">
     <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;button1.Parent" xml:space="preserve">
+  <data name="&gt;&gt;buttonSettings.Parent" xml:space="preserve">
     <value>panel1</value>
   </data>
-  <data name="&gt;&gt;button1.ZOrder" xml:space="preserve">
+  <data name="&gt;&gt;buttonSettings.ZOrder" xml:space="preserve">
     <value>1</value>
   </data>
   <data name="buttonStop.BackgroundImage" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAAK/INwWK6QAAAAlwSFlzAAAO
-        vwAADr8BOAVTJAAAABl0RVh0U29mdHdhcmUAcGFpbnQubmV0IDQuMC4xNkRpr/UAAACrSURBVDhPY/j/
+        vAAADrwBlbxySQAAABl0RVh0U29mdHdhcmUAcGFpbnQubmV0IDQuMC4xNkRpr/UAAACrSURBVDhPY/j/
         /z9FGKsgKRirICkYhbNx7/X/K7Zd/j9/3fn/05ef+t87/+j/lukH/1dP2PO/qGPH/8yGzf8TKtYBleIw
         gBjN4YWrgEpxGECMZr+sZUClOAwgRrNL4kKgUhwGEKPZOmoOUCkOA4jRbBw0A6gUhwHEaNbyngxUisMA
         YjQrOPcBleIwgBjN4tZdQKU4DCBGM59JK1ApDgPIwVgFScFYBYnH/xkAzS7OndvXTyMAAAAASUVORK5C
@@ -360,8 +363,11 @@
   <data name="buttonCopyToClipboard.Text" xml:space="preserve">
     <value>Copy to clipboard</value>
   </data>
+  <metadata name="toolTip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>232, 7</value>
+  </metadata>
   <data name="buttonCopyToClipboard.ToolTip" xml:space="preserve">
-    <value>Copy all logs to clipboard</value>
+    <value>Copy logbuffer in CSV format to clipboard</value>
   </data>
   <data name="&gt;&gt;buttonCopyToClipboard.Name" xml:space="preserve">
     <value>buttonCopyToClipboard</value>
@@ -378,7 +384,7 @@
   <data name="buttonRecord.BackgroundImage" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAAK/INwWK6QAAAAlwSFlzAAAO
-        vgAADr4B6kKxwAAAABl0RVh0U29mdHdhcmUAcGFpbnQubmV0IDQuMC4xNkRpr/UAAAEASURBVDhPpYxL
+        vAAADrwBlbxySQAAABl0RVh0U29mdHdhcmUAcGFpbnQubmV0IDQuMC4xNkRpr/UAAAEASURBVDhPpYxL
         b0FRFEb9lTLCRLQDrxRVzxKqqkqpV+IRCWVQNeKXr+57nTS5HCe9MVgnOSt7fR7gKrTSDVrpBq20tQ55
         TzkTttrv4XsLyxVMJtDrQfNVnTvvHR/7ezjA9gdWVjyFzz603qBahXxOJaaB3Q7WXzCdwWAgcQtqNYkL
         cJ9UiWlgs4b5HIZDaL9L/AxFiVMpiERUYhpYSDySuNOGeh1KRUinIRaFUEglpoHxGD46Er/AUwkeMhLH
@@ -527,6 +533,12 @@
   <metadata name="timerView.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>126, 7</value>
   </metadata>
+  <metadata name="SaveFileDialog1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>329, 7</value>
+  </metadata>
+  <data name="SaveFileDialog1.Filter" xml:space="preserve">
+    <value>Csv files (*.csv)|*.csv|All files (*.*)|*.*</value>
+  </data>
   <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </metadata>
@@ -1778,6 +1790,9 @@
         AaxBgACsQYAArEGAAKxBgACsQYAArEHAAaxBwAGsQeABrEHgAaxBwACsQQ==
 </value>
   </data>
+  <data name="$this.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
   <data name="$this.MinimumSize" type="System.Drawing.Size, System.Drawing">
     <value>200, 200</value>
   </data>
@@ -1810,6 +1825,12 @@
   </data>
   <data name="&gt;&gt;toolTip1.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolTip, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;SaveFileDialog1.Name" xml:space="preserve">
+    <value>SaveFileDialog1</value>
+  </data>
+  <data name="&gt;&gt;SaveFileDialog1.Type" xml:space="preserve">
+    <value>System.Windows.Forms.SaveFileDialog, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;$this.Name" xml:space="preserve">
     <value>Logger</value>
