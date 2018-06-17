@@ -153,8 +153,6 @@ namespace ModbusControlSpace
         {
             // background worker thread
 
-            // TODO: try to read multiple registers at once, will be much faster?
-
             foreach (ImportLine line in ImportList)
             {
                 // cancel?

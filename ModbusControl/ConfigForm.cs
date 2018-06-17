@@ -8,8 +8,6 @@ using System.Text;
 using System.Windows.Forms;
 using System.IO.Ports;
 
-//TODO: logging configureren? aan/uit, maxaantal,... niet hier, in logging form?
-
 namespace ModbusControlSpace
 {
     public partial class ConfigForm : Form

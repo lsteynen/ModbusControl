@@ -16,7 +16,7 @@ using LST.Helpers;
 // - TODO: controleren: is het logisch wat er required is en wat optioneel?
 // - TODO: Mbc file manual nog eens helemaal vergelijken met de XML tags hier (+voorbeeld van expand)
 // - TODO: Endofmessagetimeout: ook auto doen? 3.5ch timeout met minimum van 100ms
-// - TODO: Inter-frame delay: auto of een getal in ms. auto = Tchar*3.5, ook 0 toelaten? is -1 dan auto?
+// - TODO: interframeDelay: auto of een getal in ms. auto = Tchar*3.5, ook 0 toelaten? is -1 dan auto?
 
 namespace ModbusControlSpace
 {

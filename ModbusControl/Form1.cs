@@ -22,9 +22,6 @@ using ModbusRegViewSpace;
 using TreeGridViewSpace;
 using LST.Helpers;
 
-//TODO: localoverrides file in user/doc of %programdata%?
-//TODO: manuals in user/doc of in C:\Users\Public\Documents of in %programdata%?
-//TODO: string2/4/6... implementeren
 //TODO: instellen EndOfMessageTimeout en InterframeDelay: instellen als 0=auto, 'Auto' tonen in numericupdown? <> 0 is fixed milliseconden.
 //      zie ook https://stackoverflow.com/questions/5921446/having-text-inside-numericupdown-control-after-the-number
 
@@ -1476,7 +1473,6 @@ namespace ModbusControlSpace
                 Debug.Print(DateTime.Now.TimeOfDay + "PollTabPage(): GetGroupOfRegistersToRead: " + LineIndex + "," + LineCount + "," + FirstReg + "," + RegCount);
 
                 // read 
-                // TODO: splitsing holdingreg/inputreg?
                 UInt16 FirstRegOffset = GetRegOffset(FirstReg);
                 result = mb.MifReadHoldingRegisters(Project.Connection.SlaveID, FirstRegOffset, RegCount, out tmpdata);
                 if (result == ModbusProtocol.Result.SUCCESS)
