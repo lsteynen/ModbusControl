@@ -321,9 +321,11 @@ namespace ModbusControlSpace
                 // save settings if form exists
                 Settings1.Values.customwrite.slaveid = CustomwriteForm.SlaveID;
                 Settings1.Values.customwrite.register = (int)CustomwriteForm.Register;
+                Settings1.Values.customwrite.quantity = CustomwriteForm.Quantity;
                 Settings1.Values.customwrite.datasize = CustomwriteForm.Datasize;
                 Settings1.Values.customwrite.functioncode = CustomwriteForm.Functioncode;
                 Settings1.Values.customwrite.datasize = CustomwriteForm.Datasize;
+                Settings1.Values.customwrite.data = CustomwriteForm.Data;
             }
             if (CustommodbuscommandForm != null)
             {
@@ -2176,11 +2178,12 @@ namespace ModbusControlSpace
             {
                 CustomwriteForm = new CustomWrite(this);
                 // load settings
-                CustomreadForm.SlaveID = (byte)Settings1.Values.customread.slaveid;
-                CustomreadForm.Register = (uint)Settings1.Values.customread.register;
-                CustomreadForm.Quantity = (ushort)Settings1.Values.customread.quantity;
+                CustomwriteForm.SlaveID = (byte)Settings1.Values.customwrite.slaveid;
+                CustomwriteForm.Register = (uint)Settings1.Values.customwrite.register;
+                CustomwriteForm.Quantity = (ushort)Settings1.Values.customwrite.quantity;
                 CustomwriteForm.Functioncode = Settings1.Values.customwrite.functioncode;
                 CustomwriteForm.Datasize = Settings1.Values.customwrite.datasize;
+                CustomwriteForm.Data = Settings1.Values.customwrite.data;
             }
 
             // show

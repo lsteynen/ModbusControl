@@ -59,7 +59,6 @@ namespace ModbusControlSpace
 
         public bool ShowEquals
         {
-            // uses Radiobutton.Tag
             get { return checkboxShowEquals.Checked; }
             set { checkboxShowEquals.Checked = value; }
         }

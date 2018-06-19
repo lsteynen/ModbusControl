@@ -12,11 +12,11 @@ using System.Linq;
 
 using LST.Helpers;
 
-// - TODO: testen: allerlei defaults voor tags die ontbreken, in <modbus>, in <var>
-// - TODO: controleren: is het logisch wat er required is en wat optioneel?
-// - TODO: Mbc file manual nog eens helemaal vergelijken met de XML tags hier (+voorbeeld van expand)
-// - TODO: Endofmessagetimeout: ook auto doen? 3.5ch timeout met minimum van 100ms
-// - TODO: interframeDelay: auto of een getal in ms. auto = Tchar*3.5, ook 0 toelaten? is -1 dan auto?
+// TODO: testen: allerlei defaults voor tags die ontbreken, in <modbus>, in <var>
+// TODO: controleren: is het logisch wat er required is en wat optioneel?
+// TODO: Endofmessagetimeout: ook auto doen? 3.5ch timeout met minimum van 100ms
+// TODO: interframeDelay: auto of een getal in ms. auto = Tchar*3.5, ook 0 toelaten? is -1 dan auto?
+// TODO: Mbc file manual nog eens helemaal vergelijken met de XML tags hier (+voorbeeld van expand)
 
 namespace ModbusControlSpace
 {

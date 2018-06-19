@@ -178,6 +178,10 @@ namespace ModbusControlSpace
             public string datasize
             { get; set; }
 
+            [XmlElement("data")]
+            public string data
+            { get; set; }
+
             // constructor
             public CCustomWrite()
             {
@@ -187,6 +191,7 @@ namespace ModbusControlSpace
                 quantity = 1;
                 functioncode = "16";
                 datasize = "16";
+                data = String.Empty;
             }
         }
 

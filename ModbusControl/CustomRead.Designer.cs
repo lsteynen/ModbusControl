@@ -102,7 +102,7 @@
             this.radiobuttonSize16bit.Size = new System.Drawing.Size(51, 17);
             this.radiobuttonSize16bit.TabIndex = 0;
             this.radiobuttonSize16bit.TabStop = true;
-            this.radiobuttonSize16bit.Tag = "\"16\"";
+            this.radiobuttonSize16bit.Tag = "16";
             this.radiobuttonSize16bit.Text = "16-bit";
             this.toolTip1.SetToolTip(this.radiobuttonSize16bit, "Handle all registers as 16-bit values");
             this.radiobuttonSize16bit.UseVisualStyleBackColor = true;
@@ -115,7 +115,7 @@
             this.radiobuttonSize32bit.Name = "radiobuttonSize32bit";
             this.radiobuttonSize32bit.Size = new System.Drawing.Size(51, 17);
             this.radiobuttonSize32bit.TabIndex = 1;
-            this.radiobuttonSize32bit.Tag = "\"32\"";
+            this.radiobuttonSize32bit.Tag = "32";
             this.radiobuttonSize32bit.Text = "32-bit";
             this.toolTip1.SetToolTip(this.radiobuttonSize32bit, "Handle all registers as 32-bit values (2 registers per value)");
             this.radiobuttonSize32bit.UseVisualStyleBackColor = true;
@@ -142,7 +142,7 @@
             this.radiobuttonAsFloat.Name = "radiobuttonAsFloat";
             this.radiobuttonAsFloat.Size = new System.Drawing.Size(48, 17);
             this.radiobuttonAsFloat.TabIndex = 3;
-            this.radiobuttonAsFloat.Tag = "\"float\"";
+            this.radiobuttonAsFloat.Tag = "float";
             this.radiobuttonAsFloat.Text = "Float";
             this.toolTip1.SetToolTip(this.radiobuttonAsFloat, "Show all values as 32-bit floating point");
             this.radiobuttonAsFloat.UseVisualStyleBackColor = true;
@@ -154,7 +154,7 @@
             this.radiobuttonAsHex.Name = "radiobuttonAsHex";
             this.radiobuttonAsHex.Size = new System.Drawing.Size(44, 17);
             this.radiobuttonAsHex.TabIndex = 2;
-            this.radiobuttonAsHex.Tag = "\"hex\"";
+            this.radiobuttonAsHex.Tag = "hex";
             this.radiobuttonAsHex.Text = "Hex";
             this.toolTip1.SetToolTip(this.radiobuttonAsHex, "Show all values in hexadecimal");
             this.radiobuttonAsHex.UseVisualStyleBackColor = true;
@@ -168,7 +168,7 @@
             this.radiobuttonAsInt.Size = new System.Drawing.Size(37, 17);
             this.radiobuttonAsInt.TabIndex = 0;
             this.radiobuttonAsInt.TabStop = true;
-            this.radiobuttonAsInt.Tag = "\"int\"";
+            this.radiobuttonAsInt.Tag = "int";
             this.radiobuttonAsInt.Text = "Int";
             this.toolTip1.SetToolTip(this.radiobuttonAsInt, "Show all values as signed int");
             this.radiobuttonAsInt.UseVisualStyleBackColor = true;
@@ -180,7 +180,7 @@
             this.radiobuttonAsUInt.Name = "radiobuttonAsUInt";
             this.radiobuttonAsUInt.Size = new System.Drawing.Size(45, 17);
             this.radiobuttonAsUInt.TabIndex = 1;
-            this.radiobuttonAsUInt.Tag = "\"uint\"";
+            this.radiobuttonAsUInt.Tag = "uint";
             this.radiobuttonAsUInt.Text = "UInt";
             this.toolTip1.SetToolTip(this.radiobuttonAsUInt, "Show all values as unsigned int");
             this.radiobuttonAsUInt.UseVisualStyleBackColor = true;

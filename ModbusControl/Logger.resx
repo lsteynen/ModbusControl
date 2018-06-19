@@ -296,7 +296,7 @@
     <value>Clear</value>
   </data>
   <data name="buttonClear.ToolTip" xml:space="preserve">
-    <value>Clear the log buffer</value>
+    <value>Clear the logbuffer</value>
   </data>
   <data name="&gt;&gt;buttonClear.Name" xml:space="preserve">
     <value>buttonClear</value>

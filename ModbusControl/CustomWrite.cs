@@ -51,6 +51,13 @@ namespace ModbusControlSpace
             get { return Global.GetRadioGroupTag(groupboxDatasize); }
             set { Global.SetRadioGroupByTag(groupboxDatasize, value); }
         }
+
+        public string Data
+        {
+            get { return textboxData.Text; }
+            set { textboxData.Text = value; }
+        }
+
         #endregion
 
         // constructor

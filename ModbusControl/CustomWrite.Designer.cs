@@ -111,7 +111,7 @@
             this.radiobuttonSize16bit.Size = new System.Drawing.Size(51, 17);
             this.radiobuttonSize16bit.TabIndex = 0;
             this.radiobuttonSize16bit.TabStop = true;
-            this.radiobuttonSize16bit.Tag = "\"16\"";
+            this.radiobuttonSize16bit.Tag = "16";
             this.radiobuttonSize16bit.Text = "16-bit";
             this.toolTip1.SetToolTip(this.radiobuttonSize16bit, "Handle all registers as 16-bit values");
             this.radiobuttonSize16bit.UseVisualStyleBackColor = true;
@@ -123,7 +123,7 @@
             this.radiobuttonSize32bit.Name = "radiobuttonSize32bit";
             this.radiobuttonSize32bit.Size = new System.Drawing.Size(51, 17);
             this.radiobuttonSize32bit.TabIndex = 1;
-            this.radiobuttonSize32bit.Tag = "\"32\"";
+            this.radiobuttonSize32bit.Tag = "32";
             this.radiobuttonSize32bit.Text = "32-bit";
             this.toolTip1.SetToolTip(this.radiobuttonSize32bit, "Handle all registers as 32-bit values (2 registers per value)");
             this.radiobuttonSize32bit.UseVisualStyleBackColor = true;
@@ -170,7 +170,7 @@
             this.radiobuttonWriteFC16.Size = new System.Drawing.Size(116, 17);
             this.radiobuttonWriteFC16.TabIndex = 1;
             this.radiobuttonWriteFC16.TabStop = true;
-            this.radiobuttonWriteFC16.Tag = "\"16\"";
+            this.radiobuttonWriteFC16.Tag = "16";
             this.radiobuttonWriteFC16.Text = "16 (set multiple reg)";
             this.toolTip1.SetToolTip(this.radiobuttonWriteFC16, "Use function code 16 (set multiple register) only");
             this.radiobuttonWriteFC16.UseVisualStyleBackColor = true;
@@ -183,7 +183,7 @@
             this.radiobuttonWriteFC6.Size = new System.Drawing.Size(102, 17);
             this.radiobuttonWriteFC6.TabIndex = 0;
             this.radiobuttonWriteFC6.TabStop = true;
-            this.radiobuttonWriteFC6.Tag = "\"6\"";
+            this.radiobuttonWriteFC6.Tag = "6";
             this.radiobuttonWriteFC6.Text = "6 (set single reg)";
             this.toolTip1.SetToolTip(this.radiobuttonWriteFC6, "Use function code 6 (set single register) of FC16 (set multiple registers) only");
             this.radiobuttonWriteFC6.UseVisualStyleBackColor = true;
