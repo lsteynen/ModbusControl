@@ -288,6 +288,7 @@ namespace ModbusControlSpace
             StopAllComms();
 
             Debug.Print(DateTime.Now.TimeOfDay + ": Form1_FormClosing()-5");
+
             // Update the current settings
             Settings1.Values.mbcmrulist = recentFilesMenuItem.GetList();
             Settings1.Values.stoponerror = Options.StopOnError;
@@ -299,12 +300,35 @@ namespace ModbusControlSpace
                 // save settings if form exists
                 Settings1.Values.export.tabs = ExportForm.TabSelect;
                 Settings1.Values.export.exportformat = ExportForm.ExportFormatSelect;
-                Settings1.Values.export.asciiformat = ExportForm.AsciiFormatSelect;
+                Settings1.Values.export.exportasciias = ExportForm.AsciiFormatSelect;
             }
             if (ImportcompareForm != null)
             {
                 // save settings if form exists
                 Settings1.Values.compare.showequal = ImportcompareForm.ShowEquals;
+            }
+            if (CustomreadForm != null)
+            {
+                // save settings if form exists
+                Settings1.Values.customread.slaveid = CustomreadForm.SlaveID;
+                Settings1.Values.customread.register = (int)CustomreadForm.Register;
+                Settings1.Values.customread.quantity = CustomreadForm.Quantity;
+                Settings1.Values.customread.datasize = CustomreadForm.Datasize;
+                Settings1.Values.customread.showvaluesas = CustomreadForm.Showvaluesas;
+            }
+            if (CustomwriteForm != null)
+            {
+                // save settings if form exists
+                Settings1.Values.customwrite.slaveid = CustomwriteForm.SlaveID;
+                Settings1.Values.customwrite.register = (int)CustomwriteForm.Register;
+                Settings1.Values.customwrite.datasize = CustomwriteForm.Datasize;
+                Settings1.Values.customwrite.functioncode = CustomwriteForm.Functioncode;
+                Settings1.Values.customwrite.datasize = CustomwriteForm.Datasize;
+            }
+            if (CustommodbuscommandForm != null)
+            {
+                // save settings if form exists
+                Settings1.Values.customcommand.command = CustommodbuscommandForm.Command;
             }
             Settings1.Values.logger.capacity = Logger1.CapacityLines;
             Settings1.Values.logger.logerrors = Logger1.TheLogFilter.LogErrors;
@@ -737,6 +761,7 @@ namespace ModbusControlSpace
             optionsForm.StopOnError = Options.StopOnError;
             optionsForm.UseLocalOverrides = Options.UseLocalOverrides;
             optionsForm.BeepOnInputError = Options.BeepOnInputError;
+            optionsForm.LoggerCapacity = Logger1.CapacityLines;
             optionsForm.CheckForUpdates = Options.CheckForUpdates;
 
             if (optionsForm.ShowDialog() == System.Windows.Forms.DialogResult.OK)
@@ -745,6 +770,7 @@ namespace ModbusControlSpace
                 Options.StopOnError = optionsForm.StopOnError;
                 Options.UseLocalOverrides = optionsForm.UseLocalOverrides;
                 Options.BeepOnInputError = optionsForm.BeepOnInputError;
+                Logger1.CapacityLines = optionsForm.LoggerCapacity;
                 Options.CheckForUpdates = optionsForm.CheckForUpdates;
             }
         }
@@ -2091,7 +2117,7 @@ namespace ModbusControlSpace
                 // load settings
                 ExportForm.TabSelect = Settings1.Values.export.tabs;
                 ExportForm.ExportFormatSelect = Settings1.Values.export.exportformat;
-                ExportForm.AsciiFormatSelect = Settings1.Values.export.asciiformat;
+                ExportForm.AsciiFormatSelect = Settings1.Values.export.exportasciias;
             }
 
             // show modal
@@ -2128,8 +2154,12 @@ namespace ModbusControlSpace
             if (CustomreadForm == null)
             {
                 CustomreadForm = new CustomRead(this);
-                CustomreadForm.SlaveID = Project.Connection.SlaveID;
-                CustomreadForm.Register = (uint)Project.Options.HoldingregistersStart;
+                // load settings
+                CustomreadForm.SlaveID = (byte)Settings1.Values.customread.slaveid;
+                CustomreadForm.Register = (uint)Settings1.Values.customread.register;
+                CustomreadForm.Quantity = (ushort)Settings1.Values.customread.quantity;
+                CustomreadForm.Datasize = Settings1.Values.customread.datasize;
+                CustomreadForm.Showvaluesas = Settings1.Values.customread.showvaluesas;
             }
 
             // update some parameters
@@ -2145,8 +2175,12 @@ namespace ModbusControlSpace
             if (CustomwriteForm == null)
             {
                 CustomwriteForm = new CustomWrite(this);
-                CustomwriteForm.SlaveID = Project.Connection.SlaveID;
-                CustomwriteForm.Register = (uint)Project.Options.HoldingregistersStart;
+                // load settings
+                CustomreadForm.SlaveID = (byte)Settings1.Values.customread.slaveid;
+                CustomreadForm.Register = (uint)Settings1.Values.customread.register;
+                CustomreadForm.Quantity = (ushort)Settings1.Values.customread.quantity;
+                CustomwriteForm.Functioncode = Settings1.Values.customwrite.functioncode;
+                CustomwriteForm.Datasize = Settings1.Values.customwrite.datasize;
             }
 
             // show
@@ -2159,6 +2193,8 @@ namespace ModbusControlSpace
             if (CustommodbuscommandForm == null)
             {
                 CustommodbuscommandForm = new CustomModbusCommand(this);
+                // load settings
+                CustommodbuscommandForm.Command = Settings1.Values.customcommand.command;
             }
 
             // show modal

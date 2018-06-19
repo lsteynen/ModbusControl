@@ -18,6 +18,45 @@ namespace ModbusControlSpace
         Form1 mParent;
         public ModbusInterface mModbus;
 
+        #region properties
+
+        public byte SlaveID
+        {
+            get { return (byte)numericSlaveAddress.Value; }
+            set { numericSlaveAddress.Value = value; }
+        }
+
+        public UInt32 Register
+        {
+            get { return (UInt32)numericRegister.Value; }
+            set { numericRegister.Value = value; }
+        }
+
+        public UInt16 Quantity
+        {
+            get { return (UInt16)numericQuantity.Value; }
+            set { numericQuantity.Value = value; }
+        }
+
+        public string Datasize
+        {
+            // uses Radiobutton.Tag
+            get { return Global.GetRadioGroupTag( groupboxDatasize); }
+            set { Global.SetRadioGroupByTag(groupboxDatasize, value); }
+        }
+
+        public string Showvaluesas
+        {
+            // uses Radiobutton.Tag
+            get { return Global.GetRadioGroupTag(groupboxShowas); }
+            set { Global.SetRadioGroupByTag(groupboxShowas, value); }
+        }
+
+        public bool ShortLivedTcpConnection
+        { get; set; }
+
+        #endregion
+
         // constructor
         public CustomRead(Form1 parent)
         {
@@ -31,49 +70,6 @@ namespace ModbusControlSpace
             mParent = parent;
             mModbus = parent.mb;
         }
-
-        #region properties
-
-        public byte SlaveID
-        {
-            get
-            {
-                return (byte)numericSlaveAddress.Value;
-            }
-            set
-            {
-                numericSlaveAddress.Value = value;
-            }
-        }
-
-        public UInt32 Register
-        {
-            get
-            {
-                return (UInt32)numericRegister.Value;
-            }
-            set
-            {
-                numericRegister.Value = value;
-            }
-        }
-
-        public UInt16 Quantity
-        {
-            get
-            {
-                return (UInt16)numericQuantity.Value;
-            }
-            set
-            {
-                numericQuantity.Value = value;
-            }
-        }
-
-        public bool ShortLivedTcpConnection
-        { get; set; }
-
-        #endregion
 
         private void OnFormClosing(object sender, FormClosingEventArgs e)
         {

@@ -34,12 +34,15 @@
             this.checkboxStopOnCommsError = new System.Windows.Forms.CheckBox();
             this.checkboxBeepOnInputError = new System.Windows.Forms.CheckBox();
             this.CheckboxCheckForUpdates = new System.Windows.Forms.CheckBox();
+            this.label1 = new System.Windows.Forms.Label();
+            this.numericLoggerCapacity = new System.Windows.Forms.NumericUpDown();
+            ((System.ComponentModel.ISupportInitialize)(this.numericLoggerCapacity)).BeginInit();
             this.SuspendLayout();
             // 
             // buttonCancel
             // 
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.buttonCancel.Location = new System.Drawing.Point(179, 132);
+            this.buttonCancel.Location = new System.Drawing.Point(167, 182);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 23);
             this.buttonCancel.TabIndex = 5;
@@ -49,7 +52,7 @@
             // buttonOK
             // 
             this.buttonOK.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.buttonOK.Location = new System.Drawing.Point(90, 132);
+            this.buttonOK.Location = new System.Drawing.Point(78, 182);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(75, 23);
             this.buttonOK.TabIndex = 4;
@@ -59,7 +62,7 @@
             // checkboxUseLocalOverrides
             // 
             this.checkboxUseLocalOverrides.AutoSize = true;
-            this.checkboxUseLocalOverrides.Location = new System.Drawing.Point(112, 35);
+            this.checkboxUseLocalOverrides.Location = new System.Drawing.Point(39, 45);
             this.checkboxUseLocalOverrides.Name = "checkboxUseLocalOverrides";
             this.checkboxUseLocalOverrides.Size = new System.Drawing.Size(116, 17);
             this.checkboxUseLocalOverrides.TabIndex = 1;
@@ -69,7 +72,7 @@
             // checkboxStopOnCommsError
             // 
             this.checkboxStopOnCommsError.AutoSize = true;
-            this.checkboxStopOnCommsError.Location = new System.Drawing.Point(112, 12);
+            this.checkboxStopOnCommsError.Location = new System.Drawing.Point(39, 22);
             this.checkboxStopOnCommsError.Name = "checkboxStopOnCommsError";
             this.checkboxStopOnCommsError.Size = new System.Drawing.Size(120, 17);
             this.checkboxStopOnCommsError.TabIndex = 0;
@@ -79,7 +82,7 @@
             // checkboxBeepOnInputError
             // 
             this.checkboxBeepOnInputError.AutoSize = true;
-            this.checkboxBeepOnInputError.Location = new System.Drawing.Point(112, 58);
+            this.checkboxBeepOnInputError.Location = new System.Drawing.Point(39, 68);
             this.checkboxBeepOnInputError.Name = "checkboxBeepOnInputError";
             this.checkboxBeepOnInputError.Size = new System.Drawing.Size(116, 17);
             this.checkboxBeepOnInputError.TabIndex = 2;
@@ -89,20 +92,59 @@
             // CheckboxCheckForUpdates
             // 
             this.CheckboxCheckForUpdates.AutoSize = true;
-            this.CheckboxCheckForUpdates.Location = new System.Drawing.Point(112, 97);
+            this.CheckboxCheckForUpdates.Location = new System.Drawing.Point(39, 136);
             this.CheckboxCheckForUpdates.Name = "CheckboxCheckForUpdates";
             this.CheckboxCheckForUpdates.Size = new System.Drawing.Size(113, 17);
             this.CheckboxCheckForUpdates.TabIndex = 3;
             this.CheckboxCheckForUpdates.Text = "Check for updates";
             this.CheckboxCheckForUpdates.UseVisualStyleBackColor = true;
             // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(39, 99);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(116, 13);
+            this.label1.TabIndex = 26;
+            this.label1.Text = "Logger capacity (lines):";
+            // 
+            // numericLoggerCapacity
+            // 
+            this.numericLoggerCapacity.Increment = new decimal(new int[] {
+            1000,
+            0,
+            0,
+            0});
+            this.numericLoggerCapacity.Location = new System.Drawing.Point(161, 97);
+            this.numericLoggerCapacity.Maximum = new decimal(new int[] {
+            999999,
+            0,
+            0,
+            0});
+            this.numericLoggerCapacity.Minimum = new decimal(new int[] {
+            1000,
+            0,
+            0,
+            0});
+            this.numericLoggerCapacity.Name = "numericLoggerCapacity";
+            this.numericLoggerCapacity.Size = new System.Drawing.Size(75, 20);
+            this.numericLoggerCapacity.TabIndex = 25;
+            this.numericLoggerCapacity.Value = new decimal(new int[] {
+            5000,
+            0,
+            0,
+            0});
+            // 
             // OptionsForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
+            this.AutoSize = true;
             this.CancelButton = this.buttonCancel;
-            this.ClientSize = new System.Drawing.Size(345, 166);
+            this.ClientSize = new System.Drawing.Size(321, 217);
             this.ControlBox = false;
+            this.Controls.Add(this.label1);
+            this.Controls.Add(this.numericLoggerCapacity);
             this.Controls.Add(this.CheckboxCheckForUpdates);
             this.Controls.Add(this.checkboxBeepOnInputError);
             this.Controls.Add(this.checkboxUseLocalOverrides);
@@ -116,6 +158,7 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Tag = "";
             this.Text = "Options";
+            ((System.ComponentModel.ISupportInitialize)(this.numericLoggerCapacity)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -129,5 +172,7 @@
         private System.Windows.Forms.CheckBox checkboxStopOnCommsError;
         private System.Windows.Forms.CheckBox checkboxBeepOnInputError;
         private System.Windows.Forms.CheckBox CheckboxCheckForUpdates;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.NumericUpDown numericLoggerCapacity;
     }
 }

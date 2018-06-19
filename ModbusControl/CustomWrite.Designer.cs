@@ -33,12 +33,12 @@
             this.textboxLog = new System.Windows.Forms.TextBox();
             this.buttonClear = new System.Windows.Forms.Button();
             this.buttonSend = new System.Windows.Forms.Button();
-            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.groupboxDatasize = new System.Windows.Forms.GroupBox();
             this.radiobuttonSize16bit = new System.Windows.Forms.RadioButton();
             this.radiobuttonSize32bit = new System.Windows.Forms.RadioButton();
             this.textboxData = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
-            this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.groupboxFunctioncode = new System.Windows.Forms.GroupBox();
             this.radiobuttonWriteFC16 = new System.Windows.Forms.RadioButton();
             this.radiobuttonWriteFC6 = new System.Windows.Forms.RadioButton();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
@@ -48,8 +48,8 @@
             this.label5 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
-            this.groupBox2.SuspendLayout();
-            this.groupBox3.SuspendLayout();
+            this.groupboxDatasize.SuspendLayout();
+            this.groupboxFunctioncode.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericQuantity)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericRegister)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericSlaveAddress)).BeginInit();
@@ -91,16 +91,16 @@
             this.buttonSend.UseVisualStyleBackColor = true;
             this.buttonSend.Click += new System.EventHandler(this.buttonSend_Click);
             // 
-            // groupBox2
+            // groupboxDatasize
             // 
-            this.groupBox2.Controls.Add(this.radiobuttonSize16bit);
-            this.groupBox2.Controls.Add(this.radiobuttonSize32bit);
-            this.groupBox2.Location = new System.Drawing.Point(147, 41);
-            this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(79, 53);
-            this.groupBox2.TabIndex = 8;
-            this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "Data size:";
+            this.groupboxDatasize.Controls.Add(this.radiobuttonSize16bit);
+            this.groupboxDatasize.Controls.Add(this.radiobuttonSize32bit);
+            this.groupboxDatasize.Location = new System.Drawing.Point(147, 41);
+            this.groupboxDatasize.Name = "groupboxDatasize";
+            this.groupboxDatasize.Size = new System.Drawing.Size(79, 53);
+            this.groupboxDatasize.TabIndex = 8;
+            this.groupboxDatasize.TabStop = false;
+            this.groupboxDatasize.Text = "Data size:";
             // 
             // radiobuttonSize16bit
             // 
@@ -111,6 +111,7 @@
             this.radiobuttonSize16bit.Size = new System.Drawing.Size(51, 17);
             this.radiobuttonSize16bit.TabIndex = 0;
             this.radiobuttonSize16bit.TabStop = true;
+            this.radiobuttonSize16bit.Tag = "\"16\"";
             this.radiobuttonSize16bit.Text = "16-bit";
             this.toolTip1.SetToolTip(this.radiobuttonSize16bit, "Handle all registers as 16-bit values");
             this.radiobuttonSize16bit.UseVisualStyleBackColor = true;
@@ -122,6 +123,7 @@
             this.radiobuttonSize32bit.Name = "radiobuttonSize32bit";
             this.radiobuttonSize32bit.Size = new System.Drawing.Size(51, 17);
             this.radiobuttonSize32bit.TabIndex = 1;
+            this.radiobuttonSize32bit.Tag = "\"32\"";
             this.radiobuttonSize32bit.Text = "32-bit";
             this.toolTip1.SetToolTip(this.radiobuttonSize32bit, "Handle all registers as 32-bit values (2 registers per value)");
             this.radiobuttonSize32bit.UseVisualStyleBackColor = true;
@@ -148,16 +150,16 @@
             this.label4.TabIndex = 9;
             this.label4.Text = "Write data:\r\n(comma separated)\r\n";
             // 
-            // groupBox3
+            // groupboxFunctioncode
             // 
-            this.groupBox3.Controls.Add(this.radiobuttonWriteFC16);
-            this.groupBox3.Controls.Add(this.radiobuttonWriteFC6);
-            this.groupBox3.Location = new System.Drawing.Point(16, 41);
-            this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(127, 53);
-            this.groupBox3.TabIndex = 7;
-            this.groupBox3.TabStop = false;
-            this.groupBox3.Text = "Use function code:";
+            this.groupboxFunctioncode.Controls.Add(this.radiobuttonWriteFC16);
+            this.groupboxFunctioncode.Controls.Add(this.radiobuttonWriteFC6);
+            this.groupboxFunctioncode.Location = new System.Drawing.Point(16, 41);
+            this.groupboxFunctioncode.Name = "groupboxFunctioncode";
+            this.groupboxFunctioncode.Size = new System.Drawing.Size(127, 53);
+            this.groupboxFunctioncode.TabIndex = 7;
+            this.groupboxFunctioncode.TabStop = false;
+            this.groupboxFunctioncode.Text = "Use function code:";
             // 
             // radiobuttonWriteFC16
             // 
@@ -168,6 +170,7 @@
             this.radiobuttonWriteFC16.Size = new System.Drawing.Size(116, 17);
             this.radiobuttonWriteFC16.TabIndex = 1;
             this.radiobuttonWriteFC16.TabStop = true;
+            this.radiobuttonWriteFC16.Tag = "\"16\"";
             this.radiobuttonWriteFC16.Text = "16 (set multiple reg)";
             this.toolTip1.SetToolTip(this.radiobuttonWriteFC16, "Use function code 16 (set multiple register) only");
             this.radiobuttonWriteFC16.UseVisualStyleBackColor = true;
@@ -180,6 +183,7 @@
             this.radiobuttonWriteFC6.Size = new System.Drawing.Size(102, 17);
             this.radiobuttonWriteFC6.TabIndex = 0;
             this.radiobuttonWriteFC6.TabStop = true;
+            this.radiobuttonWriteFC6.Tag = "\"6\"";
             this.radiobuttonWriteFC6.Text = "6 (set single reg)";
             this.toolTip1.SetToolTip(this.radiobuttonWriteFC6, "Use function code 6 (set single register) of FC16 (set multiple registers) only");
             this.radiobuttonWriteFC6.UseVisualStyleBackColor = true;
@@ -271,22 +275,22 @@
             this.Controls.Add(this.label5);
             this.Controls.Add(this.label6);
             this.Controls.Add(this.label7);
-            this.Controls.Add(this.groupBox3);
+            this.Controls.Add(this.groupboxFunctioncode);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.textboxData);
             this.Controls.Add(this.textboxLog);
             this.Controls.Add(this.buttonClear);
             this.Controls.Add(this.buttonSend);
-            this.Controls.Add(this.groupBox2);
+            this.Controls.Add(this.groupboxDatasize);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "CustomWrite";
             this.Text = "Custom write (holding registers)";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.OnFormClosing);
             this.Shown += new System.EventHandler(this.CustomWrite_Shown);
-            this.groupBox2.ResumeLayout(false);
-            this.groupBox2.PerformLayout();
-            this.groupBox3.ResumeLayout(false);
-            this.groupBox3.PerformLayout();
+            this.groupboxDatasize.ResumeLayout(false);
+            this.groupboxDatasize.PerformLayout();
+            this.groupboxFunctioncode.ResumeLayout(false);
+            this.groupboxFunctioncode.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericQuantity)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericRegister)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericSlaveAddress)).EndInit();
@@ -300,12 +304,12 @@
         private System.Windows.Forms.TextBox textboxLog;
         private System.Windows.Forms.Button buttonClear;
         private System.Windows.Forms.Button buttonSend;
-        private System.Windows.Forms.GroupBox groupBox2;
+        private System.Windows.Forms.GroupBox groupboxDatasize;
         private System.Windows.Forms.RadioButton radiobuttonSize16bit;
         private System.Windows.Forms.RadioButton radiobuttonSize32bit;
         private System.Windows.Forms.TextBox textboxData;
         private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.GroupBox groupBox3;
+        private System.Windows.Forms.GroupBox groupboxFunctioncode;
         private System.Windows.Forms.RadioButton radiobuttonWriteFC16;
         private System.Windows.Forms.RadioButton radiobuttonWriteFC6;
         private System.Windows.Forms.ToolTip toolTip1;

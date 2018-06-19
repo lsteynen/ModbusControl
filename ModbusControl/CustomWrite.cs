@@ -18,6 +18,41 @@ namespace ModbusControlSpace
         Form1 mParent;
         public ModbusInterface mModbus;
 
+        #region properties
+
+        public byte SlaveID
+        {
+            get { return (byte)numericSlaveAddress.Value; }
+            set { numericSlaveAddress.Value = value; }
+        }
+
+        public UInt32 Register
+        {
+            get { return (UInt32)numericRegister.Value; }
+            set { numericRegister.Value = value; }
+        }
+
+        public UInt16 Quantity
+        {
+            get { return (UInt16)numericQuantity.Value; }
+            set { numericQuantity.Value = value; }
+        }
+
+        public string Functioncode
+        {
+            // uses Radiobutton.Tag
+            get { return Global.GetRadioGroupTag(groupboxFunctioncode); }
+            set { Global.SetRadioGroupByTag(groupboxFunctioncode, value); }
+        }
+        
+        public string Datasize
+        {
+            // uses Radiobutton.Tag
+            get { return Global.GetRadioGroupTag(groupboxDatasize); }
+            set { Global.SetRadioGroupByTag(groupboxDatasize, value); }
+        }
+        #endregion
+
         // constructor
         public CustomWrite(Form1 parent)
         {
@@ -31,46 +66,6 @@ namespace ModbusControlSpace
             mParent = parent;
             mModbus = parent.mb;
         }
-
-        #region properties
-
-        public byte SlaveID
-        {
-            get
-            {
-                return (byte)numericSlaveAddress.Value;
-            }
-            set
-            {
-                numericSlaveAddress.Value = value;
-            }
-        }
-
-        public UInt32 Register
-        {
-            get
-            {
-                return (UInt32)numericRegister.Value;
-            }
-            set
-            {
-                numericRegister.Value = value;
-            }
-        }
-
-        public UInt16 Quantity
-        {
-            get
-            {
-                return (UInt16)numericQuantity.Value;
-            }
-            set
-            {
-                numericQuantity.Value = value;
-            }
-        }
-
-        #endregion
 
         private void OnFormClosing(object sender, FormClosingEventArgs e)
         {

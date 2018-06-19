@@ -18,6 +18,16 @@ namespace ModbusControlSpace
         Form1 mParent;
         public ModbusInterface mModbus;
 
+        #region properties
+
+        public string Command
+        {
+            get { return textboxCommand.Text; }
+            set { textboxCommand.Text = value; }
+        }
+
+        #endregion
+
         public CustomModbusCommand(Form1 parent)
         {
             InitializeComponent();

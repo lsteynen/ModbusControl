@@ -40,6 +40,12 @@ namespace ModbusControlSpace
             }
         }
 
+        public int LoggerCapacity
+        {
+            get { return (int)numericLoggerCapacity.Value; }
+            set { numericLoggerCapacity.Value = value; }
+        }
+
         public bool CheckForUpdates
         {
             get { return CheckboxCheckForUpdates.Checked; }
@@ -56,3 +62,4 @@ namespace ModbusControlSpace
 
     }
 }
+*/

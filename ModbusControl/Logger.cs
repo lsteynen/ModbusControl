@@ -575,18 +575,5 @@ namespace LST.Helpers
             }
         }
 
-        private void buttonSettings_Click(object sender, EventArgs e)
-        {
-            LoggerSettings form = new LoggerSettings();
-
-            form.CapacityLines = CapacityLines;
-
-            if (form.ShowDialog() == System.Windows.Forms.DialogResult.OK)
-            {
-                // Save new settings
-                CapacityLines = form.CapacityLines;
-            }
-        }
-
     }
 }

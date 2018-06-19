@@ -157,12 +157,6 @@
     <Compile Include="ImportCompare.Designer.cs">
       <DependentUpon>ImportCompare.cs</DependentUpon>
     </Compile>
-    <Compile Include="LoggerSettings.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="LoggerSettings.Designer.cs">
-      <DependentUpon>LoggerSettings.cs</DependentUpon>
-    </Compile>
     <Compile Include="LogFilter.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -214,12 +208,6 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>TreeGridView.resx</DependentUpon>
     </Compile>
-    <Compile Include="UserControl1.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="UserControl1.Designer.cs">
-      <DependentUpon>UserControl1.cs</DependentUpon>
-    </Compile>
     <Compile Include="ValueToString.cs" />
     <EmbeddedResource Include="AboutBox1.resx">
       <DependentUpon>AboutBox1.cs</DependentUpon>
@@ -254,9 +242,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="ImportCompare.resx">
       <DependentUpon>ImportCompare.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="LoggerSettings.resx">
-      <DependentUpon>LoggerSettings.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="LogFilter.resx">
       <DependentUpon>LogFilter.cs</DependentUpon>

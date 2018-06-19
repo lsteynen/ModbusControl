@@ -33,10 +33,10 @@
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
-            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.groupboxDatasize = new System.Windows.Forms.GroupBox();
             this.radiobuttonSize16bit = new System.Windows.Forms.RadioButton();
             this.radiobuttonSize32bit = new System.Windows.Forms.RadioButton();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.groupboxShowas = new System.Windows.Forms.GroupBox();
             this.radiobuttonAsFloat = new System.Windows.Forms.RadioButton();
             this.radiobuttonAsHex = new System.Windows.Forms.RadioButton();
             this.radiobuttonAsInt = new System.Windows.Forms.RadioButton();
@@ -48,8 +48,8 @@
             this.numericSlaveAddress = new System.Windows.Forms.NumericUpDown();
             this.numericRegister = new System.Windows.Forms.NumericUpDown();
             this.numericQuantity = new System.Windows.Forms.NumericUpDown();
-            this.groupBox2.SuspendLayout();
-            this.groupBox1.SuspendLayout();
+            this.groupboxDatasize.SuspendLayout();
+            this.groupboxShowas.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericSlaveAddress)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericRegister)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericQuantity)).BeginInit();
@@ -82,16 +82,16 @@
             this.label3.TabIndex = 4;
             this.label3.Text = "Quantity:";
             // 
-            // groupBox2
+            // groupboxDatasize
             // 
-            this.groupBox2.Controls.Add(this.radiobuttonSize16bit);
-            this.groupBox2.Controls.Add(this.radiobuttonSize32bit);
-            this.groupBox2.Location = new System.Drawing.Point(15, 41);
-            this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(79, 53);
-            this.groupBox2.TabIndex = 7;
-            this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "Data size:";
+            this.groupboxDatasize.Controls.Add(this.radiobuttonSize16bit);
+            this.groupboxDatasize.Controls.Add(this.radiobuttonSize32bit);
+            this.groupboxDatasize.Location = new System.Drawing.Point(15, 41);
+            this.groupboxDatasize.Name = "groupboxDatasize";
+            this.groupboxDatasize.Size = new System.Drawing.Size(79, 53);
+            this.groupboxDatasize.TabIndex = 7;
+            this.groupboxDatasize.TabStop = false;
+            this.groupboxDatasize.Text = "Data size:";
             // 
             // radiobuttonSize16bit
             // 
@@ -102,6 +102,7 @@
             this.radiobuttonSize16bit.Size = new System.Drawing.Size(51, 17);
             this.radiobuttonSize16bit.TabIndex = 0;
             this.radiobuttonSize16bit.TabStop = true;
+            this.radiobuttonSize16bit.Tag = "\"16\"";
             this.radiobuttonSize16bit.Text = "16-bit";
             this.toolTip1.SetToolTip(this.radiobuttonSize16bit, "Handle all registers as 16-bit values");
             this.radiobuttonSize16bit.UseVisualStyleBackColor = true;
@@ -114,23 +115,24 @@
             this.radiobuttonSize32bit.Name = "radiobuttonSize32bit";
             this.radiobuttonSize32bit.Size = new System.Drawing.Size(51, 17);
             this.radiobuttonSize32bit.TabIndex = 1;
+            this.radiobuttonSize32bit.Tag = "\"32\"";
             this.radiobuttonSize32bit.Text = "32-bit";
             this.toolTip1.SetToolTip(this.radiobuttonSize32bit, "Handle all registers as 32-bit values (2 registers per value)");
             this.radiobuttonSize32bit.UseVisualStyleBackColor = true;
             this.radiobuttonSize32bit.CheckedChanged += new System.EventHandler(this.radiobuttonSize32bit_CheckedChanged);
             // 
-            // groupBox1
+            // groupboxShowas
             // 
-            this.groupBox1.Controls.Add(this.radiobuttonAsFloat);
-            this.groupBox1.Controls.Add(this.radiobuttonAsHex);
-            this.groupBox1.Controls.Add(this.radiobuttonAsInt);
-            this.groupBox1.Controls.Add(this.radiobuttonAsUInt);
-            this.groupBox1.Location = new System.Drawing.Point(98, 41);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(147, 53);
-            this.groupBox1.TabIndex = 8;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Show values as:";
+            this.groupboxShowas.Controls.Add(this.radiobuttonAsFloat);
+            this.groupboxShowas.Controls.Add(this.radiobuttonAsHex);
+            this.groupboxShowas.Controls.Add(this.radiobuttonAsInt);
+            this.groupboxShowas.Controls.Add(this.radiobuttonAsUInt);
+            this.groupboxShowas.Location = new System.Drawing.Point(98, 41);
+            this.groupboxShowas.Name = "groupboxShowas";
+            this.groupboxShowas.Size = new System.Drawing.Size(147, 53);
+            this.groupboxShowas.TabIndex = 8;
+            this.groupboxShowas.TabStop = false;
+            this.groupboxShowas.Text = "Show values as:";
             // 
             // radiobuttonAsFloat
             // 
@@ -140,6 +142,7 @@
             this.radiobuttonAsFloat.Name = "radiobuttonAsFloat";
             this.radiobuttonAsFloat.Size = new System.Drawing.Size(48, 17);
             this.radiobuttonAsFloat.TabIndex = 3;
+            this.radiobuttonAsFloat.Tag = "\"float\"";
             this.radiobuttonAsFloat.Text = "Float";
             this.toolTip1.SetToolTip(this.radiobuttonAsFloat, "Show all values as 32-bit floating point");
             this.radiobuttonAsFloat.UseVisualStyleBackColor = true;
@@ -151,6 +154,7 @@
             this.radiobuttonAsHex.Name = "radiobuttonAsHex";
             this.radiobuttonAsHex.Size = new System.Drawing.Size(44, 17);
             this.radiobuttonAsHex.TabIndex = 2;
+            this.radiobuttonAsHex.Tag = "\"hex\"";
             this.radiobuttonAsHex.Text = "Hex";
             this.toolTip1.SetToolTip(this.radiobuttonAsHex, "Show all values in hexadecimal");
             this.radiobuttonAsHex.UseVisualStyleBackColor = true;
@@ -164,6 +168,7 @@
             this.radiobuttonAsInt.Size = new System.Drawing.Size(37, 17);
             this.radiobuttonAsInt.TabIndex = 0;
             this.radiobuttonAsInt.TabStop = true;
+            this.radiobuttonAsInt.Tag = "\"int\"";
             this.radiobuttonAsInt.Text = "Int";
             this.toolTip1.SetToolTip(this.radiobuttonAsInt, "Show all values as signed int");
             this.radiobuttonAsInt.UseVisualStyleBackColor = true;
@@ -175,6 +180,7 @@
             this.radiobuttonAsUInt.Name = "radiobuttonAsUInt";
             this.radiobuttonAsUInt.Size = new System.Drawing.Size(45, 17);
             this.radiobuttonAsUInt.TabIndex = 1;
+            this.radiobuttonAsUInt.Tag = "\"uint\"";
             this.radiobuttonAsUInt.Text = "UInt";
             this.toolTip1.SetToolTip(this.radiobuttonAsUInt, "Show all values as unsigned int");
             this.radiobuttonAsUInt.UseVisualStyleBackColor = true;
@@ -275,8 +281,8 @@
             this.Controls.Add(this.textboxLog);
             this.Controls.Add(this.buttonClear);
             this.Controls.Add(this.buttonSend);
-            this.Controls.Add(this.groupBox1);
-            this.Controls.Add(this.groupBox2);
+            this.Controls.Add(this.groupboxShowas);
+            this.Controls.Add(this.groupboxDatasize);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
@@ -286,10 +292,10 @@
             this.toolTip1.SetToolTip(this, "Send the read command");
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.OnFormClosing);
             this.Shown += new System.EventHandler(this.CustomRead_Shown);
-            this.groupBox2.ResumeLayout(false);
-            this.groupBox2.PerformLayout();
-            this.groupBox1.ResumeLayout(false);
-            this.groupBox1.PerformLayout();
+            this.groupboxDatasize.ResumeLayout(false);
+            this.groupboxDatasize.PerformLayout();
+            this.groupboxShowas.ResumeLayout(false);
+            this.groupboxShowas.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericSlaveAddress)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericRegister)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericQuantity)).EndInit();
@@ -303,10 +309,10 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.GroupBox groupBox2;
+        private System.Windows.Forms.GroupBox groupboxDatasize;
         private System.Windows.Forms.RadioButton radiobuttonSize16bit;
         private System.Windows.Forms.RadioButton radiobuttonSize32bit;
-        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.GroupBox groupboxShowas;
         private System.Windows.Forms.RadioButton radiobuttonAsHex;
         private System.Windows.Forms.RadioButton radiobuttonAsInt;
         private System.Windows.Forms.RadioButton radiobuttonAsUInt;
