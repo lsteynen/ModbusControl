@@ -38,18 +38,13 @@ namespace Modbus_net
 
         public string ChannelName
         {
-            get
-            {
-                return mPort.PortName;
-            }
+            // read only
+            get { return mPort.PortName; }
         }
 
         public bool IsOpen
         {
-            get
-            {
-                return mPort.IsOpen;
-            }
+            get { return mPort.IsOpen; }
         }
 
         public bool IsSerialChannel
@@ -65,14 +60,8 @@ namespace Modbus_net
         public uint ConnectTimeout
         {
             // is not used here
-            get
-            {
-                return 0;
-            }
-            set
-            {
-                // ignore
-            }
+            get { return 0; }
+            set { /* ignore */ }
         }
 
         public uint ResponseTimeout
@@ -85,6 +74,12 @@ namespace Modbus_net
         {
             get;
             set;
+        }
+
+        public uint Baudrate
+        {
+            // read only
+            get { return (uint)mPort.BaudRate; }
         }
 
         public uint ConnectCount

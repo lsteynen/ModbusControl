@@ -15,6 +15,7 @@ namespace ModbusControlSpace
     {
         private UInt32 mResponseTimeout = 1000;
         private UInt32 mEndOfMessageTimeout = 100;
+        private UInt32 mInterFrameDelay = 0;
         private bool mOneWireEchoSuppression = false;
         private UInt32 mTries = 1;
 
@@ -68,6 +69,19 @@ namespace ModbusControlSpace
             {
                 mEndOfMessageTimeout = value;
                 if (mb != null) mb.EndOfMessageTimeout = mEndOfMessageTimeout;
+            }
+        }
+
+        public UInt32 InterFrameDelay
+        {
+            get
+            {
+                return mInterFrameDelay;
+            }
+            set
+            {
+                mInterFrameDelay = value;
+                if (mb != null) mb.InterFrameDelay = mInterFrameDelay;
             }
         }
 
@@ -257,6 +271,7 @@ namespace ModbusControlSpace
             mb.OneWireEchoSuppression = mOneWireEchoSuppression;
             mb.ResponseTimeout = mResponseTimeout;
             mb.EndOfMessageTimeout = mEndOfMessageTimeout;
+            mb.InterFrameDelay = mInterFrameDelay;
             mb.Tries = mTries;
             mb.RetryOnException11 = false;
 
@@ -279,6 +294,7 @@ namespace ModbusControlSpace
             uint ConnectTimeout = Math.Max(3000, mResponseTimeout); // 3000ms or higher if ResponseTimeout is hoger
             mb.ConnectTimeout = ConnectTimeout;
             mb.ResponseTimeout = mResponseTimeout;
+            mb.InterFrameDelay = mInterFrameDelay;
             mb.Tries = mTries;
             mb.RetryOnException11 = false;
 
@@ -301,6 +317,7 @@ namespace ModbusControlSpace
             uint ConnectTimeout = Math.Max(3000, mResponseTimeout); // 3000ms or higher if ResponseTimeout is hoger
             mb.ConnectTimeout = ConnectTimeout;
             mb.ResponseTimeout = mResponseTimeout;
+            mb.InterFrameDelay = mInterFrameDelay;
             mb.Tries = mTries;
             mb.RetryOnException11 = false;
 

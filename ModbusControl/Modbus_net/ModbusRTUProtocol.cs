@@ -23,6 +23,7 @@ namespace Modbus_net
         public bool OneWireEchoSuppression { get; set; }
         public uint ResponseTimeout { get; set; }
         public uint EndOfMessageTimeout { get; set; }
+        public uint InterFrameDelay { get; set; }
         public uint ConnectionClosedBecauseOfResponseErrorCount { get; set; } // not used here
 
         // events
@@ -57,6 +58,12 @@ namespace Modbus_net
             if (Channel.BeforeTransaction() == false)
             {
                 return ModbusProtocol.Result.CHANNELNOTOPEN;
+            }
+
+            // Do inter-frame delay
+            if (InterFrameDelay > 0)
+            {
+                Thread.Sleep((int)InterFrameDelay);
             }
 
             // Channel Write() can throw exception if connection is not open

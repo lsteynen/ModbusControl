@@ -22,7 +22,7 @@ using ModbusRegViewSpace;
 using TreeGridViewSpace;
 using LST.Helpers;
 
-//TODO: instellen EndOfMessageTimeout en InterframeDelay: instellen als 0=auto, 'Auto' tonen in numericupdown? <> 0 is fixed milliseconden.
+//TODO: instellen EndOfMessageTimeout en InterFrameDelay: instellen als 0=auto, 'Auto' tonen in numericupdown? <> 0 is fixed milliseconden.
 //      zie ook https://stackoverflow.com/questions/5921446/having-text-inside-numericupdown-control-after-the-number
 
 namespace ModbusControlSpace
@@ -670,6 +670,7 @@ namespace ModbusControlSpace
             configform.ConnectionSlaveID = Project.Connection.SlaveID;
             configform.ConnectionMaximumFrameSize = Project.Connection.MaximumFrameSize;
             configform.ConnectionResponseTimeout = Project.Connection.ResponseTimeout;
+            configform.ConnectionInterFrameDelay = Project.Connection.InterFrameDelay;
             configform.ConnectionWriteHoldingregFunctionCode = Project.Connection.WriteHoldingregFunctioncode;
             configform.ConnectionInt32Endian = Project.Connection.Int32Endian;
             configform.ConnectionFloat32Endian = Project.Connection.Float32Endian;
@@ -696,7 +697,8 @@ namespace ModbusControlSpace
                            && ((configform.ConnectionIPAddress != Project.Connection.IPAddress)
                                || (configform.ConnectionIPPort != Project.Connection.IPPort)
                                || (configform.ConnectionTcpConnectMode != Project.Connection.TcpConnectMode)))
-                       || (configform.ConnectionResponseTimeout != Project.Connection.ResponseTimeout));
+                       || (configform.ConnectionResponseTimeout != Project.Connection.ResponseTimeout)
+                       || (configform.ConnectionInterFrameDelay != Project.Connection.InterFrameDelay));
 
                 bool ReopenConnection = ConnectionIsOpen && ConnectionChange;
                 bool SavedPollingIsStarted = PollingIsStarted;
@@ -720,6 +722,7 @@ namespace ModbusControlSpace
                 Project.Connection.SlaveID = configform.ConnectionSlaveID;
                 Project.Connection.MaximumFrameSize = configform.ConnectionMaximumFrameSize;
                 Project.Connection.ResponseTimeout = configform.ConnectionResponseTimeout;
+                Project.Connection.InterFrameDelay = configform.ConnectionInterFrameDelay;
                 Project.Connection.WriteHoldingregFunctioncode = configform.ConnectionWriteHoldingregFunctionCode;
                 Project.Connection.Int32Endian = configform.ConnectionInt32Endian;
                 Project.Connection.Float32Endian = configform.ConnectionFloat32Endian;
@@ -1144,6 +1147,7 @@ namespace ModbusControlSpace
                 mb.OneWireEchoSuppression = Project.Connection.SerialOneWireEchoSuppression;
                 mb.ResponseTimeout = (uint)Project.Connection.ResponseTimeout;
                 mb.EndOfMessageTimeout = (uint)Project.Connection.SerialEndOfMessageTimeout;
+                mb.InterFrameDelay = (uint)Project.Connection.InterFrameDelay;
 
                 // success
                 Logger1.Log(Logger.LogType.Info, "Serial port " + Portname + " opened");
@@ -1202,6 +1206,7 @@ namespace ModbusControlSpace
 
                 // ok
                 mb.ResponseTimeout = (uint)Project.Connection.ResponseTimeout;
+                mb.InterFrameDelay = (uint)Project.Connection.InterFrameDelay;
 
                 // success
                 Logger1.Log(Logger.LogType.Info, "Connection to " + ConnectionName + " opened");
@@ -1261,6 +1266,7 @@ namespace ModbusControlSpace
 
                 // ok
                 mb.ResponseTimeout = (uint)Project.Connection.ResponseTimeout;
+                mb.InterFrameDelay = (uint)Project.Connection.InterFrameDelay;
 
                 // success
                 Logger1.Log(Logger.LogType.Info, "Connection to " + ConnectionName + " opened");

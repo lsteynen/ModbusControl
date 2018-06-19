@@ -52,18 +52,12 @@ namespace Modbus_net
 
         public string ChannelName
         {
-            get
-            {
-                return mEndpoint.ToString();
-            }
+            get { return mEndpoint.ToString(); }
         }
 
         public bool IsOpen
         {
-            get
-            {
-                return mIsOpen;
-            }
+            get { return mIsOpen; }
         }
 
         public bool IsConnected
@@ -82,6 +76,12 @@ namespace Modbus_net
         public bool IsTcpChannel
         {
             get { return true; }
+        }
+
+        public uint Baudrate
+        {
+            // not supported
+            get { return 0; }
         }
 
         public uint ConnectTimeout

@@ -9,6 +9,7 @@ namespace Modbus_net
         private IModbusProtocol mProtocol;
         private ICommChannel mChannel;
         private bool mIsOpen;
+        private uint mInterFrameDelay;
 
         // all these result codes must be supported in AdjustResultCounters() and GetResultText()
         public enum Result
@@ -51,6 +52,7 @@ namespace Modbus_net
             ConnectTimeout = 3000;
             ResponseTimeout = 1000;
             EndOfMessageTimeout = 100;
+            mInterFrameDelay = 0;
             Tries = 3;
             RetryOnException11 = false;
         }
@@ -89,6 +91,14 @@ namespace Modbus_net
         {
             get { return mProtocol.EndOfMessageTimeout; }
             set { mProtocol.EndOfMessageTimeout = value; }
+        }
+
+        public uint InterFrameDelay
+        {
+            get { return mInterFrameDelay; }
+            set { SetInterFrameDelay( value);
+                  mInterFrameDelay = value; 
+                }
         }
 
         public uint Tries
@@ -857,6 +867,28 @@ namespace Modbus_net
             if (mChannel.IsOpen && mChannel.IsTcpChannel)
             {
                 mChannel.Close();
+            }
+        }
+
+        /// <summary>
+        /// Set inter-frame delay
+        /// 0 means set default: is 4 charactertimes for serial channel, 0ms for TCP channel
+        /// >0 means delay in ms
+        /// </summary>
+        private void SetInterFrameDelay( uint Delay)
+        {
+            if ((Delay == 0) && (mChannel.IsSerialChannel))
+            {
+                // default, set to 4 * Tchar, naar boven afronden, ms
+                uint protdelay = mProtocol.InterFrameDelay = (40000 + (mChannel.Baudrate - 1)) / mChannel.Baudrate;
+                // met minimum van 2ms voor hoge baudrates
+                if (protdelay < 2) protdelay = 2;
+                mProtocol.InterFrameDelay = protdelay;
+            }
+            else
+            {
+                // fixed ms
+                mProtocol.InterFrameDelay = Delay;
             }
         }
 

@@ -51,6 +51,7 @@ namespace ModbusControlSpace
             public Byte SlaveID;
             public int MaximumFrameSize;
             public int ResponseTimeout;
+            public int InterFrameDelay;
             public Global.eWriteHoldingregFunctionCode WriteHoldingregFunctioncode;
             public Global.eEndian Int32Endian;
             public Global.eEndian Float32Endian;
@@ -151,6 +152,7 @@ namespace ModbusControlSpace
             Connection.SlaveID = 1;
             Connection.MaximumFrameSize = 256;
             Connection.ResponseTimeout = 1000;
+            Connection.InterFrameDelay = 0;
             Connection.WriteHoldingregFunctioncode = Global.eWriteHoldingregFunctionCode.FC16;
             Connection.Int32Endian = Global.eEndian.Little;
             Connection.Float32Endian = Global.eEndian.Little;
@@ -568,6 +570,24 @@ namespace ModbusControlSpace
                     {
                         TFilePosition fp = GetFilePos(xe2);
                         throw new XmlException("XML element <" + xe2.Name + "> has an invalid value. Valid values are 13 - 256." + Environment.NewLine + LimitXmlText(xe2.ToString()) + Environment.NewLine, null, fp.Line, fp.Col);
+                    }
+                }
+
+                // Inter-frame delay
+                xe2 = GetSingleElement(xe1, "interframedelay", eReq.Optional);
+                if (xe2 != null)
+                {
+                    string TmpString = xe2.Value.Trim();
+                    // get value
+                    UInt32 TmpValue;
+                    if (UInt32.TryParse(TmpString, out TmpValue))
+                    {
+                        Connection.InterFrameDelay = (int)TmpValue;
+                    }
+                    else
+                    {
+                        TFilePosition fp = GetFilePos(xe2);
+                        throw new XmlException("XML element <" + xe2.Name + "> has an invalid value. Use 0 for default." + Environment.NewLine + LimitXmlText(xe2.ToString()) + Environment.NewLine, null, fp.Line, fp.Col);
                     }
                 }
 
@@ -1819,6 +1839,8 @@ namespace ModbusControlSpace
                 xeModbus.Add(xe);
             }
             xe.Value = Connection.MaximumFrameSize.ToString();
+
+            //TODO: interframedelay toevoegen?
 
             // Find WriteHoldingregisterFC node, or create it
             xe = GetSingleElement(xeModbus, "WriteHoldingregisterFC", eReq.Optional);

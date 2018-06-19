@@ -142,6 +142,15 @@ namespace ModbusControlSpace
             }
         }
 
+        public int ConnectionInterFrameDelay
+        {
+            get { return (int)numericInterFrameDelay.Value; }
+            set
+            {
+                numericInterFrameDelay.Value = value;
+            }
+        }
+
         public Global.eWriteHoldingregFunctionCode ConnectionWriteHoldingregFunctionCode
         {
             get 

@@ -59,6 +59,12 @@ namespace Modbus_net
             set; 
         }
 
+        uint Baudrate
+        {
+            // read only
+            get;
+        }
+
         uint ConnectCount
         {
             get;

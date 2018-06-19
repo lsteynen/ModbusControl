@@ -14,6 +14,7 @@ namespace Modbus_net
         bool OneWireEchoSuppression { get; set; } // not used here
         uint ResponseTimeout { get; set; }
         uint EndOfMessageTimeout { get; set; }
+        uint InterFrameDelay { get; set; }
         uint ConnectionClosedBecauseOfResponseErrorCount { get; set; }
 
         // methods

@@ -83,6 +83,8 @@
             this.textboxHoldingRegistersStart = new System.Windows.Forms.TextBox();
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
             this.groupBox5 = new System.Windows.Forms.GroupBox();
+            this.numericInterFrameDelay = new System.Windows.Forms.NumericUpDown();
+            this.label15 = new System.Windows.Forms.Label();
             this.groupboxConnection.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericMaximumFrameSize)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericResponseTimeout)).BeginInit();
@@ -98,10 +100,13 @@
             this.groupBox4.SuspendLayout();
             this.groupBox3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericSamplerate)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericInterFrameDelay)).BeginInit();
             this.SuspendLayout();
             // 
             // groupboxConnection
             // 
+            this.groupboxConnection.Controls.Add(this.numericInterFrameDelay);
+            this.groupboxConnection.Controls.Add(this.label15);
             this.groupboxConnection.Controls.Add(this.numericMaximumFrameSize);
             this.groupboxConnection.Controls.Add(this.numericResponseTimeout);
             this.groupboxConnection.Controls.Add(this.numericSlaveAddress);
@@ -114,7 +119,7 @@
             this.groupboxConnection.Controls.Add(this.label7);
             this.groupboxConnection.Location = new System.Drawing.Point(12, 12);
             this.groupboxConnection.Name = "groupboxConnection";
-            this.groupboxConnection.Size = new System.Drawing.Size(194, 348);
+            this.groupboxConnection.Size = new System.Drawing.Size(194, 372);
             this.groupboxConnection.TabIndex = 0;
             this.groupboxConnection.TabStop = false;
             this.groupboxConnection.Text = "Connection / Protocol";
@@ -781,6 +786,28 @@
             this.groupBox5.TabIndex = 16;
             this.groupBox5.TabStop = false;
             // 
+            // numericInterFrameDelay
+            // 
+            this.numericInterFrameDelay.Location = new System.Drawing.Point(126, 344);
+            this.numericInterFrameDelay.Maximum = new decimal(new int[] {
+            9999999,
+            0,
+            0,
+            0});
+            this.numericInterFrameDelay.Name = "numericInterFrameDelay";
+            this.numericInterFrameDelay.Size = new System.Drawing.Size(61, 20);
+            this.numericInterFrameDelay.TabIndex = 11;
+            this.toolTip1.SetToolTip(this.numericInterFrameDelay, "Delay between frames, in milliseconds, use 0 for default");
+            // 
+            // label15
+            // 
+            this.label15.AutoSize = true;
+            this.label15.Location = new System.Drawing.Point(7, 346);
+            this.label15.Name = "label15";
+            this.label15.Size = new System.Drawing.Size(110, 13);
+            this.label15.TabIndex = 10;
+            this.label15.Text = "Inter-frame delay (ms):";
+            // 
             // ConfigForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
@@ -832,6 +859,7 @@
             this.groupBox3.ResumeLayout(false);
             this.groupBox3.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericSamplerate)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericInterFrameDelay)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -893,6 +921,8 @@
         private System.Windows.Forms.TextBox textboxHoldingRegistersStart;
         private System.ComponentModel.BackgroundWorker backgroundWorker1;
         private System.Windows.Forms.GroupBox groupBox5;
+        private System.Windows.Forms.NumericUpDown numericInterFrameDelay;
+        private System.Windows.Forms.Label label15;
 
     }
 }

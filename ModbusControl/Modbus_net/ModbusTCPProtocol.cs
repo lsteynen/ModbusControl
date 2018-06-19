@@ -24,6 +24,7 @@ namespace Modbus_net
         public bool OneWireEchoSuppression { get; set; } // not used here
         public uint ResponseTimeout { get; set; }
         public uint EndOfMessageTimeout { get; set; } // not used here
+        public uint InterFrameDelay { get; set; }
         public uint ConnectionClosedBecauseOfResponseErrorCount { get; set; }
 
         // events
@@ -58,6 +59,12 @@ namespace Modbus_net
             }
 
             byte[] txframe = BuildQueryFrame(query, querylength);
+
+            // Do inter-frame delay
+            if (InterFrameDelay > 0)
+            {
+                Thread.Sleep((int)InterFrameDelay);
+            }
 
             // Channel Write() can throw exception if connection is not open
             try
