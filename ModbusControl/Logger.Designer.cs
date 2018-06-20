@@ -34,18 +34,18 @@
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripStatusLabel2 = new System.Windows.Forms.ToolStripStatusLabel();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.checkboxEnable = new System.Windows.Forms.CheckBox();
+            this.buttonBottom = new System.Windows.Forms.Button();
+            this.buttonTop = new System.Windows.Forms.Button();
+            this.checkboxScrollLock = new System.Windows.Forms.CheckBox();
             this.buttonSaveToFile = new System.Windows.Forms.Button();
-            this.buttonStop = new System.Windows.Forms.Button();
-            this.logFilter = new LST.Helpers.LogFilter();
             this.Loggrid = new SourceGrid.DataGrid();
             this.buttonClear = new System.Windows.Forms.Button();
             this.buttonCopyToClipboard = new System.Windows.Forms.Button();
-            this.buttonRecord = new System.Windows.Forms.Button();
-            this.buttonLast = new System.Windows.Forms.Button();
-            this.buttonFirst = new System.Windows.Forms.Button();
             this.timerView = new System.Windows.Forms.Timer(this.components);
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.SaveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
+            this.logFilter = new LST.Helpers.LogFilter();
             this.statusStrip1.SuspendLayout();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
@@ -71,17 +71,49 @@
             // 
             // panel1
             // 
+            this.panel1.Controls.Add(this.checkboxEnable);
+            this.panel1.Controls.Add(this.buttonBottom);
+            this.panel1.Controls.Add(this.buttonTop);
+            this.panel1.Controls.Add(this.checkboxScrollLock);
             this.panel1.Controls.Add(this.buttonSaveToFile);
-            this.panel1.Controls.Add(this.buttonStop);
             this.panel1.Controls.Add(this.logFilter);
             this.panel1.Controls.Add(this.Loggrid);
             this.panel1.Controls.Add(this.buttonClear);
             this.panel1.Controls.Add(this.buttonCopyToClipboard);
-            this.panel1.Controls.Add(this.buttonRecord);
-            this.panel1.Controls.Add(this.buttonLast);
-            this.panel1.Controls.Add(this.buttonFirst);
             resources.ApplyResources(this.panel1, "panel1");
             this.panel1.Name = "panel1";
+            // 
+            // checkboxEnable
+            // 
+            resources.ApplyResources(this.checkboxEnable, "checkboxEnable");
+            this.checkboxEnable.Name = "checkboxEnable";
+            this.toolTip1.SetToolTip(this.checkboxEnable, resources.GetString("checkboxEnable.ToolTip"));
+            this.checkboxEnable.UseVisualStyleBackColor = true;
+            this.checkboxEnable.CheckedChanged += new System.EventHandler(this.checkboxEnable_CheckedChanged);
+            // 
+            // buttonBottom
+            // 
+            resources.ApplyResources(this.buttonBottom, "buttonBottom");
+            this.buttonBottom.Name = "buttonBottom";
+            this.toolTip1.SetToolTip(this.buttonBottom, resources.GetString("buttonBottom.ToolTip"));
+            this.buttonBottom.UseVisualStyleBackColor = true;
+            this.buttonBottom.Click += new System.EventHandler(this.buttonBottom_Click);
+            // 
+            // buttonTop
+            // 
+            resources.ApplyResources(this.buttonTop, "buttonTop");
+            this.buttonTop.Name = "buttonTop";
+            this.toolTip1.SetToolTip(this.buttonTop, resources.GetString("buttonTop.ToolTip"));
+            this.buttonTop.UseVisualStyleBackColor = true;
+            this.buttonTop.Click += new System.EventHandler(this.buttonTop_Click);
+            // 
+            // checkboxScrollLock
+            // 
+            resources.ApplyResources(this.checkboxScrollLock, "checkboxScrollLock");
+            this.checkboxScrollLock.Name = "checkboxScrollLock";
+            this.toolTip1.SetToolTip(this.checkboxScrollLock, resources.GetString("checkboxScrollLock.ToolTip"));
+            this.checkboxScrollLock.UseVisualStyleBackColor = true;
+            this.checkboxScrollLock.CheckedChanged += new System.EventHandler(this.checkboxScrollLock_CheckedChanged);
             // 
             // buttonSaveToFile
             // 
@@ -91,13 +123,45 @@
             this.buttonSaveToFile.UseVisualStyleBackColor = true;
             this.buttonSaveToFile.Click += new System.EventHandler(this.buttonSaveToFile_Click);
             // 
-            // buttonStop
+            // Loggrid
             // 
-            resources.ApplyResources(this.buttonStop, "buttonStop");
-            this.buttonStop.Name = "buttonStop";
-            this.toolTip1.SetToolTip(this.buttonStop, resources.GetString("buttonStop.ToolTip"));
-            this.buttonStop.UseVisualStyleBackColor = true;
-            this.buttonStop.Click += new System.EventHandler(this.buttonStop_Click);
+            resources.ApplyResources(this.Loggrid, "Loggrid");
+            this.Loggrid.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.Loggrid.DeleteQuestionMessage = "Are you sure to delete all the selected rows?";
+            this.Loggrid.EnableSort = false;
+            this.Loggrid.FixedRows = 1;
+            this.Loggrid.Name = "Loggrid";
+            this.Loggrid.SelectionMode = SourceGrid.GridSelectionMode.Row;
+            this.Loggrid.TabStop = true;
+            this.Loggrid.ToolTipText = "";
+            this.Loggrid.MouseClick += new System.Windows.Forms.MouseEventHandler(this.Loggrid_MouseClick);
+            // 
+            // buttonClear
+            // 
+            resources.ApplyResources(this.buttonClear, "buttonClear");
+            this.buttonClear.Name = "buttonClear";
+            this.toolTip1.SetToolTip(this.buttonClear, resources.GetString("buttonClear.ToolTip"));
+            this.buttonClear.UseVisualStyleBackColor = true;
+            this.buttonClear.Click += new System.EventHandler(this.buttonClear_Click);
+            // 
+            // buttonCopyToClipboard
+            // 
+            resources.ApplyResources(this.buttonCopyToClipboard, "buttonCopyToClipboard");
+            this.buttonCopyToClipboard.Name = "buttonCopyToClipboard";
+            this.toolTip1.SetToolTip(this.buttonCopyToClipboard, resources.GetString("buttonCopyToClipboard.ToolTip"));
+            this.buttonCopyToClipboard.UseVisualStyleBackColor = true;
+            this.buttonCopyToClipboard.Click += new System.EventHandler(this.buttonCopyToClipboard_Click);
+            // 
+            // timerView
+            // 
+            this.timerView.Interval = 150;
+            this.timerView.Tick += new System.EventHandler(this.timerView_Tick);
+            // 
+            // SaveFileDialog1
+            // 
+            this.SaveFileDialog1.AddExtension = false;
+            this.SaveFileDialog1.DefaultExt = "csv";
+            resources.ApplyResources(this.SaveFileDialog1, "SaveFileDialog1");
             // 
             // logFilter
             // 
@@ -118,69 +182,6 @@
             this.logFilter.Tag = "What to log";
             this.toolTip1.SetToolTip(this.logFilter, resources.GetString("logFilter.ToolTip"));
             // 
-            // Loggrid
-            // 
-            resources.ApplyResources(this.Loggrid, "Loggrid");
-            this.Loggrid.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.Loggrid.DeleteQuestionMessage = "Are you sure to delete all the selected rows?";
-            this.Loggrid.EnableSort = false;
-            this.Loggrid.FixedRows = 1;
-            this.Loggrid.Name = "Loggrid";
-            this.Loggrid.SelectionMode = SourceGrid.GridSelectionMode.Row;
-            this.Loggrid.TabStop = true;
-            this.Loggrid.ToolTipText = "";
-            // 
-            // buttonClear
-            // 
-            resources.ApplyResources(this.buttonClear, "buttonClear");
-            this.buttonClear.Name = "buttonClear";
-            this.toolTip1.SetToolTip(this.buttonClear, resources.GetString("buttonClear.ToolTip"));
-            this.buttonClear.UseVisualStyleBackColor = true;
-            this.buttonClear.Click += new System.EventHandler(this.buttonClear_Click);
-            // 
-            // buttonCopyToClipboard
-            // 
-            resources.ApplyResources(this.buttonCopyToClipboard, "buttonCopyToClipboard");
-            this.buttonCopyToClipboard.Name = "buttonCopyToClipboard";
-            this.toolTip1.SetToolTip(this.buttonCopyToClipboard, resources.GetString("buttonCopyToClipboard.ToolTip"));
-            this.buttonCopyToClipboard.UseVisualStyleBackColor = true;
-            this.buttonCopyToClipboard.Click += new System.EventHandler(this.buttonCopyToClipboard_Click);
-            // 
-            // buttonRecord
-            // 
-            resources.ApplyResources(this.buttonRecord, "buttonRecord");
-            this.buttonRecord.Name = "buttonRecord";
-            this.toolTip1.SetToolTip(this.buttonRecord, resources.GetString("buttonRecord.ToolTip"));
-            this.buttonRecord.UseVisualStyleBackColor = true;
-            this.buttonRecord.Click += new System.EventHandler(this.buttonRecord_Click);
-            // 
-            // buttonLast
-            // 
-            resources.ApplyResources(this.buttonLast, "buttonLast");
-            this.buttonLast.Name = "buttonLast";
-            this.toolTip1.SetToolTip(this.buttonLast, resources.GetString("buttonLast.ToolTip"));
-            this.buttonLast.UseVisualStyleBackColor = true;
-            this.buttonLast.Click += new System.EventHandler(this.buttonLast_Click);
-            // 
-            // buttonFirst
-            // 
-            resources.ApplyResources(this.buttonFirst, "buttonFirst");
-            this.buttonFirst.Name = "buttonFirst";
-            this.toolTip1.SetToolTip(this.buttonFirst, resources.GetString("buttonFirst.ToolTip"));
-            this.buttonFirst.UseVisualStyleBackColor = true;
-            this.buttonFirst.Click += new System.EventHandler(this.buttonFirst_Click);
-            // 
-            // timerView
-            // 
-            this.timerView.Interval = 150;
-            this.timerView.Tick += new System.EventHandler(this.timerView_Tick);
-            // 
-            // SaveFileDialog1
-            // 
-            this.SaveFileDialog1.AddExtension = false;
-            this.SaveFileDialog1.DefaultExt = "csv";
-            resources.ApplyResources(this.SaveFileDialog1, "SaveFileDialog1");
-            // 
             // Logger
             // 
             resources.ApplyResources(this, "$this");
@@ -193,6 +194,7 @@
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();
             this.panel1.ResumeLayout(false);
+            this.panel1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -203,19 +205,19 @@
         private System.Windows.Forms.StatusStrip statusStrip1;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
         private System.Windows.Forms.Panel panel1;
-        private System.Windows.Forms.Button buttonFirst;
         private System.Windows.Forms.Timer timerView;
-        private System.Windows.Forms.Button buttonRecord;
-        private System.Windows.Forms.Button buttonLast;
         private System.Windows.Forms.Button buttonCopyToClipboard;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel2;
         private System.Windows.Forms.Button buttonClear;
         private SourceGrid.DataGrid Loggrid;
         private LogFilter logFilter;
         private System.Windows.Forms.ToolTip toolTip1;
-        private System.Windows.Forms.Button buttonStop;
         private System.Windows.Forms.Button buttonSaveToFile;
         private System.Windows.Forms.SaveFileDialog SaveFileDialog1;
+        private System.Windows.Forms.CheckBox checkboxScrollLock;
+        private System.Windows.Forms.Button buttonBottom;
+        private System.Windows.Forms.Button buttonTop;
+        private System.Windows.Forms.CheckBox checkboxEnable;
     }
 }
 

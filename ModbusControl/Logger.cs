@@ -6,6 +6,16 @@ using System.Text;
 using System.Threading;
 using System.Windows.Forms;
 
+/*
+ * Enable:  on: logging = on
+ *          off: logging = off
+ * Clear:   
+ * Scroll lock: on: stop scrolling, stay at current position
+ *              off: resume scrolling, jump to end
+ * Top:     stop scrolling, jump to start
+ * Bottom:  stop scrolling, jump to end
+*/
+
 namespace LST.Helpers
 {
     public partial class Logger : Form
@@ -13,8 +23,9 @@ namespace LST.Helpers
         private bool mEnable = false;
         private int mMaxLines = 1000;
         private int mLogAdded;
-        private bool mIsPauseView;
+        private bool mScrollLock;
         private bool mTemporaryNoRemove;
+        private StringBuilder mStatusStrBuilder = new StringBuilder();
         
         public enum LogType
         {
@@ -90,16 +101,8 @@ namespace LST.Helpers
                 mEnable = value;
                 timerView.Enabled = mEnable;
 
-                buttonRecord.Enabled = !mEnable;
-                buttonStop.Enabled = mEnable;
-                buttonFirst.Enabled = !mEnable;
-                buttonLast.Enabled = !mEnable;
-
-                // repaint to show the "Stopped" state
-                if (mEnable == false)
-                {
-                    RefreshView();
-                }
+                // repaint, required to show stopped state
+                RefreshView();
             }
         }
 
@@ -263,6 +266,12 @@ namespace LST.Helpers
             }
         }
 
+        // Do not close, hide
+        private void Logger_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            this.Hide();
+            e.Cancel = true; // this cancels the close event.
+        }
 
 #if false
         private void listView1_RetrieveVirtualItem(object sender, RetrieveVirtualItemEventArgs e)
@@ -295,7 +304,7 @@ namespace LST.Helpers
             if (Interlocked.Exchange(ref mLogAdded, 0) == 1)
             {
                 // if view not paused
-                if (mIsPauseView == false)
+                if (mScrollLock == false)
                 {
                 	// threadsafe
                 	lock (LogListLock)
@@ -319,91 +328,41 @@ namespace LST.Helpers
             }
 
             // update status line
-            string StatusStr = "?";
+            mStatusStrBuilder.Clear();
             if( mEnable)
             {
-			    if( mIsPauseView)
-                {
-                    StatusStr = "Paused";
-                }
-                else
-                {
-                    StatusStr = "Enabled";
-                }
+                mStatusStrBuilder.Append("Enabled");
             }
             else
             {
-                StatusStr = "Stopped";
+                mStatusStrBuilder.Append("Stopped");
             }
-            toolStripStatusLabel2.Text = StatusStr + " - " 
-                               + LogList.Count.ToString() + " / "
-                               + mMaxLines.ToString();
+
+            mStatusStrBuilder.Append(" - ");
+            mStatusStrBuilder.Append(LogList.Count.ToString());
+            mStatusStrBuilder.Append(" / ");
+            mStatusStrBuilder.Append(mMaxLines.ToString());
+
+			if( mScrollLock)
+            {
+                mStatusStrBuilder.Append(" - Scroll lock");
+            }
+
+            toolStripStatusLabel2.Text = mStatusStrBuilder.ToString();
         }
 
+#if false
         private void buttonPause_Click(object sender, EventArgs e)
         {
             // pause at current position
-            mIsPauseView = true;
+            mScrollLock = true;
         }
+#endif
 
-        private void buttonRecord_Click(object sender, EventArgs e)
+        private void checkboxEnable_CheckedChanged(object sender, EventArgs e)
         {
-            // Enable logging, via the property
-            Enable = true;
-
-            // show last (newest) log entry
-            if (Loggrid.Rows.Count > 0)
-            {
-                // threadsafe
-                lock (LogListLock)
-                {
-                    //Loggrid.SuspendLayout();
-                    Loggrid.RecalcCustomScrollBars();
-                    Loggrid.ShowCell(new SourceGrid.Position(Loggrid.Rows.Count - 1, 0), true);
-                    Loggrid.Refresh();
-                    //Loggrid.ResumeLayout();
-                }
-            }
-        }
-
-        private void buttonStop_Click(object sender, EventArgs e)
-        {
-            // Disable logging, via the property
-            Enable = false;
-        }
-
-        private void buttonFirst_Click(object sender, EventArgs e)
-        {
-            // Show first (oldest) log entries
-            if (Loggrid.Rows.Count > 0)
-            {
-                // mIsPauseView = true;
-
-                //Loggrid.SuspendLayout();
-                Loggrid.ShowCell(new SourceGrid.Position(1, 1), true);
-                Loggrid.RecalcCustomScrollBars();
-                Loggrid.Refresh();
-                //Loggrid.ResumeLayout();
-            }
-        }
-
-        private void buttonLast_Click(object sender, EventArgs e)
-        {
-            // Show last (newest) log entries
-            if (Loggrid.Rows.Count > 0)
-            {
-                // mIsPauseView = true;
-
-                // threadsafe
-                lock (LogListLock)
-                {
-                    //Loggrid.SuspendLayout();
-                    Loggrid.RecalcCustomScrollBars();
-                    Loggrid.ShowCell(new SourceGrid.Position(Loggrid.Rows.Count - 1, 0), true);
-                    Loggrid.Refresh();
-                    //Loggrid.ResumeLayout();
-                }
-            }
+            // Enable/disable logging, via the property
+            Enable = checkboxEnable.Checked;
         }
 
         private void buttonClear_Click(object sender, EventArgs e)
@@ -419,37 +378,81 @@ namespace LST.Helpers
             }
         }
 
-        private void buttonCopyToClipboard_Click(object sender, EventArgs e)
+        /// <summary>
+        /// Scrolling locked or enabled
+        /// </summary>
+        private void checkboxScrollLock_CheckedChanged(object sender, EventArgs e)
         {
-            // copy logger content to clipboard
+            mScrollLock = checkboxScrollLock.Checked;
 
-            StringBuilder builder = new StringBuilder();
-
-            // Append to StringBuilder.
-            lock (LogListLock)
+            if (mScrollLock == false)
             {
-                for (int i = 0; i < LogList.Count; ++i)
+                // show last (newest) log entry
+                if (Loggrid.Rows.Count > 0)
                 {
-                    LogEntry Log = LogList[i];
-
-                    builder.AppendLine(//Log.DateTime.ToString("HH:mm:ss.fff")
-                                       Log.Time
-                                      + ";" + Log.Type.ToString()
-                                      + ";" + Log.Text);
+                    // threadsafe
+                    lock (LogListLock)
+                    {
+                        //Loggrid.SuspendLayout();
+                        Loggrid.RecalcCustomScrollBars();
+                        Loggrid.ShowCell(new SourceGrid.Position(Loggrid.Rows.Count - 1, 0), true);
+                        Loggrid.Refresh();
+                        //Loggrid.ResumeLayout();
+                    }
                 }
             }
 
-            if (builder.Length > 0)
+            if( mEnable == false)
             {
-                System.Windows.Forms.Clipboard.SetText(builder.ToString());
+                RefreshView();
+            }
+
+        }
+
+        private void buttonTop_Click(object sender, EventArgs e)
+        {
+            // Stop scrolling
+            checkboxScrollLock.Checked = true;
+
+            // Show top (oldest) log entries
+            if (Loggrid.Rows.Count > 0)
+            {
+                //Loggrid.SuspendLayout();
+                Loggrid.ShowCell(new SourceGrid.Position(1, 1), true);
+                Loggrid.RecalcCustomScrollBars();
+                Loggrid.Refresh();
+                //Loggrid.ResumeLayout();
             }
         }
 
-        // Do not close, hide
-        private void Logger_FormClosing(object sender, FormClosingEventArgs e)
+        private void buttonBottom_Click(object sender, EventArgs e)
         {
-            this.Hide();
-            e.Cancel = true; // this cancels the close event.
+            // Stop scrolling
+            checkboxScrollLock.Checked = true;
+
+            // Show last (newest) log entries
+            if (Loggrid.Rows.Count > 0)
+            {
+                // threadsafe
+                lock (LogListLock)
+                {
+                    //Loggrid.SuspendLayout();
+                    Loggrid.RecalcCustomScrollBars();
+                    Loggrid.ShowCell(new SourceGrid.Position(Loggrid.Rows.Count - 1, 0), true);
+                    Loggrid.Refresh();
+                    //Loggrid.ResumeLayout();
+                }
+            }
+        }
+
+        /// <summary>
+        /// User clicked in the grid
+        /// </summary>
+        private void Loggrid_MouseClick(object sender, MouseEventArgs e)
+        {
+            // pause at current position
+            mScrollLock = true;
+            checkboxScrollLock.Checked = true;
         }
 
         // enter a log
@@ -504,6 +507,32 @@ namespace LST.Helpers
                 }
 
                 mLogAdded = 1;
+            }
+        }
+
+        private void buttonCopyToClipboard_Click(object sender, EventArgs e)
+        {
+            // copy logger content to clipboard
+
+            StringBuilder builder = new StringBuilder();
+
+            // Append to StringBuilder.
+            lock (LogListLock)
+            {
+                for (int i = 0; i < LogList.Count; ++i)
+                {
+                    LogEntry Log = LogList[i];
+
+                    builder.AppendLine(//Log.DateTime.ToString("HH:mm:ss.fff")
+                                       Log.Time
+                                      + ";" + Log.Type.ToString()
+                                      + ";" + Log.Text);
+                }
+            }
+
+            if (builder.Length > 0)
+            {
+                System.Windows.Forms.Clipboard.SetText(builder.ToString());
             }
         }
 

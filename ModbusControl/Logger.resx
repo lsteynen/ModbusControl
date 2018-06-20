@@ -135,7 +135,7 @@
     <value>0, 343</value>
   </data>
   <data name="statusStrip1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>542, 22</value>
+    <value>609, 22</value>
   </data>
   <assembly alias="mscorlib" name="mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="statusStrip1.TabIndex" type="System.Int32, mscorlib">
@@ -156,11 +156,166 @@
   <data name="&gt;&gt;statusStrip1.ZOrder" xml:space="preserve">
     <value>1</value>
   </data>
+  <data name="checkboxEnable.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="checkboxEnable.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="checkboxEnable.Location" type="System.Drawing.Point, System.Drawing">
+    <value>10, 12</value>
+  </data>
+  <data name="checkboxEnable.Size" type="System.Drawing.Size, System.Drawing">
+    <value>59, 17</value>
+  </data>
+  <data name="checkboxEnable.TabIndex" type="System.Int32, mscorlib">
+    <value>16</value>
+  </data>
+  <data name="checkboxEnable.Text" xml:space="preserve">
+    <value>Enable</value>
+  </data>
+  <metadata name="toolTip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>232, 7</value>
+  </metadata>
+  <data name="checkboxEnable.ToolTip" xml:space="preserve">
+    <value>Turn logger on/off</value>
+  </data>
+  <data name="&gt;&gt;checkboxEnable.Name" xml:space="preserve">
+    <value>checkboxEnable</value>
+  </data>
+  <data name="&gt;&gt;checkboxEnable.Type" xml:space="preserve">
+    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;checkboxEnable.Parent" xml:space="preserve">
+    <value>panel1</value>
+  </data>
+  <data name="&gt;&gt;checkboxEnable.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="buttonBottom.BackgroundImageLayout" type="System.Windows.Forms.ImageLayout, System.Windows.Forms">
+    <value>None</value>
+  </data>
+  <data name="buttonBottom.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAAK/INwWK6QAAAAlwSFlzAAAO
+        vwAADr8BOAVTJAAAABl0RVh0U29mdHdhcmUAcGFpbnQubmV0IDQuMC4xNkRpr/UAAAFSSURBVDhPpZG9
+        S0JRGMb9R9ocGgyLGpwUokGCkrj04aRE2tUwsXBJkCjFMqOkEBLpC2ooqCVo6mNocCsoIjDT25eFoRJU
+        XCSezhG8IfcMXRt+nPf9vQ/PclQA/gVTKoEplSAN/aEsuMlrmHwX6PQm0eE+hYE/hM66j1bzNpq4VTR2
+        xaA2LpI4o4Bimcti6wRfjjhgmv2G3i9C4ylA7XxHg/0DWtslif3mKTULxRIRKiXBPYBPiDCFP9E29oLm
+        wSQ512YpMkEZCGUqJTOkZDhRhnbonGh5jsKUlN7gHTaPIOrHU2RlZyhMWYULpMnDvlVhSiVIgyP6gHq+
+        UiqYWs+Vd86K2DguIXZQxPxuCf61AtyxN4ws5WFbyKMv8Ipun8Au8MRzcK08g19+gjXyCHP4Hj3TAowT
+        GRi8aehGb9HiTEFjv0G760peUC9MqQSm/DtQ/QBynOZ/1LufnAAAAABJRU5ErkJggg==
+</value>
+  </data>
+  <data name="buttonBottom.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="buttonBottom.Location" type="System.Drawing.Point, System.Drawing">
+    <value>354, 9</value>
+  </data>
+  <data name="buttonBottom.Size" type="System.Drawing.Size, System.Drawing">
+    <value>24, 23</value>
+  </data>
+  <data name="buttonBottom.TabIndex" type="System.Int32, mscorlib">
+    <value>15</value>
+  </data>
+  <data name="buttonBottom.ToolTip" xml:space="preserve">
+    <value>Stop scrolling, show newest logs</value>
+  </data>
+  <data name="&gt;&gt;buttonBottom.Name" xml:space="preserve">
+    <value>buttonBottom</value>
+  </data>
+  <data name="&gt;&gt;buttonBottom.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;buttonBottom.Parent" xml:space="preserve">
+    <value>panel1</value>
+  </data>
+  <data name="&gt;&gt;buttonBottom.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="buttonTop.BackgroundImageLayout" type="System.Windows.Forms.ImageLayout, System.Windows.Forms">
+    <value>None</value>
+  </data>
+  <data name="buttonTop.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAAK/INwWK6QAAAAlwSFlzAAAO
+        vQAADr0BR/uQrQAAABl0RVh0U29mdHdhcmUAcGFpbnQubmV0IDQuMC4xNkRpr/UAAAG8SURBVDhPY/j/
+        /z9FmD4gsusRY0LPE6aMKU+Zc2c+Yy2c9ZwNKgUBTrlX2BxzrnzXSbvxwzDr9i+LvDu/7Uvv/vGouv8/
+        sPnhf6AB/4EG/Aca8D9v5jMwBhryA6qdgUHFYwKrqtfk/75VD/6HNr/4n9L36n/WpFf/86e9+V83/93/
+        nlXv/0/d/O7/gr3v/y8/9O4fCDfOf/YNqh1sADMQ/9fwm/5fN3j+f+PIZf8tEtb/t8/Y/t8l/8B/r9IT
+        f/2rL/wJbrj2O7z9wU8Qzpz4+CtUOwQADWDX8J3Gphs8jwVoADPQACaoFPkguOUuIxD/DW29xwgVIg3Y
+        Fd/+t2jv/59AA/5FtN8nzUX6Kef/pM/5/b997b//S/b9/w404F98z0NmqDR+YJB04qdx4fP/fp1f/6fP
+        /vG/BWpIQs/Df/HdD9ihyrAD/dTL32VTv/xXyfr4X7vg3X/b2h///Tr+/M+Y+e//4r3/vgMN+BfZ8YAT
+        qhwVAGPiCzAm/usEz/tvBIxK8/h1/+3St/13ztv/17Pk+B+/qvO/g+qv/gxru/8DGJUsUG0IADSADWgA
+        CzAqmYFRSXk00gEwMAAA9qQb9iBPSC0AAAAASUVORK5CYII=
+</value>
+  </data>
+  <data name="buttonTop.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="buttonTop.Location" type="System.Drawing.Point, System.Drawing">
+    <value>324, 9</value>
+  </data>
+  <data name="buttonTop.Size" type="System.Drawing.Size, System.Drawing">
+    <value>24, 23</value>
+  </data>
+  <data name="buttonTop.TabIndex" type="System.Int32, mscorlib">
+    <value>13</value>
+  </data>
+  <data name="buttonTop.ToolTip" xml:space="preserve">
+    <value>Stop scrolling, show oldest logs</value>
+  </data>
+  <data name="&gt;&gt;buttonTop.Name" xml:space="preserve">
+    <value>buttonTop</value>
+  </data>
+  <data name="&gt;&gt;buttonTop.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;buttonTop.Parent" xml:space="preserve">
+    <value>panel1</value>
+  </data>
+  <data name="&gt;&gt;buttonTop.ZOrder" xml:space="preserve">
+    <value>2</value>
+  </data>
+  <data name="checkboxScrollLock.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="checkboxScrollLock.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="checkboxScrollLock.Location" type="System.Drawing.Point, System.Drawing">
+    <value>243, 12</value>
+  </data>
+  <data name="checkboxScrollLock.Size" type="System.Drawing.Size, System.Drawing">
+    <value>75, 17</value>
+  </data>
+  <data name="checkboxScrollLock.TabIndex" type="System.Int32, mscorlib">
+    <value>12</value>
+  </data>
+  <data name="checkboxScrollLock.Text" xml:space="preserve">
+    <value>Scroll lock</value>
+  </data>
+  <data name="checkboxScrollLock.ToolTip" xml:space="preserve">
+    <value>Stop auto-scrolling</value>
+  </data>
+  <data name="&gt;&gt;checkboxScrollLock.Name" xml:space="preserve">
+    <value>checkboxScrollLock</value>
+  </data>
+  <data name="&gt;&gt;checkboxScrollLock.Type" xml:space="preserve">
+    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;checkboxScrollLock.Parent" xml:space="preserve">
+    <value>panel1</value>
+  </data>
+  <data name="&gt;&gt;checkboxScrollLock.ZOrder" xml:space="preserve">
+    <value>3</value>
+  </data>
   <data name="buttonSaveToFile.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
   </data>
   <data name="buttonSaveToFile.Location" type="System.Drawing.Point, System.Drawing">
-    <value>394, 9</value>
+    <value>509, 8</value>
   </data>
   <data name="buttonSaveToFile.Size" type="System.Drawing.Size, System.Drawing">
     <value>92, 23</value>
@@ -171,9 +326,6 @@
   <data name="buttonSaveToFile.Text" xml:space="preserve">
     <value>Save to file...</value>
   </data>
-  <metadata name="toolTip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>232, 7</value>
-  </metadata>
   <data name="buttonSaveToFile.ToolTip" xml:space="preserve">
     <value>Save logbuffer to CSV file</value>
   </data>
@@ -187,53 +339,10 @@
     <value>panel1</value>
   </data>
   <data name="&gt;&gt;buttonSaveToFile.ZOrder" xml:space="preserve">
-    <value>0</value>
-  </data>
-  <data name="buttonStop.BackgroundImage" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-    <value>
-        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAAK/INwWK6QAAAAlwSFlzAAAO
-        vAAADrwBlbxySQAAABl0RVh0U29mdHdhcmUAcGFpbnQubmV0IDQuMC4xNkRpr/UAAACrSURBVDhPY/j/
-        /z9FGKsgKRirICkYhbNx7/X/K7Zd/j9/3fn/05ef+t87/+j/lukH/1dP2PO/qGPH/8yGzf8TKtYBleIw
-        gBjN4YWrgEpxGECMZr+sZUClOAwgRrNL4kKgUhwGEKPZOmoOUCkOA4jRbBw0A6gUhwHEaNbyngxUisMA
-        YjQrOPcBleIwgBjN4tZdQKU4DCBGM59JK1ApDgPIwVgFScFYBYnH/xkAzS7OndvXTyMAAAAASUVORK5C
-        YII=
-</value>
-  </data>
-  <data name="buttonStop.BackgroundImageLayout" type="System.Windows.Forms.ImageLayout, System.Windows.Forms">
-    <value>Center</value>
-  </data>
-  <data name="buttonStop.Enabled" type="System.Boolean, mscorlib">
-    <value>False</value>
-  </data>
-  <data name="buttonStop.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="buttonStop.Location" type="System.Drawing.Point, System.Drawing">
-    <value>34, 10</value>
-  </data>
-  <data name="buttonStop.Size" type="System.Drawing.Size, System.Drawing">
-    <value>22, 22</value>
-  </data>
-  <data name="buttonStop.TabIndex" type="System.Int32, mscorlib">
-    <value>1</value>
-  </data>
-  <data name="buttonStop.ToolTip" xml:space="preserve">
-    <value>Stop logging</value>
-  </data>
-  <data name="&gt;&gt;buttonStop.Name" xml:space="preserve">
-    <value>buttonStop</value>
-  </data>
-  <data name="&gt;&gt;buttonStop.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;buttonStop.Parent" xml:space="preserve">
-    <value>panel1</value>
-  </data>
-  <data name="&gt;&gt;buttonStop.ZOrder" xml:space="preserve">
-    <value>1</value>
+    <value>4</value>
   </data>
   <data name="logFilter.Location" type="System.Drawing.Point, System.Drawing">
-    <value>118, 10</value>
+    <value>73, 9</value>
   </data>
   <data name="logFilter.Size" type="System.Drawing.Size, System.Drawing">
     <value>94, 21</value>
@@ -254,7 +363,7 @@
     <value>panel1</value>
   </data>
   <data name="&gt;&gt;logFilter.ZOrder" xml:space="preserve">
-    <value>2</value>
+    <value>5</value>
   </data>
   <data name="Loggrid.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
     <value>Top, Bottom, Left, Right</value>
@@ -263,7 +372,7 @@
     <value>3, 37</value>
   </data>
   <data name="Loggrid.Size" type="System.Drawing.Size, System.Drawing">
-    <value>536, 303</value>
+    <value>603, 303</value>
   </data>
   <data name="Loggrid.TabIndex" type="System.Int32, mscorlib">
     <value>7</value>
@@ -278,13 +387,13 @@
     <value>panel1</value>
   </data>
   <data name="&gt;&gt;Loggrid.ZOrder" xml:space="preserve">
-    <value>3</value>
+    <value>6</value>
   </data>
   <data name="buttonClear.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
   </data>
   <data name="buttonClear.Location" type="System.Drawing.Point, System.Drawing">
-    <value>221, 9</value>
+    <value>176, 8</value>
   </data>
   <data name="buttonClear.Size" type="System.Drawing.Size, System.Drawing">
     <value>52, 23</value>
@@ -308,13 +417,13 @@
     <value>panel1</value>
   </data>
   <data name="&gt;&gt;buttonClear.ZOrder" xml:space="preserve">
-    <value>4</value>
+    <value>7</value>
   </data>
   <data name="buttonCopyToClipboard.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
   </data>
   <data name="buttonCopyToClipboard.Location" type="System.Drawing.Point, System.Drawing">
-    <value>279, 9</value>
+    <value>394, 8</value>
   </data>
   <data name="buttonCopyToClipboard.Size" type="System.Drawing.Size, System.Drawing">
     <value>109, 23</value>
@@ -338,131 +447,6 @@
     <value>panel1</value>
   </data>
   <data name="&gt;&gt;buttonCopyToClipboard.ZOrder" xml:space="preserve">
-    <value>5</value>
-  </data>
-  <data name="buttonRecord.BackgroundImage" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-    <value>
-        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAAK/INwWK6QAAAAlwSFlzAAAO
-        vAAADrwBlbxySQAAABl0RVh0U29mdHdhcmUAcGFpbnQubmV0IDQuMC4xNkRpr/UAAAEASURBVDhPpYxL
-        b0FRFEb9lTLCRLQDrxRVzxKqqkqpV+IRCWVQNeKXr+57nTS5HCe9MVgnOSt7fR7gKrTSDVrpBq20tQ55
-        TzkTttrv4XsLyxVMJtDrQfNVnTvvHR/7ezjA9gdWVjyFzz603qBahXxOJaaB3Q7WXzCdwWAgcQtqNYkL
-        cJ9UiWlgs4b5HIZDaL9L/AxFiVMpiERUYhpYSDySuNOGeh1KRUinIRaFUEglpoHxGD46Er/AUwkeMhLH
-        IBwGv18lpoFuFxoNKJch8wjx+DEOBODGq5JLAxaWqlQgK3EiAXe3EAyCz6fOnfeOzx+W1iHvKWfCLVrp
-        Bq38P3h+AShfy6FfqtBCAAAAAElFTkSuQmCC
-</value>
-  </data>
-  <data name="buttonRecord.BackgroundImageLayout" type="System.Windows.Forms.ImageLayout, System.Windows.Forms">
-    <value>Center</value>
-  </data>
-  <data name="buttonRecord.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="buttonRecord.Location" type="System.Drawing.Point, System.Drawing">
-    <value>8, 10</value>
-  </data>
-  <data name="buttonRecord.Size" type="System.Drawing.Size, System.Drawing">
-    <value>22, 22</value>
-  </data>
-  <data name="buttonRecord.TabIndex" type="System.Int32, mscorlib">
-    <value>0</value>
-  </data>
-  <data name="buttonRecord.ToolTip" xml:space="preserve">
-    <value>Enable logging</value>
-  </data>
-  <data name="&gt;&gt;buttonRecord.Name" xml:space="preserve">
-    <value>buttonRecord</value>
-  </data>
-  <data name="&gt;&gt;buttonRecord.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;buttonRecord.Parent" xml:space="preserve">
-    <value>panel1</value>
-  </data>
-  <data name="&gt;&gt;buttonRecord.ZOrder" xml:space="preserve">
-    <value>6</value>
-  </data>
-  <data name="buttonLast.BackgroundImage" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-    <value>
-        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAAK/INwWK6QAAABl0RVh0U29m
-        dHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAAFhSURBVDhPY/j//z9FGKsgKRiFUzjrOZBCVQDDILmm
-        Bc9/Z058DOQixFEU5c589j+h+x6QiRCDYZDcqiPv/4e3PwByEeIoijKmPP0/b//v/wldd4BchDhMbuG+
-        D/+DG66hyKEoSuh58n/2vl//O7f+/e9WehkohCo3bcv7//7VF1DE4QwQjux69H/Ktl//S5b+/Z8w/e9/
-        m9yzQGGEXO/qD/+9Sk/AxUAYzgDhwOaH/1vXvgdrNi758l86+tp/48hlQCmIXN38d/9d8g+A+TCMYoBH
-        1f3/JXPfwTUruvQAhRFy+dPe/LfP2A4XA2E4A4TtS+/+D2x5hqEZJpc9+fV/i4T1KOJwBghb5N35b1Nw
-        BUMzTC61/zXcSzCMosgw6zZWzSAMkgtreflfN3gekIsQR1Gkk3YDSCH4yBgk51f98L+G7zQgFyGOoggf
-        dsq98l/FYwIYI4ujKCIHYxUkHv9nAAAepeWlyQiKpQAAAABJRU5ErkJggg==
-</value>
-  </data>
-  <data name="buttonLast.BackgroundImageLayout" type="System.Windows.Forms.ImageLayout, System.Windows.Forms">
-    <value>Center</value>
-  </data>
-  <data name="buttonLast.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="buttonLast.Location" type="System.Drawing.Point, System.Drawing">
-    <value>86, 10</value>
-  </data>
-  <data name="buttonLast.Size" type="System.Drawing.Size, System.Drawing">
-    <value>22, 22</value>
-  </data>
-  <data name="buttonLast.TabIndex" type="System.Int32, mscorlib">
-    <value>3</value>
-  </data>
-  <data name="buttonLast.ToolTip" xml:space="preserve">
-    <value>Jump to newest log item</value>
-  </data>
-  <data name="&gt;&gt;buttonLast.Name" xml:space="preserve">
-    <value>buttonLast</value>
-  </data>
-  <data name="&gt;&gt;buttonLast.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;buttonLast.Parent" xml:space="preserve">
-    <value>panel1</value>
-  </data>
-  <data name="&gt;&gt;buttonLast.ZOrder" xml:space="preserve">
-    <value>7</value>
-  </data>
-  <data name="buttonFirst.BackgroundImage" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-    <value>
-        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAAK/INwWK6QAAABl0RVh0U29m
-        dHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAAFcSURBVDhPpYu7S4JRGMb9R9ocGgyLGpwUokGCkpAu
-        TkqkqWFi4ZIgUYplRkkhJNINaiioJWjqMjS4FRQRmKndLAyVoEIknr5P8KXTd4ik4cf5ned5XhmAf8EN
-        a4HEFc1iYjVbtoXvhK90KNIbSAsPm5E4lh6xdVIAbyRinElDP34pKJuTWBcfsHZY5I6MoQw2jvCh85xJ
-        OhJT6B6RvQJ+jvoCqcqxLQq0u+NMJ0JiCN5idrvIjLr9N5Vj/w6gm/5Em/OYuiokXZMZeFfyNNL7klg/
-        QGlKOLbGSlB7S9BY9yvdd0i0Yyk4Iy/MSD2awGCsDF3wHQpXHirTLnVVSDTuJIYWcpKRcuAULSNPkNtf
-        0WzYZDoREtXwNcxzOe6osT+OOssbGvTLko6kyZ5Aj++ZOxJRms9R3xERlM1JFJYrdHoy3FEVuXZeeNiM
-        pNVxAXHAG/0GN6wFbvh3IPsC4Frmf4xQcHUAAAAASUVORK5CYII=
-</value>
-  </data>
-  <data name="buttonFirst.BackgroundImageLayout" type="System.Windows.Forms.ImageLayout, System.Windows.Forms">
-    <value>Center</value>
-  </data>
-  <data name="buttonFirst.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="buttonFirst.Location" type="System.Drawing.Point, System.Drawing">
-    <value>60, 10</value>
-  </data>
-  <data name="buttonFirst.Size" type="System.Drawing.Size, System.Drawing">
-    <value>22, 22</value>
-  </data>
-  <data name="buttonFirst.TabIndex" type="System.Int32, mscorlib">
-    <value>2</value>
-  </data>
-  <data name="buttonFirst.ToolTip" xml:space="preserve">
-    <value>Jump to oldest log item</value>
-  </data>
-  <data name="&gt;&gt;buttonFirst.Name" xml:space="preserve">
-    <value>buttonFirst</value>
-  </data>
-  <data name="&gt;&gt;buttonFirst.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;buttonFirst.Parent" xml:space="preserve">
-    <value>panel1</value>
-  </data>
-  <data name="&gt;&gt;buttonFirst.ZOrder" xml:space="preserve">
     <value>8</value>
   </data>
   <data name="panel1.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
@@ -472,7 +456,7 @@
     <value>0, 0</value>
   </data>
   <data name="panel1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>542, 343</value>
+    <value>609, 343</value>
   </data>
   <data name="panel1.TabIndex" type="System.Int32, mscorlib">
     <value>0</value>
@@ -505,7 +489,7 @@
     <value>96, 96</value>
   </data>
   <data name="$this.ClientSize" type="System.Drawing.Size, System.Drawing">
-    <value>542, 365</value>
+    <value>609, 365</value>
   </data>
   <data name="$this.Icon" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
@@ -1748,6 +1732,9 @@
         UP3/C0zxkwAAAAwAAAAGC071HAxR//8MUf//DFH//wxR//8MUf+VAACsQfwYrEEAAKxBAACsQYABrEGA
         AaxBgACsQYAArEGAAKxBgACsQYAArEHAAaxBwAGsQeABrEHgAaxBwACsQQ==
 </value>
+  </data>
+  <data name="$this.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
   </data>
   <data name="$this.MinimumSize" type="System.Drawing.Size, System.Drawing">
     <value>200, 200</value>
