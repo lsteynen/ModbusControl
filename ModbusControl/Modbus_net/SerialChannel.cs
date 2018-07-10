@@ -180,8 +180,6 @@ namespace Modbus_net
         {
             mPort.Write(data, start, length);
 
-            // TODO: 3.5ch delay na laatste receive, instelbaar? interframeDelay
-
             // log send data
             if (OnDataSent != null)
             {

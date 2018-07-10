@@ -12,10 +12,6 @@ using System.Linq;
 
 using LST.Helpers;
 
-// TODO: testen: allerlei defaults voor tags die ontbreken, in <modbus>, in <var>
-// TODO: controleren: is het logisch wat er required is en wat optioneel?
-// TODO: Endofmessagetimeout: ook auto doen? 3.5ch timeout met minimum van 100ms
-// TODO: interframeDelay: auto of een getal in ms. auto = Tchar*3.5, ook 0 toelaten? is -1 dan auto?
 // TODO: Mbc file manual nog eens helemaal vergelijken met de XML tags hier (+voorbeeld van expand)
 
 namespace ModbusControlSpace
@@ -137,7 +133,6 @@ namespace ModbusControlSpace
         public CProject()
         {
             // Set defaults
-            //TODO: alles moet een default hebben
             FormSize.Width = DefaultFormSize.Width;
             FormSize.Height = DefaultFormSize.Height;
             Connection.ConnectionType = Global.eConnectionType.SerialRTU;
@@ -1822,7 +1817,7 @@ namespace ModbusControlSpace
             }
             xe.Value = Connection.SlaveID.ToString();
 
-            // Find SlaveID node, or create it
+            // Find ResponseTimeout node, or create it
             xe = GetSingleElement(xeModbus, "ResponseTimeout", eReq.Optional);
             if (xe == null)
             {
@@ -1831,7 +1826,7 @@ namespace ModbusControlSpace
             }
             xe.Value = Connection.ResponseTimeout.ToString();
 
-            // Find SlaveID node, or create it
+            // Find MaximumFramesize node, or create it
             xe = GetSingleElement(xeModbus, "MaximumFramesize", eReq.Optional);
             if (xe == null)
             {
@@ -1840,7 +1835,14 @@ namespace ModbusControlSpace
             }
             xe.Value = Connection.MaximumFrameSize.ToString();
 
-            //TODO: interframedelay toevoegen?
+            // Find interframedelay node, or create it
+            xe = GetSingleElement(xeModbus, "interframedelay", eReq.Optional);
+            if (xe == null)
+            {
+                xe = new XElement("interframedelay");
+                xeModbus.Add(xe);
+            }
+            xe.Value = Connection.InterFrameDelay.ToString();
 
             // Find WriteHoldingregisterFC node, or create it
             xe = GetSingleElement(xeModbus, "WriteHoldingregisterFC", eReq.Optional);

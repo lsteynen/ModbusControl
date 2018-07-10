@@ -22,7 +22,7 @@ using ModbusRegViewSpace;
 using TreeGridViewSpace;
 using LST.Helpers;
 
-//TODO: instellen EndOfMessageTimeout en InterFrameDelay: instellen als 0=auto, 'Auto' tonen in numericupdown? <> 0 is fixed milliseconden.
+//TODO: instellen InterFrameDelay: instellen als 0=auto, 'Auto' tonen in numericupdown? <> 0 is fixed milliseconden.
 //      zie ook https://stackoverflow.com/questions/5921446/having-text-inside-numericupdown-control-after-the-number
 
 namespace ModbusControlSpace
