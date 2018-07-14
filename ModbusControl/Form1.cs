@@ -1124,41 +1124,84 @@ namespace ModbusControlSpace
             // Open serial port, RTU protocol
 
             string Portname = Project.Connection.SerialPort;
+            string ErrorText = string.Empty;
+            bool Opened = false;
+            bool Continue = true;
 
-            // got serial port name?
-            if (string.IsNullOrEmpty(Portname))
+            while( Continue)
             {
-                MessageBox.Show("No serial port name!", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                // show message on statusbar
-                SetStatusBarMessage( "Serial port " + Portname + " open failed");
-                return false;
+                // got serial port name?
+                if (string.IsNullOrEmpty(Portname))
+                {
+                    ErrorText = "No serial port name.";
+                    Opened = false;
+                }
+                else
+                {
+                    Opened = TryOpenSerialPort(Portname, out ErrorText);
+                }
+
+                if (Opened)
+                {
+                    // set this port as the project's serial port
+                    Project.Connection.SerialPort = Portname;
+
+                    // set parameters
+                    mb.OneWireEchoSuppression = Project.Connection.SerialOneWireEchoSuppression;
+                    mb.ResponseTimeout = (uint)Project.Connection.ResponseTimeout;
+                    mb.EndOfMessageTimeout = (uint)Project.Connection.SerialEndOfMessageTimeout;
+                    mb.InterFrameDelay = (uint)Project.Connection.InterFrameDelay;
+
+                    // success
+                    return true;
+                }
+                else
+                {
+                    // failed
+                    SerialPortOpenFailed form = new SerialPortOpenFailed();
+                    form.ErrorText = "Error opening serial port " + Portname + ":" + Environment.NewLine + ErrorText;
+                    if (form.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                    {
+                        Portname = form.SelectedPortName;
+                        Continue = true;
+                    }
+                    else
+                    {
+                        Continue = false;
+                    }
+                    form.Dispose();
+                }
             }
 
+            return false;
+        }
+
+        /// <summary>
+        /// Try opening serial connection
+        /// Return true/false and error text
+        /// </summary>
+        private bool TryOpenSerialPort(string Portname, out string ErrorText)
+        {
             // show message on statusbar
-            SetStatusBarMessage( "Opening " + Portname + "...");
+            SetStatusBarMessage("Opening " + Portname + "...");
             this.Update(); // make it visible immediately
 
             // open
             try
             {
                 mb.OpenSerialRtu(Portname, (uint)Project.Connection.SerialBaudrate, Project.Connection.SerialParity, StopBits.One);
-
-                // ok
-                mb.OneWireEchoSuppression = Project.Connection.SerialOneWireEchoSuppression;
-                mb.ResponseTimeout = (uint)Project.Connection.ResponseTimeout;
-                mb.EndOfMessageTimeout = (uint)Project.Connection.SerialEndOfMessageTimeout;
-                mb.InterFrameDelay = (uint)Project.Connection.InterFrameDelay;
-
                 // success
                 Logger1.Log(Logger.LogType.Info, "Serial port " + Portname + " opened");
-                SetStatusBarMessage( "Serial port " + Portname + " opened");
+                SetStatusBarMessage("Serial port " + Portname + " opened");
+                ErrorText = string.Empty;
                 return true;
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error opening serial port " + Portname + Environment.NewLine + ex.Message, this.Text, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                // fail
+                ErrorText = ex.Message;
                 Logger1.Log(Logger.LogType.Error, "Error opening serial port " + Portname + ": " + ex.Message);
-                SetStatusBarMessage( "Serial port " + Portname + " open failed");
+                SetStatusBarMessage("Serial port " + Portname + " open failed");
             }
 
             return false;

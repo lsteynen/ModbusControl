@@ -202,6 +202,12 @@
     <Compile Include="SaveConfigurationForm.Designer.cs">
       <DependentUpon>SaveConfigurationForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="SerialPortOpenFailed.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SerialPortOpenFailed.Designer.cs">
+      <DependentUpon>SerialPortOpenFailed.cs</DependentUpon>
+    </Compile>
     <Compile Include="Settings.cs" />
     <Compile Include="TreeGridView.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -319,6 +325,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="SaveConfigurationForm.resx">
       <DependentUpon>SaveConfigurationForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SerialPortOpenFailed.resx">
+      <DependentUpon>SerialPortOpenFailed.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="TreeGridView.resx">
       <SubType>Designer</SubType>
