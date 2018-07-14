@@ -8,7 +8,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("ModbusControl")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("LS")]
+[assembly: AssemblyCompany("LST")]
 [assembly: AssemblyProduct("ModbusControl")]
 [assembly: AssemblyCopyright("")]
 [assembly: AssemblyTrademark("")]
@@ -29,5 +29,6 @@ using System.Runtime.InteropServices;
 //      Build Number
 //      Revision
 //
-[assembly: AssemblyVersion("2.0.7.0")]
-[assembly: AssemblyFileVersion("2.0.7.0")]
+[assembly: AssemblyVersion("2.0.7.1009")]
+//AssemblyFileVersion removed so VS studio sets AssemblyFileVersion = AssemblyVersion
+//[assembly: AssemblyFileVersion("2.0.7.0")]
