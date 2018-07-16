@@ -29,6 +29,6 @@ using System.Runtime.InteropServices;
 //      Build Number
 //      Revision
 //
-[assembly: AssemblyVersion("2.0.7.1015")]
+[assembly: AssemblyVersion("2.0.7.1016")]
 //AssemblyFileVersion removed so VS studio sets AssemblyFileVersion = AssemblyVersion
 //[assembly: AssemblyFileVersion("2.0.7.0")]
