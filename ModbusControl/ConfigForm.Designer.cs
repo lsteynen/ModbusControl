@@ -832,6 +832,8 @@
             this.Controls.Add(this.checkboxShowInfo);
             this.Controls.Add(this.groupboxConnection);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
             this.Name = "ConfigForm";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;

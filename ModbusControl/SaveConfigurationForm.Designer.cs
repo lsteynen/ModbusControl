@@ -127,6 +127,8 @@
             this.Controls.Add(this.checkboxConnection);
             this.Controls.Add(this.checkboxFormSize);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
             this.Name = "SaveConfigurationForm";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
