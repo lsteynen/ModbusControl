@@ -559,6 +559,11 @@ namespace LST.Helpers
                 // ANSI encoding is 1 byte per character, 0-127 is ASCII, 128-255 is per codepage.
 
                 mCsvWriter = new CsvWriter(filename, System.Text.Encoding.Default);
+                // settings
+                mCsvWriter.CommentHeader = "#";
+                mCsvWriter.Separator = ';';
+                // always put quotes around the text field
+                mCsvWriter.QuoteSomeFields = new bool[] { false, false, true }; // we choose to always quote the description field
             }
             catch (Exception ex)
             {
@@ -572,10 +577,6 @@ namespace LST.Helpers
             // and mTemporaryNoRemove is reset
             try
             {
-                // settings
-                mCsvWriter.CommentHeader = "#";
-                mCsvWriter.Separator = ';';
-
                 // export file header info
                 mCsvWriter.WriteComment("Modbuscontrol logger export - " + DateTime.Now.ToString());
                 mCsvWriter.WriteComment("Fields: Time;Type;Text");
