@@ -903,6 +903,7 @@ namespace ModbusControlSpace
 
             // New project
             Project = new CProject();
+            ClearProjectInTabs();
 
             try
             {
@@ -977,6 +978,12 @@ namespace ModbusControlSpace
             recentFilesMenuItem.AddRecentItem(path);
 
             return true;
+        }
+
+        public void ClearProjectInTabs()
+        {
+            tabControl1.TabPages.Clear();
+            CurrentTabPage = null;
         }
 
         public void LoadProjectInTabs()

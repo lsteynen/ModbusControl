@@ -553,12 +553,12 @@
             this.radiobuttonWriteFCAuto.AutoSize = true;
             this.radiobuttonWriteFCAuto.Location = new System.Drawing.Point(6, 49);
             this.radiobuttonWriteFCAuto.Name = "radiobuttonWriteFCAuto";
-            this.radiobuttonWriteFCAuto.Size = new System.Drawing.Size(108, 17);
+            this.radiobuttonWriteFCAuto.Size = new System.Drawing.Size(140, 17);
             this.radiobuttonWriteFCAuto.TabIndex = 2;
             this.radiobuttonWriteFCAuto.TabStop = true;
             this.radiobuttonWriteFCAuto.Tag = "";
-            this.radiobuttonWriteFCAuto.Text = "Use FC6 and F16";
-            this.toolTip1.SetToolTip(this.radiobuttonWriteFCAuto, "Use FC6 for single register write and FC16 for multiple registers write");
+            this.radiobuttonWriteFCAuto.Text = "Auto select FC6 or FC16";
+            this.toolTip1.SetToolTip(this.radiobuttonWriteFCAuto, "Auto use FC6 for 16-bit registers or FC16 for 32-bit registers");
             this.radiobuttonWriteFCAuto.UseVisualStyleBackColor = true;
             // 
             // groupBox2
