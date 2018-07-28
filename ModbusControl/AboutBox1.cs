@@ -28,7 +28,7 @@ namespace ModbusControlSpace
             this.labelVersion.Text = "Version " + VersionString;
 
             this.labelMyDocuments.Text = "User documents: " + Global.MyDocumentsPath;
-            this.labelCommonApplicationData.Text = "Settings storage: " + Global.CommonApplicationDataPath;
+            // this.labelCommonApplicationData.Text = "Settings storage: " + Global.CommonApplicationDataPath;
             this.labelDotNetVersion.Text = ".NET runtime version: " + typeof(int).Assembly.ImageRuntimeVersion;
             this.labelFormSize.Text = "Form size: " + FormWidth + " x " + FormHeight;
             if( string.IsNullOrEmpty(LocalOverride))

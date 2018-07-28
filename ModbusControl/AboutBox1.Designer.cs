@@ -35,7 +35,6 @@
             this.labelVersion = new System.Windows.Forms.Label();
             this.logoPictureBox = new System.Windows.Forms.PictureBox();
             this.labelName = new System.Windows.Forms.Label();
-            this.labelCommonApplicationData = new System.Windows.Forms.Label();
             this.labelLocalOverride = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.logoPictureBox)).BeginInit();
             this.SuspendLayout();
@@ -53,7 +52,7 @@
             // labelFormSize
             // 
             this.labelFormSize.AutoSize = true;
-            this.labelFormSize.Location = new System.Drawing.Point(147, 97);
+            this.labelFormSize.Location = new System.Drawing.Point(147, 84);
             this.labelFormSize.MaximumSize = new System.Drawing.Size(0, 17);
             this.labelFormSize.Name = "labelFormSize";
             this.labelFormSize.Size = new System.Drawing.Size(72, 13);
@@ -65,7 +64,7 @@
             // labelDotNetVersion
             // 
             this.labelDotNetVersion.AutoSize = true;
-            this.labelDotNetVersion.Location = new System.Drawing.Point(147, 84);
+            this.labelDotNetVersion.Location = new System.Drawing.Point(147, 71);
             this.labelDotNetVersion.MaximumSize = new System.Drawing.Size(0, 17);
             this.labelDotNetVersion.Name = "labelDotNetVersion";
             this.labelDotNetVersion.Size = new System.Drawing.Size(98, 13);
@@ -121,22 +120,10 @@
             this.labelName.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.labelName.UseMnemonic = false;
             // 
-            // labelCommonApplicationData
-            // 
-            this.labelCommonApplicationData.AutoSize = true;
-            this.labelCommonApplicationData.Location = new System.Drawing.Point(147, 71);
-            this.labelCommonApplicationData.MaximumSize = new System.Drawing.Size(0, 17);
-            this.labelCommonApplicationData.Name = "labelCommonApplicationData";
-            this.labelCommonApplicationData.Size = new System.Drawing.Size(145, 13);
-            this.labelCommonApplicationData.TabIndex = 34;
-            this.labelCommonApplicationData.Text = "labelCommonApplicationData";
-            this.labelCommonApplicationData.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.labelCommonApplicationData.UseMnemonic = false;
-            // 
             // labelLocalOverride
             // 
             this.labelLocalOverride.AutoSize = true;
-            this.labelLocalOverride.Location = new System.Drawing.Point(147, 110);
+            this.labelLocalOverride.Location = new System.Drawing.Point(147, 97);
             this.labelLocalOverride.MaximumSize = new System.Drawing.Size(0, 17);
             this.labelLocalOverride.Name = "labelLocalOverride";
             this.labelLocalOverride.Size = new System.Drawing.Size(95, 13);
@@ -153,7 +140,6 @@
             this.AutoSize = true;
             this.ClientSize = new System.Drawing.Size(355, 172);
             this.Controls.Add(this.labelLocalOverride);
-            this.Controls.Add(this.labelCommonApplicationData);
             this.Controls.Add(this.labelName);
             this.Controls.Add(this.labelVersion);
             this.Controls.Add(this.labelMyDocuments);
@@ -187,7 +173,6 @@
         private System.Windows.Forms.Label labelVersion;
         private System.Windows.Forms.PictureBox logoPictureBox;
         private System.Windows.Forms.Label labelName;
-        private System.Windows.Forms.Label labelCommonApplicationData;
         private System.Windows.Forms.Label labelLocalOverride;
     }
 }
