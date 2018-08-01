@@ -561,7 +561,8 @@ namespace ModbusRegViewSpace
                 // if value is valid: write, otherwise show error
                 if (bIsValid)
                 {
-                    // update all shown fields of this register
+                    // update value and all shown fields of this register
+                    CurrentEditReg.Value32 = NewValue;
                     SetRegValue(CurrentEditReg);
 
                     // show the typed string as the cell's new value (till the next read)
