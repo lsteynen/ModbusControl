@@ -60,6 +60,7 @@ namespace ModbusControlSpace
         private ModbusServer.ModbusServer TcpBridge;
         private Thread UpdaterThread;   // Updater thread
         private Object UpdaterLock = new Object();  // lock for safely terminating the updater thread
+        private bool AlternateWriteUseFC16;
 
         // a write entry
         private class WriteEntry
@@ -2041,12 +2042,13 @@ namespace ModbusControlSpace
             ModbusProtocol.Result result = ModbusProtocol.Result.SUCCESS;
 
             // use FC6 or FC16?
-            //  #reg    FC6     FC16    auto
-            //  1       FC6     FC16#1  FC6
-            //  >1      N*FC6   FC16#N  FC16#N
+            //  #reg    FC6     FC16    auto    alternate 
+            //  1       FC6     FC16#1  FC6     in turn
+            //  >1      N*FC6   FC16#N  FC16#N  in turn
 
             bool useFC16 = (Project.Connection.WriteHoldingregFunctioncode == Global.eWriteHoldingregFunctionCode.FC16)
-                            || ((Project.Connection.WriteHoldingregFunctioncode == Global.eWriteHoldingregFunctionCode.Auto) && (RegCount > 1));
+                            || ((Project.Connection.WriteHoldingregFunctioncode == Global.eWriteHoldingregFunctionCode.Auto) && (RegCount > 1))
+                            || ((Project.Connection.WriteHoldingregFunctioncode == Global.eWriteHoldingregFunctionCode.Alternate) && AlternateWriteUseFC16);
 
             if (useFC16)
             {
@@ -2075,6 +2077,9 @@ namespace ModbusControlSpace
                     Beep();
                 }
             }
+
+            // toggle alternating
+            AlternateWriteUseFC16 = !AlternateWriteUseFC16;
 
             return result;
         }

@@ -18,7 +18,7 @@ namespace ModbusControlSpace
     {
         public enum eConnectionType { SerialRTU = 0, ModbusTcp = 1, RtuOverTcp = 2 }
         public enum eTcpConnectMode { Longlived = 0, Shortlived = 1 }
-        public enum eWriteHoldingregFunctionCode { FC6, FC16, Auto};
+        public enum eWriteHoldingregFunctionCode { FC6, FC16, Auto, Alternate};
         public enum eEndian { Little, Big };
         public enum eFormat { Int = 0, UInt, Hex, Bin, Float, ASCII };
         public static string[] FormatText = { "int", "uint", "hex", "bin", "float", "ASCII" };

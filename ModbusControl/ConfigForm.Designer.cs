@@ -85,6 +85,7 @@
             this.textboxHoldingRegistersStart = new System.Windows.Forms.TextBox();
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
             this.groupBox5 = new System.Windows.Forms.GroupBox();
+            this.radiobuttonWriteFCAlternate = new System.Windows.Forms.RadioButton();
             this.groupboxConnection.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericInterFrameDelay)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericMaximumFrameSize)).BeginInit();
@@ -513,12 +514,13 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.radiobuttonWriteFCAlternate);
             this.groupBox1.Controls.Add(this.radiobuttonWriteFC6);
             this.groupBox1.Controls.Add(this.radiobuttonWriteFC16);
             this.groupBox1.Controls.Add(this.radiobuttonWriteFCAuto);
             this.groupBox1.Location = new System.Drawing.Point(212, 12);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(210, 74);
+            this.groupBox1.Size = new System.Drawing.Size(210, 89);
             this.groupBox1.TabIndex = 1;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Functioncode to write holding registers";
@@ -558,14 +560,14 @@
             this.radiobuttonWriteFCAuto.TabStop = true;
             this.radiobuttonWriteFCAuto.Tag = "";
             this.radiobuttonWriteFCAuto.Text = "Auto select FC6 or FC16";
-            this.toolTip1.SetToolTip(this.radiobuttonWriteFCAuto, "Auto use FC6 for 16-bit registers or FC16 for 32-bit registers");
+            this.toolTip1.SetToolTip(this.radiobuttonWriteFCAuto, "Automatically use FC6 for 16-bit registers or FC16 for 32-bit registers");
             this.radiobuttonWriteFCAuto.UseVisualStyleBackColor = true;
             // 
             // groupBox2
             // 
             this.groupBox2.Controls.Add(this.radiobuttonInt32LittleEndian);
             this.groupBox2.Controls.Add(this.radiobuttonInt32BigEndian);
-            this.groupBox2.Location = new System.Drawing.Point(212, 92);
+            this.groupBox2.Location = new System.Drawing.Point(212, 107);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(210, 36);
             this.groupBox2.TabIndex = 2;
@@ -656,7 +658,7 @@
             this.groupBox4.Controls.Add(this.radiobuttonAsciiLittleEndian);
             this.groupBox4.Controls.Add(this.radiobuttonAsciiBigEndian);
             this.groupBox4.Controls.Add(this.label14);
-            this.groupBox4.Location = new System.Drawing.Point(212, 179);
+            this.groupBox4.Location = new System.Drawing.Point(212, 194);
             this.groupBox4.Name = "groupBox4";
             this.groupBox4.Size = new System.Drawing.Size(210, 63);
             this.groupBox4.TabIndex = 4;
@@ -700,7 +702,7 @@
             // 
             this.groupBox3.Controls.Add(this.radiobuttonFloat32LittleEndian);
             this.groupBox3.Controls.Add(this.radiobuttonFloat32BigEndian);
-            this.groupBox3.Location = new System.Drawing.Point(212, 134);
+            this.groupBox3.Location = new System.Drawing.Point(212, 149);
             this.groupBox3.Name = "groupBox3";
             this.groupBox3.Size = new System.Drawing.Size(210, 39);
             this.groupBox3.TabIndex = 3;
@@ -808,6 +810,19 @@
             this.groupBox5.Size = new System.Drawing.Size(10, 348);
             this.groupBox5.TabIndex = 16;
             this.groupBox5.TabStop = false;
+            // 
+            // radiobuttonWriteFCAlternate
+            // 
+            this.radiobuttonWriteFCAlternate.AutoSize = true;
+            this.radiobuttonWriteFCAlternate.Location = new System.Drawing.Point(6, 65);
+            this.radiobuttonWriteFCAlternate.Name = "radiobuttonWriteFCAlternate";
+            this.radiobuttonWriteFCAlternate.Size = new System.Drawing.Size(165, 17);
+            this.radiobuttonWriteFCAlternate.TabIndex = 3;
+            this.radiobuttonWriteFCAlternate.TabStop = true;
+            this.radiobuttonWriteFCAlternate.Tag = "";
+            this.radiobuttonWriteFCAlternate.Text = "Alternately use FC6 and FC16";
+            this.toolTip1.SetToolTip(this.radiobuttonWriteFCAlternate, "Use FC6 and FC16 in turn to test both");
+            this.radiobuttonWriteFCAlternate.UseVisualStyleBackColor = true;
             // 
             // ConfigForm
             // 
@@ -926,6 +941,6 @@
         private System.Windows.Forms.GroupBox groupBox5;
         private System.Windows.Forms.NumericUpDown numericInterFrameDelay;
         private System.Windows.Forms.Label label15;
-
+        private System.Windows.Forms.RadioButton radiobuttonWriteFCAlternate;
     }
 }

@@ -25,7 +25,7 @@ namespace ModbusControlSpace
 
         private enum eReq { Optional, Required }
         private string[] ConnectionTypes = new string[] { "serial/rtu", "modbus/tcp", "rtu/tcp" }; // Must be order of Global.eConnectionType.SerialRTU
-        private string[] WriteHoldingregisterFCs = new string[] { "6", "16", "auto"};
+        private string[] WriteHoldingregisterFCs = new string[] { "6", "16", "auto", "alternate"};
 
         public struct TSize
         {
@@ -148,7 +148,7 @@ namespace ModbusControlSpace
             Connection.MaximumFrameSize = 256;
             Connection.ResponseTimeout = 1000;
             Connection.InterFrameDelay = 0;
-            Connection.WriteHoldingregFunctioncode = Global.eWriteHoldingregFunctionCode.FC16;
+            Connection.WriteHoldingregFunctioncode = Global.eWriteHoldingregFunctionCode.Auto;
             Connection.Int32Endian = Global.eEndian.Little;
             Connection.Float32Endian = Global.eEndian.Little;
             Connection.Ascii16Endian = Global.eEndian.Big;
@@ -592,13 +592,8 @@ namespace ModbusControlSpace
                 {
                     string TmpString = xe2.Value.Trim();
                     byte TmpValue;
-                    // get value, must be 6, 16 or 'auto'. 'alternate' is accepted as 'auto' for compatibility
-                    if ((string.Compare(TmpString, "auto", StringComparison.OrdinalIgnoreCase) == 0)
-                       || (string.Compare(TmpString, "alternate", StringComparison.OrdinalIgnoreCase) == 0))
-                    {
-                        Connection.WriteHoldingregFunctioncode = Global.eWriteHoldingregFunctionCode.Auto;
-                    }
-                    else if (byte.TryParse(TmpString, out TmpValue) && ((TmpValue == 6) || (TmpValue == 16)))
+                    // get value, must be 6, 16, 'auto' or 'alternate'
+                    if (byte.TryParse(TmpString, out TmpValue) && ((TmpValue == 6) || (TmpValue == 16)))
                     {
                         if (TmpValue == 16)
                         {
@@ -608,6 +603,14 @@ namespace ModbusControlSpace
                         {
                             Connection.WriteHoldingregFunctioncode = Global.eWriteHoldingregFunctionCode.FC6;
                         }
+                    }
+                    else if (string.Compare(TmpString, "auto", StringComparison.OrdinalIgnoreCase) == 0)
+                    {
+                        Connection.WriteHoldingregFunctioncode = Global.eWriteHoldingregFunctionCode.Auto;
+                    }
+                    else if (string.Compare(TmpString, "alternate", StringComparison.OrdinalIgnoreCase) == 0)
+                    {
+                        Connection.WriteHoldingregFunctioncode = Global.eWriteHoldingregFunctionCode.Alternate;
                     }
                     else
                     {
@@ -1071,8 +1074,8 @@ namespace ModbusControlSpace
                             newBitfield.Description = string.Empty;
                             newBitfield.Format = Global.eFormat.UInt;
                             newBitfield.MinLen = 0;
-                            newBitfield.ForeColor = Color.Black;
-                            newBitfield.BackColor = Color.White;
+                            newBitfield.ForeColor = newVar.ForeColor;
+                            newBitfield.BackColor = newVar.BackColor;
 
                             // default position is auto count
                             newBitfield.Position = AutoPosition;
