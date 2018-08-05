@@ -37,7 +37,7 @@
             this.checkboxEnable = new System.Windows.Forms.CheckBox();
             this.buttonBottom = new System.Windows.Forms.Button();
             this.buttonTop = new System.Windows.Forms.Button();
-            this.checkboxScrollLock = new System.Windows.Forms.CheckBox();
+            this.chkAutoScroll = new System.Windows.Forms.CheckBox();
             this.buttonSaveToFile = new System.Windows.Forms.Button();
             this.Loggrid = new SourceGrid.DataGrid();
             this.buttonClear = new System.Windows.Forms.Button();
@@ -74,7 +74,7 @@
             this.panel1.Controls.Add(this.checkboxEnable);
             this.panel1.Controls.Add(this.buttonBottom);
             this.panel1.Controls.Add(this.buttonTop);
-            this.panel1.Controls.Add(this.checkboxScrollLock);
+            this.panel1.Controls.Add(this.chkAutoScroll);
             this.panel1.Controls.Add(this.buttonSaveToFile);
             this.panel1.Controls.Add(this.logFilter);
             this.panel1.Controls.Add(this.Loggrid);
@@ -107,13 +107,15 @@
             this.buttonTop.UseVisualStyleBackColor = true;
             this.buttonTop.Click += new System.EventHandler(this.buttonTop_Click);
             // 
-            // checkboxScrollLock
+            // chkAutoScroll
             // 
-            resources.ApplyResources(this.checkboxScrollLock, "checkboxScrollLock");
-            this.checkboxScrollLock.Name = "checkboxScrollLock";
-            this.toolTip1.SetToolTip(this.checkboxScrollLock, resources.GetString("checkboxScrollLock.ToolTip"));
-            this.checkboxScrollLock.UseVisualStyleBackColor = true;
-            this.checkboxScrollLock.CheckedChanged += new System.EventHandler(this.checkboxScrollLock_CheckedChanged);
+            resources.ApplyResources(this.chkAutoScroll, "chkAutoScroll");
+            this.chkAutoScroll.Checked = true;
+            this.chkAutoScroll.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chkAutoScroll.Name = "chkAutoScroll";
+            this.toolTip1.SetToolTip(this.chkAutoScroll, resources.GetString("chkAutoScroll.ToolTip"));
+            this.chkAutoScroll.UseVisualStyleBackColor = true;
+            this.chkAutoScroll.CheckedChanged += new System.EventHandler(this.chkAutoScroll_CheckedChanged);
             // 
             // buttonSaveToFile
             // 
@@ -214,7 +216,7 @@
         private System.Windows.Forms.ToolTip toolTip1;
         private System.Windows.Forms.Button buttonSaveToFile;
         private System.Windows.Forms.SaveFileDialog SaveFileDialog1;
-        private System.Windows.Forms.CheckBox checkboxScrollLock;
+        private System.Windows.Forms.CheckBox chkAutoScroll;
         private System.Windows.Forms.Button buttonBottom;
         private System.Windows.Forms.Button buttonTop;
         private System.Windows.Forms.CheckBox checkboxEnable;

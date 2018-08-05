@@ -198,7 +198,7 @@
   <data name="buttonBottom.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAAK/INwWK6QAAAAlwSFlzAAAO
-        vwAADr8BOAVTJAAAABl0RVh0U29mdHdhcmUAcGFpbnQubmV0IDQuMC4xNkRpr/UAAAFSSURBVDhPpZG9
+        vAAADrwBlbxySQAAABl0RVh0U29mdHdhcmUAcGFpbnQubmV0IDQuMC4xNkRpr/UAAAFSSURBVDhPpZG9
         S0JRGMb9R9ocGgyLGpwUokGCkrj04aRE2tUwsXBJkCjFMqOkEBLpC2ooqCVo6mNocCsoIjDT25eFoRJU
         XCSezhG8IfcMXRt+nPf9vQ/PclQA/gVTKoEplSAN/aEsuMlrmHwX6PQm0eE+hYE/hM66j1bzNpq4VTR2
         xaA2LpI4o4Bimcti6wRfjjhgmv2G3i9C4ylA7XxHg/0DWtslif3mKTULxRIRKiXBPYBPiDCFP9E29oLm
@@ -220,7 +220,7 @@
     <value>15</value>
   </data>
   <data name="buttonBottom.ToolTip" xml:space="preserve">
-    <value>Stop scrolling, show newest logs</value>
+    <value>Show newest logs, resume auto-scrolling</value>
   </data>
   <data name="&gt;&gt;buttonBottom.Name" xml:space="preserve">
     <value>buttonBottom</value>
@@ -240,7 +240,7 @@
   <data name="buttonTop.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAAK/INwWK6QAAAAlwSFlzAAAO
-        vQAADr0BR/uQrQAAABl0RVh0U29mdHdhcmUAcGFpbnQubmV0IDQuMC4xNkRpr/UAAAG8SURBVDhPY/j/
+        vAAADrwBlbxySQAAABl0RVh0U29mdHdhcmUAcGFpbnQubmV0IDQuMC4xNkRpr/UAAAG8SURBVDhPY/j/
         /z9FmD4gsusRY0LPE6aMKU+Zc2c+Yy2c9ZwNKgUBTrlX2BxzrnzXSbvxwzDr9i+LvDu/7Uvv/vGouv8/
         sPnhf6AB/4EG/Aca8D9v5jMwBhryA6qdgUHFYwKrqtfk/75VD/6HNr/4n9L36n/WpFf/86e9+V83/93/
         nlXv/0/d/O7/gr3v/y8/9O4fCDfOf/YNqh1sADMQ/9fwm/5fN3j+f+PIZf8tEtb/t8/Y/t8l/8B/r9IT
@@ -264,7 +264,7 @@
     <value>13</value>
   </data>
   <data name="buttonTop.ToolTip" xml:space="preserve">
-    <value>Stop scrolling, show oldest logs</value>
+    <value>Show oldest logs, stop auto-scrolling</value>
   </data>
   <data name="&gt;&gt;buttonTop.Name" xml:space="preserve">
     <value>buttonTop</value>
@@ -278,37 +278,37 @@
   <data name="&gt;&gt;buttonTop.ZOrder" xml:space="preserve">
     <value>2</value>
   </data>
-  <data name="checkboxScrollLock.AutoSize" type="System.Boolean, mscorlib">
+  <data name="chkAutoScroll.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
   </data>
-  <data name="checkboxScrollLock.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+  <data name="chkAutoScroll.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
   </data>
-  <data name="checkboxScrollLock.Location" type="System.Drawing.Point, System.Drawing">
+  <data name="chkAutoScroll.Location" type="System.Drawing.Point, System.Drawing">
     <value>243, 12</value>
   </data>
-  <data name="checkboxScrollLock.Size" type="System.Drawing.Size, System.Drawing">
+  <data name="chkAutoScroll.Size" type="System.Drawing.Size, System.Drawing">
     <value>75, 17</value>
   </data>
-  <data name="checkboxScrollLock.TabIndex" type="System.Int32, mscorlib">
+  <data name="chkAutoScroll.TabIndex" type="System.Int32, mscorlib">
     <value>12</value>
   </data>
-  <data name="checkboxScrollLock.Text" xml:space="preserve">
-    <value>Scroll lock</value>
+  <data name="chkAutoScroll.Text" xml:space="preserve">
+    <value>Auto scroll</value>
   </data>
-  <data name="checkboxScrollLock.ToolTip" xml:space="preserve">
-    <value>Stop auto-scrolling</value>
+  <data name="chkAutoScroll.ToolTip" xml:space="preserve">
+    <value>Auto-scrolling on/off</value>
   </data>
-  <data name="&gt;&gt;checkboxScrollLock.Name" xml:space="preserve">
-    <value>checkboxScrollLock</value>
+  <data name="&gt;&gt;chkAutoScroll.Name" xml:space="preserve">
+    <value>chkAutoScroll</value>
   </data>
-  <data name="&gt;&gt;checkboxScrollLock.Type" xml:space="preserve">
+  <data name="&gt;&gt;chkAutoScroll.Type" xml:space="preserve">
     <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;checkboxScrollLock.Parent" xml:space="preserve">
+  <data name="&gt;&gt;chkAutoScroll.Parent" xml:space="preserve">
     <value>panel1</value>
   </data>
-  <data name="&gt;&gt;checkboxScrollLock.ZOrder" xml:space="preserve">
+  <data name="&gt;&gt;chkAutoScroll.ZOrder" xml:space="preserve">
     <value>3</value>
   </data>
   <data name="buttonSaveToFile.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
@@ -357,7 +357,7 @@
     <value>logFilter</value>
   </data>
   <data name="&gt;&gt;logFilter.Type" xml:space="preserve">
-    <value>LST.Helpers.LogFilter, ModbusControl, Version=2.0.6.0, Culture=neutral, PublicKeyToken=null</value>
+    <value>LST.Helpers.LogFilter, ModbusControl, Version=2.0.8.1044, Culture=neutral, PublicKeyToken=null</value>
   </data>
   <data name="&gt;&gt;logFilter.Parent" xml:space="preserve">
     <value>panel1</value>
@@ -1732,9 +1732,6 @@
         UP3/C0zxkwAAAAwAAAAGC071HAxR//8MUf//DFH//wxR//8MUf+VAACsQfwYrEEAAKxBAACsQYABrEGA
         AaxBgACsQYAArEGAAKxBgACsQYAArEHAAaxBwAGsQeABrEHgAaxBwACsQQ==
 </value>
-  </data>
-  <data name="$this.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
   </data>
   <data name="$this.MinimumSize" type="System.Drawing.Size, System.Drawing">
     <value>200, 200</value>

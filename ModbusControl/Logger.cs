@@ -10,10 +10,10 @@ using System.Windows.Forms;
  * Enable:  on: logging = on
  *          off: logging = off
  * Clear:   
- * Scroll lock: on: stop scrolling, stay at current position
- *              off: resume scrolling, jump to end
- * Top:     stop scrolling, jump to start
- * Bottom:  stop scrolling, jump to end
+ * Auto scroll on: resume scrolling, jump to end
+ *             off: stop scrolling, stay at current position
+ * Top:     stop scrolling, jump to oldest
+ * Bottom:  jump to end, set auto scroll
 */
 
 namespace LST.Helpers
@@ -23,7 +23,7 @@ namespace LST.Helpers
         private bool mEnable = false;
         private int mMaxLines = 1000;
         private int mLogAdded;
-        private bool mScrollLock;
+        private bool mAutoScroll;
         private bool mTemporaryNoRemove;
         private StringBuilder mStatusStrBuilder = new StringBuilder();
         
@@ -237,6 +237,8 @@ namespace LST.Helpers
             // Disable sort AFTER assigning datasource
             Loggrid.EnableSort = false;
 
+            mAutoScroll = chkAutoScroll.Checked;
+
             timerView.Interval = 200;
             timerView.Enabled = false;
         }
@@ -303,8 +305,8 @@ namespace LST.Helpers
             // threadsafe
             if (Interlocked.Exchange(ref mLogAdded, 0) == 1)
             {
-                // if view not paused
-                if (mScrollLock == false)
+                // if auto scrolling
+                if (mAutoScroll)
                 {
                 	// threadsafe
                 	lock (LogListLock)
@@ -343,7 +345,7 @@ namespace LST.Helpers
             mStatusStrBuilder.Append(" / ");
             mStatusStrBuilder.Append(mMaxLines.ToString());
 
-			if( mScrollLock)
+			if( mAutoScroll == false)
             {
                 mStatusStrBuilder.Append(" - Scroll lock");
             }
@@ -355,7 +357,7 @@ namespace LST.Helpers
         private void buttonPause_Click(object sender, EventArgs e)
         {
             // pause at current position
-            mScrollLock = true;
+            mAutoScroll = false;
         }
 #endif
 
@@ -379,15 +381,15 @@ namespace LST.Helpers
         }
 
         /// <summary>
-        /// Scrolling locked or enabled
+        /// Auto scrolling enabled/disable
         /// </summary>
-        private void checkboxScrollLock_CheckedChanged(object sender, EventArgs e)
+        private void chkAutoScroll_CheckedChanged(object sender, EventArgs e)
         {
-            mScrollLock = checkboxScrollLock.Checked;
+            mAutoScroll = chkAutoScroll.Checked;
 
-            if (mScrollLock == false)
+            if (mAutoScroll)
             {
-                // show last (newest) log entry
+                // show newest (last) log entry
                 if (Loggrid.Rows.Count > 0)
                 {
                     // threadsafe
@@ -406,13 +408,12 @@ namespace LST.Helpers
             {
                 RefreshView();
             }
-
         }
 
         private void buttonTop_Click(object sender, EventArgs e)
         {
-            // Stop scrolling
-            checkboxScrollLock.Checked = true;
+            // Stop auto scrolling
+            chkAutoScroll.Checked = false;
 
             // Show top (oldest) log entries
             if (Loggrid.Rows.Count > 0)
@@ -427,8 +428,8 @@ namespace LST.Helpers
 
         private void buttonBottom_Click(object sender, EventArgs e)
         {
-            // Stop scrolling
-            checkboxScrollLock.Checked = true;
+            // Resume auto-scrolling
+            chkAutoScroll.Checked = true;
 
             // Show last (newest) log entries
             if (Loggrid.Rows.Count > 0)
@@ -451,8 +452,8 @@ namespace LST.Helpers
         private void Loggrid_MouseClick(object sender, MouseEventArgs e)
         {
             // pause at current position
-            mScrollLock = true;
-            checkboxScrollLock.Checked = true;
+            mAutoScroll = false;
+            chkAutoScroll.Checked = false;
         }
 
         // enter a log
