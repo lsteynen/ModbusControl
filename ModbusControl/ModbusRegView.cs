@@ -631,6 +631,14 @@ namespace ModbusRegViewSpace
                 CurrentEditIsEscaped = true;
             }
 
+			//TODO???????????
+            // Option: stay on the same row after entering data
+            bool OptionStayOnRowAfterEdit = true;
+            if (OptionStayOnRowAfterEdit && (keyData == Keys.Enter))
+            {
+                keyData = Keys.Control | Keys.Enter;
+            }
+
             return base.ProcessDialogKey(keyData);
         }
 
