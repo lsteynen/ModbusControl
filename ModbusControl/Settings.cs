@@ -28,6 +28,14 @@ namespace ModbusControlSpace
             public bool beeponinputerror
             { get; set; }
 
+            [XmlElement("autonextrowonenter")]
+            public bool autonextrowonenter
+            { get; set; }
+
+            [XmlElement("autostartedit")]
+            public bool autostartedit
+            { get; set; }
+
             [XmlElement("checkforupdates")]
             public bool checkforupdates
             { get; set; }
@@ -72,6 +80,8 @@ namespace ModbusControlSpace
                 stoponerror = false;
                 uselocaloverrides = true;
                 beeponinputerror = true;
+                autonextrowonenter = false;
+                autostartedit = false;
                 checkforupdates = true;
                 lastcheckforupdate = DateTime.MinValue;
                 mbcmrulist = new List<string>();

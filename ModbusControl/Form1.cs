@@ -34,6 +34,8 @@ namespace ModbusControlSpace
             public bool StopOnError;
             public bool UseLocalOverrides;
             public bool BeepOnInputError;
+            public bool AutoNextRowOnEnter;
+            public bool AutoStartEdit;
             public bool CheckForUpdates;
         }
 
@@ -155,11 +157,17 @@ namespace ModbusControlSpace
             Options.StopOnError = Settings1.Values.stoponerror;
             Options.UseLocalOverrides = Settings1.Values.uselocaloverrides;
             Options.BeepOnInputError = Settings1.Values.beeponinputerror;
+            Options.AutoNextRowOnEnter = Settings1.Values.autonextrowonenter;
+            Options.AutoStartEdit = Settings1.Values.autostartedit;
             Options.CheckForUpdates = Settings1.Values.checkforupdates;
+            // pass options to clients
+            PassOptionsToClients();
+
             recentFilesMenuItem.LoadList(Settings1.Values.mbcmrulist);
-            Logger1.CapacityLines = Settings1.Values.logger.capacity;
+
             // export settings taken when form is created
             // compare settings taken when form is created
+            Logger1.CapacityLines = Settings1.Values.logger.capacity;
             Logger1.TheLogFilter.LogErrors = Settings1.Values.logger.logerrors;
             Logger1.TheLogFilter.LogWarnings = Settings1.Values.logger.logwarnings;
             Logger1.TheLogFilter.LogInfo = Settings1.Values.logger.loginfo;
@@ -295,6 +303,8 @@ namespace ModbusControlSpace
             Settings1.Values.stoponerror = Options.StopOnError;
             Settings1.Values.uselocaloverrides = Options.UseLocalOverrides;
             Settings1.Values.beeponinputerror = Options.BeepOnInputError;
+            Settings1.Values.autonextrowonenter = Options.AutoNextRowOnEnter;
+            Settings1.Values.autostartedit = Options.AutoStartEdit;
             Settings1.Values.checkforupdates = Options.CheckForUpdates;
             if (ExportForm != null)
             {
@@ -767,6 +777,8 @@ namespace ModbusControlSpace
             optionsForm.StopOnError = Options.StopOnError;
             optionsForm.UseLocalOverrides = Options.UseLocalOverrides;
             optionsForm.BeepOnInputError = Options.BeepOnInputError;
+            optionsForm.AutoNextRowOnEnter = Options.AutoNextRowOnEnter;
+            optionsForm.AutoStartEdit = Options.AutoStartEdit;
             optionsForm.LoggerCapacity = Logger1.CapacityLines;
             optionsForm.CheckForUpdates = Options.CheckForUpdates;
 
@@ -776,8 +788,13 @@ namespace ModbusControlSpace
                 Options.StopOnError = optionsForm.StopOnError;
                 Options.UseLocalOverrides = optionsForm.UseLocalOverrides;
                 Options.BeepOnInputError = optionsForm.BeepOnInputError;
+                Options.AutoNextRowOnEnter = optionsForm.AutoNextRowOnEnter;
+                Options.AutoStartEdit = optionsForm.AutoStartEdit;
                 Logger1.CapacityLines = optionsForm.LoggerCapacity;
                 Options.CheckForUpdates = optionsForm.CheckForUpdates;
+
+                // pass options to clients
+                PassOptionsToClients();
             }
         }
 
@@ -1067,6 +1084,13 @@ namespace ModbusControlSpace
             }
         }
 
+        private void PassOptionsToClients()
+        {
+            // Static for all tabs
+            ModbusRegView.NextRowOnEnter = Options.AutoNextRowOnEnter;
+            ModbusRegView.StartEditOnAnyCharacter = Options.AutoStartEdit;
+        }
+
         public void UpdatePropertiesInAllTabs()
         {
             // Iterate all tabs
@@ -1115,7 +1139,7 @@ namespace ModbusControlSpace
             }
 
             // update grid readonly
-            ModbusRegView.mIsReadOnly = !ConnectionIsOpen;
+            ModbusRegView.IsReadOnly = !ConnectionIsOpen;
 
             // update menu's
             ConnectionInUse = ConnectionIsOpen;
@@ -1406,7 +1430,7 @@ namespace ModbusControlSpace
             }
 
             // update grid readonly
-            ModbusRegView.mIsReadOnly = !ConnectionIsOpen;
+            ModbusRegView.IsReadOnly = !ConnectionIsOpen;
 
             // fully closed
             ConnectionInUse = false;

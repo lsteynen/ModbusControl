@@ -39,6 +39,24 @@ namespace ModbusControlSpace
             }
         }
 
+        public bool AutoNextRowOnEnter
+        {
+            get { return checkboxNextRowOnEnter.Checked; }
+            set
+            {
+                checkboxNextRowOnEnter.Checked = value;
+            }
+        }
+
+        public bool AutoStartEdit
+        {
+            get { return checkboxAutostartEdit.Checked; }
+            set
+            {
+                checkboxAutostartEdit.Checked = value;
+            }
+        }
+
         public int LoggerCapacity
         {
             get { return (int)numericLoggerCapacity.Value; }

@@ -21,11 +21,31 @@ namespace ModbusRegViewSpace
         static extern bool PostMessage(IntPtr hWnd, uint Msg, int wParam, int lParam);
         private const int WM_CHAR = 0x0102;
 
-        public static bool mIsReadOnly = false;
+        private static bool mIsReadOnly = false;
+        private static bool mNextRowOnEnter = false;
+        private static bool mStartEditOnAnyCharacter = false;
         private bool mShowInfo = false;
         private char BufferedChar = (char)0;
 
         // properties
+
+        public static bool IsReadOnly
+        {
+            get { return mIsReadOnly; }
+            set { mIsReadOnly = value; }
+        }
+
+        public static bool NextRowOnEnter
+        {
+            get { return mNextRowOnEnter; }
+            set { mNextRowOnEnter = value; }
+        }
+
+        public static bool StartEditOnAnyCharacter
+        {
+            get { return mStartEditOnAnyCharacter; }
+            set { mStartEditOnAnyCharacter = value; }
+        }
 
         public bool showInfo
         {
@@ -423,6 +443,16 @@ namespace ModbusRegViewSpace
                 e.Handled = true;
             }
 
+            // Option: stay on the same row on pressing Enter in the grid
+            if (mNextRowOnEnter == false)
+            {
+                if ((e.KeyData & Keys.KeyCode) == Keys.Enter)
+                {
+                    e.Handled = true;
+                    return;
+                }
+            }
+
             // Pass control-plus as zoom-in to parent
             if (e.Control && ((e.KeyCode == Keys.Add) || (e.KeyCode == Keys.Oemplus)))
             {
@@ -461,10 +491,8 @@ namespace ModbusRegViewSpace
         /// </summary>
         private void Grid_KeyPress(object sender, KeyPressEventArgs e)
         {
-            //TODO???????????
             // Option: start value editing on any types character
-            bool OptionStartEditOnAnyCharacter = true;
-            if (OptionStartEditOnAnyCharacter)
+            if (mStartEditOnAnyCharacter)
             {
                 // accept letters, digits and punctuation like ",;
                 // do not accept control-A
@@ -679,10 +707,8 @@ namespace ModbusRegViewSpace
                 CurrentEditIsCanceled = true;
             }
 
-			//TODO???????????
             // Option: stay on the same row after entering data
-            bool OptionStayOnRowAfterEdit = true;
-            if (OptionStayOnRowAfterEdit && (keyData == Keys.Enter))
+            if ((mNextRowOnEnter == false) && (keyData == Keys.Enter))
             {
                 keyData = Keys.Control | Keys.Enter;
             }

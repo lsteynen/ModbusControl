@@ -36,13 +36,15 @@
             this.CheckboxCheckForUpdates = new System.Windows.Forms.CheckBox();
             this.label1 = new System.Windows.Forms.Label();
             this.numericLoggerCapacity = new System.Windows.Forms.NumericUpDown();
+            this.checkboxNextRowOnEnter = new System.Windows.Forms.CheckBox();
+            this.checkboxAutostartEdit = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.numericLoggerCapacity)).BeginInit();
             this.SuspendLayout();
             // 
             // buttonCancel
             // 
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.buttonCancel.Location = new System.Drawing.Point(147, 182);
+            this.buttonCancel.Location = new System.Drawing.Point(147, 201);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 23);
             this.buttonCancel.TabIndex = 5;
@@ -52,7 +54,7 @@
             // buttonOK
             // 
             this.buttonOK.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.buttonOK.Location = new System.Drawing.Point(58, 182);
+            this.buttonOK.Location = new System.Drawing.Point(58, 201);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(75, 23);
             this.buttonOK.TabIndex = 4;
@@ -62,7 +64,7 @@
             // checkboxUseLocalOverrides
             // 
             this.checkboxUseLocalOverrides.AutoSize = true;
-            this.checkboxUseLocalOverrides.Location = new System.Drawing.Point(39, 45);
+            this.checkboxUseLocalOverrides.Location = new System.Drawing.Point(39, 42);
             this.checkboxUseLocalOverrides.Name = "checkboxUseLocalOverrides";
             this.checkboxUseLocalOverrides.Size = new System.Drawing.Size(116, 17);
             this.checkboxUseLocalOverrides.TabIndex = 1;
@@ -82,7 +84,7 @@
             // checkboxBeepOnInputError
             // 
             this.checkboxBeepOnInputError.AutoSize = true;
-            this.checkboxBeepOnInputError.Location = new System.Drawing.Point(39, 68);
+            this.checkboxBeepOnInputError.Location = new System.Drawing.Point(39, 62);
             this.checkboxBeepOnInputError.Name = "checkboxBeepOnInputError";
             this.checkboxBeepOnInputError.Size = new System.Drawing.Size(116, 17);
             this.checkboxBeepOnInputError.TabIndex = 2;
@@ -92,7 +94,7 @@
             // CheckboxCheckForUpdates
             // 
             this.CheckboxCheckForUpdates.AutoSize = true;
-            this.CheckboxCheckForUpdates.Location = new System.Drawing.Point(39, 136);
+            this.CheckboxCheckForUpdates.Location = new System.Drawing.Point(39, 161);
             this.CheckboxCheckForUpdates.Name = "CheckboxCheckForUpdates";
             this.CheckboxCheckForUpdates.Size = new System.Drawing.Size(113, 17);
             this.CheckboxCheckForUpdates.TabIndex = 3;
@@ -102,7 +104,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(36, 99);
+            this.label1.Location = new System.Drawing.Point(36, 124);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(116, 13);
             this.label1.TabIndex = 26;
@@ -115,7 +117,7 @@
             0,
             0,
             0});
-            this.numericLoggerCapacity.Location = new System.Drawing.Point(161, 97);
+            this.numericLoggerCapacity.Location = new System.Drawing.Point(161, 122);
             this.numericLoggerCapacity.Maximum = new decimal(new int[] {
             999999,
             0,
@@ -135,14 +137,36 @@
             0,
             0});
             // 
+            // checkboxNextRowOnEnter
+            // 
+            this.checkboxNextRowOnEnter.AutoSize = true;
+            this.checkboxNextRowOnEnter.Location = new System.Drawing.Point(39, 82);
+            this.checkboxNextRowOnEnter.Name = "checkboxNextRowOnEnter";
+            this.checkboxNextRowOnEnter.Size = new System.Drawing.Size(151, 17);
+            this.checkboxNextRowOnEnter.TabIndex = 27;
+            this.checkboxNextRowOnEnter.Text = "Move to next row on Enter";
+            this.checkboxNextRowOnEnter.UseVisualStyleBackColor = true;
+            // 
+            // checkboxAutostartEdit
+            // 
+            this.checkboxAutostartEdit.AutoSize = true;
+            this.checkboxAutostartEdit.Location = new System.Drawing.Point(39, 102);
+            this.checkboxAutostartEdit.Name = "checkboxAutostartEdit";
+            this.checkboxAutostartEdit.Size = new System.Drawing.Size(166, 17);
+            this.checkboxAutostartEdit.TabIndex = 28;
+            this.checkboxAutostartEdit.Text = "Auto-start edit mode on typing";
+            this.checkboxAutostartEdit.UseVisualStyleBackColor = true;
+            // 
             // OptionsForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.AutoSize = true;
             this.CancelButton = this.buttonCancel;
-            this.ClientSize = new System.Drawing.Size(280, 217);
+            this.ClientSize = new System.Drawing.Size(280, 235);
             this.ControlBox = false;
+            this.Controls.Add(this.checkboxAutostartEdit);
+            this.Controls.Add(this.checkboxNextRowOnEnter);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.numericLoggerCapacity);
             this.Controls.Add(this.CheckboxCheckForUpdates);
@@ -176,5 +200,7 @@
         private System.Windows.Forms.CheckBox CheckboxCheckForUpdates;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.NumericUpDown numericLoggerCapacity;
+        private System.Windows.Forms.CheckBox checkboxNextRowOnEnter;
+        private System.Windows.Forms.CheckBox checkboxAutostartEdit;
     }
 }
