@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading;
 using System.Windows.Forms;
 using TreeGridViewSpace;
+using System.Runtime.InteropServices;
 
 using LST.Helpers;
 
@@ -16,8 +17,13 @@ namespace ModbusRegViewSpace
 {
     public class ModbusRegView : TreeGridView
     {
+        [DllImport("user32.dll")]
+        static extern bool PostMessage(IntPtr hWnd, uint Msg, int wParam, int lParam);
+        private const int WM_CHAR = 0x0102;
+
         public static bool mIsReadOnly = false;
         private bool mShowInfo = false;
+        private char BufferedChar = (char)0;
 
         // properties
 
@@ -105,7 +111,7 @@ namespace ModbusRegViewSpace
         private int CurrentEditBitfieldIndex;
         private ModbusControlSpace.Global.eFormat CurrentEditFormat;
         private int CurrentEditDecimals;
-        private bool CurrentEditIsEscaped;
+        private bool CurrentEditIsCanceled;
         private float OriginalFontSize;
         private int OriginalRowHeight;
 
@@ -162,11 +168,13 @@ namespace ModbusRegViewSpace
             OriginalFontSize = Font.Size;
             OriginalRowHeight = RowTemplate.Height;
 
-            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.OnGridKeyDown);
-            this.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.OnGridCellDoubleClick);
-            this.CellBeginEdit += new System.Windows.Forms.DataGridViewCellCancelEventHandler(this.OnGridCellBeginEdit);
-            this.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.OnGridCellEndEdit);
-            this.RowPrePaint += new System.Windows.Forms.DataGridViewRowPrePaintEventHandler(this.OnGridRowPrePaint);
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Grid_KeyDown);
+            this.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.Grid_KeyPress);
+            this.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.Grid_CellDoubleClick);
+            this.EditingControlShowing += new System.Windows.Forms.DataGridViewEditingControlShowingEventHandler(this.Grid_CellEditingControlShowing);
+            this.CellBeginEdit += new System.Windows.Forms.DataGridViewCellCancelEventHandler(this.Grid_CellBeginEdit);
+            this.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.Grid_CellEndEdit);
+            this.RowPrePaint += new System.Windows.Forms.DataGridViewRowPrePaintEventHandler(this.Grid_RowPrePaint);
 
             this.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] { RegisterCol, DescriptionCol, ValueCol });
 
@@ -401,41 +409,21 @@ namespace ModbusRegViewSpace
             }
         }
 
-        private void OnGridKeyDown(object sender, KeyEventArgs e)
+        /// <summary>
+        /// Start edit dmv F2, of zoomen
+        /// </summary>
+        private void Grid_KeyDown(object sender, KeyEventArgs e)
         {
-            /* use F2 key to start edit via keyboard */
+            // use F2 key to start edit via keyboard
             if (e.KeyCode == Keys.F2)
             {
-                /* find register/child to edit */
-                CurrentEditReg = FindRegFromGridIndex(this.CurrentCellAddress.Y, out CurrentEditBitfieldIndex);
-
-                // is this var writeable?
-                if (CurrentEditReg.Writeable)
-                {
-                    // save the format for later
-                    CurrentEditFormat = CurrentEditReg.Format;
-                    CurrentEditDecimals = CurrentEditReg.Decimals;
-                    // make third column of this row the current cell, thats the one to edit
-                    this.CurrentCell = this.Rows[this.CurrentCellAddress.Y].Cells[2];
-                    // go edit cell
-                    bool ret = this.BeginEdit(true);
-                    if (ret == false)
-                    {
-                        // beginedit failed
-                        OnBeepEvent();
-                    }
-                }
-                else
-                {
-                    // not writeable
-                    OnBeepEvent();
-                }
+                TryStartEdit(this.CurrentCellAddress.Y);
 
                 // we only decide about editing
                 e.Handled = true;
             }
 
-            /* Pass control-plus as zoom-in to host */
+            // Pass control-plus as zoom-in to parent
             if (e.Control && ((e.KeyCode == Keys.Add) || (e.KeyCode == Keys.Oemplus)))
             {
                 OnZoomEvent(sender, +1);
@@ -443,7 +431,7 @@ namespace ModbusRegViewSpace
                 e.Handled = true;
             }
 
-            /* Pass control-minus as zoom-out to host */
+            // Pass control-minus as zoom-out to parent
             if (e.Control && ((e.KeyCode == Keys.Subtract) || (e.KeyCode == Keys.OemMinus)))
             {
                 OnZoomEvent(sender, -1);
@@ -451,7 +439,7 @@ namespace ModbusRegViewSpace
                 e.Handled = true;
             }
 
-            /* Pass control-0 as reset-zoom to host */
+            // Pass control-0 as reset-zoom to parent
             if (e.Control && ((e.KeyCode == Keys.NumPad0) || (e.KeyCode == Keys.D0)))
             {
                 OnZoomEvent(sender, 0);
@@ -459,7 +447,7 @@ namespace ModbusRegViewSpace
                 e.Handled = true;
             }
 
-            /* Pass control-F to host to start a find */
+            // Pass control-F as start_find to parent
             if (e.Control && (e.KeyCode == Keys.F))
             {
                 OnFindEvent( sender);
@@ -468,7 +456,35 @@ namespace ModbusRegViewSpace
             }
         }
 
-        private void OnGridCellDoubleClick(object sender, DataGridViewCellEventArgs e)
+        /// <summary>
+        /// Start edit dmv KeyPress letter, cijfer, leesteken
+        /// </summary>
+        private void Grid_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            //TODO???????????
+            // Option: start value editing on any types character
+            bool OptionStartEditOnAnyCharacter = true;
+            if (OptionStartEditOnAnyCharacter)
+            {
+                // accept letters, digits and punctuation like ",;
+                // do not accept control-A
+                if (Char.IsLetterOrDigit(e.KeyChar) || Char.IsPunctuation(e.KeyChar))
+                {
+                    BufferedChar = e.KeyChar;
+
+                    // go edit cell
+                    TryStartEdit(this.CurrentCellAddress.Y);
+
+                    // key handled
+                    e.Handled = true;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Start edit dmv cell doubleclick
+        /// </summary>
+        private void Grid_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
             // do not react on clicks on headers
             if (e.RowIndex >= 0)
@@ -476,35 +492,67 @@ namespace ModbusRegViewSpace
                 // react only on clicks in value column
                 if ((e.ColumnIndex == 2))
                 {
-                    /* find register/child to edit */
-                    CurrentEditReg = FindRegFromGridIndex(e.RowIndex, out CurrentEditBitfieldIndex);
-
-                    // is this var writeable?
-                    if (CurrentEditReg.Writeable)
-                    {
-                        // save the format for later
-                        CurrentEditFormat = CurrentEditReg.Format;
-                        CurrentEditDecimals = CurrentEditReg.Decimals;
-                        // go edit cell
-                        bool ret = this.BeginEdit(true);
-                        if (ret == false)
-                        {
-                            // beginedit failed
-                            OnBeepEvent();
-                        }
-                    }
-                    else
-                    {
-                        // not writeable
-                        OnBeepEvent();
-                    }
+                    // go edit cell
+                    TryStartEdit(e.RowIndex);
                 }
             }
         }
 
-        private void OnGridCellBeginEdit(object sender, DataGridViewCellCancelEventArgs e)
+        private bool TryStartEdit(int RowIndex)
         {
-            CurrentEditIsEscaped = false;
+            // in read-only mode?
+            if ( mIsReadOnly)
+            {
+                // Read only
+                OnBeepEvent();
+                return false;
+            }
+
+            // find register/child to edit
+            CurrentEditReg = FindRegFromGridIndex(RowIndex, out CurrentEditBitfieldIndex);
+
+            // is this var writeable?
+            if (CurrentEditReg.Writeable == false)
+            {
+                // not writeable
+                OnBeepEvent();
+                return false;
+            }
+
+            // save the format for later
+            CurrentEditFormat = CurrentEditReg.Format;
+            CurrentEditDecimals = CurrentEditReg.Decimals;
+
+            // make third column of this row the current cell, 'value' is the one to edit
+            this.CurrentCell = this.Rows[RowIndex].Cells[2];
+
+            // go edit cell
+            return this.BeginEdit(true);
+        }
+
+        /// <summary>
+        /// Editing control shows
+        /// if we have a buffered key: send it to this control
+        /// </summary>
+        private void Grid_CellEditingControlShowing(object sender, DataGridViewEditingControlShowingEventArgs e)
+        {
+            DataGridViewTextBoxEditingControl ed = e.Control as DataGridViewTextBoxEditingControl;
+
+            if (ed != null)
+            {
+                // got a buffered key?
+                // then send it to the editing control
+                if (BufferedChar > 0)
+                {
+                    PostMessage(ed.Handle, WM_CHAR, (int)BufferedChar, 0);
+                    BufferedChar = (char)0;
+                }
+            }
+        }
+
+        private void Grid_CellBeginEdit(object sender, DataGridViewCellCancelEventArgs e)
+        {
+            CurrentEditIsCanceled = false;
 
             // dot not allow editing if we're not polling 
             if (mIsReadOnly)
@@ -513,12 +561,12 @@ namespace ModbusRegViewSpace
             }
         }
 
-        private void OnGridCellEndEdit(object sender, DataGridViewCellEventArgs e)
+        private void Grid_CellEndEdit(object sender, DataGridViewCellEventArgs e)
         {
             string OrigString;
 
             // check if this edit was entered, not canceled by ESC 
-            if (CurrentEditIsEscaped == false)
+            if (CurrentEditIsCanceled == false)
             {
                 // get the value string, watch out for null if value is empty
                 if (this.Rows[e.RowIndex].Cells[e.ColumnIndex].Value != null)
@@ -628,7 +676,7 @@ namespace ModbusRegViewSpace
             /* if escape was pressed, set a flag so that OnGridCellEndEdit() knows that the input was canceled */
             if (keyData == Keys.Escape)
             {
-                CurrentEditIsEscaped = true;
+                CurrentEditIsCanceled = true;
             }
 
 			//TODO???????????
@@ -642,7 +690,7 @@ namespace ModbusRegViewSpace
             return base.ProcessDialogKey(keyData);
         }
 
-        private void OnGridRowPrePaint(object sender, DataGridViewRowPrePaintEventArgs e)
+        private void Grid_RowPrePaint(object sender, DataGridViewRowPrePaintEventArgs e)
         {
             if( Rows[e.RowIndex].Height != RowTemplate.Height)
             {
