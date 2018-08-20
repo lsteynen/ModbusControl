@@ -17,7 +17,7 @@ namespace ModbusControlSpace
 {
     public partial class Export : Form
     {
-        private Form1 mParent;
+        private MainForm mParent;
         private byte mSlaveAddress;
         private ModbusInterface mModbus;
         private BackgroundWorker mWorker;
@@ -53,7 +53,7 @@ namespace ModbusControlSpace
         }
 
         // constructor
-        public Export(Form1 parent)
+        public Export(MainForm parent)
         {
             InitializeComponent();
 

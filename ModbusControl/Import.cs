@@ -17,7 +17,7 @@ namespace ModbusControlSpace
 {
     public partial class Import : Form
     {
-        private Form1 mParent;
+        private MainForm mParent;
         private byte mSlaveAddress;
         private ModbusInterface mModbus;
         private BackgroundWorker mWorker;
@@ -55,7 +55,7 @@ namespace ModbusControlSpace
         List<ImportLine> ImportList = new List<ImportLine>();
 
         // constructor
-        public Import(Form1 parent)
+        public Import(MainForm parent)
         {
             InitializeComponent();
 

@@ -15,7 +15,7 @@ namespace ModbusControlSpace
 {
     public partial class CustomModbusCommand : Form
     {
-        Form1 mParent;
+        MainForm mParent;
         public ModbusInterface mModbus;
 
         #region properties
@@ -28,7 +28,7 @@ namespace ModbusControlSpace
 
         #endregion
 
-        public CustomModbusCommand(Form1 parent)
+        public CustomModbusCommand(MainForm parent)
         {
             InitializeComponent();
 

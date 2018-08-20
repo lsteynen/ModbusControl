@@ -27,7 +27,7 @@ using LST.Helpers;
 
 namespace ModbusControlSpace
 {
-    public partial class Form1 : Form
+    public partial class MainForm : Form
     {
         public struct TOptions
         {
@@ -88,7 +88,7 @@ namespace ModbusControlSpace
         CustomModbusCommand CustommodbuscommandForm;
 
         // constructor
-        public Form1()
+        public MainForm()
         {
             InitializeComponent();
 

@@ -15,7 +15,7 @@ namespace ModbusControlSpace
 {
     public partial class CustomWrite : Form
     {
-        Form1 mParent;
+        MainForm mParent;
         public ModbusInterface mModbus;
 
         #region properties
@@ -61,7 +61,7 @@ namespace ModbusControlSpace
         #endregion
 
         // constructor
-        public CustomWrite(Form1 parent)
+        public CustomWrite(MainForm parent)
         {
             InitializeComponent();
 

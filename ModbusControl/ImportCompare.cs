@@ -17,7 +17,7 @@ namespace ModbusControlSpace
 {
     public partial class Importcompare : Form
     {
-        private Form1 mParent;
+        private MainForm mParent;
         private byte mSlaveAddress;
         private ModbusInterface mModbus;
         private BackgroundWorker mWorker;
@@ -64,7 +64,7 @@ namespace ModbusControlSpace
         }
 
         // constructor
-        public Importcompare(Form1 parent)
+        public Importcompare(MainForm parent)
         {
             InitializeComponent();
 

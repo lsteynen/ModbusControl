@@ -15,7 +15,7 @@ namespace ModbusControlSpace
 {
     public partial class CustomRead : Form
     {
-        Form1 mParent;
+        MainForm mParent;
         public ModbusInterface mModbus;
 
         #region properties
@@ -58,7 +58,7 @@ namespace ModbusControlSpace
         #endregion
 
         // constructor
-        public CustomRead(Form1 parent)
+        public CustomRead(MainForm parent)
         {
             InitializeComponent();
 
