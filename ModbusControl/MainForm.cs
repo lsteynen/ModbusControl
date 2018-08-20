@@ -104,6 +104,8 @@ namespace ModbusControlSpace
             Global.SystemDpiY = g.DpiY;
             g.Dispose();
 
+            SaveStatusbarDefaultBackColor();
+
             // Create our settings object
             Settings1 = new Settings();
             Settings1.StorePath = Path.Combine(Global.CommonApplicationDataPath, "Settings.xml");
@@ -1233,7 +1235,7 @@ namespace ModbusControlSpace
                 // fail
                 ErrorText = ex.Message;
                 Logger1.Log(Logger.LogType.Error, "Error opening serial port " + Portname + ": " + ex.Message);
-                SetStatusBarMessage("Serial port " + Portname + " open failed");
+                SetStatusBarErrorMessage("Serial port " + Portname + " open failed");
             }
 
             return false;
@@ -1258,7 +1260,7 @@ namespace ModbusControlSpace
             {
                 MessageBox.Show("Invalid IP address!", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 // show message on statusbar
-                SetStatusBarMessage( ConnectionName + " connect failed");
+                SetStatusBarErrorMessage( ConnectionName + " connect failed");
                 return false;
             }
 
@@ -1293,7 +1295,7 @@ namespace ModbusControlSpace
                 MessageBox.Show("Connect to " + ConnectionName + " failed!" + Environment.NewLine + ex.Message, this.Text, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 Logger1.Log(Logger.LogType.Error, "Connect to " + ConnectionName + " failed: " + ex.Message);
                 // show message on statusbar
-                SetStatusBarMessage( "Connect to " + ConnectionName + " failed!");
+                SetStatusBarErrorMessage( "Connect to " + ConnectionName + " failed!");
             }
 
             return false;
@@ -1318,7 +1320,7 @@ namespace ModbusControlSpace
             {
                 MessageBox.Show("Invalid IP address!", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 // show message on statusbar
-                SetStatusBarMessage( ConnectionName + " connect failed");
+                SetStatusBarErrorMessage( ConnectionName + " connect failed");
                 return false;
             }
 
@@ -1352,7 +1354,7 @@ namespace ModbusControlSpace
             {
                 MessageBox.Show("Connect to " + ConnectionName + " failed!" + Environment.NewLine + ex.Message, this.Text, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 Logger1.Log(Logger.LogType.Error, "Connect to " + ConnectionName + " failed: " + ex.Message);
-                SetStatusBarMessage( "Connect to " + ConnectionName + " failed!");
+                SetStatusBarErrorMessage( "Connect to " + ConnectionName + " failed!");
             }
 
             return false;
@@ -1641,7 +1643,7 @@ namespace ModbusControlSpace
                                 mrv.SetRegistersReadError(LineIndex, 1, ModbusProtocol.GetResultText(result));
 
                                 // show the error in the status bar
-                                SetStatusBarErrorText("Read failed: Slave=" + Project.Connection.SlaveID + ", reg=" + FirstReg + ", quant=" + RegCount + ", Error=" + ModbusProtocol.GetResultText(result));
+                                SetStatusBarErrorMessage("Read failed: Slave=" + Project.Connection.SlaveID + ", reg=" + FirstReg + ", quant=" + RegCount + ", Error=" + ModbusProtocol.GetResultText(result));
                             }
 
                             // for each line of this group
@@ -1659,7 +1661,7 @@ namespace ModbusControlSpace
                         mrv.SetRegistersReadError(LineIndex, LineCount, ModbusProtocol.GetResultText(result));
 
                         // show the error in the status bar
-                        SetStatusBarErrorText("Read failed: Slave=" + Project.Connection.SlaveID + ", reg=" + FirstReg + ", quant=" + RegCount + ", Error=" + ModbusProtocol.GetResultText(result));
+                        SetStatusBarErrorMessage("Read failed: Slave=" + Project.Connection.SlaveID + ", reg=" + FirstReg + ", quant=" + RegCount + ", Error=" + ModbusProtocol.GetResultText(result));
 
                         // next group
                         LineIndex += LineCount;
@@ -2003,7 +2005,7 @@ namespace ModbusControlSpace
         public void ReportInputError(string ErrorText)
         {
             Logger1.Log(Logger.LogType.Error, ErrorText);
-            SetStatusBarErrorText(ErrorText);
+            SetStatusBarErrorMessage(ErrorText);
         }
 
         #region Writes
@@ -2082,7 +2084,7 @@ namespace ModbusControlSpace
 
                 if (result != ModbusProtocol.Result.SUCCESS)
                 {
-                    SetStatusBarErrorText("Write failed: Slave=" + Project.Connection.SlaveID + ", FC16, addr=" + Reg + ", quant=" + RegCount + ", Error=" + ModbusProtocol.GetResultText(result));
+                    SetStatusBarErrorMessage("Write failed: Slave=" + Project.Connection.SlaveID + ", FC16, addr=" + Reg + ", quant=" + RegCount + ", Error=" + ModbusProtocol.GetResultText(result));
                     Beep();
                 }
             }
@@ -2097,7 +2099,7 @@ namespace ModbusControlSpace
 
                 if (result != ModbusProtocol.Result.SUCCESS)
                 {
-                    SetStatusBarErrorText("Write failed: Slave=" + Project.Connection.SlaveID + ", FC6, reg=" + Reg + ", data=" + Values[0] + ", Error=" + ModbusProtocol.GetResultText(result));
+                    SetStatusBarErrorMessage("Write failed: Slave=" + Project.Connection.SlaveID + ", FC6, reg=" + Reg + ", data=" + Values[0] + ", Error=" + ModbusProtocol.GetResultText(result));
                     Beep();
                 }
             }
@@ -2303,27 +2305,40 @@ namespace ModbusControlSpace
 
         #region Status bar message system
 
-        //  show error in the status bar
-        public void SetStatusBarErrorText(string ErrorText)
+        Color SavedStatusbarForeColor;
+        Color SavedStatusbarBackColor;
+        Color StatusbarErrorBackColor = Color.FromArgb(255,100,100); // Color.Red;
+
+        private void SaveStatusbarDefaultBackColor()
         {
-            SetStatusBarMessage( ErrorText);
+            SavedStatusbarForeColor = lblStatus.ForeColor;
+            SavedStatusbarBackColor = lblStatus.BackColor;
+        }
+
+        //  show error in the status bar
+        public void SetStatusBarErrorMessage(string ErrorText)
+        {
+            SetStatusBarMessage( ErrorText, true);
         }
 
         // Show a message in the status bar
         // show it a certain time, then fallback to showing the counts
-        private delegate void DelegateSetStatusBarMessage(string text);
-        public void SetStatusBarMessage(string text)
+        private delegate void DelegateSetStatusBarMessage(string text, bool IsError);
+        public void SetStatusBarMessage(string text, bool IsError = false)
         {
             if (this.InvokeRequired)
             {
                 DelegateSetStatusBarMessage del = new DelegateSetStatusBarMessage(this.SetStatusBarMessage);
-                this.Invoke(del, text);
+                this.Invoke(del, text, IsError);
             }
             else
             {
                 StatusbarTimer.Enabled = false;
-                this.lblStatus.Text = text;
-                StatusbarTimer.Interval = 3000;
+                lblStatus.Text = text;
+                if( IsError) lblStatus.BackColor = StatusbarErrorBackColor;
+                    else lblStatus.BackColor = SavedStatusbarBackColor;
+                if( IsError) StatusbarTimer.Interval = 5000;
+                    else StatusbarTimer.Interval = 3000;
                 StatusbarTimer.Enabled = true;
                 lblStatus.ToolTipText = "Last message: " + text;
             }
@@ -2333,6 +2348,7 @@ namespace ModbusControlSpace
         private void StatusbarTimerEvent(object sender, EventArgs e)
         {
             StatusbarTimer.Enabled = false;
+            lblStatus.BackColor = SavedStatusbarBackColor;
             UpdateStatusBar();
         }
 

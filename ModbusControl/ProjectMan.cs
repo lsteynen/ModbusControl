@@ -74,7 +74,7 @@ namespace ModbusControlSpace
         public struct TTab
         {
             public string Name;
-            public List<TVar> VarList; // List with varss in this tab page
+            public List<TVar> VarList; // List with vars in this tab page
         }
 
         public struct TVar
