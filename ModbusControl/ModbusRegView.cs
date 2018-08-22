@@ -60,7 +60,7 @@ namespace ModbusRegViewSpace
             }
         }
 
-        private ContextMenuStrip ContextMenuForDescriptionColumn = new ContextMenuStrip();
+        private ContextMenuStrip ContextMenuForFirstColumns = new ContextMenuStrip();
         private ContextMenu ContextMenuForValueColumn = new ContextMenu();
 
         public delegate void FindHandler(object sender);
@@ -206,13 +206,15 @@ namespace ModbusRegViewSpace
             YellowIcon = (Bitmap)resourceManager.GetObject("YellowIcon");
             WhiteIcon = (Bitmap)resourceManager.GetObject("WhiteIcon");
 
-            // Create context menu for description column
-            ContextMenuForDescriptionColumn.Items.Add("Mark this line in red", RedIcon, new EventHandler(Menu_SetColorRed));
-            ContextMenuForDescriptionColumn.Items.Add("Mark this line in green", GreenIcon, new EventHandler(Menu_SetColorGreen));
-            ContextMenuForDescriptionColumn.Items.Add("Mark this line in blue", BlueIcon, new EventHandler(Menu_SetColorBlue));
-            ContextMenuForDescriptionColumn.Items.Add("Mark this line in yellow", YellowIcon, new EventHandler(Menu_SetColorYellow));
-            ContextMenuForDescriptionColumn.Items.Add("Remove color mark of this line", WhiteIcon, new EventHandler(Menu_SetColorDefault));
-            
+            // Create context menu for regsiter/description columns
+            ContextMenuForFirstColumns.Items.Add("Mark this line in red", RedIcon, new EventHandler(Menu_SetColorRed));
+            ContextMenuForFirstColumns.Items.Add("Mark this line in green", GreenIcon, new EventHandler(Menu_SetColorGreen));
+            ContextMenuForFirstColumns.Items.Add("Mark this line in blue", BlueIcon, new EventHandler(Menu_SetColorBlue));
+            ContextMenuForFirstColumns.Items.Add("Mark this line in yellow", YellowIcon, new EventHandler(Menu_SetColorYellow));
+            ContextMenuForFirstColumns.Items.Add("Remove color mark of this line", WhiteIcon, new EventHandler(Menu_SetColorDefault));
+            ContextMenuForFirstColumns.Items.Add("-");
+            ContextMenuForFirstColumns.Items.Add("Copy line", null, new EventHandler(Menu_CopyLine));
+
             // Create context menu for value column
             ContextMenuForValueColumn.MenuItems.Add("Show value as Int", new EventHandler(Menu_SetFormatToInt));
             ContextMenuForValueColumn.MenuItems.Add("Show value as UInt", new EventHandler(Menu_SetFormatToUInt));
@@ -220,6 +222,8 @@ namespace ModbusRegViewSpace
             ContextMenuForValueColumn.MenuItems.Add("Show value as Binary", new EventHandler(Menu_SetFormatToBin));
             ContextMenuForValueColumn.MenuItems.Add("Show value as Float", new EventHandler(Menu_SetFormatToFloat));
             ContextMenuForValueColumn.MenuItems.Add("Show value as ASCII", new EventHandler(Menu_SetFormatToASCII));
+            ContextMenuForValueColumn.MenuItems.Add("-");
+            ContextMenuForValueColumn.MenuItems.Add("Copy value", new EventHandler(Menu_CopyValue));
 
             this.MouseUp += new System.Windows.Forms.MouseEventHandler(Grid_MouseUp);
         }
@@ -491,11 +495,31 @@ namespace ModbusRegViewSpace
         /// </summary>
         private void Grid_KeyPress(object sender, KeyPressEventArgs e)
         {
+            // control-C for Copy?
+            if (e.KeyChar == (char)3)
+            {
+                int row = this.CurrentCellAddress.Y;
+                switch(this.CurrentCellAddress.X)
+                {
+                    // column 0 and 1: copy whole line
+                    case 0:
+                    case 1:
+                        CopyLineToClipboard(row);
+                        break;
+                    // column 2: copy value string
+                    case 2:
+                        CopyValueToClipboard(row);
+                        break;
+                }
+
+                e.Handled = true;
+            }
+
             // Option: start value editing on any types character
             if (mStartEditOnAnyCharacter)
             {
                 // accept letters, digits and punctuation like ",;
-                // do not accept control-A
+                // do not accept control characters for example
                 if (Char.IsLetterOrDigit(e.KeyChar) || Char.IsPunctuation(e.KeyChar))
                 {
                     BufferedChar = e.KeyChar;
@@ -507,6 +531,12 @@ namespace ModbusRegViewSpace
                     e.Handled = true;
                 }
             }
+        }
+
+        private string isnull(string s, string text)
+        {
+            if (s != null) return s;
+            return text;
         }
 
         /// <summary>
@@ -865,7 +895,7 @@ namespace ModbusRegViewSpace
                     CurrentEditRowIndex = hitTestInfo.RowIndex;
 
                     // show menu
-                    ContextMenuForDescriptionColumn.Show( this, e.X, e.Y);
+                    ContextMenuForFirstColumns.Show( this, e.X, e.Y);
                 }
 
                 // Value column?
@@ -969,6 +999,46 @@ namespace ModbusRegViewSpace
                 r.Format = Format;
                 // update the value shown in the grid
                 r.node.Cells[2].Value = CValueToString.ValueToString(r.Value32, r.Size, r.Format, r.Decimals, r.MinLen);
+            }
+        }
+
+        /// <summary>
+        /// Copy grid line string to clipboard
+        /// </summary>
+        private void Menu_CopyLine(object sender, EventArgs e)
+        {
+            int row = this.CurrentCellAddress.Y;
+            CopyLineToClipboard(row);
+        }
+
+        /// <summary>
+        /// Copy grid value to clipboard
+        /// </summary>
+        private void Menu_CopyValue(object sender, EventArgs e)
+        {
+            int row = this.CurrentCellAddress.Y;
+            CopyValueToClipboard(row);
+        }
+
+        private void CopyLineToClipboard(int row)
+        {
+            string s = isnull(this.Rows[row].Cells[0].Value.ToString(), "")
+                    + (char)9 // tab
+                    + isnull(this.Rows[row].Cells[1].Value.ToString(), "")
+                    + (char)9 // tab
+                    + isnull(this.Rows[row].Cells[2].Value.ToString(), "");
+            if (s.Length > 0)
+            {
+                System.Windows.Forms.Clipboard.SetText(s);
+            }
+        }
+
+        private void CopyValueToClipboard(int row)
+        {
+            string s = isnull(this.Rows[row].Cells[2].Value.ToString(), "");
+            if (s.Length > 0)
+            {
+                System.Windows.Forms.Clipboard.SetText(s);
             }
         }
 

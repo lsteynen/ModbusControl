@@ -12,8 +12,6 @@ using System.Linq;
 
 using LST.Helpers;
 
-// TODO: Mbc file manual nog eens helemaal vergelijken met de XML tags hier (+voorbeeld van expand)
-
 namespace ModbusControlSpace
 {
     /// <summary>
