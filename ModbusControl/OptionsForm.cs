@@ -63,6 +63,18 @@ namespace ModbusControlSpace
             set { numericLoggerCapacity.Value = value; }
         }
 
+        public bool CustomEditorEnable
+        {
+            get { return checkboxCustomEditor.Checked; }
+            set { checkboxCustomEditor.Checked = value; }
+        }
+
+        public string CustomEditorCommand
+        {
+            get { return textboxCustomEditor.Text; }
+            set { textboxCustomEditor.Text = value; }
+        }
+
         public bool CheckForUpdates
         {
             get { return CheckboxCheckForUpdates.Checked; }

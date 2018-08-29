@@ -52,10 +52,8 @@
     <Compile Include="..\..\ModbusControl\Modbusdecode.cs">
       <Link>Modbusdecode.cs</Link>
     </Compile>
-    <Compile Include="..\..\ModbusControl\StringToValue.cs">
-      <Link>StringToValue.cs</Link>
-    </Compile>
     <Compile Include="TestFitsWidth.cs" />
+    <Compile Include="TestGlobal.cs" />
     <Compile Include="TestModbusDecode.cs" />
     <Compile Include="TestColorFromString.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

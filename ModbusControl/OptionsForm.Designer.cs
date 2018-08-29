@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.buttonOK = new System.Windows.Forms.Button();
             this.checkboxUseLocalOverrides = new System.Windows.Forms.CheckBox();
@@ -38,13 +39,16 @@
             this.numericLoggerCapacity = new System.Windows.Forms.NumericUpDown();
             this.checkboxNextRowOnEnter = new System.Windows.Forms.CheckBox();
             this.checkboxAutostartEdit = new System.Windows.Forms.CheckBox();
+            this.textboxCustomEditor = new System.Windows.Forms.TextBox();
+            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            this.checkboxCustomEditor = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.numericLoggerCapacity)).BeginInit();
             this.SuspendLayout();
             // 
             // buttonCancel
             // 
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.buttonCancel.Location = new System.Drawing.Point(147, 201);
+            this.buttonCancel.Location = new System.Drawing.Point(201, 251);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 23);
             this.buttonCancel.TabIndex = 5;
@@ -54,7 +58,8 @@
             // buttonOK
             // 
             this.buttonOK.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.buttonOK.Location = new System.Drawing.Point(58, 201);
+            this.buttonOK.Location = new System.Drawing.Point(112, 251);
+            this.buttonOK.Margin = new System.Windows.Forms.Padding(3, 3, 3, 10);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(75, 23);
             this.buttonOK.TabIndex = 4;
@@ -64,51 +69,55 @@
             // checkboxUseLocalOverrides
             // 
             this.checkboxUseLocalOverrides.AutoSize = true;
-            this.checkboxUseLocalOverrides.Location = new System.Drawing.Point(39, 42);
+            this.checkboxUseLocalOverrides.Location = new System.Drawing.Point(23, 32);
             this.checkboxUseLocalOverrides.Name = "checkboxUseLocalOverrides";
             this.checkboxUseLocalOverrides.Size = new System.Drawing.Size(116, 17);
             this.checkboxUseLocalOverrides.TabIndex = 1;
             this.checkboxUseLocalOverrides.Text = "Use local overrides";
+            this.toolTip1.SetToolTip(this.checkboxUseLocalOverrides, "Enables the local overrides mechanism");
             this.checkboxUseLocalOverrides.UseVisualStyleBackColor = true;
             // 
             // checkboxStopOnCommsError
             // 
             this.checkboxStopOnCommsError.AutoSize = true;
-            this.checkboxStopOnCommsError.Location = new System.Drawing.Point(39, 22);
+            this.checkboxStopOnCommsError.Location = new System.Drawing.Point(23, 12);
             this.checkboxStopOnCommsError.Name = "checkboxStopOnCommsError";
             this.checkboxStopOnCommsError.Size = new System.Drawing.Size(120, 17);
             this.checkboxStopOnCommsError.TabIndex = 0;
             this.checkboxStopOnCommsError.Text = "Stop polling on error";
+            this.toolTip1.SetToolTip(this.checkboxStopOnCommsError, "Stop polling on read error, show message if stopped");
             this.checkboxStopOnCommsError.UseVisualStyleBackColor = true;
             // 
             // checkboxBeepOnInputError
             // 
             this.checkboxBeepOnInputError.AutoSize = true;
-            this.checkboxBeepOnInputError.Location = new System.Drawing.Point(39, 62);
+            this.checkboxBeepOnInputError.Location = new System.Drawing.Point(23, 52);
             this.checkboxBeepOnInputError.Name = "checkboxBeepOnInputError";
             this.checkboxBeepOnInputError.Size = new System.Drawing.Size(116, 17);
             this.checkboxBeepOnInputError.TabIndex = 2;
             this.checkboxBeepOnInputError.Text = "Beep on input error";
+            this.toolTip1.SetToolTip(this.checkboxBeepOnInputError, "Enable beep when invalid value is entered");
             this.checkboxBeepOnInputError.UseVisualStyleBackColor = true;
             // 
             // CheckboxCheckForUpdates
             // 
             this.CheckboxCheckForUpdates.AutoSize = true;
-            this.CheckboxCheckForUpdates.Location = new System.Drawing.Point(39, 161);
+            this.CheckboxCheckForUpdates.Location = new System.Drawing.Point(23, 218);
             this.CheckboxCheckForUpdates.Name = "CheckboxCheckForUpdates";
             this.CheckboxCheckForUpdates.Size = new System.Drawing.Size(113, 17);
             this.CheckboxCheckForUpdates.TabIndex = 3;
             this.CheckboxCheckForUpdates.Text = "Check for updates";
+            this.toolTip1.SetToolTip(this.CheckboxCheckForUpdates, "Check for program updates on startup");
             this.CheckboxCheckForUpdates.UseVisualStyleBackColor = true;
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(36, 124);
+            this.label1.Location = new System.Drawing.Point(20, 116);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(116, 13);
+            this.label1.Size = new System.Drawing.Size(86, 13);
             this.label1.TabIndex = 26;
-            this.label1.Text = "Logger capacity (lines):";
+            this.label1.Text = "Logger capacity:";
             // 
             // numericLoggerCapacity
             // 
@@ -117,7 +126,7 @@
             0,
             0,
             0});
-            this.numericLoggerCapacity.Location = new System.Drawing.Point(161, 122);
+            this.numericLoggerCapacity.Location = new System.Drawing.Point(114, 114);
             this.numericLoggerCapacity.Maximum = new decimal(new int[] {
             999999,
             0,
@@ -131,6 +140,7 @@
             this.numericLoggerCapacity.Name = "numericLoggerCapacity";
             this.numericLoggerCapacity.Size = new System.Drawing.Size(75, 20);
             this.numericLoggerCapacity.TabIndex = 25;
+            this.toolTip1.SetToolTip(this.numericLoggerCapacity, "Logger memory capacity, number of lines");
             this.numericLoggerCapacity.Value = new decimal(new int[] {
             5000,
             0,
@@ -140,22 +150,44 @@
             // checkboxNextRowOnEnter
             // 
             this.checkboxNextRowOnEnter.AutoSize = true;
-            this.checkboxNextRowOnEnter.Location = new System.Drawing.Point(39, 82);
+            this.checkboxNextRowOnEnter.Location = new System.Drawing.Point(23, 72);
             this.checkboxNextRowOnEnter.Name = "checkboxNextRowOnEnter";
             this.checkboxNextRowOnEnter.Size = new System.Drawing.Size(151, 17);
             this.checkboxNextRowOnEnter.TabIndex = 27;
             this.checkboxNextRowOnEnter.Text = "Move to next row on Enter";
+            this.toolTip1.SetToolTip(this.checkboxNextRowOnEnter, "Move to next row after entering a new value");
             this.checkboxNextRowOnEnter.UseVisualStyleBackColor = true;
             // 
             // checkboxAutostartEdit
             // 
             this.checkboxAutostartEdit.AutoSize = true;
-            this.checkboxAutostartEdit.Location = new System.Drawing.Point(39, 102);
+            this.checkboxAutostartEdit.Location = new System.Drawing.Point(23, 92);
             this.checkboxAutostartEdit.Name = "checkboxAutostartEdit";
             this.checkboxAutostartEdit.Size = new System.Drawing.Size(166, 17);
             this.checkboxAutostartEdit.TabIndex = 28;
             this.checkboxAutostartEdit.Text = "Auto-start edit mode on typing";
+            this.toolTip1.SetToolTip(this.checkboxAutostartEdit, "Auto-start edit to enter a new value, without pressing F2 or doubleclicking");
             this.checkboxAutostartEdit.UseVisualStyleBackColor = true;
+            // 
+            // textboxCustomEditor
+            // 
+            this.textboxCustomEditor.Location = new System.Drawing.Point(42, 167);
+            this.textboxCustomEditor.Name = "textboxCustomEditor";
+            this.textboxCustomEditor.Size = new System.Drawing.Size(335, 20);
+            this.textboxCustomEditor.TabIndex = 29;
+            this.toolTip1.SetToolTip(this.textboxCustomEditor, "Configure a custom editor, for example \"c:\\windows\\system32\\notepad.exe\" \"%file\"." +
+        " \r\nLeave empty for standard editor");
+            // 
+            // checkboxCustomEditor
+            // 
+            this.checkboxCustomEditor.AutoSize = true;
+            this.checkboxCustomEditor.Location = new System.Drawing.Point(23, 144);
+            this.checkboxCustomEditor.Name = "checkboxCustomEditor";
+            this.checkboxCustomEditor.Size = new System.Drawing.Size(111, 17);
+            this.checkboxCustomEditor.TabIndex = 31;
+            this.checkboxCustomEditor.Text = "Use custom editor";
+            this.toolTip1.SetToolTip(this.checkboxCustomEditor, "Use this editor");
+            this.checkboxCustomEditor.UseVisualStyleBackColor = true;
             // 
             // OptionsForm
             // 
@@ -163,8 +195,10 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.AutoSize = true;
             this.CancelButton = this.buttonCancel;
-            this.ClientSize = new System.Drawing.Size(280, 235);
+            this.ClientSize = new System.Drawing.Size(389, 284);
             this.ControlBox = false;
+            this.Controls.Add(this.checkboxCustomEditor);
+            this.Controls.Add(this.textboxCustomEditor);
             this.Controls.Add(this.checkboxAutostartEdit);
             this.Controls.Add(this.checkboxNextRowOnEnter);
             this.Controls.Add(this.label1);
@@ -202,5 +236,8 @@
         private System.Windows.Forms.NumericUpDown numericLoggerCapacity;
         private System.Windows.Forms.CheckBox checkboxNextRowOnEnter;
         private System.Windows.Forms.CheckBox checkboxAutostartEdit;
+        private System.Windows.Forms.TextBox textboxCustomEditor;
+        private System.Windows.Forms.ToolTip toolTip1;
+        private System.Windows.Forms.CheckBox checkboxCustomEditor;
     }
 }

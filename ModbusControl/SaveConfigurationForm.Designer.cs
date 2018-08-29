@@ -82,6 +82,7 @@
             // buttonSave
             // 
             this.buttonSave.Location = new System.Drawing.Point(83, 128);
+            this.buttonSave.Margin = new System.Windows.Forms.Padding(3, 3, 3, 10);
             this.buttonSave.Name = "buttonSave";
             this.buttonSave.Size = new System.Drawing.Size(75, 23);
             this.buttonSave.TabIndex = 4;

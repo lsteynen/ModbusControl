@@ -47,9 +47,6 @@
     <Compile Include="..\..\ModbusControl\ColorFromString.cs">
       <Link>ColorFromString.cs</Link>
     </Compile>
-    <Compile Include="..\..\ModbusControl\Global.cs">
-      <Link>Global.cs</Link>
-    </Compile>
     <Compile Include="..\..\ModbusControl\ProjectMan.cs">
       <Link>ProjectMan.cs</Link>
     </Compile>

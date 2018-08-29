@@ -44,6 +44,7 @@
             this.okButton.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.okButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.okButton.Location = new System.Drawing.Point(140, 137);
+            this.okButton.Margin = new System.Windows.Forms.Padding(3, 3, 3, 10);
             this.okButton.Name = "okButton";
             this.okButton.Size = new System.Drawing.Size(75, 23);
             this.okButton.TabIndex = 5;

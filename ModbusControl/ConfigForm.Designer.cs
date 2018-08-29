@@ -59,6 +59,7 @@
             this.label7 = new System.Windows.Forms.Label();
             this.checkboxShowInfo = new System.Windows.Forms.CheckBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.radiobuttonWriteFCAlternate = new System.Windows.Forms.RadioButton();
             this.radiobuttonWriteFC6 = new System.Windows.Forms.RadioButton();
             this.radiobuttonWriteFC16 = new System.Windows.Forms.RadioButton();
             this.radiobuttonWriteFCAuto = new System.Windows.Forms.RadioButton();
@@ -85,7 +86,6 @@
             this.textboxHoldingRegistersStart = new System.Windows.Forms.TextBox();
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
             this.groupBox5 = new System.Windows.Forms.GroupBox();
-            this.radiobuttonWriteFCAlternate = new System.Windows.Forms.RadioButton();
             this.groupboxConnection.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericInterFrameDelay)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericMaximumFrameSize)).BeginInit();
@@ -525,6 +525,19 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Functioncode to write holding registers";
             // 
+            // radiobuttonWriteFCAlternate
+            // 
+            this.radiobuttonWriteFCAlternate.AutoSize = true;
+            this.radiobuttonWriteFCAlternate.Location = new System.Drawing.Point(6, 65);
+            this.radiobuttonWriteFCAlternate.Name = "radiobuttonWriteFCAlternate";
+            this.radiobuttonWriteFCAlternate.Size = new System.Drawing.Size(165, 17);
+            this.radiobuttonWriteFCAlternate.TabIndex = 3;
+            this.radiobuttonWriteFCAlternate.TabStop = true;
+            this.radiobuttonWriteFCAlternate.Tag = "";
+            this.radiobuttonWriteFCAlternate.Text = "Alternately use FC6 and FC16";
+            this.toolTip1.SetToolTip(this.radiobuttonWriteFCAlternate, "Use FC6 and FC16 in turn to test both");
+            this.radiobuttonWriteFCAlternate.UseVisualStyleBackColor = true;
+            // 
             // radiobuttonWriteFC6
             // 
             this.radiobuttonWriteFC6.AutoSize = true;
@@ -779,6 +792,7 @@
             // 
             this.buttonOK.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.buttonOK.Location = new System.Drawing.Point(250, 366);
+            this.buttonOK.Margin = new System.Windows.Forms.Padding(3, 3, 3, 10);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(75, 23);
             this.buttonOK.TabIndex = 13;
@@ -811,26 +825,13 @@
             this.groupBox5.TabIndex = 16;
             this.groupBox5.TabStop = false;
             // 
-            // radiobuttonWriteFCAlternate
-            // 
-            this.radiobuttonWriteFCAlternate.AutoSize = true;
-            this.radiobuttonWriteFCAlternate.Location = new System.Drawing.Point(6, 65);
-            this.radiobuttonWriteFCAlternate.Name = "radiobuttonWriteFCAlternate";
-            this.radiobuttonWriteFCAlternate.Size = new System.Drawing.Size(165, 17);
-            this.radiobuttonWriteFCAlternate.TabIndex = 3;
-            this.radiobuttonWriteFCAlternate.TabStop = true;
-            this.radiobuttonWriteFCAlternate.Tag = "";
-            this.radiobuttonWriteFCAlternate.Text = "Alternately use FC6 and FC16";
-            this.toolTip1.SetToolTip(this.radiobuttonWriteFCAlternate, "Use FC6 and FC16 in turn to test both");
-            this.radiobuttonWriteFCAlternate.UseVisualStyleBackColor = true;
-            // 
             // ConfigForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.AutoSize = true;
             this.CancelButton = this.buttonCancel;
-            this.ClientSize = new System.Drawing.Size(664, 405);
+            this.ClientSize = new System.Drawing.Size(664, 401);
             this.ControlBox = false;
             this.Controls.Add(this.groupBox5);
             this.Controls.Add(this.textboxHoldingRegistersStart);

@@ -13,8 +13,8 @@ namespace DebugTest
     {
         static void Main(string[] args)
         {
-            TestStringToValue t = new TestStringToValue();
-            t.Test_ASCII();
+            TestGlobal t = new TestGlobal();
+            t.Test05();
         }
     }
 }

@@ -36,6 +36,8 @@ namespace ModbusControlSpace
             public bool BeepOnInputError;
             public bool AutoNextRowOnEnter;
             public bool AutoStartEdit;
+            public bool CustomEditorEnable;
+            public string CustomEditorCommand;
             public bool CheckForUpdates;
         }
 
@@ -156,34 +158,36 @@ namespace ModbusControlSpace
             // Load our settings
             Settings1.Load();
             // And use them
-            Options.StopOnError = Settings1.Values.stoponerror;
-            Options.UseLocalOverrides = Settings1.Values.uselocaloverrides;
-            Options.BeepOnInputError = Settings1.Values.beeponinputerror;
-            Options.AutoNextRowOnEnter = Settings1.Values.autonextrowonenter;
-            Options.AutoStartEdit = Settings1.Values.autostartedit;
-            Options.CheckForUpdates = Settings1.Values.checkforupdates;
+            Options.StopOnError = Settings1.Values.StopOnError;
+            Options.UseLocalOverrides = Settings1.Values.UseLocalOverrides;
+            Options.BeepOnInputError = Settings1.Values.BeepOnInputError;
+            Options.AutoNextRowOnEnter = Settings1.Values.AutoNextRowOnEnter;
+            Options.AutoStartEdit = Settings1.Values.AutoStartEdit;
+            Options.CustomEditorEnable = Settings1.Values.CustomEditorEnable;
+            Options.CustomEditorCommand = Settings1.Values.CustomEditorCommand;
+            Options.CheckForUpdates = Settings1.Values.CheckForUpdates;
             // pass options to clients
             PassOptionsToClients();
 
-            recentFilesMenuItem.LoadList(Settings1.Values.mbcmrulist);
+            recentFilesMenuItem.LoadList(Settings1.Values.MbcMruList);
 
             // export settings taken when form is created
             // compare settings taken when form is created
-            Logger1.CapacityLines = Settings1.Values.logger.capacity;
-            Logger1.TheLogFilter.LogErrors = Settings1.Values.logger.logerrors;
-            Logger1.TheLogFilter.LogWarnings = Settings1.Values.logger.logwarnings;
-            Logger1.TheLogFilter.LogInfo = Settings1.Values.logger.loginfo;
-            Logger1.TheLogFilter.LogTrace = Settings1.Values.logger.logtrace;
-            Logger1.TheLogFilter.LogReads = Settings1.Values.logger.logreads;
-            Logger1.TheLogFilter.LogWrites = Settings1.Values.logger.logwrites;
-            Logger1.TheLogFilter.LogBridgeInfo = Settings1.Values.logger.logbridgeinfo;
-            Logger1.TheLogFilter.LogBridgeData = Settings1.Values.logger.logbridgedata;
-            Logger1.TheLogFilter.LogBridgeDecode = Settings1.Values.logger.logbridgedecode;
+            Logger1.CapacityLines = Settings1.Values.Logger.Capacity;
+            Logger1.TheLogFilter.LogErrors = Settings1.Values.Logger.LogErrors;
+            Logger1.TheLogFilter.LogWarnings = Settings1.Values.Logger.LogWarnings;
+            Logger1.TheLogFilter.LogInfo = Settings1.Values.Logger.LogInfo;
+            Logger1.TheLogFilter.LogTrace = Settings1.Values.Logger.LogTrace;
+            Logger1.TheLogFilter.LogReads = Settings1.Values.Logger.LogReads;
+            Logger1.TheLogFilter.LogWrites = Settings1.Values.Logger.LogWrites;
+            Logger1.TheLogFilter.LogBridgeInfo = Settings1.Values.Logger.LogBridgeInfo;
+            Logger1.TheLogFilter.LogBridgeData = Settings1.Values.Logger.LogBridgeData;
+            Logger1.TheLogFilter.LogBridgeDecode = Settings1.Values.Logger.LogBridgeDecode;
 
             // Start updater thread
             // if auto-update enabled
             // and only once per day, check if this is 1 day later
-            DateTime LastCheckDate = Settings1.Values.lastcheckforupdate.Date;
+            DateTime LastCheckDate = Settings1.Values.LastCheckForUpdate.Date;
             DateTime NextCheckDate = LastCheckDate.AddDays(1);
             if( Options.CheckForUpdates && (DateTime.Now >= NextCheckDate))
             {
@@ -301,60 +305,62 @@ namespace ModbusControlSpace
             Debug.Print(DateTime.Now.TimeOfDay + ": Form1_FormClosing()-5");
 
             // Update the current settings
-            Settings1.Values.mbcmrulist = recentFilesMenuItem.GetList();
-            Settings1.Values.stoponerror = Options.StopOnError;
-            Settings1.Values.uselocaloverrides = Options.UseLocalOverrides;
-            Settings1.Values.beeponinputerror = Options.BeepOnInputError;
-            Settings1.Values.autonextrowonenter = Options.AutoNextRowOnEnter;
-            Settings1.Values.autostartedit = Options.AutoStartEdit;
-            Settings1.Values.checkforupdates = Options.CheckForUpdates;
+            Settings1.Values.MbcMruList = recentFilesMenuItem.GetList();
+            Settings1.Values.StopOnError = Options.StopOnError;
+            Settings1.Values.UseLocalOverrides = Options.UseLocalOverrides;
+            Settings1.Values.BeepOnInputError = Options.BeepOnInputError;
+            Settings1.Values.AutoNextRowOnEnter = Options.AutoNextRowOnEnter;
+            Settings1.Values.AutoStartEdit = Options.AutoStartEdit;
+            Settings1.Values.CustomEditorEnable = Options.CustomEditorEnable;
+            Settings1.Values.CustomEditorCommand = Options.CustomEditorCommand;
+            Settings1.Values.CheckForUpdates = Options.CheckForUpdates;
             if (ExportForm != null)
             {
                 // save settings if form exists
-                Settings1.Values.export.tabs = ExportForm.TabSelect;
-                Settings1.Values.export.exportformat = ExportForm.ExportFormatSelect;
-                Settings1.Values.export.exportasciias = ExportForm.AsciiFormatSelect;
+                Settings1.Values.Export.Tabs = ExportForm.TabSelect;
+                Settings1.Values.Export.ExportFormat = ExportForm.ExportFormatSelect;
+                Settings1.Values.Export.ExportAsciiAs = ExportForm.AsciiFormatSelect;
             }
             if (ImportcompareForm != null)
             {
                 // save settings if form exists
-                Settings1.Values.compare.showequal = ImportcompareForm.ShowEquals;
+                Settings1.Values.Compare.ShowEqual = ImportcompareForm.ShowEquals;
             }
             if (CustomreadForm != null)
             {
                 // save settings if form exists
-                Settings1.Values.customread.slaveid = CustomreadForm.SlaveID;
-                Settings1.Values.customread.register = (int)CustomreadForm.Register;
-                Settings1.Values.customread.quantity = CustomreadForm.Quantity;
-                Settings1.Values.customread.datasize = CustomreadForm.Datasize;
-                Settings1.Values.customread.showvaluesas = CustomreadForm.Showvaluesas;
+                Settings1.Values.CustomRead.SlaveID = CustomreadForm.SlaveID;
+                Settings1.Values.CustomRead.Register = (int)CustomreadForm.Register;
+                Settings1.Values.CustomRead.Quantity = CustomreadForm.Quantity;
+                Settings1.Values.CustomRead.Datasize = CustomreadForm.Datasize;
+                Settings1.Values.CustomRead.ShowValuesAs = CustomreadForm.Showvaluesas;
             }
             if (CustomwriteForm != null)
             {
                 // save settings if form exists
-                Settings1.Values.customwrite.slaveid = CustomwriteForm.SlaveID;
-                Settings1.Values.customwrite.register = (int)CustomwriteForm.Register;
-                Settings1.Values.customwrite.quantity = CustomwriteForm.Quantity;
-                Settings1.Values.customwrite.datasize = CustomwriteForm.Datasize;
-                Settings1.Values.customwrite.functioncode = CustomwriteForm.Functioncode;
-                Settings1.Values.customwrite.datasize = CustomwriteForm.Datasize;
-                Settings1.Values.customwrite.data = CustomwriteForm.Data;
+                Settings1.Values.CustomWrite.SlaveID = CustomwriteForm.SlaveID;
+                Settings1.Values.CustomWrite.Register = (int)CustomwriteForm.Register;
+                Settings1.Values.CustomWrite.Quantity = CustomwriteForm.Quantity;
+                Settings1.Values.CustomWrite.Datasize = CustomwriteForm.Datasize;
+                Settings1.Values.CustomWrite.Functioncode = CustomwriteForm.Functioncode;
+                Settings1.Values.CustomWrite.Datasize = CustomwriteForm.Datasize;
+                Settings1.Values.CustomWrite.Data = CustomwriteForm.Data;
             }
             if (CustommodbuscommandForm != null)
             {
                 // save settings if form exists
-                Settings1.Values.customcommand.command = CustommodbuscommandForm.Command;
+                Settings1.Values.CustomCommand.Command = CustommodbuscommandForm.Command;
             }
-            Settings1.Values.logger.capacity = Logger1.CapacityLines;
-            Settings1.Values.logger.logerrors = Logger1.TheLogFilter.LogErrors;
-            Settings1.Values.logger.logwarnings = Logger1.TheLogFilter.LogWarnings;
-            Settings1.Values.logger.loginfo = Logger1.TheLogFilter.LogInfo;
-            Settings1.Values.logger.logtrace = Logger1.TheLogFilter.LogTrace;
-            Settings1.Values.logger.logreads = Logger1.TheLogFilter.LogReads;
-            Settings1.Values.logger.logwrites = Logger1.TheLogFilter.LogWrites;
-            Settings1.Values.logger.logbridgeinfo = Logger1.TheLogFilter.LogBridgeInfo;
-            Settings1.Values.logger.logbridgedata = Logger1.TheLogFilter.LogBridgeData;
-            Settings1.Values.logger.logbridgedecode = Logger1.TheLogFilter.LogBridgeDecode;
+            Settings1.Values.Logger.Capacity = Logger1.CapacityLines;
+            Settings1.Values.Logger.LogErrors = Logger1.TheLogFilter.LogErrors;
+            Settings1.Values.Logger.LogWarnings = Logger1.TheLogFilter.LogWarnings;
+            Settings1.Values.Logger.LogInfo = Logger1.TheLogFilter.LogInfo;
+            Settings1.Values.Logger.LogTrace = Logger1.TheLogFilter.LogTrace;
+            Settings1.Values.Logger.LogReads = Logger1.TheLogFilter.LogReads;
+            Settings1.Values.Logger.LogWrites = Logger1.TheLogFilter.LogWrites;
+            Settings1.Values.Logger.LogBridgeInfo = Logger1.TheLogFilter.LogBridgeInfo;
+            Settings1.Values.Logger.LogBridgeData = Logger1.TheLogFilter.LogBridgeData;
+            Settings1.Values.Logger.LogBridgeDecode = Logger1.TheLogFilter.LogBridgeDecode;
 
             // And save
             Settings1.Save();
@@ -473,24 +479,7 @@ namespace ModbusControlSpace
             // File exists?
             if (File.Exists(filepath))
             {
-                // get the app associated with editing .txt files
-                string app = FileAssoc.GetExecutable(".txt");
-                if (app != null)
-                {
-                    try
-                    {
-                        Process p = Process.Start(app, filepath);
-                    }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show(ex.Message + Environment.NewLine + app + Environment.NewLine,
-                                    this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    }
-                }
-                else
-                {
-                    MessageBox.Show("Error: Windows has no program association for opening .txt files!", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
+                StartEditor(filepath);
             }
             else
             {
@@ -636,24 +625,7 @@ namespace ModbusControlSpace
                 // File exists?
                 if (File.Exists(ProjectPath))
                 {
-                    // get the app associated with editing .txt files
-                    string app = FileAssoc.GetExecutable(".txt");
-                    if (app != null)
-                    {
-                        try
-                        {
-                            Process p = Process.Start(app, ProjectPath);
-                        }
-                        catch (Exception ex)
-                        {
-                            MessageBox.Show(ex.Message + Environment.NewLine + app + Environment.NewLine,
-                                        this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        }
-                    }
-                    else
-                    {
-                        MessageBox.Show("Error: Windows has no program association for opening .txt files!", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    }
+                    StartEditor(ProjectPath);
                 }
                 else
                 {
@@ -782,6 +754,8 @@ namespace ModbusControlSpace
             optionsForm.AutoNextRowOnEnter = Options.AutoNextRowOnEnter;
             optionsForm.AutoStartEdit = Options.AutoStartEdit;
             optionsForm.LoggerCapacity = Logger1.CapacityLines;
+            optionsForm.CustomEditorEnable = Options.CustomEditorEnable;
+            optionsForm.CustomEditorCommand = Options.CustomEditorCommand;
             optionsForm.CheckForUpdates = Options.CheckForUpdates;
 
             if (optionsForm.ShowDialog() == System.Windows.Forms.DialogResult.OK)
@@ -793,6 +767,8 @@ namespace ModbusControlSpace
                 Options.AutoNextRowOnEnter = optionsForm.AutoNextRowOnEnter;
                 Options.AutoStartEdit = optionsForm.AutoStartEdit;
                 Logger1.CapacityLines = optionsForm.LoggerCapacity;
+                Options.CustomEditorEnable = optionsForm.CustomEditorEnable;
+                Options.CustomEditorCommand = optionsForm.CustomEditorCommand;
                 Options.CheckForUpdates = optionsForm.CheckForUpdates;
 
                 // pass options to clients
@@ -2204,9 +2180,9 @@ namespace ModbusControlSpace
             {
                 ExportForm = new Export(this);
                 // load settings
-                ExportForm.TabSelect = Settings1.Values.export.tabs;
-                ExportForm.ExportFormatSelect = Settings1.Values.export.exportformat;
-                ExportForm.AsciiFormatSelect = Settings1.Values.export.exportasciias;
+                ExportForm.TabSelect = Settings1.Values.Export.Tabs;
+                ExportForm.ExportFormatSelect = Settings1.Values.Export.ExportFormat;
+                ExportForm.AsciiFormatSelect = Settings1.Values.Export.ExportAsciiAs;
             }
 
             // show modal
@@ -2223,7 +2199,7 @@ namespace ModbusControlSpace
             {
                 ImportcompareForm = new Importcompare(this);
                 // load settings
-                ImportcompareForm.ShowEquals = Settings1.Values.compare.showequal;
+                ImportcompareForm.ShowEquals = Settings1.Values.Compare.ShowEqual;
             }
 
             // show modal
@@ -2244,11 +2220,11 @@ namespace ModbusControlSpace
             {
                 CustomreadForm = new CustomRead(this);
                 // load settings
-                CustomreadForm.SlaveID = (byte)Settings1.Values.customread.slaveid;
-                CustomreadForm.Register = (uint)Settings1.Values.customread.register;
-                CustomreadForm.Quantity = (ushort)Settings1.Values.customread.quantity;
-                CustomreadForm.Datasize = Settings1.Values.customread.datasize;
-                CustomreadForm.Showvaluesas = Settings1.Values.customread.showvaluesas;
+                CustomreadForm.SlaveID = (byte)Settings1.Values.CustomRead.SlaveID;
+                CustomreadForm.Register = (uint)Settings1.Values.CustomRead.Register;
+                CustomreadForm.Quantity = (ushort)Settings1.Values.CustomRead.Quantity;
+                CustomreadForm.Datasize = Settings1.Values.CustomRead.Datasize;
+                CustomreadForm.Showvaluesas = Settings1.Values.CustomRead.ShowValuesAs;
             }
 
             // update some parameters
@@ -2265,12 +2241,12 @@ namespace ModbusControlSpace
             {
                 CustomwriteForm = new CustomWrite(this);
                 // load settings
-                CustomwriteForm.SlaveID = (byte)Settings1.Values.customwrite.slaveid;
-                CustomwriteForm.Register = (uint)Settings1.Values.customwrite.register;
-                CustomwriteForm.Quantity = (ushort)Settings1.Values.customwrite.quantity;
-                CustomwriteForm.Functioncode = Settings1.Values.customwrite.functioncode;
-                CustomwriteForm.Datasize = Settings1.Values.customwrite.datasize;
-                CustomwriteForm.Data = Settings1.Values.customwrite.data;
+                CustomwriteForm.SlaveID = (byte)Settings1.Values.CustomWrite.SlaveID;
+                CustomwriteForm.Register = (uint)Settings1.Values.CustomWrite.Register;
+                CustomwriteForm.Quantity = (ushort)Settings1.Values.CustomWrite.Quantity;
+                CustomwriteForm.Functioncode = Settings1.Values.CustomWrite.Functioncode;
+                CustomwriteForm.Datasize = Settings1.Values.CustomWrite.Datasize;
+                CustomwriteForm.Data = Settings1.Values.CustomWrite.Data;
             }
 
             // show
@@ -2284,7 +2260,7 @@ namespace ModbusControlSpace
             {
                 CustommodbuscommandForm = new CustomModbusCommand(this);
                 // load settings
-                CustommodbuscommandForm.Command = Settings1.Values.customcommand.command;
+                CustommodbuscommandForm.Command = Settings1.Values.CustomCommand.Command;
             }
 
             // show modal
@@ -2390,7 +2366,62 @@ namespace ModbusControlSpace
             }
         }
 
-		#endregion
+        #endregion
+
+        private void StartEditor( string file)
+        {
+            string EdCommand = String.Empty;
+            string EdArg = String.Empty;
+
+            // custom editor enabled?
+            if (Options.CustomEditorEnable)
+            {
+                // custom editor configured?
+                string CmdLine = Options.CustomEditorCommand.Trim();
+                if (CmdLine.Length > 0)
+                {
+                    CmdLine = CmdLine.Replace("%file", ProjectPath);
+                    Global.SplitCommandString(CmdLine, out EdCommand, out EdArg);
+#if DEBUGXX
+                    MessageBox.Show(EdCommand + " " + EdArg, "Command line:", MessageBoxButtons.OK, MessageBoxIcon.Information);
+#endif
+                    try
+                    {
+                        Process p = Process.Start(EdCommand, EdArg);
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show(ex.Message + Environment.NewLine + EdCommand + Environment.NewLine,
+                            this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("Error: Custom editor is enabled but command is empty!", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+            else
+            {
+                // get the windows app associated with editing .txt files
+                EdCommand = FileAssoc.GetExecutable(".txt");
+                if (String.IsNullOrEmpty(EdCommand) == false)
+                {
+                    try
+                    {
+                        Process p = Process.Start(EdCommand, ProjectPath);
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show(ex.Message + Environment.NewLine + EdCommand + Environment.NewLine,
+                            this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("Error: Windows has no program association for opening .txt files!", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+        }
 
         private void BeepHandler(object sender)
         {
@@ -2502,12 +2533,11 @@ namespace ModbusControlSpace
             }
 
             // run updater only once per day
-            // remember day updater was run
-            Settings1.Values.lastcheckforupdate = DateTime.Now;
+            // remember date/time updater was run
+            Settings1.Values.LastCheckForUpdate = DateTime.Now;
         }
 
         #endregion
-
         
     }
 }

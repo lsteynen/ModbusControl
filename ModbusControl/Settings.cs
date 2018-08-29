@@ -17,264 +17,274 @@ namespace ModbusControlSpace
         public class CValues
         {
             [XmlElement("stoponerror")]
-            public bool stoponerror
+            public bool StopOnError
             { get; set; }
 
             [XmlElement("uselocaloverrides")]
-            public bool uselocaloverrides
+            public bool UseLocalOverrides
             { get; set; }
 
             [XmlElement("beeponinputerror")]
-            public bool beeponinputerror
+            public bool BeepOnInputError
             { get; set; }
 
             [XmlElement("autonextrowonenter")]
-            public bool autonextrowonenter
+            public bool AutoNextRowOnEnter
             { get; set; }
 
             [XmlElement("autostartedit")]
-            public bool autostartedit
+            public bool AutoStartEdit
+            { get; set; }
+
+            [XmlElement("customeditoreenable")]
+            public bool CustomEditorEnable
+            { get; set; }
+
+            [XmlElement("customeditorcommand")]
+            public string CustomEditorCommand
             { get; set; }
 
             [XmlElement("checkforupdates")]
-            public bool checkforupdates
+            public bool CheckForUpdates
             { get; set; }
 
             [XmlElement("lastcheckforupdate")]
-            public DateTime lastcheckforupdate
+            public DateTime LastCheckForUpdate
             { get; set; }
 
             [XmlArray("mbcmrulist")]
             [XmlArrayItem("file")]
-            public List<string> mbcmrulist
+            public List<string> MbcMruList
             { get; set; }
 
             [XmlElement("export")]
-            public CExport export
+            public CExport Export
             { get; set; }
 
             [XmlElement("compare")]
-            public CCompare compare
+            public CCompare Compare
             { get; set; }
 
             [XmlElement("customread")]
-            public CCustomRead customread
+            public CCustomRead CustomRead
             { get; set; }
 
             [XmlElement("customwrite")]
-            public CCustomWrite customwrite
+            public CCustomWrite CustomWrite
             { get; set; }
 
             [XmlElement("customcommand")]
-            public CCustomCommand customcommand
+            public CCustomCommand CustomCommand
             { get; set; }
 
             [XmlElement("logger")]
-            public CLoggerValues logger
+            public CLoggerValues Logger
             { get; set; }
 
             // constructor
             public CValues()
             {
                 // sets default values
-                stoponerror = false;
-                uselocaloverrides = true;
-                beeponinputerror = true;
-                autonextrowonenter = false;
-                autostartedit = false;
-                checkforupdates = true;
-                lastcheckforupdate = DateTime.MinValue;
-                mbcmrulist = new List<string>();
-                export = new CExport();
-                compare = new CCompare();
-                customread = new CCustomRead();
-                customwrite = new CCustomWrite();
-                customcommand = new CCustomCommand();
-                logger = new CLoggerValues();
+                StopOnError = false;
+                UseLocalOverrides = true;
+                BeepOnInputError = true;
+                AutoNextRowOnEnter = false;
+                AutoStartEdit = false;
+                CustomEditorEnable = false;
+                CustomEditorCommand = "";
+                CheckForUpdates = true;
+                LastCheckForUpdate = DateTime.MinValue;
+                MbcMruList = new List<string>();
+                Export = new CExport();
+                Compare = new CCompare();
+                CustomRead = new CCustomRead();
+                CustomWrite = new CCustomWrite();
+                CustomCommand = new CCustomCommand();
+                Logger = new CLoggerValues();
             }
         };
 
         public class CExport
         {
             [XmlElement("tabs")]
-            public string tabs
+            public string Tabs
             { get; set; }
 
             [XmlElement("exportformat")]
-            public string exportformat
+            public string ExportFormat
             { get; set; }
 
             [XmlElement("exportasciias")]
-            public string exportasciias
+            public string ExportAsciiAs
             { get; set; }
 
             // constructor
             public CExport()
             {
                 // sets default values
-                tabs = "current";
-                exportformat = "grid";
-                exportasciias = "ascii";
+                Tabs = "current";
+                ExportFormat = "grid";
+                ExportAsciiAs = "ascii";
             }
         }
 
         public class CCompare
         {
             [XmlElement("showequal")]
-            public bool showequal
+            public bool ShowEqual
             { get; set; }
 
             // constructor
             public CCompare()
             {
                 // sets default values
-                showequal = true;
+                ShowEqual = true;
             }
         }
 
         public class CCustomRead
         {
             [XmlElement("slaveid")]
-            public int slaveid
+            public int SlaveID
             { get; set; }
 
             [XmlElement("register")]
-            public int register
+            public int Register
             { get; set; }
 
             [XmlElement("quantity")]
-            public int quantity
+            public int Quantity
             { get; set; }
 
             [XmlElement("datasize")]
-            public string datasize
+            public string Datasize
             { get; set; }
 
             [XmlElement("showvaluesas")]
-            public string showvaluesas
+            public string ShowValuesAs
             { get; set; }
 
             // constructor
             public CCustomRead()
             {
                 // sets default values
-                slaveid = 1;
-                register = 40001;
-                quantity = 1;
-                datasize = "16";
-                showvaluesas = "int";
+                SlaveID = 1;
+                Register = 40001;
+                Quantity = 1;
+                Datasize = "16";
+                ShowValuesAs = "int";
             }
         }
 
         public class CCustomWrite
         {
             [XmlElement("slaveid")]
-            public int slaveid
+            public int SlaveID
             { get; set; }
 
             [XmlElement("register")]
-            public int register
+            public int Register
             { get; set; }
 
             [XmlElement("quantity")]
-            public int quantity
+            public int Quantity
             { get; set; }
 
             [XmlElement("functioncode")]
-            public string functioncode
+            public string Functioncode
             { get; set; }
 
             [XmlElement("datasize")]
-            public string datasize
+            public string Datasize
             { get; set; }
 
             [XmlElement("data")]
-            public string data
+            public string Data
             { get; set; }
 
             // constructor
             public CCustomWrite()
             {
                 // sets default values
-                slaveid = 1;
-                register = 40001;
-                quantity = 1;
-                functioncode = "16";
-                datasize = "16";
-                data = String.Empty;
+                SlaveID = 1;
+                Register = 40001;
+                Quantity = 1;
+                Functioncode = "16";
+                Datasize = "16";
+                Data = String.Empty;
             }
         }
 
         public class CCustomCommand
         {
             [XmlElement("command")]
-            public string command
+            public string Command
             { get; set; }
 
             // constructor
             public CCustomCommand()
             {
                 // sets default values
-                command = "01 03 00 00 00 0A";
+                Command = "01 03 00 00 00 0A";
             }
         }
 
         public class CLoggerValues
         {
             [XmlElement("logerrors")]
-            public bool logerrors
+            public bool LogErrors
             { get; set; }
 
             [XmlElement("logwarnings")]
-            public bool logwarnings
+            public bool LogWarnings
             { get; set; }
 
             [XmlElement("loginfo")]
-            public bool loginfo
+            public bool LogInfo
             { get; set; }
 
             [XmlElement("logtrace")]
-            public bool logtrace
+            public bool LogTrace
             { get; set; }
 
             [XmlElement("logreads")]
-            public bool logreads
+            public bool LogReads
             { get; set; }
 
             [XmlElement("logwrites")]
-            public bool logwrites
+            public bool LogWrites
             { get; set; }
 
             [XmlElement("logbridgeinfo")]
-            public bool logbridgeinfo
+            public bool LogBridgeInfo
             { get; set; }
 
             [XmlElement("logbridgedata")]
-            public bool logbridgedata
+            public bool LogBridgeData
             { get; set; }
 
             [XmlElement("logbridgedecode")]
-            public bool logbridgedecode
+            public bool LogBridgeDecode
             { get; set; }
 
             [XmlElement("capacity")]
-            public int capacity
+            public int Capacity
             { get; set; }
 
             // constructor
             public CLoggerValues()
             {
                 // sets default values
-                logerrors = true;
-                logwarnings = true;
-                loginfo = true;
-                logtrace = false;
-                logreads = false;
-                logwrites = false;
-                logbridgeinfo = false;
-                logbridgedata = false;
-                logbridgedecode = false;
-                capacity = 5000;
+                LogErrors = true;
+                LogWarnings = true;
+                LogInfo = true;
+                LogTrace = false;
+                LogReads = false;
+                LogWrites = false;
+                LogBridgeInfo = false;
+                LogBridgeData = false;
+                LogBridgeDecode = false;
+                Capacity = 5000;
             }
         }
 
