@@ -30,7 +30,6 @@
         {
             this.components = new System.ComponentModel.Container();
             this.groupboxConnection = new System.Windows.Forms.GroupBox();
-            this.numericInterFrameDelay = new System.Windows.Forms.NumericUpDown();
             this.label15 = new System.Windows.Forms.Label();
             this.numericMaximumFrameSize = new System.Windows.Forms.NumericUpDown();
             this.numericResponseTimeout = new System.Windows.Forms.NumericUpDown();
@@ -86,8 +85,8 @@
             this.textboxHoldingRegistersStart = new System.Windows.Forms.TextBox();
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
             this.groupBox5 = new System.Windows.Forms.GroupBox();
+            this.numericInterFrameDelay = new LST.Controls.NumericUpDown2();
             this.groupboxConnection.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericInterFrameDelay)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericMaximumFrameSize)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericResponseTimeout)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericSlaveAddress)).BeginInit();
@@ -102,6 +101,7 @@
             this.groupBox4.SuspendLayout();
             this.groupBox3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericSamplerate)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericInterFrameDelay)).BeginInit();
             this.SuspendLayout();
             // 
             // groupboxConnection
@@ -124,20 +124,6 @@
             this.groupboxConnection.TabIndex = 0;
             this.groupboxConnection.TabStop = false;
             this.groupboxConnection.Text = "Connection / Protocol";
-            // 
-            // numericInterFrameDelay
-            // 
-            this.numericInterFrameDelay.Location = new System.Drawing.Point(126, 344);
-            this.numericInterFrameDelay.Maximum = new decimal(new int[] {
-            9999999,
-            0,
-            0,
-            0});
-            this.numericInterFrameDelay.Name = "numericInterFrameDelay";
-            this.numericInterFrameDelay.Size = new System.Drawing.Size(61, 20);
-            this.numericInterFrameDelay.TabIndex = 11;
-            this.toolTip1.SetToolTip(this.numericInterFrameDelay, "Delay between response and next query, in milliseconds, use 0 for auto, auto is 4" +
-        "Tchar for serial channels and 0ms for TCP channels");
             // 
             // label15
             // 
@@ -825,6 +811,20 @@
             this.groupBox5.TabIndex = 16;
             this.groupBox5.TabStop = false;
             // 
+            // numericInterFrameDelay
+            // 
+            this.numericInterFrameDelay.Location = new System.Drawing.Point(126, 344);
+            this.numericInterFrameDelay.Maximum = new decimal(new int[] {
+            9999999,
+            0,
+            0,
+            0});
+            this.numericInterFrameDelay.Name = "numericInterFrameDelay";
+            this.numericInterFrameDelay.Size = new System.Drawing.Size(61, 20);
+            this.numericInterFrameDelay.TabIndex = 11;
+            this.toolTip1.SetToolTip(this.numericInterFrameDelay, "Delay between response and next query, in milliseconds, 0 is auto, auto is 4Tchar" +
+        " for serial channels and 0ms for TCP channels");
+            // 
             // ConfigForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
@@ -857,7 +857,6 @@
             this.Text = "Project configuration";
             this.groupboxConnection.ResumeLayout(false);
             this.groupboxConnection.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericInterFrameDelay)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericMaximumFrameSize)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericResponseTimeout)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericSlaveAddress)).EndInit();
@@ -879,6 +878,7 @@
             this.groupBox3.ResumeLayout(false);
             this.groupBox3.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericSamplerate)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericInterFrameDelay)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -940,8 +940,8 @@
         private System.Windows.Forms.TextBox textboxHoldingRegistersStart;
         private System.ComponentModel.BackgroundWorker backgroundWorker1;
         private System.Windows.Forms.GroupBox groupBox5;
-        private System.Windows.Forms.NumericUpDown numericInterFrameDelay;
         private System.Windows.Forms.Label label15;
         private System.Windows.Forms.RadioButton radiobuttonWriteFCAlternate;
+        private LST.Controls.NumericUpDown2 numericInterFrameDelay;
     }
 }

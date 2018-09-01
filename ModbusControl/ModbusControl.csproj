@@ -184,6 +184,9 @@
     <Compile Include="Modbus_net\ModbusTCPProtocol.cs" />
     <Compile Include="Modbus_net\SerialChannel.cs" />
     <Compile Include="Modbus_net\TcpChannel.cs" />
+    <Compile Include="NumericUpDown2.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="OptionsForm.cs">
       <SubType>Form</SubType>
     </Compile>
