@@ -2380,7 +2380,7 @@ namespace ModbusControlSpace
                 string CmdLine = Options.CustomEditorCommand.Trim();
                 if (CmdLine.Length > 0)
                 {
-                    CmdLine = CmdLine.Replace("%file", ProjectPath);
+                    CmdLine = CmdLine.Replace("%file", file);
                     Global.SplitCommandString(CmdLine, out EdCommand, out EdArg);
 #if DEBUGXX
                     MessageBox.Show(EdCommand + " " + EdArg, "Command line:", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -2408,7 +2408,7 @@ namespace ModbusControlSpace
                 {
                     try
                     {
-                        Process p = Process.Start(EdCommand, ProjectPath);
+                        Process p = Process.Start(EdCommand, file);
                     }
                     catch (Exception ex)
                     {

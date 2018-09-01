@@ -51,7 +51,7 @@
             this.buttonCancel.Location = new System.Drawing.Point(201, 251);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 23);
-            this.buttonCancel.TabIndex = 5;
+            this.buttonCancel.TabIndex = 11;
             this.buttonCancel.Text = "Cancel";
             this.buttonCancel.UseVisualStyleBackColor = true;
             // 
@@ -62,7 +62,7 @@
             this.buttonOK.Margin = new System.Windows.Forms.Padding(3, 3, 3, 10);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(75, 23);
-            this.buttonOK.TabIndex = 4;
+            this.buttonOK.TabIndex = 10;
             this.buttonOK.Text = "OK";
             this.buttonOK.UseVisualStyleBackColor = true;
             // 
@@ -105,7 +105,7 @@
             this.CheckboxCheckForUpdates.Location = new System.Drawing.Point(23, 218);
             this.CheckboxCheckForUpdates.Name = "CheckboxCheckForUpdates";
             this.CheckboxCheckForUpdates.Size = new System.Drawing.Size(113, 17);
-            this.CheckboxCheckForUpdates.TabIndex = 3;
+            this.CheckboxCheckForUpdates.TabIndex = 9;
             this.CheckboxCheckForUpdates.Text = "Check for updates";
             this.toolTip1.SetToolTip(this.CheckboxCheckForUpdates, "Check for program updates on startup");
             this.CheckboxCheckForUpdates.UseVisualStyleBackColor = true;
@@ -116,7 +116,7 @@
             this.label1.Location = new System.Drawing.Point(20, 116);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(86, 13);
-            this.label1.TabIndex = 26;
+            this.label1.TabIndex = 5;
             this.label1.Text = "Logger capacity:";
             // 
             // numericLoggerCapacity
@@ -139,7 +139,7 @@
             0});
             this.numericLoggerCapacity.Name = "numericLoggerCapacity";
             this.numericLoggerCapacity.Size = new System.Drawing.Size(75, 20);
-            this.numericLoggerCapacity.TabIndex = 25;
+            this.numericLoggerCapacity.TabIndex = 6;
             this.toolTip1.SetToolTip(this.numericLoggerCapacity, "Logger memory capacity, number of lines");
             this.numericLoggerCapacity.Value = new decimal(new int[] {
             5000,
@@ -153,7 +153,7 @@
             this.checkboxNextRowOnEnter.Location = new System.Drawing.Point(23, 72);
             this.checkboxNextRowOnEnter.Name = "checkboxNextRowOnEnter";
             this.checkboxNextRowOnEnter.Size = new System.Drawing.Size(151, 17);
-            this.checkboxNextRowOnEnter.TabIndex = 27;
+            this.checkboxNextRowOnEnter.TabIndex = 3;
             this.checkboxNextRowOnEnter.Text = "Move to next row on Enter";
             this.toolTip1.SetToolTip(this.checkboxNextRowOnEnter, "Move to next row after entering a new value");
             this.checkboxNextRowOnEnter.UseVisualStyleBackColor = true;
@@ -164,9 +164,9 @@
             this.checkboxAutostartEdit.Location = new System.Drawing.Point(23, 92);
             this.checkboxAutostartEdit.Name = "checkboxAutostartEdit";
             this.checkboxAutostartEdit.Size = new System.Drawing.Size(166, 17);
-            this.checkboxAutostartEdit.TabIndex = 28;
+            this.checkboxAutostartEdit.TabIndex = 4;
             this.checkboxAutostartEdit.Text = "Auto-start edit mode on typing";
-            this.toolTip1.SetToolTip(this.checkboxAutostartEdit, "Auto-start edit to enter a new value, without pressing F2 or doubleclicking");
+            this.toolTip1.SetToolTip(this.checkboxAutostartEdit, "Auto-start edit to enter a new value, without pressing F2 or double-clicking");
             this.checkboxAutostartEdit.UseVisualStyleBackColor = true;
             // 
             // textboxCustomEditor
@@ -174,9 +174,8 @@
             this.textboxCustomEditor.Location = new System.Drawing.Point(42, 167);
             this.textboxCustomEditor.Name = "textboxCustomEditor";
             this.textboxCustomEditor.Size = new System.Drawing.Size(335, 20);
-            this.textboxCustomEditor.TabIndex = 29;
-            this.toolTip1.SetToolTip(this.textboxCustomEditor, "Configure a custom editor, for example \"c:\\windows\\system32\\notepad.exe\" \"%file\"." +
-        " \r\nLeave empty for standard editor");
+            this.textboxCustomEditor.TabIndex = 8;
+            this.toolTip1.SetToolTip(this.textboxCustomEditor, "Custom editor command, for example [\"c:\\windows\\system32\\notepad.exe\" \"%file\"]");
             // 
             // checkboxCustomEditor
             // 
@@ -184,9 +183,9 @@
             this.checkboxCustomEditor.Location = new System.Drawing.Point(23, 144);
             this.checkboxCustomEditor.Name = "checkboxCustomEditor";
             this.checkboxCustomEditor.Size = new System.Drawing.Size(111, 17);
-            this.checkboxCustomEditor.TabIndex = 31;
+            this.checkboxCustomEditor.TabIndex = 7;
             this.checkboxCustomEditor.Text = "Use custom editor";
-            this.toolTip1.SetToolTip(this.checkboxCustomEditor, "Use this editor");
+            this.toolTip1.SetToolTip(this.checkboxCustomEditor, "Use this editor instead of the default one");
             this.checkboxCustomEditor.UseVisualStyleBackColor = true;
             // 
             // OptionsForm
