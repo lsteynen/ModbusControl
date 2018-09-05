@@ -22,8 +22,6 @@ using ModbusRegViewSpace;
 using TreeGridViewSpace;
 using LST.Helpers;
 
-//TODO: instellen InterFrameDelay: instellen als 0=auto, 'Auto' tonen in numericupdown? <> 0 is fixed milliseconden.
-//      zie ook https://stackoverflow.com/questions/5921446/having-text-inside-numericupdown-control-after-the-number
 
 namespace ModbusControlSpace
 {
@@ -106,7 +104,7 @@ namespace ModbusControlSpace
             Global.SystemDpiY = g.DpiY;
             g.Dispose();
 
-            SaveStatusbarDefaultBackColor();
+            SaveStatusbarDefaultValues();
 
             // Create our settings object
             Settings1 = new Settings();
@@ -262,6 +260,7 @@ namespace ModbusControlSpace
                 UpdateTitle();
                 // Enable/disable menu items and toolbar buttons
                 UpdateMenus();
+                UpdateStatusBar();
 
                 // autostart communication
                 // if configured in mbc or override: use that
@@ -274,6 +273,12 @@ namespace ModbusControlSpace
                     MessageBox.Show("Error: Unsupported command-line parameters!",
                         this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
+            }
+            else
+            {
+                // Enable/disable menu items and toolbar buttons
+                UpdateMenus();
+                UpdateStatusBar();
             }
         }
 
@@ -449,6 +454,7 @@ namespace ModbusControlSpace
             UpdateTitle();
             // Enable/disable menu items and toolbar buttons
             UpdateMenus();
+            UpdateStatusBar();
 
             // autostart communication
             // if configured in mbc or override: use that
@@ -578,6 +584,7 @@ namespace ModbusControlSpace
                 UpdateTitle();
                 // Enable/disable menu items and toolbar buttons
                 UpdateMenus();
+                UpdateStatusBar();
 
                 // autostart communication
                 // if configured in mbc or override: use that
@@ -1125,6 +1132,7 @@ namespace ModbusControlSpace
             // update menu's
             ConnectionInUse = ConnectionIsOpen;
             UpdateMenus();
+            UpdateStatusBar();
 
             return ConnectionIsOpen;
         }
@@ -1211,10 +1219,10 @@ namespace ModbusControlSpace
             }
             catch (Exception ex)
             {
-                // fail
+                // error
                 ErrorText = ex.Message;
-                Logger1.Log(Logger.LogType.Error, "Error opening serial port " + Portname + ": " + ex.Message);
                 SetStatusBarErrorMessage("Serial port " + Portname + " open failed");
+                Logger1.Log(Logger.LogType.Error, "Error opening serial port " + Portname + ": " + ex.Message);
             }
 
             return false;
@@ -1237,17 +1245,18 @@ namespace ModbusControlSpace
             }
             else
             {
+                // error
+                SetStatusBarErrorMessage(ConnectionName + " connect failed");
                 MessageBox.Show("Invalid IP address!", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                // show message on statusbar
-                SetStatusBarErrorMessage( ConnectionName + " connect failed");
                 return false;
             }
 
             // connect to our own Modbus/tcp server?
             if (IsConnectToMyOwnBridge())
             {
-                MessageBox.Show("With the current settings ModbusControl would connect to its own Modbus/TCP bridge server!", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                // error
                 SetStatusBarErrorMessage("Connect to " + ConnectionName + " failed");
+                MessageBox.Show("With the current settings ModbusControl would connect to its own Modbus/TCP bridge server!", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return false;
             }
 
@@ -1271,10 +1280,10 @@ namespace ModbusControlSpace
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Connect to " + ConnectionName + " failed!" + Environment.NewLine + ex.Message, this.Text, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                // error
+                SetStatusBarErrorMessage("Connect to " + ConnectionName + " failed!");
                 Logger1.Log(Logger.LogType.Error, "Connect to " + ConnectionName + " failed: " + ex.Message);
-                // show message on statusbar
-                SetStatusBarErrorMessage( "Connect to " + ConnectionName + " failed!");
+                MessageBox.Show("Connect to " + ConnectionName + " failed!" + Environment.NewLine + ex.Message, this.Text, MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
 
             return false;
@@ -1297,17 +1306,18 @@ namespace ModbusControlSpace
             }
             else
             {
+                // error
+                SetStatusBarErrorMessage(ConnectionName + " connect failed");
                 MessageBox.Show("Invalid IP address!", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                // show message on statusbar
-                SetStatusBarErrorMessage( ConnectionName + " connect failed");
                 return false;
             }
 
             // connect to our own Modbus/tcp server?
             if (IsConnectToMyOwnBridge())
             {
-                MessageBox.Show("With the current settings ModbusControl would connect to its own Modbus/TCP bridge server!", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                // error
                 SetStatusBarErrorMessage("Connect to " + ConnectionName + " failed");
+                MessageBox.Show("With the current settings ModbusControl would connect to its own Modbus/TCP bridge server!", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return false;
             }
 
@@ -1331,9 +1341,10 @@ namespace ModbusControlSpace
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Connect to " + ConnectionName + " failed!" + Environment.NewLine + ex.Message, this.Text, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                // error
+                SetStatusBarErrorMessage("Connect to " + ConnectionName + " failed!");
                 Logger1.Log(Logger.LogType.Error, "Connect to " + ConnectionName + " failed: " + ex.Message);
-                SetStatusBarErrorMessage( "Connect to " + ConnectionName + " failed!");
+                MessageBox.Show("Connect to " + ConnectionName + " failed!" + Environment.NewLine + ex.Message, this.Text, MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
 
             return false;
@@ -1418,6 +1429,7 @@ namespace ModbusControlSpace
 
             // update menu's
             UpdateMenus();
+            UpdateStatusBar();
         }
 
         private bool IsConnectToMyOwnBridge()
@@ -1805,6 +1817,7 @@ namespace ModbusControlSpace
                 UpdateTitle();
                 // Enable/disable menu items and toolbar buttons
                 UpdateMenus();
+                UpdateStatusBar();
 
                 // autostart communication
                 // if configured in mbc or override: use that
@@ -2284,14 +2297,14 @@ namespace ModbusControlSpace
 
         #region Status bar message system
 
-        Color StatusbarDefaultForeColor;
         Color StatusbarDefaultBackColor;
         Color StatusbarNoPollingBackColor = Color.FromArgb(135, 206, 250); // kind of blue;
         Color StatusbarErrorBackColor = Color.FromArgb(255, 100, 100); // kind of red;
+        string StatusbarText;
+        bool StatusbarTextIsError;
 
-        private void SaveStatusbarDefaultBackColor()
+        private void SaveStatusbarDefaultValues()
         {
-            StatusbarDefaultForeColor = lblStatus.ForeColor;
             StatusbarDefaultBackColor = lblStatus.BackColor;
         }
 
@@ -2314,10 +2327,10 @@ namespace ModbusControlSpace
             else
             {
                 StatusbarTimer.Enabled = false;
-                lblStatus.Text = text;
-                if( IsError) lblStatus.BackColor = StatusbarErrorBackColor;
-                    else lblStatus.BackColor = StatusbarDefaultBackColor;
-                if( IsError) StatusbarTimer.Interval = 5000;
+                StatusbarText = text;
+                StatusbarTextIsError = IsError;
+                UpdateStatusBar();
+                if (IsError) StatusbarTimer.Interval = 5000;
                     else StatusbarTimer.Interval = 3000;
                 StatusbarTimer.Enabled = true;
                 lblStatus.ToolTipText = "Last message: " + text;
@@ -2328,6 +2341,7 @@ namespace ModbusControlSpace
         private void StatusbarTimerEvent(object sender, EventArgs e)
         {
             StatusbarTimer.Enabled = false;
+            StatusbarText = String.Empty;
             UpdateStatusBar();
         }
 
@@ -2341,26 +2355,7 @@ namespace ModbusControlSpace
             }
             else
             {
-                // showing a message? then no info and counters
-                if (StatusbarTimer.Enabled)
-                {
-                    return;
-                }
-
                 // show info and counters
-                uint NoResponseCount = mb.NoResponseCount
-                                     + mb.TcpConnectFailCount;
-                                     // + mb.TcpConnectionLostCount
-                                     // + mb.TcpConnectionClosedBecauseOfResponseError 
-
-                uint ResponseErrorCount = mb.ResponseCrcErrorCount
-                                    + mb.ResponseFormatErrorCount
-                                    + mb.ResponseMBAPheaderErrorCount
-                                    + mb.OneWireEchoErrorCount
-                                    + mb.TcpConnectFailCount
-                                    // + mb.TcpConnectionLostCount
-                                    + mb.TotalExceptionCount;
-
                 string s = String.Empty;
                 Color col = StatusbarDefaultBackColor;
                 if (ConnectionIsOpen)
@@ -2380,12 +2375,34 @@ namespace ModbusControlSpace
                     col = StatusbarNoPollingBackColor;
                 }
 
-                s += "Read count: " + mb.SuccessCount.ToString()
+                // make counters
+                uint NoResponseCount = mb.NoResponseCount
+                                     + mb.TcpConnectFailCount;
+                // + mb.TcpConnectionLostCount
+                // + mb.TcpConnectionClosedBecauseOfResponseError 
+
+                uint ResponseErrorCount = mb.ResponseCrcErrorCount
+                                    + mb.ResponseFormatErrorCount
+                                    + mb.ResponseMBAPheaderErrorCount
+                                    + mb.OneWireEchoErrorCount
+                                    + mb.TcpConnectFailCount
+                                    // + mb.TcpConnectionLostCount
+                                    + mb.TotalExceptionCount;
+
+                if (String.IsNullOrEmpty(StatusbarText))
+                {
+                    // normal
+                    this.lblStatus.Text = s + "Read count: " + mb.SuccessCount.ToString()
                          + ", No response count: " + NoResponseCount.ToString()
                          + ", Response error count: " + ResponseErrorCount.ToString();
-
-                this.lblStatus.Text = s;
-                this.lblStatus.BackColor = col;
+                    this.lblStatus.BackColor = col;
+                }
+                else
+                {
+                    // message
+                    this.lblStatus.Text = StatusbarText;
+                    this.lblStatus.BackColor = StatusbarTextIsError ? StatusbarErrorBackColor : col;
+                }
             }
         }
 
@@ -2489,6 +2506,7 @@ namespace ModbusControlSpace
                 UpdateTitle();
                 // Enable/disable menu items and toolbar buttons
                 UpdateMenus();
+                UpdateStatusBar();
 
                 // autostart communication
                 // if configured in mbc or override: use that

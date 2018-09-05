@@ -109,9 +109,8 @@ namespace ModbusControlSpace
             // lblStatus
             // 
             this.lblStatus.Name = "lblStatus";
-            this.lblStatus.Size = new System.Drawing.Size(569, 17);
+            this.lblStatus.Size = new System.Drawing.Size(538, 17);
             this.lblStatus.Spring = true;
-            this.lblStatus.Text = "Ready";
             this.lblStatus.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // openFileDialog1
