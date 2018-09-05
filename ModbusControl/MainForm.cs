@@ -551,14 +551,15 @@ namespace ModbusControlSpace
         {
             PollingIsStarted = true;
             UpdateMenus();
+            UpdateStatusBar();
         }
 
         private void StopPolling()
         {
             PollingIsStarted = false;
             UpdateMenus();
+            UpdateStatusBar();
         }
-
 
         /// <summary>
         /// Open project file
@@ -609,6 +610,7 @@ namespace ModbusControlSpace
                 UpdateTitle();
                 // Enable/disable menu items and toolbar buttons
                 UpdateMenus();
+                UpdateStatusBar();
 
                 // autostart communication
                 // if configured in mbc or override: use that
@@ -732,6 +734,7 @@ namespace ModbusControlSpace
                         StartPolling();
                     }
                     UpdateMenus();
+                    UpdateStatusBar();
                 }
 
                 UpdateModbusTcpBridge();
@@ -1244,7 +1247,7 @@ namespace ModbusControlSpace
             if (IsConnectToMyOwnBridge())
             {
                 MessageBox.Show("With the current settings ModbusControl would connect to its own Modbus/TCP bridge server!", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                this.lblStatus.Text = "Connect to " + ConnectionName + " failed";
+                SetStatusBarErrorMessage("Connect to " + ConnectionName + " failed");
                 return false;
             }
 
@@ -1304,7 +1307,7 @@ namespace ModbusControlSpace
             if (IsConnectToMyOwnBridge())
             {
                 MessageBox.Show("With the current settings ModbusControl would connect to its own Modbus/TCP bridge server!", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                this.lblStatus.Text = "Connect to " + ConnectionName + " failed";
+                SetStatusBarErrorMessage("Connect to " + ConnectionName + " failed");
                 return false;
             }
 
@@ -2281,14 +2284,15 @@ namespace ModbusControlSpace
 
         #region Status bar message system
 
-        Color SavedStatusbarForeColor;
-        Color SavedStatusbarBackColor;
-        Color StatusbarErrorBackColor = Color.FromArgb(255,100,100); // Color.Red;
+        Color StatusbarDefaultForeColor;
+        Color StatusbarDefaultBackColor;
+        Color StatusbarNoPollingBackColor = Color.FromArgb(135, 206, 250); // kind of blue;
+        Color StatusbarErrorBackColor = Color.FromArgb(255, 100, 100); // kind of red;
 
         private void SaveStatusbarDefaultBackColor()
         {
-            SavedStatusbarForeColor = lblStatus.ForeColor;
-            SavedStatusbarBackColor = lblStatus.BackColor;
+            StatusbarDefaultForeColor = lblStatus.ForeColor;
+            StatusbarDefaultBackColor = lblStatus.BackColor;
         }
 
         //  show error in the status bar
@@ -2312,7 +2316,7 @@ namespace ModbusControlSpace
                 StatusbarTimer.Enabled = false;
                 lblStatus.Text = text;
                 if( IsError) lblStatus.BackColor = StatusbarErrorBackColor;
-                    else lblStatus.BackColor = SavedStatusbarBackColor;
+                    else lblStatus.BackColor = StatusbarDefaultBackColor;
                 if( IsError) StatusbarTimer.Interval = 5000;
                     else StatusbarTimer.Interval = 3000;
                 StatusbarTimer.Enabled = true;
@@ -2324,7 +2328,6 @@ namespace ModbusControlSpace
         private void StatusbarTimerEvent(object sender, EventArgs e)
         {
             StatusbarTimer.Enabled = false;
-            lblStatus.BackColor = SavedStatusbarBackColor;
             UpdateStatusBar();
         }
 
@@ -2338,13 +2341,13 @@ namespace ModbusControlSpace
             }
             else
             {
-                // showing a message? then no counters
+                // showing a message? then no info and counters
                 if (StatusbarTimer.Enabled)
                 {
                     return;
                 }
 
-                // show counters
+                // show info and counters
                 uint NoResponseCount = mb.NoResponseCount
                                      + mb.TcpConnectFailCount;
                                      // + mb.TcpConnectionLostCount
@@ -2358,11 +2361,31 @@ namespace ModbusControlSpace
                                     // + mb.TcpConnectionLostCount
                                     + mb.TotalExceptionCount;
 
-                string s = "Read count: " + mb.SuccessCount.ToString()
+                string s = String.Empty;
+                Color col = StatusbarDefaultBackColor;
+                if (ConnectionIsOpen)
+                {
+                    if (PollingIsStarted)
+                    {
+                    }
+                    else
+                    {
+                        s = "Polling stopped | ";
+                        col = StatusbarNoPollingBackColor;
+                    }
+                }
+                else
+                {
+                    s = "Connection closed | ";
+                    col = StatusbarNoPollingBackColor;
+                }
+
+                s += "Read count: " + mb.SuccessCount.ToString()
                          + ", No response count: " + NoResponseCount.ToString()
                          + ", Response error count: " + ResponseErrorCount.ToString();
 
                 this.lblStatus.Text = s;
+                this.lblStatus.BackColor = col;
             }
         }
 
