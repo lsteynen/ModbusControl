@@ -154,7 +154,18 @@ namespace ModbusControlSpace
         private void Form1_Load(object sender, EventArgs e)
         {
             // Load our settings
-            Settings1.Load();
+            try
+            {
+                Settings1.Load();
+            }
+            catch (Exception ex)
+            {
+                string msg = "Error on loading program settings from Settings.xml:" + Environment.NewLine + Environment.NewLine
+                    + ex.Message + Environment.NewLine + Environment.NewLine
+                    + "Will create a new Settings.xml with default settings on program exit.";
+                MessageBox.Show(msg, this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+
             // And use them
             Options.StopOnError = Settings1.Values.StopOnError;
             Options.UseLocalOverrides = Settings1.Values.UseLocalOverrides;
