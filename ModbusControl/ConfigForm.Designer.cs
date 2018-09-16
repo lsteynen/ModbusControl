@@ -85,6 +85,7 @@
             this.textboxHoldingRegistersStart = new System.Windows.Forms.TextBox();
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
             this.groupBox5 = new System.Windows.Forms.GroupBox();
+            this.buttonApply = new System.Windows.Forms.Button();
             this.numericInterFrameDelay = new LST.Controls.NumericUpDown2();
             this.groupboxConnection.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericMaximumFrameSize)).BeginInit();
@@ -602,7 +603,7 @@
             this.groupboxModbusTcpServer.Controls.Add(this.numericTcpServerPort);
             this.groupboxModbusTcpServer.Controls.Add(this.checkboxTcpServerEnable);
             this.groupboxModbusTcpServer.Controls.Add(this.label13);
-            this.groupboxModbusTcpServer.Location = new System.Drawing.Point(466, 285);
+            this.groupboxModbusTcpServer.Location = new System.Drawing.Point(466, 272);
             this.groupboxModbusTcpServer.Name = "groupboxModbusTcpServer";
             this.groupboxModbusTcpServer.Size = new System.Drawing.Size(178, 75);
             this.groupboxModbusTcpServer.TabIndex = 11;
@@ -777,7 +778,7 @@
             // buttonOK
             // 
             this.buttonOK.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.buttonOK.Location = new System.Drawing.Point(250, 366);
+            this.buttonOK.Location = new System.Drawing.Point(240, 366);
             this.buttonOK.Margin = new System.Windows.Forms.Padding(3, 3, 3, 10);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(75, 23);
@@ -788,7 +789,7 @@
             // buttonCancel
             // 
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.buttonCancel.Location = new System.Drawing.Point(339, 366);
+            this.buttonCancel.Location = new System.Drawing.Point(329, 366);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 23);
             this.buttonCancel.TabIndex = 14;
@@ -807,9 +808,19 @@
             // 
             this.groupBox5.Location = new System.Drawing.Point(438, 12);
             this.groupBox5.Name = "groupBox5";
-            this.groupBox5.Size = new System.Drawing.Size(10, 348);
+            this.groupBox5.Size = new System.Drawing.Size(10, 335);
             this.groupBox5.TabIndex = 16;
             this.groupBox5.TabStop = false;
+            // 
+            // buttonApply
+            // 
+            this.buttonApply.Location = new System.Drawing.Point(418, 366);
+            this.buttonApply.Name = "buttonApply";
+            this.buttonApply.Size = new System.Drawing.Size(75, 23);
+            this.buttonApply.TabIndex = 17;
+            this.buttonApply.Text = "Apply";
+            this.buttonApply.UseVisualStyleBackColor = true;
+            this.buttonApply.Click += new System.EventHandler(this.buttonApply_Click);
             // 
             // numericInterFrameDelay
             // 
@@ -833,6 +844,7 @@
             this.CancelButton = this.buttonCancel;
             this.ClientSize = new System.Drawing.Size(664, 401);
             this.ControlBox = false;
+            this.Controls.Add(this.buttonApply);
             this.Controls.Add(this.groupBox5);
             this.Controls.Add(this.textboxHoldingRegistersStart);
             this.Controls.Add(this.buttonCancel);
@@ -943,5 +955,6 @@
         private System.Windows.Forms.Label label15;
         private System.Windows.Forms.RadioButton radiobuttonWriteFCAlternate;
         private LST.Controls.NumericUpDown2 numericInterFrameDelay;
+        private System.Windows.Forms.Button buttonApply;
     }
 }

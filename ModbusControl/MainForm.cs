@@ -685,81 +685,92 @@ namespace ModbusControlSpace
             configform.OptionsShowInfo = Project.Options.ShowInfo;
             configform.ModbusTcpBridgeEnable = Project.ModbusTcpBridge.Enable;
             configform.ModbusTcpBridgeIPPort = Project.ModbusTcpBridge.IPPort;
+            // Apply button callback
+            configform.OnApply += this.ConfigApplyHandler;
 
             if (configform.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
-                // check if the new settings change the current connection
-                // if connection type changes, or connection is serial and serial parameters change...
-                bool ConnectionChange =
-                      ((configform.ConnectionType != Project.Connection.ConnectionType)
-                       || ((Project.Connection.ConnectionType == Global.eConnectionType.SerialRTU)
-                           && ((configform.ConnectionSerialPort != Project.Connection.SerialPort)
-                               || (configform.ConnectionSerialBaudrate != Project.Connection.SerialBaudrate)
-                               || (configform.ConnectionSerialParity != Project.Connection.SerialParity)
-                               || (configform.ConnectionSerialEndOfMessageTimeout != Project.Connection.SerialEndOfMessageTimeout)
-                               || (configform.ConnectionSerialOneWireEchoSuppression != Project.Connection.SerialOneWireEchoSuppression)))
-                       || (((Project.Connection.ConnectionType == Global.eConnectionType.ModbusTcp) || (Project.Connection.ConnectionType == Global.eConnectionType.RtuOverTcp))
-                           && ((configform.ConnectionIPAddress != Project.Connection.IPAddress)
-                               || (configform.ConnectionIPPort != Project.Connection.IPPort)
-                               || (configform.ConnectionTcpConnectMode != Project.Connection.TcpConnectMode)))
-                       || (configform.ConnectionResponseTimeout != Project.Connection.ResponseTimeout)
-                       || (configform.ConnectionInterFrameDelay != Project.Connection.InterFrameDelay));
-
-                bool ReopenConnection = ConnectionIsOpen && ConnectionChange;
-                bool SavedPollingIsStarted = PollingIsStarted;
-                        
-                if( ReopenConnection)
-                {
-                    // Stop comms
-                    StopAllComms();
-                }
-
-                // Save new settings
-                Project.Connection.ConnectionType = configform.ConnectionType;
-                Project.Connection.SerialPort = configform.ConnectionSerialPort;
-                Project.Connection.SerialBaudrate = configform.ConnectionSerialBaudrate;
-                Project.Connection.SerialParity = configform.ConnectionSerialParity;
-                Project.Connection.SerialEndOfMessageTimeout = configform.ConnectionSerialEndOfMessageTimeout;
-                Project.Connection.SerialOneWireEchoSuppression = configform.ConnectionSerialOneWireEchoSuppression;
-                Project.Connection.IPAddress = configform.ConnectionIPAddress;
-                Project.Connection.IPPort = configform.ConnectionIPPort;
-                Project.Connection.TcpConnectMode = configform.ConnectionTcpConnectMode;
-                Project.Connection.SlaveID = configform.ConnectionSlaveID;
-                Project.Connection.MaximumFrameSize = configform.ConnectionMaximumFrameSize;
-                Project.Connection.ResponseTimeout = configform.ConnectionResponseTimeout;
-                Project.Connection.InterFrameDelay = configform.ConnectionInterFrameDelay;
-                Project.Connection.WriteHoldingregFunctioncode = configform.ConnectionWriteHoldingregFunctionCode;
-                Project.Connection.Int32Endian = configform.ConnectionInt32Endian;
-                Project.Connection.Float32Endian = configform.ConnectionFloat32Endian;
-                Project.Connection.Ascii16Endian = configform.ConnectionAscii16Endian;
-                Project.Options.Samplerate = configform.OptionsSamplerate;
-                Project.Options.ShowInfo = configform.OptionsShowInfo;
-                Project.ModbusTcpBridge.Enable = configform.ModbusTcpBridgeEnable;
-                Project.ModbusTcpBridge.IPPort = configform.ModbusTcpBridgeIPPort;
-
-                // pass new configuration to CStringToValue
-                Endians.Int32BigEndian = Project.Connection.Int32Endian == Global.eEndian.Big;
-                Endians.Float32BigEndian = Project.Connection.Float32Endian == Global.eEndian.Big;
-                CValueToString.Ascii16BigEndian = Project.Connection.Ascii16Endian == Global.eEndian.Big;
-
-                // restore connection
-                if (ReopenConnection)
-                {
-                    OpenConnection();
-
-                    if (ConnectionIsOpen && SavedPollingIsStarted)
-                    {
-                        StartPolling();
-                    }
-                    UpdateMenus();
-                    UpdateStatusBar();
-                }
-
-                UpdateModbusTcpBridge();
-
-                // update settings in all tabs
-                UpdatePropertiesInAllTabs();
+                // apply the new settings
+                ApplyConfiguration(configform);
             }
+        }
+
+        /// <summary>
+        /// Apply the new configuration settings
+        /// </summary>
+        private void ApplyConfiguration(ConfigForm configform)
+        {
+            // check if the new settings change the current connection
+            // if connection type changes, or connection is serial and serial parameters change...
+            bool ConnectionChange =
+                  ((configform.ConnectionType != Project.Connection.ConnectionType)
+                   || ((Project.Connection.ConnectionType == Global.eConnectionType.SerialRTU)
+                       && ((configform.ConnectionSerialPort != Project.Connection.SerialPort)
+                           || (configform.ConnectionSerialBaudrate != Project.Connection.SerialBaudrate)
+                           || (configform.ConnectionSerialParity != Project.Connection.SerialParity)
+                           || (configform.ConnectionSerialEndOfMessageTimeout != Project.Connection.SerialEndOfMessageTimeout)
+                           || (configform.ConnectionSerialOneWireEchoSuppression != Project.Connection.SerialOneWireEchoSuppression)))
+                   || (((Project.Connection.ConnectionType == Global.eConnectionType.ModbusTcp) || (Project.Connection.ConnectionType == Global.eConnectionType.RtuOverTcp))
+                       && ((configform.ConnectionIPAddress != Project.Connection.IPAddress)
+                           || (configform.ConnectionIPPort != Project.Connection.IPPort)
+                           || (configform.ConnectionTcpConnectMode != Project.Connection.TcpConnectMode)))
+                   || (configform.ConnectionResponseTimeout != Project.Connection.ResponseTimeout)
+                   || (configform.ConnectionInterFrameDelay != Project.Connection.InterFrameDelay));
+
+            bool ReopenConnection = ConnectionIsOpen && ConnectionChange;
+            bool SavedPollingIsStarted = PollingIsStarted;
+
+            if (ReopenConnection)
+            {
+                // Stop comms
+                StopAllComms();
+            }
+
+            // Save new settings
+            Project.Connection.ConnectionType = configform.ConnectionType;
+            Project.Connection.SerialPort = configform.ConnectionSerialPort;
+            Project.Connection.SerialBaudrate = configform.ConnectionSerialBaudrate;
+            Project.Connection.SerialParity = configform.ConnectionSerialParity;
+            Project.Connection.SerialEndOfMessageTimeout = configform.ConnectionSerialEndOfMessageTimeout;
+            Project.Connection.SerialOneWireEchoSuppression = configform.ConnectionSerialOneWireEchoSuppression;
+            Project.Connection.IPAddress = configform.ConnectionIPAddress;
+            Project.Connection.IPPort = configform.ConnectionIPPort;
+            Project.Connection.TcpConnectMode = configform.ConnectionTcpConnectMode;
+            Project.Connection.SlaveID = configform.ConnectionSlaveID;
+            Project.Connection.MaximumFrameSize = configform.ConnectionMaximumFrameSize;
+            Project.Connection.ResponseTimeout = configform.ConnectionResponseTimeout;
+            Project.Connection.InterFrameDelay = configform.ConnectionInterFrameDelay;
+            Project.Connection.WriteHoldingregFunctioncode = configform.ConnectionWriteHoldingregFunctionCode;
+            Project.Connection.Int32Endian = configform.ConnectionInt32Endian;
+            Project.Connection.Float32Endian = configform.ConnectionFloat32Endian;
+            Project.Connection.Ascii16Endian = configform.ConnectionAscii16Endian;
+            Project.Options.Samplerate = configform.OptionsSamplerate;
+            Project.Options.ShowInfo = configform.OptionsShowInfo;
+            Project.ModbusTcpBridge.Enable = configform.ModbusTcpBridgeEnable;
+            Project.ModbusTcpBridge.IPPort = configform.ModbusTcpBridgeIPPort;
+
+            // pass new configuration to CStringToValue
+            Endians.Int32BigEndian = Project.Connection.Int32Endian == Global.eEndian.Big;
+            Endians.Float32BigEndian = Project.Connection.Float32Endian == Global.eEndian.Big;
+            CValueToString.Ascii16BigEndian = Project.Connection.Ascii16Endian == Global.eEndian.Big;
+
+            // restore connection
+            if (ReopenConnection)
+            {
+                OpenConnection();
+
+                if (ConnectionIsOpen && SavedPollingIsStarted)
+                {
+                    StartPolling();
+                }
+                UpdateMenus();
+                UpdateStatusBar();
+            }
+
+            UpdateModbusTcpBridge();
+
+            // update settings in all tabs
+            UpdatePropertiesInAllTabs();
         }
 
         /// <summary>
@@ -2009,6 +2020,13 @@ namespace ModbusControlSpace
         {
             Logger1.Log(Logger.LogType.Error, ErrorText);
             SetStatusBarErrorMessage(ErrorText);
+        }
+
+        // call when Apply button in Config form is pressed
+        private void ConfigApplyHandler(object sender)
+        {
+            // apply the new settings
+            ApplyConfiguration((ConfigForm)sender);
         }
 
         #region Writes

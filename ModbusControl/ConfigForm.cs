@@ -257,6 +257,9 @@ namespace ModbusControlSpace
             }
         }
 
+        // Apply button callback
+        public delegate void ApplyHandler(object sender);
+        public event ApplyHandler OnApply;
 
         // Implementation
 
@@ -315,5 +318,12 @@ namespace ModbusControlSpace
             return result;
         }
 
+        private void buttonApply_Click(object sender, EventArgs e)
+        {
+            if (this.OnApply != null)
+            {
+                OnApply(this);
+            }
+        }
     }
 }
