@@ -475,6 +475,7 @@ namespace ModbusControlSpace
 
         /// <summary>
         /// Save configuration
+        /// Keep previous form to keep the settings in the current session
         /// </summary>
         private void saveConfigurationMenuItem_Click(object sender, EventArgs e)
         {
@@ -928,6 +929,12 @@ namespace ModbusControlSpace
             // clear
             ProjectIsOpen = false;
             LocalOverrideUsed = null;
+            // dispose the save_configuration_form to clear its checkboxes
+            if (SaveConfigurationForm1 != null)
+            {
+                SaveConfigurationForm1.Dispose();
+                SaveConfigurationForm1 = null;
+            }
 
             // New project
             Project = new CProject();
