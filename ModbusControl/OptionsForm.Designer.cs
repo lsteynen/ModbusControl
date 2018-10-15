@@ -42,13 +42,14 @@
             this.textboxCustomEditor = new System.Windows.Forms.TextBox();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.checkboxCustomEditor = new System.Windows.Forms.CheckBox();
+            this.checkboxIgnoreFormSizeOnReload = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.numericLoggerCapacity)).BeginInit();
             this.SuspendLayout();
             // 
             // buttonCancel
             // 
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.buttonCancel.Location = new System.Drawing.Point(201, 251);
+            this.buttonCancel.Location = new System.Drawing.Point(201, 276);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 23);
             this.buttonCancel.TabIndex = 11;
@@ -58,7 +59,7 @@
             // buttonOK
             // 
             this.buttonOK.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.buttonOK.Location = new System.Drawing.Point(112, 251);
+            this.buttonOK.Location = new System.Drawing.Point(112, 276);
             this.buttonOK.Margin = new System.Windows.Forms.Padding(3, 3, 3, 10);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(75, 23);
@@ -96,13 +97,13 @@
             this.checkboxBeepOnInputError.Size = new System.Drawing.Size(116, 17);
             this.checkboxBeepOnInputError.TabIndex = 2;
             this.checkboxBeepOnInputError.Text = "Beep on input error";
-            this.toolTip1.SetToolTip(this.checkboxBeepOnInputError, "Enable beep when invalid value is entered");
+            this.toolTip1.SetToolTip(this.checkboxBeepOnInputError, "Beep when an invalid value is entered");
             this.checkboxBeepOnInputError.UseVisualStyleBackColor = true;
             // 
             // CheckboxCheckForUpdates
             // 
             this.CheckboxCheckForUpdates.AutoSize = true;
-            this.CheckboxCheckForUpdates.Location = new System.Drawing.Point(23, 218);
+            this.CheckboxCheckForUpdates.Location = new System.Drawing.Point(23, 243);
             this.CheckboxCheckForUpdates.Name = "CheckboxCheckForUpdates";
             this.CheckboxCheckForUpdates.Size = new System.Drawing.Size(113, 17);
             this.CheckboxCheckForUpdates.TabIndex = 9;
@@ -113,7 +114,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(20, 116);
+            this.label1.Location = new System.Drawing.Point(20, 144);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(86, 13);
             this.label1.TabIndex = 5;
@@ -126,7 +127,7 @@
             0,
             0,
             0});
-            this.numericLoggerCapacity.Location = new System.Drawing.Point(114, 114);
+            this.numericLoggerCapacity.Location = new System.Drawing.Point(114, 142);
             this.numericLoggerCapacity.Maximum = new decimal(new int[] {
             999999,
             0,
@@ -171,7 +172,7 @@
             // 
             // textboxCustomEditor
             // 
-            this.textboxCustomEditor.Location = new System.Drawing.Point(42, 167);
+            this.textboxCustomEditor.Location = new System.Drawing.Point(42, 192);
             this.textboxCustomEditor.Name = "textboxCustomEditor";
             this.textboxCustomEditor.Size = new System.Drawing.Size(335, 20);
             this.textboxCustomEditor.TabIndex = 8;
@@ -180,13 +181,24 @@
             // checkboxCustomEditor
             // 
             this.checkboxCustomEditor.AutoSize = true;
-            this.checkboxCustomEditor.Location = new System.Drawing.Point(23, 144);
+            this.checkboxCustomEditor.Location = new System.Drawing.Point(23, 169);
             this.checkboxCustomEditor.Name = "checkboxCustomEditor";
             this.checkboxCustomEditor.Size = new System.Drawing.Size(111, 17);
             this.checkboxCustomEditor.TabIndex = 7;
             this.checkboxCustomEditor.Text = "Use custom editor";
             this.toolTip1.SetToolTip(this.checkboxCustomEditor, "Use this editor instead of the default one");
             this.checkboxCustomEditor.UseVisualStyleBackColor = true;
+            // 
+            // checkboxIgnoreFormSizeOnReload
+            // 
+            this.checkboxIgnoreFormSizeOnReload.AutoSize = true;
+            this.checkboxIgnoreFormSizeOnReload.Location = new System.Drawing.Point(23, 112);
+            this.checkboxIgnoreFormSizeOnReload.Name = "checkboxIgnoreFormSizeOnReload";
+            this.checkboxIgnoreFormSizeOnReload.Size = new System.Drawing.Size(182, 17);
+            this.checkboxIgnoreFormSizeOnReload.TabIndex = 12;
+            this.checkboxIgnoreFormSizeOnReload.Text = "Ignore form size on project reload";
+            this.toolTip1.SetToolTip(this.checkboxIgnoreFormSizeOnReload, "Do not use the form size specified in the mbc file on project REload");
+            this.checkboxIgnoreFormSizeOnReload.UseVisualStyleBackColor = true;
             // 
             // OptionsForm
             // 
@@ -195,8 +207,9 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.AutoSize = true;
             this.CancelButton = this.buttonCancel;
-            this.ClientSize = new System.Drawing.Size(389, 284);
+            this.ClientSize = new System.Drawing.Size(389, 316);
             this.ControlBox = false;
+            this.Controls.Add(this.checkboxIgnoreFormSizeOnReload);
             this.Controls.Add(this.checkboxCustomEditor);
             this.Controls.Add(this.textboxCustomEditor);
             this.Controls.Add(this.checkboxAutostartEdit);
@@ -239,5 +252,6 @@
         private System.Windows.Forms.TextBox textboxCustomEditor;
         private System.Windows.Forms.ToolTip toolTip1;
         private System.Windows.Forms.CheckBox checkboxCustomEditor;
+        private System.Windows.Forms.CheckBox checkboxIgnoreFormSizeOnReload;
     }
 }

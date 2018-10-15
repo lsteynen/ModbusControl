@@ -57,6 +57,15 @@ namespace ModbusControlSpace
             }
         }
 
+        public bool IgnoreSizeOnReload
+        {
+            get { return checkboxIgnoreFormSizeOnReload.Checked; }
+            set
+            {
+                checkboxIgnoreFormSizeOnReload.Checked = value;
+            }
+        }
+
         public int LoggerCapacity
         {
             get { return (int)numericLoggerCapacity.Value; }

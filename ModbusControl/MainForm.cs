@@ -34,11 +34,14 @@ namespace ModbusControlSpace
             public bool BeepOnInputError;
             public bool AutoNextRowOnEnter;
             public bool AutoStartEdit;
+            public bool IgnoreSizeOnReload;
             public bool CustomEditorEnable;
             public string CustomEditorCommand;
             public bool CheckForUpdates;
         }
 
+        private int DefaultFormWidth;
+        private int DefaultFormHeight;
         private Settings Settings1;
         public string ProjectPath; // Path of current project file (null if none, assigned if open or tried to open)
         public CProject Project; // Loaded project
@@ -92,9 +95,9 @@ namespace ModbusControlSpace
         {
             InitializeComponent();
 
-            // The CProject class needs some static defaults, form's default size
-            CProject.DefaultFormSize.Width = this.Width;
-            CProject.DefaultFormSize.Height = this.Height;
+            // Store this program's default size, as defined by designer
+            DefaultFormWidth = this.Width;
+            DefaultFormHeight = this.Height;
 
             // This app is DPI-aware, get system DPI
             // We support system DPI. We do not support per-monitor-DPI yet.
@@ -172,6 +175,7 @@ namespace ModbusControlSpace
             Options.BeepOnInputError = Settings1.Values.BeepOnInputError;
             Options.AutoNextRowOnEnter = Settings1.Values.AutoNextRowOnEnter;
             Options.AutoStartEdit = Settings1.Values.AutoStartEdit;
+            Options.IgnoreSizeOnReload = Settings1.Values.IgnoreSizeOnReload;
             Options.CustomEditorEnable = Settings1.Values.CustomEditorEnable;
             Options.CustomEditorCommand = Settings1.Values.CustomEditorCommand;
             Options.CheckForUpdates = Settings1.Values.CheckForUpdates;
@@ -327,6 +331,7 @@ namespace ModbusControlSpace
             Settings1.Values.BeepOnInputError = Options.BeepOnInputError;
             Settings1.Values.AutoNextRowOnEnter = Options.AutoNextRowOnEnter;
             Settings1.Values.AutoStartEdit = Options.AutoStartEdit;
+            Settings1.Values.IgnoreSizeOnReload = Options.IgnoreSizeOnReload;
             Settings1.Values.CustomEditorEnable = Options.CustomEditorEnable;
             Settings1.Values.CustomEditorCommand = Options.CustomEditorCommand;
             Settings1.Values.CheckForUpdates = Options.CheckForUpdates;
@@ -623,7 +628,9 @@ namespace ModbusControlSpace
                 ResetBeforeLoad();
 
                 // load project
-                LoadProject(ProjectPath);
+                CProject.CLoadOptions opt = new CProject.CLoadOptions();
+                opt.IgnoreFormSize = Options.IgnoreSizeOnReload;
+                LoadProject(ProjectPath, opt);
 
                 // Update program's title
                 UpdateTitle();
@@ -786,6 +793,7 @@ namespace ModbusControlSpace
             optionsForm.BeepOnInputError = Options.BeepOnInputError;
             optionsForm.AutoNextRowOnEnter = Options.AutoNextRowOnEnter;
             optionsForm.AutoStartEdit = Options.AutoStartEdit;
+            optionsForm.IgnoreSizeOnReload = Options.IgnoreSizeOnReload;
             optionsForm.LoggerCapacity = Logger1.CapacityLines;
             optionsForm.CustomEditorEnable = Options.CustomEditorEnable;
             optionsForm.CustomEditorCommand = Options.CustomEditorCommand;
@@ -799,6 +807,7 @@ namespace ModbusControlSpace
                 Options.BeepOnInputError = optionsForm.BeepOnInputError;
                 Options.AutoNextRowOnEnter = optionsForm.AutoNextRowOnEnter;
                 Options.AutoStartEdit = optionsForm.AutoStartEdit;
+                Options.IgnoreSizeOnReload = optionsForm.IgnoreSizeOnReload;
                 Logger1.CapacityLines = optionsForm.LoggerCapacity;
                 Options.CustomEditorEnable = optionsForm.CustomEditorEnable;
                 Options.CustomEditorCommand = optionsForm.CustomEditorCommand;
@@ -818,7 +827,6 @@ namespace ModbusControlSpace
             about.LocalOverride = LocalOverrideUsed;
             about.ShowDialog();
         }
-
 
         private void OpenConnectionToolbutton_Click(object sender, EventArgs e)
         {
@@ -919,13 +927,14 @@ namespace ModbusControlSpace
         /// <summary>
         /// Load a .mbc project file
         /// into Project class
-        /// Keep it in memory for possible change & save in the future
+        /// Keep it in memory for change & save
         /// </summary>
         /// 
-        private bool LoadProject(string path)
+        private bool LoadProject(string path, CProject.CLoadOptions options = null)
         {
             // Store new project path
             ProjectPath = path;
+
             // clear
             ProjectIsOpen = false;
             LocalOverrideUsed = null;
@@ -942,7 +951,7 @@ namespace ModbusControlSpace
 
             try
             {
-                Project.Load(path);
+                Project.Load(path, options);
             }
             catch (XmlException ex)
             {
@@ -1006,8 +1015,14 @@ namespace ModbusControlSpace
             UpdateModbusTcpBridge();
 
             // Set the form size
-            this.Width = Project.FormSize.Width;
-            this.Height = Project.FormSize.Height;
+            if (Project.FormSize.WidthSeen)
+            {
+                this.Width = Project.FormSize.Width;
+            }
+            if (Project.FormSize.HeightSeen)
+            {
+                this.Height = Project.FormSize.Height;
+            }
 
             // Add to MRU list
             recentFilesMenuItem.AddRecentItem(path);

@@ -22,6 +22,7 @@ namespace ModbusControlSpace
             public bool BeepOnInputError { get; set; }
             public bool AutoNextRowOnEnter { get; set; }
             public bool AutoStartEdit { get; set; }
+            public bool IgnoreSizeOnReload { get; set; }
             public bool CustomEditorEnable { get; set; }
             public string CustomEditorCommand { get; set; }
             public bool CheckForUpdates { get; set; }
@@ -43,6 +44,7 @@ namespace ModbusControlSpace
                 BeepOnInputError = true;
                 AutoNextRowOnEnter = false;
                 AutoStartEdit = false;
+                IgnoreSizeOnReload = false;
                 CustomEditorEnable = false;
                 CustomEditorCommand = "";
                 CheckForUpdates = true;
@@ -244,6 +246,12 @@ namespace ModbusControlSpace
             if (xn != null)
             {
                 Values.AutoStartEdit = ParseBool(xn.InnerText);
+            }
+
+            xn = xmlroot.SelectSingleNode("ignoresizeonreload");
+            if (xn != null)
+            {
+                Values.IgnoreSizeOnReload = ParseBool(xn.InnerText);
             }
 
             xn = xmlroot.SelectSingleNode("customeditoreenable");
@@ -497,6 +505,7 @@ namespace ModbusControlSpace
             UpdateOrInsertElementBool(xmlroot, "beeponinputerror", Values.BeepOnInputError);
             UpdateOrInsertElementBool(xmlroot, "autonextrowonenter", Values.AutoNextRowOnEnter);
             UpdateOrInsertElementBool(xmlroot, "autostartedit", Values.AutoStartEdit);
+            UpdateOrInsertElementBool(xmlroot, "ignoresizeonreload", Values.IgnoreSizeOnReload);
             UpdateOrInsertElementBool(xmlroot, "customeditoreenable", Values.CustomEditorEnable);
             UpdateOrInsertElementString(xmlroot, "customeditorcommand", Values.CustomEditorCommand);
             UpdateOrInsertElementBool(xmlroot, "checkforupdates", Values.CheckForUpdates);

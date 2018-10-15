@@ -25,9 +25,23 @@ namespace ModbusControlSpace
         private string[] ConnectionTypes = new string[] { "serial/rtu", "modbus/tcp", "rtu/tcp" }; // Must be order of Global.eConnectionType.SerialRTU
         private string[] WriteHoldingregisterFCs = new string[] { "6", "16", "auto", "alternate"};
 
+        public class CLoadOptions
+        {
+            public bool IgnoreFormSize;
+
+            // constructor
+            public CLoadOptions()
+            {
+                // sets default values
+                IgnoreFormSize = false;
+            }
+        }
+
         public struct TSize
         {
+            public bool WidthSeen;
             public int Width;
+            public bool HeightSeen;
             public int Height;
         }
 
@@ -103,9 +117,6 @@ namespace ModbusControlSpace
             public Color BackColor;     // background color
         }
 
-        // Static for default form size
-        public static TSize DefaultFormSize;
-
         // structure holding a line and column position in the xml file
         public struct TFilePosition
         {
@@ -131,8 +142,8 @@ namespace ModbusControlSpace
         public CProject()
         {
             // Set defaults
-            FormSize.Width = DefaultFormSize.Width;
-            FormSize.Height = DefaultFormSize.Height;
+            FormSize.WidthSeen = false;
+            FormSize.HeightSeen = false;
             Connection.ConnectionType = Global.eConnectionType.SerialRTU;
             Connection.SerialPort = "COM1";
             Connection.SerialBaudrate = 9600;
@@ -163,16 +174,24 @@ namespace ModbusControlSpace
             // Create list for holding all tabs
             TabsList = new List<TTab>();
         }
-        
+
         /// <summary>
         /// Load an XML project file 
         /// Throws exception on error
         /// </summary>
-        public void Load(string path)
+        /// <param name="path">Path to mbc file</param>
+        /// <param name="options">Load options, can be null</param>
+        public void Load(string path, CLoadOptions options)
         {
             // Load xml document into XmlDoc
             // A previous document will be discarded when a new is loaded
             XmlDoc = XDocument.Load(path, LoadOptions.PreserveWhitespace | LoadOptions.SetLineInfo);
+
+            // when no options passed: make default options, is easier
+            if (options == null)
+            {
+                options = new CProject.CLoadOptions();
+            }
 
             // Parse the document
             // Store all data in this class
@@ -185,11 +204,14 @@ namespace ModbusControlSpace
                 throw new XmlException("XML root element <modbuscontrol> not found. The mbc project file should have one root element <modbuscontrol>.");
             }
 
-            // process one <Size> element
-            ProcessSizeElement(XmlRootNode);
+            if (options.IgnoreFormSize == false)
+            {
+                // process one <Size> element
+                ProcessSizeElement(XmlRootNode);
+            }
 
             // process one <Modbus> element
-            ProcessModbusElement(XmlRootNode);
+            ProcessModbusElement(XmlRootNode, eReq.Required);
 
             // process all <tab>
             ProcessTabs(XmlRootNode);
@@ -260,7 +282,7 @@ namespace ModbusControlSpace
                     ProcessSizeElement(proj);
                     
                     // process one <Modbus> element
-                    ProcessModbusElement(proj);
+                    ProcessModbusElement(proj, eReq.Optional);
 
                     // process one <modbustcpserver>
                     ProcessModbustcpserverElement(proj);
@@ -321,6 +343,7 @@ namespace ModbusControlSpace
                         // keep a minimum width
                         if (TmpValue < 100) TmpValue = 100;
                         // value in mbc file is standarized in 96DPI
+                        FormSize.WidthSeen = true;
                         FormSize.Width = Global.ScaleXcoordFrom96DpiToSystemDpi((int)TmpValue);
                     }
                     else
@@ -341,6 +364,7 @@ namespace ModbusControlSpace
                         // keep a minimum height
                         if (TmpValue < 100) TmpValue = 100;
                         // value in mbc file is standarized in 96DPI
+                        FormSize.HeightSeen = true;
                         FormSize.Height = Global.ScaleYcoordFrom96DpiToSystemDpi((int)TmpValue);
                     }
                     else
@@ -353,14 +377,14 @@ namespace ModbusControlSpace
         }
 
         /// <summary>
-        /// Process <Modbus> element, optional
+        /// Process <Modbus> element, may be required or optional
         /// Throws exception on error
         /// </summary>
         /// <param name="pxe"></param>
-        private void ProcessModbusElement(XElement pxe)
+        private void ProcessModbusElement(XElement pxe, eReq required)
         {
-            // process one <Modbus> element, required
-            XElement xe1 = GetSingleElement(pxe, "Modbus", eReq.Required);
+            // process one <Modbus> element
+            XElement xe1 = GetSingleElement(pxe, "Modbus", required);
             if( xe1 != null)
             {
                 // Connection, optional
