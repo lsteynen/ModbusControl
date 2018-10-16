@@ -213,7 +213,7 @@ namespace ModbusRegViewSpace
             ContextMenuForFirstColumns.Items.Add("Mark this line in yellow", YellowIcon, new EventHandler(Menu_SetColorYellow));
             ContextMenuForFirstColumns.Items.Add("Remove color mark of this line", WhiteIcon, new EventHandler(Menu_SetColorDefault));
             ContextMenuForFirstColumns.Items.Add("-");
-            ContextMenuForFirstColumns.Items.Add("Copy line", null, new EventHandler(Menu_CopyLine));
+            ContextMenuForFirstColumns.Items.Add("Copy grid line", null, new EventHandler(Menu_CopyLine));
 
             // Create context menu for value column
             ContextMenuForValueColumn.MenuItems.Add("Show value as Int", new EventHandler(Menu_SetFormatToInt));
@@ -533,10 +533,24 @@ namespace ModbusRegViewSpace
             }
         }
 
+        /// <summary>
+        /// If string s is not null: return s
+        /// If string s is null: return string text
+        /// </summary>
         private string isnull(string s, string text)
         {
             if (s != null) return s;
             return text;
+        }
+
+        /// <summary>
+        /// Convert object to string
+        /// Return empty string if objects is null
+        /// </summary>
+        private string ObjToString(object obj)
+        {
+            if (obj != null) return obj.ToString();
+            return "";
         }
 
         /// <summary>
@@ -1022,11 +1036,11 @@ namespace ModbusRegViewSpace
 
         private void CopyLineToClipboard(int row)
         {
-            string s = isnull(this.Rows[row].Cells[0].Value.ToString(), "")
+            string s = ObjToString(this.Rows[row].Cells[0].Value)
                     + (char)9 // tab
-                    + isnull(this.Rows[row].Cells[1].Value.ToString(), "")
+                    + ObjToString(this.Rows[row].Cells[1].Value)
                     + (char)9 // tab
-                    + isnull(this.Rows[row].Cells[2].Value.ToString(), "");
+                    + ObjToString(this.Rows[row].Cells[2].Value);
             if (s.Length > 0)
             {
                 System.Windows.Forms.Clipboard.SetText(s);
@@ -1035,7 +1049,7 @@ namespace ModbusRegViewSpace
 
         private void CopyValueToClipboard(int row)
         {
-            string s = isnull(this.Rows[row].Cells[2].Value.ToString(), "");
+            string s = ObjToString(this.Rows[row].Cells[2].Value);
             if (s.Length > 0)
             {
                 System.Windows.Forms.Clipboard.SetText(s);
