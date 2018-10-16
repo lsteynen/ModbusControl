@@ -25,18 +25,6 @@ namespace ModbusControlSpace
         private string[] ConnectionTypes = new string[] { "serial/rtu", "modbus/tcp", "rtu/tcp" }; // Must be order of Global.eConnectionType.SerialRTU
         private string[] WriteHoldingregisterFCs = new string[] { "6", "16", "auto", "alternate"};
 
-        public class CLoadOptions
-        {
-            public bool IgnoreFormSize;
-
-            // constructor
-            public CLoadOptions()
-            {
-                // sets default values
-                IgnoreFormSize = false;
-            }
-        }
-
         public struct TSize
         {
             public bool WidthSeen;
@@ -180,18 +168,11 @@ namespace ModbusControlSpace
         /// Throws exception on error
         /// </summary>
         /// <param name="path">Path to mbc file</param>
-        /// <param name="options">Load options, can be null</param>
-        public void Load(string path, CLoadOptions options)
+        public void Load(string path)
         {
             // Load xml document into XmlDoc
             // A previous document will be discarded when a new is loaded
             XmlDoc = XDocument.Load(path, LoadOptions.PreserveWhitespace | LoadOptions.SetLineInfo);
-
-            // when no options passed: make default options, is easier
-            if (options == null)
-            {
-                options = new CProject.CLoadOptions();
-            }
 
             // Parse the document
             // Store all data in this class
@@ -204,11 +185,8 @@ namespace ModbusControlSpace
                 throw new XmlException("XML root element <modbuscontrol> not found. The mbc project file should have one root element <modbuscontrol>.");
             }
 
-            if (options.IgnoreFormSize == false)
-            {
-                // process one <Size> element
-                ProcessSizeElement(XmlRootNode);
-            }
+            // process one <Size> element
+            ProcessSizeElement(XmlRootNode);
 
             // process one <Modbus> element
             ProcessModbusElement(XmlRootNode, eReq.Required);

@@ -40,6 +40,18 @@ namespace ModbusControlSpace
             public bool CheckForUpdates;
         }
 
+        public class CLoadOptions
+        {
+            public bool IgnoreFormSize;
+
+            // constructor
+            public CLoadOptions()
+            {
+                // sets default values
+                IgnoreFormSize = false;
+            }
+        }
+
         private int DefaultFormWidth;
         private int DefaultFormHeight;
         private Settings Settings1;
@@ -628,7 +640,7 @@ namespace ModbusControlSpace
                 ResetBeforeLoad();
 
                 // load project
-                CProject.CLoadOptions opt = new CProject.CLoadOptions();
+                CLoadOptions opt = new CLoadOptions();
                 opt.IgnoreFormSize = Options.IgnoreSizeOnReload;
                 LoadProject(ProjectPath, opt);
 
@@ -929,8 +941,7 @@ namespace ModbusControlSpace
         /// into Project class
         /// Keep it in memory for change & save
         /// </summary>
-        /// 
-        private bool LoadProject(string path, CProject.CLoadOptions options = null)
+        private bool LoadProject(string path, CLoadOptions options = null)
         {
             // Store new project path
             ProjectPath = path;
@@ -951,7 +962,7 @@ namespace ModbusControlSpace
 
             try
             {
-                Project.Load(path, options);
+                Project.Load(path);
             }
             catch (XmlException ex)
             {
@@ -968,6 +979,14 @@ namespace ModbusControlSpace
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
 
                 return false;
+            }
+
+            // ignore form size? then reset the 'seen' flags
+            // we will accept the form size from localoverride
+            if ((options != null) && options.IgnoreFormSize)
+            {
+                Project.FormSize.WidthSeen = false;
+                Project.FormSize.HeightSeen = false;
             }
 
             // load local overrides
