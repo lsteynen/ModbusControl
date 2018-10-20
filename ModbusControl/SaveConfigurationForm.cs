@@ -12,9 +12,15 @@ namespace ModbusControlSpace
     {
         // properties
         public CProject Project;
+        public bool LocalOverrideUsed;
         public int SizeWidth;
         public int SizeHeight;
-        
+
+        private void SaveConfigurationForm_Load(object sender, EventArgs e)
+        {
+            panelWarning.Visible = LocalOverrideUsed;
+        }
+
         public SaveConfigurationForm()
         {
             InitializeComponent();

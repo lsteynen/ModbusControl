@@ -28,115 +28,168 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.checkboxFormSize = new System.Windows.Forms.CheckBox();
-            this.checkboxConnection = new System.Windows.Forms.CheckBox();
-            this.label1 = new System.Windows.Forms.Label();
-            this.checkboxSettings = new System.Windows.Forms.CheckBox();
-            this.buttonSave = new System.Windows.Forms.Button();
-            this.buttonCancel = new System.Windows.Forms.Button();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SaveConfigurationForm));
+            this.panelWarning = new System.Windows.Forms.Panel();
+            this.label2 = new System.Windows.Forms.Label();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.panel2 = new System.Windows.Forms.Panel();
             this.checkboxBridge = new System.Windows.Forms.CheckBox();
+            this.buttonCancel = new System.Windows.Forms.Button();
+            this.buttonSave = new System.Windows.Forms.Button();
+            this.checkboxSettings = new System.Windows.Forms.CheckBox();
+            this.label1 = new System.Windows.Forms.Label();
+            this.checkboxConnection = new System.Windows.Forms.CheckBox();
+            this.checkboxFormSize = new System.Windows.Forms.CheckBox();
+            this.panelWarning.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
+            this.panel2.SuspendLayout();
             this.SuspendLayout();
             // 
-            // checkboxFormSize
+            // panelWarning
             // 
-            this.checkboxFormSize.AutoSize = true;
-            this.checkboxFormSize.Location = new System.Drawing.Point(35, 101);
-            this.checkboxFormSize.Name = "checkboxFormSize";
-            this.checkboxFormSize.Size = new System.Drawing.Size(104, 17);
-            this.checkboxFormSize.TabIndex = 1;
-            this.checkboxFormSize.Text = "Current form size";
-            this.checkboxFormSize.UseVisualStyleBackColor = true;
-            this.checkboxFormSize.CheckedChanged += new System.EventHandler(this.checkbox_CheckedChanged);
+            this.panelWarning.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panelWarning.Controls.Add(this.label2);
+            this.panelWarning.Controls.Add(this.pictureBox1);
+            this.panelWarning.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panelWarning.Location = new System.Drawing.Point(0, 0);
+            this.panelWarning.Name = "panelWarning";
+            this.panelWarning.Size = new System.Drawing.Size(354, 53);
+            this.panelWarning.TabIndex = 7;
             // 
-            // checkboxConnection
+            // label2
             // 
-            this.checkboxConnection.AutoSize = true;
-            this.checkboxConnection.Location = new System.Drawing.Point(35, 38);
-            this.checkboxConnection.Name = "checkboxConnection";
-            this.checkboxConnection.Size = new System.Drawing.Size(181, 17);
-            this.checkboxConnection.TabIndex = 2;
-            this.checkboxConnection.Text = "Connection and protocol settings";
-            this.checkboxConnection.UseVisualStyleBackColor = true;
-            this.checkboxConnection.CheckedChanged += new System.EventHandler(this.checkbox_CheckedChanged);
+            this.label2.Location = new System.Drawing.Point(48, 7);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(291, 45);
+            this.label2.TabIndex = 1;
+            this.label2.Text = "Some parameters are overridden by a local override! \r\nIf you save the current con" +
+    "figuration to the mbc project file\r\nyou may overwrite some parameters with local" +
+    " overrides.";
             // 
-            // label1
+            // pictureBox1
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(16, 17);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(281, 13);
-            this.label1.TabIndex = 0;
-            this.label1.Text = "Save the following configuration settings to the project file:";
+            this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
+            this.pictureBox1.Location = new System.Drawing.Point(9, 10);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(32, 32);
+            this.pictureBox1.TabIndex = 0;
+            this.pictureBox1.TabStop = false;
             // 
-            // checkboxSettings
+            // panel2
             // 
-            this.checkboxSettings.AutoSize = true;
-            this.checkboxSettings.Location = new System.Drawing.Point(35, 59);
-            this.checkboxSettings.Name = "checkboxSettings";
-            this.checkboxSettings.Size = new System.Drawing.Size(133, 17);
-            this.checkboxSettings.TabIndex = 3;
-            this.checkboxSettings.Text = "Sample rate, show info";
-            this.checkboxSettings.UseVisualStyleBackColor = true;
-            this.checkboxSettings.CheckedChanged += new System.EventHandler(this.checkbox_CheckedChanged);
-            // 
-            // buttonSave
-            // 
-            this.buttonSave.Location = new System.Drawing.Point(83, 128);
-            this.buttonSave.Margin = new System.Windows.Forms.Padding(3, 3, 3, 10);
-            this.buttonSave.Name = "buttonSave";
-            this.buttonSave.Size = new System.Drawing.Size(75, 23);
-            this.buttonSave.TabIndex = 4;
-            this.buttonSave.Text = "Save";
-            this.buttonSave.UseVisualStyleBackColor = true;
-            this.buttonSave.Click += new System.EventHandler(this.buttonSave_Click);
-            // 
-            // buttonCancel
-            // 
-            this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.buttonCancel.Location = new System.Drawing.Point(166, 128);
-            this.buttonCancel.Name = "buttonCancel";
-            this.buttonCancel.Size = new System.Drawing.Size(75, 23);
-            this.buttonCancel.TabIndex = 5;
-            this.buttonCancel.Text = "Cancel";
-            this.buttonCancel.UseVisualStyleBackColor = true;
-            this.buttonCancel.Click += new System.EventHandler(this.buttonCancel_Click);
+            this.panel2.AutoSize = true;
+            this.panel2.Controls.Add(this.checkboxBridge);
+            this.panel2.Controls.Add(this.buttonCancel);
+            this.panel2.Controls.Add(this.buttonSave);
+            this.panel2.Controls.Add(this.checkboxSettings);
+            this.panel2.Controls.Add(this.label1);
+            this.panel2.Controls.Add(this.checkboxConnection);
+            this.panel2.Controls.Add(this.checkboxFormSize);
+            this.panel2.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panel2.Location = new System.Drawing.Point(0, 53);
+            this.panel2.Name = "panel2";
+            this.panel2.Size = new System.Drawing.Size(354, 149);
+            this.panel2.TabIndex = 8;
             // 
             // checkboxBridge
             // 
             this.checkboxBridge.AutoSize = true;
-            this.checkboxBridge.Location = new System.Drawing.Point(35, 80);
+            this.checkboxBridge.Location = new System.Drawing.Point(31, 75);
             this.checkboxBridge.Name = "checkboxBridge";
             this.checkboxBridge.Size = new System.Drawing.Size(161, 17);
-            this.checkboxBridge.TabIndex = 6;
+            this.checkboxBridge.TabIndex = 13;
             this.checkboxBridge.Text = "Modbus/TCP bridge settings";
             this.checkboxBridge.UseVisualStyleBackColor = true;
             this.checkboxBridge.CheckedChanged += new System.EventHandler(this.checkbox_CheckedChanged);
             // 
+            // buttonCancel
+            // 
+            this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+            this.buttonCancel.Location = new System.Drawing.Point(181, 123);
+            this.buttonCancel.Name = "buttonCancel";
+            this.buttonCancel.Size = new System.Drawing.Size(75, 23);
+            this.buttonCancel.TabIndex = 12;
+            this.buttonCancel.Text = "Cancel";
+            this.buttonCancel.UseVisualStyleBackColor = true;
+            this.buttonCancel.Click += new System.EventHandler(this.buttonCancel_Click);
+            // 
+            // buttonSave
+            // 
+            this.buttonSave.Location = new System.Drawing.Point(98, 123);
+            this.buttonSave.Name = "buttonSave";
+            this.buttonSave.Size = new System.Drawing.Size(75, 23);
+            this.buttonSave.TabIndex = 11;
+            this.buttonSave.Text = "Save";
+            this.buttonSave.UseVisualStyleBackColor = true;
+            this.buttonSave.Click += new System.EventHandler(this.buttonSave_Click);
+            // 
+            // checkboxSettings
+            // 
+            this.checkboxSettings.AutoSize = true;
+            this.checkboxSettings.Location = new System.Drawing.Point(31, 54);
+            this.checkboxSettings.Name = "checkboxSettings";
+            this.checkboxSettings.Size = new System.Drawing.Size(133, 17);
+            this.checkboxSettings.TabIndex = 10;
+            this.checkboxSettings.Text = "Sample rate, show info";
+            this.checkboxSettings.UseVisualStyleBackColor = true;
+            this.checkboxSettings.CheckedChanged += new System.EventHandler(this.checkbox_CheckedChanged);
+            // 
+            // label1
+            // 
+            this.label1.Location = new System.Drawing.Point(12, 12);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(285, 13);
+            this.label1.TabIndex = 7;
+            this.label1.Text = "Save the following configuration settings to the project file:";
+            // 
+            // checkboxConnection
+            // 
+            this.checkboxConnection.AutoSize = true;
+            this.checkboxConnection.Location = new System.Drawing.Point(31, 33);
+            this.checkboxConnection.Name = "checkboxConnection";
+            this.checkboxConnection.Size = new System.Drawing.Size(181, 17);
+            this.checkboxConnection.TabIndex = 9;
+            this.checkboxConnection.Text = "Connection and protocol settings";
+            this.checkboxConnection.UseVisualStyleBackColor = true;
+            this.checkboxConnection.CheckedChanged += new System.EventHandler(this.checkbox_CheckedChanged);
+            // 
+            // checkboxFormSize
+            // 
+            this.checkboxFormSize.AutoSize = true;
+            this.checkboxFormSize.Location = new System.Drawing.Point(31, 96);
+            this.checkboxFormSize.Name = "checkboxFormSize";
+            this.checkboxFormSize.Size = new System.Drawing.Size(104, 17);
+            this.checkboxFormSize.TabIndex = 8;
+            this.checkboxFormSize.Text = "Current form size";
+            this.checkboxFormSize.UseVisualStyleBackColor = true;
+            this.checkboxFormSize.CheckedChanged += new System.EventHandler(this.checkbox_CheckedChanged);
+            // 
             // SaveConfigurationForm
             // 
-            this.AcceptButton = this.buttonSave;
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.AutoSize = true;
-            this.CancelButton = this.buttonCancel;
-            this.ClientSize = new System.Drawing.Size(324, 163);
+            this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.ClientSize = new System.Drawing.Size(354, 208);
             this.ControlBox = false;
-            this.Controls.Add(this.checkboxBridge);
-            this.Controls.Add(this.buttonCancel);
-            this.Controls.Add(this.buttonSave);
-            this.Controls.Add(this.checkboxSettings);
-            this.Controls.Add(this.label1);
-            this.Controls.Add(this.checkboxConnection);
-            this.Controls.Add(this.checkboxFormSize);
+            this.Controls.Add(this.panel2);
+            this.Controls.Add(this.panelWarning);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
+            this.MinimumSize = new System.Drawing.Size(370, 38);
             this.Name = "SaveConfigurationForm";
+            this.Padding = new System.Windows.Forms.Padding(0, 0, 0, 6);
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Tag = "";
-            this.Text = "Save configuration to project file";
+            this.Text = "Some parameters are overridden by a local override!";
+            this.Load += new System.EventHandler(this.SaveConfigurationForm_Load);
+            this.panelWarning.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
+            this.panel2.ResumeLayout(false);
+            this.panel2.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -144,12 +197,16 @@
 
         #endregion
 
-        private System.Windows.Forms.CheckBox checkboxFormSize;
-        private System.Windows.Forms.CheckBox checkboxConnection;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.CheckBox checkboxSettings;
-        private System.Windows.Forms.Button buttonSave;
-        private System.Windows.Forms.Button buttonCancel;
+        private System.Windows.Forms.Panel panelWarning;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.PictureBox pictureBox1;
+        private System.Windows.Forms.Panel panel2;
         private System.Windows.Forms.CheckBox checkboxBridge;
+        private System.Windows.Forms.Button buttonCancel;
+        private System.Windows.Forms.Button buttonSave;
+        private System.Windows.Forms.CheckBox checkboxSettings;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.CheckBox checkboxConnection;
+        private System.Windows.Forms.CheckBox checkboxFormSize;
     }
 }

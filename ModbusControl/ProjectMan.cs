@@ -1,3 +1,4 @@
+
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -122,6 +123,7 @@ namespace ModbusControlSpace
         public List<TTab> TabsList; // List with all tab pages
         public string LocalOverrideFile;
         public string LocalOverrideName;
+        public bool LocalOverrideParametersUsed;
 
         private XDocument XmlDoc; // doc holding the current xml mbc project file, for possibility to save
         private XElement XmlRootNode; // root node of the document
@@ -170,6 +172,9 @@ namespace ModbusControlSpace
         /// <param name="path">Path to mbc file</param>
         public void Load(string path)
         {
+            // reset the local override flag
+            LocalOverrideParametersUsed = false;
+
             // Load xml document into XmlDoc
             // A previous document will be discarded when a new is loaded
             XmlDoc = XDocument.Load(path, LoadOptions.PreserveWhitespace | LoadOptions.SetLineInfo);
@@ -257,13 +262,13 @@ namespace ModbusControlSpace
                 if (IsFound)
                 {
                     // process one <Size> element
-                    ProcessSizeElement(proj);
-                    
+                    LocalOverrideParametersUsed |= ProcessSizeElement(proj);
+
                     // process one <Modbus> element
-                    ProcessModbusElement(proj, eReq.Optional);
+                    LocalOverrideParametersUsed |= ProcessModbusElement(proj, eReq.Optional);
 
                     // process one <modbustcpserver>
-                    ProcessModbustcpserverElement(proj);
+                    LocalOverrideParametersUsed |= ProcessModbustcpserverElement(proj);
 
                     // process one <autostart>
                     // do this after the tabs are loaded
@@ -304,8 +309,11 @@ namespace ModbusControlSpace
         /// Throws exception on error
         /// </summary>
         /// <param name="pxe"></param>
-        private void ProcessSizeElement(XElement pxe)
+        /// <return>true if one of the elements was seen</return>
+        private bool ProcessSizeElement(XElement pxe)
         {
+            bool Seen = false;
+
             // process one <Size> element
             XElement xe1 = GetSingleElement(pxe, "Size", eReq.Optional);
             if( xe1 != null)
@@ -320,8 +328,9 @@ namespace ModbusControlSpace
                     {
                         // keep a minimum width
                         if (TmpValue < 100) TmpValue = 100;
-                        // value in mbc file is standarized in 96DPI
+                        // value in mbc file is standarized to 96DPI
                         FormSize.WidthSeen = true;
+                        Seen = true;
                         FormSize.Width = Global.ScaleXcoordFrom96DpiToSystemDpi((int)TmpValue);
                     }
                     else
@@ -341,8 +350,9 @@ namespace ModbusControlSpace
                     {
                         // keep a minimum height
                         if (TmpValue < 100) TmpValue = 100;
-                        // value in mbc file is standarized in 96DPI
+                        // value in mbc file is standarized to 96DPI
                         FormSize.HeightSeen = true;
+                        Seen = true;
                         FormSize.Height = Global.ScaleYcoordFrom96DpiToSystemDpi((int)TmpValue);
                     }
                     else
@@ -352,6 +362,8 @@ namespace ModbusControlSpace
                     }
                 }
             }
+
+            return Seen;
         }
 
         /// <summary>
@@ -359,16 +371,20 @@ namespace ModbusControlSpace
         /// Throws exception on error
         /// </summary>
         /// <param name="pxe"></param>
-        private void ProcessModbusElement(XElement pxe, eReq required)
+        /// <return>true if one of the elements was seen</return>
+        private bool ProcessModbusElement(XElement pxe, eReq req)
         {
+            bool Seen = false;
+
             // process one <Modbus> element
-            XElement xe1 = GetSingleElement(pxe, "Modbus", required);
+            XElement xe1 = GetSingleElement(pxe, "Modbus", req);
             if( xe1 != null)
             {
                 // Connection, optional
                 XElement xe2 = GetSingleElement(xe1, "Connection", eReq.Optional);
                 if (xe2 != null)
                 {
+                    Seen = true;
                     // accept a few strings
                     string TmpString = xe2.Value.Trim();
                     if (string.Compare(TmpString, ConnectionTypes[0], StringComparison.OrdinalIgnoreCase) == 0)
@@ -394,6 +410,7 @@ namespace ModbusControlSpace
                 xe2 = GetSingleElement(xe1, "Port", eReq.Optional);
                 if (xe2 != null)
                 {
+                    Seen = true;
                     string TmpString = xe2.Value.Trim();
                     if (string.IsNullOrEmpty(TmpString) == false)
                     {
@@ -406,6 +423,7 @@ namespace ModbusControlSpace
                 xe2 = GetSingleElement(xe1, "Baudrate", eReq.Optional);
                 if (xe2 != null)
                 {
+                    Seen = true;
                     string TmpString = xe2.Value.Trim();
                     UInt32 TmpValue;
                     if ((UInt32.TryParse(TmpString, out TmpValue) && (TmpValue <= 99999999))
@@ -424,6 +442,7 @@ namespace ModbusControlSpace
                 xe2 = GetSingleElement(xe1, "Parity", eReq.Optional);
                 if (xe2 != null)
                 {
+                    Seen = true;
                     string TmpString = xe2.Value.Trim();
                     Parity TmpParity;
                     if (Enum.TryParse<Parity>(TmpString, true, out TmpParity))
@@ -441,6 +460,7 @@ namespace ModbusControlSpace
                 xe2 = GetSingleElement(xe1, "EndofmessageTimeout", eReq.Optional);
                 if (xe2 != null)
                 {
+                    Seen = true;
                     string TmpString = xe2.Value.Trim();
                     // get value, limit range 1 - 9999999
                     UInt32 TmpValue;
@@ -459,6 +479,7 @@ namespace ModbusControlSpace
                 xe2 = GetSingleElement(xe1, "OnewireEchoSuppression", eReq.Optional);
                 if (xe2 != null)
                 {
+                    Seen = true;
                     // accept true and false
                     string TmpString = xe2.Value.Trim();
                     bool TmpBool;
@@ -477,6 +498,7 @@ namespace ModbusControlSpace
                 xe2 = GetSingleElement(xe1, "IPaddress", eReq.Optional);
                 if (xe2 != null)
                 {
+                    Seen = true;
                     string TmpString = xe2.Value.Trim();
                     System.Net.IPAddress TmpIPaddress;
                     if (TmpString == "")
@@ -500,6 +522,7 @@ namespace ModbusControlSpace
                 xe2 = GetSingleElement(xe1, "IPport", eReq.Optional);
                 if (xe2 != null)
                 {
+                    Seen = true;
                     string TmpString = xe2.Value.Trim();
                     // get value, limit range 1 - 65535
                     UInt16 TmpValue;
@@ -518,6 +541,7 @@ namespace ModbusControlSpace
                 xe2 = GetSingleElement(xe1, "SlaveID", eReq.Optional); 
                 if (xe2 != null)
                 {
+                    Seen = true;
                     string TmpString = xe2.Value.Trim();
                     // get value, limit range 0 - 255
                     byte TmpValue;
@@ -536,6 +560,7 @@ namespace ModbusControlSpace
                 xe2 = GetSingleElement(xe1, "ResponseTimeout", eReq.Optional);
                 if (xe2 != null)
                 {
+                    Seen = true;
                     string TmpString = xe2.Value.Trim();
                     // get value, limit range 1 - 9999999
                     UInt32 TmpValue;
@@ -554,6 +579,7 @@ namespace ModbusControlSpace
                 xe2 = GetSingleElement(xe1, "MaximumFramesize", eReq.Optional);
                 if (xe2 != null)
                 {
+                    Seen = true;
                     string TmpString = xe2.Value.Trim();
                     // get value, limit range 13 - 256
                     UInt32 TmpValue;
@@ -572,6 +598,7 @@ namespace ModbusControlSpace
                 xe2 = GetSingleElement(xe1, "interframedelay", eReq.Optional);
                 if (xe2 != null)
                 {
+                    Seen = true;
                     string TmpString = xe2.Value.Trim();
                     // get value
                     UInt32 TmpValue;
@@ -590,6 +617,7 @@ namespace ModbusControlSpace
                 xe2 = GetSingleElement(xe1, "WriteHoldingregisterFC", eReq.Optional);
                 if (xe2 != null)
                 {
+                    Seen = true;
                     string TmpString = xe2.Value.Trim();
                     byte TmpValue;
                     // get value, must be 6, 16, 'auto' or 'alternate'
@@ -628,6 +656,7 @@ namespace ModbusControlSpace
                 }
                 if (xe2 != null)
                 {
+                    Seen = true;
                     string TmpString = xe2.Value.Trim();
                     Global.eEndian TmpEndian;
                     if( TryParseEndian(TmpString, out TmpEndian))
@@ -645,6 +674,7 @@ namespace ModbusControlSpace
                 xe2 = GetSingleElement(xe1, "float32endian", eReq.Optional);
                 if (xe2 != null)
                 {
+                    Seen = true;
                     string TmpString = xe2.Value.Trim();
                     Global.eEndian TmpEndian;
                     if (TryParseEndian(TmpString, out TmpEndian))
@@ -662,6 +692,7 @@ namespace ModbusControlSpace
                 xe2 = GetSingleElement(xe1, "ascii16endian", eReq.Optional);
                 if (xe2 != null)
                 {
+                    Seen = true;
                     string TmpString = xe2.Value.Trim();
                     Global.eEndian TmpEndian;
                     if (TryParseEndian(TmpString, out TmpEndian))
@@ -679,6 +710,7 @@ namespace ModbusControlSpace
                 xe2 = GetSingleElement(xe1, "HoldingregisterStart", eReq.Optional);
                 if (xe2 != null)
                 {
+                    Seen = true;
                     string TmpString = xe2.Value.Trim();
                     UInt32 TmpNum;
                     // allow 40.000, 40.001, 400.000 and 400.001 (dots only here for clearness)
@@ -703,6 +735,7 @@ namespace ModbusControlSpace
                 xe2 = GetSingleElement(xe1, "SampleRate", eReq.Optional);
                 if (xe2 != null)
                 {
+                    Seen = true;
                     string TmpString = xe2.Value.Trim();
                     // get value, limit range 0 - 99999999
                     UInt32 TmpValue;
@@ -721,6 +754,7 @@ namespace ModbusControlSpace
                 xe2 = GetSingleElement(xe1, "ShowInfo", eReq.Optional);
                 if (xe2 != null)
                 {
+                    Seen = true;
                     // accept true and false
                     string TmpString = xe2.Value.Trim();
                     bool TmpBool;
@@ -735,6 +769,8 @@ namespace ModbusControlSpace
                     }
                 }
             }
+
+            return Seen;
         }
 
 
@@ -1325,8 +1361,11 @@ namespace ModbusControlSpace
         /// Throws exception on error
         /// </summary>
         /// <param name="pxe"></param>
-        private void ProcessModbustcpserverElement(XElement pxe)
+        /// <return>true if one of the elements was seen</return>
+        private bool ProcessModbustcpserverElement(XElement pxe)
         {
+            bool Seen = false;
+
             // process one <modbustcpserver> element
             XElement xe1 = GetSingleElement(pxe, "modbustcpserver", eReq.Optional);
             if (xe1 != null)
@@ -1341,6 +1380,7 @@ namespace ModbusControlSpace
                     if (TryParseBool(TmpString, out TmpBool))
                     {
                         ModbusTcpBridge.Enable = TmpBool;
+                        Seen = true;
                     }
                     else
                     {
@@ -1360,6 +1400,7 @@ namespace ModbusControlSpace
                     {
                         // ok
                         ModbusTcpBridge.IPPort = TmpValue;
+                        Seen = true;
                     }
                     else
                     {
@@ -1369,6 +1410,8 @@ namespace ModbusControlSpace
                     }
                 }
             }
+
+            return Seen;
         }
 
 
@@ -1989,7 +2032,7 @@ namespace ModbusControlSpace
                 xeSize.Add(widthNode);
             }
             // write value
-            // value in mbc file is standarized in 96DPI
+            // value in mbc file is standarized to 96DPI
             widthNode.Value = Global.ScaleXcoordFromSystemDpiTo96Dpi(FormSize.Width).ToString();
 
             // Find Height node, or create it
@@ -2000,7 +2043,7 @@ namespace ModbusControlSpace
                 xeSize.Add(heightNode);
             }
             // write value
-            // value in mbc file is standarized in 96DPI
+            // value in mbc file is standarized to 96DPI
             heightNode.Value = Global.ScaleYcoordFromSystemDpiTo96Dpi(FormSize.Height).ToString();
 
             // And write the file

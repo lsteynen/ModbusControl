@@ -58,7 +58,7 @@ namespace ModbusControlSpace
         public string ProjectPath; // Path of current project file (null if none, assigned if open or tried to open)
         public CProject Project; // Loaded project
         private bool ProjectIsOpen; // true if project is successully opened
-        private string LocalOverrideUsed; // assigned to localoverride name is localoverride used, null or empty if not
+        private string LocalOverrideUsedName; // assigned to localoverride name is localoverride used, null or empty if not
         private bool ConnectionInUse; // true while connecting, connected or disconnecting
         private bool ConnectionIsOpen; // true while having a successful connection
         private bool PollingIsStarted; // default: start polling if connection is opened
@@ -500,6 +500,9 @@ namespace ModbusControlSpace
             {
                 SaveConfigurationForm1 = new SaveConfigurationForm();
             }
+
+            // pass parameters
+            SaveConfigurationForm1.LocalOverrideUsed = Project.LocalOverrideParametersUsed;
             SaveConfigurationForm1.SizeWidth = this.Width;
             SaveConfigurationForm1.SizeHeight = this.Height;
             SaveConfigurationForm1.Project = Project;
@@ -682,6 +685,7 @@ namespace ModbusControlSpace
         {
             ConfigForm configform = new ConfigForm();
 
+            configform.LocalOverrideUsed = Project.LocalOverrideParametersUsed;
             configform.ConnectionInUse = ConnectionInUse;
             configform.ConnectionType = Project.Connection.ConnectionType;
             configform.ConnectionSerialPort = Project.Connection.SerialPort;
@@ -836,7 +840,7 @@ namespace ModbusControlSpace
             about.VersionString = Global.VersionString;
             about.FormWidth = this.Width;
             about.FormHeight = this.Height;
-            about.LocalOverride = LocalOverrideUsed;
+            about.LocalOverride = LocalOverrideUsedName;
             about.ShowDialog();
         }
 
@@ -881,7 +885,7 @@ namespace ModbusControlSpace
                 s += " (open failed)";
             }
 
-            if (string.IsNullOrEmpty(LocalOverrideUsed) == false) s += " (local override used)";
+            if (string.IsNullOrEmpty(LocalOverrideUsedName) == false) s += " (local override used)";
 
             this.Text = s;
         }
@@ -948,7 +952,7 @@ namespace ModbusControlSpace
 
             // clear
             ProjectIsOpen = false;
-            LocalOverrideUsed = null;
+            LocalOverrideUsedName = null;
             // dispose the save_configuration_form to clear its checkboxes
             if (SaveConfigurationForm1 != null)
             {
@@ -996,7 +1000,7 @@ namespace ModbusControlSpace
                 {
                     Project.LocalOverrideFile = Path.Combine(Global.MyDocumentsPath, "LocalOverrides.xml");
                     bool IsLocalOverrideUsed = Project.LoadLocalOverride(System.IO.Path.GetFileName(ProjectPath));
-                    LocalOverrideUsed = Project.LocalOverrideName;
+                    LocalOverrideUsedName = Project.LocalOverrideName;
                 }
                 catch (DirectoryNotFoundException)
                 {

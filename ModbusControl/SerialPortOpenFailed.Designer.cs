@@ -80,7 +80,6 @@
             // 
             this.buttonOK.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.buttonOK.Location = new System.Drawing.Point(65, 145);
-            this.buttonOK.Margin = new System.Windows.Forms.Padding(3, 3, 3, 10);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(75, 23);
             this.buttonOK.TabIndex = 15;
@@ -120,7 +119,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.AutoSize = true;
             this.CancelButton = this.buttonCancel;
-            this.ClientSize = new System.Drawing.Size(295, 180);
+            this.ClientSize = new System.Drawing.Size(295, 177);
             this.ControlBox = false;
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label2);
@@ -134,6 +133,7 @@
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "SerialPortOpenFailed";
+            this.Padding = new System.Windows.Forms.Padding(0, 0, 0, 6);
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;

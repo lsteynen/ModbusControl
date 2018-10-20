@@ -44,7 +44,6 @@
             this.okButton.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.okButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.okButton.Location = new System.Drawing.Point(140, 137);
-            this.okButton.Margin = new System.Windows.Forms.Padding(3, 3, 3, 10);
             this.okButton.Name = "okButton";
             this.okButton.Size = new System.Drawing.Size(75, 23);
             this.okButton.TabIndex = 5;
@@ -139,7 +138,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.AutoSize = true;
-            this.ClientSize = new System.Drawing.Size(355, 172);
+            this.ClientSize = new System.Drawing.Size(355, 169);
             this.Controls.Add(this.labelLocalOverride);
             this.Controls.Add(this.labelName);
             this.Controls.Add(this.labelVersion);
@@ -153,7 +152,7 @@
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "AboutBox1";
-            this.Padding = new System.Windows.Forms.Padding(9);
+            this.Padding = new System.Windows.Forms.Padding(9, 9, 9, 6);
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;

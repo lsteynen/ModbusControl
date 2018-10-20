@@ -60,7 +60,6 @@
             // 
             this.buttonOK.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.buttonOK.Location = new System.Drawing.Point(112, 276);
-            this.buttonOK.Margin = new System.Windows.Forms.Padding(3, 3, 3, 10);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(75, 23);
             this.buttonOK.TabIndex = 10;
@@ -108,7 +107,7 @@
             this.CheckboxCheckForUpdates.Size = new System.Drawing.Size(113, 17);
             this.CheckboxCheckForUpdates.TabIndex = 9;
             this.CheckboxCheckForUpdates.Text = "Check for updates";
-            this.toolTip1.SetToolTip(this.CheckboxCheckForUpdates, "Check for program updates on startup");
+            this.toolTip1.SetToolTip(this.CheckboxCheckForUpdates, "Check for program updates on startup, once per day");
             this.CheckboxCheckForUpdates.UseVisualStyleBackColor = true;
             // 
             // label1
@@ -207,7 +206,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.AutoSize = true;
             this.CancelButton = this.buttonCancel;
-            this.ClientSize = new System.Drawing.Size(389, 316);
+            this.ClientSize = new System.Drawing.Size(389, 308);
             this.ControlBox = false;
             this.Controls.Add(this.checkboxIgnoreFormSizeOnReload);
             this.Controls.Add(this.checkboxCustomEditor);
@@ -226,6 +225,7 @@
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "OptionsForm";
+            this.Padding = new System.Windows.Forms.Padding(0, 0, 0, 6);
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;

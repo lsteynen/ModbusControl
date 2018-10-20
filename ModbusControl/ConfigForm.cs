@@ -15,6 +15,13 @@ namespace ModbusControlSpace
 
         // Properties - settings
 
+        public bool LocalOverrideUsed
+        {
+            // not used
+            get { return panelWarning.Visible; }
+            set { panelWarning.Visible = value; }
+        }
+
         public bool ConnectionInUse
         {
             // not used
@@ -325,5 +332,6 @@ namespace ModbusControlSpace
                 OnApply(this);
             }
         }
+
     }
 }
