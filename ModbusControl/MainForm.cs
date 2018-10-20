@@ -2589,7 +2589,7 @@ namespace ModbusControlSpace
             }
             else
             {
-                MessageBox.Show("Only .mbc files are accepted!", System.Reflection.Assembly.GetExecutingAssembly().GetName().Name, MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show("Drag and drop only accepts .mbc ModbusControl project files!", System.Reflection.Assembly.GetExecutingAssembly().GetName().Name, MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
         }
 
