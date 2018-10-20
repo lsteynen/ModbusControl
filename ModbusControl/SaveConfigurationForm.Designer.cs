@@ -53,7 +53,7 @@
             this.panelWarning.Dock = System.Windows.Forms.DockStyle.Top;
             this.panelWarning.Location = new System.Drawing.Point(0, 0);
             this.panelWarning.Name = "panelWarning";
-            this.panelWarning.Size = new System.Drawing.Size(354, 53);
+            this.panelWarning.Size = new System.Drawing.Size(364, 53);
             this.panelWarning.TabIndex = 7;
             // 
             // label2
@@ -88,7 +88,7 @@
             this.panel2.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel2.Location = new System.Drawing.Point(0, 53);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(354, 149);
+            this.panel2.Size = new System.Drawing.Size(364, 149);
             this.panel2.TabIndex = 8;
             // 
             // checkboxBridge
@@ -170,7 +170,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.AutoSize = true;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.ClientSize = new System.Drawing.Size(354, 208);
+            this.ClientSize = new System.Drawing.Size(364, 208);
             this.ControlBox = false;
             this.Controls.Add(this.panel2);
             this.Controls.Add(this.panelWarning);
@@ -184,7 +184,7 @@
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Tag = "";
-            this.Text = "Some parameters are overridden by a local override!";
+            this.Text = "Save configuration to project file";
             this.Load += new System.EventHandler(this.SaveConfigurationForm_Load);
             this.panelWarning.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
