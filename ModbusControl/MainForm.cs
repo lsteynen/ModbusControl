@@ -2494,6 +2494,7 @@ namespace ModbusControlSpace
                 string CmdLine = Options.CustomEditorCommand.Trim();
                 if (CmdLine.Length > 0)
                 {
+                    // assuming the user has put quotes around %file if required
                     CmdLine = CmdLine.Replace("%file", file);
                     Global.SplitCommandString(CmdLine, out EdCommand, out EdArg);
 #if DEBUGXX
@@ -2522,7 +2523,8 @@ namespace ModbusControlSpace
                 {
                     try
                     {
-                        Process p = Process.Start(EdCommand, file);
+                        // must quote file path if it contains spaces
+                        Process p = Process.Start(EdCommand, "\"" + file + "\"");
                     }
                     catch (Exception ex)
                     {
