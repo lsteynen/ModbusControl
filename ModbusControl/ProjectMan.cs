@@ -92,6 +92,7 @@ namespace ModbusControlSpace
             public Color BackColor; // background color
             public List<TBitfield> Bitfields; // List with bitfields
             public bool Expand;         // expand bitfields
+            public Dictionary<int, string> EnumDict; // enum convert dictionary
         }
 
         // structure holding a bitfield definition
@@ -104,6 +105,7 @@ namespace ModbusControlSpace
             public int MinLen;          // minimum number of digits to display
             public Color ForeColor;     // foreground/font color
             public Color BackColor;     // background color
+            public Dictionary<int, string> EnumDict; // enum convert dictionary
         }
 
         // structure holding a line and column position in the xml file
@@ -823,6 +825,7 @@ namespace ModbusControlSpace
                 DefaultVar.BackColor = Color.White;
                 DefaultVar.Bitfields = null;
                 DefaultVar.Expand = false;
+                DefaultVar.EnumDict = null;
  
                 // in tab we can set defaults for all var's
 
@@ -1112,6 +1115,7 @@ namespace ModbusControlSpace
                             newBitfield.MinLen = 0;
                             newBitfield.ForeColor = newVar.ForeColor;
                             newBitfield.BackColor = newVar.BackColor;
+                            newBitfield.EnumDict = null;
 
                             // default position is auto count
                             newBitfield.Position = AutoPosition;
@@ -1227,6 +1231,9 @@ namespace ModbusControlSpace
                                 }
                             }
 
+                            // get enum, optional
+                            newBitfield.EnumDict = GetEnum(fieldNode);
+
                             // auto count capability for Position
                             AutoPosition += newBitfield.Width;
 
@@ -1257,6 +1264,9 @@ namespace ModbusControlSpace
                         }
                     }
 
+                    // get enum, optional
+                    newVar.EnumDict = GetEnum(varNode);
+
                     // Add new var to the list
                     newTab.VarList.Add(newVar);
                     // update next auto register numbering
@@ -1267,6 +1277,61 @@ namespace ModbusControlSpace
             }
         }
 
+        Dictionary<int, string> GetEnum(XElement node)
+        {
+            Dictionary<int, string> dict = null;
+
+            // get enum, optional
+            XElement enumNode = GetSingleElement(node, "enum", eReq.Optional);
+            if (enumNode != null)
+            {
+                // get all <item> in this enum, optional
+                IEnumerable<XElement> itemList = GetAllElements(enumNode, "item", eReq.Optional);
+                if (itemList.Count() >= 1)
+                {
+                    dict = new Dictionary<int, string>();
+
+                    // get all items, each item requires value and text
+                    foreach (XElement item in itemList)
+                    {
+                        XElement itemValue = GetSingleElement(item, "value", eReq.Required);
+                        string TmpString = itemValue.Value.Trim();
+                        int TmpValue;
+                        if (int.TryParse(TmpString, out TmpValue))
+                        {
+                            // OK
+                        }
+                        else
+                        {
+                            TFilePosition fp = GetFilePos(itemValue);
+                            throw new XmlException("XML element <" + itemValue.Name + "> has an invalid value. Must be valid integer." + Environment.NewLine + LimitXmlText(itemValue.ToString()) + Environment.NewLine, null, fp.Line, fp.Col);
+                        }
+
+                        XElement itemText = GetSingleElement(item, "text", eReq.Required);
+                        TmpString = itemText.Value.Trim();
+
+                        try
+                        {
+                            // throws exception on duplicate key
+                            dict.Add(TmpValue, TmpString);
+                        }
+                        catch
+                        {
+                            TFilePosition fp = GetFilePos(itemValue);
+                            throw new XmlException("XML element <" + itemValue.Name + "> has an invalid value. Enum integers must be unique." + Environment.NewLine + LimitXmlText(itemValue.ToString()) + Environment.NewLine, null, fp.Line, fp.Col);
+                        }
+                    }
+
+                    // got no items? then no dictionary
+                    if (dict.Count == 0)
+                    {
+                        dict = null;
+                    }
+                }
+            }
+
+            return dict;
+        }
 
         /// <summary>
         /// Process the autostart element
