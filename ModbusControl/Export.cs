@@ -407,7 +407,7 @@ namespace ModbusControlSpace
             // make value string
             // decimals are not used in export
             // minlen is not used in export
-            string ValueString = CValueToString.ValueToString(Value, Size, Format, 0, 0);
+            string ValueString = CValueToString.ValueToString(Value, Size, Format);
 
             // output to file
             string[] fields = new string[] { Reg.ToString(), Size.ToString(), Description, RWstring, Format.ToString(), ValueString};

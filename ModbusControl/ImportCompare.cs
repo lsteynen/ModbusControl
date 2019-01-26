@@ -261,7 +261,7 @@ namespace ModbusControlSpace
             // make RW string
             string RWstring = (isReadable ? "r" : "") + (isWriteable ? "w" : "");
             // make value string (various formats)
-            string TargetValueString = CValueToString.ValueToString(TargetValue, Size, Format, 0, 0);
+            string TargetValueString = CValueToString.ValueToString(TargetValue, Size, Format);
             // make result string
             string ResultString = bEqual ? "EQUAL" : "DIFFERENT: target value is " + TargetValueString;
             // make output string

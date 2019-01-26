@@ -1097,14 +1097,13 @@ namespace ModbusControlSpace
 
                 // add info to Description?
                 // populate grid
-                newRegView.showInfo = Project.Options.ShowInfo;
                 foreach (CProject.TVar var in ptab.VarList)
                 {
                     string Tmpstr = var.Description;
 
                     ModbusRegView.RegEntry nr = newRegView.AddReg(var.Regnr, var.Size * 16, Tmpstr, var.Format, var.MinLen, var.Decimals, var.isReadable, var.isWriteable);
                     newRegView.SetRegForegroundColor(nr, var.ForeColor);
-                    newRegView.SetRegBackgroundColor(nr, var.BackColor);
+                    newRegView.SetRegBackEnumDict(nr, var.EnumDict);
 
                     // add the bitfields
                     if ((var.Bitfields != null) && (var.Bitfields.Count >= 1))
@@ -1115,6 +1114,7 @@ namespace ModbusControlSpace
                             ModbusRegView.BitfieldEntry nf = newRegView.AddRegBitfield(nr, var.Bitfields[i].Position, var.Bitfields[i].Width, Tmptext, var.Bitfields[i].Format, var.Bitfields[i].MinLen);
                             newRegView.SetBitfieldForegroundColor(nf, var.Bitfields[i].ForeColor);
                             newRegView.SetBitfieldBackgroundColor(nf, var.Bitfields[i].BackColor);
+                            newRegView.SetBitfieldEnumDict(nf, var.Bitfields[i].EnumDict);
                         }
                         // show the bitfields expanded?
                         if (var.Expand)
@@ -1123,6 +1123,8 @@ namespace ModbusControlSpace
                         }
                     }
                 }
+                // set the showInfo flag after all is loaded, so the descriptions are up to date
+                newRegView.showInfo = Project.Options.ShowInfo;
 
                 newTab.ResumeLayout();
                 tabControl1.TabPages.Add(newTab);

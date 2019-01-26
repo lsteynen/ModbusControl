@@ -5,6 +5,7 @@
 
 using System;
 using System.ComponentModel;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
@@ -25,10 +26,11 @@ namespace LST.Helpers
         /// <param name="Value">Value to convert</param>
         /// <param name="Size">Width of value in bits</param>
         /// <param name="Type">Int, Uint, Hex, ...</param>
-        /// <param name="Decimals">number of decimals, for Int/UInt only</param>
-        /// <param name="MinLen">minimum number of digits</param>
+        /// <param name="Decimals">Optional: number of decimals, for Int/UInt only</param>
+        /// <param name="MinLen">Optional: minimum number of digits</param>
+        /// <param name="EnumDict">Optional: enum dictionary</param>
         /// <returns></returns>
-        public static string ValueToString(Int32 Value, int Size, ModbusControlSpace.Global.eFormat Format, int Decimals, int MinLen)
+        public static string ValueToString(Int32 Value, int Size, ModbusControlSpace.Global.eFormat Format, int Decimals = 0, int MinLen = 0, Dictionary<int, string> EnumDict = null)
         {
             string Result = string.Empty;
             UInt32 UValue;
@@ -77,6 +79,22 @@ namespace LST.Helpers
                     // invalid
                     throw new ArgumentException("Invalid format enum!", "Type");
                     //break;
+            }
+
+            // enum?
+            if (EnumDict != null)
+            {
+                string Enumstr;
+                if (EnumDict.TryGetValue(Value, out Enumstr))
+                {
+                    // found
+                    Result += " (" + Enumstr + ")";
+                }
+                else
+                {
+                    // not found
+                    Result += " (enum?)";
+                }
             }
 
             return Result;

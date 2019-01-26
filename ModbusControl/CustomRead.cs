@@ -181,7 +181,7 @@ namespace ModbusControlSpace
                     // make value string
                     // decimals are not used
                     // minlen is not used
-                    Result += CValueToString.ValueToString(Value, Size, Format, 0, 0);
+                    Result += CValueToString.ValueToString(Value, Size, Format);
                 }
 
                 if (RegQuantity == 0) Result += "(no data)";

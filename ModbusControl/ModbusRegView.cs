@@ -82,13 +82,14 @@ namespace ModbusRegViewSpace
             public int Decimals;        // nr of decimals to show
             public bool Readable;       // readable?
             public bool Writeable;      // writable?
-            public List<BitfieldEntry> ListOfBitfields; // list of bitfields
             public Color ForeColor;     // the foreground/font color
             public Color BackColor;     // the background color
-            public TreeGridNode node;   // TreeGridView node tree
             public Int16[] RawReg;      // raw 16-bit register values
             public Int32 Value32;       // actual value in 32-bit
             public string ValueStr;     // value as a string
+            public Dictionary<int, string> EnumDict; // enum convert dictionary
+            public TreeGridNode node;   // TreeGridView node tree
+            public List<BitfieldEntry> ListOfBitfields; // list of bitfields
 
             // constructor
             public RegEntry()
@@ -101,26 +102,45 @@ namespace ModbusRegViewSpace
                 Decimals = 0;
                 Readable = false;
                 Writeable = false;
-                ListOfBitfields = null;
-                node = null;
+                ForeColor = Color.Black;
+                BackColor = Color.White;
                 RawReg = new Int16[2];
                 Value32 = 0;
                 ValueStr = String.Empty;
+                EnumDict = null;
+                node = null;
+                ListOfBitfields = null;
             }
         };
 
         // structure holding a bitfield
         public class BitfieldEntry
         {
-            public int Size;            // number of bits
             public int Position;        // number of lowest bit
+            public int Size;            // number of bits
             public string Text;         // description
             public ModbusControlSpace.Global.eFormat Format;      // display as dec, unsigned, hex, binary
             public int MinLen;          // minimum display length
             public Color ForeColor;     // the foreground/font color
             public Color BackColor;     // the background color
-            public Int32 Value;         // actual value
+            public Int32 Value32;         // actual value
+            public Dictionary<int, string> EnumDict; // enum convert dictionary
             public TreeGridNode node;   // TreeGridView node tree
+
+            // constructor
+            public BitfieldEntry()
+            {
+                Position = 0;
+                Size = 1;
+                Text = "";
+                Format = ModbusControlSpace.Global.eFormat.Int;
+                MinLen = 1;
+                ForeColor = Color.Black;
+                BackColor = Color.White;
+                Value32 = 0;
+                EnumDict = null;
+                node = null;
+            }
         }
 
         // list of all our registers
@@ -265,6 +285,11 @@ namespace ModbusRegViewSpace
             this.Nodes.SetBackColor(r.node, color);
         }
 
+        public void SetRegBackEnumDict(RegEntry r, Dictionary<int, string> dict)
+        {
+            r.EnumDict = dict;
+        }
+
         public BitfieldEntry AddRegBitfield(RegEntry r, int Position, int BitWidth, string Text, ModbusControlSpace.Global.eFormat Format, int MinLen)
         {
             Debug.Assert( (Position >= 0) && (Position <= 31));
@@ -276,8 +301,8 @@ namespace ModbusRegViewSpace
             }
 
             BitfieldEntry Field = new BitfieldEntry();
-            Field.Size = BitWidth;
             Field.Position = Position;
+            Field.Size = BitWidth;
             Field.Text = Text;
             Field.Format = Format;
             Field.MinLen = MinLen;
@@ -309,6 +334,11 @@ namespace ModbusRegViewSpace
         {
             f.BackColor = color;
             this.Nodes.SetBackColor(f.node, color);
+        }
+
+        public void SetBitfieldEnumDict(BitfieldEntry f, Dictionary<int, string> dict)
+        {
+            f.EnumDict = dict;
         }
 
         public void ExpandBitfields(RegEntry r)
@@ -355,7 +385,7 @@ namespace ModbusRegViewSpace
         public void SetRegValue(RegEntry r)
         {
             // update the value shown in the grid
-            r.ValueStr = CValueToString.ValueToString(r.Value32, r.Size, r.Format, r.Decimals, r.MinLen);
+            r.ValueStr = CValueToString.ValueToString(r.Value32, r.Size, r.Format, r.Decimals, r.MinLen, r.EnumDict);
             r.node.Cells[2].Value = r.ValueStr;
             r.node.Cells[2].Style.ForeColor = Color.Black;
 
@@ -367,9 +397,9 @@ namespace ModbusRegViewSpace
                     BitfieldEntry bf = r.ListOfBitfields[i];
                     Int32 NewFieldValue = GetBitfieldValue(r.Value32, bf.Position, bf.Size, bf.Format == ModbusControlSpace.Global.eFormat.Int);
                     // store our value
-                    bf.Value = NewFieldValue;
+                    bf.Value32 = NewFieldValue;
                     // update the value shown in the grid
-                    r.node.Nodes[i].Cells[2].Value = CValueToString.ValueToString(NewFieldValue, bf.Size, bf.Format, 0, bf.MinLen);
+                    r.node.Nodes[i].Cells[2].Value = CValueToString.ValueToString(NewFieldValue, bf.Size, bf.Format, 0, bf.MinLen, bf.EnumDict);
                     r.node.Nodes[i].Cells[2].Style.ForeColor = Color.Black;
                 }
             }
@@ -1005,7 +1035,7 @@ namespace ModbusRegViewSpace
 
                 f.Format = Format;
                 // update the value shown in the grid
-                r.node.Nodes[BitfieldIndex].Cells[2].Value = CValueToString.ValueToString(f.Value, f.Size, f.Format, 0, f.MinLen);
+                r.node.Nodes[BitfieldIndex].Cells[2].Value = CValueToString.ValueToString(f.Value32, f.Size, f.Format, 0, f.MinLen);
             }
             else
             {
@@ -1297,7 +1327,13 @@ namespace ModbusRegViewSpace
             // add decimals
             if (r.Decimals != 0)
             {
-                builder.Append(", decimals");
+                builder.Append(", dec");
+            }
+
+            // add enum
+            if (r.EnumDict != null)
+            {
+                builder.Append(", enum");
             }
 
             // add r/w 
@@ -1325,6 +1361,12 @@ namespace ModbusRegViewSpace
             // add format and size
             builder.Append(ModbusControlSpace.Global.FormatText[(int)bf.Format]);
             builder.Append(bf.Size.ToString());
+
+            // add enum
+            if (bf.EnumDict != null)
+            {
+                builder.Append(", enum");
+            }
 
             builder.Append("]");
 
