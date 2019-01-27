@@ -101,7 +101,7 @@ namespace LST.Helpers
                 mEnable = value;
                 timerView.Enabled = mEnable;
 
-                // repaint, required to show stopped state
+                // repaint, show enabled/stopped state
                 RefreshView();
             }
         }
@@ -117,6 +117,8 @@ namespace LST.Helpers
                 if (value < 1000) value = 1000;
                 AdjustLoggerSize(value);
                 mMaxLines = value;
+
+                // repaint, show new capacity
                 RefreshView();
             }
         }
@@ -377,6 +379,9 @@ namespace LST.Helpers
 
                 // update view
                 Loggrid.Refresh();
+
+                // repaint, show new count
+                RefreshView();
             }
         }
 
