@@ -66,6 +66,13 @@ namespace ModbusControlSpace
                 return;
             }
 
+            // minimum length?
+            if (query.Length < 2)
+            {
+                textboxResult.AppendText("ERROR: Command must be at least 2 bytes!" + Environment.NewLine);
+                return;
+            }
+
             // disable SEND button for visual information
             buttonSend.Enabled = false;
             // and show waitcursor

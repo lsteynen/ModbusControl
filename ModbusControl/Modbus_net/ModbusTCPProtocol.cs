@@ -37,12 +37,26 @@ namespace Modbus_net
 
         // implementation
 
+        /// <summary>
+        /// Send a modbus query, get reponse.
+        /// </summary>
+        /// <param name="query">Query command, must be at least 2 bytes</param>
+        /// <param name="querylength">Length of query, number of bytes</param>
+        /// <param name="response">Where the response bytes will be returned. Array size will be match response length</param>
+        /// <param name="expectedresponselength">Expected response length</param>
+        /// <returns></returns>
         public ModbusProtocol.Result ProtocolSendReceive(byte[] query, int querylength, out byte[] response, int expectedresponselength)
         {
-            // query must be in RTU format, start with slaveID, no CRC
+            // query must be in RTU format, start with slaveID, no CRC. Minimum length 2 bytes.
 
             // must assign
             response = null;
+
+            // query must be at least 2 bytes
+            if ((query.Length < 2) || (querylength < 2))
+            {
+                return ModbusProtocol.Result.INVALIDARGUMENT;
+            }
 
             // remember these for checking later
             mCurrentSlaveAddress = query[0];

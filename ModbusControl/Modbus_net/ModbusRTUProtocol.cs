@@ -44,6 +44,12 @@ namespace Modbus_net
             // must assign
             response = null;
 
+            // query must be at least 2 bytes
+            if ((query.Length < 2) || (querylength < 2))
+            {
+                return ModbusProtocol.Result.INVALIDARGUMENT;
+            }
+
             // remember these for checking later
             mCurrentSlaveAddress = query[0];
             mCurrentFunctioncode = query[1];
