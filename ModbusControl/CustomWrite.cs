@@ -154,6 +154,7 @@ namespace ModbusControlSpace
                 {
                     Int32 Value;
                     Endians.eType Type;
+                    // the trim removes spaces, tabs and CR/LF
                     bool bIsValid = CValueToString.StringToValue(aDataStr[i].Trim(), false, 32, 0, out Value, out Type);
 
                     if (bIsValid)

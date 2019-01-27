@@ -47,27 +47,24 @@ namespace ModbusControlSpace
 
         private void buttonSend_Click(object sender, EventArgs e)
         {
-            string cleanstring;
+            int convresult;
             byte[] query = null;
 
-            // normalize the string (clean it up and validate)
-            bool valid = NormalizeStringToHexByteList(textboxCommand.Text, out cleanstring);
-
             // convert string to array of bytes
-            if (valid)
+            convresult = ConvertStringToByteArray(textboxCommand.Text, out query);
+            // not OK?
+            if (convresult != 0)
             {
-                valid = ConvertStringToByteArray(cleanstring, out query);
-            }
-
-            if (valid == false)
-            {
-                textboxResult.AppendText("ERROR: Command has invalid characters or byte values!" + Environment.NewLine);
+                if (convresult == 1)
+                {
+                    textboxResult.AppendText("ERROR: Command was empty!" + Environment.NewLine);
+                }
+                else
+                {
+                    textboxResult.AppendText("ERROR: Command has invalid characters or invalid byte values!" + Environment.NewLine);
+                }
                 return;
             }
-
-            // replace the original command with the cleaned-up version
-            textboxCommand.Text = cleanstring;
-            textboxCommand.Update(); // make it visible immediately
 
             // disable SEND button for visual information
             buttonSend.Enabled = false;
@@ -97,101 +94,79 @@ namespace ModbusControlSpace
             Cursor.Current = Cursors.Default;
         }
 
-        private bool NormalizeStringToHexByteList(string ins, out string result)
+        /// <summary>
+        /// Convert string to array of bytes.
+        /// Each hex byte is 1 or 2 hex digits. Hex bytes are separated by whitespace (spaces, tabs, CR/LF). Extra whitespace is ignored.
+        /// </summary>
+        /// <returns>0 if OK (got at least 1 byte), 1 if string empty, 2 if error
+        /// </returns>
+        private int ConvertStringToByteArray(string ins, out byte[] result)
         {
-            StringBuilder outs = new StringBuilder();
-
-            int i = 0;
-            bool insertseparator = false;
-            result = null;
-            while (i < ins.Length)
-            {
-                char c = ins[i];
-                if (c == ' ')
-                {
-                    ++i;
-                }
-                else if (ishex(c))
-                {
-                    ++i;
-                    if (insertseparator)
-                    {
-                        outs.Append(" ");
-                    }
-                    if ((i < ins.Length) && ishex(ins[i]))
-                    {
-                        outs.Append(c);
-                        outs.Append(ins[i]);
-                        ++i;
-
-                        if ((i < ins.Length) && ishex(ins[i]))
-                        {
-                            return false;
-                        }
-                    }
-                    else
-                    {
-                        outs.Append('0');
-                        outs.Append(c);
-                    }
-                    insertseparator = true;
-                }
-                else
-                {
-                    return false;
-                }
-            }
-
-            result = outs.ToString();
-
-            return true;
-        }
-
-        private bool ishex(char c)
-        {
-            return (c >= '0' && c <= '9') || (c >= 'a' && c <= 'f') || (c >= 'A' && c <= 'F');
-        }
-
-        private bool ConvertStringToByteArray(string ins, out byte[] result)
-        {
-            result = new byte[ins.Length];
+            result = new byte[1000];
             int resultindex = 0;
 
             int i = 0;
             while (i < ins.Length)
             {
-                char c = ins[i];
-                if (c == ' ')
+                // skip whitespace
+                while ((i < ins.Length) && Char.IsWhiteSpace(ins[i]))
                 {
                     ++i;
                 }
-                else if (ishex(c))
+
+                // at end?
+                if (i >= ins.Length)
                 {
+                    break;
+                }
+
+                // hex digit?
+                if (ishex(ins[i]))
+                {
+                    char c1 = ins[i];
                     ++i;
+                    // 2 digits?
                     if ((i < ins.Length) && ishex(ins[i]))
                     {
-                        result[resultindex++] = AsciiToByte(c, ins[i]);
+                        // 2 digits
+                        result[resultindex++] = AsciiToByte(c1, ins[i]);
                         ++i;
 
+                        // more digits?
                         if ((i < ins.Length) && ishex(ins[i]))
                         {
-                            return false;
+                            // error
+                            return 2;
                         }
                     }
                     else
                     {
-                        result[resultindex++] = AsciiToByte('0', c);
+                        // 1 digit
+                        result[resultindex++] = AsciiToByte('0', c1);
                     }
                 }
                 else
                 {
-                    return false;
+                    // error
+                    return 2;
                 }
             }
 
             Array.Resize(ref result, resultindex);
 
-            return true;
+            // return error if string was empty
+            if (resultindex == 0)
+            {
+                return 1;
+            }
+
+            // success
+            return 0;
+        }
+
+        private bool ishex(char c)
+        {
+            return (c >= '0' && c <= '9') || (c >= 'a' && c <= 'f') || (c >= 'A' && c <= 'F');
         }
 
         private byte AsciiToByte(char c1, char c2)
