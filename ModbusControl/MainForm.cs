@@ -1103,6 +1103,7 @@ namespace ModbusControlSpace
 
                     ModbusRegView.RegEntry nr = newRegView.AddReg(var.Regnr, var.Size * 16, Tmpstr, var.Format, var.MinLen, var.Decimals, var.isReadable, var.isWriteable);
                     newRegView.SetRegForegroundColor(nr, var.ForeColor);
+                    newRegView.SetRegBackgroundColor(nr, var.BackColor);
                     newRegView.SetRegBackEnumDict(nr, var.EnumDict);
 
                     // add the bitfields
