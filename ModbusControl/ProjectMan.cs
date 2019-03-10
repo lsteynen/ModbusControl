@@ -645,7 +645,7 @@ namespace ModbusControlSpace
                     else
                     {
                         TFilePosition fp = GetFilePos(xe2);
-                        throw new XmlException("XML element <" + xe2.Name + "> has an invalid value. Valid values are '6' (or '06'), '16', 'auto' (or 'alternate')." + Environment.NewLine + LimitXmlText(xe2.ToString()) + Environment.NewLine, null, fp.Line, fp.Col);
+                        throw new XmlException("XML element <" + xe2.Name + "> has an invalid value. Valid values are '6' (or '06'), '16', 'auto' or 'alternate'." + Environment.NewLine + LimitXmlText(xe2.ToString()) + Environment.NewLine, null, fp.Line, fp.Col);
                     }
                 }
 
