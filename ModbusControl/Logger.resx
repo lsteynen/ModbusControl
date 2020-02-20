@@ -357,7 +357,7 @@
     <value>logFilter</value>
   </data>
   <data name="&gt;&gt;logFilter.Type" xml:space="preserve">
-    <value>LST.Helpers.LogFilter, ModbusControl, Version=2.0.8.1044, Culture=neutral, PublicKeyToken=null</value>
+    <value>LST.Helpers.LogFilter, ModbusControl, Version=2.0.11.1081, Culture=neutral, PublicKeyToken=null</value>
   </data>
   <data name="&gt;&gt;logFilter.Parent" xml:space="preserve">
     <value>panel1</value>
@@ -480,7 +480,7 @@
     <value>329, 7</value>
   </metadata>
   <data name="SaveFileDialog1.Filter" xml:space="preserve">
-    <value>Csv files (*.csv)|*.csv|All files (*.*)|*.*</value>
+    <value>CSV files (*.csv)|*.csv|All files (*.*)|*.*</value>
   </data>
   <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>

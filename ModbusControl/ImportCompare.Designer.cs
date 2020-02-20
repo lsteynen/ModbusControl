@@ -71,7 +71,7 @@
             this.openFileDialog1.AddExtension = false;
             this.openFileDialog1.CheckFileExists = false;
             this.openFileDialog1.DefaultExt = "csv";
-            this.openFileDialog1.Filter = "Csv files (*.csv)|*.csv|All files (*.*)|*.*";
+            this.openFileDialog1.Filter = "CSV files (*.csv)|*.csv|All files (*.*)|*.*";
             // 
             // SelectFileButton
             // 

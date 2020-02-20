@@ -99,7 +99,7 @@
             // 
             this.SaveFileDialog1.AddExtension = false;
             this.SaveFileDialog1.DefaultExt = "csv";
-            this.SaveFileDialog1.Filter = "Csv files (*.csv)|*.csv|All files (*.*)|*.*";
+            this.SaveFileDialog1.Filter = "CSV files (*.csv)|*.csv|All files (*.*)|*.*";
             // 
             // SelectFileButton
             // 
