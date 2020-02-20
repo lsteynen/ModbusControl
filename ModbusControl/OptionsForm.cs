@@ -66,6 +66,18 @@ namespace ModbusControlSpace
             }
         }
 
+        public bool MbcfileValidationEnable
+        {
+            get { return checkboxUseValidationSchema.Checked; }
+            set { checkboxUseValidationSchema.Checked = value; }
+        }
+
+        public string MbcfileValidationFile
+        {
+            get { return textboxUseValidationSchema.Text; }
+            set { textboxUseValidationSchema.Text = value; }
+        }
+
         public int LoggerCapacity
         {
             get { return (int)numericLoggerCapacity.Value; }
@@ -98,5 +110,20 @@ namespace ModbusControlSpace
             InitializeComponent();
         }
 
+        private void butSelectValidationFile_Click(object sender, EventArgs e)
+        {
+            if (openFileDialog1.ShowDialog() == DialogResult.OK)
+            {
+                textboxUseValidationSchema.Text = openFileDialog1.FileName;
+            }
+        }
+
+        private void butSelectCustomEditor_Click(object sender, EventArgs e)
+        {
+            if (openFileDialog2.ShowDialog() == DialogResult.OK)
+            {
+                textboxCustomEditor.Text = openFileDialog2.FileName;
+            }
+        }
     }
 }

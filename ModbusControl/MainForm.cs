@@ -35,6 +35,8 @@ namespace ModbusControlSpace
             public bool AutoNextRowOnEnter;
             public bool AutoStartEdit;
             public bool IgnoreSizeOnReload;
+            public bool MbcfileValidationEnable;
+            public string MbcfileValidationXSDFile;
             public bool CustomEditorEnable;
             public string CustomEditorCommand;
             public bool CheckForUpdates;
@@ -188,6 +190,8 @@ namespace ModbusControlSpace
             Options.AutoNextRowOnEnter = Settings1.Values.AutoNextRowOnEnter;
             Options.AutoStartEdit = Settings1.Values.AutoStartEdit;
             Options.IgnoreSizeOnReload = Settings1.Values.IgnoreSizeOnReload;
+            Options.MbcfileValidationEnable = Settings1.Values.MbcfileValidationEnable;
+            Options.MbcfileValidationXSDFile = Settings1.Values.MbcfileValidationXSDFile;
             Options.CustomEditorEnable = Settings1.Values.CustomEditorEnable;
             Options.CustomEditorCommand = Settings1.Values.CustomEditorCommand;
             Options.CheckForUpdates = Settings1.Values.CheckForUpdates;
@@ -344,6 +348,8 @@ namespace ModbusControlSpace
             Settings1.Values.AutoNextRowOnEnter = Options.AutoNextRowOnEnter;
             Settings1.Values.AutoStartEdit = Options.AutoStartEdit;
             Settings1.Values.IgnoreSizeOnReload = Options.IgnoreSizeOnReload;
+            Settings1.Values.MbcfileValidationEnable = Options.MbcfileValidationEnable;
+            Settings1.Values.MbcfileValidationXSDFile = Options.MbcfileValidationXSDFile;
             Settings1.Values.CustomEditorEnable = Options.CustomEditorEnable;
             Settings1.Values.CustomEditorCommand = Options.CustomEditorCommand;
             Settings1.Values.CheckForUpdates = Options.CheckForUpdates;
@@ -811,6 +817,8 @@ namespace ModbusControlSpace
             optionsForm.AutoStartEdit = Options.AutoStartEdit;
             optionsForm.IgnoreSizeOnReload = Options.IgnoreSizeOnReload;
             optionsForm.LoggerCapacity = Logger1.CapacityLines;
+            optionsForm.MbcfileValidationEnable = Options.MbcfileValidationEnable;
+            optionsForm.MbcfileValidationFile = Options.MbcfileValidationXSDFile;
             optionsForm.CustomEditorEnable = Options.CustomEditorEnable;
             optionsForm.CustomEditorCommand = Options.CustomEditorCommand;
             optionsForm.CheckForUpdates = Options.CheckForUpdates;
@@ -825,6 +833,8 @@ namespace ModbusControlSpace
                 Options.AutoStartEdit = optionsForm.AutoStartEdit;
                 Options.IgnoreSizeOnReload = optionsForm.IgnoreSizeOnReload;
                 Logger1.CapacityLines = optionsForm.LoggerCapacity;
+                Options.MbcfileValidationEnable = optionsForm.MbcfileValidationEnable;
+                Options.MbcfileValidationXSDFile = optionsForm.MbcfileValidationFile;
                 Options.CustomEditorEnable = optionsForm.CustomEditorEnable;
                 Options.CustomEditorCommand = optionsForm.CustomEditorCommand;
                 Options.CheckForUpdates = optionsForm.CheckForUpdates;
@@ -966,6 +976,12 @@ namespace ModbusControlSpace
 
             try
             {
+                // optional validation schema
+                if( Options.MbcfileValidationEnable && (Options.MbcfileValidationXSDFile != ""))
+                {
+                    Project.ValidationSchemaPath = Options.MbcfileValidationXSDFile;
+                }
+
                 Project.Load(path);
             }
             catch (XmlException ex)

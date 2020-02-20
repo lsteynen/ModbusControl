@@ -9,6 +9,7 @@ using System.Text.RegularExpressions;
 using System.Xml;
 using System.Drawing;
 using System.Xml.Linq;
+using System.Xml.Schema;
 using System.Linq;
 
 using LST.Helpers;
@@ -24,7 +25,7 @@ namespace ModbusControlSpace
 
         private enum eReq { Optional, Required }
         private string[] ConnectionTypes = new string[] { "serial/rtu", "modbus/tcp", "rtu/tcp" }; // Must be order of Global.eConnectionType.SerialRTU
-        private string[] WriteHoldingregisterFCs = new string[] { "6", "16", "auto", "alternate"};
+        private string[] WriteHoldingregisterFCs = new string[] { "6", "16", "auto", "alternate" };
 
         public struct TSize
         {
@@ -115,9 +116,16 @@ namespace ModbusControlSpace
             public int Col;
         }
 
+        // list of XML tags to convert to lower case
+        List<string> TagsValueToLowerList = new List<string> { "connection", "parity", "writeholdingregisterfc",
+                                        "int32endian", "float32endian" , "ascii16endian", "onewireechosuppression",
+                                        "showinfo", "enable", "rw", "expandfields", "type", "expandfields" };
+                
+
         // Properties
 
         public string Path; // path to loaded mbc project file
+        public string ValidationSchemaPath; // path to validation XSD file
         public TSize FormSize; // Form size
         public TConnection Connection; // Modbus connection settings
         public TOptions Options; // Options settings
@@ -160,6 +168,7 @@ namespace ModbusControlSpace
             Options.AutostartSeen = false;
             Options.AutostartEnable = true; // default is enabled if not seen
             Options.AutostartTabpage = "1";
+            ValidationSchemaPath = "";
             ModbusTcpBridge.Enable = false;
             ModbusTcpBridge.IPPort = 502;
 
@@ -180,6 +189,16 @@ namespace ModbusControlSpace
             // Load xml document into XmlDoc
             // A previous document will be discarded when a new is loaded
             XmlDoc = XDocument.Load(path, LoadOptions.PreserveWhitespace | LoadOptions.SetLineInfo);
+
+            // got validation schema?
+            // throws exception on validation error
+            if (ValidationSchemaPath != "")
+            {
+                XmlSchemaSet schemas = new XmlSchemaSet();
+                schemas.Add("", XmlReader.Create(ValidationSchemaPath));
+                XmlDoc.Validate(schemas, ValidationEventHandler);
+            }
+
 
             // Parse the document
             // Store all data in this class
@@ -212,13 +231,22 @@ namespace ModbusControlSpace
             Path = path;
         }
 
+        static void ValidationEventHandler(object sender, ValidationEventArgs e)
+        {
+            // throw exception on validation error
+            string Msg = "Schema validation failed: " + Environment.NewLine 
+                    + e.Message + Environment.NewLine
+                    + "Line " + e.Exception.LineNumber.ToString() + ", column " + e.Exception.LinePosition.ToString() + ".";
+
+            throw new XmlException(Msg);
+        }
 
         /// <summary>
         /// Load local overrides for this project
         /// Throws exception on error
         /// </summary>
         /// returns true if localoverride is found, else false
-        public bool LoadLocalOverride( string path)
+        public bool LoadLocalOverride(string path)
         {
             string Filename = System.IO.Path.GetFileName(path);
             bool IsFound = false;
@@ -318,7 +346,7 @@ namespace ModbusControlSpace
 
             // process one <Size> element
             XElement xe1 = GetSingleElement(pxe, "Size", eReq.Optional);
-            if( xe1 != null)
+            if (xe1 != null)
             {
                 // Get Width, optional
                 XElement xe2 = GetSingleElement(xe1, "Width", eReq.Optional);
@@ -380,7 +408,7 @@ namespace ModbusControlSpace
 
             // process one <Modbus> element
             XElement xe1 = GetSingleElement(pxe, "Modbus", req);
-            if( xe1 != null)
+            if (xe1 != null)
             {
                 // Connection, optional
                 XElement xe2 = GetSingleElement(xe1, "Connection", eReq.Optional);
@@ -540,7 +568,7 @@ namespace ModbusControlSpace
                 }
 
                 // SlaveID
-                xe2 = GetSingleElement(xe1, "SlaveID", eReq.Optional); 
+                xe2 = GetSingleElement(xe1, "SlaveID", eReq.Optional);
                 if (xe2 != null)
                 {
                     Seen = true;
@@ -661,7 +689,7 @@ namespace ModbusControlSpace
                     Seen = true;
                     string TmpString = xe2.Value.Trim();
                     Global.eEndian TmpEndian;
-                    if( TryParseEndian(TmpString, out TmpEndian))
+                    if (TryParseEndian(TmpString, out TmpEndian))
                     {
                         Connection.Int32Endian = TmpEndian;
                     }
@@ -784,12 +812,12 @@ namespace ModbusControlSpace
         private void ProcessTabs(XElement pxe)
         {
             // get all <tab> elements, optional
-            IEnumerable<XElement> tabList = GetAllElements( pxe, "tab", eReq.Optional);
+            IEnumerable<XElement> tabList = GetAllElements(pxe, "tab", eReq.Optional);
             foreach (XElement tabNode in tabList)
             {
                 // do not allow a <tab> in a <tab>
                 XElement xetit = GetSingleElement(tabNode, "tab", eReq.Optional);
-                if( xetit != null)
+                if (xetit != null)
                 {
                     TFilePosition fp = GetFilePos(xetit);
                     throw new XmlException("XML element <tab> is nested in another <tab>. This is not allowed." + Environment.NewLine + LimitXmlText(xetit.ToString()) + Environment.NewLine, null, fp.Line, fp.Col);
@@ -826,7 +854,7 @@ namespace ModbusControlSpace
                 DefaultVar.Bitfields = null;
                 DefaultVar.Expand = false;
                 DefaultVar.EnumDict = null;
- 
+
                 // in tab we can set defaults for all var's
 
                 // get rw, optional
@@ -930,7 +958,7 @@ namespace ModbusControlSpace
                 {
                     // do not allow a <var> in a <var>
                     XElement xeviv = GetSingleElement(varNode, "var", eReq.Optional);
-                    if( xeviv != null)
+                    if (xeviv != null)
                     {
                         TFilePosition fp = GetFilePos(xeviv);
                         throw new XmlException("XML element <var> is nested in another <var>. This is not allowed." + Environment.NewLine + LimitXmlText(xeviv.ToString()) + Environment.NewLine, null, fp.Line, fp.Col);
@@ -941,7 +969,7 @@ namespace ModbusControlSpace
 
                     // get reg, required
                     XElement regNode = GetSingleElement(varNode, "reg", eReq.Required);
-                    if( regNode != null)
+                    if (regNode != null)
                     {
                         string regString = regNode.Value.Trim();
                         // auto numbering?
@@ -1153,7 +1181,7 @@ namespace ModbusControlSpace
                             }
 
                             // validate position and width
-                            if( (newBitfield.Position + newBitfield.Width) <= (newVar.Size * 16))
+                            if ((newBitfield.Position + newBitfield.Width) <= (newVar.Size * 16))
                             {
                                 // okay
                             }
@@ -1589,9 +1617,9 @@ namespace ModbusControlSpace
             // max length reached? Then end with ...
             if (j >= maxlen)
             {
-                outs[j-3] = '.';
-                outs[j-2] = '.';
-                outs[j-1] = '.';
+                outs[j - 3] = '.';
+                outs[j - 2] = '.';
+                outs[j - 1] = '.';
             }
             return new string(outs, 0, j);
         }
@@ -1644,7 +1672,7 @@ namespace ModbusControlSpace
             return false;
         }
 
-        
+
         /// <summary>
         /// Check if Holdingreg number is valid, HoldingregistersStart .. HoldingregistersEnd
         /// </summary>
@@ -1691,77 +1719,77 @@ namespace ModbusControlSpace
         }
 
 
-        private bool GetVarTypestringToFormatAndSize( string text, out Global.eFormat Format, out int Size)
+        private bool GetVarTypestringToFormatAndSize(string text, out Global.eFormat Format, out int Size)
         {
             text = text.ToLower();
 
-            if( text == "int16")
+            if (text == "int16")
             {
                 Format = Global.eFormat.Int;
                 Size = 1;
                 return true;
             }
-            else if( text == "uint16")
+            else if (text == "uint16")
             {
                 Format = Global.eFormat.UInt;
                 Size = 1;
                 return true;
             }
-            else if( text == "int32")
+            else if (text == "int32")
             {
                 Format = Global.eFormat.Int;
                 Size = 2;
                 return true;
             }
-            else if( text == "uint32")
+            else if (text == "uint32")
             {
                 Format = Global.eFormat.UInt;
                 Size = 2;
                 return true;
             }
-            else if( text == "hex16")
+            else if (text == "hex16")
             {
                 Format = Global.eFormat.Hex;
                 Size = 1;
                 return true;
             }
-            else if( text == "hex32")
+            else if (text == "hex32")
             {
                 Format = Global.eFormat.Hex;
                 Size = 2;
                 return true;
             }
-            else if( text == "bin16")
+            else if (text == "bin16")
             {
                 Format = Global.eFormat.Bin;
                 Size = 1;
                 return true;
             }
-            else if( text == "bin32")
+            else if (text == "bin32")
             {
                 Format = Global.eFormat.Bin;
                 Size = 2;
                 return true;
             }
-            else if( text == "float32")
+            else if (text == "float32")
             {
                 Format = Global.eFormat.Float;
                 Size = 2;
                 return true;
             }
-            else if( text == "ascii16")
+            else if (text == "ascii16")
             {
                 Format = Global.eFormat.ASCII;
                 Size = 1;
                 return true;
             }
-            else if( text == "ascii32")
+            else if (text == "ascii32")
             {
                 Format = Global.eFormat.ASCII;
                 Size = 2;
                 return true;
             }
-            
+
             Format = Global.eFormat.Int;
             Size = 0;
             return false;
@@ -1804,7 +1832,7 @@ namespace ModbusControlSpace
         /// <summary>
         /// Determine last holding register user number, from first holding register user number
         /// </summary>
-        static public int GetHoldingRegistersEnd( int holdingRegistersStart)
+        static public int GetHoldingRegistersEnd(int holdingRegistersStart)
         {
             // 40000-49999, 40001-49999
             // 400000-465535, 400001-465536
@@ -1833,7 +1861,8 @@ namespace ModbusControlSpace
 
         /// <summary>
         /// Write connection parameters to XML document
-        /// Create XML nodes if they don't exist yet
+        /// Create elements if they don't exist yet
+        /// Remove or replace obsolete elements
         /// </summary>
         public void WriteConnection()
         {
@@ -1879,7 +1908,7 @@ namespace ModbusControlSpace
                 xe = new XElement("parity");
                 xeModbus.Add(xe);
             }
-            xe.Value = Connection.SerialParity.ToString();
+            xe.Value = Connection.SerialParity.ToString().ToLower();
 
             // Find Serial EndofmessageTimeout node, or create it
             xe = GetSingleElement(xeModbus, "EndofmessageTimeout", eReq.Optional);
@@ -1897,7 +1926,7 @@ namespace ModbusControlSpace
                 xe = new XElement("onewireechosuppression");
                 xeModbus.Add(xe);
             }
-            xe.Value = Connection.SerialOneWireEchoSuppression.ToString();
+            xe.Value = Connection.SerialOneWireEchoSuppression.ToString().ToLower();
 
             // Find IPAddress node, or create it
             xe = GetSingleElement(xeModbus, "IPaddress", eReq.Optional);
@@ -1964,6 +1993,13 @@ namespace ModbusControlSpace
             }
             xe.Value = WriteHoldingregisterFCs[(int)Connection.WriteHoldingregFunctioncode];
 
+            // Remove Value32BitEndian, obsolete
+            xe = GetSingleElement(xeModbus, "Value32BitEndian", eReq.Optional);
+            if (xe != null)
+            {
+                xe.Remove();
+            }
+
             // Find int32endian node, or create it
             xe = GetSingleElement(xeModbus, "int32endian", eReq.Optional);
             if (xe == null)
@@ -1971,14 +2007,7 @@ namespace ModbusControlSpace
                 xe = new XElement("int32endian");
                 xeModbus.Add(xe);
             }
-            xe.Value = Connection.Int32Endian.ToString();
-
-            // Remove Value32BitEndian, obsolete
-            xe = GetSingleElement(xeModbus, "Value32BitEndian", eReq.Optional);
-            if (xe != null)
-            {
-                xe.Remove();
-            }
+            xe.Value = Connection.Int32Endian.ToString().ToLower();
 
             // Find float32endian node, or create it
             xe = GetSingleElement(xeModbus, "float32endian", eReq.Optional);
@@ -1987,7 +2016,7 @@ namespace ModbusControlSpace
                 xe = new XElement("float32endian");
                 xeModbus.Add(xe);
             }
-            xe.Value = Connection.Float32Endian.ToString();
+            xe.Value = Connection.Float32Endian.ToString().ToLower();
 
             // Find ascii16endian node, or create it
             xe = GetSingleElement(xeModbus, "ascii16endian", eReq.Optional);
@@ -1996,16 +2025,26 @@ namespace ModbusControlSpace
                 xe = new XElement("ascii16endian");
                 xeModbus.Add(xe);
             }
-            xe.Value = Connection.Ascii16Endian.ToString();
+            xe.Value = Connection.Ascii16Endian.ToString().ToLower();
 
-            // And write the file
-            XmlDoc.Save(Path);
+            // Remove ShowType, obsolete
+            xe = GetSingleElement(xeModbus, "ShowType", eReq.Optional);
+            if (xe != null)
+            {
+                xe.Remove();
+            }
+
+            // Remove ShowReadwrite, obsolete
+            xe = GetSingleElement(xeModbus, "ShowReadwrite", eReq.Optional);
+            if (xe != null)
+            {
+                xe.Remove();
+            }
         }
 
-        
         /// <summary>
         /// Write Modbus/TCP bridge settings to XML document
-        /// Create XML nodes if they don't exist yet
+        /// Create elements if they don't exist yet
         /// </summary>
         public void WriteBridgeSettings()
         {
@@ -2024,7 +2063,7 @@ namespace ModbusControlSpace
                 xe = new XElement("enable");
                 xeBridge.Add(xe);
             }
-            xe.Value = ModbusTcpBridge.Enable.ToString();
+            xe.Value = ModbusTcpBridge.Enable.ToString().ToLower();
 
             // Find Port node, or create it
             xe = GetSingleElement(xeBridge, "port", eReq.Optional);
@@ -2034,9 +2073,6 @@ namespace ModbusControlSpace
                 xeBridge.Add(xe);
             }
             xe.Value = ModbusTcpBridge.IPPort.ToString();
-
-            // And write the file
-            XmlDoc.Save(Path);
         }
 
         /// <summary>
@@ -2060,7 +2096,7 @@ namespace ModbusControlSpace
                 xe = new XElement("showinfo");
                 xeBridge.Add(xe);
             }
-            xe.Value = Options.ShowInfo.ToString();
+            xe.Value = Options.ShowInfo.ToString().ToLower();
 
             // Find Samplerate node, or create it
             xe = GetSingleElement(xeBridge, "SampleRate", eReq.Optional);
@@ -2070,9 +2106,6 @@ namespace ModbusControlSpace
                 xeBridge.Add(xe);
             }
             xe.Value = Options.Samplerate.ToString();
-
-            // And write the file
-            XmlDoc.Save(Path);
         }
 
         /// <summary>
@@ -2110,9 +2143,142 @@ namespace ModbusControlSpace
             // write value
             // value in mbc file is standarized to 96DPI
             heightNode.Value = Global.ScaleYcoordFromSystemDpiTo96Dpi(FormSize.Height).ToString();
+        }
 
+        /// <summary>
+        /// Update to current version: convert all XML tag names to lowercase, remove/replace obsolete tags
+        /// </summary>
+        public void UpdateXML()
+        {
+            //DumpXMLTree();
+
+            // convert all XML tag names to lowercase
+            foreach (XElement xe1 in XmlDoc.Elements())
+            {
+                ConvertAlltagsToLowercaseRec(xe1);
+            }
+
+            // Got a modbus element?
+            XElement xeModbus = GetSingleElement(XmlRootNode, "Modbus", eReq.Optional);
+            if (xeModbus != null)
+            {
+                // Remove Value32BitEndian, obsolete
+                XElement xe = GetSingleElement(xeModbus, "Value32BitEndian", eReq.Optional);
+                if (xe != null)
+                {
+                    xe.Remove();
+                }
+
+                // Find int32endian node, or create it
+                xe = GetSingleElement(xeModbus, "int32endian", eReq.Optional);
+                if (xe == null)
+                {
+                    xe = new XElement("int32endian");
+                    xeModbus.Add(xe);
+                    xe.Value = Connection.Int32Endian.ToString().ToLower();
+                }
+
+                // Find float32endian node, or create it
+                xe = GetSingleElement(xeModbus, "float32endian", eReq.Optional);
+                if (xe == null)
+                {
+                    xe = new XElement("float32endian");
+                    xeModbus.Add(xe);
+                    xe.Value = Connection.Float32Endian.ToString().ToLower();
+                }
+
+                // Find ascii16endian node, or create it
+                xe = GetSingleElement(xeModbus, "ascii16endian", eReq.Optional);
+                if (xe == null)
+                {
+                    xe = new XElement("ascii16endian");
+                    xeModbus.Add(xe);
+                    xe.Value = Connection.Ascii16Endian.ToString().ToLower();
+                }
+
+                // Remove ShowType
+                xe = GetSingleElement(xeModbus, "ShowType", eReq.Optional);
+                if (xe != null)
+                {
+                    xe.Remove();
+                }
+
+                // Remove ShowReadwrite
+                xe = GetSingleElement(xeModbus, "ShowReadwrite", eReq.Optional);
+                if (xe != null)
+                {
+                    xe.Remove();
+                }
+            }
+
+            // convert elements with keywords to lower case
+            foreach (XElement xe1 in XmlDoc.Elements())
+            {
+                ConvertAllEnumsToLowercaseRec(xe1);
+            }
+
+            //DumpXMLTree();
+        }
+
+        private void ConvertAlltagsToLowercaseRec(XElement xel)
+        {
+            xel.Name = xel.Name.ToString().ToLower();
+            foreach (XElement xel2 in xel.Elements())
+            {
+                ConvertAlltagsToLowercaseRec(xel2);
+            }
+        }
+
+        private void ConvertAllEnumsToLowercaseRec(XElement xel)
+        {
+            if(TagsValueToLowerList.Contains(xel.Name.ToString()))
+            {
+                xel.Value = xel.Value.ToString().ToLower().Trim();
+            }
+
+            foreach (XElement xel2 in xel.Elements())
+            {
+                ConvertAllEnumsToLowercaseRec(xel2);
+            }
+        }
+
+        /// <summary>
+        /// Save configuration to file
+        /// </summary>
+        public void SaveFile()
+        {
             // And write the file
             XmlDoc.Save(Path);
+        }
+
+        /// <summary>
+        /// Dump the project's XML tree
+        /// </summary>
+        public void DumpXMLTree()
+        {
+            List<string> TL = new List<string>();
+            int level = 0;
+
+            foreach (XElement xel in XmlDoc.Elements())
+            {
+                DumpXMLElementRec(xel, level, TL);
+            }
+        }
+
+        private void DumpXMLElementRec(XElement xel, int level, List<string> TL)
+        {
+            string s;
+
+            s = new String(' ', level) + xel.Name.ToString();
+            s += ", " + xel.NodeType.ToString();
+            s += ", " + xel.HasElements.ToString();
+            s += ", " + xel.Value.ToString();
+            TL.Add(s);
+
+            foreach (XElement xel2 in xel.Elements())
+            {
+                DumpXMLElementRec(xel2, level+1, TL);
+            }
         }
     }
 }

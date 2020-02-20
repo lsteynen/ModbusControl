@@ -28,11 +28,13 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SaveConfigurationForm));
             this.panelWarning = new System.Windows.Forms.Panel();
             this.label2 = new System.Windows.Forms.Label();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.panel2 = new System.Windows.Forms.Panel();
+            this.checkboxUpdateXML = new System.Windows.Forms.CheckBox();
             this.checkboxBridge = new System.Windows.Forms.CheckBox();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.buttonSave = new System.Windows.Forms.Button();
@@ -40,6 +42,7 @@
             this.label1 = new System.Windows.Forms.Label();
             this.checkboxConnection = new System.Windows.Forms.CheckBox();
             this.checkboxFormSize = new System.Windows.Forms.CheckBox();
+            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.panelWarning.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.panel2.SuspendLayout();
@@ -77,7 +80,7 @@
             // 
             // panel2
             // 
-            this.panel2.AutoSize = true;
+            this.panel2.Controls.Add(this.checkboxUpdateXML);
             this.panel2.Controls.Add(this.checkboxBridge);
             this.panel2.Controls.Add(this.buttonCancel);
             this.panel2.Controls.Add(this.buttonSave);
@@ -88,8 +91,21 @@
             this.panel2.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel2.Location = new System.Drawing.Point(0, 53);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(364, 149);
+            this.panel2.Size = new System.Drawing.Size(364, 180);
             this.panel2.TabIndex = 8;
+            // 
+            // checkboxUpdateXML
+            // 
+            this.checkboxUpdateXML.AutoSize = true;
+            this.checkboxUpdateXML.Location = new System.Drawing.Point(31, 117);
+            this.checkboxUpdateXML.Name = "checkboxUpdateXML";
+            this.checkboxUpdateXML.Size = new System.Drawing.Size(171, 17);
+            this.checkboxUpdateXML.TabIndex = 14;
+            this.checkboxUpdateXML.Text = "Update XML to current version";
+            this.toolTip1.SetToolTip(this.checkboxUpdateXML, "Update the project file XML to the current version, convert XML tags to lower cas" +
+        "e, remove obsolete tags, etc");
+            this.checkboxUpdateXML.UseVisualStyleBackColor = true;
+            this.checkboxUpdateXML.CheckedChanged += new System.EventHandler(this.checkbox_CheckedChanged);
             // 
             // checkboxBridge
             // 
@@ -99,13 +115,14 @@
             this.checkboxBridge.Size = new System.Drawing.Size(161, 17);
             this.checkboxBridge.TabIndex = 13;
             this.checkboxBridge.Text = "Modbus/TCP bridge settings";
+            this.toolTip1.SetToolTip(this.checkboxBridge, "Save the Modbus/TCP bridge server settings");
             this.checkboxBridge.UseVisualStyleBackColor = true;
             this.checkboxBridge.CheckedChanged += new System.EventHandler(this.checkbox_CheckedChanged);
             // 
             // buttonCancel
             // 
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.buttonCancel.Location = new System.Drawing.Point(181, 123);
+            this.buttonCancel.Location = new System.Drawing.Point(181, 149);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 23);
             this.buttonCancel.TabIndex = 12;
@@ -115,7 +132,7 @@
             // 
             // buttonSave
             // 
-            this.buttonSave.Location = new System.Drawing.Point(98, 123);
+            this.buttonSave.Location = new System.Drawing.Point(98, 149);
             this.buttonSave.Name = "buttonSave";
             this.buttonSave.Size = new System.Drawing.Size(75, 23);
             this.buttonSave.TabIndex = 11;
@@ -131,6 +148,7 @@
             this.checkboxSettings.Size = new System.Drawing.Size(133, 17);
             this.checkboxSettings.TabIndex = 10;
             this.checkboxSettings.Text = "Sample rate, show info";
+            this.toolTip1.SetToolTip(this.checkboxSettings, "Save the current sample rate and ShowInfo flag");
             this.checkboxSettings.UseVisualStyleBackColor = true;
             this.checkboxSettings.CheckedChanged += new System.EventHandler(this.checkbox_CheckedChanged);
             // 
@@ -150,6 +168,7 @@
             this.checkboxConnection.Size = new System.Drawing.Size(181, 17);
             this.checkboxConnection.TabIndex = 9;
             this.checkboxConnection.Text = "Connection and protocol settings";
+            this.toolTip1.SetToolTip(this.checkboxConnection, "Save the current connection and protocol settings");
             this.checkboxConnection.UseVisualStyleBackColor = true;
             this.checkboxConnection.CheckedChanged += new System.EventHandler(this.checkbox_CheckedChanged);
             // 
@@ -161,6 +180,7 @@
             this.checkboxFormSize.Size = new System.Drawing.Size(104, 17);
             this.checkboxFormSize.TabIndex = 8;
             this.checkboxFormSize.Text = "Current form size";
+            this.toolTip1.SetToolTip(this.checkboxFormSize, "Save the current form size ");
             this.checkboxFormSize.UseVisualStyleBackColor = true;
             this.checkboxFormSize.CheckedChanged += new System.EventHandler(this.checkbox_CheckedChanged);
             // 
@@ -170,7 +190,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.AutoSize = true;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.ClientSize = new System.Drawing.Size(364, 208);
+            this.ClientSize = new System.Drawing.Size(364, 249);
             this.ControlBox = false;
             this.Controls.Add(this.panel2);
             this.Controls.Add(this.panelWarning);
@@ -184,14 +204,13 @@
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Tag = "";
-            this.Text = "Save configuration to project file";
+            this.Text = "Save project file";
             this.Load += new System.EventHandler(this.SaveConfigurationForm_Load);
             this.panelWarning.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.panel2.ResumeLayout(false);
             this.panel2.PerformLayout();
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
@@ -208,5 +227,7 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.CheckBox checkboxConnection;
         private System.Windows.Forms.CheckBox checkboxFormSize;
+        private System.Windows.Forms.CheckBox checkboxUpdateXML;
+        private System.Windows.Forms.ToolTip toolTip1;
     }
 }

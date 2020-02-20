@@ -43,13 +43,21 @@
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.checkboxCustomEditor = new System.Windows.Forms.CheckBox();
             this.checkboxIgnoreFormSizeOnReload = new System.Windows.Forms.CheckBox();
+            this.textboxUseValidationSchema = new System.Windows.Forms.TextBox();
+            this.checkboxUseValidationSchema = new System.Windows.Forms.CheckBox();
+            this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
+            this.butSelectValidationFile = new System.Windows.Forms.Button();
+            this.butSelectCustomEditor = new System.Windows.Forms.Button();
+            this.openFileDialog2 = new System.Windows.Forms.OpenFileDialog();
+            this.label2 = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.numericLoggerCapacity)).BeginInit();
             this.SuspendLayout();
             // 
             // buttonCancel
             // 
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.buttonCancel.Location = new System.Drawing.Point(201, 276);
+            this.buttonCancel.Location = new System.Drawing.Point(245, 322);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 23);
             this.buttonCancel.TabIndex = 11;
@@ -59,7 +67,7 @@
             // buttonOK
             // 
             this.buttonOK.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.buttonOK.Location = new System.Drawing.Point(112, 276);
+            this.buttonOK.Location = new System.Drawing.Point(156, 322);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(75, 23);
             this.buttonOK.TabIndex = 10;
@@ -102,7 +110,7 @@
             // CheckboxCheckForUpdates
             // 
             this.CheckboxCheckForUpdates.AutoSize = true;
-            this.CheckboxCheckForUpdates.Location = new System.Drawing.Point(23, 243);
+            this.CheckboxCheckForUpdates.Location = new System.Drawing.Point(23, 289);
             this.CheckboxCheckForUpdates.Name = "CheckboxCheckForUpdates";
             this.CheckboxCheckForUpdates.Size = new System.Drawing.Size(113, 17);
             this.CheckboxCheckForUpdates.TabIndex = 9;
@@ -113,7 +121,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(20, 144);
+            this.label1.Location = new System.Drawing.Point(20, 235);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(86, 13);
             this.label1.TabIndex = 5;
@@ -126,7 +134,7 @@
             0,
             0,
             0});
-            this.numericLoggerCapacity.Location = new System.Drawing.Point(114, 142);
+            this.numericLoggerCapacity.Location = new System.Drawing.Point(114, 233);
             this.numericLoggerCapacity.Maximum = new decimal(new int[] {
             999999,
             0,
@@ -171,16 +179,16 @@
             // 
             // textboxCustomEditor
             // 
-            this.textboxCustomEditor.Location = new System.Drawing.Point(42, 192);
+            this.textboxCustomEditor.Location = new System.Drawing.Point(82, 200);
             this.textboxCustomEditor.Name = "textboxCustomEditor";
-            this.textboxCustomEditor.Size = new System.Drawing.Size(335, 20);
+            this.textboxCustomEditor.Size = new System.Drawing.Size(347, 20);
             this.textboxCustomEditor.TabIndex = 8;
             this.toolTip1.SetToolTip(this.textboxCustomEditor, "Custom editor command, for example [\"c:\\windows\\system32\\notepad.exe\" \"%file\"]");
             // 
             // checkboxCustomEditor
             // 
             this.checkboxCustomEditor.AutoSize = true;
-            this.checkboxCustomEditor.Location = new System.Drawing.Point(23, 169);
+            this.checkboxCustomEditor.Location = new System.Drawing.Point(23, 181);
             this.checkboxCustomEditor.Name = "checkboxCustomEditor";
             this.checkboxCustomEditor.Size = new System.Drawing.Size(111, 17);
             this.checkboxCustomEditor.TabIndex = 7;
@@ -199,15 +207,92 @@
             this.toolTip1.SetToolTip(this.checkboxIgnoreFormSizeOnReload, "Do not use the form size specified in the mbc file on project REload");
             this.checkboxIgnoreFormSizeOnReload.UseVisualStyleBackColor = true;
             // 
+            // textboxUseValidationSchema
+            // 
+            this.textboxUseValidationSchema.Location = new System.Drawing.Point(90, 156);
+            this.textboxUseValidationSchema.Name = "textboxUseValidationSchema";
+            this.textboxUseValidationSchema.Size = new System.Drawing.Size(339, 20);
+            this.textboxUseValidationSchema.TabIndex = 14;
+            this.toolTip1.SetToolTip(this.textboxUseValidationSchema, "Custom editor command, for example [\"c:\\windows\\system32\\notepad.exe\" \"%file\"]");
+            // 
+            // checkboxUseValidationSchema
+            // 
+            this.checkboxUseValidationSchema.AutoSize = true;
+            this.checkboxUseValidationSchema.Location = new System.Drawing.Point(23, 134);
+            this.checkboxUseValidationSchema.Name = "checkboxUseValidationSchema";
+            this.checkboxUseValidationSchema.Size = new System.Drawing.Size(231, 17);
+            this.checkboxUseValidationSchema.TabIndex = 13;
+            this.checkboxUseValidationSchema.Text = "Use XSD validation schema on project load";
+            this.checkboxUseValidationSchema.UseVisualStyleBackColor = true;
+            // 
+            // openFileDialog1
+            // 
+            this.openFileDialog1.AddExtension = false;
+            this.openFileDialog1.DefaultExt = "xsd";
+            this.openFileDialog1.Filter = "Schema files (*.xsd)|*.xsd|All files (*.*)|*.*";
+            // 
+            // butSelectValidationFile
+            // 
+            this.butSelectValidationFile.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.butSelectValidationFile.Location = new System.Drawing.Point(435, 154);
+            this.butSelectValidationFile.Name = "butSelectValidationFile";
+            this.butSelectValidationFile.Size = new System.Drawing.Size(31, 23);
+            this.butSelectValidationFile.TabIndex = 15;
+            this.butSelectValidationFile.Text = "...";
+            this.butSelectValidationFile.UseVisualStyleBackColor = true;
+            this.butSelectValidationFile.Click += new System.EventHandler(this.butSelectValidationFile_Click);
+            // 
+            // butSelectCustomEditor
+            // 
+            this.butSelectCustomEditor.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.butSelectCustomEditor.Location = new System.Drawing.Point(435, 198);
+            this.butSelectCustomEditor.Name = "butSelectCustomEditor";
+            this.butSelectCustomEditor.Size = new System.Drawing.Size(31, 23);
+            this.butSelectCustomEditor.TabIndex = 16;
+            this.butSelectCustomEditor.Text = "...";
+            this.butSelectCustomEditor.UseVisualStyleBackColor = true;
+            this.butSelectCustomEditor.Click += new System.EventHandler(this.butSelectCustomEditor_Click);
+            // 
+            // openFileDialog2
+            // 
+            this.openFileDialog2.AddExtension = false;
+            this.openFileDialog2.DefaultExt = "exe";
+            this.openFileDialog2.Filter = "Executable files (*.exe)|*.exe|All files (*.*)|*.*";
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(39, 159);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(49, 13);
+            this.label2.TabIndex = 17;
+            this.label2.Text = "Schema:";
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(39, 203);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(37, 13);
+            this.label3.TabIndex = 18;
+            this.label3.Text = "Editor:";
+            // 
             // OptionsForm
             // 
             this.AcceptButton = this.buttonOK;
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.AutoSize = true;
+            this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.CancelButton = this.buttonCancel;
-            this.ClientSize = new System.Drawing.Size(389, 308);
+            this.ClientSize = new System.Drawing.Size(476, 353);
             this.ControlBox = false;
+            this.Controls.Add(this.label3);
+            this.Controls.Add(this.label2);
+            this.Controls.Add(this.butSelectCustomEditor);
+            this.Controls.Add(this.butSelectValidationFile);
+            this.Controls.Add(this.checkboxUseValidationSchema);
+            this.Controls.Add(this.textboxUseValidationSchema);
             this.Controls.Add(this.checkboxIgnoreFormSizeOnReload);
             this.Controls.Add(this.checkboxCustomEditor);
             this.Controls.Add(this.textboxCustomEditor);
@@ -253,5 +338,13 @@
         private System.Windows.Forms.ToolTip toolTip1;
         private System.Windows.Forms.CheckBox checkboxCustomEditor;
         private System.Windows.Forms.CheckBox checkboxIgnoreFormSizeOnReload;
+        private System.Windows.Forms.CheckBox checkboxUseValidationSchema;
+        private System.Windows.Forms.TextBox textboxUseValidationSchema;
+        private System.Windows.Forms.OpenFileDialog openFileDialog1;
+        private System.Windows.Forms.Button butSelectValidationFile;
+        private System.Windows.Forms.Button butSelectCustomEditor;
+        private System.Windows.Forms.OpenFileDialog openFileDialog2;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label label3;
     }
 }

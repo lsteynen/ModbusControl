@@ -23,6 +23,8 @@ namespace ModbusControlSpace
             public bool AutoNextRowOnEnter { get; set; }
             public bool AutoStartEdit { get; set; }
             public bool IgnoreSizeOnReload { get; set; }
+            public bool MbcfileValidationEnable { get; set; }
+            public string MbcfileValidationXSDFile { get; set; }
             public bool CustomEditorEnable { get; set; }
             public string CustomEditorCommand { get; set; }
             public bool CheckForUpdates { get; set; }
@@ -45,6 +47,8 @@ namespace ModbusControlSpace
                 AutoNextRowOnEnter = false;
                 AutoStartEdit = false;
                 IgnoreSizeOnReload = false;
+                MbcfileValidationEnable = false;
+                MbcfileValidationXSDFile = "";
                 CustomEditorEnable = false;
                 CustomEditorCommand = "";
                 CheckForUpdates = true;
@@ -252,6 +256,18 @@ namespace ModbusControlSpace
             if (xn != null)
             {
                 Values.IgnoreSizeOnReload = ParseBool(xn.InnerText);
+            }
+
+            xn = xmlroot.SelectSingleNode("mbcfilevalidationenable");
+            if (xn != null)
+            {
+                Values.MbcfileValidationEnable = ParseBool(xn.InnerText);
+            }
+
+            xn = xmlroot.SelectSingleNode("mbcfilevalidationxsdfile");
+            if (xn != null)
+            {
+                Values.MbcfileValidationXSDFile = xn.InnerText;
             }
 
             xn = xmlroot.SelectSingleNode("customeditoreenable");
@@ -506,6 +522,8 @@ namespace ModbusControlSpace
             UpdateOrInsertElementBool(xmlroot, "autonextrowonenter", Values.AutoNextRowOnEnter);
             UpdateOrInsertElementBool(xmlroot, "autostartedit", Values.AutoStartEdit);
             UpdateOrInsertElementBool(xmlroot, "ignoresizeonreload", Values.IgnoreSizeOnReload);
+            UpdateOrInsertElementBool(xmlroot, "mbcfilevalidationenable", Values.MbcfileValidationEnable);
+            UpdateOrInsertElementString(xmlroot, "mbcfilevalidationxsdfile", Values.MbcfileValidationXSDFile);
             UpdateOrInsertElementBool(xmlroot, "customeditoreenable", Values.CustomEditorEnable);
             UpdateOrInsertElementString(xmlroot, "customeditorcommand", Values.CustomEditorCommand);
             UpdateOrInsertElementBool(xmlroot, "checkforupdates", Values.CheckForUpdates);

@@ -31,7 +31,11 @@ namespace ModbusControlSpace
 
         private void checkbox_CheckedChanged(object sender, EventArgs e)
         {
-            buttonSave.Enabled = (checkboxConnection.Checked || checkboxSettings.Checked || checkboxBridge.Checked || checkboxFormSize.Checked);
+            buttonSave.Enabled = (checkboxConnection.Checked 
+                || checkboxSettings.Checked 
+                || checkboxBridge.Checked 
+                || checkboxFormSize.Checked 
+                || checkboxUpdateXML.Checked);
         }
 
         private void buttonSave_Click(object sender, EventArgs e)
@@ -39,22 +43,27 @@ namespace ModbusControlSpace
             // Got project?
             if (Project != null)
             {
+                bool Changed = false;
+
                 if (checkboxConnection.Checked)
                 {
                     // new parameters already in Project
                     Project.WriteConnection();
+                    Changed = true;
                 }
 
                 if (checkboxSettings.Checked)
                 {
                     // new parameters already in Project
                     Project.WriteOtherSettings();
+                    Changed = true;
                 }
 
                 if (checkboxBridge.Checked)
                 {
                     // new parameters already in Project
                     Project.WriteBridgeSettings();
+                    Changed = true;
                 }
 
                 if (checkboxFormSize.Checked)
@@ -63,6 +72,19 @@ namespace ModbusControlSpace
                     Project.FormSize.Width = SizeWidth;
                     Project.FormSize.Height = SizeHeight;
                     Project.WriteFormSize();
+                    Changed = true;
+                }
+
+                if (checkboxUpdateXML.Checked)
+                {
+                    // update XML to current version, like convert all XML tags to lowercase, ...
+                    Project.UpdateXML();
+                    Changed = true;
+                }
+
+                if (Changed)
+                {
+                    Project.SaveFile();
                 }
 
                 Close();

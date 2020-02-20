@@ -109,14 +109,14 @@ namespace ModbusControlSpace
             // lblStatus
             // 
             this.lblStatus.Name = "lblStatus";
-            this.lblStatus.Size = new System.Drawing.Size(538, 17);
+            this.lblStatus.Size = new System.Drawing.Size(569, 17);
             this.lblStatus.Spring = true;
             this.lblStatus.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // openFileDialog1
             // 
             this.openFileDialog1.DefaultExt = "mbc";
-            this.openFileDialog1.Filter = "ModbusControl project (*.mbc)|*.mbc|All files (*.*)|*.*";
+            this.openFileDialog1.Filter = "ModbusControl project files (*.mbc)|*.mbc|All files (*.*)|*.*";
             // 
             // DiagnosticsTimer
             // 
@@ -217,7 +217,7 @@ namespace ModbusControlSpace
             // 
             this.saveConfigurationMenuItem.Name = "saveConfigurationMenuItem";
             this.saveConfigurationMenuItem.Size = new System.Drawing.Size(266, 22);
-            this.saveConfigurationMenuItem.Text = "Save configuration to project file...";
+            this.saveConfigurationMenuItem.Text = "Save project file...";
             this.saveConfigurationMenuItem.Click += new System.EventHandler(this.saveConfigurationMenuItem_Click);
             // 
             // toolStripSeparator6
