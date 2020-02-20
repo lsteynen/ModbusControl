@@ -192,7 +192,10 @@ namespace Modbus_net
             }
 
             // on the forums, some say it is best to close the underlying connection explicitly
-            mConnection.Client.Disconnect(false);
+            if (mConnection.Client.Connected)
+            {
+                mConnection.Client.Disconnect(false);
+            }
             mConnection.Close();
         }
 
@@ -388,12 +391,12 @@ namespace Modbus_net
                             }
                         }
                     }
-
-                    Thread.Sleep(10);
                 }
                 catch (Exception)
                 {
                 }
+
+				Thread.Sleep(10);
             }
             while (ReceiveThread_Stop == false);
         }

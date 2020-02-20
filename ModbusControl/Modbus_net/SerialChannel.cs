@@ -264,12 +264,12 @@ namespace Modbus_net
                             }
                         }
                     }
-
-                    Thread.Sleep(10);
                 }
                 catch (Exception)
                 {
                 }
+
+                Thread.Sleep(10);
             }
             while (ReceiveThread_Stop == false);
         }

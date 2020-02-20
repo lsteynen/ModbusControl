@@ -829,9 +829,10 @@ namespace Modbus_net
                 result = mProtocol.ProtocolSendReceive( query, querylength, out response, expectedresponselength);
                 ++mytries;
 
+                // adjust counters for transport errors and exceptions
+                // must do here to count the errors of first tries
                 if (result != Result.SUCCESS)
                 {
-                    // adjust counters for transport errors and exceptions, upper layers check for more errors
                     AdjustResultCounters(result);
                 }
             }
@@ -842,6 +843,8 @@ namespace Modbus_net
             {
                 ++FatalCount;
             }
+
+            // upper layers will check for more errors
 
             return result;
         }
