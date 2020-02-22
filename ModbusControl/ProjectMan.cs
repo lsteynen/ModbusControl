@@ -2247,8 +2247,22 @@ namespace ModbusControlSpace
         /// </summary>
         public void SaveFile()
         {
-            // And write the file
+            /* 
+            //default XDocument save, saves with BOM
             XmlDoc.Save(Path);
+            */
+
+            // save without BOM
+            XmlWriterSettings settings = new XmlWriterSettings();
+            settings.Encoding = new UTF8Encoding(false); // The false means, do not emit the BOM.
+            /* Indenting werkt niet goed
+            settings.Indent = true;
+            settings.IndentChars = ("\t");
+            */
+            using (XmlWriter w = XmlWriter.Create(Path, settings))
+            {
+                XmlDoc.Save(w);
+            }
         }
 
         /// <summary>
