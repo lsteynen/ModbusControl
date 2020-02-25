@@ -16,6 +16,7 @@ using System.Threading;
 using System.Timers;
 using System.Windows.Forms;
 using System.Xml;
+using System.Xml.Schema;
 
 using Modbus_net;
 using ModbusRegViewSpace;
@@ -970,36 +971,59 @@ namespace ModbusControlSpace
                 SaveConfigurationForm1 = null;
             }
 
-            // New project
-            Project = new CProject();
-            ClearProjectInTabs();
-
-            try
+            bool bUseValidation = true;
+            bool bRetry = false;
+            do
             {
-                // optional validation schema
-                if( Options.MbcfileValidationEnable && (Options.MbcfileValidationXSDFile != ""))
+                // New project
+                bRetry = false;
+                Project = new CProject();
+                ClearProjectInTabs();
+
+                try
                 {
-                    Project.ValidationSchemaPath = Options.MbcfileValidationXSDFile;
+                    // optional validation schema
+                    if (bUseValidation && Options.MbcfileValidationEnable && (Options.MbcfileValidationXSDFile != ""))
+                    {
+                        Project.ValidationSchemaPath = Options.MbcfileValidationXSDFile;
+                    }
+
+                    Project.Load(path);
                 }
+                catch (XmlSchemaException ex)
+                {
+                    // schema validation fail
+                    ValidationFailed form = new ValidationFailed();
+                    form.ErrorText = "Error: Cannot load .mbc project file because XML schema validation failed: " + Environment.NewLine + ex.Message;
+                    System.Windows.Forms.DialogResult Result = form.ShowDialog();
+                    form.Dispose();
+                    if (Result == System.Windows.Forms.DialogResult.OK)
+                    {
+                        bUseValidation = false;
+                        bRetry = true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+                catch (XmlException ex)
+                {
+                    MessageBox.Show("Error: Cannot load .mbc project file because it has an error: " + Environment.NewLine +
+                        ex.Message, this.Text,
+                        MessageBoxButtons.OK, MessageBoxIcon.Error);
 
-                Project.Load(path);
-            }
-            catch (XmlException ex)
-            {
-                MessageBox.Show("Error: Cannot load .mbc project file because it has an error: " + Environment.NewLine +
-                    ex.Message, this.Text,
-                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return false;
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Error: Cannot load .mbc project file: " + Environment.NewLine +
+                        ex.Message, this.Text,
+                        MessageBoxButtons.OK, MessageBoxIcon.Error);
 
-                return false;
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Error: Cannot load .mbc project file: " + Environment.NewLine +
-                    ex.Message, this.Text,
-                    MessageBoxButtons.OK, MessageBoxIcon.Error);
-
-                return false;
-            }
+                    return false;
+                }
+            } while (bRetry);
 
             // ignore form size? then reset the 'seen' flags
             // we will accept the form size from localoverride

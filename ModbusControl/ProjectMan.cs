@@ -234,11 +234,10 @@ namespace ModbusControlSpace
         static void ValidationEventHandler(object sender, ValidationEventArgs e)
         {
             // throw exception on validation error
-            string Msg = "Schema validation failed: " + Environment.NewLine 
-                    + e.Message + Environment.NewLine
+            string Msg = e.Message + Environment.NewLine
                     + "Line " + e.Exception.LineNumber.ToString() + ", column " + e.Exception.LinePosition.ToString() + ".";
 
-            throw new XmlException(Msg);
+            throw new XmlSchemaException(Msg);
         }
 
         /// <summary>
