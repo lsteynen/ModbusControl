@@ -47,7 +47,7 @@ namespace ModbusControlSpace
                 AutoNextRowOnEnter = false;
                 AutoStartEdit = false;
                 IgnoreSizeOnReload = false;
-                MbcfileValidationEnable = false;
+                MbcfileValidationEnable = true;
                 MbcfileValidationXSDFile = "";
                 CustomEditorEnable = false;
                 CustomEditorCommand = "";
