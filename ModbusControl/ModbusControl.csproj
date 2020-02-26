@@ -205,17 +205,17 @@
     <Compile Include="SaveConfigurationForm.Designer.cs">
       <DependentUpon>SaveConfigurationForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="ValidationFailed.cs">
+    <Compile Include="ValidationFailedForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="ValidationFailed.Designer.cs">
-      <DependentUpon>ValidationFailed.cs</DependentUpon>
+    <Compile Include="ValidationFailedForm.Designer.cs">
+      <DependentUpon>ValidationFailedForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="SerialPortOpenFailed.cs">
+    <Compile Include="SerialPortOpenFailedForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="SerialPortOpenFailed.Designer.cs">
-      <DependentUpon>SerialPortOpenFailed.cs</DependentUpon>
+    <Compile Include="SerialPortOpenFailedForm.Designer.cs">
+      <DependentUpon>SerialPortOpenFailedForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Settings.cs" />
     <Compile Include="TreeGridView.Designer.cs">
@@ -335,11 +335,11 @@
     <EmbeddedResource Include="SaveConfigurationForm.resx">
       <DependentUpon>SaveConfigurationForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="ValidationFailed.resx">
-      <DependentUpon>ValidationFailed.cs</DependentUpon>
+    <EmbeddedResource Include="ValidationFailedForm.resx">
+      <DependentUpon>ValidationFailedForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="SerialPortOpenFailed.resx">
-      <DependentUpon>SerialPortOpenFailed.cs</DependentUpon>
+    <EmbeddedResource Include="SerialPortOpenFailedForm.resx">
+      <DependentUpon>SerialPortOpenFailedForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="TreeGridView.resx">
       <SubType>Designer</SubType>

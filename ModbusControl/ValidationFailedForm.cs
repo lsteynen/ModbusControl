@@ -10,7 +10,7 @@ using System.Windows.Forms;
 
 namespace ModbusControlSpace
 {
-    public partial class ValidationFailed : Form
+    public partial class ValidationFailedForm : Form
     {
         public string ErrorText
         {
@@ -18,7 +18,7 @@ namespace ModbusControlSpace
             set { labelErrortext.Text = value; }
         }
 
-        public ValidationFailed()
+        public ValidationFailedForm()
         {
             InitializeComponent();
 

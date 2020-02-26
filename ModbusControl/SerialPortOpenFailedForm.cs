@@ -10,7 +10,7 @@ using System.Windows.Forms;
 
 namespace ModbusControlSpace
 {
-    public partial class SerialPortOpenFailed : Form
+    public partial class SerialPortOpenFailedForm : Form
     {
         public string ErrorText
         {
@@ -22,7 +22,7 @@ namespace ModbusControlSpace
             get { return comboSerialPort.Text.Trim(); }
         }
 
-        public SerialPortOpenFailed()
+        public SerialPortOpenFailedForm()
         {
             InitializeComponent();
 

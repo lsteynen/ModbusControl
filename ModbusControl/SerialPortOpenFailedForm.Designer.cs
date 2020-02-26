@@ -1,6 +1,6 @@
 ﻿namespace ModbusControlSpace
 {
-    partial class SerialPortOpenFailed
+    partial class SerialPortOpenFailedForm
     {
         /// <summary>
         /// Required designer variable.

@@ -1,6 +1,6 @@
 ﻿namespace ModbusControlSpace
 {
-    partial class ValidationFailed
+    partial class ValidationFailedForm
     {
         /// <summary>
         /// Required designer variable.

@@ -993,7 +993,7 @@ namespace ModbusControlSpace
                 catch (XmlSchemaException ex)
                 {
                     // schema validation fail
-                    ValidationFailed form = new ValidationFailed();
+                    ValidationFailedForm form = new ValidationFailedForm();
                     form.ErrorText = "Error: Cannot load .mbc project file because XML schema validation failed: " + Environment.NewLine + ex.Message;
                     System.Windows.Forms.DialogResult Result = form.ShowDialog();
                     form.Dispose();
@@ -1289,7 +1289,7 @@ namespace ModbusControlSpace
                 else
                 {
                     // failed
-                    SerialPortOpenFailed form = new SerialPortOpenFailed();
+                    SerialPortOpenFailedForm form = new SerialPortOpenFailedForm();
                     form.ErrorText = "Error opening serial port " + Portname + ":" + Environment.NewLine + ErrorText;
                     if (form.ShowDialog() == System.Windows.Forms.DialogResult.OK)
                     {
