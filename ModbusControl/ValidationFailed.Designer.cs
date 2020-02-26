@@ -39,7 +39,7 @@
             // 
             this.labelErrortext.Location = new System.Drawing.Point(69, 18);
             this.labelErrortext.Name = "labelErrortext";
-            this.labelErrortext.Size = new System.Drawing.Size(288, 114);
+            this.labelErrortext.Size = new System.Drawing.Size(267, 114);
             this.labelErrortext.TabIndex = 4;
             this.labelErrortext.Text = "Error text...";
             // 
@@ -76,6 +76,7 @@
             this.AcceptButton = this.buttonOK;
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
+            this.AutoSize = true;
             this.CancelButton = this.buttonCancel;
             this.ClientSize = new System.Drawing.Size(374, 177);
             this.ControlBox = false;
