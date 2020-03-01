@@ -12,6 +12,7 @@ namespace ModbusControlSpace
         // properties
 
         public string VersionString { get; set; }
+        public string AppdataPath { get; set; }
         public int FormWidth { get; set; }
         public int FormHeight { get; set; }
         public string LocalOverride { get; set; }
@@ -27,8 +28,7 @@ namespace ModbusControlSpace
             this.labelName.Text = AssemblyProduct;
             this.labelVersion.Text = "Version " + VersionString;
 
-            this.labelMyDocuments.Text = "User documents: " + Global.MyDocumentsPath;
-            // this.labelCommonApplicationData.Text = "Settings storage: " + Global.CommonApplicationDataPath;
+            this.labelAppdata.Text = "User application data folder: " + AppdataPath;
             this.labelDotNetVersion.Text = ".NET runtime version: " + typeof(int).Assembly.ImageRuntimeVersion;
             this.labelFormSize.Text = "Form size: " + FormWidth + " x " + FormHeight;
             if( string.IsNullOrEmpty(LocalOverride))

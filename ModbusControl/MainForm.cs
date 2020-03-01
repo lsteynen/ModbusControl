@@ -57,7 +57,7 @@ namespace ModbusControlSpace
 
         private int DefaultFormWidth;
         private int DefaultFormHeight;
-        private Settings Settings1;
+        private CSettings Settings1;
         public string ProjectPath; // Path of current project file (null if none, assigned if open or tried to open)
         public CProject Project; // Loaded project
         private bool ProjectIsOpen; // true if project is successully opened
@@ -125,8 +125,7 @@ namespace ModbusControlSpace
             SaveStatusbarDefaultValues();
 
             // Create our settings object
-            Settings1 = new Settings();
-            Settings1.StorePath = Path.Combine(Global.CommonApplicationDataPath, "Settings.xml");
+            Settings1 = new CSettings();
 
             // Init MRU project files list
             recentFilesMenuItem.MaxItems = 10;
@@ -178,6 +177,7 @@ namespace ModbusControlSpace
             }
             catch (Exception ex)
             {
+                //TODO: is tekst altijd juist?
                 string msg = "Error on loading program settings from Settings.xml:" + Environment.NewLine + Environment.NewLine
                     + ex.Message + Environment.NewLine + Environment.NewLine
                     + "Will create a new Settings.xml with default settings on program exit.";
@@ -185,39 +185,44 @@ namespace ModbusControlSpace
             }
 
             // And use them
-            Options.StopOnError = Settings1.Values.StopOnError;
-            Options.UseLocalOverrides = Settings1.Values.UseLocalOverrides;
-            Options.BeepOnInputError = Settings1.Values.BeepOnInputError;
-            Options.AutoNextRowOnEnter = Settings1.Values.AutoNextRowOnEnter;
-            Options.AutoStartEdit = Settings1.Values.AutoStartEdit;
-            Options.IgnoreSizeOnReload = Settings1.Values.IgnoreSizeOnReload;
-            Options.MbcfileValidationEnable = Settings1.Values.MbcfileValidationEnable;
-            Options.MbcfileValidationXSDFile = Settings1.Values.MbcfileValidationXSDFile;
-            Options.CustomEditorEnable = Settings1.Values.CustomEditorEnable;
-            Options.CustomEditorCommand = Settings1.Values.CustomEditorCommand;
-            Options.CheckForUpdates = Settings1.Values.CheckForUpdates;
+            Options.StopOnError = Settings1.Roaming.StopOnError;
+            Options.UseLocalOverrides = Settings1.Roaming.UseLocalOverrides;
+            Options.BeepOnInputError = Settings1.Roaming.BeepOnInputError;
+            Options.AutoNextRowOnEnter = Settings1.Roaming.AutoNextRowOnEnter;
+            Options.AutoStartEdit = Settings1.Roaming.AutoStartEdit;
+            Options.IgnoreSizeOnReload = Settings1.Roaming.IgnoreSizeOnReload;
+            Options.MbcfileValidationEnable = Settings1.Roaming.MbcfileValidationEnable;
+            Options.MbcfileValidationXSDFile = Settings1.Roaming.MbcfileValidationXSDFile;
+            Options.CustomEditorEnable = Settings1.Roaming.CustomEditorEnable;
+            Options.CustomEditorCommand = Settings1.Roaming.CustomEditorCommand;
+            Options.CheckForUpdates = Settings1.Shared.Updater.CheckForUpdates;
             // pass options to clients
             PassOptionsToClients();
 
-            recentFilesMenuItem.LoadList(Settings1.Values.MbcMruList);
+            recentFilesMenuItem.LoadList(Settings1.Roaming.MbcMruList);
 
-            // export settings taken when form is created
-            // compare settings taken when form is created
-            Logger1.CapacityLines = Settings1.Values.Logger.Capacity;
-            Logger1.TheLogFilter.LogErrors = Settings1.Values.Logger.LogErrors;
-            Logger1.TheLogFilter.LogWarnings = Settings1.Values.Logger.LogWarnings;
-            Logger1.TheLogFilter.LogInfo = Settings1.Values.Logger.LogInfo;
-            Logger1.TheLogFilter.LogTrace = Settings1.Values.Logger.LogTrace;
-            Logger1.TheLogFilter.LogReads = Settings1.Values.Logger.LogReads;
-            Logger1.TheLogFilter.LogWrites = Settings1.Values.Logger.LogWrites;
-            Logger1.TheLogFilter.LogBridgeInfo = Settings1.Values.Logger.LogBridgeInfo;
-            Logger1.TheLogFilter.LogBridgeData = Settings1.Values.Logger.LogBridgeData;
-            Logger1.TheLogFilter.LogBridgeDecode = Settings1.Values.Logger.LogBridgeDecode;
+            // the export window settings will be used when form is created
+            // the compare window settings will be used when form is created
+            // logger settings
+            Logger1.CapacityLines = Settings1.Roaming.Logger.Capacity;
+            Logger1.TheLogFilter.LogErrors = Settings1.Roaming.Logger.LogErrors;
+            Logger1.TheLogFilter.LogWarnings = Settings1.Roaming.Logger.LogWarnings;
+            Logger1.TheLogFilter.LogInfo = Settings1.Roaming.Logger.LogInfo;
+            Logger1.TheLogFilter.LogTrace = Settings1.Roaming.Logger.LogTrace;
+            Logger1.TheLogFilter.LogReads = Settings1.Roaming.Logger.LogReads;
+            Logger1.TheLogFilter.LogWrites = Settings1.Roaming.Logger.LogWrites;
+            Logger1.TheLogFilter.LogBridgeInfo = Settings1.Roaming.Logger.LogBridgeInfo;
+            Logger1.TheLogFilter.LogBridgeData = Settings1.Roaming.Logger.LogBridgeData;
+            Logger1.TheLogFilter.LogBridgeDecode = Settings1.Roaming.Logger.LogBridgeDecode;
+
+            //TODO
+            // migreer de localoverrides file van oude locatie (mydocuments\Modbuscontrol) naar nieuwe (%appdata%)
+            MigrateLocalOverrides();
 
             // Start updater thread
             // if auto-update enabled
             // and only once per day, check if this is 1 day later
-            DateTime LastCheckDate = Settings1.Values.LastCheckForUpdate.Date;
+            DateTime LastCheckDate = Settings1.Shared.Updater.LastCheckForUpdate.Date;
             DateTime NextCheckDate = LastCheckDate.AddDays(1);
             if( Options.CheckForUpdates && (DateTime.Now >= NextCheckDate))
             {
@@ -342,68 +347,76 @@ namespace ModbusControlSpace
             Debug.Print(DateTime.Now.TimeOfDay + ": Form1_FormClosing()-5");
 
             // Update the current settings
-            Settings1.Values.MbcMruList = recentFilesMenuItem.GetList();
-            Settings1.Values.StopOnError = Options.StopOnError;
-            Settings1.Values.UseLocalOverrides = Options.UseLocalOverrides;
-            Settings1.Values.BeepOnInputError = Options.BeepOnInputError;
-            Settings1.Values.AutoNextRowOnEnter = Options.AutoNextRowOnEnter;
-            Settings1.Values.AutoStartEdit = Options.AutoStartEdit;
-            Settings1.Values.IgnoreSizeOnReload = Options.IgnoreSizeOnReload;
-            Settings1.Values.MbcfileValidationEnable = Options.MbcfileValidationEnable;
-            Settings1.Values.MbcfileValidationXSDFile = Options.MbcfileValidationXSDFile;
-            Settings1.Values.CustomEditorEnable = Options.CustomEditorEnable;
-            Settings1.Values.CustomEditorCommand = Options.CustomEditorCommand;
-            Settings1.Values.CheckForUpdates = Options.CheckForUpdates;
+            Settings1.Roaming.MbcMruList = recentFilesMenuItem.GetList();
+            Settings1.Roaming.StopOnError = Options.StopOnError;
+            Settings1.Roaming.UseLocalOverrides = Options.UseLocalOverrides;
+            Settings1.Roaming.BeepOnInputError = Options.BeepOnInputError;
+            Settings1.Roaming.AutoNextRowOnEnter = Options.AutoNextRowOnEnter;
+            Settings1.Roaming.AutoStartEdit = Options.AutoStartEdit;
+            Settings1.Roaming.IgnoreSizeOnReload = Options.IgnoreSizeOnReload;
+            Settings1.Roaming.MbcfileValidationEnable = Options.MbcfileValidationEnable;
+            Settings1.Roaming.MbcfileValidationXSDFile = Options.MbcfileValidationXSDFile;
+            Settings1.Roaming.CustomEditorEnable = Options.CustomEditorEnable;
+            Settings1.Roaming.CustomEditorCommand = Options.CustomEditorCommand;
+            Settings1.Shared.Updater.CheckForUpdates = Options.CheckForUpdates;
             if (ExportForm != null)
             {
                 // save settings if form exists
-                Settings1.Values.Export.Tabs = ExportForm.TabSelect;
-                Settings1.Values.Export.ExportFormat = ExportForm.ExportFormatSelect;
-                Settings1.Values.Export.ExportAsciiAs = ExportForm.AsciiFormatSelect;
+                Settings1.Roaming.Export.Tabs = ExportForm.TabSelect;
+                Settings1.Roaming.Export.ExportFormat = ExportForm.ExportFormatSelect;
+                Settings1.Roaming.Export.ExportAsciiAs = ExportForm.AsciiFormatSelect;
             }
             if (ImportcompareForm != null)
             {
                 // save settings if form exists
-                Settings1.Values.Compare.ShowEqual = ImportcompareForm.ShowEquals;
+                Settings1.Roaming.Compare.ShowEqual = ImportcompareForm.ShowEquals;
             }
             if (CustomreadForm != null)
             {
                 // save settings if form exists
-                Settings1.Values.CustomRead.SlaveID = CustomreadForm.SlaveID;
-                Settings1.Values.CustomRead.Register = (int)CustomreadForm.Register;
-                Settings1.Values.CustomRead.Quantity = CustomreadForm.Quantity;
-                Settings1.Values.CustomRead.Datasize = CustomreadForm.Datasize;
-                Settings1.Values.CustomRead.ShowValuesAs = CustomreadForm.Showvaluesas;
+                Settings1.Roaming.CustomRead.SlaveID = CustomreadForm.SlaveID;
+                Settings1.Roaming.CustomRead.Register = (int)CustomreadForm.Register;
+                Settings1.Roaming.CustomRead.Quantity = CustomreadForm.Quantity;
+                Settings1.Roaming.CustomRead.Datasize = CustomreadForm.Datasize;
+                Settings1.Roaming.CustomRead.ShowValuesAs = CustomreadForm.Showvaluesas;
             }
             if (CustomwriteForm != null)
             {
                 // save settings if form exists
-                Settings1.Values.CustomWrite.SlaveID = CustomwriteForm.SlaveID;
-                Settings1.Values.CustomWrite.Register = (int)CustomwriteForm.Register;
-                Settings1.Values.CustomWrite.Quantity = CustomwriteForm.Quantity;
-                Settings1.Values.CustomWrite.Datasize = CustomwriteForm.Datasize;
-                Settings1.Values.CustomWrite.Functioncode = CustomwriteForm.Functioncode;
-                Settings1.Values.CustomWrite.Datasize = CustomwriteForm.Datasize;
-                Settings1.Values.CustomWrite.Data = CustomwriteForm.Data;
+                Settings1.Roaming.CustomWrite.SlaveID = CustomwriteForm.SlaveID;
+                Settings1.Roaming.CustomWrite.Register = (int)CustomwriteForm.Register;
+                Settings1.Roaming.CustomWrite.Quantity = CustomwriteForm.Quantity;
+                Settings1.Roaming.CustomWrite.Datasize = CustomwriteForm.Datasize;
+                Settings1.Roaming.CustomWrite.Functioncode = CustomwriteForm.Functioncode;
+                Settings1.Roaming.CustomWrite.Datasize = CustomwriteForm.Datasize;
+                Settings1.Roaming.CustomWrite.Data = CustomwriteForm.Data;
             }
             if (CustommodbuscommandForm != null)
             {
                 // save settings if form exists
-                Settings1.Values.CustomCommand.Command = CustommodbuscommandForm.Command;
+                Settings1.Roaming.CustomCommand.Command = CustommodbuscommandForm.Command;
             }
-            Settings1.Values.Logger.Capacity = Logger1.CapacityLines;
-            Settings1.Values.Logger.LogErrors = Logger1.TheLogFilter.LogErrors;
-            Settings1.Values.Logger.LogWarnings = Logger1.TheLogFilter.LogWarnings;
-            Settings1.Values.Logger.LogInfo = Logger1.TheLogFilter.LogInfo;
-            Settings1.Values.Logger.LogTrace = Logger1.TheLogFilter.LogTrace;
-            Settings1.Values.Logger.LogReads = Logger1.TheLogFilter.LogReads;
-            Settings1.Values.Logger.LogWrites = Logger1.TheLogFilter.LogWrites;
-            Settings1.Values.Logger.LogBridgeInfo = Logger1.TheLogFilter.LogBridgeInfo;
-            Settings1.Values.Logger.LogBridgeData = Logger1.TheLogFilter.LogBridgeData;
-            Settings1.Values.Logger.LogBridgeDecode = Logger1.TheLogFilter.LogBridgeDecode;
+            Settings1.Roaming.Logger.Capacity = Logger1.CapacityLines;
+            Settings1.Roaming.Logger.LogErrors = Logger1.TheLogFilter.LogErrors;
+            Settings1.Roaming.Logger.LogWarnings = Logger1.TheLogFilter.LogWarnings;
+            Settings1.Roaming.Logger.LogInfo = Logger1.TheLogFilter.LogInfo;
+            Settings1.Roaming.Logger.LogTrace = Logger1.TheLogFilter.LogTrace;
+            Settings1.Roaming.Logger.LogReads = Logger1.TheLogFilter.LogReads;
+            Settings1.Roaming.Logger.LogWrites = Logger1.TheLogFilter.LogWrites;
+            Settings1.Roaming.Logger.LogBridgeInfo = Logger1.TheLogFilter.LogBridgeInfo;
+            Settings1.Roaming.Logger.LogBridgeData = Logger1.TheLogFilter.LogBridgeData;
+            Settings1.Roaming.Logger.LogBridgeDecode = Logger1.TheLogFilter.LogBridgeDecode;
 
             // And save
-            Settings1.Save();
+            // Exception opvangen en deftige melding geven
+            try
+            {
+                Settings1.Save();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "ModbusControl", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         #region Menu and toolbar handlers
@@ -519,7 +532,8 @@ namespace ModbusControlSpace
         private void editLocalOverridesMenuItem_Click(object sender, EventArgs e)
         {
             // Make path
-            string filepath = Path.Combine(Global.MyDocumentsPath, "LocalOverrides.xml");
+            //TODO, ander path
+            string filepath = Path.Combine(Settings1.StoreRoamingPath, "LocalOverrides.xml");
 
             // File exists?
             if (File.Exists(filepath))
@@ -849,6 +863,7 @@ namespace ModbusControlSpace
         {
             AboutBox1 about = new AboutBox1();
             about.VersionString = Global.VersionString;
+            about.AppdataPath = Settings1.StoreRoamingPath;
             about.FormWidth = this.Width;
             about.FormHeight = this.Height;
             about.LocalOverride = LocalOverrideUsedName;
@@ -1038,7 +1053,7 @@ namespace ModbusControlSpace
             {
                 try
                 {
-                    Project.LocalOverrideFile = Path.Combine(Global.MyDocumentsPath, "LocalOverrides.xml");
+                    Project.LocalOverrideFile = Path.Combine(Settings1.StoreRoamingPath, "LocalOverrides.xml");
                     bool IsLocalOverrideUsed = Project.LoadLocalOverride(System.IO.Path.GetFileName(ProjectPath));
                     LocalOverrideUsedName = Project.LocalOverrideName;
                 }
@@ -2313,9 +2328,9 @@ namespace ModbusControlSpace
             {
                 ExportForm = new Export(this);
                 // load settings
-                ExportForm.TabSelect = Settings1.Values.Export.Tabs;
-                ExportForm.ExportFormatSelect = Settings1.Values.Export.ExportFormat;
-                ExportForm.AsciiFormatSelect = Settings1.Values.Export.ExportAsciiAs;
+                ExportForm.TabSelect = Settings1.Roaming.Export.Tabs;
+                ExportForm.ExportFormatSelect = Settings1.Roaming.Export.ExportFormat;
+                ExportForm.AsciiFormatSelect = Settings1.Roaming.Export.ExportAsciiAs;
             }
 
             // show modal
@@ -2332,7 +2347,7 @@ namespace ModbusControlSpace
             {
                 ImportcompareForm = new Importcompare(this);
                 // load settings
-                ImportcompareForm.ShowEquals = Settings1.Values.Compare.ShowEqual;
+                ImportcompareForm.ShowEquals = Settings1.Roaming.Compare.ShowEqual;
             }
 
             // show modal
@@ -2353,11 +2368,11 @@ namespace ModbusControlSpace
             {
                 CustomreadForm = new CustomRead(this);
                 // load settings
-                CustomreadForm.SlaveID = (byte)Settings1.Values.CustomRead.SlaveID;
-                CustomreadForm.Register = (uint)Settings1.Values.CustomRead.Register;
-                CustomreadForm.Quantity = (ushort)Settings1.Values.CustomRead.Quantity;
-                CustomreadForm.Datasize = Settings1.Values.CustomRead.Datasize;
-                CustomreadForm.Showvaluesas = Settings1.Values.CustomRead.ShowValuesAs;
+                CustomreadForm.SlaveID = (byte)Settings1.Roaming.CustomRead.SlaveID;
+                CustomreadForm.Register = (uint)Settings1.Roaming.CustomRead.Register;
+                CustomreadForm.Quantity = (ushort)Settings1.Roaming.CustomRead.Quantity;
+                CustomreadForm.Datasize = Settings1.Roaming.CustomRead.Datasize;
+                CustomreadForm.Showvaluesas = Settings1.Roaming.CustomRead.ShowValuesAs;
             }
 
             // update some parameters
@@ -2374,12 +2389,12 @@ namespace ModbusControlSpace
             {
                 CustomwriteForm = new CustomWrite(this);
                 // load settings
-                CustomwriteForm.SlaveID = (byte)Settings1.Values.CustomWrite.SlaveID;
-                CustomwriteForm.Register = (uint)Settings1.Values.CustomWrite.Register;
-                CustomwriteForm.Quantity = (ushort)Settings1.Values.CustomWrite.Quantity;
-                CustomwriteForm.Functioncode = Settings1.Values.CustomWrite.Functioncode;
-                CustomwriteForm.Datasize = Settings1.Values.CustomWrite.Datasize;
-                CustomwriteForm.Data = Settings1.Values.CustomWrite.Data;
+                CustomwriteForm.SlaveID = (byte)Settings1.Roaming.CustomWrite.SlaveID;
+                CustomwriteForm.Register = (uint)Settings1.Roaming.CustomWrite.Register;
+                CustomwriteForm.Quantity = (ushort)Settings1.Roaming.CustomWrite.Quantity;
+                CustomwriteForm.Functioncode = Settings1.Roaming.CustomWrite.Functioncode;
+                CustomwriteForm.Datasize = Settings1.Roaming.CustomWrite.Datasize;
+                CustomwriteForm.Data = Settings1.Roaming.CustomWrite.Data;
             }
 
             // show
@@ -2393,7 +2408,7 @@ namespace ModbusControlSpace
             {
                 CustommodbuscommandForm = new CustomModbusCommand(this);
                 // load settings
-                CustommodbuscommandForm.Command = Settings1.Values.CustomCommand.Command;
+                CustommodbuscommandForm.Command = Settings1.Roaming.CustomCommand.Command;
             }
 
             // show modal
@@ -2694,10 +2709,27 @@ namespace ModbusControlSpace
 
             // run updater only once per day
             // remember date/time updater was run
-            Settings1.Values.LastCheckForUpdate = DateTime.Now;
+            Settings1.Shared.Updater.LastCheckForUpdate = DateTime.Now;
         }
 
         #endregion
-        
+
+        /// <summary>
+        /// Migreer de localoverrides file van oude locatie (mydocuments\Modbuscontrol) naar nieuwe (%appdata%).
+        /// Only if it does not yet exists in the new location.
+        /// </summary>
+        private void MigrateLocalOverrides()
+        {
+            //TODO
+            /*
+            // check if our directory in MyDocuments exist for the current user
+            // if not: create it and create the default files
+            if (!Directory.Exists(Global.MyDocumentsPath))
+            {
+                Directory.CreateDirectory(Global.MyDocumentsPath);
+                File.Copy(Path.Combine(Global.ApplicationStartupPath, "LocalOverrides.xml"), Path.Combine(Global.MyDocumentsPath, "LocalOverrides.xml"));
+            }
+            */
+        }
     }
 }

@@ -6,124 +6,517 @@ using System.Xml.Serialization;
 using System.IO;
 using System.Windows.Forms;
 
+//TODO: installer maakt geen default settings file, app doet dat bij eerste afsluit.
+
+// We laden en schrijven de XML files manueel. Als we de class naar een XML file zouden schrijven
+// ontstaat het probleem dat een aantal XML elementen verdwijnen als je even een oudere versie
+// van de applicatie runt.
+
 namespace ModbusControlSpace
 {
-    public class Settings
+    public class CSettings
     {
-        private XmlDocument doc;
-        private XmlNode xmlroot;
+        // company and app name
+        private string Company = @"E.D.&A";
+        private string AppName = "ModbusControl";
+        private string SettingsFilename = "Settings.xml";
 
-        // public
+        // paths
+        public string ApplicationStartupPath;
+        public string StoreRoamingPath;
+        public string StoreLocalPath;
+        public string StoreSharedPath;
 
-        public class CValues
+        public CRoaming Roaming;    // user roaming settings
+        //public CLocal Local;        // user local settings
+        public CShared Shared;      // per applciation shared settings
+
+        // constructor
+        public CSettings()
         {
-            public bool StopOnError { get; set; }
-            public bool UseLocalOverrides { get; set; }
-            public bool BeepOnInputError { get; set; }
-            public bool AutoNextRowOnEnter { get; set; }
-            public bool AutoStartEdit { get; set; }
-            public bool IgnoreSizeOnReload { get; set; }
-            public bool MbcfileValidationEnable { get; set; }
-            public string MbcfileValidationXSDFile { get; set; }
-            public bool CustomEditorEnable { get; set; }
-            public string CustomEditorCommand { get; set; }
-            public bool CheckForUpdates { get; set; }
-            public DateTime LastCheckForUpdate { get; set; }
-            public List<string> MbcMruList { get; set; }
-            public CExport Export { get; set; }
-            public CCompare Compare { get; set; }
-            public CCustomRead CustomRead { get; set; }
-            public CCustomWrite CustomWrite { get; set; }
-            public CCustomCommand CustomCommand { get; set; }
-            public CLoggerValues Logger { get; set; }
+            // init paths
+            // Get Special Folders paths
+            ApplicationStartupPath = Application.StartupPath;
+            StoreRoamingPath = Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.ApplicationData), Company, AppName, SettingsFilename);
+            StoreLocalPath = Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.LocalApplicationData), Company, AppName, SettingsFilename);
+            StoreSharedPath = Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.CommonApplicationData), Company, AppName, SettingsFilename);
+
+            Roaming = new CRoaming();
+            Roaming.FilePath = StoreRoamingPath;
+            //Local = new CLocal();
+            //Local.FilePath = StoreLocalPath;
+            Shared = new CShared();
+            Shared.FilePath = StoreSharedPath;
+        }
+
+        /// <summary>
+        /// Load all settings from files
+        /// </summary>
+        public void Load()
+        {
+            Roaming.Load();
+            //Local.Load();
+            Shared.Load();
+        }
+
+        /// <summary>
+        /// Save all settings to files
+        /// </summary>
+        public void Save()
+        {
+            try
+            {
+                Roaming.Save();
+            }
+            catch (Exception ex)
+            {
+                throw new IOException("Error while saving user settings: " + ex.Message);
+            }
+
+            //Local.Save();
+
+            try
+            {
+                Shared.Save();
+            }
+            catch (Exception ex)
+            {
+                throw new IOException("Error while saving shared settings: " + ex.Message);
+            }
+        }
+
+        // per user, roaming
+        public class CRoaming
+        {
+            public string FilePath;
+
+            // settings
+            public bool StopOnError;
+            public bool UseLocalOverrides;
+            public bool BeepOnInputError;
+            public bool AutoNextRowOnEnter;
+            public bool AutoStartEdit;
+            public bool IgnoreSizeOnReload;
+            public bool MbcfileValidationEnable;
+            public string MbcfileValidationXSDFile;
+            public bool CustomEditorEnable;
+            public string CustomEditorCommand;
+            public List<string> MbcMruList;
+            public CExport Export;
+            public CCompare Compare;
+            public CCustomRead CustomRead;
+            public CCustomWrite CustomWrite;
+            public CCustomCommand CustomCommand;
+            public CLogger Logger;
+
+            private XmlDocument xdoc;
+            private XmlNode xroot;
+            private string DummyStr;
 
             // constructor
-            public CValues()
+            public CRoaming()
             {
-                // sets default values
+                // sets defaults
                 StopOnError = false;
                 UseLocalOverrides = true;
                 BeepOnInputError = true;
                 AutoNextRowOnEnter = false;
                 AutoStartEdit = false;
                 IgnoreSizeOnReload = false;
-                MbcfileValidationEnable = true;
+                MbcfileValidationEnable = false;
                 MbcfileValidationXSDFile = "";
                 CustomEditorEnable = false;
                 CustomEditorCommand = "";
-                CheckForUpdates = true;
-                LastCheckForUpdate = DateTime.MinValue;
                 MbcMruList = new List<string>();
                 Export = new CExport();
                 Compare = new CCompare();
                 CustomRead = new CCustomRead();
                 CustomWrite = new CCustomWrite();
                 CustomCommand = new CCustomCommand();
-                Logger = new CLoggerValues();
+                Logger = new CLogger();
             }
+
+            /// <summary>
+            /// Load settings from file
+            /// Throws exception on error
+            /// </summary>
+            public void Load()
+            {
+                // geeft geen melding als file niet bestaat of niet het juiste root element heeft
+                // bij save wordt een nieuwe file gemaakt
+
+                // Create the directory tree if it doesn't exists yet
+                Directory.CreateDirectory(Path.GetDirectoryName(FilePath));
+
+                // get doc
+                // if it does not exist, no worries, is probably the first time this user runs this program
+                try
+                {
+                    xdoc = new XmlDocument();
+                    xdoc.Load(FilePath);
+                }
+                catch (Exception ex)
+                {
+                    DummyStr = ex.Message;
+#if DEBUG
+                    MessageBox.Show(ex.Message, "Debug: CSettings.CRoaming.Load() error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+#endif
+
+                    /////////////////
+                    //TODO
+                    // try load load old settings file at old location
+                    LoadOldSettings();
+                    /////////////
+
+                    xdoc = null;
+                    xroot = null;
+                    return;
+                }
+
+                // get root
+                xroot = GetRootElement(xdoc, "modbuscontrol");
+                if (xroot == null)
+                {
+                    // not found
+                    xdoc = null;
+                    return;
+                }
+
+                // read elements
+                ReadElementBool(xroot, "stoponerror", ref StopOnError);
+                ReadElementBool(xroot, "uselocaloverrides", ref UseLocalOverrides);
+                ReadElementBool(xroot, "beeponinputerror", ref BeepOnInputError);
+                ReadElementBool(xroot, "autonextrowonenter", ref AutoNextRowOnEnter);
+                ReadElementBool(xroot, "autostartedit", ref AutoStartEdit);
+                ReadElementBool(xroot, "ignoresizeonreload", ref IgnoreSizeOnReload);
+                ReadElementBool(xroot, "mbcfilevalidationenable", ref MbcfileValidationEnable);
+                ReadElementString(xroot, "mbcfilevalidationxsdfile", ref MbcfileValidationXSDFile);
+                ReadElementBool(xroot, "customeditoreenable", ref CustomEditorEnable);
+                ReadElementString(xroot, "customeditorcommand", ref CustomEditorCommand);
+                ReadElementStringList(xroot, "mbcmrulist", "file", ref MbcMruList);
+                Export.Read(xroot);
+                Compare.Read(xroot);
+                CustomRead.Read(xroot);
+                CustomWrite.Read(xroot);
+                CustomCommand.Read(xroot);
+                Logger.Read(xroot);
+            }
+
+            /// <summary>
+            /// Save settings to the xml file
+            /// Throws exception on error
+            /// </summary>
+            public void Save()
+            {
+                // Create the directory tree if it doesn't exists yet
+                Directory.CreateDirectory(Path.GetDirectoryName(FilePath));
+
+                // file or root element did not exist?  
+                if (xdoc == null)
+                {
+                    // create new doc
+                    xdoc = new XmlDocument();
+
+                    // the xml declaration is recommended, but not mandatory
+                    XmlDeclaration xmlDeclaration = xdoc.CreateXmlDeclaration("1.0", "UTF-8", null);
+                    XmlElement root = xdoc.DocumentElement;
+                    xdoc.InsertBefore(xmlDeclaration, root);
+
+                    // create root element
+                    xroot = xdoc.CreateElement("modbuscontrol");
+                    xdoc.AppendChild(xroot);
+                }
+
+                // write data
+                WriteElementBool(xroot, "stoponerror", StopOnError);
+                WriteElementBool(xroot, "uselocaloverrides", UseLocalOverrides);
+                WriteElementBool(xroot, "beeponinputerror", BeepOnInputError);
+                WriteElementBool(xroot, "autonextrowonenter", AutoNextRowOnEnter);
+                WriteElementBool(xroot, "autostartedit", AutoStartEdit);
+                WriteElementBool(xroot, "ignoresizeonreload", IgnoreSizeOnReload);
+                WriteElementBool(xroot, "mbcfilevalidationenable", MbcfileValidationEnable);
+                WriteElementString(xroot, "mbcfilevalidationxsdfile", MbcfileValidationXSDFile);
+                WriteElementBool(xroot, "customeditoreenable", CustomEditorEnable);
+                WriteElementString(xroot, "customeditorcommand", CustomEditorCommand);
+                WriteElementStringList(xroot, "mbcmrulist", "file", MbcMruList);
+                Export.Write(xroot);
+                Compare.Write(xroot);
+                CustomRead.Write(xroot);
+                CustomWrite.Write(xroot);
+                CustomCommand.Write(xroot);
+
+                // Write file
+                // no UTF8 BOM, indented
+                using (XmlTextWriter xtw = new XmlTextWriter(FilePath, new UTF8Encoding(false)))
+                {
+                    xtw.Formatting = Formatting.Indented;
+                    xdoc.WriteContentTo(xtw);
+                }
+            }
+
+            private void LoadOldSettings()
+            {
+                XmlDocument xdoc = null;
+
+                // old settings.xml is in %programdata%
+                string FilePath = Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.CommonApplicationData), @"E.D.&A", "ModbusControl", "Settings.xml");
+
+                try
+                {
+                    xdoc = new XmlDocument();
+                    xdoc.Load(FilePath);
+                }
+                catch (Exception)
+                {
+                    // nope
+                }
+
+                // get root
+                XmlNode xroot = GetRootElement(xdoc, "modbuscontrol");
+                if (xroot != null)
+                {
+                    // read elements
+                    ReadElementBool(xroot, "stoponerror", ref StopOnError);
+                    ReadElementBool(xroot, "uselocaloverrides", ref UseLocalOverrides);
+                    ReadElementBool(xroot, "beeponinputerror", ref BeepOnInputError);
+                    ReadElementBool(xroot, "autonextrowonenter", ref AutoNextRowOnEnter);
+                    ReadElementBool(xroot, "autostartedit", ref AutoStartEdit);
+                    ReadElementBool(xroot, "ignoresizeonreload", ref IgnoreSizeOnReload);
+                    ReadElementBool(xroot, "mbcfilevalidationenable", ref MbcfileValidationEnable);
+                    ReadElementString(xroot, "mbcfilevalidationxsdfile", ref MbcfileValidationXSDFile);
+                    ReadElementBool(xroot, "customeditoreenable", ref CustomEditorEnable);
+                    ReadElementString(xroot, "customeditorcommand", ref CustomEditorCommand);
+                    ReadElementStringList(xroot, "mbcmrulist", "file", ref MbcMruList);
+                    Export.Read(xroot);
+                    Compare.Read(xroot);
+                    CustomRead.Read(xroot);
+                    CustomWrite.Read(xroot);
+                    CustomCommand.Read(xroot);
+                    Logger.Read(xroot);
+                }
+            }
+        }
+
+        /*
+        // per user, local
+        public class CLocal
+        {
+            public string FilePath;
+            // not used
         };
+        */
+
+        // per application, shared for all users
+        public class CShared
+        {
+            public string FilePath;
+
+            // settings
+            public CUpdater Updater;
+
+            private XmlDocument xdoc;
+            private XmlNode xroot;
+            private string DummyStr;
+
+            // constructor
+            public CShared()
+            {
+                // sets defaults
+                Updater = new CUpdater();
+            }
+
+            /// <summary>
+            /// Load settings from file
+            /// </summary>
+            public void Load()
+            {
+                // geeft geen melding als file niet bestaat of niet het juiste root element heeft
+                // bij save wordt dan een nieuwe file gemaakt
+
+                // get doc
+                // if it does not exist, no worries, is probably the first time this user runs this app
+                try
+                {
+                    xdoc = new XmlDocument();
+                    xdoc.Load(FilePath);
+                }
+                catch (Exception ex)
+                {
+                    DummyStr = ex.Message;
+#if DEBUG
+                    MessageBox.Show(ex.Message, "Debug: CSettings.CShared.Load() error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+#endif
+                    xdoc = null;
+                    xroot = null;
+                    return;
+                }
+
+                // get root
+                xroot = GetRootElement(xdoc, "modbuscontrol");
+                if (xroot == null)
+                {
+                    // not found
+                    xdoc = null;
+                    return;
+                }
+
+                // read elements
+                Updater.Read(xroot);
+            }
+
+            /// <summary>
+            /// Save settings to the xml file
+            /// Throws exception on error
+            /// </summary>
+            public void Save()
+            {
+                // got no document yet?
+                if (xdoc == null)
+                {
+                    // create new doc
+                    xdoc = new XmlDocument();
+
+                    // the xml declaration is recommended, but not mandatory
+                    XmlDeclaration xmlDeclaration = xdoc.CreateXmlDeclaration("1.0", "UTF-8", null);
+                    XmlElement root = xdoc.DocumentElement;
+                    xdoc.InsertBefore(xmlDeclaration, root);
+
+                    // create root
+                    xroot = xdoc.CreateElement("modbuscontrol");
+                    xdoc.AppendChild(xroot);
+                }
+
+                // write data
+                Updater.Write(xroot);
+
+                // Write file
+                // no UTF8 BOM, indented
+                using (XmlTextWriter xtw = new XmlTextWriter(FilePath, new UTF8Encoding(false)))
+                {
+                    xtw.Formatting = Formatting.Indented;
+                    xdoc.WriteContentTo(xtw);
+                }
+            }
+        }
 
         public class CExport
         {
-            public string Tabs { get; set; }
-            public string ExportFormat { get; set; }
-            public string ExportAsciiAs { get; set; }
+            public string Tabs;
+            public string ExportFormat;
+            public string ExportAsciiAs;
 
             // constructor
             public CExport()
             {
-                // sets default values
+                // sets defaults
                 Tabs = "current";
                 ExportFormat = "grid";
                 ExportAsciiAs = "ascii";
+            }
+
+            public void Read(XmlNode xparent)
+            {
+                XmlNode xn = xparent.SelectSingleNode("export");
+                if (xn != null)
+                {
+                    ReadElementString(xparent, "tabs", ref Tabs);
+                    ReadElementString(xparent, "exportformat", ref ExportFormat);
+                    ReadElementString(xparent, "exportasciias", ref ExportAsciiAs);
+                }
+            }
+
+            public void Write(XmlNode xparent)
+            {
+                XmlNode xn = WriteParentElement(xparent, "export");
+                WriteElementString(xn, "tabs", Tabs);
+                WriteElementString(xn, "exportformat", ExportFormat);
+                WriteElementString(xn, "exportasciias", ExportAsciiAs);
             }
         }
 
         public class CCompare
         {
-            public bool ShowEqual { get; set; }
+            public bool ShowEqual;
 
             // constructor
             public CCompare()
             {
-                // sets default values
+                // sets defaults
                 ShowEqual = true;
+            }
+
+            public void Read(XmlNode xparent)
+            {
+                XmlNode xn = xparent.SelectSingleNode("compare");
+                if (xn != null)
+                {
+                    ReadElementBool(xn, "showequal", ref ShowEqual);
+                }
+            }
+
+            public void Write(XmlNode xparent)
+            {
+                XmlNode xn = WriteParentElement(xparent, "compare");
+                WriteElementBool(xn, "showequal", ShowEqual);
             }
         }
 
         public class CCustomRead
         {
-            public int SlaveID { get; set; }
-            public int Register { get; set; }
-            public int Quantity { get; set; }
-            public string Datasize { get; set; } // Datasize is string because that's how we save radiobuttons
-            public string ShowValuesAs { get; set; }
+            public int SlaveID;
+            public int Register;
+            public int Quantity;
+            public string Datasize; // Datasize is string because that's how we save radiobuttons
+            public string ShowValuesAs;
 
             // constructor
             public CCustomRead()
             {
-                // sets default values
+                // sets defaults
                 SlaveID = 1;
                 Register = 40001;
                 Quantity = 10;
                 Datasize = "16";
                 ShowValuesAs = "int";
             }
+
+            public void Read(XmlNode xparent)
+            {
+                XmlNode xn = xparent.SelectSingleNode("customread");
+                if (xn != null)
+                {
+                    ReadElementInt(xn, "slaveid", ref SlaveID);
+                    ReadElementInt(xn, "register", ref Register);
+                    ReadElementInt(xn, "quantity", ref Quantity);
+                    ReadElementString(xn, "datasize", ref Datasize);
+                    ReadElementString(xn, "showvaluesas", ref ShowValuesAs);
+                }
+            }
+
+            public void Write(XmlNode xparent)
+            {
+                XmlNode xn = WriteParentElement(xparent, "customread");
+                WriteElementInt(xn, "slaveid", SlaveID);
+                WriteElementInt(xn, "register", Register);
+                WriteElementInt(xn, "quantity", Quantity);
+                WriteElementString(xn, "datasize", Datasize);
+                WriteElementString(xn, "showvaluesas", ShowValuesAs);
+            }
         }
 
         public class CCustomWrite
         {
-            public int SlaveID { get; set; }
-            public int Register { get; set; }
-            public int Quantity { get; set; }
-            public string Functioncode { get; set; }
-            public string Datasize { get; set; }
-            public string Data { get; set; }
+            public int SlaveID;
+            public int Register;
+            public int Quantity;
+            public string Functioncode;
+            public string Datasize;
+            public string Data;
 
             // constructor
             public CCustomWrite()
             {
-                // sets default values
+                // sets defaults
                 SlaveID = 1;
                 Register = 40001;
                 Quantity = 1;
@@ -131,37 +524,77 @@ namespace ModbusControlSpace
                 Datasize = "16";
                 Data = String.Empty;
             }
+
+            public void Read(XmlNode xparent)
+            {
+                XmlNode xn = xparent.SelectSingleNode("customwrite");
+                if (xn != null)
+                {
+                    ReadElementInt(xn, "slaveid", ref SlaveID);
+                    ReadElementInt(xn, "register", ref Register);
+                    ReadElementInt(xn, "quantity", ref Quantity);
+                    ReadElementString(xn, "functioncode", ref Functioncode);
+                    ReadElementString(xn, "datasize", ref Datasize);
+                    ReadElementString(xn, "data", ref Data);
+                }
+            }
+
+            public void Write(XmlNode xparent)
+            {
+                XmlNode xn = WriteParentElement(xparent, "customwrite");
+                WriteElementInt(xn, "slaveid", SlaveID);
+                WriteElementInt(xn, "register", Register);
+                WriteElementInt(xn, "quantity", Quantity);
+                WriteElementString(xn, "functioncode", Functioncode);
+                WriteElementString(xn, "datasize", Datasize);
+                WriteElementString(xn, "data", Data);
+            }
         }
 
         public class CCustomCommand
         {
-            public string Command { get; set; }
+            public string Command;
 
             // constructor
             public CCustomCommand()
             {
-                // sets default values
+                // sets defaults
                 Command = "01 03 00 00 00 0A";
+            }
+
+            public void Read(XmlNode xparent)
+            {
+                XmlNode xn = xparent.SelectSingleNode("customcommand");
+                if (xn != null)
+                {
+                    ReadElementString(xn, "command", ref Command);
+                }
+            }
+
+            public void Write(XmlNode xparent)
+            {
+                XmlNode xn = WriteParentElement(xparent, "customcommand");
+                WriteElementString(xn, "command", Command);
             }
         }
 
-        public class CLoggerValues
+        public class CLogger
         {
-            public bool LogErrors { get; set; }
-            public bool LogWarnings { get; set; }
-            public bool LogInfo { get; set; }
-            public bool LogTrace { get; set; }
-            public bool LogReads { get; set; }
-            public bool LogWrites { get; set; }
-            public bool LogBridgeInfo { get; set; }
-            public bool LogBridgeData { get; set; }
-            public bool LogBridgeDecode { get; set; }
-            public int Capacity { get; set; }
+            public bool LogErrors;
+            public bool LogWarnings;
+            public bool LogInfo;
+            public bool LogTrace;
+            public bool LogReads;
+            public bool LogWrites;
+            public bool LogBridgeInfo;
+            public bool LogBridgeData;
+            public bool LogBridgeDecode;
+            public int Capacity;
 
             // constructor
-            public CLoggerValues()
+            public CLogger()
             {
-                // sets default values
+                // sets defaults
                 LogErrors = true;
                 LogWarnings = true;
                 LogInfo = true;
@@ -173,451 +606,164 @@ namespace ModbusControlSpace
                 LogBridgeDecode = false;
                 Capacity = 5000;
             }
+
+            public void Read(XmlNode xparent)
+            {
+                XmlNode xn = xparent.SelectSingleNode("logger");
+                if (xn != null)
+                {
+                    ReadElementBool(xn, "logerrors", ref LogErrors);
+                    ReadElementBool(xn, "logwarnings", ref LogWarnings);
+                    ReadElementBool(xn, "loginfo", ref LogInfo);
+                    ReadElementBool(xn, "logtrace", ref LogTrace);
+                    ReadElementBool(xn, "logreads", ref LogReads);
+                    ReadElementBool(xn, "logwrites", ref LogWrites);
+                    ReadElementBool(xn, "logbridgeinfo", ref LogBridgeInfo);
+                    ReadElementBool(xn, "logbridgedata", ref LogBridgeData);
+                    ReadElementBool(xn, "logbridgedata", ref LogBridgeData);
+                    ReadElementBool(xn, "logbridgedecode", ref LogBridgeDecode);
+                    ReadElementInt(xn, "capacity", ref Capacity);
+                }
+            }
+
+            public void Write(XmlNode xparent)
+            {
+                XmlNode xn = WriteParentElement(xparent, "logger");
+                WriteElementBool(xn, "logerrors", LogErrors);
+                WriteElementBool(xn, "logwarnings", LogWarnings);
+                WriteElementBool(xn, "loginfo", LogInfo);
+                WriteElementBool(xn, "logtrace", LogTrace);
+                WriteElementBool(xn, "logreads", LogReads);
+                WriteElementBool(xn, "logwrites", LogWrites);
+                WriteElementBool(xn, "logbridgeinfo", LogBridgeInfo);
+                WriteElementBool(xn, "logbridgedata", LogBridgeData);
+                WriteElementBool(xn, "logbridgedecode", LogBridgeDecode);
+                WriteElementInt(xn, "capacity", Capacity);
+            }
         }
 
-        public CValues Values;
-        public string StorePath = "Settings.xml";
-
-        /// <summary>
-        /// Load settings from the xml file
-        /// Return false on error
-        /// </summary>
-        public bool TryLoad()
+        public class CUpdater
         {
-            bool result = true;
+            // settings
+            public bool CheckForUpdates;
+            public DateTime LastCheckForUpdate;
 
-            try
+            // constructor
+            public CUpdater()
             {
-                Load();
-            }
-            catch
-            {
-                result = false;
+                // sets defaults
+                CheckForUpdates = true;
+                LastCheckForUpdate = DateTime.MinValue;
             }
 
-            return result;
+            public void Read(XmlNode xparent)
+            {
+                ReadElementBool(xparent, "checkforupdates", ref CheckForUpdates);
+                ReadElementDatetime(xparent, "lastcheckforupdate", ref LastCheckForUpdate);
+            }
+
+            public void Write(XmlNode xparent)
+            {
+                XmlNode xn = WriteParentElement(xparent, "update");
+                WriteElementBool(xn, "checkforupdates", CheckForUpdates);
+                WriteElementDatetime(xn, "lastcheckforupdate", LastCheckForUpdate);
+            }
         }
 
-        /// <summary>
-        /// Load settings from the xml file
-        /// Throws exception on error
-        /// </summary>
-        public void Load()
+        private static void ReadElementBool(XmlNode xparent, string name, ref bool o)
         {
-            XmlNode xn;
-
-            // Create a Values object with defaults
-            Values = new CValues();
-
-            // Create the directory tree if it doesn't exists yet
-            Directory.CreateDirectory(Path.GetDirectoryName(StorePath));
-
-            // load settings xml file
-            doc = new XmlDocument();
-            doc.Load(StorePath);
-
-            // select <modbuscontrol> element as our parent of everything
-            xmlroot = doc.SelectSingleNode("modbuscontrol");
-            if (xmlroot == null)
-                throw new XmlException("root element not found");
-
-            // parse elements
-            xn = xmlroot.SelectSingleNode("stoponerror");
+            XmlNode xn = xparent.SelectSingleNode(name);
             if (xn != null)
             {
-                Values.StopOnError = ParseBool(xn.InnerText);
+                if (xn.InnerText == "true")
+                    o = true;
+                if (xn.InnerText == "false")
+                    o = false;
             }
+        }
 
-            xn = xmlroot.SelectSingleNode("uselocaloverrides");
+        private static void ReadElementInt(XmlNode xparent, string name, ref int o)
+        {
+            XmlNode xn = xparent.SelectSingleNode(name);
             if (xn != null)
             {
-                Values.UseLocalOverrides = ParseBool(xn.InnerText);
+                int tmpint;
+                if (int.TryParse(xn.InnerText, out tmpint))
+                {
+                    o = tmpint;
+                }
             }
+        }
 
-            xn = xmlroot.SelectSingleNode("beeponinputerror");
+        private static void ReadElementString(XmlNode xparent, string name, ref string o)
+        {
+            XmlNode xn = xparent.SelectSingleNode(name);
             if (xn != null)
             {
-                Values.BeepOnInputError = ParseBool(xn.InnerText);
+                o = xn.InnerText;
             }
+        }
 
-            xn = xmlroot.SelectSingleNode("autonextrowonenter");
+        private static void ReadElementDatetime(XmlNode xparent, string name, ref DateTime o)
+        {
+            XmlNode xn = xparent.SelectSingleNode(name);
             if (xn != null)
             {
-                Values.AutoNextRowOnEnter = ParseBool(xn.InnerText);
+                DateTime tmpdatetime;
+                if (DateTime.TryParse(xn.InnerText, out tmpdatetime))
+                {
+                    o = tmpdatetime;
+                }
             }
+        }
 
-            xn = xmlroot.SelectSingleNode("autostartedit");
+        //TODO: goed testen
+        private static void ReadElementStringList(XmlNode xparent, string parentname, string name, ref List<string> strlist)
+        {
+            XmlNode xn = xparent.SelectSingleNode(parentname);
             if (xn != null)
             {
-                Values.AutoStartEdit = ParseBool(xn.InnerText);
-            }
-
-            xn = xmlroot.SelectSingleNode("ignoresizeonreload");
-            if (xn != null)
-            {
-                Values.IgnoreSizeOnReload = ParseBool(xn.InnerText);
-            }
-
-            xn = xmlroot.SelectSingleNode("mbcfilevalidationenable");
-            if (xn != null)
-            {
-                Values.MbcfileValidationEnable = ParseBool(xn.InnerText);
-            }
-
-            xn = xmlroot.SelectSingleNode("mbcfilevalidationxsdfile");
-            if (xn != null)
-            {
-                Values.MbcfileValidationXSDFile = xn.InnerText;
-            }
-
-            xn = xmlroot.SelectSingleNode("customeditoreenable");
-            if (xn != null)
-            {
-                Values.CustomEditorEnable = ParseBool(xn.InnerText);
-            }
-
-            xn = xmlroot.SelectSingleNode("customeditorcommand");
-            if (xn != null)
-            {
-                Values.CustomEditorCommand = xn.InnerText;
-            }
-
-            xn = xmlroot.SelectSingleNode("checkforupdates");
-            if (xn != null)
-            {
-                Values.CheckForUpdates = ParseBool(xn.InnerText);
-            }
-
-            xn = xmlroot.SelectSingleNode("lastcheckforupdate");
-            if (xn != null)
-            {
-                Values.LastCheckForUpdate = DateTime.Parse(xn.InnerText);
-            }
-
-            xn = xmlroot.SelectSingleNode("mbcmrulist");
-            if (xn != null)
-            {
-                XmlNodeList xl = xn.SelectNodes("file");
+                strlist.Clear();
+                XmlNodeList xl = xn.SelectNodes(name);
                 foreach (XmlNode ln in xl)
                 {
-                    Values.MbcMruList.Add(ln.InnerText);
+                    strlist.Add(ln.InnerText);
                 }
-            }
-
-            xn = xmlroot.SelectSingleNode("export");
-            if (xn != null)
-            {
-                XmlNode xn2 = xn.SelectSingleNode("tabs");
-                if (xn2 != null)
-                {
-                    Values.Export.Tabs = xn2.InnerText;
-                }
-
-                xn2 = xn.SelectSingleNode("exportformat");
-                if (xn2 != null)
-                {
-                    Values.Export.ExportFormat = xn2.InnerText;
-                }
-
-                xn2 = xn.SelectSingleNode("exportasciias");
-                if (xn2 != null)
-                {
-                    Values.Export.ExportAsciiAs = xn2.InnerText;
-                }
-            }
-
-            xn = xmlroot.SelectSingleNode("compare");
-            if (xn != null)
-            {
-                XmlNode xn2 = xn.SelectSingleNode("showequal");
-                if (xn2 != null)
-                {
-                    Values.Compare.ShowEqual = ParseBool(xn.InnerText);
-                }
-            }
-
-            xn = xmlroot.SelectSingleNode("customread");
-            if (xn != null)
-            {
-                XmlNode xn2 = xn.SelectSingleNode("slaveid");
-                if (xn2 != null)
-                {
-                    Values.CustomRead.SlaveID = ParseInt(xn2.InnerText);
-                }
-
-                xn2 = xn.SelectSingleNode("register");
-                if (xn2 != null)
-                {
-                    Values.CustomRead.Register = ParseInt(xn2.InnerText);
-                }
-
-                xn2 = xn.SelectSingleNode("quantity");
-                if (xn2 != null)
-                {
-                    Values.CustomRead.Quantity = ParseInt(xn2.InnerText);
-                }
-
-                xn2 = xn.SelectSingleNode("datasize");
-                if (xn2 != null)
-                {
-                    Values.CustomRead.Datasize = xn2.InnerText;
-                }
-
-                xn2 = xn.SelectSingleNode("quantity");
-                if (xn2 != null)
-                {
-                    Values.CustomRead.Quantity = ParseInt(xn2.InnerText);
-                }
-
-                xn2 = xn.SelectSingleNode("showvaluesas");
-                if (xn2 != null)
-                {
-                    Values.CustomRead.ShowValuesAs = xn2.InnerText;
-                }
-            }
-
-            xn = xmlroot.SelectSingleNode("customwrite");
-            if (xn != null)
-            {
-                XmlNode xn2 = xn.SelectSingleNode("slaveid");
-                if (xn2 != null)
-                {
-                    Values.CustomWrite.SlaveID = ParseInt(xn2.InnerText);
-                }
-
-                xn2 = xn.SelectSingleNode("register");
-                if (xn2 != null)
-                {
-                    Values.CustomWrite.Register = ParseInt(xn2.InnerText);
-                }
-
-                xn2 = xn.SelectSingleNode("quantity");
-                if (xn2 != null)
-                {
-                    Values.CustomWrite.Quantity = ParseInt(xn2.InnerText);
-                }
-
-                xn2 = xn.SelectSingleNode("functioncode");
-                if (xn2 != null)
-                {
-                    Values.CustomWrite.Functioncode = xn2.InnerText;
-                }
-
-                xn2 = xn.SelectSingleNode("datasize");
-                if (xn2 != null)
-                {
-                    Values.CustomWrite.Datasize = xn2.InnerText;
-                }
-
-                xn2 = xn.SelectSingleNode("data");
-                if (xn2 != null)
-                {
-                    Values.CustomWrite.Data = xn2.InnerText;
-                }
-            }
-
-            xn = xmlroot.SelectSingleNode("customcommand");
-            if (xn != null)
-            {
-                XmlNode xn2 = xn.SelectSingleNode("command");
-                if (xn2 != null)
-                {
-                    Values.CustomCommand.Command = xn2.InnerText;
-                }
-            }
-
-            xn = xmlroot.SelectSingleNode("logger");
-            if (xn != null)
-            {
-                XmlNode xn2 = xn.SelectSingleNode("logerrors");
-                if (xn2 != null)
-                {
-                    Values.Logger.LogErrors = ParseBool(xn2.InnerText);
-                }
-
-                xn2 = xn.SelectSingleNode("logwarnings");
-                if (xn2 != null)
-                {
-                    Values.Logger.LogWarnings = ParseBool(xn2.InnerText);
-                }
-
-                xn2 = xn.SelectSingleNode("loginfo");
-                if (xn2 != null)
-                {
-                    Values.Logger.LogInfo = ParseBool(xn2.InnerText);
-                }
-
-                xn2 = xn.SelectSingleNode("logtrace");
-                if (xn2 != null)
-                {
-                    Values.Logger.LogTrace = ParseBool(xn2.InnerText);
-                }
-
-                xn2 = xn.SelectSingleNode("logreads");
-                if (xn2 != null)
-                {
-                    Values.Logger.LogReads = ParseBool(xn2.InnerText);
-                }
-
-                xn2 = xn.SelectSingleNode("logwrites");
-                if (xn2 != null)
-                {
-                    Values.Logger.LogWrites = ParseBool(xn2.InnerText);
-                }
-
-                xn2 = xn.SelectSingleNode("logbridgeinfo");
-                if (xn2 != null)
-                {
-                    Values.Logger.LogBridgeInfo = ParseBool(xn2.InnerText);
-                }
-
-                xn2 = xn.SelectSingleNode("logbridgedata");
-                if (xn2 != null)
-                {
-                    Values.Logger.LogBridgeData = ParseBool(xn2.InnerText);
-                }
-
-                xn2 = xn.SelectSingleNode("logbridgedecode");
-                if (xn2 != null)
-                {
-                    Values.Logger.LogBridgeDecode = ParseBool(xn2.InnerText);
-                }
-
-                xn2 = xn.SelectSingleNode("capacity");
-                if (xn2 != null)
-                {
-                    Values.Logger.Capacity = ParseInt(xn2.InnerText);
-                }
-
             }
         }
 
-        /// <summary>
-        /// Save settings to the xml file
-        /// </summary>
-        public void Save()
+        private static XmlNode WriteElementBool(XmlNode parent, string name, bool value)
         {
-            XmlNode xn;
-
-            // xml root does not exist?  
-            if (xmlroot == null)
-            {
-                // create new doc
-                doc = new XmlDocument();
-
-                // the xml declaration is recommended, but not mandatory
-                XmlDeclaration xmlDeclaration = doc.CreateXmlDeclaration("1.0", "UTF-8", null);
-                XmlElement root = doc.DocumentElement;
-                doc.InsertBefore(xmlDeclaration, root);
-
-                // create root element
-                xmlroot = doc.CreateElement("modbuscontrol");
-                doc.AppendChild(xmlroot);
-            }
-
-            // Make changes to the document
-            UpdateOrInsertElementBool(xmlroot, "stoponerror", Values.StopOnError);
-            UpdateOrInsertElementBool(xmlroot, "uselocaloverrides", Values.UseLocalOverrides);
-            UpdateOrInsertElementBool(xmlroot, "beeponinputerror", Values.BeepOnInputError);
-            UpdateOrInsertElementBool(xmlroot, "autonextrowonenter", Values.AutoNextRowOnEnter);
-            UpdateOrInsertElementBool(xmlroot, "autostartedit", Values.AutoStartEdit);
-            UpdateOrInsertElementBool(xmlroot, "ignoresizeonreload", Values.IgnoreSizeOnReload);
-            UpdateOrInsertElementBool(xmlroot, "mbcfilevalidationenable", Values.MbcfileValidationEnable);
-            UpdateOrInsertElementString(xmlroot, "mbcfilevalidationxsdfile", Values.MbcfileValidationXSDFile);
-            UpdateOrInsertElementBool(xmlroot, "customeditoreenable", Values.CustomEditorEnable);
-            UpdateOrInsertElementString(xmlroot, "customeditorcommand", Values.CustomEditorCommand);
-            UpdateOrInsertElementBool(xmlroot, "checkforupdates", Values.CheckForUpdates);
-            UpdateOrInsertElementDatetime(xmlroot, "lastcheckforupdate", Values.LastCheckForUpdate);
-            xn = UpdateOrInsertElementParent(xmlroot, "mbcmrulist");
-            UpdateOrInsertElementListString(xn, "file", Values.MbcMruList);
-
-            xn = UpdateOrInsertElementParent(xmlroot, "export");
-            UpdateOrInsertElementString(xn, "tabs", Values.Export.Tabs);
-            UpdateOrInsertElementString(xn, "exportformat", Values.Export.ExportFormat);
-            UpdateOrInsertElementString(xn, "exportasciias", Values.Export.ExportAsciiAs);
-
-            xn = UpdateOrInsertElementParent(xmlroot, "compare");
-            UpdateOrInsertElementBool(xn, "showequal", Values.Compare.ShowEqual);
-
-            xn = UpdateOrInsertElementParent(xmlroot, "customread");
-            UpdateOrInsertElementInt(xn, "slaveid", Values.CustomRead.SlaveID);
-            UpdateOrInsertElementInt(xn, "register", Values.CustomRead.Register);
-            UpdateOrInsertElementInt(xn, "quantity", Values.CustomRead.Quantity);
-            UpdateOrInsertElementString(xn, "datasize", Values.CustomRead.Datasize);
-            UpdateOrInsertElementString(xn, "showvaluesas", Values.CustomRead.ShowValuesAs);
-
-            xn = UpdateOrInsertElementParent(xmlroot, "customwrite");
-            UpdateOrInsertElementInt(xn, "slaveid", Values.CustomWrite.SlaveID);
-            UpdateOrInsertElementInt(xn, "register", Values.CustomWrite.Register);
-            UpdateOrInsertElementInt(xn, "quantity", Values.CustomWrite.Quantity);
-            UpdateOrInsertElementString(xn, "functioncode", Values.CustomWrite.Functioncode);
-            UpdateOrInsertElementString(xn, "datasize", Values.CustomWrite.Datasize);
-            UpdateOrInsertElementString(xn, "data", Values.CustomWrite.Data);
-
-            xn = UpdateOrInsertElementParent(xmlroot, "customcommand");
-            UpdateOrInsertElementString(xn, "command", Values.CustomCommand.Command);
-
-            xn = UpdateOrInsertElementParent(xmlroot, "logger");
-            UpdateOrInsertElementBool(xn, "logerrors", Values.Logger.LogErrors);
-            UpdateOrInsertElementBool(xn, "logwarnings", Values.Logger.LogWarnings);
-            UpdateOrInsertElementBool(xn, "loginfo", Values.Logger.LogInfo);
-            UpdateOrInsertElementBool(xn, "logtrace", Values.Logger.LogTrace);
-            UpdateOrInsertElementBool(xn, "logreads", Values.Logger.LogReads);
-            UpdateOrInsertElementBool(xn, "logwrites", Values.Logger.LogWrites);
-            UpdateOrInsertElementBool(xn, "logbridgeinfo", Values.Logger.LogBridgeInfo);
-            UpdateOrInsertElementBool(xn, "logbridgedata", Values.Logger.LogBridgeData);
-            UpdateOrInsertElementBool(xn, "logbridgedecode", Values.Logger.LogBridgeDecode);
-            UpdateOrInsertElementInt(xn, "capacity", Values.Logger.Capacity);
-
-            // Write document
-            using (XmlTextWriter xtw = new XmlTextWriter(StorePath, Encoding.UTF8))
-            {
-                xtw.Formatting = Formatting.Indented;
-                doc.WriteContentTo(xtw);
-            }
+            // gebruik altijd lower case true en false
+            return WriteElementString(parent, name, value.ToString().ToLower());
         }
 
-        private bool ParseBool(string s)
+        private static XmlNode WriteElementInt(XmlNode parent, string name, int value)
         {
-            return (string.Compare(s.Trim(), "true", StringComparison.OrdinalIgnoreCase) == 0);
+            return WriteElementString(parent, name, value.ToString());
         }
 
-        private int ParseInt(string s)
+        private static XmlNode WriteElementString(XmlNode parent, string name, string value)
         {
-            int result = 0;
-            int.TryParse(s, out result);
-            return result;
-        }
-
-        private XmlNode UpdateOrInsertElementString(XmlNode parent, string name, string value)
-        {
+            XmlDocument xdoc = parent.OwnerDocument;
             XmlNode xn = parent.SelectSingleNode(name);
             if (xn == null)
             {
-                XmlElement e = doc.CreateElement(name);
+                XmlElement e = xdoc.CreateElement(name);
                 xn = parent.AppendChild(e);
             }
             xn.InnerText = value;
             return xn;
         }
 
-        private XmlNode UpdateOrInsertElementBool(XmlNode parent, string name, bool value)
+        private static XmlNode WriteElementDatetime(XmlNode parent, string name, DateTime value)
         {
-            return UpdateOrInsertElementString(parent, name, value.ToString().ToLower());
+            return WriteElementString(parent, name, value.ToString());
         }
 
-        private XmlNode UpdateOrInsertElementInt(XmlNode parent, string name, int value)
+        private static XmlNode WriteParentElement(XmlNode parent, string name)
         {
-            return UpdateOrInsertElementString(parent, name, value.ToString());
-        }
-
-        private XmlNode UpdateOrInsertElementDatetime(XmlNode parent, string name, DateTime value)
-        {
-            return UpdateOrInsertElementString(parent, name, value.ToString());
-        }
-
-        private XmlNode UpdateOrInsertElementParent(XmlNode parent, string name)
-        {
+            XmlDocument doc = parent.OwnerDocument;
             XmlNode xn = parent.SelectSingleNode(name);
             if (xn == null)
             {
@@ -627,16 +773,40 @@ namespace ModbusControlSpace
             return xn;
         }
 
-        private void UpdateOrInsertElementListString(XmlNode parent, string name, List<string> valuelist)
+        //TODO: goed testen
+        private static void WriteElementStringList(XmlNode parent, string parentname, string name, List<string> strlist)
         {
-            parent.RemoveAll();
-            foreach (string s in valuelist)
+            XmlDocument xdoc = parent.OwnerDocument;
+            XmlNode xp = WriteParentElement(parent, parentname);
+            xp.RemoveAll();
+            foreach (string s in strlist)
             {
-                XmlElement e = doc.CreateElement(name);
+                XmlElement e = xdoc.CreateElement(name);
                 e.InnerText = s;
-                XmlNode xn = parent.AppendChild(e);
+                xp.AppendChild(e);
             }
         }
 
+        /// <summary>
+        /// Get the first XML element
+        /// Check if name matches
+        /// Return null if no match
+        /// </summary>
+        private static XmlNode GetRootElement(XmlNode parent, string name)
+        {
+            XmlNode n = parent.FirstChild;
+            // find first element, skip XML declaration
+            while ((n != null) && (n.NodeType != XmlNodeType.Element))
+            {
+                n = n.NextSibling;
+            }
+            if ((n != null) && (n.Name == name))
+            {
+                // found
+                return n;
+            }
+            // not found
+            return null;
+        }
     }
 }

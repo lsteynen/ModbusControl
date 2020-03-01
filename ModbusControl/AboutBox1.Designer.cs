@@ -31,7 +31,7 @@
             this.okButton = new System.Windows.Forms.Button();
             this.labelFormSize = new System.Windows.Forms.Label();
             this.labelDotNetVersion = new System.Windows.Forms.Label();
-            this.labelMyDocuments = new System.Windows.Forms.Label();
+            this.labelAppdata = new System.Windows.Forms.Label();
             this.labelVersion = new System.Windows.Forms.Label();
             this.logoPictureBox = new System.Windows.Forms.PictureBox();
             this.labelName = new System.Windows.Forms.Label();
@@ -75,15 +75,15 @@
             // 
             // labelMyDocuments
             // 
-            this.labelMyDocuments.AutoSize = true;
-            this.labelMyDocuments.Location = new System.Drawing.Point(147, 58);
-            this.labelMyDocuments.MaximumSize = new System.Drawing.Size(0, 17);
-            this.labelMyDocuments.Name = "labelMyDocuments";
-            this.labelMyDocuments.Size = new System.Drawing.Size(97, 13);
-            this.labelMyDocuments.TabIndex = 2;
-            this.labelMyDocuments.Text = "labelMyDocuments";
-            this.labelMyDocuments.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.labelMyDocuments.UseMnemonic = false;
+            this.labelAppdata.AutoSize = true;
+            this.labelAppdata.Location = new System.Drawing.Point(147, 58);
+            this.labelAppdata.MaximumSize = new System.Drawing.Size(0, 17);
+            this.labelAppdata.Name = "labelMyDocuments";
+            this.labelAppdata.Size = new System.Drawing.Size(97, 13);
+            this.labelAppdata.TabIndex = 2;
+            this.labelAppdata.Text = "labelMyDocuments";
+            this.labelAppdata.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.labelAppdata.UseMnemonic = false;
             // 
             // labelVersion
             // 
@@ -142,7 +142,7 @@
             this.Controls.Add(this.labelLocalOverride);
             this.Controls.Add(this.labelName);
             this.Controls.Add(this.labelVersion);
-            this.Controls.Add(this.labelMyDocuments);
+            this.Controls.Add(this.labelAppdata);
             this.Controls.Add(this.labelDotNetVersion);
             this.Controls.Add(this.labelFormSize);
             this.Controls.Add(this.logoPictureBox);
@@ -169,7 +169,7 @@
         private System.Windows.Forms.Button okButton;
         private System.Windows.Forms.Label labelFormSize;
         private System.Windows.Forms.Label labelDotNetVersion;
-        private System.Windows.Forms.Label labelMyDocuments;
+        private System.Windows.Forms.Label labelAppdata;
         private System.Windows.Forms.Label labelVersion;
         private System.Windows.Forms.PictureBox logoPictureBox;
         private System.Windows.Forms.Label labelName;
