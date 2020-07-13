@@ -120,7 +120,6 @@ namespace ModbusControlSpace
         List<string> TagsValueToLowerList = new List<string> { "connection", "parity", "writeholdingregisterfc",
                                         "int32endian", "float32endian" , "ascii16endian", "onewireechosuppression",
                                         "showinfo", "enable", "rw", "expandfields", "type", "expandfields" };
-                
 
         // Properties
 
@@ -188,7 +187,8 @@ namespace ModbusControlSpace
 
             // Load xml document into XmlDoc
             // A previous document will be discarded when a new is loaded
-            XmlDoc = XDocument.Load(path, LoadOptions.PreserveWhitespace | LoadOptions.SetLineInfo);
+            //XmlDoc = XDocument.Load(path, LoadOptions.PreserveWhitespace | LoadOptions.SetLineInfo);
+            XmlDoc = XDocument.Load(path, LoadOptions.SetLineInfo);
 
             // got validation schema?
             // throws exception on validation error
@@ -198,7 +198,6 @@ namespace ModbusControlSpace
                 schemas.Add("", XmlReader.Create(ValidationSchemaPath));
                 XmlDoc.Validate(schemas, ValidationEventHandler);
             }
-
 
             // Parse the document
             // Store all data in this class
@@ -2144,101 +2143,172 @@ namespace ModbusControlSpace
             heightNode.Value = Global.ScaleYcoordFromSystemDpiTo96Dpi(FormSize.Height).ToString();
         }
 
-        /// <summary>
-        /// Update to current version: convert all XML tag names to lowercase, remove/replace obsolete tags
-        /// </summary>
-        public void UpdateXML()
+        /// Update the project mbc XML to the current version
+        /// convert all XML tags to lowercase
+        /// convert all enum keywords to lowercase
+        /// remove or replace obsolete tags
+        public void UpdateProjectXML()
         {
             //DumpXMLTree();
 
-            // convert all XML tag names to lowercase
-            foreach (XElement xe1 in XmlDoc.Elements())
+            // convert all XML tags to lowercase
+            XMLConvertAllTagsToLowercase(XmlDoc);
+
+            // convert elements with enum keywords to lower case
+            XMLConvertAllEnumsToLowercase(XmlDoc);
+
+            // remove or replace obsolete tags
+            XMLRemoveOrReplaceObsoleteElements(XmlDoc);
+
+            //DumpXMLTree();
+        }
+
+        /// <summary>
+        /// convert all XML tag names to lowercase
+        /// </summary>
+        private void XMLConvertAllTagsToLowercase(XDocument doc)
+        {
+            foreach (XElement xe in doc.Elements())
             {
-                ConvertAlltagsToLowercaseRec(xe1);
+                XMLConvertAllTagsToLowercaseRec(xe);
+            }
+        }
+
+        private void XMLConvertAllTagsToLowercaseRec(XElement xe)
+        {
+            xe.Name = xe.Name.ToString().ToLower();
+            foreach (XElement xe2 in xe.Elements())
+            {
+                XMLConvertAllTagsToLowercaseRec(xe2);
+            }
+        }
+
+        /// <summary>
+        /// convert all enum keywords to lowercase
+        /// </summary>
+        private void XMLConvertAllEnumsToLowercase(XDocument doc)
+        {
+            foreach (XElement xe in doc.Elements())
+            {
+                XMLConvertAllEnumsToLowercaseRec(xe);
+            }
+        }
+
+        private void XMLConvertAllEnumsToLowercaseRec(XElement xe)
+        {
+            if (TagsValueToLowerList.Contains(xe.Name.ToString()))
+            {
+                xe.Value = xe.Value.ToString().ToLower().Trim();
             }
 
-            // Got a modbus element?
-            XElement xeModbus = GetSingleElement(XmlRootNode, "Modbus", eReq.Optional);
-            if (xeModbus != null)
+            foreach (XElement xe2 in xe.Elements())
             {
-                // Remove Value32BitEndian, obsolete
-                XElement xe = GetSingleElement(xeModbus, "Value32BitEndian", eReq.Optional);
-                if (xe != null)
-                {
-                    xe.Remove();
-                }
+                XMLConvertAllEnumsToLowercaseRec(xe2);
+            }
+        }
 
-                // Find int32endian node, or create it
-                xe = GetSingleElement(xeModbus, "int32endian", eReq.Optional);
+        /// <summary>
+        /// remove or replace obsolete elements
+        /// </summary>
+        private void XMLRemoveOrReplaceObsoleteElements(XDocument doc)
+        {
+            // niet itereren en intussen nodes deleten of inserten!
+            // dus: met iteratie een node zoeken, die deleten, dan nieuwe iteratie beginnen
+
+            // Search /modbus
+            XElement xm = XmlFindElement(doc.Root, "modbus");
+            if (xm != null)
+            {
+                XElement xe;
+
+                // Remove /modbus/showreadwrite
+                do
+                {
+                    xe = XmlFindElement(xm, "showreadwrite");
+                    if (xe != null)
+                    {
+                        xe.Remove();
+                    }
+                }
+                while (xe != null);
+
+                // Remove /modbus/showtype
+                do
+                {
+                    xe = XmlFindElement(xm, "showtype");
+                    if (xe != null)
+                    {
+                        xe.Remove();
+                    }
+                }
+                while (xe != null);
+
+                // replace /modbus/value32bitendian
+                // with int32endian, float32endian, ascii16endian
+                // if they don't exist yet
+
+                // Remove /modbus/value32bitendian
+                do
+                {
+                    xe = XmlFindElement(xm, "value32bitendian");
+                    if (xe != null)
+                    {
+                        xe.Remove();
+                    }
+                }
+                while (xe != null);
+
+                // insert int32endian if it doesn't exist yet
+                xe = XmlFindElement(xm, "int32endian");
                 if (xe == null)
                 {
                     xe = new XElement("int32endian");
-                    xeModbus.Add(xe);
                     xe.Value = Connection.Int32Endian.ToString().ToLower();
+                    xm.Add(xe);
                 }
 
-                // Find float32endian node, or create it
-                xe = GetSingleElement(xeModbus, "float32endian", eReq.Optional);
+                // insert float32endian if it doesn't exist yet
+                xe = XmlFindElement(xm, "float32endian");
                 if (xe == null)
                 {
                     xe = new XElement("float32endian");
-                    xeModbus.Add(xe);
                     xe.Value = Connection.Float32Endian.ToString().ToLower();
+                    xm.Add(xe);
                 }
 
-                // Find ascii16endian node, or create it
-                xe = GetSingleElement(xeModbus, "ascii16endian", eReq.Optional);
+                // insert ascii16endian if it doesn't exist yet
+                xe = XmlFindElement(xm, "ascii16endian");
                 if (xe == null)
                 {
                     xe = new XElement("ascii16endian");
-                    xeModbus.Add(xe);
                     xe.Value = Connection.Ascii16Endian.ToString().ToLower();
+                    xm.Add(xe);
                 }
-
-                // Remove ShowType
-                xe = GetSingleElement(xeModbus, "ShowType", eReq.Optional);
-                if (xe != null)
-                {
-                    xe.Remove();
-                }
-
-                // Remove ShowReadwrite
-                xe = GetSingleElement(xeModbus, "ShowReadwrite", eReq.Optional);
-                if (xe != null)
-                {
-                    xe.Remove();
-                }
-            }
-
-            // convert elements with keywords to lower case
-            foreach (XElement xe1 in XmlDoc.Elements())
-            {
-                ConvertAllEnumsToLowercaseRec(xe1);
-            }
-
-            //DumpXMLTree();
-        }
-
-        private void ConvertAlltagsToLowercaseRec(XElement xel)
-        {
-            xel.Name = xel.Name.ToString().ToLower();
-            foreach (XElement xel2 in xel.Elements())
-            {
-                ConvertAlltagsToLowercaseRec(xel2);
             }
         }
 
-        private void ConvertAllEnumsToLowercaseRec(XElement xel)
+        /// <summary>
+        /// Iterate through XML elements, recursive
+        /// Return null if not found
+        /// </summary>
+        private XElement XmlFindElement(XElement xe, string name)
         {
-            if(TagsValueToLowerList.Contains(xel.Name.ToString()))
+            // found?
+            if (xe.Name == name)
             {
-                xel.Value = xel.Value.ToString().ToLower().Trim();
+                return xe;
             }
 
-            foreach (XElement xel2 in xel.Elements())
+            foreach (XElement xe2 in xe.Elements())
             {
-                ConvertAllEnumsToLowercaseRec(xel2);
+                XElement xe3 = XmlFindElement(xe2, name);
+                if (xe3 != null)
+                {
+                    return xe3;
+                }
             }
+
+            return null;
         }
 
         /// <summary>
@@ -2247,18 +2317,17 @@ namespace ModbusControlSpace
         public void SaveFile()
         {
             /* 
-            //default XDocument save, saves with BOM
+            //default XDocument save, with BOM, no indent
             XmlDoc.Save(Path);
             */
 
-            // save without BOM
+            // save
+            // without BOM, with indent
             XmlWriterSettings settings = new XmlWriterSettings();
-            settings.Encoding = new UTF8Encoding(false); // The false means, do not emit the BOM.
-            /* Indenting werkt niet goed
+            settings.Encoding = new UTF8Encoding(false); // The false means 'no BOM'
             settings.Indent = true;
             settings.IndentChars = ("\t");
-            */
-            using (XmlWriter w = XmlWriter.Create(Path, settings))
+            using (XmlWriter w = XmlWriter.Create(Path+"f", settings))
             {
                 XmlDoc.Save(w);
             }
@@ -2290,8 +2359,37 @@ namespace ModbusControlSpace
 
             foreach (XElement xel2 in xel.Elements())
             {
-                DumpXMLElementRec(xel2, level+1, TL);
+                DumpXMLElementRec(xel2, level + 1, TL);
             }
+        }
+
+        /// <summary>
+        /// Help migrate the old localoverrides file; check if it has active entries.
+        /// Return true if it has active entries.
+        /// </summary>
+        public bool MigrateLocalOverridesHasActiveEntries(string oldFilePath)
+        {
+            // load old file
+            XDocument doc = XDocument.Load(oldFilePath);
+
+            // get doc root
+            XElement root = doc.Element("LocalOverrides");
+            if (root == null)
+            {
+                // try lower case
+                root = doc.Element("localoverrides");
+                if (root == null)
+                {
+                    // no valid root found
+                    return false;
+                }
+            }
+
+            // get all <Project>/<project> nodes
+            IEnumerable<XElement> projlist = GetAllElements(root, "Project", eReq.Optional);
+
+            // return true if <project> defined
+            return (projlist.Count() > 0);
         }
     }
 }

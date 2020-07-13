@@ -78,7 +78,7 @@ namespace ModbusControlSpace
                 if (checkboxUpdateXML.Checked)
                 {
                     // update XML to current version, like convert all XML tags to lowercase, ...
-                    Project.UpdateXML();
+                    Project.UpdateProjectXML();
                     Changed = true;
                 }
 

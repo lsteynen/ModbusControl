@@ -25,6 +25,7 @@ namespace ModbusControlSpace
 
         public static string VersionString;
         public static string ApplicationStartupPath;
+        public static string MyDocumentsDir;
         public static float SystemDpiX = 96.0F;
         public static float SystemDpiY = 96.0F;
 
@@ -34,6 +35,10 @@ namespace ModbusControlSpace
             Version v = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
             VersionString = "v" + v.Major + "." + v.Minor + "." + v.Build;
             if (v.Revision > 0) VersionString += "." + v.Revision;
+
+            // Get Special Folders paths
+            ApplicationStartupPath = Application.StartupPath;
+            MyDocumentsDir = Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments), "ModbusControl");
         }
 
 

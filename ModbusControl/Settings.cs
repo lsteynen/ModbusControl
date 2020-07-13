@@ -6,8 +6,7 @@ using System.Xml.Serialization;
 using System.IO;
 using System.Windows.Forms;
 
-//TODO: installer maakt geen default settings file, app doet dat bij eerste afsluit.
-
+// Note: Installer maakt geen default settings file, app doet dat bij eerste close.
 // We laden en schrijven de XML files manueel. Als we de class naar een XML file zouden schrijven
 // ontstaat het probleem dat een aantal XML elementen verdwijnen als je even een oudere versie
 // van de applicatie runt.
@@ -22,24 +21,28 @@ namespace ModbusControlSpace
         private string SettingsFilename = "Settings.xml";
 
         // paths
-        public string ApplicationStartupPath;
+        public string StoreRoamingDir;
+        public string StoreLocalDir;
+        public string StoreSharedDir;
         public string StoreRoamingPath;
         public string StoreLocalPath;
         public string StoreSharedPath;
 
         public CRoaming Roaming;    // user roaming settings
         //public CLocal Local;        // user local settings
-        public CShared Shared;      // per applciation shared settings
+        public CShared Shared;      // per application shared settings
 
         // constructor
         public CSettings()
         {
             // init paths
             // Get Special Folders paths
-            ApplicationStartupPath = Application.StartupPath;
-            StoreRoamingPath = Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.ApplicationData), Company, AppName, SettingsFilename);
-            StoreLocalPath = Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.LocalApplicationData), Company, AppName, SettingsFilename);
-            StoreSharedPath = Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.CommonApplicationData), Company, AppName, SettingsFilename);
+            StoreRoamingDir = Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.ApplicationData), Company, AppName);
+            StoreLocalDir = Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.LocalApplicationData), Company, AppName);
+            StoreSharedDir = Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.CommonApplicationData), Company, AppName);
+            StoreRoamingPath = Path.Combine(StoreRoamingDir, SettingsFilename);
+            StoreLocalPath = Path.Combine(StoreLocalDir, SettingsFilename);
+            StoreSharedPath = Path.Combine(StoreSharedDir, SettingsFilename);
 
             Roaming = new CRoaming();
             Roaming.FilePath = StoreRoamingPath;
@@ -150,6 +153,7 @@ namespace ModbusControlSpace
 
                 // get doc
                 // if it does not exist, no worries, is probably the first time this user runs this program
+                // then try to load load old settings file at old location
                 try
                 {
                     xdoc = new XmlDocument();
@@ -162,11 +166,8 @@ namespace ModbusControlSpace
                     MessageBox.Show(ex.Message, "Debug: CSettings.CRoaming.Load() error", MessageBoxButtons.OK, MessageBoxIcon.Error);
 #endif
 
-                    /////////////////
-                    //TODO
                     // try load load old settings file at old location
-                    LoadOldSettings();
-                    /////////////
+                    MigrateOldSettings();
 
                     xdoc = null;
                     xroot = null;
@@ -254,7 +255,7 @@ namespace ModbusControlSpace
                 }
             }
 
-            private void LoadOldSettings()
+            private void MigrateOldSettings()
             {
                 XmlDocument xdoc = null;
 
@@ -293,6 +294,13 @@ namespace ModbusControlSpace
                     CustomWrite.Read(xroot);
                     CustomCommand.Read(xroot);
                     Logger.Read(xroot);
+                }
+
+                // delete the old settings file
+                // to avoid confusion
+                if( File.Exists(FilePath))
+                {
+                    File.Delete(FilePath);
                 }
             }
         }
@@ -717,7 +725,6 @@ namespace ModbusControlSpace
             }
         }
 
-        //TODO: goed testen
         private static void ReadElementStringList(XmlNode xparent, string parentname, string name, ref List<string> strlist)
         {
             XmlNode xn = xparent.SelectSingleNode(parentname);
@@ -773,7 +780,6 @@ namespace ModbusControlSpace
             return xn;
         }
 
-        //TODO: goed testen
         private static void WriteElementStringList(XmlNode parent, string parentname, string name, List<string> strlist)
         {
             XmlDocument xdoc = parent.OwnerDocument;

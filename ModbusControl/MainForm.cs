@@ -17,6 +17,7 @@ using System.Timers;
 using System.Windows.Forms;
 using System.Xml;
 using System.Xml.Schema;
+using System.Xml.Linq;
 
 using Modbus_net;
 using ModbusRegViewSpace;
@@ -81,6 +82,7 @@ namespace ModbusControlSpace
         private Thread UpdaterThread;   // Updater thread
         private Object UpdaterLock = new Object();  // lock for safely terminating the updater thread
         private bool AlternateWriteUseFC16;
+        private string LocalOverridesFilename = "LocalOverrides.xml";
 
         // a write entry
         private class WriteEntry
@@ -171,14 +173,14 @@ namespace ModbusControlSpace
         private void Form1_Load(object sender, EventArgs e)
         {
             // Load our settings
+            // For a new user the settings file will not exists yet, do not panic, it will be saved on exit.
             try
             {
                 Settings1.Load();
             }
             catch (Exception ex)
             {
-                //TODO: is tekst altijd juist?
-                string msg = "Error on loading program settings from Settings.xml:" + Environment.NewLine + Environment.NewLine
+                string msg = "Error while loading program settings from Settings.xml:" + Environment.NewLine + Environment.NewLine
                     + ex.Message + Environment.NewLine + Environment.NewLine
                     + "Will create a new Settings.xml with default settings on program exit.";
                 MessageBox.Show(msg, this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -215,8 +217,10 @@ namespace ModbusControlSpace
             Logger1.TheLogFilter.LogBridgeData = Settings1.Roaming.Logger.LogBridgeData;
             Logger1.TheLogFilter.LogBridgeDecode = Settings1.Roaming.Logger.LogBridgeDecode;
 
-            //TODO
-            // migreer de localoverrides file van oude locatie (mydocuments\Modbuscontrol) naar nieuwe (%appdata%)
+            // For a new user the localoverrides file will not exist yet, don't panic, just create the default.
+            // Is there is an old localoverrides file (mydocuments\Modbuscontrol\localoverrides.xml) and it has active overrides, then
+            // copy the file to the new location (%appdata%\roaming\ed&a\Modbuscontrol\.), rename it with 'old', and inform the user.
+            // We don't actually migrate, a lot of work for few users.
             MigrateLocalOverrides();
 
             // Start updater thread
@@ -532,8 +536,7 @@ namespace ModbusControlSpace
         private void editLocalOverridesMenuItem_Click(object sender, EventArgs e)
         {
             // Make path
-            //TODO, ander path
-            string filepath = Path.Combine(Settings1.StoreRoamingPath, "LocalOverrides.xml");
+            string filepath = Path.Combine(Settings1.StoreRoamingDir, LocalOverridesFilename);
 
             // File exists?
             if (File.Exists(filepath))
@@ -1053,7 +1056,7 @@ namespace ModbusControlSpace
             {
                 try
                 {
-                    Project.LocalOverrideFile = Path.Combine(Settings1.StoreRoamingPath, "LocalOverrides.xml");
+                    Project.LocalOverrideFile = Path.Combine(Settings1.StoreRoamingDir, LocalOverridesFilename);
                     bool IsLocalOverrideUsed = Project.LoadLocalOverride(System.IO.Path.GetFileName(ProjectPath));
                     LocalOverrideUsedName = Project.LocalOverrideName;
                 }
@@ -2715,21 +2718,54 @@ namespace ModbusControlSpace
         #endregion
 
         /// <summary>
-        /// Migreer de localoverrides file van oude locatie (mydocuments\Modbuscontrol) naar nieuwe (%appdata%).
-        /// Only if it does not yet exists in the new location.
+        // For a new user the localoverrides file will not exist yet, don't panic, just create the default.
+        // Is there is an old localoverrides file (mydocuments\Modbuscontrol\LocalOverrides.xml) and it has active overrides, then
+        // copy the file to the new location (%appdata%\roaming\ed&a\Modbuscontrol\.), rename it with '.old', and inform the user.
+        // We don't actually migrate, a lot of work for few users.
+        /// Dan de oude file deleten, om vergissingen te voorkomen.
         /// </summary>
         private void MigrateLocalOverrides()
         {
-            //TODO
-            /*
-            // check if our directory in MyDocuments exist for the current user
-            // if not: create it and create the default files
-            if (!Directory.Exists(Global.MyDocumentsPath))
+            string OldFilePath = Path.Combine(Global.MyDocumentsDir, LocalOverridesFilename);
+            string NewFilePath = Path.Combine(Settings1.StoreRoamingDir, LocalOverridesFilename);
+            string CopyNewFilepath = Path.Combine(Global.ApplicationStartupPath, LocalOverridesFilename);
+
+            // File does not yet exist at new location? (is per user)
+            if (!File.Exists(NewFilePath))
             {
-                Directory.CreateDirectory(Global.MyDocumentsPath);
-                File.Copy(Path.Combine(Global.ApplicationStartupPath, "LocalOverrides.xml"), Path.Combine(Global.MyDocumentsPath, "LocalOverrides.xml"));
+                // then create a new one, with default content
+                File.Copy(CopyNewFilepath, NewFilePath);
+
+                // Got an overrides file at old location? And it hast active overrides?
+                // Then copy the old file to the new location, rename it with '.old', and inform the user.
+                if (File.Exists(OldFilePath))
+                {
+                    bool OldHasActiveEntries = false;
+                    try
+                    {
+                        CProject proj = new CProject();
+                        OldHasActiveEntries = proj.MigrateLocalOverridesHasActiveEntries(OldFilePath);
+                    }
+                    catch
+                    {
+                    }
+
+                    // move the old file to the new location, rename it with '.old'
+                    string MovedName = Path.GetFileName(OldFilePath) + ".old";
+                    string MovedPath = Path.Combine(Settings1.StoreRoamingDir, MovedName);
+                    File.Delete(MovedPath);
+                    File.Move(OldFilePath, MovedPath);
+
+                    // inform the user
+                    if (OldHasActiveEntries)
+                    {
+                        string msg = "The old LocalOverrides.xml file had one or more active project overrides." + Environment.NewLine
+                            + "It is now renamed and moved to the new location '" + MovedPath + "'." + Environment.NewLine
+                            + "If you want to keep using your local overrides you'll have to migrate them yourself into the new local overrrides file. Sorry." + Environment.NewLine;
+                        MessageBox.Show(msg, this.Text, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                    }
+                }
             }
-            */
         }
     }
 }
