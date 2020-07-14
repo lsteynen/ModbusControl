@@ -2317,17 +2317,17 @@ namespace ModbusControlSpace
         public void SaveFile()
         {
             /* 
-            //default XDocument save, with BOM, no indent
+            //default XDocument save, with BOM, no indenting
             XmlDoc.Save(Path);
             */
 
             // save
-            // without BOM, with indent
+            // without BOM, with indenting
             XmlWriterSettings settings = new XmlWriterSettings();
             settings.Encoding = new UTF8Encoding(false); // The false means 'no BOM'
             settings.Indent = true;
             settings.IndentChars = ("\t");
-            using (XmlWriter w = XmlWriter.Create(Path+"f", settings))
+            using (XmlWriter w = XmlWriter.Create(Path, settings))
             {
                 XmlDoc.Save(w);
             }

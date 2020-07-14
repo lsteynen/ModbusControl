@@ -18,14 +18,13 @@ namespace ModbusControlSpace
         // company and app name
         private string Company = @"E.D.&A";
         private string AppName = "ModbusControl";
-        private string SettingsFilename = "Settings.xml";
 
         // paths
         public string StoreRoamingDir;
-        public string StoreLocalDir;
+        //public string StoreLocalDir;
         public string StoreSharedDir;
         public string StoreRoamingPath;
-        public string StoreLocalPath;
+        //public string StoreLocalPath;
         public string StoreSharedPath;
 
         public CRoaming Roaming;    // user roaming settings
@@ -38,11 +37,11 @@ namespace ModbusControlSpace
             // init paths
             // Get Special Folders paths
             StoreRoamingDir = Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.ApplicationData), Company, AppName);
-            StoreLocalDir = Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.LocalApplicationData), Company, AppName);
+            StoreRoamingPath = Path.Combine(StoreRoamingDir, "Settings.xml");
+            //StoreLocalDir = Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.LocalApplicationData), Company, AppName);
+            //StoreLocalPath = Path.Combine(StoreLocalDir, "Settings.xml");
             StoreSharedDir = Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.CommonApplicationData), Company, AppName);
-            StoreRoamingPath = Path.Combine(StoreRoamingDir, SettingsFilename);
-            StoreLocalPath = Path.Combine(StoreLocalDir, SettingsFilename);
-            StoreSharedPath = Path.Combine(StoreSharedDir, SettingsFilename);
+            StoreSharedPath = Path.Combine(StoreSharedDir, "CSettings.xml"); // Common settings, andere filename omdat de file Settings.xml gedelete wordt na migratie van de user settings.
 
             Roaming = new CRoaming();
             Roaming.FilePath = StoreRoamingPath;
@@ -126,8 +125,8 @@ namespace ModbusControlSpace
                 AutoNextRowOnEnter = false;
                 AutoStartEdit = false;
                 IgnoreSizeOnReload = false;
-                MbcfileValidationEnable = false;
-                MbcfileValidationXSDFile = "";
+                MbcfileValidationEnable = false; // see further
+                MbcfileValidationXSDFile = ""; // see further
                 CustomEditorEnable = false;
                 CustomEditorCommand = "";
                 MbcMruList = new List<string>();
@@ -137,6 +136,14 @@ namespace ModbusControlSpace
                 CustomWrite = new CCustomWrite();
                 CustomCommand = new CCustomCommand();
                 Logger = new CLogger();
+
+                // setup ValidationXSDFile, if we find it
+                string Filepath = Path.Combine(Global.ApplicationStartupPath, "MbcValidate.xsd");
+                if (File.Exists(Filepath))
+                {
+                    MbcfileValidationEnable = true;
+                    MbcfileValidationXSDFile = Filepath;
+                }
             }
 
             /// <summary>
@@ -321,6 +328,7 @@ namespace ModbusControlSpace
 
             // settings
             public CUpdater Updater;
+            public Version LastRunVersion;
 
             private XmlDocument xdoc;
             private XmlNode xroot;
@@ -331,6 +339,7 @@ namespace ModbusControlSpace
             {
                 // sets defaults
                 Updater = new CUpdater();
+                LastRunVersion = new Version(0, 0, 0, 0);
             }
 
             /// <summary>
@@ -370,6 +379,7 @@ namespace ModbusControlSpace
 
                 // read elements
                 Updater.Read(xroot);
+                ReadElementVersion(xroot, "lastrunversion", ref LastRunVersion);
             }
 
             /// <summary>
@@ -396,6 +406,7 @@ namespace ModbusControlSpace
 
                 // write data
                 Updater.Write(xroot);
+                WriteElementVersion(xroot, "lastrunversion", LastRunVersion);
 
                 // Write file
                 // no UTF8 BOM, indented
@@ -588,6 +599,7 @@ namespace ModbusControlSpace
 
         public class CLogger
         {
+            // settings
             public bool LogErrors;
             public bool LogWarnings;
             public bool LogInfo;
@@ -666,8 +678,12 @@ namespace ModbusControlSpace
 
             public void Read(XmlNode xparent)
             {
-                ReadElementBool(xparent, "checkforupdates", ref CheckForUpdates);
-                ReadElementDatetime(xparent, "lastcheckforupdate", ref LastCheckForUpdate);
+                XmlNode xn = xparent.SelectSingleNode("update");
+                if (xn != null)
+                {
+                    ReadElementBool(xn, "checkforupdates", ref CheckForUpdates);
+                    ReadElementDatetime(xn, "lastcheckforupdate", ref LastCheckForUpdate);
+                }
             }
 
             public void Write(XmlNode xparent)
@@ -739,6 +755,15 @@ namespace ModbusControlSpace
             }
         }
 
+        private static void ReadElementVersion(XmlNode xparent, string name, ref Version v)
+        {
+            XmlNode xn = xparent.SelectSingleNode(name);
+            if (xn != null)
+            {
+                v = Version.Parse(xn.InnerText);
+            }
+        }
+
         private static XmlNode WriteElementBool(XmlNode parent, string name, bool value)
         {
             // gebruik altijd lower case true en false
@@ -791,6 +816,11 @@ namespace ModbusControlSpace
                 e.InnerText = s;
                 xp.AppendChild(e);
             }
+        }
+
+        private static XmlNode WriteElementVersion(XmlNode parent, string name, Version v)
+        {
+            return WriteElementString(parent, name, v.ToString());
         }
 
         /// <summary>

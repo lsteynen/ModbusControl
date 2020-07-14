@@ -23,6 +23,7 @@ namespace ModbusControlSpace
         public enum eFormat { Int = 0, UInt, Hex, Bin, Float, ASCII };
         public static string[] FormatText = { "int", "uint", "hex", "bin", "float", "ASCII" };
 
+        public static Version VersionNum;
         public static string VersionString;
         public static string ApplicationStartupPath;
         public static string MyDocumentsDir;
@@ -31,10 +32,11 @@ namespace ModbusControlSpace
 
         static Global()
         {
-            // Get version string
+            // Get version
+            VersionNum = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
             Version v = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
-            VersionString = "v" + v.Major + "." + v.Minor + "." + v.Build;
-            if (v.Revision > 0) VersionString += "." + v.Revision;
+            VersionString = "v" + VersionNum.Major + "." + VersionNum.Minor + "." + VersionNum.Build;
+            if (VersionNum.Revision > 0) VersionString += "." + VersionNum.Revision;
 
             // Get Special Folders paths
             ApplicationStartupPath = Application.StartupPath;

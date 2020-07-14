@@ -170,6 +170,9 @@ namespace ModbusControlSpace
             tabControl1.DragDrop += new DragEventHandler(Form1_DragDrop);
         }
 
+        /// <summary>
+        /// Form is loaded but not yet shown
+        /// </summary>
         private void Form1_Load(object sender, EventArgs e)
         {
             // Load our settings
@@ -201,10 +204,12 @@ namespace ModbusControlSpace
             // pass options to clients
             PassOptionsToClients();
 
+            // MRU list
             recentFilesMenuItem.LoadList(Settings1.Roaming.MbcMruList);
 
-            // the export window settings will be used when form is created
-            // the compare window settings will be used when form is created
+            // the export window settings will be used later, when form is created
+            // the compare window settings will be used later, when form is created
+
             // logger settings
             Logger1.CapacityLines = Settings1.Roaming.Logger.Capacity;
             Logger1.TheLogFilter.LogErrors = Settings1.Roaming.Logger.LogErrors;
@@ -220,23 +225,11 @@ namespace ModbusControlSpace
             // For a new user the localoverrides file will not exist yet, don't panic, just create the default.
             // Is there is an old localoverrides file (mydocuments\Modbuscontrol\localoverrides.xml) and it has active overrides, then
             // copy the file to the new location (%appdata%\roaming\ed&a\Modbuscontrol\.), rename it with 'old', and inform the user.
-            // We don't actually migrate, a lot of work for few users.
+            // We don't actually migrate, too much work for few users.
             MigrateLocalOverrides();
 
-            // Start updater thread
-            // if auto-update enabled
-            // and only once per day, check if this is 1 day later
-            DateTime LastCheckDate = Settings1.Shared.Updater.LastCheckForUpdate.Date;
-            DateTime NextCheckDate = LastCheckDate.AddDays(1);
-            if( Options.CheckForUpdates && (DateTime.Now >= NextCheckDate))
-            {
-                // do the update check after a few seconds
-                UpdaterThread = new Thread(UpdaterThread_Work);
-                UpdaterThread.Start();
-            }
-
-            // Optionally add PDF files to the help menu, if any
-            // Got to keep in insert counter for all files
+            // Add PDF files to the help menu, if any
+            // Use insert counter to insert at the begin of the menu
             int InsertIndex = 0;
             try
             {
@@ -262,7 +255,7 @@ namespace ModbusControlSpace
             {
             }
 
-            // Optionally add demo mbc files to the help menu, if any
+            // Add demo mbc file(s) to the help menu, if any
             try
             {
                 // throws exception if directory does not exist
@@ -286,8 +279,37 @@ namespace ModbusControlSpace
             catch (Exception)
             {
             }
+        }
+
+        /// <summary>
+        /// After Form is show for the first time
+        /// </summary>
+        private void MainForm_Shown(object sender, EventArgs e)
+        {
+            // Is dit een nieuwe release? Vraag dan om de release notes te tonen.
+            // We negeren Revision om te voorkomen dat gebruikers deze dialog krijgen als ze een pre-release nieuwe exe kregen.
+            Version CurVers = new Version(Global.VersionNum.Major, Global.VersionNum.Minor, Global.VersionNum.Build);
+            Version PrevVers = new Version(Settings1.Shared.LastRunVersion.Major, Settings1.Shared.LastRunVersion.Minor, Settings1.Shared.LastRunVersion.Build);
+            if (CurVers.CompareTo(PrevVers) > 0)
+            {
+                // ShowReleaseNotes, if any
+                ShowReleaseNotes();
+            }
+
+            // Start updater thread
+            // if auto-update enabled
+            // and only once per day, check if this is 1 day later
+            DateTime LastCheckDate = Settings1.Shared.Updater.LastCheckForUpdate.Date;
+            DateTime NextCheckDate = LastCheckDate.AddDays(1);
+            if (Options.CheckForUpdates && (DateTime.Now >= NextCheckDate))
+            {
+                // do the update check after a few seconds
+                UpdaterThread = new Thread(UpdaterThread_Work);
+                UpdaterThread.Start();
+            }
 
             // got command line parameters?
+            // voorlopig alleen projectfile
             int NrArgs = Environment.GetCommandLineArgs().Length;
             if (NrArgs >= 2)
             {
@@ -321,6 +343,7 @@ namespace ModbusControlSpace
                 UpdateMenus();
                 UpdateStatusBar();
             }
+
         }
 
         /// <summary>
@@ -410,6 +433,8 @@ namespace ModbusControlSpace
             Settings1.Roaming.Logger.LogBridgeInfo = Logger1.TheLogFilter.LogBridgeInfo;
             Settings1.Roaming.Logger.LogBridgeData = Logger1.TheLogFilter.LogBridgeData;
             Settings1.Roaming.Logger.LogBridgeDecode = Logger1.TheLogFilter.LogBridgeDecode;
+
+            Settings1.Shared.LastRunVersion = Global.VersionNum;
 
             // And save
             // Exception opvangen en deftige melding geven
@@ -1972,6 +1997,33 @@ namespace ModbusControlSpace
             StartUpdater(true);
         }
 
+        private void ShowReleaseNotes()
+        {
+            // Toon de release notes pdf
+
+            // Zoek een pdf met 'release' in de naam
+            // throws exception if directory does not exist
+            string[] files = Directory.GetFiles(Global.ApplicationStartupPath, "*release*.pdf");
+            if (files.Length > 0)
+            {
+                DialogResult dr = MessageBox.Show("ModbusControl has been updated. Do you want to see the release notes?",
+                    this.Text, MessageBoxButtons.YesNo);
+                if (dr == DialogResult.Yes)
+                {
+                    string path = files[0];
+                    try
+                    {
+                        Process.Start(path);
+                    }
+                    catch (Exception ex)
+                    {
+                        string msg = ex.Message + Environment.NewLine + path;
+                        MessageBox.Show(msg, this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                }
+            }
+        }
+
         private void formtimer1_Tick(object sender, EventArgs e)
         {
             if ((DiagnosticscountersForm1 != null) && DiagnosticscountersForm1.Visible)
@@ -2767,5 +2819,6 @@ namespace ModbusControlSpace
                 }
             }
         }
+
     }
 }
