@@ -99,8 +99,11 @@ namespace ModbusControlSpace
             public bool AutoNextRowOnEnter;
             public bool AutoStartEdit;
             public bool IgnoreSizeOnReload;
+            public bool ShowVarProperties;
+            public bool MultilineAutosizeRows;      
             public bool MbcfileValidationEnable;
             public string MbcfileValidationXSDFile;
+            public bool ShowFindFilterBox;
             public bool CustomEditorEnable;
             public string CustomEditorCommand;
             public List<string> MbcMruList;
@@ -125,8 +128,11 @@ namespace ModbusControlSpace
                 AutoNextRowOnEnter = false;
                 AutoStartEdit = false;
                 IgnoreSizeOnReload = false;
+                ShowVarProperties = false;
+                MultilineAutosizeRows = false;
                 MbcfileValidationEnable = false; // see further
                 MbcfileValidationXSDFile = ""; // see further
+                ShowFindFilterBox = false;
                 CustomEditorEnable = false;
                 CustomEditorCommand = "";
                 MbcMruList = new List<string>();
@@ -173,9 +179,6 @@ namespace ModbusControlSpace
                     MessageBox.Show(ex.Message, "Debug: CSettings.CRoaming.Load() error", MessageBoxButtons.OK, MessageBoxIcon.Error);
 #endif
 
-                    // try load load old settings file at old location
-                    MigrateOldSettings();
-
                     xdoc = null;
                     xroot = null;
                     return;
@@ -197,8 +200,11 @@ namespace ModbusControlSpace
                 ReadElementBool(xroot, "autonextrowonenter", ref AutoNextRowOnEnter);
                 ReadElementBool(xroot, "autostartedit", ref AutoStartEdit);
                 ReadElementBool(xroot, "ignoresizeonreload", ref IgnoreSizeOnReload);
+                ReadElementBool(xroot, "multilineautosizerows", ref MultilineAutosizeRows);
+                ReadElementBool(xroot, "showvarproperties", ref ShowVarProperties);
                 ReadElementBool(xroot, "mbcfilevalidationenable", ref MbcfileValidationEnable);
                 ReadElementString(xroot, "mbcfilevalidationxsdfile", ref MbcfileValidationXSDFile);
+                ReadElementBool(xroot, "showfindfilterbox", ref ShowFindFilterBox);
                 ReadElementBool(xroot, "customeditoreenable", ref CustomEditorEnable);
                 ReadElementString(xroot, "customeditorcommand", ref CustomEditorCommand);
                 ReadElementStringList(xroot, "mbcmrulist", "file", ref MbcMruList);
@@ -242,8 +248,11 @@ namespace ModbusControlSpace
                 WriteElementBool(xroot, "autonextrowonenter", AutoNextRowOnEnter);
                 WriteElementBool(xroot, "autostartedit", AutoStartEdit);
                 WriteElementBool(xroot, "ignoresizeonreload", IgnoreSizeOnReload);
+                WriteElementBool(xroot, "multilineautosizerows", MultilineAutosizeRows);
+                WriteElementBool(xroot, "showvarproperties", ShowVarProperties);
                 WriteElementBool(xroot, "mbcfilevalidationenable", MbcfileValidationEnable);
                 WriteElementString(xroot, "mbcfilevalidationxsdfile", MbcfileValidationXSDFile);
+                WriteElementBool(xroot, "showfindfilterbox", ShowFindFilterBox);
                 WriteElementBool(xroot, "customeditoreenable", CustomEditorEnable);
                 WriteElementString(xroot, "customeditorcommand", CustomEditorCommand);
                 WriteElementStringList(xroot, "mbcmrulist", "file", MbcMruList);
@@ -262,54 +271,6 @@ namespace ModbusControlSpace
                 }
             }
 
-            private void MigrateOldSettings()
-            {
-                XmlDocument xdoc = null;
-
-                // old settings.xml is in %programdata%
-                string FilePath = Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.CommonApplicationData), @"E.D.&A", "ModbusControl", "Settings.xml");
-
-                try
-                {
-                    xdoc = new XmlDocument();
-                    xdoc.Load(FilePath);
-                }
-                catch (Exception)
-                {
-                    // nope
-                }
-
-                // get root
-                XmlNode xroot = GetRootElement(xdoc, "modbuscontrol");
-                if (xroot != null)
-                {
-                    // read elements
-                    ReadElementBool(xroot, "stoponerror", ref StopOnError);
-                    ReadElementBool(xroot, "uselocaloverrides", ref UseLocalOverrides);
-                    ReadElementBool(xroot, "beeponinputerror", ref BeepOnInputError);
-                    ReadElementBool(xroot, "autonextrowonenter", ref AutoNextRowOnEnter);
-                    ReadElementBool(xroot, "autostartedit", ref AutoStartEdit);
-                    ReadElementBool(xroot, "ignoresizeonreload", ref IgnoreSizeOnReload);
-                    ReadElementBool(xroot, "mbcfilevalidationenable", ref MbcfileValidationEnable);
-                    ReadElementString(xroot, "mbcfilevalidationxsdfile", ref MbcfileValidationXSDFile);
-                    ReadElementBool(xroot, "customeditoreenable", ref CustomEditorEnable);
-                    ReadElementString(xroot, "customeditorcommand", ref CustomEditorCommand);
-                    ReadElementStringList(xroot, "mbcmrulist", "file", ref MbcMruList);
-                    Export.Read(xroot);
-                    Compare.Read(xroot);
-                    CustomRead.Read(xroot);
-                    CustomWrite.Read(xroot);
-                    CustomCommand.Read(xroot);
-                    Logger.Read(xroot);
-                }
-
-                // delete the old settings file
-                // to avoid confusion
-                if( File.Exists(FilePath))
-                {
-                    File.Delete(FilePath);
-                }
-            }
         }
 
         /*

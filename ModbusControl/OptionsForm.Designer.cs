@@ -43,6 +43,8 @@
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.checkboxCustomEditor = new System.Windows.Forms.CheckBox();
             this.checkboxIgnoreFormSizeOnReload = new System.Windows.Forms.CheckBox();
+            this.checkboxShowVarProperties = new System.Windows.Forms.CheckBox();
+            this.checkboxAutoRowSize = new System.Windows.Forms.CheckBox();
             this.textboxUseValidationSchema = new System.Windows.Forms.TextBox();
             this.checkboxUseValidationSchema = new System.Windows.Forms.CheckBox();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
@@ -57,7 +59,7 @@
             // buttonCancel
             // 
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.buttonCancel.Location = new System.Drawing.Point(245, 322);
+            this.buttonCancel.Location = new System.Drawing.Point(230, 312);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 23);
             this.buttonCancel.TabIndex = 11;
@@ -67,7 +69,7 @@
             // buttonOK
             // 
             this.buttonOK.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.buttonOK.Location = new System.Drawing.Point(156, 322);
+            this.buttonOK.Location = new System.Drawing.Point(142, 312);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(75, 23);
             this.buttonOK.TabIndex = 10;
@@ -77,7 +79,7 @@
             // checkboxUseLocalOverrides
             // 
             this.checkboxUseLocalOverrides.AutoSize = true;
-            this.checkboxUseLocalOverrides.Location = new System.Drawing.Point(23, 32);
+            this.checkboxUseLocalOverrides.Location = new System.Drawing.Point(223, 35);
             this.checkboxUseLocalOverrides.Name = "checkboxUseLocalOverrides";
             this.checkboxUseLocalOverrides.Size = new System.Drawing.Size(116, 17);
             this.checkboxUseLocalOverrides.TabIndex = 1;
@@ -88,7 +90,7 @@
             // checkboxStopOnCommsError
             // 
             this.checkboxStopOnCommsError.AutoSize = true;
-            this.checkboxStopOnCommsError.Location = new System.Drawing.Point(23, 12);
+            this.checkboxStopOnCommsError.Location = new System.Drawing.Point(223, 12);
             this.checkboxStopOnCommsError.Name = "checkboxStopOnCommsError";
             this.checkboxStopOnCommsError.Size = new System.Drawing.Size(120, 17);
             this.checkboxStopOnCommsError.TabIndex = 0;
@@ -99,7 +101,7 @@
             // checkboxBeepOnInputError
             // 
             this.checkboxBeepOnInputError.AutoSize = true;
-            this.checkboxBeepOnInputError.Location = new System.Drawing.Point(23, 52);
+            this.checkboxBeepOnInputError.Location = new System.Drawing.Point(23, 12);
             this.checkboxBeepOnInputError.Name = "checkboxBeepOnInputError";
             this.checkboxBeepOnInputError.Size = new System.Drawing.Size(116, 17);
             this.checkboxBeepOnInputError.TabIndex = 2;
@@ -110,7 +112,7 @@
             // CheckboxCheckForUpdates
             // 
             this.CheckboxCheckForUpdates.AutoSize = true;
-            this.CheckboxCheckForUpdates.Location = new System.Drawing.Point(23, 289);
+            this.CheckboxCheckForUpdates.Location = new System.Drawing.Point(23, 277);
             this.CheckboxCheckForUpdates.Name = "CheckboxCheckForUpdates";
             this.CheckboxCheckForUpdates.Size = new System.Drawing.Size(113, 17);
             this.CheckboxCheckForUpdates.TabIndex = 9;
@@ -121,7 +123,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(20, 235);
+            this.label1.Location = new System.Drawing.Point(21, 244);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(86, 13);
             this.label1.TabIndex = 5;
@@ -134,7 +136,7 @@
             0,
             0,
             0});
-            this.numericLoggerCapacity.Location = new System.Drawing.Point(114, 233);
+            this.numericLoggerCapacity.Location = new System.Drawing.Point(114, 243);
             this.numericLoggerCapacity.Maximum = new decimal(new int[] {
             999999,
             0,
@@ -158,7 +160,7 @@
             // checkboxNextRowOnEnter
             // 
             this.checkboxNextRowOnEnter.AutoSize = true;
-            this.checkboxNextRowOnEnter.Location = new System.Drawing.Point(23, 72);
+            this.checkboxNextRowOnEnter.Location = new System.Drawing.Point(23, 35);
             this.checkboxNextRowOnEnter.Name = "checkboxNextRowOnEnter";
             this.checkboxNextRowOnEnter.Size = new System.Drawing.Size(151, 17);
             this.checkboxNextRowOnEnter.TabIndex = 3;
@@ -169,7 +171,7 @@
             // checkboxAutostartEdit
             // 
             this.checkboxAutostartEdit.AutoSize = true;
-            this.checkboxAutostartEdit.Location = new System.Drawing.Point(23, 92);
+            this.checkboxAutostartEdit.Location = new System.Drawing.Point(23, 58);
             this.checkboxAutostartEdit.Name = "checkboxAutostartEdit";
             this.checkboxAutostartEdit.Size = new System.Drawing.Size(166, 17);
             this.checkboxAutostartEdit.TabIndex = 4;
@@ -179,16 +181,16 @@
             // 
             // textboxCustomEditor
             // 
-            this.textboxCustomEditor.Location = new System.Drawing.Point(82, 200);
+            this.textboxCustomEditor.Location = new System.Drawing.Point(71, 210);
             this.textboxCustomEditor.Name = "textboxCustomEditor";
-            this.textboxCustomEditor.Size = new System.Drawing.Size(347, 20);
+            this.textboxCustomEditor.Size = new System.Drawing.Size(302, 20);
             this.textboxCustomEditor.TabIndex = 8;
             this.toolTip1.SetToolTip(this.textboxCustomEditor, "Custom editor command, for example [\"c:\\windows\\system32\\notepad.exe\" \"%file\"]");
             // 
             // checkboxCustomEditor
             // 
             this.checkboxCustomEditor.AutoSize = true;
-            this.checkboxCustomEditor.Location = new System.Drawing.Point(23, 181);
+            this.checkboxCustomEditor.Location = new System.Drawing.Point(23, 192);
             this.checkboxCustomEditor.Name = "checkboxCustomEditor";
             this.checkboxCustomEditor.Size = new System.Drawing.Size(111, 17);
             this.checkboxCustomEditor.TabIndex = 7;
@@ -199,7 +201,7 @@
             // checkboxIgnoreFormSizeOnReload
             // 
             this.checkboxIgnoreFormSizeOnReload.AutoSize = true;
-            this.checkboxIgnoreFormSizeOnReload.Location = new System.Drawing.Point(23, 112);
+            this.checkboxIgnoreFormSizeOnReload.Location = new System.Drawing.Point(223, 58);
             this.checkboxIgnoreFormSizeOnReload.Name = "checkboxIgnoreFormSizeOnReload";
             this.checkboxIgnoreFormSizeOnReload.Size = new System.Drawing.Size(182, 17);
             this.checkboxIgnoreFormSizeOnReload.TabIndex = 12;
@@ -207,18 +209,42 @@
             this.toolTip1.SetToolTip(this.checkboxIgnoreFormSizeOnReload, "Do not use the form size specified in the mbc file on project REload");
             this.checkboxIgnoreFormSizeOnReload.UseVisualStyleBackColor = true;
             // 
+            // checkboxShowVarProperties
+            // 
+            this.checkboxShowVarProperties.AutoSize = true;
+            this.checkboxShowVarProperties.Location = new System.Drawing.Point(23, 81);
+            this.checkboxShowVarProperties.Name = "checkboxShowVarProperties";
+            this.checkboxShowVarProperties.Size = new System.Drawing.Size(157, 17);
+            this.checkboxShowVarProperties.TabIndex = 13;
+            this.checkboxShowVarProperties.Text = "Show var properties column";
+            this.toolTip1.SetToolTip(this.checkboxShowVarProperties, "Do not use the form size specified in the mbc file on project REload");
+            this.checkboxShowVarProperties.UseVisualStyleBackColor = true;
+            // 
+            // checkboxAutoRowSize
+            // 
+            this.checkboxAutoRowSize.AutoSize = true;
+            this.checkboxAutoRowSize.Location = new System.Drawing.Point(23, 104);
+            this.checkboxAutoRowSize.Name = "checkboxAutoRowSize";
+            this.checkboxAutoRowSize.Size = new System.Drawing.Size(176, 17);
+            this.checkboxAutoRowSize.TabIndex = 14;
+            this.checkboxAutoRowSize.Text = "Multiline rows with auto row size";
+            this.toolTip1.SetToolTip(this.checkboxAutoRowSize, "Do not use the form size specified in the mbc file on project REload");
+            this.checkboxAutoRowSize.UseVisualStyleBackColor = true;
+            // 
             // textboxUseValidationSchema
             // 
-            this.textboxUseValidationSchema.Location = new System.Drawing.Point(90, 156);
+            this.textboxUseValidationSchema.Location = new System.Drawing.Point(82, 158);
+            this.textboxUseValidationSchema.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.textboxUseValidationSchema.Name = "textboxUseValidationSchema";
-            this.textboxUseValidationSchema.Size = new System.Drawing.Size(339, 20);
+            this.textboxUseValidationSchema.Size = new System.Drawing.Size(291, 20);
             this.textboxUseValidationSchema.TabIndex = 14;
             this.toolTip1.SetToolTip(this.textboxUseValidationSchema, "Custom editor command, for example [\"c:\\windows\\system32\\notepad.exe\" \"%file\"]");
             // 
             // checkboxUseValidationSchema
             // 
             this.checkboxUseValidationSchema.AutoSize = true;
-            this.checkboxUseValidationSchema.Location = new System.Drawing.Point(23, 134);
+            this.checkboxUseValidationSchema.Location = new System.Drawing.Point(23, 140);
+            this.checkboxUseValidationSchema.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.checkboxUseValidationSchema.Name = "checkboxUseValidationSchema";
             this.checkboxUseValidationSchema.Size = new System.Drawing.Size(231, 17);
             this.checkboxUseValidationSchema.TabIndex = 13;
@@ -234,9 +260,10 @@
             // butSelectValidationFile
             // 
             this.butSelectValidationFile.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.butSelectValidationFile.Location = new System.Drawing.Point(435, 154);
+            this.butSelectValidationFile.Location = new System.Drawing.Point(374, 158);
+            this.butSelectValidationFile.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.butSelectValidationFile.Name = "butSelectValidationFile";
-            this.butSelectValidationFile.Size = new System.Drawing.Size(31, 23);
+            this.butSelectValidationFile.Size = new System.Drawing.Size(25, 19);
             this.butSelectValidationFile.TabIndex = 15;
             this.butSelectValidationFile.Text = "...";
             this.butSelectValidationFile.UseVisualStyleBackColor = true;
@@ -245,9 +272,10 @@
             // butSelectCustomEditor
             // 
             this.butSelectCustomEditor.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.butSelectCustomEditor.Location = new System.Drawing.Point(435, 198);
+            this.butSelectCustomEditor.Location = new System.Drawing.Point(374, 210);
+            this.butSelectCustomEditor.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.butSelectCustomEditor.Name = "butSelectCustomEditor";
-            this.butSelectCustomEditor.Size = new System.Drawing.Size(31, 23);
+            this.butSelectCustomEditor.Size = new System.Drawing.Size(25, 19);
             this.butSelectCustomEditor.TabIndex = 16;
             this.butSelectCustomEditor.Text = "...";
             this.butSelectCustomEditor.UseVisualStyleBackColor = true;
@@ -262,7 +290,8 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(39, 159);
+            this.label2.Location = new System.Drawing.Point(31, 160);
+            this.label2.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(49, 13);
             this.label2.TabIndex = 17;
@@ -271,7 +300,8 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(39, 203);
+            this.label3.Location = new System.Drawing.Point(31, 212);
+            this.label3.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(37, 13);
             this.label3.TabIndex = 18;
@@ -283,10 +313,11 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.AutoSize = true;
-            this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.CancelButton = this.buttonCancel;
-            this.ClientSize = new System.Drawing.Size(476, 353);
+            this.ClientSize = new System.Drawing.Size(455, 345);
             this.ControlBox = false;
+            this.Controls.Add(this.checkboxAutoRowSize);
+            this.Controls.Add(this.checkboxShowVarProperties);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.butSelectCustomEditor);
@@ -338,6 +369,8 @@
         private System.Windows.Forms.ToolTip toolTip1;
         private System.Windows.Forms.CheckBox checkboxCustomEditor;
         private System.Windows.Forms.CheckBox checkboxIgnoreFormSizeOnReload;
+        private System.Windows.Forms.CheckBox checkboxShowVarProperties;
+        private System.Windows.Forms.CheckBox checkboxAutoRowSize;
         private System.Windows.Forms.CheckBox checkboxUseValidationSchema;
         private System.Windows.Forms.TextBox textboxUseValidationSchema;
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
@@ -346,5 +379,6 @@
         private System.Windows.Forms.OpenFileDialog openFileDialog2;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label3;
+
     }
 }

@@ -14,6 +14,8 @@ using System.Linq;
 
 using LST.Helpers;
 
+//TODO: <expanded> ipv <expandchildren>, <expandfields> nog wel accepteren, updaten
+
 namespace ModbusControlSpace
 {
     /// <summary>
@@ -61,7 +63,7 @@ namespace ModbusControlSpace
             public int HoldingregistersStart;
             public int HoldingregistersEnd;
             public int Samplerate;
-            public bool ShowInfo;
+            //public bool ShowInfo;
             public bool AutostartSeen;
             public bool AutostartEnable;
             public string AutostartTabpage;
@@ -163,7 +165,7 @@ namespace ModbusControlSpace
             Options.HoldingregistersStart = 40001;
             Options.HoldingregistersEnd = GetHoldingRegistersEnd(Options.HoldingregistersStart);
             Options.Samplerate = 1000;
-            Options.ShowInfo = true;
+            //Options.ShowInfo = true;
             Options.AutostartSeen = false;
             Options.AutostartEnable = true; // default is enabled if not seen
             Options.AutostartTabpage = "1";
@@ -566,7 +568,7 @@ namespace ModbusControlSpace
                 }
 
                 // SlaveID
-                xe2 = GetSingleElement(xe1, "SlaveID", eReq.Optional);
+                xe2 = GetSingleElement(xe1, "SlaveID", eReq.Optional); 
                 if (xe2 != null)
                 {
                     Seen = true;
@@ -779,23 +781,24 @@ namespace ModbusControlSpace
                 }
 
                 // ShowInfo 
-                xe2 = GetSingleElement(xe1, "ShowInfo", eReq.Optional);
-                if (xe2 != null)
-                {
-                    Seen = true;
-                    // accept true and false
-                    string TmpString = xe2.Value.Trim();
-                    bool TmpBool;
-                    if (TryParseBool(TmpString, out TmpBool))
-                    {
-                        Options.ShowInfo = TmpBool;
-                    }
-                    else
-                    {
-                        TFilePosition fp = GetFilePos(xe2);
-                        throw new XmlException("XML element <" + xe2.Name + "> has an invalid value. Valid values are 'true' or 'false'." + Environment.NewLine + LimitXmlText(xe2.ToString()) + Environment.NewLine, null, fp.Line, fp.Col);
-                    }
-                }
+                //TODO
+                //xe2 = GetSingleElement(xe1, "ShowInfo", eReq.Optional);
+                //if (xe2 != null)
+                //{
+                //    Seen = true;
+                //    // accept true and false
+                //    string TmpString = xe2.Value.Trim();
+                //    bool TmpBool;
+                //    if (TryParseBool(TmpString, out TmpBool))
+                //    {
+                //        Options.ShowInfo = TmpBool;
+                //    }
+                //    else
+                //    {
+                //        TFilePosition fp = GetFilePos(xe2);
+                //        throw new XmlException("XML element <" + xe2.Name + "> has an invalid value. Valid values are 'true' or 'false'." + Environment.NewLine + LimitXmlText(xe2.ToString()) + Environment.NewLine, null, fp.Line, fp.Col);
+                //    }
+                //}
             }
 
             return Seen;
@@ -810,7 +813,7 @@ namespace ModbusControlSpace
         private void ProcessTabs(XElement pxe)
         {
             // get all <tab> elements, optional
-            IEnumerable<XElement> tabList = GetAllElements(pxe, "tab", eReq.Optional);
+            IEnumerable<XElement> tabList = GetAllElements( pxe, "tab", eReq.Optional);
             foreach (XElement tabNode in tabList)
             {
                 // do not allow a <tab> in a <tab>
@@ -852,7 +855,7 @@ namespace ModbusControlSpace
                 DefaultVar.Bitfields = null;
                 DefaultVar.Expand = false;
                 DefaultVar.EnumDict = null;
-
+ 
                 // in tab we can set defaults for all var's
 
                 // get rw, optional
@@ -935,6 +938,8 @@ namespace ModbusControlSpace
 
                 // get expandfields, optional
                 XElement expandNode = GetSingleElement(tabNode, "expandfields", eReq.Optional);
+                //TODO
+                if (expandNode == null) expandNode = GetSingleElement(tabNode, "expanded", eReq.Optional);
                 if (expandNode != null)
                 {
                     string TmpString = expandNode.Value.Trim();
@@ -1275,6 +1280,8 @@ namespace ModbusControlSpace
 
                     // get expandfields, optional
                     expandNode = GetSingleElement(varNode, "expandfields", eReq.Optional);
+                    //TODO
+                    if (expandNode == null) expandNode = GetSingleElement(varNode, "expanded", eReq.Optional);
                     if (expandNode != null)
                     {
                         string TmpString = expandNode.Value.Trim();
@@ -1670,7 +1677,7 @@ namespace ModbusControlSpace
             return false;
         }
 
-
+        
         /// <summary>
         /// Check if Holdingreg number is valid, HoldingregistersStart .. HoldingregistersEnd
         /// </summary>
@@ -1787,7 +1794,7 @@ namespace ModbusControlSpace
                 Size = 2;
                 return true;
             }
-
+            
             Format = Global.eFormat.Int;
             Size = 0;
             return false;
@@ -2030,7 +2037,7 @@ namespace ModbusControlSpace
             if (xe != null)
             {
                 xe.Remove();
-            }
+        	}
 
             // Remove ShowReadwrite, obsolete
             xe = GetSingleElement(xeModbus, "ShowReadwrite", eReq.Optional);
@@ -2039,7 +2046,7 @@ namespace ModbusControlSpace
                 xe.Remove();
             }
         }
-
+        
         /// <summary>
         /// Write Modbus/TCP bridge settings to XML document
         /// Create elements if they don't exist yet
@@ -2074,7 +2081,7 @@ namespace ModbusControlSpace
         }
 
         /// <summary>
-        /// Write other settings to XML document, like samplerate, showinfo
+        /// Write other settings to XML document, like samplerate, //showinfo
         /// Create XML nodes if they don't exist yet
         /// </summary>
         public void WriteOtherSettings()
@@ -2088,16 +2095,16 @@ namespace ModbusControlSpace
             }
 
             // Find showinfo node, or create it
-            XElement xe = GetSingleElement(xeBridge, "ShowInfo", eReq.Optional);
-            if (xe == null)
-            {
-                xe = new XElement("showinfo");
-                xeBridge.Add(xe);
-            }
-            xe.Value = Options.ShowInfo.ToString().ToLower();
+            //XElement xe = GetSingleElement(xeBridge, "ShowInfo", eReq.Optional);
+            //if (xe == null)
+            //{
+            //    xe = new XElement("showinfo");
+            //    xeBridge.Add(xe);
+            //}
+            //xe.Value = Options.ShowInfo.ToString();
 
             // Find Samplerate node, or create it
-            xe = GetSingleElement(xeBridge, "SampleRate", eReq.Optional);
+            XElement xe = GetSingleElement(xeBridge, "SampleRate", eReq.Optional);
             if (xe == null)
             {
                 xe = new XElement("samplerate");

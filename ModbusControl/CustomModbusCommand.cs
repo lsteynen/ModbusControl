@@ -8,7 +8,6 @@ using System.Text;
 using System.Windows.Forms;
 
 using LST.Helpers;
-using ModbusRegViewSpace;
 using Modbus_net;
 
 namespace ModbusControlSpace

@@ -20,10 +20,18 @@ using System.Xml.Schema;
 using System.Xml.Linq;
 
 using Modbus_net;
-using ModbusRegViewSpace;
-using TreeGridViewSpace;
 using LST.Helpers;
+using LST.ModbusGridView;
 
+//TODO: een read functie maken die bij een adres error de read in stukjes doet
+//      moet bij elke deel-read data returnen, dus ik denk dat je een -start- en een -continue- functie nodig hebt, elk blocking zoals gewoonlijk
+//TODO: string: lengte per reg of per byte? 
+//      string2, string4, ... string250 (aantal chars)
+//TODO: read/write alle types van modbus registers
+//TODO: CustomRead en CustomWrite: read/write alle types van modbus registers
+//TODO: LocalOverrides afvoeren, vervangen door command line opties
+//TODO: dynamic connectie (ipv static) bij elke read de poort/connectie openen, daarna terug sluiten
+//      kan de connect/disconnect dan vervallen?  poll start = connect, poll stop = disconnect, pollonce = connect/read/disconnect
 
 namespace ModbusControlSpace
 {
@@ -37,8 +45,11 @@ namespace ModbusControlSpace
             public bool AutoNextRowOnEnter;
             public bool AutoStartEdit;
             public bool IgnoreSizeOnReload;
+            public bool ShowVarProperties;
+            public bool AutoRowSize;
             public bool MbcfileValidationEnable;
             public string MbcfileValidationXSDFile;
+            public bool ShowFindBox;
             public bool CustomEditorEnable;
             public string CustomEditorCommand;
             public bool CheckForUpdates;
@@ -73,7 +84,7 @@ namespace ModbusControlSpace
         private SaveConfigurationForm SaveConfigurationForm1;
         private DiagnosticsForm DiagnosticscountersForm1;
         private Thread CommsThread;
-        private bool CommsThread_StopFlag;
+        private volatile bool CommsThread_StopFlag;
         private TabPage CurrentTabPage; // null if none
         public bool MainPollingIsEnabled = true;
         private bool TabIsChanged;
@@ -196,13 +207,19 @@ namespace ModbusControlSpace
             Options.AutoNextRowOnEnter = Settings1.Roaming.AutoNextRowOnEnter;
             Options.AutoStartEdit = Settings1.Roaming.AutoStartEdit;
             Options.IgnoreSizeOnReload = Settings1.Roaming.IgnoreSizeOnReload;
+            Options.ShowVarProperties = Settings1.Roaming.ShowVarProperties;
+            Options.AutoRowSize = Settings1.Roaming.MultilineAutosizeRows;
             Options.MbcfileValidationEnable = Settings1.Roaming.MbcfileValidationEnable;
             Options.MbcfileValidationXSDFile = Settings1.Roaming.MbcfileValidationXSDFile;
+            Options.ShowFindBox = Settings1.Roaming.ShowFindFilterBox;
             Options.CustomEditorEnable = Settings1.Roaming.CustomEditorEnable;
             Options.CustomEditorCommand = Settings1.Roaming.CustomEditorCommand;
             Options.CheckForUpdates = Settings1.Shared.Updater.CheckForUpdates;
             // pass options to clients
-            PassOptionsToClients();
+            PassOptionsToCurrentClientTab();
+
+            // Findbox
+            panFilter.Visible = Options.ShowFindBox;
 
             // MRU list
             recentFilesMenuItem.LoadList(Settings1.Roaming.MbcMruList);
@@ -223,10 +240,11 @@ namespace ModbusControlSpace
             Logger1.TheLogFilter.LogBridgeDecode = Settings1.Roaming.Logger.LogBridgeDecode;
 
             // For a new user the localoverrides file will not exist yet, don't panic, just create the default.
-            // Is there is an old localoverrides file (mydocuments\Modbuscontrol\localoverrides.xml) and it has active overrides, then
+            // If there is an old localoverrides file (mydocuments\Modbuscontrol\localoverrides.xml) and it has active overrides, then
             // copy the file to the new location (%appdata%\roaming\ed&a\Modbuscontrol\.), rename it with 'old', and inform the user.
             // We don't actually migrate, too much work for few users.
-            MigrateLocalOverrides();
+            //TODO: LocalOverrides wordt afgevoerd?
+            //MigrateLocalOverrides();
 
             // Add PDF files to the help menu, if any
             // Use insert counter to insert at the begin of the menu
@@ -381,8 +399,11 @@ namespace ModbusControlSpace
             Settings1.Roaming.AutoNextRowOnEnter = Options.AutoNextRowOnEnter;
             Settings1.Roaming.AutoStartEdit = Options.AutoStartEdit;
             Settings1.Roaming.IgnoreSizeOnReload = Options.IgnoreSizeOnReload;
+            Settings1.Roaming.ShowVarProperties = Options.ShowVarProperties;
+            Settings1.Roaming.MultilineAutosizeRows = Options.AutoRowSize;
             Settings1.Roaming.MbcfileValidationEnable = Options.MbcfileValidationEnable;
             Settings1.Roaming.MbcfileValidationXSDFile = Options.MbcfileValidationXSDFile;
+            Settings1.Roaming.ShowFindFilterBox = panFilter.Visible;
             Settings1.Roaming.CustomEditorEnable = Options.CustomEditorEnable;
             Settings1.Roaming.CustomEditorCommand = Options.CustomEditorCommand;
             Settings1.Shared.Updater.CheckForUpdates = Options.CheckForUpdates;
@@ -448,6 +469,29 @@ namespace ModbusControlSpace
             }
         }
 
+        private void MainForm_KeyDown(object sender, KeyEventArgs e)
+        {
+            // Control with '+' is zoom in
+            if (e.Control && ((e.KeyCode == Keys.Add) || (e.KeyCode == Keys.Oemplus)))
+            {
+                ChangeZoom(+1);
+                e.Handled = true;
+            }
+            // Control with '-' is zoom out
+            else if (e.Control && ((e.KeyCode == Keys.Subtract) || (e.KeyCode == Keys.OemMinus)))
+            {
+                ChangeZoom(-1);
+                e.Handled = true;
+            }
+            // Control 0 is reset zoom
+            else if (e.Control && ((e.KeyCode == Keys.NumPad0) || (e.KeyCode == Keys.D0)))
+            {
+                ChangeZoom(0);
+                e.Handled = true;
+            }
+        }
+
+
         #region Menu and toolbar handlers
 
         /// <summary>
@@ -490,7 +534,7 @@ namespace ModbusControlSpace
         /// <summary>
         /// Open windows explorer at the project file's directory
         /// </summary>
-        private void openFileLocationToolStripMenuItem_Click(object sender, EventArgs e)
+        private void OpenFileLocationToolStripMenuItem_Click(object sender, EventArgs e)
         {
             string DirName = System.IO.Path.GetDirectoryName(ProjectPath);
             if (!String.IsNullOrEmpty(DirName))
@@ -619,17 +663,17 @@ namespace ModbusControlSpace
 
         private void zoomInToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            DoZoom(+1);
+            ChangeZoom(+1);
         }
 
         private void zoomOutToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            DoZoom(-1);
+            ChangeZoom(-1);
         }
 
         private void resetZoomToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            DoZoom(0);
+            ChangeZoom(0);
         }
 
         #endregion
@@ -755,7 +799,7 @@ namespace ModbusControlSpace
             configform.ConnectionAscii16Endian = Project.Connection.Ascii16Endian;
             configform.OptionsHoldingregistersStart = Project.Options.HoldingregistersStart;
             configform.OptionsSamplerate = Project.Options.Samplerate;
-            configform.OptionsShowInfo = Project.Options.ShowInfo;
+            //configform.OptionsShowInfo = Project.Options.ShowInfo;
             configform.ModbusTcpBridgeEnable = Project.ModbusTcpBridge.Enable;
             configform.ModbusTcpBridgeIPPort = Project.ModbusTcpBridge.IPPort;
             // Apply button callback
@@ -818,7 +862,7 @@ namespace ModbusControlSpace
             Project.Connection.Float32Endian = configform.ConnectionFloat32Endian;
             Project.Connection.Ascii16Endian = configform.ConnectionAscii16Endian;
             Project.Options.Samplerate = configform.OptionsSamplerate;
-            Project.Options.ShowInfo = configform.OptionsShowInfo;
+            //Project.Options.ShowInfo = configform.OptionsShowInfo;
             Project.ModbusTcpBridge.Enable = configform.ModbusTcpBridgeEnable;
             Project.ModbusTcpBridge.IPPort = configform.ModbusTcpBridgeIPPort;
 
@@ -842,8 +886,8 @@ namespace ModbusControlSpace
 
             UpdateModbusTcpBridge();
 
-            // update settings in all tabs
-            UpdatePropertiesInAllTabs();
+            // update settings current tab
+            PassOptionsToCurrentClientTab();
         }
 
         /// <summary>
@@ -859,9 +903,12 @@ namespace ModbusControlSpace
             optionsForm.AutoNextRowOnEnter = Options.AutoNextRowOnEnter;
             optionsForm.AutoStartEdit = Options.AutoStartEdit;
             optionsForm.IgnoreSizeOnReload = Options.IgnoreSizeOnReload;
+            optionsForm.ShowVarProperties = Options.ShowVarProperties;
+            optionsForm.AutoRowSize = Options.AutoRowSize;
             optionsForm.LoggerCapacity = Logger1.CapacityLines;
             optionsForm.MbcfileValidationEnable = Options.MbcfileValidationEnable;
             optionsForm.MbcfileValidationFile = Options.MbcfileValidationXSDFile;
+            optionsForm.CustomEditorEnable = Options.CustomEditorEnable;
             optionsForm.CustomEditorEnable = Options.CustomEditorEnable;
             optionsForm.CustomEditorCommand = Options.CustomEditorCommand;
             optionsForm.CheckForUpdates = Options.CheckForUpdates;
@@ -875,6 +922,8 @@ namespace ModbusControlSpace
                 Options.AutoNextRowOnEnter = optionsForm.AutoNextRowOnEnter;
                 Options.AutoStartEdit = optionsForm.AutoStartEdit;
                 Options.IgnoreSizeOnReload = optionsForm.IgnoreSizeOnReload;
+                Options.ShowVarProperties = optionsForm.ShowVarProperties;
+                Options.AutoRowSize = optionsForm.AutoRowSize;
                 Logger1.CapacityLines = optionsForm.LoggerCapacity;
                 Options.MbcfileValidationEnable = optionsForm.MbcfileValidationEnable;
                 Options.MbcfileValidationXSDFile = optionsForm.MbcfileValidationFile;
@@ -882,8 +931,8 @@ namespace ModbusControlSpace
                 Options.CustomEditorCommand = optionsForm.CustomEditorCommand;
                 Options.CheckForUpdates = optionsForm.CheckForUpdates;
 
-                // pass options to clients
-                PassOptionsToClients();
+                // pass options to current client
+                PassOptionsToCurrentClientTab();
             }
         }
 
@@ -963,6 +1012,7 @@ namespace ModbusControlSpace
                 reloadProjectFileMenuItem.Enabled = !String.IsNullOrEmpty(ProjectPath);
                 ReloadToolbutton.Enabled = reloadProjectFileMenuItem.Enabled;
                 editProjectFileMenuItem.Enabled = (!String.IsNullOrEmpty(ProjectPath)) && File.Exists(ProjectPath);
+                //TODO: als je alleen een demo.mbc meegeeft op de command line werkt dit niet
                 openFileLocationToolStripMenuItem.Enabled = !String.IsNullOrEmpty(System.IO.Path.GetDirectoryName(ProjectPath));
                 saveConfigurationMenuItem.Enabled = ProjectIsOpen;
 
@@ -991,7 +1041,7 @@ namespace ModbusControlSpace
         {
             // Set some default
             // reset zoom
-            DoZoom(0);
+            ChangeZoom(0);
         }
 
         /// <summary>
@@ -1013,6 +1063,9 @@ namespace ModbusControlSpace
                 SaveConfigurationForm1.Dispose();
                 SaveConfigurationForm1 = null;
             }
+
+            // clear Find/filter
+            FilterClear();
 
             bool bUseValidation = true;
             bool bRetry = false;
@@ -1047,6 +1100,7 @@ namespace ModbusControlSpace
                     }
                     else
                     {
+                        PassOptionsToCurrentClientTab();
                         return false;
                     }
                 }
@@ -1056,6 +1110,7 @@ namespace ModbusControlSpace
                         ex.Message, this.Text,
                         MessageBoxButtons.OK, MessageBoxIcon.Error);
 
+                    PassOptionsToCurrentClientTab();
                     return false;
                 }
                 catch (Exception ex)
@@ -1064,6 +1119,7 @@ namespace ModbusControlSpace
                         ex.Message, this.Text,
                         MessageBoxButtons.OK, MessageBoxIcon.Error);
 
+                    PassOptionsToCurrentClientTab();
                     return false;
                 }
             } while (bRetry);
@@ -1117,6 +1173,9 @@ namespace ModbusControlSpace
             // Create the tab pages
             LoadProjectInTabs();
 
+            // update settings current tab
+            PassOptionsToCurrentClientTab();
+
             // update the modbus/tcp server settings
             UpdateModbusTcpBridge();
 
@@ -1150,11 +1209,11 @@ namespace ModbusControlSpace
             foreach (CProject.TTab ptab in Project.TabsList)
             {
                 TabPage newTab = new System.Windows.Forms.TabPage();
-                ModbusRegView newRegView = new ModbusRegViewSpace.ModbusRegView();
+                ModbusGridView newRegView = new ModbusGridView();
 
                 // init new tabpage
                 newTab.SuspendLayout();
-                newTab.Location = new System.Drawing.Point(4, 22); 
+                newTab.Location = new System.Drawing.Point(4, 22);
                 newTab.Name = ptab.Name;
                 newTab.TabIndex = 1;
                 newTab.Padding = new Padding(0);
@@ -1163,17 +1222,13 @@ namespace ModbusControlSpace
                 newTab.Controls.Add(newRegView);
                 newTab.Tag = newRegView;
 
-                // init new ModbusRegView
+                // init new ModbusRegView properties
                 newRegView.Dock = System.Windows.Forms.DockStyle.Fill;
-                newRegView.OnRegisterWrite += new ModbusRegView.RegisterWriteHandler(this.OnRegisterWrite);
-                newRegView.OnBeep += new ModbusRegView.BeepHandler(this.BeepHandler);
+                newRegView.AutosizeColumns = true;
+                newRegView.AutosizeRows = true;
 
-                // TODO: find implementeren?
-                // control-F callback
-                //newRegView.ControlFCallback += this.OnStartFind;
-
-                // Zoom callback
-                newRegView.OnZoom += this.OnZoom;
+                newRegView.OnRegisterWrite += new ModbusGridView.RegisterWriteHandler(this.OnRegisterWrite);
+                newRegView.OnBeep += new ModbusGridView.BeepHandler(this.BeepHandler);
 
                 // ReportErrorMessage callback
                 newRegView.OnReportErrorMessage += this.ReportInputError;
@@ -1182,33 +1237,26 @@ namespace ModbusControlSpace
                 // populate grid
                 foreach (CProject.TVar var in ptab.VarList)
                 {
-                    string Tmpstr = var.Description;
-
-                    ModbusRegView.RegEntry nr = newRegView.AddReg(var.Regnr, var.Size * 16, Tmpstr, var.Format, var.MinLen, var.Decimals, var.isReadable, var.isWriteable);
-                    newRegView.SetRegForegroundColor(nr, var.ForeColor);
-                    newRegView.SetRegBackgroundColor(nr, var.BackColor);
-                    newRegView.SetRegBackEnumDict(nr, var.EnumDict);
+                    ModbusGridView.ListItem regItem = newRegView.AddReg(null, var.Regnr, var.Description, var.Size, var.Format, var.isReadable, var.isWriteable);
+                    int fieldCount = 0;
+                    if (var.Bitfields != null) fieldCount = var.Bitfields.Count;
+                    newRegView.RegSetOptions(regItem, var.ForeColor, var.BackColor, var.MinLen, var.Decimals, var.Expand);
+                    newRegView.RegSetEnums(regItem, var.EnumDict);
 
                     // add the bitfields
-                    if ((var.Bitfields != null) && (var.Bitfields.Count >= 1))
+                    if (fieldCount > 0)
                     {
                         for (int i = 0; i < var.Bitfields.Count; ++i)
                         {
-                            string Tmptext = var.Bitfields[i].Description;
-                            ModbusRegView.BitfieldEntry nf = newRegView.AddRegBitfield(nr, var.Bitfields[i].Position, var.Bitfields[i].Width, Tmptext, var.Bitfields[i].Format, var.Bitfields[i].MinLen);
-                            newRegView.SetBitfieldForegroundColor(nf, var.Bitfields[i].ForeColor);
-                            newRegView.SetBitfieldBackgroundColor(nf, var.Bitfields[i].BackColor);
-                            newRegView.SetBitfieldEnumDict(nf, var.Bitfields[i].EnumDict);
-                        }
-                        // show the bitfields expanded?
-                        if (var.Expand)
-                        {
-                            newRegView.ExpandBitfields(nr);
+                            // Bitfields inherit rw from parent
+                            ModbusGridView.ListItem fieldItem = newRegView.RegAddField(regItem, var.Bitfields[i].Position, var.Bitfields[i].Width, var.Bitfields[i].Description, var.Bitfields[i].Format);
+                            newRegView.RegFieldSetOptions(fieldItem, var.Bitfields[i].ForeColor, var.Bitfields[i].BackColor, var.Bitfields[i].MinLen, 0);
+                            newRegView.RegSetEnums(fieldItem, var.Bitfields[i].EnumDict);
                         }
                     }
                 }
-                // set the showInfo flag after all is loaded, so the descriptions are up to date
-                newRegView.showInfo = Project.Options.ShowInfo;
+
+                newRegView.FinalizeLoad();
 
                 newTab.ResumeLayout();
                 tabControl1.TabPages.Add(newTab);
@@ -1225,21 +1273,28 @@ namespace ModbusControlSpace
             }
         }
 
-        private void PassOptionsToClients()
+
+        private void PassOptionsToCurrentClientTab()
         {
-            // Static for all tabs
-            ModbusRegView.NextRowOnEnter = Options.AutoNextRowOnEnter;
-            ModbusRegView.StartEditOnAnyCharacter = Options.AutoStartEdit;
+            if (CurrentTabPage != null)
+            {
+                PassOptionsToClientTab(CurrentTabPage);
+            }
         }
 
-        public void UpdatePropertiesInAllTabs()
+        private void PassOptionsToClientTab(TabPage tab)
         {
-            // Iterate all tabs
-            foreach (TabPage tab in tabControl1.TabPages)
-            {
-                ModbusRegView mrv = (ModbusRegView)tab.Tag;
-                mrv.showInfo = Project.Options.ShowInfo;
-            }
+            ModbusGridView mgv = CurrentTabPage.Tag as ModbusGridView;
+
+            // Static for all tabs
+            mgv.ReadOnly = !ConnectionIsOpen;
+            mgv.StartEditOnAnyCharacter = Options.AutoStartEdit;
+            mgv.NextRowOnEnter = Options.AutoNextRowOnEnter;
+            mgv.ShowVarProperties = Options.ShowVarProperties;
+            //mgv.AutosizeAndWrapRows = Options.AutoRowSize;
+            mgv.WrapRows = Options.AutoRowSize;
+            mgv.SetFilter(tbFilterText.Text, chkFilterCaseSensitive.Checked);
+            mgv.SetZoom(ZoomFactor);
         }
 
         private bool OpenConnection()
@@ -1280,7 +1335,7 @@ namespace ModbusControlSpace
             }
 
             // update grid readonly
-            ModbusRegView.IsReadOnly = !ConnectionIsOpen;
+            PassOptionsToCurrentClientTab();
 
             // update menu's
             ConnectionInUse = ConnectionIsOpen;
@@ -1575,7 +1630,7 @@ namespace ModbusControlSpace
             }
 
             // update grid readonly
-            ModbusRegView.IsReadOnly = !ConnectionIsOpen;
+            PassOptionsToCurrentClientTab();
 
             // fully closed
             ConnectionInUse = false;
@@ -1702,43 +1757,43 @@ namespace ModbusControlSpace
         private void tabControl1_Selected(object sender, TabControlEventArgs e)
         {
             CurrentTabPage = tabControl1.SelectedTab;
+
+            // update page properties factor
+            PassOptionsToCurrentClientTab();
+
             TabIsChanged = true;
         }
 
         private void PollTabPage(TabPage page)
         {
-            Debug.Print(DateTime.Now.TimeOfDay + "PollTabPage(): " + page);
+            //Debug.Print(DateTime.Now.TimeOfDay + "PollTabPage(): " + page);
 
-            int LineIndex = 0;
-            int LineCount = 0;
-            UInt32 FirstReg;
-            UInt16 RegCount;
             short[] tmpdata = new short[150];
-            int MaxReg16Count = GetMaxRegistersInSingleRead();
-            ModbusRegView mrv = page.Tag as ModbusRegView;
+            ModbusGridView mrv = page.Tag as ModbusGridView;
             ModbusProtocol.Result result;
 
             // start with first line of this tab
-            LineIndex = 0;
+            ModbusGridView.TReadGroup rg = default;
+            rg.lineIndex = 0;
 
             // get groups of vars to read
-            while (mrv.GetGroupOfRegistersToRead(ref LineIndex, out LineCount, out FirstReg, out RegCount, MaxReg16Count)
+            while (mrv.GetRegistersGroupToRead(ref rg, Project.Connection.MaximumFrameSize)
                   && ContinuePolling())
             {
-                Debug.Print(DateTime.Now.TimeOfDay + "PollTabPage(): GetGroupOfRegistersToRead: " + LineIndex + "," + LineCount + "," + FirstReg + "," + RegCount);
+                //Debug.Print(DateTime.Now.TimeOfDay + "PollTabPage(): GetGroupOfRegistersToRead: " + rg.lineIndex + "," + rg.lineCount + "," + rg.readFirstReg + "," + rg.readCount);
 
                 // read 
-                UInt16 FirstRegOffset = GetRegOffset(FirstReg);
-                result = mb.MifReadHoldingRegisters(Project.Connection.SlaveID, FirstRegOffset, RegCount, out tmpdata);
+                UInt16 FirstRegOffset = GetRegOffset(rg.readFirstReg);
+                result = mb.MifReadHoldingRegisters(Project.Connection.SlaveID, FirstRegOffset, rg.readCount, out tmpdata);
                 if (result == ModbusProtocol.Result.SUCCESS)
                 {
                     // ok
 
                     // update data
-                    mrv.SetRegistersReadData(LineIndex, LineCount, tmpdata);
+                    mrv.SetRegistersReadData(rg, tmpdata);
 
                     // next group
-                    LineIndex += LineCount;
+                    rg.lineIndex += rg.lineCount;
                 }
                 else
                 {
@@ -1752,47 +1807,46 @@ namespace ModbusControlSpace
                         PollOnceIsStarted = false;
                         // tell the user
                         string msg = "Polling stopped because of 'Stop polling on error' option!" + Environment.NewLine
-                                   + "Read failed: Slave=" + Project.Connection.SlaveID + ", reg=" + FirstReg + ", quant=" + RegCount + Environment.NewLine
+                                   + "Read failed: Slave=" + Project.Connection.SlaveID + ", reg=" + rg.readFirstReg + ", quant=" + rg.readCount + Environment.NewLine
                                    + "Error: " + ModbusProtocol.GetResultText(result);
                         StopOnError(msg);
                         Logger1.Log(Logger.LogType.Info, "Polling stopped because of 'Stop polling on error' option!");
                     }
 
-                    // if it is an address error? and we tried a group read? then read alls vars of this group with single reads to get per-var errors
-                    // some slaves return eILLEGALDATAVALUE if address+regcount is invalid, some return ILLEGALADDRESSEXCEPTION
-                    if (((result == ModbusProtocol.Result.ILLEGALADDRESSEXCEPTION) || (result == ModbusProtocol.Result.ILLEGALDATAVALUEEXCEPTION)) && (LineCount > 1) && ContinuePolling())
+                    // if it is an address error? and we tried a group read? then read alls vars of this group with single reads to get per-register errors
+                    // some slaves return ILLEGALDATAVALUE if address+regcount is invalid, some return ILLEGALADDRESSEXCEPTION
+                    if (((result == ModbusProtocol.Result.ILLEGALADDRESSEXCEPTION) || (result == ModbusProtocol.Result.ILLEGALDATAVALUEEXCEPTION)) && (rg.lineCount > 1) && ContinuePolling())
                     {
                         // read the vars per line, to detect the error per line
-                        int DummyLineCount;
-                        // must use GetGroupOfRegistersToRead() to read lines with 32-bit registers
-                        while ((mrv.GetGroupOfRegistersToRead(ref LineIndex, out DummyLineCount, out FirstReg, out RegCount, 1))
-                             && (LineCount > 0)
+                        int endLineIndex2 = rg.lineIndex + rg.lineCount;
+                        // must use GetGroupOfRegistersToRead() to read lines with 32-bit registers, read 1 line max
+                        while (mrv.GetRegistersGroupToRead(ref rg, 1)
+                             && ((rg.lineIndex + rg.lineCount) < endLineIndex2)
                              && ContinuePolling())
                         {
                             // read
-                            FirstRegOffset = GetRegOffset(FirstReg);
-                            result = mb.MifReadHoldingRegisters(Project.Connection.SlaveID, FirstRegOffset, RegCount, out tmpdata);
+                            FirstRegOffset = GetRegOffset(rg.readFirstReg);
+                            result = mb.MifReadHoldingRegisters(Project.Connection.SlaveID, FirstRegOffset, rg.readCount, out tmpdata);
                             if (result == ModbusProtocol.Result.SUCCESS)
                             {
                                 // ok
 
                                 // update data for this var
-                                mrv.SetRegistersReadData(LineIndex, 1, tmpdata);
+                                mrv.SetRegistersReadData(rg, tmpdata);
                             }
                             else
                             {
                                 // error
 
                                 // show the error text for this var
-                                mrv.SetRegistersReadError(LineIndex, 1, ModbusProtocol.GetResultText(result));
+                                mrv.SetRegistersReadError(rg, ModbusProtocol.GetResultText(result));
 
                                 // show the error in the status bar
-                                SetStatusBarErrorMessage("Read failed: Slave=" + Project.Connection.SlaveID + ", reg=" + FirstReg + ", quant=" + RegCount + ", Error=" + ModbusProtocol.GetResultText(result));
+                                SetStatusBarErrorMessage("Read failed: Slave=" + Project.Connection.SlaveID + ", reg=" + rg.readFirstReg + ", quant=" + rg.readCount + ", Error=" + ModbusProtocol.GetResultText(result));
                             }
 
                             // for each line of this group
-                            LineIndex += 1;
-                            --LineCount;
+                            rg.lineIndex += 1;
 
                             // do possible pending writes
                             DoPendingWrites();
@@ -1802,13 +1856,13 @@ namespace ModbusControlSpace
                     {
                         // other errors
                         // show the error text
-                        mrv.SetRegistersReadError(LineIndex, LineCount, ModbusProtocol.GetResultText(result));
+                        mrv.SetRegistersReadError(rg, ModbusProtocol.GetResultText(result));
 
                         // show the error in the status bar
-                        SetStatusBarErrorMessage("Read failed: Slave=" + Project.Connection.SlaveID + ", reg=" + FirstReg + ", quant=" + RegCount + ", Error=" + ModbusProtocol.GetResultText(result));
+                        SetStatusBarErrorMessage("Read failed: Slave=" + Project.Connection.SlaveID + ", reg=" + rg.readFirstReg + ", quant=" + rg.readCount + ", Error=" + ModbusProtocol.GetResultText(result));
 
                         // next group
-                        LineIndex += LineCount;
+                        rg.lineIndex += rg.lineCount;
                     }
                 }
 
@@ -2113,22 +2167,22 @@ namespace ModbusControlSpace
         {
             // if configured in mbc or override: use that
             // if not configured: DefaultStart
-            bool startcomm = Project.Options.AutostartSeen ? Project.Options.AutostartEnable : aDefaultOpen;
-            if (ProjectIsOpen && startcomm)
+            bool startcomm = ProjectIsOpen && Project.Options.AutostartSeen ? Project.Options.AutostartEnable : aDefaultOpen;
+            if (startcomm)
             {
                 OpenConnection();
 
-                aStartPolling = Project.Options.AutostartSeen ? Project.Options.AutostartEnable : aStartPolling;
-                if (ConnectionIsOpen && aStartPolling)
+                bool startPolling = ConnectionIsOpen && Project.Options.AutostartSeen ? Project.Options.AutostartEnable : aStartPolling;
+                if (startPolling)
                 {
                     StartPolling();
                 }
+            }
 
-                // Set startpage, if any
-                if (string.IsNullOrEmpty(Project.Options.AutostartTabpage) == false)
-                {
-                    SelectTabPage(Project.Options.AutostartTabpage);
-                }
+            // Set startpage, if given
+            if (ProjectIsOpen && Project.Options.AutostartSeen && (string.IsNullOrEmpty(Project.Options.AutostartTabpage) == false))
+            {
+                SelectTabPage(Project.Options.AutostartTabpage);
             }
         }
 
@@ -2148,7 +2202,7 @@ namespace ModbusControlSpace
                 // Select page by number (1-based)
                 if ((pagenumber >= 1) && (pagenumber <= tabControl1.TabPages.Count))
                 {
-                    tabControl1.SelectTab(pagenumber-1);
+                    tabControl1.SelectTab(pagenumber - 1);
                 }
             }
             else
@@ -2190,7 +2244,7 @@ namespace ModbusControlSpace
         #region Writes
 
         // Add a write to the writelist
-        private void OnRegisterWrite(object sender, ModbusRegView.RegisterWriteEventArgs e)
+        private void OnRegisterWrite(object sender, ModbusGridView.RegisterWriteEventArgs e)
         {
             WriteEntry w = new WriteEntry();
 
@@ -2293,68 +2347,121 @@ namespace ModbusControlSpace
 
         #region Zoom
 
-        // Zoom callback from the grids
-        private void OnZoom(object sender, int Action)
-        {
-            // "Zoom" callback from RegView
-
-            DoZoom(Action);
-        }
-
         private void Form_MouseWheel(object sender, MouseEventArgs e)
         {
-            /* CTRL+scrollwheel: zoom/unzoom */
+            int wheelFactor = 120;
+
+            // CTRL+scrollwheel: zoom/unzoom
             if (Control.ModifierKeys == Keys.Control)
             {
                 // send +1 to zoom in, -1 to zoom out
-                if ((e.Delta / 120) >= +1)
+                if ((e.Delta / wheelFactor) >= +1)
                 {
-                    DoZoom(+1);
+                    ChangeZoom(+1);
                 }
-                else if ((e.Delta / 120) <= -1)
+                else if ((e.Delta / wheelFactor) <= -1)
                 {
-                    DoZoom(-1);
+                    ChangeZoom(-1);
                 }
             }
         }
 
         /// <summary>
-        /// Zoom in, zoom out, reset zoom
+        /// Change the zoom factor
         /// </summary>
-        /// <param name="Action">0 is reset, <0 is zoom out, >0 is zoom in</param>
-        private void DoZoom(int Action)
+        /// <param name="action">+1 do zoom in, -1 for zoom out, 0 for reset zoom</param>
+        private void ChangeZoom(int action)
         {
-            // Action: 0 reset zoom
-            //         >0 zoom in (larger)
-            //         <0 zoom out (smaller)
+            // zoom callback from RegView
 
-            if (Action > 0) // larger?
+            float minZoom = 1;
+            float maxZoom = 10;
+            float changeFactor = 1.15F;
+
+            if (action > 0)
             {
-                // max limit
-                if (ZoomFactor < 10)
+                // zoom in
+                if (ZoomFactor < maxZoom)
                 {
-                    ZoomFactor = ZoomFactor * 1.2F;
+                    ZoomFactor = ZoomFactor * changeFactor;
                 }
             }
-            else if (Action < 0) // smaller?
+            else if (action < 0)
             {
-                // min limit
-                if (ZoomFactor > 0.25)
+                // zoom out
+                if (ZoomFactor > minZoom)
                 {
-                    ZoomFactor = ZoomFactor / 1.2F;
+                    ZoomFactor = ZoomFactor / changeFactor;
                 }
             }
-            else // reset zoom
+            else
             {
+                // reset zoom
                 ZoomFactor = 1.0F;
             }
 
-            // update all grids
-            foreach (TabPage ptab in tabControl1.TabPages)
+            // update zoom of the current page
+            if (CurrentTabPage != null)
             {
-                ModbusRegView mrv = ptab.Tag as ModbusRegView;
-                mrv.SetFontZoomFactor(ZoomFactor);
+                ModbusGridView mgv = CurrentTabPage.Tag as ModbusGridView;
+                mgv.SetZoom(ZoomFactor);
             }
+        }
+
+        #endregion
+
+        #region Find
+
+        private void tbFilterText_TextChanged(object sender, EventArgs e)
+        {
+            if (CurrentTabPage != null)
+            {
+                ModbusGridView mgv = CurrentTabPage.Tag as ModbusGridView;
+                mgv.SetFilter(tbFilterText.Text, chkFilterCaseSensitive.Checked);
+            }
+        }
+
+        private void btnFilterClear_Click(object sender, EventArgs e)
+        {
+            FilterClear();
+        }
+
+        private void chkFilterCaseSensitive_CheckedChanged(object sender, EventArgs e)
+        {
+            if (CurrentTabPage != null)
+            {
+                ModbusGridView mgv = CurrentTabPage.Tag as ModbusGridView;
+                mgv.SetFilter(tbFilterText.Text, chkFilterCaseSensitive.Checked);
+            }
+        }
+        private void btnFilterClose_Click(object sender, EventArgs e)
+        {
+            FilterClear();
+            panFilter.Hide();
+        }
+
+        private void findFilterToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            FilterStartFind();
+        }
+
+        /// <summary>
+        /// Clear the Find/Filter
+        /// </summary>
+        private void FilterClear()
+        {
+            tbFilterText.Clear();
+        }
+
+        /// <summary>
+        /// Show the Find/Filter bar
+        /// Find callback from RegView
+        /// </summary>
+        private void FilterStartFind()
+        {
+            panFilter.Show();
+            tbFilterText.SelectAll();
+            tbFilterText.Focus();
         }
 
         #endregion
@@ -2386,6 +2493,7 @@ namespace ModbusControlSpace
                 ExportForm.TabSelect = Settings1.Roaming.Export.Tabs;
                 ExportForm.ExportFormatSelect = Settings1.Roaming.Export.ExportFormat;
                 ExportForm.AsciiFormatSelect = Settings1.Roaming.Export.ExportAsciiAs;
+                ExportForm.MaximumFrameSize = Project.Connection.MaximumFrameSize;
             }
 
             // show modal
@@ -2518,7 +2626,7 @@ namespace ModbusControlSpace
                 StatusbarTextIsError = IsError;
                 UpdateStatusBar();
                 if (IsError) StatusbarTimer.Interval = 5000;
-                    else StatusbarTimer.Interval = 3000;
+                else StatusbarTimer.Interval = 3000;
                 StatusbarTimer.Enabled = true;
                 lblStatus.ToolTipText = "Last message: " + text;
             }
@@ -2755,7 +2863,7 @@ namespace ModbusControlSpace
                 {
                     Process.Start(psi);
                 }
-                catch( Exception ex)
+                catch (Exception ex)
                 {
                     string msg = ex.Message + Environment.NewLine + psi.FileName;
                     MessageBox.Show(msg, this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -2769,56 +2877,6 @@ namespace ModbusControlSpace
 
         #endregion
 
-        /// <summary>
-        // For a new user the localoverrides file will not exist yet, don't panic, just create the default.
-        // Is there is an old localoverrides file (mydocuments\Modbuscontrol\LocalOverrides.xml) and it has active overrides, then
-        // copy the file to the new location (%appdata%\roaming\ed&a\Modbuscontrol\.), rename it with '.old', and inform the user.
-        // We don't actually migrate, a lot of work for few users.
-        /// Dan de oude file deleten, om vergissingen te voorkomen.
-        /// </summary>
-        private void MigrateLocalOverrides()
-        {
-            string OldFilePath = Path.Combine(Global.MyDocumentsDir, LocalOverridesFilename);
-            string NewFilePath = Path.Combine(Settings1.StoreRoamingDir, LocalOverridesFilename);
-            string CopyNewFilepath = Path.Combine(Global.ApplicationStartupPath, LocalOverridesFilename);
-
-            // File does not yet exist at new location? (is per user)
-            if (!File.Exists(NewFilePath))
-            {
-                // then create a new one, with default content
-                File.Copy(CopyNewFilepath, NewFilePath);
-
-                // Got an overrides file at old location? And it hast active overrides?
-                // Then copy the old file to the new location, rename it with '.old', and inform the user.
-                if (File.Exists(OldFilePath))
-                {
-                    bool OldHasActiveEntries = false;
-                    try
-                    {
-                        CProject proj = new CProject();
-                        OldHasActiveEntries = proj.MigrateLocalOverridesHasActiveEntries(OldFilePath);
-                    }
-                    catch
-                    {
-                    }
-
-                    // move the old file to the new location, rename it with '.old'
-                    string MovedName = Path.GetFileName(OldFilePath) + ".old";
-                    string MovedPath = Path.Combine(Settings1.StoreRoamingDir, MovedName);
-                    File.Delete(MovedPath);
-                    File.Move(OldFilePath, MovedPath);
-
-                    // inform the user
-                    if (OldHasActiveEntries)
-                    {
-                        string msg = "The old LocalOverrides.xml file had one or more active project overrides." + Environment.NewLine
-                            + "It is now renamed and moved to the new location '" + MovedPath + "'." + Environment.NewLine
-                            + "If you want to keep using your local overrides you'll have to migrate them yourself into the new local overrrides file. Sorry." + Environment.NewLine;
-                        MessageBox.Show(msg, this.Text, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                    }
-                }
-            }
-        }
 
     }
 }

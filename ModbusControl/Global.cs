@@ -22,6 +22,7 @@ namespace ModbusControlSpace
         public enum eEndian { Little, Big };
         public enum eFormat { Int = 0, UInt, Hex, Bin, Float, ASCII };
         public static string[] FormatText = { "int", "uint", "hex", "bin", "float", "ASCII" };
+        public enum eType { Int, Float, ASCII };
 
         public static Version VersionNum;
         public static string VersionString;
@@ -151,6 +152,32 @@ namespace ModbusControlSpace
 
             return true;
         }
-		
+
+        // convert format to type
+        public static eType ConvertFormatToType(ModbusControlSpace.Global.eFormat Format)
+        {
+            eType Type = eType.Int;
+
+            switch (Format)
+            {
+                case ModbusControlSpace.Global.eFormat.Int:
+                case ModbusControlSpace.Global.eFormat.UInt:
+                case ModbusControlSpace.Global.eFormat.Hex:
+                case ModbusControlSpace.Global.eFormat.Bin:
+                    Type = eType.Int;
+                    break;
+                case ModbusControlSpace.Global.eFormat.Float:
+                    Type = eType.Float;
+                    break;
+                case ModbusControlSpace.Global.eFormat.ASCII:
+                    Type = eType.ASCII;
+                    break;
+                default:
+                    // invalid
+                    throw new ArgumentException("Invalid format enum!");
+            }
+
+            return Type;
+        }
     }
 }

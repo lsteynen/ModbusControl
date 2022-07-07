@@ -237,15 +237,6 @@ namespace ModbusControlSpace
             }
         }
 
-        public bool OptionsShowInfo
-        {
-            get { return checkboxShowInfo.Checked; }
-            set
-            {
-                checkboxShowInfo.Checked = value;
-            }
-        }
-
         public bool ModbusTcpBridgeEnable
         {
             get { return checkboxTcpServerEnable.Checked; }

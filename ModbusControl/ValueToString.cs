@@ -24,19 +24,19 @@ namespace LST.Helpers
         /// Value can be less than 32 bits, given by Size. Use sign-extend if needed
         /// </summary>
         /// <param name="Value">Value to convert</param>
-        /// <param name="Size">Width of value in bits</param>
+        /// <param name="Width">Width of value in bits</param>
         /// <param name="Type">Int, Uint, Hex, ...</param>
         /// <param name="Decimals">Optional: number of decimals, for Int/UInt only</param>
         /// <param name="MinLen">Optional: minimum number of digits</param>
         /// <param name="EnumDict">Optional: enum dictionary</param>
         /// <returns></returns>
-        public static string ValueToString(Int32 Value, int Size, ModbusControlSpace.Global.eFormat Format, int Decimals = 0, int MinLen = 0, Dictionary<int, string> EnumDict = null)
+        public static string ValueToString(Int32 Value, int Width, ModbusControlSpace.Global.eFormat Format, int Decimals = 0, int MinLen = 0, Dictionary<int, string> EnumDict = null)
         {
             string Result = string.Empty;
             UInt32 UValue;
 
             // check
-            if (!((Size >= 1) && (Size <= 32)))
+            if (!((Width >= 1) && (Width <= 32)))
             {
                 throw new ArgumentException("Invalid size!", "Size");
             }
@@ -46,34 +46,34 @@ namespace LST.Helpers
             {
                 case ModbusControlSpace.Global.eFormat.Int:
                     // signed decimal
-                    Value = ConvertSignedValueTo32bit(Value, Size);
+                    Value = ConvertSignedValueTo32bit(Value, Width);
                     Result = CValueToString.AsInt(Value, Decimals, MinLen);
                     break;
                 case ModbusControlSpace.Global.eFormat.UInt:
                     // unsigned decimal
-                    UValue = ConvertUnsignedValueTo32bit((UInt32)Value, Size);
+                    UValue = ConvertUnsignedValueTo32bit((UInt32)Value, Width);
                     Result = CValueToString.AsUInt(UValue, Decimals, MinLen);
                     break;
                 case ModbusControlSpace.Global.eFormat.Hex:
                     // hexadecimal
-                    UValue = ConvertUnsignedValueTo32bit((UInt32)Value, Size);
+                    UValue = ConvertUnsignedValueTo32bit((UInt32)Value, Width);
                     Result = CValueToString.AsHex(UValue, MinLen);
                     break;
                 case ModbusControlSpace.Global.eFormat.Bin:
                     // binary
-                    UValue = ConvertUnsignedValueTo32bit((UInt32)Value, Size);
+                    UValue = ConvertUnsignedValueTo32bit((UInt32)Value, Width);
                     Result = CValueToString.AsBin(UValue, MinLen);
                     break;
                 case ModbusControlSpace.Global.eFormat.Float:
                     // float32
-                    if (!(Size == 32))
+                    if (!(Width == 32))
                     {
                         throw new ArgumentException("Invalid size!", "Size");
                     }
                     Result = CValueToString.AsFloat(Value);
                     break;
                 case ModbusControlSpace.Global.eFormat.ASCII:
-                    Result = CValueToString.AsASCII((UInt32)Value, Size);
+                    Result = CValueToString.AsASCII((UInt32)Value, Width);
 	                break;
                 default:
                     // invalid

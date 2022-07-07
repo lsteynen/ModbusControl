@@ -58,9 +58,10 @@
             // 
             // buttonStart
             // 
-            this.buttonStart.Location = new System.Drawing.Point(12, 99);
+            this.buttonStart.Location = new System.Drawing.Point(15, 124);
+            this.buttonStart.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.buttonStart.Name = "buttonStart";
-            this.buttonStart.Size = new System.Drawing.Size(150, 23);
+            this.buttonStart.Size = new System.Drawing.Size(188, 29);
             this.buttonStart.TabIndex = 4;
             this.buttonStart.Text = "Start";
             this.toolTip1.SetToolTip(this.buttonStart, "Start the export");
@@ -72,12 +73,13 @@
             this.textboxLog.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.textboxLog.Location = new System.Drawing.Point(12, 128);
+            this.textboxLog.Location = new System.Drawing.Point(15, 160);
+            this.textboxLog.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.textboxLog.Multiline = true;
             this.textboxLog.Name = "textboxLog";
             this.textboxLog.ReadOnly = true;
             this.textboxLog.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.textboxLog.Size = new System.Drawing.Size(520, 222);
+            this.textboxLog.Size = new System.Drawing.Size(649, 276);
             this.textboxLog.TabIndex = 7;
             this.textboxLog.WordWrap = false;
             // 
@@ -85,9 +87,10 @@
             // 
             this.radiobuttonExportCurrentTab.AutoSize = true;
             this.radiobuttonExportCurrentTab.Checked = true;
-            this.radiobuttonExportCurrentTab.Location = new System.Drawing.Point(3, 3);
+            this.radiobuttonExportCurrentTab.Location = new System.Drawing.Point(4, 4);
+            this.radiobuttonExportCurrentTab.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.radiobuttonExportCurrentTab.Name = "radiobuttonExportCurrentTab";
-            this.radiobuttonExportCurrentTab.Size = new System.Drawing.Size(191, 17);
+            this.radiobuttonExportCurrentTab.Size = new System.Drawing.Size(255, 21);
             this.radiobuttonExportCurrentTab.TabIndex = 0;
             this.radiobuttonExportCurrentTab.TabStop = true;
             this.radiobuttonExportCurrentTab.Tag = "current";
@@ -103,9 +106,10 @@
             // 
             // SelectFileButton
             // 
-            this.SelectFileButton.Location = new System.Drawing.Point(12, 70);
+            this.SelectFileButton.Location = new System.Drawing.Point(15, 86);
+            this.SelectFileButton.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.SelectFileButton.Name = "SelectFileButton";
-            this.SelectFileButton.Size = new System.Drawing.Size(75, 23);
+            this.SelectFileButton.Size = new System.Drawing.Size(94, 29);
             this.SelectFileButton.TabIndex = 2;
             this.SelectFileButton.Text = "Select file...";
             this.toolTip1.SetToolTip(this.SelectFileButton, "Select the file to export to");
@@ -116,17 +120,19 @@
             // 
             this.panelTab.Controls.Add(this.radiobuttonExportAllTabs);
             this.panelTab.Controls.Add(this.radiobuttonExportCurrentTab);
-            this.panelTab.Location = new System.Drawing.Point(12, 12);
+            this.panelTab.Location = new System.Drawing.Point(15, 15);
+            this.panelTab.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.panelTab.Name = "panelTab";
-            this.panelTab.Size = new System.Drawing.Size(205, 43);
+            this.panelTab.Size = new System.Drawing.Size(256, 54);
             this.panelTab.TabIndex = 0;
             // 
             // radiobuttonExportAllTabs
             // 
             this.radiobuttonExportAllTabs.AutoSize = true;
-            this.radiobuttonExportAllTabs.Location = new System.Drawing.Point(3, 21);
+            this.radiobuttonExportAllTabs.Location = new System.Drawing.Point(4, 26);
+            this.radiobuttonExportAllTabs.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.radiobuttonExportAllTabs.Name = "radiobuttonExportAllTabs";
-            this.radiobuttonExportAllTabs.Size = new System.Drawing.Size(173, 17);
+            this.radiobuttonExportAllTabs.Size = new System.Drawing.Size(231, 21);
             this.radiobuttonExportAllTabs.TabIndex = 1;
             this.radiobuttonExportAllTabs.Tag = "all";
             this.radiobuttonExportAllTabs.Text = "Export registers of all tabs to file";
@@ -138,17 +144,19 @@
             this.textboxFilename.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.textboxFilename.Location = new System.Drawing.Point(93, 71);
+            this.textboxFilename.Location = new System.Drawing.Point(116, 89);
+            this.textboxFilename.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.textboxFilename.Name = "textboxFilename";
             this.textboxFilename.ReadOnly = true;
-            this.textboxFilename.Size = new System.Drawing.Size(439, 20);
+            this.textboxFilename.Size = new System.Drawing.Size(548, 22);
             this.textboxFilename.TabIndex = 3;
             // 
             // buttonClearLog
             // 
-            this.buttonClearLog.Location = new System.Drawing.Point(249, 99);
+            this.buttonClearLog.Location = new System.Drawing.Point(311, 124);
+            this.buttonClearLog.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.buttonClearLog.Name = "buttonClearLog";
-            this.buttonClearLog.Size = new System.Drawing.Size(75, 23);
+            this.buttonClearLog.Size = new System.Drawing.Size(94, 29);
             this.buttonClearLog.TabIndex = 6;
             this.buttonClearLog.Text = "Clear log";
             this.toolTip1.SetToolTip(this.buttonClearLog, "Clear the result log window");
@@ -162,9 +170,11 @@
             this.groupboxExportFormat.Controls.Add(this.radiobuttonAsInt);
             this.groupboxExportFormat.Controls.Add(this.radiobuttonAsUInt);
             this.groupboxExportFormat.Controls.Add(this.FormatAsciiPanel);
-            this.groupboxExportFormat.Location = new System.Drawing.Point(223, 10);
+            this.groupboxExportFormat.Location = new System.Drawing.Point(279, 12);
+            this.groupboxExportFormat.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.groupboxExportFormat.Name = "groupboxExportFormat";
-            this.groupboxExportFormat.Size = new System.Drawing.Size(272, 58);
+            this.groupboxExportFormat.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.groupboxExportFormat.Size = new System.Drawing.Size(340, 72);
             this.groupboxExportFormat.TabIndex = 1;
             this.groupboxExportFormat.TabStop = false;
             this.groupboxExportFormat.Text = "Export values format:";
@@ -173,9 +183,10 @@
             // 
             this.radiobuttonAsInGrid.AutoSize = true;
             this.radiobuttonAsInGrid.Checked = true;
-            this.radiobuttonAsInGrid.Location = new System.Drawing.Point(6, 15);
+            this.radiobuttonAsInGrid.Location = new System.Drawing.Point(8, 19);
+            this.radiobuttonAsInGrid.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.radiobuttonAsInGrid.Name = "radiobuttonAsInGrid";
-            this.radiobuttonAsInGrid.Size = new System.Drawing.Size(68, 17);
+            this.radiobuttonAsInGrid.Size = new System.Drawing.Size(88, 21);
             this.radiobuttonAsInGrid.TabIndex = 0;
             this.radiobuttonAsInGrid.TabStop = true;
             this.radiobuttonAsInGrid.Tag = "grid";
@@ -187,9 +198,10 @@
             // radiobuttonAsHex
             // 
             this.radiobuttonAsHex.AutoSize = true;
-            this.radiobuttonAsHex.Location = new System.Drawing.Point(205, 15);
+            this.radiobuttonAsHex.Location = new System.Drawing.Point(256, 19);
+            this.radiobuttonAsHex.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.radiobuttonAsHex.Name = "radiobuttonAsHex";
-            this.radiobuttonAsHex.Size = new System.Drawing.Size(58, 17);
+            this.radiobuttonAsHex.Size = new System.Drawing.Size(72, 21);
             this.radiobuttonAsHex.TabIndex = 3;
             this.radiobuttonAsHex.Tag = "hex";
             this.radiobuttonAsHex.Text = "All Hex";
@@ -200,9 +212,10 @@
             // radiobuttonAsInt
             // 
             this.radiobuttonAsInt.AutoSize = true;
-            this.radiobuttonAsInt.Location = new System.Drawing.Point(88, 15);
+            this.radiobuttonAsInt.Location = new System.Drawing.Point(110, 19);
+            this.radiobuttonAsInt.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.radiobuttonAsInt.Name = "radiobuttonAsInt";
-            this.radiobuttonAsInt.Size = new System.Drawing.Size(51, 17);
+            this.radiobuttonAsInt.Size = new System.Drawing.Size(63, 21);
             this.radiobuttonAsInt.TabIndex = 1;
             this.radiobuttonAsInt.Tag = "int";
             this.radiobuttonAsInt.Text = "All Int";
@@ -213,9 +226,10 @@
             // radiobuttonAsUInt
             // 
             this.radiobuttonAsUInt.AutoSize = true;
-            this.radiobuttonAsUInt.Location = new System.Drawing.Point(142, 15);
+            this.radiobuttonAsUInt.Location = new System.Drawing.Point(178, 19);
+            this.radiobuttonAsUInt.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.radiobuttonAsUInt.Name = "radiobuttonAsUInt";
-            this.radiobuttonAsUInt.Size = new System.Drawing.Size(59, 17);
+            this.radiobuttonAsUInt.Size = new System.Drawing.Size(73, 21);
             this.radiobuttonAsUInt.TabIndex = 2;
             this.radiobuttonAsUInt.Tag = "uint";
             this.radiobuttonAsUInt.Text = "All UInt";
@@ -229,17 +243,19 @@
             this.FormatAsciiPanel.Controls.Add(this.radExportAscii);
             this.FormatAsciiPanel.Controls.Add(this.radExportAsciiAsInt);
             this.FormatAsciiPanel.Controls.Add(this.radExportAsciiAsHex);
-            this.FormatAsciiPanel.Location = new System.Drawing.Point(1, 35);
+            this.FormatAsciiPanel.Location = new System.Drawing.Point(1, 44);
+            this.FormatAsciiPanel.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.FormatAsciiPanel.Name = "FormatAsciiPanel";
-            this.FormatAsciiPanel.Size = new System.Drawing.Size(268, 21);
+            this.FormatAsciiPanel.Size = new System.Drawing.Size(335, 26);
             this.FormatAsciiPanel.TabIndex = 26;
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(3, 2);
+            this.label1.Location = new System.Drawing.Point(4, 2);
+            this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(84, 13);
+            this.label1.Size = new System.Drawing.Size(108, 17);
             this.label1.TabIndex = 0;
             this.label1.Text = "Export ASCII as:";
             // 
@@ -247,9 +263,10 @@
             // 
             this.radExportAscii.AutoSize = true;
             this.radExportAscii.Checked = true;
-            this.radExportAscii.Location = new System.Drawing.Point(87, 0);
+            this.radExportAscii.Location = new System.Drawing.Point(109, 0);
+            this.radExportAscii.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.radExportAscii.Name = "radExportAscii";
-            this.radExportAscii.Size = new System.Drawing.Size(52, 17);
+            this.radExportAscii.Size = new System.Drawing.Size(62, 21);
             this.radExportAscii.TabIndex = 1;
             this.radExportAscii.TabStop = true;
             this.radExportAscii.Tag = "ascii";
@@ -260,9 +277,10 @@
             // radExportAsciiAsInt
             // 
             this.radExportAsciiAsInt.AutoSize = true;
-            this.radExportAsciiAsInt.Location = new System.Drawing.Point(141, 0);
+            this.radExportAsciiAsInt.Location = new System.Drawing.Point(176, 0);
+            this.radExportAsciiAsInt.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.radExportAsciiAsInt.Name = "radExportAsciiAsInt";
-            this.radExportAsciiAsInt.Size = new System.Drawing.Size(52, 17);
+            this.radExportAsciiAsInt.Size = new System.Drawing.Size(64, 21);
             this.radExportAsciiAsInt.TabIndex = 2;
             this.radExportAsciiAsInt.Tag = "int";
             this.radExportAsciiAsInt.Text = "As Int";
@@ -272,9 +290,10 @@
             // radExportAsciiAsHex
             // 
             this.radExportAsciiAsHex.AutoSize = true;
-            this.radExportAsciiAsHex.Location = new System.Drawing.Point(204, 0);
+            this.radExportAsciiAsHex.Location = new System.Drawing.Point(255, 0);
+            this.radExportAsciiAsHex.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.radExportAsciiAsHex.Name = "radExportAsciiAsHex";
-            this.radExportAsciiAsHex.Size = new System.Drawing.Size(59, 17);
+            this.radExportAsciiAsHex.Size = new System.Drawing.Size(73, 21);
             this.radExportAsciiAsHex.TabIndex = 3;
             this.radExportAsciiAsHex.Tag = "hex";
             this.radExportAsciiAsHex.Text = "As Hex";
@@ -284,9 +303,10 @@
             // buttonCancel
             // 
             this.buttonCancel.Enabled = false;
-            this.buttonCancel.Location = new System.Drawing.Point(168, 99);
+            this.buttonCancel.Location = new System.Drawing.Point(210, 124);
+            this.buttonCancel.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.buttonCancel.Name = "buttonCancel";
-            this.buttonCancel.Size = new System.Drawing.Size(75, 23);
+            this.buttonCancel.Size = new System.Drawing.Size(94, 29);
             this.buttonCancel.TabIndex = 5;
             this.buttonCancel.Text = "Cancel";
             this.toolTip1.SetToolTip(this.buttonCancel, "Cancel the current operation");
@@ -295,9 +315,9 @@
             // 
             // Export
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(120F, 120F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(544, 362);
+            this.ClientSize = new System.Drawing.Size(680, 452);
             this.Controls.Add(this.groupboxExportFormat);
             this.Controls.Add(this.buttonCancel);
             this.Controls.Add(this.buttonClearLog);
@@ -307,6 +327,7 @@
             this.Controls.Add(this.textboxLog);
             this.Controls.Add(this.buttonStart);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.Name = "Export";
             this.Text = "Export registers to file";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.OnFormClosing);

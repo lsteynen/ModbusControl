@@ -330,6 +330,7 @@ namespace LST.Helpers
 
         /// <summary>
         /// Writes a single row to a CSV file.
+        /// For example: 40020;32;"REC type (32 bit)";r;Int;888019
         /// </summary>
         /// <param name="row">The row to be written</param>
         public void WriteRow(string[] row)

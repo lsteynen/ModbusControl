@@ -8,7 +8,6 @@ using System.Text;
 using System.Windows.Forms;
 
 using LST.Helpers;
-using ModbusRegViewSpace;
 using Modbus_net;
 
 namespace ModbusControlSpace
@@ -165,23 +164,23 @@ namespace ModbusControlSpace
                     Endians.eType Type = ConvertFormatToType(Format);
 
                     // 16 or 32-bit?
-                    int Size = radiobuttonSize32bit.Checked ? 32 : 16;
+                    int Width = radiobuttonSize32bit.Checked ? 32 : 16;
 
                     // make 32-bit value, watch size and endian
                     short[] aTmpRegs = new short[2];
                     aTmpRegs[0] = aValues[i];
                     aTmpRegs[1] = 0;
                     // is it 32-bit?
-                    if (Size == 32)
+                    if (Width == 32)
                     {
                         aTmpRegs[1] = aValues[++i];
                     }
-                    Value = Endians.ConvertShortsToValue(aTmpRegs, Type, Size);
+                    Value = Endians.ConvertShortsToValue(aTmpRegs, Type, Width);
 
                     // make value string
                     // decimals are not used
                     // minlen is not used
-                    Result += CValueToString.ValueToString(Value, Size, Format);
+                    Result += CValueToString.ValueToString(Value, Width, Format);
                 }
 
                 if (RegQuantity == 0) Result += "(no data)";
@@ -231,6 +230,7 @@ namespace ModbusControlSpace
         }
 
         // convert format to type
+        //TODO: naar globals.cs?
         private Endians.eType ConvertFormatToType(ModbusControlSpace.Global.eFormat Format)
         {
             Endians.eType Type = Endians.eType.Int;

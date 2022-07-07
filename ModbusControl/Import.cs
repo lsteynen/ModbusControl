@@ -10,7 +10,6 @@ using System.Threading;
 using System.Windows.Forms;
 
 using LST.Helpers;
-using ModbusRegViewSpace;
 using Modbus_net;
 
 namespace ModbusControlSpace
@@ -512,6 +511,7 @@ namespace ModbusControlSpace
         }
 
         // convert format to type
+        //TODO: naar globals.cs
         private Endians.eType ConvertFormatToType(ModbusControlSpace.Global.eFormat Format)
         {
             Endians.eType Type = Endians.eType.Int;

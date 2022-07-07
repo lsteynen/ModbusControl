@@ -15,6 +15,7 @@ namespace LST.Helpers
 {
     public static class Endians
     {
+        //TODO: eType naar global
         public enum eType { Int, Float, ASCII };
 
         public static bool Int32BigEndian;
@@ -23,14 +24,14 @@ namespace LST.Helpers
         /// <summary>
         /// Converteer 1 of 2 16-bit modbus registers naar binaire value (of float of ascii)
         /// </summary>
-        public static Int32 ConvertShortsToValue(Int16[] Shorts, eType Type, int Size)
+        public static Int32 ConvertShortsToValue(Int16[] Shorts, eType Type, int Width)
         {
             Int32 Value = 0;
 
             switch (Type)
             {
                 case eType.Int: // swap 16-bit words
-                    if (Size == 32)
+                    if (Width == 32)
                     {
                         Value = ToInt32(Shorts[0], Shorts[1], Int32BigEndian);
                     }
@@ -43,7 +44,7 @@ namespace LST.Helpers
                     Value = ToInt32(Shorts[0], Shorts[1], Float32BigEndian);
                     break;
                 case eType.ASCII: // no swap
-                    if (Size == 32)
+                    if (Width == 32)
                     {
                         Value = ToInt32(Shorts[0], Shorts[1], false);
                     }
@@ -79,12 +80,12 @@ namespace LST.Helpers
         /// </summary>
         public static Int16[] ConvertValueToShorts(Int32 Value, eType Type, int Size)
         {
-            // Int: size 16: return 1 short
-            //      size 32: return 2 shorts, afh van Int32BigEndian
+            // Int: size 1: return 1 short
+            //      size 2: return 2 shorts, afh van Int32BigEndian
             // Float: moet size 32 zijn, return 2 shorts, afh van Float32BigEndian
             // ASCII: endian is op byte level
 
-            Int16[] result = new Int16[(Size + 15) / 16];
+            Int16[] result = new Int16[Size];
 
             switch (Type)
             {

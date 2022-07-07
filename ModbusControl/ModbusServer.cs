@@ -15,8 +15,8 @@ namespace ModbusServer
     public class ModbusServer : IDisposable
     {
         private bool _disposed = false;
-        private bool _listening = false;
-        private bool _listeningPaused = false;
+        private volatile bool _listening = false;
+        private volatile bool _listeningPaused = false;
 
         private int MaxConnections = 100;
         private TcpListener _listener;

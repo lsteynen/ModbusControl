@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="12.0">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -13,7 +13,7 @@
     <FileUpgradeFlags>
     </FileUpgradeFlags>
     <OldToolsVersion>3.5</OldToolsVersion>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <UpgradeBackupLocation>
     </UpgradeBackupLocation>
     <IsWebBootstrapper>false</IsWebBootstrapper>
@@ -24,7 +24,8 @@
     <ApplicationManifest>Properties\app.manifest</ApplicationManifest>
     <SignManifests>false</SignManifests>
     <ApplicationIcon>Ico5.ico</ApplicationIcon>
-    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
@@ -52,6 +53,7 @@
     <DocumentationFile>
     </DocumentationFile>
     <UseVSHostingProcess>false</UseVSHostingProcess>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -64,6 +66,7 @@
     <DocumentationFile>
     </DocumentationFile>
     <UseVSHostingProcess>false</UseVSHostingProcess>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="SourceGrid, Version=4.40.5515.17563, Culture=neutral, PublicKeyToken=df6f5e538749e85d, processorArchitecture=MSIL">
@@ -171,10 +174,16 @@
     </Compile>
     <Compile Include="Modbusdecode.cs" />
     <Compile Include="ModbusEndians.cs" />
-    <Compile Include="modbusinterface.cs" />
-    <Compile Include="ModbusRegView.cs">
+    <Compile Include="MyDatagridview.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="ModbusGridView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ModbusGridView.designer.cs">
+      <DependentUpon>ModbusGridView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="modbusinterface.cs" />
     <Compile Include="ModbusServer.cs" />
     <Compile Include="Modbus_net\ByteQueue.cs" />
     <Compile Include="Modbus_net\ICommChannel.cs" />
@@ -205,12 +214,6 @@
     <Compile Include="SaveConfigurationForm.Designer.cs">
       <DependentUpon>SaveConfigurationForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="ValidationFailedForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="ValidationFailedForm.Designer.cs">
-      <DependentUpon>ValidationFailedForm.cs</DependentUpon>
-    </Compile>
     <Compile Include="SerialPortOpenFailedForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -218,10 +221,11 @@
       <DependentUpon>SerialPortOpenFailedForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Settings.cs" />
-    <Compile Include="TreeGridView.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>TreeGridView.resx</DependentUpon>
+    <Compile Include="ValidationFailedForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ValidationFailedForm.designer.cs">
+      <DependentUpon>ValidationFailedForm.cs</DependentUpon>
     </Compile>
     <Compile Include="ValueToString.cs" />
     <EmbeddedResource Include="AboutBox1.resx">
@@ -265,6 +269,9 @@
       <DependentUpon>MainForm.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <EmbeddedResource Include="ModbusGridView.resx">
+      <DependentUpon>ModbusGridView.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="OptionsForm.resx">
       <DependentUpon>OptionsForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -278,6 +285,12 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
+    <EmbeddedResource Include="SerialPortOpenFailedForm.resx">
+      <DependentUpon>SerialPortOpenFailedForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ValidationFailedForm.resx">
+      <DependentUpon>ValidationFailedForm.cs</DependentUpon>
+    </EmbeddedResource>
     <None Include="app.config" />
     <None Include="Properties\app.manifest">
       <SubType>Designer</SubType>
@@ -290,9 +303,6 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
-    </Compile>
-    <Compile Include="TreeGridView.cs">
-      <SubType>Component</SubType>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -335,17 +345,6 @@
     <EmbeddedResource Include="SaveConfigurationForm.resx">
       <DependentUpon>SaveConfigurationForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="ValidationFailedForm.resx">
-      <DependentUpon>ValidationFailedForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="SerialPortOpenFailedForm.resx">
-      <DependentUpon>SerialPortOpenFailedForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="TreeGridView.resx">
-      <SubType>Designer</SubType>
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>TreeGridView.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\RedIcon.bmp" />
@@ -364,11 +363,13 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Ico5.ico" />
+    <None Include="Resources\Erase.png" />
+    <None Include="Resources\EraseButton.bmp" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PreBuildEvent>"$(ProjectDir)Properties\IncBuildNo.exe" "$(ProjectDir)Properties\AssemblyInfo.cs"</PreBuildEvent>
+    <PreBuildEvent>"$(ProjectDir)Properties\IncBuildNo.exe" "$(ProjectDir)Properties\AssemblyInfo.cs" $(ConfigurationName)</PreBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -9,9 +9,9 @@ using System.Text;
 using System.Threading;
 using System.Windows.Forms;
 
-using LST.Helpers;
-using ModbusRegViewSpace;
 using Modbus_net;
+using LST.Helpers;
+using LST.ModbusGridView;
 
 namespace ModbusControlSpace
 {
@@ -26,6 +26,7 @@ namespace ModbusControlSpace
         private ExportMode mExportMode;
         private const int mSleeptime = 10;
         private CsvWriter mCsvWriter;
+        private int mMaximumFrameSize = 256;
 
         private enum ExportMode { CurrentTab = 0, AllTabs };
 
@@ -50,6 +51,13 @@ namespace ModbusControlSpace
             // uses Radiobutton.Tag
             get { return Global.GetRadioGroupTag(FormatAsciiPanel); }
             set { Global.SetRadioGroupByTag(FormatAsciiPanel, value); }
+        }
+
+        public int MaximumFrameSize
+        {
+            // uses Radiobutton.Tag
+            get { return mMaximumFrameSize; }
+            set { mMaximumFrameSize = value; }
         }
 
         // constructor
@@ -234,8 +242,6 @@ namespace ModbusControlSpace
             // support cancel in the loops
 
             string TabName;
-            UInt16 ReadOffset;
-            UInt16 ReadCount;
 
             // get tab name 
             TabName = Tabpage.Name;
@@ -244,83 +250,77 @@ namespace ModbusControlSpace
             mCsvWriter.WriteComment("Tab: " + TabName);
             mWorker.ReportProgress(0, "Tab: " + TabName);
 
-            // start with first line of this tab
-            int LineIndex = 0;
-            int LineCount = 0;
-            ModbusRegView mrv = Tabpage.Tag as ModbusRegView;
-            List<ModbusRegView.RegEntry> Reglist;
+            // get tab ModbusGridView
+            ModbusGridView mrv = Tabpage.Tag as ModbusGridView;
 
-            while( mrv.GetRegistersListToRead(ref LineIndex, out LineCount, mParent.GetMaxRegistersInSingleRead(), out Reglist) >= 1)
+            // start with first line of this tab
+            ModbusGridView.TReadGroup rg = default;
+            rg.lineIndex = 0;
+
+            // get groups of vars to read
+            while (mrv.GetRegistersGroupToRead(ref rg, mMaximumFrameSize))
             {
                 // cancel?
                 if (mWorker.CancellationPending)
                     return;
 
-                // get first register offset
-                ReadOffset = mParent.GetRegOffset(Reglist[0].Reg);
-                // get number of 16-bit registers to read
-                ReadCount = 0;
-                foreach (ModbusRegView.RegEntry reg in Reglist)
-                {
-                    ReadCount += (ushort)(reg.Size/16);
-                }
-
-                // Read the group
-                Debug.Print(DateTime.Now.TimeOfDay + ": MifReadHoldingRegisters(" + mSlaveAddress + "," + GetUserReg(ReadOffset) + "," + ReadCount + ")");
+                // read 
                 short[] aValues;
-                ModbusProtocol.Result result = mModbus.MifReadHoldingRegisters(mSlaveAddress, ReadOffset, ReadCount, out aValues);
-                Debug.Print(DateTime.Now.TimeOfDay + ": MifReadHoldingRegisters returned " + result);
+                UInt16 FirstRegOffset = mParent.GetRegOffset(rg.readFirstReg);
+                ModbusProtocol.Result result = mModbus.MifReadHoldingRegisters(mSlaveAddress, FirstRegOffset, rg.readCount, out aValues);
                 if (result == ModbusProtocol.Result.SUCCESS)
                 {
                     // success
 
                     // process value of each register
                     int ValueOffset = 0;
-                    foreach (ModbusRegView.RegEntry reg in Reglist)
+                    foreach (ModbusGridView.RegItem reg in rg.registersList)
                     {
                         // cancel?
                         if (mWorker.CancellationPending)
                             return;
 
-                        // get the value, 16 or 32-bit
-
                         // convert format to type
                         Endians.eType Type = ConvertFormatToType(reg.Format);
 
-                        // make 32-bit value, watch size and endian
+                        // get the value, 16 or 32-bit, watch size and endian
                         short[] aTmpRegs = new short[2];
                         aTmpRegs[0] = aValues[ValueOffset++];
                         aTmpRegs[1] = 0;
                         // is it 32-bit?
-                        if (reg.Size == 32)
+                        if (reg.Size == 2)
                         {
                             aTmpRegs[1] = aValues[ValueOffset++];
                         }
-                        Int32 Value = Endians.ConvertShortsToValue(aTmpRegs, Type, reg.Size);
+                        Int32 Value = Endians.ConvertShortsToValue(aTmpRegs, Type, reg.Size * 16);
 
-                        WriteExportLine(reg.Reg, reg.Size, reg.Text, reg.Format, reg.Readable, reg.Writeable, Value);
+                        WriteExportLine(reg.Reg, reg.Size, reg.Descr, reg.Format, reg.Readable, reg.Writeable, Value);
                         ++mSuccessCount;
 
                         Thread.Sleep(mSleeptime);
                     }
+
+                    // next group
+                    rg.lineIndex += rg.lineCount;
                 }
                 else
                 {
                     // error
-                    // if it is an address error? and we tried a group read? then read alls vars of this group with single reads to get per-var errors
-                    // some slaves return eILLEGALDATAVALUE if address+regcount is invalid, some return ILLEGALADDRESSEXCEPTION
-                    if (((result == ModbusProtocol.Result.ILLEGALADDRESSEXCEPTION) || (result == ModbusProtocol.Result.ILLEGALDATAVALUEEXCEPTION)) && (LineCount > 1))
+
+                    // if it is an address error? and we tried a group read? then read alls vars of this group with single reads to get per - var errors
+                    //  some slaves return eILLEGALDATAVALUE if address + regcount is invalid, some return ILLEGALADDRESSEXCEPTION
+                    if (((result == ModbusProtocol.Result.ILLEGALADDRESSEXCEPTION) || (result == ModbusProtocol.Result.ILLEGALDATAVALUEEXCEPTION)) && (rg.lineCount > 1))
                     {
-                        foreach (ModbusRegView.RegEntry reg in Reglist)
+                        foreach(ModbusGridView.RegItem reg in rg.registersList)
                         {
                             // cancel?
                             if (mWorker.CancellationPending)
                                 return;
 
                             // get first register offset
-                            ReadOffset = mParent.GetRegOffset(reg.Reg);
+                            UInt16 ReadOffset = mParent.GetRegOffset(reg.Reg);
                             // get number of 16-bit registers to read
-                            ReadCount = (ushort)(reg.Size / 16);
+                            UInt16 ReadCount = (UInt16)reg.Size;
                             Debug.Print(DateTime.Now.TimeOfDay + ": MifReadHoldingRegisters(" + mSlaveAddress + "," + GetUserReg(ReadOffset) + "," + ReadCount + ")");
                             result = mModbus.MifReadHoldingRegisters(mSlaveAddress, ReadOffset, ReadCount, out aValues);
                             Debug.Print(DateTime.Now.TimeOfDay + ": MifReadHoldingRegisters returned " + result);
@@ -336,35 +336,41 @@ namespace ModbusControlSpace
                                 aTmpRegs[0] = aValues[0];
                                 aTmpRegs[1] = 0;
                                 // is it 32-bit?
-                                if (reg.Size == 32)
+                                if (reg.Size == 2)
                                 {
                                     aTmpRegs[1] = aValues[1];
                                 }
-                                Int32 Value = Endians.ConvertShortsToValue(aTmpRegs, Type, reg.Size);
+                                Int32 Value = Endians.ConvertShortsToValue(aTmpRegs, Type, reg.Size * 16);
 
-                                WriteExportLine(reg.Reg, reg.Size, reg.Text, reg.Format, reg.Readable, reg.Writeable, Value);
+                                WriteExportLine(reg.Reg, reg.Size, reg.Descr, reg.Format, reg.Readable, reg.Writeable, Value);
                                 ++mSuccessCount;
                             }
                             else
                             {
-                                WriteExportLineError(reg.Reg, reg.Size, reg.Text, reg.Format, reg.Readable, reg.Writeable, ModbusProtocol.GetResultText(result));
+                                WriteExportLineError(reg.Reg, reg.Size, reg.Descr, reg.Format, reg.Readable, reg.Writeable, ModbusProtocol.GetResultText(result));
                                 ++mErrorCount;
                             }
                         }
+
+                        // next group
+                        rg.lineIndex += rg.lineCount;
                     }
                     else
                     {
                         // other errors
                         // show error for all registers
-                        foreach (ModbusRegView.RegEntry reg in Reglist)
+                        foreach (ModbusGridView.RegItem reg in rg.registersList)
                         {
                             // cancel?
                             if (mWorker.CancellationPending)
                                 return;
 
-                            WriteExportLineError(reg.Reg, reg.Size, reg.Text, reg.Format, reg.Readable, reg.Writeable, ModbusProtocol.GetResultText(result));
+                            WriteExportLineError(reg.Reg, reg.Size, reg.Descr, reg.Format, reg.Readable, reg.Writeable, ModbusProtocol.GetResultText(result));
                             ++mErrorCount;
                         }
+
+                        // next group
+                        rg.lineIndex += rg.lineCount;
                     }
                 }
             }
@@ -373,6 +379,9 @@ namespace ModbusControlSpace
         private bool WriteExportLine(UInt32 Reg, int Size, string Description, Global.eFormat Format, bool isReadable, bool isWriteable, int Value)
         {
             // output 1 export line, all register info, and value
+
+            // width in bits
+            int Width = Size * 16;
 
             // make RW string
             string RWstring = (isReadable ? "r" : "") + (isWriteable ? "w" : "");
@@ -407,14 +416,14 @@ namespace ModbusControlSpace
             // make value string
             // decimals are not used in export
             // minlen is not used in export
-            string ValueString = CValueToString.ValueToString(Value, Size, Format);
+            string ValueString = CValueToString.ValueToString(Value, Width, Format);
 
             // output to file
-            string[] fields = new string[] { Reg.ToString(), Size.ToString(), Description, RWstring, Format.ToString(), ValueString};
+            string[] fields = new string[] { Reg.ToString(), Width.ToString(), Description, RWstring, Format.ToString(), ValueString};
             mCsvWriter.WriteRow(fields);
 
             // and log
-            string s = Reg + ";" + Size + ";\"" + Description + "\";" + RWstring + ";" + Format + ";" + ValueString;
+            string s = Reg + ";" + Width + ";\"" + Description + "\";" + RWstring + ";" + Format + ";" + ValueString;
             mWorker.ReportProgress(0, "Read: " + s);
 
             return true;
@@ -424,15 +433,18 @@ namespace ModbusControlSpace
         {
             // output 1 export line, all register info, and error message
 
+            // width in bits
+            int Width = Size * 16;
+
             // make RW string
             string RWstring = (isReadable ? "r" : "") + (isWriteable ? "w" : "");
 
             // output to file
-            string[] fields = new string[] { Reg.ToString(), Size.ToString(), Description, RWstring, Format.ToString(), "?   >> ERROR: " + Error };
+            string[] fields = new string[] { Reg.ToString(), Width.ToString(), Description, RWstring, Format.ToString(), "?   >> ERROR: " + Error };
             mCsvWriter.WriteRow(fields);
 
             // and log
-            string s = Reg + ";" + Size + ";\"" + Description + "\";" + RWstring + ";" + Format + ";?   >> ERROR: " + Error;
+            string s = Reg + ";" + Width + ";\"" + Description + "\";" + RWstring + ";" + Format + ";?   >> ERROR: " + Error;
             mWorker.ReportProgress(0, "Read: " + s);
 
             return true;
@@ -465,6 +477,7 @@ namespace ModbusControlSpace
         }
 
         // convert format to type
+        //TODO: naar globals.cs?
         private Endians.eType ConvertFormatToType(ModbusControlSpace.Global.eFormat Format)
         {
             Endians.eType Type = Endians.eType.Int;

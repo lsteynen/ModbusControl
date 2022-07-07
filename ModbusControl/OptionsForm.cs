@@ -66,6 +66,24 @@ namespace ModbusControlSpace
             }
         }
 
+        public bool ShowVarProperties
+        {
+            get { return checkboxShowVarProperties.Checked; }
+            set
+            {
+                checkboxShowVarProperties.Checked = value;
+            }
+        }
+
+        public bool AutoRowSize
+        {
+            get { return checkboxAutoRowSize.Checked; }
+            set
+            {
+                checkboxAutoRowSize.Checked = value;
+            }
+        }
+
         public bool MbcfileValidationEnable
         {
             get { return checkboxUseValidationSchema.Checked; }
