@@ -2489,12 +2489,13 @@ namespace ModbusControlSpace
             if (ExportForm == null)
             {
                 ExportForm = new Export(this);
-                // load settings
-                ExportForm.TabSelect = Settings1.Roaming.Export.Tabs;
-                ExportForm.ExportFormatSelect = Settings1.Roaming.Export.ExportFormat;
-                ExportForm.AsciiFormatSelect = Settings1.Roaming.Export.ExportAsciiAs;
-                ExportForm.MaximumFrameSize = Project.Connection.MaximumFrameSize;
             }
+
+            // load settings
+            ExportForm.TabSelect = Settings1.Roaming.Export.Tabs;
+            ExportForm.ExportFormatSelect = Settings1.Roaming.Export.ExportFormat;
+            ExportForm.AsciiFormatSelect = Settings1.Roaming.Export.ExportAsciiAs;
+            ExportForm.MaximumFrameSize = Project.Connection.MaximumFrameSize;
 
             // show modal
             ExportForm.ShowDialog();

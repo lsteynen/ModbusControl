@@ -42,7 +42,6 @@ namespace ModbusControlSpace
             this.editProjectFileMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openFileLocationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
-            this.recentFilesMenuItem = new RecentsToolStripMenuItem();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.saveConfigurationMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator6 = new System.Windows.Forms.ToolStripSeparator();
@@ -97,6 +96,7 @@ namespace ModbusControlSpace
             this.btnFilterClose = new System.Windows.Forms.Button();
             this.btnFilterClear = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
+            this.recentFilesMenuItem = new RecentsToolStripMenuItem();
             this.statusStrip.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
@@ -209,15 +209,6 @@ namespace ModbusControlSpace
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
             this.toolStripSeparator1.Size = new System.Drawing.Size(264, 6);
-            // 
-            // recentFilesMenuItem
-            // 
-            this.recentFilesMenuItem.Enabled = false;
-            this.recentFilesMenuItem.Name = "recentFilesMenuItem";
-            this.recentFilesMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.F)));
-            this.recentFilesMenuItem.Size = new System.Drawing.Size(267, 22);
-            this.recentFilesMenuItem.Text = "Recent project &files";
-            this.recentFilesMenuItem.ItemClick += new System.EventHandler(this.recentFilesMenuItem_ItemClick);
             // 
             // toolStripSeparator2
             // 
@@ -624,7 +615,7 @@ namespace ModbusControlSpace
             // 
             this.tbFilterText.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.tbFilterText.Location = new System.Drawing.Point(62, 3);
+            this.tbFilterText.Location = new System.Drawing.Point(59, 3);
             this.tbFilterText.Margin = new System.Windows.Forms.Padding(2);
             this.tbFilterText.Name = "tbFilterText";
             this.tbFilterText.Size = new System.Drawing.Size(338, 20);
@@ -651,7 +642,7 @@ namespace ModbusControlSpace
             // 
             this.chkFilterCaseSensitive.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.chkFilterCaseSensitive.AutoSize = true;
-            this.chkFilterCaseSensitive.Location = new System.Drawing.Point(429, 5);
+            this.chkFilterCaseSensitive.Location = new System.Drawing.Point(426, 5);
             this.chkFilterCaseSensitive.Margin = new System.Windows.Forms.Padding(2);
             this.chkFilterCaseSensitive.Name = "chkFilterCaseSensitive";
             this.chkFilterCaseSensitive.Size = new System.Drawing.Size(82, 17);
@@ -676,7 +667,7 @@ namespace ModbusControlSpace
             // 
             this.btnFilterClear.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.btnFilterClear.Image = global::ModbusControlSpace.Properties.Resources.Erase;
-            this.btnFilterClear.Location = new System.Drawing.Point(400, 3);
+            this.btnFilterClear.Location = new System.Drawing.Point(397, 3);
             this.btnFilterClear.Margin = new System.Windows.Forms.Padding(2);
             this.btnFilterClear.Name = "btnFilterClear";
             this.btnFilterClear.Size = new System.Drawing.Size(18, 19);
@@ -693,6 +684,15 @@ namespace ModbusControlSpace
             this.label1.Size = new System.Drawing.Size(57, 13);
             this.label1.TabIndex = 0;
             this.label1.Text = "Find/Filter:";
+            // 
+            // recentFilesMenuItem
+            // 
+            this.recentFilesMenuItem.Enabled = false;
+            this.recentFilesMenuItem.Name = "recentFilesMenuItem";
+            this.recentFilesMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.F)));
+            this.recentFilesMenuItem.Size = new System.Drawing.Size(267, 22);
+            this.recentFilesMenuItem.Text = "Recent project &files";
+            this.recentFilesMenuItem.ItemClick += new System.EventHandler(this.recentFilesMenuItem_ItemClick);
             // 
             // MainForm
             // 
