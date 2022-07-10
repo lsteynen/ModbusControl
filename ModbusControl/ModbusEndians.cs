@@ -11,26 +11,25 @@ using System.Globalization;
 using System.Resources;
 using System.Text;
 
+using ModbusControlSpace;
+
 namespace LST.Helpers
 {
     public static class Endians
     {
-        //TODO: eType naar global
-        public enum eType { Int, Float, ASCII };
-
         public static bool Int32BigEndian;
         public static bool Float32BigEndian;
 
         /// <summary>
         /// Converteer 1 of 2 16-bit modbus registers naar binaire value (of float of ascii)
         /// </summary>
-        public static Int32 ConvertShortsToValue(Int16[] Shorts, eType Type, int Width)
+        public static Int32 ConvertShortsToValue(Int16[] Shorts, Global.eType Type, int Width)
         {
             Int32 Value = 0;
 
             switch (Type)
             {
-                case eType.Int: // swap 16-bit words
+                case Global.eType.Int: // swap 16-bit words
                     if (Width == 32)
                     {
                         Value = ToInt32(Shorts[0], Shorts[1], Int32BigEndian);
@@ -40,10 +39,10 @@ namespace LST.Helpers
                         Value = Shorts[0];
                     }
                     break;
-                case eType.Float: // swap 16-bit words
+                case Global.eType.Float: // swap 16-bit words
                     Value = ToInt32(Shorts[0], Shorts[1], Float32BigEndian);
                     break;
-                case eType.ASCII: // no swap
+                case Global.eType.ASCII: // no swap
                     if (Width == 32)
                     {
                         Value = ToInt32(Shorts[0], Shorts[1], false);
@@ -78,7 +77,7 @@ namespace LST.Helpers
         /// <summary>
         /// Converteer binaire value (of float of ascii) naar 1 of 2 16-bit modbus registers
         /// </summary>
-        public static Int16[] ConvertValueToShorts(Int32 Value, eType Type, int Size)
+        public static Int16[] ConvertValueToShorts(Int32 Value, Global.eType Type, int Size)
         {
             // Int: size 1: return 1 short
             //      size 2: return 2 shorts, afh van Int32BigEndian
@@ -89,7 +88,7 @@ namespace LST.Helpers
 
             switch (Type)
             {
-                case Endians.eType.Int:
+                case Global.eType.Int:
                     if (result.Length >= 2)
                     {
                         if (Int32BigEndian)
@@ -108,7 +107,7 @@ namespace LST.Helpers
                         result[0] = (Int16)Value;
                     }
                     break;
-                case Endians.eType.Float:
+                case Global.eType.Float:
                     if (result.Length == 2)
                     {
                         if (Float32BigEndian)
@@ -127,7 +126,7 @@ namespace LST.Helpers
                         throw new ArgumentException();
                     }
                     break;
-                case eType.ASCII: // no swap
+                case Global.eType.ASCII: // no swap
                     if (Size == 32)
                     {
                         result[1] = (Int16)(((UInt32)Value) >> 16);

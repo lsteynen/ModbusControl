@@ -1400,8 +1400,7 @@ namespace LST.ModbusGridView
                     Global.eType Type = Global.ConvertFormatToType(r.Format);
 
                     // make 32-bit value, watch endian
-                    //TODO: type cast rommel opkuisen
-                    r.Value32 = Endians.ConvertShortsToValue(RawReg, (Endians.eType)Type, r.Size * 16);
+                    r.Value32 = Endians.ConvertShortsToValue(RawReg, Type, r.Size * 16);
 
                     // update register value, and its children
                     SetRegisterValue(r);
@@ -1654,7 +1653,7 @@ namespace LST.ModbusGridView
                 bool IsFloat = (edFormat == ModbusControlSpace.Global.eFormat.Float);
                 // convert & check
                 Int32 NewValue;
-                Endians.eType Type;
+                Global.eType Type;
                 bool bIsValid = CValueToString.StringToValue(newValueStr, IsFloat, edWidth, edDecimals, out NewValue, out Type);
 
                 // if this is a bitfield: insert bitfield value in register value

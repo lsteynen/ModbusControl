@@ -161,7 +161,7 @@ namespace ModbusControlSpace
                     }
 
                     // convert format to type
-                    Endians.eType Type = ConvertFormatToType(Format);
+                    Global.eType Type = Global.ConvertFormatToType(Format);
 
                     // 16 or 32-bit?
                     int Width = radiobuttonSize32bit.Checked ? 32 : 16;
@@ -223,38 +223,6 @@ namespace ModbusControlSpace
         private void radiobuttonSize32bit_CheckedChanged(object sender, EventArgs e)
         {
             radiobuttonAsFloat.Enabled = true;
-        }
-
-        private void CustomRead_Shown(object sender, EventArgs e)
-        {
-        }
-
-        // convert format to type
-        //TODO: naar globals.cs?
-        private Endians.eType ConvertFormatToType(ModbusControlSpace.Global.eFormat Format)
-        {
-            Endians.eType Type = Endians.eType.Int;
-
-            switch (Format)
-            {
-                case ModbusControlSpace.Global.eFormat.Int:
-                case ModbusControlSpace.Global.eFormat.UInt:
-                case ModbusControlSpace.Global.eFormat.Hex:
-                case ModbusControlSpace.Global.eFormat.Bin:
-                    Type = Endians.eType.Int;
-                    break;
-                case ModbusControlSpace.Global.eFormat.Float:
-                    Type = Endians.eType.Float;
-                    break;
-                case ModbusControlSpace.Global.eFormat.ASCII:
-                    Type = Endians.eType.ASCII;
-                    break;
-                default:
-                    // invalid
-                    throw new ArgumentException("Invalid format enum!");
-            }
-
-            return Type;
         }
 
     }

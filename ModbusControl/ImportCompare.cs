@@ -168,7 +168,7 @@ namespace ModbusControlSpace
                 }
 
                 // convert format to type
-                Endians.eType Type = ConvertFormatToType(line.Format);
+                Global.eType Type = Global.ConvertFormatToType(line.Format);
 
                 // convert value in file to modbus shorts[], watching endians
                 Int16[] aFileValues = Endians.ConvertValueToShorts(line.Value, Type, line.Width);
@@ -463,7 +463,7 @@ namespace ModbusControlSpace
                     continue;
                 }
                 imp.ValueString = ValueString;
-                Endians.eType Type;
+                Global.eType Type;
                 if (CValueToString.StringToValue(ValueString, bIsFloat, imp.Width, 0, out imp.Value, out Type) == false)
                 {
                     textboxLog.AppendText("ERROR: line " + csvreader.LineNumber + ": Value field is invalid!" + Environment.NewLine);
@@ -558,34 +558,6 @@ namespace ModbusControlSpace
 
             format = Global.eFormat.Int;
             return false;
-        }
-
-        // convert format to type
-        //TODO: naar globals.cs
-        private Endians.eType ConvertFormatToType(ModbusControlSpace.Global.eFormat Format)
-        {
-            Endians.eType Type = Endians.eType.Int;
-
-            switch (Format)
-            {
-                case ModbusControlSpace.Global.eFormat.Int:
-                case ModbusControlSpace.Global.eFormat.UInt:
-                case ModbusControlSpace.Global.eFormat.Hex:
-                case ModbusControlSpace.Global.eFormat.Bin:
-                    Type = Endians.eType.Int;
-                    break;
-                case ModbusControlSpace.Global.eFormat.Float:
-                    Type = Endians.eType.Float;
-                    break;
-                case ModbusControlSpace.Global.eFormat.ASCII:
-                    Type = Endians.eType.ASCII;
-                    break;
-                default:
-                    // invalid
-                    throw new ArgumentException("Invalid format enum!");
-            }
-
-            return Type;
         }
 
     }

@@ -281,7 +281,7 @@ namespace ModbusControlSpace
                             return;
 
                         // convert format to type
-                        Endians.eType Type = ConvertFormatToType(reg.Format);
+                        Global.eType Type = Global.ConvertFormatToType(reg.Format);
 
                         // get the value, 16 or 32-bit, watch size and endian
                         short[] aTmpRegs = new short[2];
@@ -329,7 +329,7 @@ namespace ModbusControlSpace
                                 // get the value, 16 or 32-bit
 
                                 // convert format to type
-                                Endians.eType Type = ConvertFormatToType(reg.Format);
+                                Global.eType Type = Global.ConvertFormatToType(reg.Format);
 
                                 // make 32-bit value, watch size and endian
                                 short[] aTmpRegs = new short[2];
@@ -474,34 +474,6 @@ namespace ModbusControlSpace
         private int GetUserReg(ushort offset)
         {
             return mParent.Project.Options.HoldingregistersStart + offset;
-        }
-
-        // convert format to type
-        //TODO: naar globals.cs?
-        private Endians.eType ConvertFormatToType(ModbusControlSpace.Global.eFormat Format)
-        {
-            Endians.eType Type = Endians.eType.Int;
-
-            switch (Format)
-            {
-                case ModbusControlSpace.Global.eFormat.Int:
-                case ModbusControlSpace.Global.eFormat.UInt:
-                case ModbusControlSpace.Global.eFormat.Hex:
-                case ModbusControlSpace.Global.eFormat.Bin:
-                    Type = Endians.eType.Int;
-                    break;
-                case ModbusControlSpace.Global.eFormat.Float:
-                    Type = Endians.eType.Float;
-                    break;
-                case ModbusControlSpace.Global.eFormat.ASCII:
-                    Type = Endians.eType.ASCII;
-                    break;
-                default:
-                    // invalid
-                    throw new ArgumentException("Invalid format enum!");
-            }
-
-            return Type;
         }
 
         private void radiobuttonFormat_CheckedChanged(object sender, EventArgs e)

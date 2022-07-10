@@ -46,6 +46,7 @@
             this.checkboxShowVarProperties = new System.Windows.Forms.CheckBox();
             this.checkboxAutoRowSize = new System.Windows.Forms.CheckBox();
             this.textboxUseValidationSchema = new System.Windows.Forms.TextBox();
+            this.checkboxClearFilterOnTabChange = new System.Windows.Forms.CheckBox();
             this.checkboxUseValidationSchema = new System.Windows.Forms.CheckBox();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.butSelectValidationFile = new System.Windows.Forms.Button();
@@ -59,7 +60,7 @@
             // buttonCancel
             // 
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.buttonCancel.Location = new System.Drawing.Point(230, 312);
+            this.buttonCancel.Location = new System.Drawing.Point(230, 318);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 23);
             this.buttonCancel.TabIndex = 11;
@@ -69,7 +70,7 @@
             // buttonOK
             // 
             this.buttonOK.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.buttonOK.Location = new System.Drawing.Point(142, 312);
+            this.buttonOK.Location = new System.Drawing.Point(142, 318);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(75, 23);
             this.buttonOK.TabIndex = 10;
@@ -79,7 +80,7 @@
             // checkboxUseLocalOverrides
             // 
             this.checkboxUseLocalOverrides.AutoSize = true;
-            this.checkboxUseLocalOverrides.Location = new System.Drawing.Point(223, 35);
+            this.checkboxUseLocalOverrides.Location = new System.Drawing.Point(223, 33);
             this.checkboxUseLocalOverrides.Name = "checkboxUseLocalOverrides";
             this.checkboxUseLocalOverrides.Size = new System.Drawing.Size(116, 17);
             this.checkboxUseLocalOverrides.TabIndex = 1;
@@ -112,18 +113,18 @@
             // CheckboxCheckForUpdates
             // 
             this.CheckboxCheckForUpdates.AutoSize = true;
-            this.CheckboxCheckForUpdates.Location = new System.Drawing.Point(23, 277);
+            this.CheckboxCheckForUpdates.Location = new System.Drawing.Point(23, 282);
             this.CheckboxCheckForUpdates.Name = "CheckboxCheckForUpdates";
-            this.CheckboxCheckForUpdates.Size = new System.Drawing.Size(113, 17);
+            this.CheckboxCheckForUpdates.Size = new System.Drawing.Size(154, 17);
             this.CheckboxCheckForUpdates.TabIndex = 9;
-            this.CheckboxCheckForUpdates.Text = "Check for updates";
+            this.CheckboxCheckForUpdates.Text = "Check for program updates";
             this.toolTip1.SetToolTip(this.CheckboxCheckForUpdates, "Check for program updates on startup, once per day");
             this.CheckboxCheckForUpdates.UseVisualStyleBackColor = true;
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(21, 244);
+            this.label1.Location = new System.Drawing.Point(21, 249);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(86, 13);
             this.label1.TabIndex = 5;
@@ -136,7 +137,7 @@
             0,
             0,
             0});
-            this.numericLoggerCapacity.Location = new System.Drawing.Point(114, 243);
+            this.numericLoggerCapacity.Location = new System.Drawing.Point(114, 248);
             this.numericLoggerCapacity.Maximum = new decimal(new int[] {
             999999,
             0,
@@ -160,7 +161,7 @@
             // checkboxNextRowOnEnter
             // 
             this.checkboxNextRowOnEnter.AutoSize = true;
-            this.checkboxNextRowOnEnter.Location = new System.Drawing.Point(23, 35);
+            this.checkboxNextRowOnEnter.Location = new System.Drawing.Point(23, 33);
             this.checkboxNextRowOnEnter.Name = "checkboxNextRowOnEnter";
             this.checkboxNextRowOnEnter.Size = new System.Drawing.Size(151, 17);
             this.checkboxNextRowOnEnter.TabIndex = 3;
@@ -171,7 +172,7 @@
             // checkboxAutostartEdit
             // 
             this.checkboxAutostartEdit.AutoSize = true;
-            this.checkboxAutostartEdit.Location = new System.Drawing.Point(23, 58);
+            this.checkboxAutostartEdit.Location = new System.Drawing.Point(23, 54);
             this.checkboxAutostartEdit.Name = "checkboxAutostartEdit";
             this.checkboxAutostartEdit.Size = new System.Drawing.Size(166, 17);
             this.checkboxAutostartEdit.TabIndex = 4;
@@ -181,7 +182,7 @@
             // 
             // textboxCustomEditor
             // 
-            this.textboxCustomEditor.Location = new System.Drawing.Point(71, 210);
+            this.textboxCustomEditor.Location = new System.Drawing.Point(71, 215);
             this.textboxCustomEditor.Name = "textboxCustomEditor";
             this.textboxCustomEditor.Size = new System.Drawing.Size(302, 20);
             this.textboxCustomEditor.TabIndex = 8;
@@ -190,7 +191,7 @@
             // checkboxCustomEditor
             // 
             this.checkboxCustomEditor.AutoSize = true;
-            this.checkboxCustomEditor.Location = new System.Drawing.Point(23, 192);
+            this.checkboxCustomEditor.Location = new System.Drawing.Point(23, 197);
             this.checkboxCustomEditor.Name = "checkboxCustomEditor";
             this.checkboxCustomEditor.Size = new System.Drawing.Size(111, 17);
             this.checkboxCustomEditor.TabIndex = 7;
@@ -201,7 +202,7 @@
             // checkboxIgnoreFormSizeOnReload
             // 
             this.checkboxIgnoreFormSizeOnReload.AutoSize = true;
-            this.checkboxIgnoreFormSizeOnReload.Location = new System.Drawing.Point(223, 58);
+            this.checkboxIgnoreFormSizeOnReload.Location = new System.Drawing.Point(223, 54);
             this.checkboxIgnoreFormSizeOnReload.Name = "checkboxIgnoreFormSizeOnReload";
             this.checkboxIgnoreFormSizeOnReload.Size = new System.Drawing.Size(182, 17);
             this.checkboxIgnoreFormSizeOnReload.TabIndex = 12;
@@ -212,18 +213,18 @@
             // checkboxShowVarProperties
             // 
             this.checkboxShowVarProperties.AutoSize = true;
-            this.checkboxShowVarProperties.Location = new System.Drawing.Point(23, 81);
+            this.checkboxShowVarProperties.Location = new System.Drawing.Point(23, 75);
             this.checkboxShowVarProperties.Name = "checkboxShowVarProperties";
-            this.checkboxShowVarProperties.Size = new System.Drawing.Size(157, 17);
+            this.checkboxShowVarProperties.Size = new System.Drawing.Size(176, 17);
             this.checkboxShowVarProperties.TabIndex = 13;
-            this.checkboxShowVarProperties.Text = "Show var properties column";
+            this.checkboxShowVarProperties.Text = "Show register properties column";
             this.toolTip1.SetToolTip(this.checkboxShowVarProperties, "Do not use the form size specified in the mbc file on project REload");
             this.checkboxShowVarProperties.UseVisualStyleBackColor = true;
             // 
             // checkboxAutoRowSize
             // 
             this.checkboxAutoRowSize.AutoSize = true;
-            this.checkboxAutoRowSize.Location = new System.Drawing.Point(23, 104);
+            this.checkboxAutoRowSize.Location = new System.Drawing.Point(23, 96);
             this.checkboxAutoRowSize.Name = "checkboxAutoRowSize";
             this.checkboxAutoRowSize.Size = new System.Drawing.Size(176, 17);
             this.checkboxAutoRowSize.TabIndex = 14;
@@ -233,18 +234,29 @@
             // 
             // textboxUseValidationSchema
             // 
-            this.textboxUseValidationSchema.Location = new System.Drawing.Point(82, 158);
-            this.textboxUseValidationSchema.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.textboxUseValidationSchema.Location = new System.Drawing.Point(82, 167);
+            this.textboxUseValidationSchema.Margin = new System.Windows.Forms.Padding(2);
             this.textboxUseValidationSchema.Name = "textboxUseValidationSchema";
             this.textboxUseValidationSchema.Size = new System.Drawing.Size(291, 20);
             this.textboxUseValidationSchema.TabIndex = 14;
             this.toolTip1.SetToolTip(this.textboxUseValidationSchema, "Custom editor command, for example [\"c:\\windows\\system32\\notepad.exe\" \"%file\"]");
             // 
+            // checkboxClearFilterOnTabChange
+            // 
+            this.checkboxClearFilterOnTabChange.AutoSize = true;
+            this.checkboxClearFilterOnTabChange.Location = new System.Drawing.Point(23, 117);
+            this.checkboxClearFilterOnTabChange.Name = "checkboxClearFilterOnTabChange";
+            this.checkboxClearFilterOnTabChange.Size = new System.Drawing.Size(169, 17);
+            this.checkboxClearFilterOnTabChange.TabIndex = 19;
+            this.checkboxClearFilterOnTabChange.Text = "Clear Find/filter on tab change";
+            this.toolTip1.SetToolTip(this.checkboxClearFilterOnTabChange, "Do not use the form size specified in the mbc file on project REload");
+            this.checkboxClearFilterOnTabChange.UseVisualStyleBackColor = true;
+            // 
             // checkboxUseValidationSchema
             // 
             this.checkboxUseValidationSchema.AutoSize = true;
-            this.checkboxUseValidationSchema.Location = new System.Drawing.Point(23, 140);
-            this.checkboxUseValidationSchema.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.checkboxUseValidationSchema.Location = new System.Drawing.Point(23, 149);
+            this.checkboxUseValidationSchema.Margin = new System.Windows.Forms.Padding(2);
             this.checkboxUseValidationSchema.Name = "checkboxUseValidationSchema";
             this.checkboxUseValidationSchema.Size = new System.Drawing.Size(231, 17);
             this.checkboxUseValidationSchema.TabIndex = 13;
@@ -260,8 +272,8 @@
             // butSelectValidationFile
             // 
             this.butSelectValidationFile.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.butSelectValidationFile.Location = new System.Drawing.Point(374, 158);
-            this.butSelectValidationFile.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.butSelectValidationFile.Location = new System.Drawing.Point(374, 167);
+            this.butSelectValidationFile.Margin = new System.Windows.Forms.Padding(2);
             this.butSelectValidationFile.Name = "butSelectValidationFile";
             this.butSelectValidationFile.Size = new System.Drawing.Size(25, 19);
             this.butSelectValidationFile.TabIndex = 15;
@@ -272,8 +284,8 @@
             // butSelectCustomEditor
             // 
             this.butSelectCustomEditor.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.butSelectCustomEditor.Location = new System.Drawing.Point(374, 210);
-            this.butSelectCustomEditor.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.butSelectCustomEditor.Location = new System.Drawing.Point(374, 215);
+            this.butSelectCustomEditor.Margin = new System.Windows.Forms.Padding(2);
             this.butSelectCustomEditor.Name = "butSelectCustomEditor";
             this.butSelectCustomEditor.Size = new System.Drawing.Size(25, 19);
             this.butSelectCustomEditor.TabIndex = 16;
@@ -290,7 +302,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(31, 160);
+            this.label2.Location = new System.Drawing.Point(31, 169);
             this.label2.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(49, 13);
@@ -300,7 +312,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(31, 212);
+            this.label3.Location = new System.Drawing.Point(31, 217);
             this.label3.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(37, 13);
@@ -314,8 +326,9 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.AutoSize = true;
             this.CancelButton = this.buttonCancel;
-            this.ClientSize = new System.Drawing.Size(455, 345);
+            this.ClientSize = new System.Drawing.Size(455, 351);
             this.ControlBox = false;
+            this.Controls.Add(this.checkboxClearFilterOnTabChange);
             this.Controls.Add(this.checkboxAutoRowSize);
             this.Controls.Add(this.checkboxShowVarProperties);
             this.Controls.Add(this.label3);
@@ -379,6 +392,6 @@
         private System.Windows.Forms.OpenFileDialog openFileDialog2;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label3;
-
+        private System.Windows.Forms.CheckBox checkboxClearFilterOnTabChange;
     }
 }

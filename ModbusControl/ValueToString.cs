@@ -12,6 +12,7 @@ using System.Globalization;
 using System.Resources;
 using System.Text;
 
+using ModbusControlSpace;
 
 namespace LST.Helpers
 {
@@ -390,7 +391,7 @@ namespace LST.Helpers
         /// Checks if value fits in Width bits
         /// Returns Endians.eType Type to show what type/format whas input
         /// </summary>
-        public static bool StringToValue(string str, bool IsFloat, int Width, int Decimals, out Int32 Result, out Endians.eType Type)
+        public static bool StringToValue(string str, bool IsFloat, int Width, int Decimals, out Int32 Result, out Global.eType Type)
         {
             bool IsValid = false;
             Int64 numInt64 = 0;
@@ -398,7 +399,7 @@ namespace LST.Helpers
 
             // never return something undefined
             Result = 0;
-            Type = Endians.eType.Int;
+            Type = Global.eType.Int;
 
             // is it a hex number?
             if (str.StartsWith("0x", StringComparison.OrdinalIgnoreCase))
@@ -412,7 +413,7 @@ namespace LST.Helpers
                 {
                     IsValid = FitsWidth(numUInt32, Width);
                     Result = (Int32)numUInt32;
-                    Type = Endians.eType.Int;
+                    Type = Global.eType.Int;
                 }
             }
             // is it a binary number?
@@ -427,7 +428,7 @@ namespace LST.Helpers
                 {
                     IsValid = FitsWidth(numUInt32, Width);
                     Result = (Int32)numUInt32;
-                    Type = Endians.eType.Int;
+                    Type = Global.eType.Int;
                 }
             }
             // is it an ASCII string? 
@@ -465,7 +466,7 @@ namespace LST.Helpers
                     // convert bytes to UInt32
                     numUInt32 = BitConverter.ToUInt32(aBytes, 0);
                     Result = (Int32)numUInt32;
-                    Type = Endians.eType.ASCII;
+                    Type = Global.eType.ASCII;
                 }
             }
             // is it a float? 
@@ -478,7 +479,7 @@ namespace LST.Helpers
                 {
                     byte[] aTmpBytes = BitConverter.GetBytes(fValue);
                     Result = BitConverter.ToInt32(aTmpBytes, 0);
-                    Type = Endians.eType.Float;
+                    Type = Global.eType.Float;
                 }
             }
             // it is an int or uint 
@@ -508,7 +509,7 @@ namespace LST.Helpers
                     IsValid = FitsWidth(numInt64, Width);
                     Result = (Int32)numInt64;
                 }
-                Type = Endians.eType.Int;
+                Type = Global.eType.Int;
             }
 
             return IsValid;

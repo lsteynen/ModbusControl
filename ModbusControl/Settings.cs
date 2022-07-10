@@ -100,7 +100,8 @@ namespace ModbusControlSpace
             public bool AutoStartEdit;
             public bool IgnoreSizeOnReload;
             public bool ShowVarProperties;
-            public bool MultilineAutosizeRows;      
+            public bool MultilineAutosizeRows;
+            public bool ClearFilterOnTabChange;
             public bool MbcfileValidationEnable;
             public string MbcfileValidationXSDFile;
             public bool ShowFindFilterBox;
@@ -130,6 +131,7 @@ namespace ModbusControlSpace
                 IgnoreSizeOnReload = false;
                 ShowVarProperties = false;
                 MultilineAutosizeRows = false;
+                ClearFilterOnTabChange = false;
                 MbcfileValidationEnable = false; // see further
                 MbcfileValidationXSDFile = ""; // see further
                 ShowFindFilterBox = false;
@@ -201,6 +203,7 @@ namespace ModbusControlSpace
                 ReadElementBool(xroot, "autostartedit", ref AutoStartEdit);
                 ReadElementBool(xroot, "ignoresizeonreload", ref IgnoreSizeOnReload);
                 ReadElementBool(xroot, "multilineautosizerows", ref MultilineAutosizeRows);
+                ReadElementBool(xroot, "clearfilterontabchange", ref ClearFilterOnTabChange);
                 ReadElementBool(xroot, "showvarproperties", ref ShowVarProperties);
                 ReadElementBool(xroot, "mbcfilevalidationenable", ref MbcfileValidationEnable);
                 ReadElementString(xroot, "mbcfilevalidationxsdfile", ref MbcfileValidationXSDFile);
@@ -249,6 +252,7 @@ namespace ModbusControlSpace
                 WriteElementBool(xroot, "autostartedit", AutoStartEdit);
                 WriteElementBool(xroot, "ignoresizeonreload", IgnoreSizeOnReload);
                 WriteElementBool(xroot, "multilineautosizerows", MultilineAutosizeRows);
+                WriteElementBool(xroot, "clearfilterontabchange", ClearFilterOnTabChange);
                 WriteElementBool(xroot, "showvarproperties", ShowVarProperties);
                 WriteElementBool(xroot, "mbcfilevalidationenable", MbcfileValidationEnable);
                 WriteElementString(xroot, "mbcfilevalidationxsdfile", MbcfileValidationXSDFile);

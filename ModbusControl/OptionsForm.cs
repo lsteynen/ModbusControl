@@ -84,6 +84,15 @@ namespace ModbusControlSpace
             }
         }
 
+        public bool ClearFilterOnTabChange
+        {
+            get { return checkboxClearFilterOnTabChange.Checked; }
+            set
+            {
+                checkboxClearFilterOnTabChange.Checked = value;
+            }
+        }
+
         public bool MbcfileValidationEnable
         {
             get { return checkboxUseValidationSchema.Checked; }

@@ -291,7 +291,6 @@
             this.Text = "Custom read (holding registers)";
             this.toolTip1.SetToolTip(this, "Send the read command");
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.OnFormClosing);
-            this.Shown += new System.EventHandler(this.CustomRead_Shown);
             this.groupboxDatasize.ResumeLayout(false);
             this.groupboxDatasize.PerformLayout();
             this.groupboxShowas.ResumeLayout(false);

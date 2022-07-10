@@ -27,8 +27,10 @@ using LST.ModbusGridView;
 //      moet bij elke deel-read data returnen, dus ik denk dat je een -start- en een -continue- functie nodig hebt, elk blocking zoals gewoonlijk
 //TODO: string: lengte per reg of per byte? 
 //      string2, string4, ... string250 (aantal chars)
+//      opgelet wat als stringlengte > maxframesize? in stukjes doen?
 //TODO: read/write alle types van modbus registers
 //TODO: CustomRead en CustomWrite: read/write alle types van modbus registers
+//TODO: Customcommand: uit een lijst kunnen kiezen? alleen de selected lijn? alleen de eerste bij nothingselected?
 //TODO: LocalOverrides afvoeren, vervangen door command line opties
 //TODO: dynamic connectie (ipv static) bij elke read de poort/connectie openen, daarna terug sluiten
 //      kan de connect/disconnect dan vervallen?  poll start = connect, poll stop = disconnect, pollonce = connect/read/disconnect
@@ -47,6 +49,7 @@ namespace ModbusControlSpace
             public bool IgnoreSizeOnReload;
             public bool ShowVarProperties;
             public bool AutoRowSize;
+            public bool ClearFilterOnTabChange;
             public bool MbcfileValidationEnable;
             public string MbcfileValidationXSDFile;
             public bool ShowFindBox;
@@ -94,6 +97,7 @@ namespace ModbusControlSpace
         private Object UpdaterLock = new Object();  // lock for safely terminating the updater thread
         private bool AlternateWriteUseFC16;
         private string LocalOverridesFilename = "LocalOverrides.xml";
+        private bool Loading;
 
         // a write entry
         private class WriteEntry
@@ -209,6 +213,7 @@ namespace ModbusControlSpace
             Options.IgnoreSizeOnReload = Settings1.Roaming.IgnoreSizeOnReload;
             Options.ShowVarProperties = Settings1.Roaming.ShowVarProperties;
             Options.AutoRowSize = Settings1.Roaming.MultilineAutosizeRows;
+            Options.ClearFilterOnTabChange = Settings1.Roaming.ClearFilterOnTabChange;
             Options.MbcfileValidationEnable = Settings1.Roaming.MbcfileValidationEnable;
             Options.MbcfileValidationXSDFile = Settings1.Roaming.MbcfileValidationXSDFile;
             Options.ShowFindBox = Settings1.Roaming.ShowFindFilterBox;
@@ -401,6 +406,7 @@ namespace ModbusControlSpace
             Settings1.Roaming.IgnoreSizeOnReload = Options.IgnoreSizeOnReload;
             Settings1.Roaming.ShowVarProperties = Options.ShowVarProperties;
             Settings1.Roaming.MultilineAutosizeRows = Options.AutoRowSize;
+            Settings1.Roaming.ClearFilterOnTabChange = Options.ClearFilterOnTabChange;
             Settings1.Roaming.MbcfileValidationEnable = Options.MbcfileValidationEnable;
             Settings1.Roaming.MbcfileValidationXSDFile = Options.MbcfileValidationXSDFile;
             Settings1.Roaming.ShowFindFilterBox = panFilter.Visible;
@@ -905,6 +911,7 @@ namespace ModbusControlSpace
             optionsForm.IgnoreSizeOnReload = Options.IgnoreSizeOnReload;
             optionsForm.ShowVarProperties = Options.ShowVarProperties;
             optionsForm.AutoRowSize = Options.AutoRowSize;
+            optionsForm.ClearFilterOnTabChange = Options.ClearFilterOnTabChange;
             optionsForm.LoggerCapacity = Logger1.CapacityLines;
             optionsForm.MbcfileValidationEnable = Options.MbcfileValidationEnable;
             optionsForm.MbcfileValidationFile = Options.MbcfileValidationXSDFile;
@@ -924,6 +931,7 @@ namespace ModbusControlSpace
                 Options.IgnoreSizeOnReload = optionsForm.IgnoreSizeOnReload;
                 Options.ShowVarProperties = optionsForm.ShowVarProperties;
                 Options.AutoRowSize = optionsForm.AutoRowSize;
+                Options.ClearFilterOnTabChange = optionsForm.ClearFilterOnTabChange;
                 Logger1.CapacityLines = optionsForm.LoggerCapacity;
                 Options.MbcfileValidationEnable = optionsForm.MbcfileValidationEnable;
                 Options.MbcfileValidationXSDFile = optionsForm.MbcfileValidationFile;
@@ -1758,6 +1766,13 @@ namespace ModbusControlSpace
         {
             CurrentTabPage = tabControl1.SelectedTab;
 
+            if (Options.ClearFilterOnTabChange)
+            {
+                Loading = true;
+                tbFilterText.Text = "";
+                Loading = false;
+            }
+
             // update page properties factor
             PassOptionsToCurrentClientTab();
 
@@ -2414,6 +2429,11 @@ namespace ModbusControlSpace
 
         private void tbFilterText_TextChanged(object sender, EventArgs e)
         {
+            if (Loading)
+            {
+                return;
+            }
+
             if (CurrentTabPage != null)
             {
                 ModbusGridView mgv = CurrentTabPage.Tag as ModbusGridView;
