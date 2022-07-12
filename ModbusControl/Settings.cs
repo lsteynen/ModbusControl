@@ -134,7 +134,7 @@ namespace ModbusControlSpace
                 ClearFilterOnTabChange = false;
                 MbcfileValidationEnable = false; // see further
                 MbcfileValidationXSDFile = ""; // see further
-                ShowFindFilterBox = false;
+                ShowFindFilterBox = true;
                 CustomEditorEnable = false;
                 CustomEditorCommand = "";
                 MbcMruList = new List<string>();
