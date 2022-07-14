@@ -32,8 +32,9 @@ using LST.ModbusGridView;
 //TODO: CustomRead en CustomWrite: read/write alle types van modbus registers
 //TODO: Customcommand: uit een lijst kunnen kiezen? alleen de selected lijn? alleen de eerste bij nothingselected?
 //TODO: LocalOverrides afvoeren, vervangen door command line opties
-//TODO: dynamic connectie (ipv static) bij elke read de poort/connectie openen, daarna terug sluiten
-//      kan de connect/disconnect dan vervallen?  poll start = connect, poll stop = disconnect, pollonce = connect/read/disconnect
+//TODO: dynamic connectie: bij elke read of write: poort/connectie open, read/write, daarna terug sluiten
+//		static connectie: poll_start = connect, read, wait, read, wait, ...   poll stop = disconnect, pollonce = connect/read/disconnect
+//      de connect/disconnect vervalt dan
 
 namespace ModbusControlSpace
 {

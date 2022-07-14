@@ -138,7 +138,7 @@
             this.tableLayoutPanel1.Controls.Add(this.lGatewayPathUnavailableExceptionCount, 1, 13);
             this.tableLayoutPanel1.Controls.Add(this.label2, 0, 12);
             this.tableLayoutPanel1.Controls.Add(this.lIllegalDataExceptionCount, 1, 12);
-            this.tableLayoutPanel1.Location = new System.Drawing.Point(6, 37);
+            this.tableLayoutPanel1.Location = new System.Drawing.Point(12, 12);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
             this.tableLayoutPanel1.RowCount = 20;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 16F));
@@ -508,7 +508,8 @@
             // 
             // buttonReset
             // 
-            this.buttonReset.Location = new System.Drawing.Point(101, 8);
+            this.buttonReset.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.buttonReset.Location = new System.Drawing.Point(107, 344);
             this.buttonReset.Name = "buttonReset";
             this.buttonReset.Size = new System.Drawing.Size(75, 23);
             this.buttonReset.TabIndex = 23;
@@ -521,7 +522,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.AutoSize = true;
-            this.ClientSize = new System.Drawing.Size(276, 377);
+            this.ClientSize = new System.Drawing.Size(286, 372);
             this.Controls.Add(this.buttonReset);
             this.Controls.Add(this.tableLayoutPanel1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;

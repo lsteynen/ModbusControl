@@ -71,7 +71,7 @@
             this.pic.TabIndex = 17;
             this.pic.TabStop = false;
             // 
-            // ValidationFailed
+            // ValidationFailedForm
             // 
             this.AcceptButton = this.buttonOK;
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
@@ -87,7 +87,7 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            this.Name = "ValidationFailed";
+            this.Name = "ValidationFailedForm";
             this.Padding = new System.Windows.Forms.Padding(0, 0, 0, 6);
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
