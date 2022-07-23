@@ -23,18 +23,19 @@ using Modbus_net;
 using LST.Helpers;
 using LST.ModbusGridView;
 
-//TODO: een read functie maken die bij een adres error de read in stukjes doet
-//      moet bij elke deel-read data returnen, dus ik denk dat je een -start- en een -continue- functie nodig hebt, elk blocking zoals gewoonlijk
-//TODO: string: lengte per reg of per byte? 
-//      string2, string4, ... string250 (aantal chars)
-//      opgelet wat als stringlengte > maxframesize? in stukjes doen?
-//TODO: read/write alle types van modbus registers
-//TODO: CustomRead en CustomWrite: read/write alle types van modbus registers
-//TODO: Customcommand: uit een lijst kunnen kiezen? alleen de selected lijn? alleen de eerste bij nothingselected?
-//TODO: LocalOverrides afvoeren, vervangen door command line opties
-//TODO: dynamic connectie: bij elke read of write: poort/connectie open, read/write, daarna terug sluiten
-//		static connectie: poll_start = connect, read, wait, read, wait, ...   poll stop = disconnect, pollonce = connect/read/disconnect
-//      de connect/disconnect vervalt dan
+//TODO:
+// X LocalOverrides afvoeren, vervangen door command line opties
+//   - bij project reload: commandline negeren? reload, drag&drop, open-recent,...  melding geven? option? Philip?
+// - een read functie maken die bij een adres error de read in stukjes doet
+//   - moet bij elke deel-read data returnen, dus ik denk dat je een -start- en een -continue- functie nodig hebt, elk blocking zoals gewoonlijk
+// - strings: string2, string4, ... string250 (aantal chars)
+//   - opgelet wat als stringlengte > maxframesize? in stukjes doen?
+// - read/write alle types van modbus registers
+//   - CustomRead en CustomWrite: read/write alle types van modbus registers
+// - Customcommand: uit een lijst kunnen kiezen? alleen de selected lijn? alleen de eerste lijn bij nothingselected?
+// - dynamic connectie: bij elke read of write: poort/connectie open, read/write, daarna terug sluiten
+//   - static connectie: poll_start = connect, read, wait, read, wait, ...   poll stop = disconnect, pollonce = connect/read/disconnect
+//   - de connect/disconnect knop kan dan eigenlijk vervallen
 
 namespace ModbusControlSpace
 {
@@ -43,7 +44,6 @@ namespace ModbusControlSpace
         public struct TOptions
         {
             public bool StopOnError;
-            public bool UseLocalOverrides;
             public bool BeepOnInputError;
             public bool AutoNextRowOnEnter;
             public bool AutoStartEdit;
@@ -77,7 +77,6 @@ namespace ModbusControlSpace
         public string ProjectPath; // Path of current project file (null if none, assigned if open or tried to open)
         public CProject Project; // Loaded project
         private bool ProjectIsOpen; // true if project is successully opened
-        private string LocalOverrideUsedName; // assigned to localoverride name is localoverride used, null or empty if not
         private bool ConnectionInUse; // true while connecting, connected or disconnecting
         private bool ConnectionIsOpen; // true while having a successful connection
         private bool PollingIsStarted; // default: start polling if connection is opened
@@ -97,8 +96,8 @@ namespace ModbusControlSpace
         private Thread UpdaterThread;   // Updater thread
         private Object UpdaterLock = new Object();  // lock for safely terminating the updater thread
         private bool AlternateWriteUseFC16;
-        private string LocalOverridesFilename = "LocalOverrides.xml";
         private bool Loading;
+        private CommandlineProc CommandlineArgs;
 
         // a write entry
         private class WriteEntry
@@ -207,7 +206,6 @@ namespace ModbusControlSpace
 
             // And use them
             Options.StopOnError = Settings1.Roaming.StopOnError;
-            Options.UseLocalOverrides = Settings1.Roaming.UseLocalOverrides;
             Options.BeepOnInputError = Settings1.Roaming.BeepOnInputError;
             Options.AutoNextRowOnEnter = Settings1.Roaming.AutoNextRowOnEnter;
             Options.AutoStartEdit = Settings1.Roaming.AutoStartEdit;
@@ -244,13 +242,6 @@ namespace ModbusControlSpace
             Logger1.TheLogFilter.LogBridgeInfo = Settings1.Roaming.Logger.LogBridgeInfo;
             Logger1.TheLogFilter.LogBridgeData = Settings1.Roaming.Logger.LogBridgeData;
             Logger1.TheLogFilter.LogBridgeDecode = Settings1.Roaming.Logger.LogBridgeDecode;
-
-            // For a new user the localoverrides file will not exist yet, don't panic, just create the default.
-            // If there is an old localoverrides file (mydocuments\Modbuscontrol\localoverrides.xml) and it has active overrides, then
-            // copy the file to the new location (%appdata%\roaming\ed&a\Modbuscontrol\.), rename it with 'old', and inform the user.
-            // We don't actually migrate, too much work for few users.
-            //TODO: LocalOverrides wordt afgevoerd?
-            //MigrateLocalOverrides();
 
             // Add PDF files to the help menu, if any
             // Use insert counter to insert at the begin of the menu
@@ -316,7 +307,7 @@ namespace ModbusControlSpace
             Version PrevVers = new Version(Settings1.Shared.LastRunVersion.Major, Settings1.Shared.LastRunVersion.Minor, Settings1.Shared.LastRunVersion.Build);
             if (CurVers.CompareTo(PrevVers) > 0)
             {
-                // ShowReleaseNotes, if any
+                // show release notes, if any
                 ShowReleaseNotes();
             }
 
@@ -332,42 +323,45 @@ namespace ModbusControlSpace
                 UpdaterThread.Start();
             }
 
-            // got command line parameters?
-            // voorlopig alleen projectfile
-            int NrArgs = Environment.GetCommandLineArgs().Length;
-            if (NrArgs >= 2)
+            // process command line parameters
+            CommandlineArgs = new CommandlineProc();
+            try
             {
-                // assume the first is an mbc project file
-                ProjectPath = Environment.GetCommandLineArgs()[1];
+                CommandlineArgs.Load();
 
-                // load project
-                LoadProject(ProjectPath);
-
-                // Update program's title
-                UpdateTitle();
-                // Enable/disable menu items and toolbar buttons
-                UpdateMenus();
-                UpdateStatusBar();
-
-                // autostart communication
-                // if configured in mbc or override: use that
-                // if not configured: autostart
-                CheckAutoStart(true, true);
-
-                // show error if there are more parameters
-                if (NrArgs >= 3)
+                // filename passed?
+                if (!String.IsNullOrEmpty(CommandlineArgs.File1))
                 {
-                    MessageBox.Show("Error: Unsupported command-line parameters!",
-                        this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    // got filename
+                    ProjectPath = CommandlineArgs.File1;
+
+                    // load project
+                    LoadProject(ProjectPath);
+
+                    // Update program's title
+                    UpdateTitle();
+                    // Enable/disable menu items and toolbar buttons
+                    UpdateMenus();
+                    UpdateStatusBar();
+
+                    // autostart communication
+                    // if configured in mbc: use that
+                    // if not configured: autostart
+                    CheckAutoStart(true, true);
                 }
             }
-            else
+            catch (Exception ex)
             {
-                // Enable/disable menu items and toolbar buttons
-                UpdateMenus();
-                UpdateStatusBar();
+                string msg = "Command line argument error: " + Environment.NewLine
+                            + ex.Message;
+                MessageBox.Show(msg, "ModbusControl", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                // continue after showing the error
             }
 
+            // Enable/disable menu items and toolbar buttons
+            UpdateMenus();
+            UpdateStatusBar();
         }
 
         /// <summary>
@@ -400,7 +394,6 @@ namespace ModbusControlSpace
             // Update the current settings
             Settings1.Roaming.MbcMruList = recentFilesMenuItem.GetList();
             Settings1.Roaming.StopOnError = Options.StopOnError;
-            Settings1.Roaming.UseLocalOverrides = Options.UseLocalOverrides;
             Settings1.Roaming.BeepOnInputError = Options.BeepOnInputError;
             Settings1.Roaming.AutoNextRowOnEnter = Options.AutoNextRowOnEnter;
             Settings1.Roaming.AutoStartEdit = Options.AutoStartEdit;
@@ -585,7 +578,7 @@ namespace ModbusControlSpace
             UpdateStatusBar();
 
             // autostart communication
-            // if configured in mbc or override: use that
+            // if configured in mbc: use that
             // if not configured: no autostart
             CheckAutoStart(false, false);
         }
@@ -602,29 +595,11 @@ namespace ModbusControlSpace
             }
 
             // pass parameters
-            SaveConfigurationForm1.LocalOverrideUsed = Project.LocalOverrideParametersUsed;
             SaveConfigurationForm1.SizeWidth = this.Width;
             SaveConfigurationForm1.SizeHeight = this.Height;
             SaveConfigurationForm1.Project = Project;
+            SaveConfigurationForm1.OverridesWarning = CommandlineArgs.IsOverrideUsed();
             SaveConfigurationForm1.ShowDialog();
-        }
-
-        private void editLocalOverridesMenuItem_Click(object sender, EventArgs e)
-        {
-            // Make path
-            string filepath = Path.Combine(Settings1.StoreRoamingDir, LocalOverridesFilename);
-
-            // File exists?
-            if (File.Exists(filepath))
-            {
-                StartEditor(filepath);
-            }
-            else
-            {
-                // Show error with expected path+name 
-                MessageBox.Show("Error: File does not exist!" + Environment.NewLine + filepath,
-                    this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
         }
 
         /// <summary>
@@ -719,7 +694,7 @@ namespace ModbusControlSpace
                 UpdateStatusBar();
 
                 // autostart communication
-                // if configured in mbc or override: use that
+                // if configured in mbc: use that
                 // if not configured: no autostart
                 CheckAutoStart(false, false);
             }
@@ -754,7 +729,7 @@ namespace ModbusControlSpace
                 UpdateStatusBar();
 
                 // autostart communication
-                // if configured in mbc or override: use that
+                // if configured in mbc: use that
                 // if not configured: use saved state
                 CheckAutoStart(SavedConnectionIsOpen, SavedPollingIsStarted);
             }
@@ -785,7 +760,10 @@ namespace ModbusControlSpace
         {
             ConfigForm configform = new ConfigForm();
 
-            configform.LocalOverrideUsed = Project.LocalOverrideParametersUsed;
+            // commandline overrides melden
+            configform.OverridesWarning = CommandlineArgs.IsOverrideUsed();
+
+            // pass project values to form
             configform.ConnectionInUse = ConnectionInUse;
             configform.ConnectionType = Project.Connection.ConnectionType;
             configform.ConnectionSerialPort = Project.Connection.SerialPort;
@@ -810,6 +788,8 @@ namespace ModbusControlSpace
             configform.ModbusTcpBridgeEnable = Project.ModbusTcpBridge.Enable;
             configform.ModbusTcpBridgeIPPort = Project.ModbusTcpBridge.IPPort;
             // Apply button callback
+
+            // set Apply handler
             configform.OnApply += this.ConfigApplyHandler;
 
             if (configform.ShowDialog() == System.Windows.Forms.DialogResult.OK)
@@ -905,7 +885,6 @@ namespace ModbusControlSpace
             OptionsForm optionsForm = new OptionsForm();
 
             optionsForm.StopOnError = Options.StopOnError;
-            optionsForm.UseLocalOverrides = Options.UseLocalOverrides;
             optionsForm.BeepOnInputError = Options.BeepOnInputError;
             optionsForm.AutoNextRowOnEnter = Options.AutoNextRowOnEnter;
             optionsForm.AutoStartEdit = Options.AutoStartEdit;
@@ -925,7 +904,6 @@ namespace ModbusControlSpace
             {
                 // Save new settings
                 Options.StopOnError = optionsForm.StopOnError;
-                Options.UseLocalOverrides = optionsForm.UseLocalOverrides;
                 Options.BeepOnInputError = optionsForm.BeepOnInputError;
                 Options.AutoNextRowOnEnter = optionsForm.AutoNextRowOnEnter;
                 Options.AutoStartEdit = optionsForm.AutoStartEdit;
@@ -952,7 +930,6 @@ namespace ModbusControlSpace
             about.AppdataPath = Settings1.StoreRoamingPath;
             about.FormWidth = this.Width;
             about.FormHeight = this.Height;
-            about.LocalOverride = LocalOverrideUsedName;
             about.ShowDialog();
         }
 
@@ -981,6 +958,34 @@ namespace ModbusControlSpace
             pollOnceMenuItem_Click(sender, null);
         }
 
+        private void ApplyCommandlineToProjectConfig()
+        {
+            if (CommandlineArgs.ArgConnectionType != null)
+                Project.Connection.ConnectionType = (Global.eConnectionType)CommandlineArgs.ArgConnectionType;
+            if (CommandlineArgs.ArgPort != null)
+                Project.Connection.SerialPort = CommandlineArgs.ArgPort;
+            if (CommandlineArgs.ArgBaudrate != null)
+                Project.Connection.SerialBaudrate = (int)CommandlineArgs.ArgBaudrate;
+            if (CommandlineArgs.ArgParity != null)
+                Project.Connection.SerialParity = (Parity)CommandlineArgs.ArgParity;
+            if (CommandlineArgs.ArgEndofmessagetimeout != null)
+                Project.Connection.SerialEndOfMessageTimeout = (int)CommandlineArgs.ArgEndofmessagetimeout;
+            if (CommandlineArgs.ArgOnewireechosuppression != null)
+                Project.Connection.SerialOneWireEchoSuppression = (bool)CommandlineArgs.ArgOnewireechosuppression;
+            if (CommandlineArgs.ArgIPAddress != null)
+                Project.Connection.IPAddress = CommandlineArgs.ArgIPAddress;
+            if (CommandlineArgs.ArgIPPort != null)
+                Project.Connection.IPPort = (ushort)CommandlineArgs.ArgIPPort;
+            if (CommandlineArgs.ArgSlaveID != null)
+                Project.Connection.SlaveID = (byte)CommandlineArgs.ArgSlaveID;
+            if (CommandlineArgs.ArgResponsetimeout != null)
+                Project.Connection.ResponseTimeout = (int)CommandlineArgs.ArgResponsetimeout;
+            if (CommandlineArgs.ArgInterframedelay != null)
+                Project.Connection.InterFrameDelay = (int)CommandlineArgs.ArgInterframedelay;
+            if (CommandlineArgs.ArgSamplerate != null)
+                Project.Options.Samplerate = (int)CommandlineArgs.ArgSamplerate;
+        }
+
         /// <summary>
         /// Update the form's title
         /// 
@@ -996,8 +1001,6 @@ namespace ModbusControlSpace
             {
                 s += " (open failed)";
             }
-
-            if (string.IsNullOrEmpty(LocalOverrideUsedName) == false) s += " (local override used)";
 
             this.Text = s;
         }
@@ -1044,13 +1047,15 @@ namespace ModbusControlSpace
         }
 
         /// <summary>
-        /// Reset stuff before loading a project
+        /// Reset stuff before reloading a project or loading another project
         /// </summary>
         private void ResetBeforeLoad()
         {
-            // Set some default
             // reset zoom
             ChangeZoom(0);
+
+            // clear commandline overrides
+            CommandlineArgs.Clear();
         }
 
         /// <summary>
@@ -1065,7 +1070,6 @@ namespace ModbusControlSpace
 
             // clear
             ProjectIsOpen = false;
-            LocalOverrideUsedName = null;
             // dispose the save_configuration_form to clear its checkboxes
             if (SaveConfigurationForm1 != null)
             {
@@ -1134,42 +1138,14 @@ namespace ModbusControlSpace
             } while (bRetry);
 
             // ignore form size? then reset the 'seen' flags
-            // we will accept the form size from localoverride
             if ((options != null) && options.IgnoreFormSize)
             {
                 Project.FormSize.WidthSeen = false;
                 Project.FormSize.HeightSeen = false;
             }
 
-            // load local overrides
-            if (Options.UseLocalOverrides)
-            {
-                try
-                {
-                    Project.LocalOverrideFile = Path.Combine(Settings1.StoreRoamingDir, LocalOverridesFilename);
-                    bool IsLocalOverrideUsed = Project.LoadLocalOverride(System.IO.Path.GetFileName(ProjectPath));
-                    LocalOverrideUsedName = Project.LocalOverrideName;
-                }
-                catch (DirectoryNotFoundException)
-                {
-                    // ignore
-                }
-                catch (FileNotFoundException)
-                {
-                    // ignore
-                }
-                catch (Exception ex)
-                {
-                    // report exception
-                    string msg = "Error: Cannot load localoverrides file: " + Environment.NewLine
-                                + ex.Message
-                                + Environment.NewLine
-                                + "Continuing without localoverrides."; 
-                    MessageBox.Show(msg, "ModbusControl - Load of localoverride failed",
-                                    MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-                // on error: continue without localoverrides
-            }
+            // apply command line parameters as overrides
+            ApplyCommandlineToProjectConfig();
 
             // Here if load was successful
             ProjectIsOpen = true;
@@ -1366,7 +1342,7 @@ namespace ModbusControlSpace
             bool Opened = false;
             bool Continue = true;
 
-            while( Continue)
+            while (Continue)
             {
                 // got serial port name?
                 if (string.IsNullOrEmpty(Portname))
@@ -1478,7 +1454,7 @@ namespace ModbusControlSpace
             }
 
             // show message on statusbar
-            SetStatusBarMessage( "Connecting to " + ConnectionName + "...");
+            SetStatusBarMessage("Connecting to " + ConnectionName + "...");
             this.Update(); // make it visible immediately
 
             // open
@@ -1492,7 +1468,7 @@ namespace ModbusControlSpace
 
                 // success
                 Logger1.Log(Logger.LogType.Info, "Connection to " + ConnectionName + " opened");
-                SetStatusBarMessage( "Connected to " + ConnectionName);
+                SetStatusBarMessage("Connected to " + ConnectionName);
                 return true;
             }
             catch (Exception ex)
@@ -1539,7 +1515,7 @@ namespace ModbusControlSpace
             }
 
             // show message on statusbar
-            SetStatusBarMessage( "Connecting to " + ConnectionName + "...");
+            SetStatusBarMessage("Connecting to " + ConnectionName + "...");
             this.Update(); // make it visible immediately
 
             // open
@@ -1553,7 +1529,7 @@ namespace ModbusControlSpace
 
                 // success
                 Logger1.Log(Logger.LogType.Info, "Connection to " + ConnectionName + " opened");
-                SetStatusBarMessage( "Connected to " + ConnectionName);
+                SetStatusBarMessage("Connected to " + ConnectionName);
                 return true;
             }
             catch (Exception ex)
@@ -1736,7 +1712,7 @@ namespace ModbusControlSpace
         // returns false to stop polling or waiting for next poll
         private bool ContinuePolling()
         {
-            return     (CommsThread_StopFlag == false)
+            return (CommsThread_StopFlag == false)
                     && (PollingIsStarted || PollOnceIsStarted)
                     && MainPollingIsEnabled
                     && (TabIsChanged == false);
@@ -1889,7 +1865,7 @@ namespace ModbusControlSpace
 
         /// <summary>
         /// Convert holding register number to register offset 0-65536
-        /// Thows exception on error
+        /// Throws exception on error
         /// </summary>
         /// <returns>Register offset</returns>
         public UInt16 GetRegOffset(UInt32 Regnr)
@@ -2012,7 +1988,7 @@ namespace ModbusControlSpace
             }
 
             UpdateDiagnosticsCounters();
-            ShowForm( DiagnosticscountersForm1);
+            ShowForm(DiagnosticscountersForm1);
         }
 
         private void loggingToolStripMenuItem_Click(object sender, EventArgs e)
@@ -2043,7 +2019,7 @@ namespace ModbusControlSpace
                 UpdateStatusBar();
 
                 // autostart communication
-                // if configured in mbc or override: use that
+                // if configured in mbc: use that
                 // if not configured: no autostart
                 CheckAutoStart(false, false);
             }
@@ -2138,7 +2114,7 @@ namespace ModbusControlSpace
 
             // update the screen quickly
             UpdateDiagnosticsCounters();
-        
+
             UpdateStatusBar();
         }
 
@@ -2181,7 +2157,7 @@ namespace ModbusControlSpace
         /// <param name="StartPolling">Start polling if connection opened</param>
         private void CheckAutoStart(bool aDefaultOpen, bool aStartPolling)
         {
-            // if configured in mbc or override: use that
+            // if configured in mbc: use that
             // if not configured: DefaultStart
             bool startcomm = ProjectIsOpen && Project.Options.AutostartSeen ? Project.Options.AutostartEnable : aDefaultOpen;
             if (startcomm)
@@ -2583,7 +2559,7 @@ namespace ModbusControlSpace
             }
 
             // show
-            ShowForm( CustomwriteForm);
+            ShowForm(CustomwriteForm);
         }
 
         private void customCommandToolStripMenuItem_Click(object sender, EventArgs e)
@@ -2628,7 +2604,7 @@ namespace ModbusControlSpace
         //  show error in the status bar
         public void SetStatusBarErrorMessage(string ErrorText)
         {
-            SetStatusBarMessage( ErrorText, true);
+            SetStatusBarMessage(ErrorText, true);
         }
 
         // Show a message in the status bar
@@ -2725,7 +2701,7 @@ namespace ModbusControlSpace
 
         #endregion
 
-        private void StartEditor( string file)
+        private void StartEditor(string file)
         {
             string EdCommand = String.Empty;
             string EdArg = String.Empty;
@@ -2739,7 +2715,7 @@ namespace ModbusControlSpace
                 {
                     // assuming the user has put quotes around %file if required
                     CmdLine = CmdLine.Replace("%file", file);
-                    Global.SplitCommandString(CmdLine, out EdCommand, out EdArg);
+                    Global.SplitCommandlineString(CmdLine, out EdCommand, out EdArg);
 #if DEBUGXX
                     MessageBox.Show(EdCommand + " " + EdArg, "Command line:", MessageBoxButtons.OK, MessageBoxIcon.Information);
 #endif
@@ -2828,7 +2804,7 @@ namespace ModbusControlSpace
                 UpdateStatusBar();
 
                 // autostart communication
-                // if configured in mbc or override: use that
+                // if configured in mbc: use that
                 // if not configured: no autostart
                 CheckAutoStart(false, false);
             }

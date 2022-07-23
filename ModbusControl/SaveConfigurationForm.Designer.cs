@@ -50,24 +50,29 @@
             // 
             // panelWarning
             // 
+            this.panelWarning.AutoSize = true;
             this.panelWarning.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panelWarning.Controls.Add(this.label2);
             this.panelWarning.Controls.Add(this.pictureBox1);
             this.panelWarning.Dock = System.Windows.Forms.DockStyle.Top;
             this.panelWarning.Location = new System.Drawing.Point(0, 0);
             this.panelWarning.Name = "panelWarning";
-            this.panelWarning.Size = new System.Drawing.Size(364, 53);
+            this.panelWarning.Size = new System.Drawing.Size(364, 64);
             this.panelWarning.TabIndex = 7;
             // 
             // label2
             // 
+            this.label2.AutoSize = true;
+            this.label2.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.label2.Location = new System.Drawing.Point(48, 7);
+            this.label2.Margin = new System.Windows.Forms.Padding(3);
+            this.label2.MaximumSize = new System.Drawing.Size(310, 0);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(291, 45);
+            this.label2.Size = new System.Drawing.Size(303, 52);
             this.label2.TabIndex = 1;
-            this.label2.Text = "Some parameters are overridden by a local override! \r\nIf you save the current con" +
-    "figuration to the mbc project file\r\nyou may overwrite some parameters with local" +
-    " overrides.";
+            this.label2.Text = "Some connection parameters are overridden by the command line! If you save the cu" +
+    "rrent configuration to the mbc project file\r\nyou may overwrite some parameters w" +
+    "ith the command line values!";
             // 
             // pictureBox1
             // 
@@ -90,7 +95,7 @@
             this.panel2.Controls.Add(this.checkboxConnection);
             this.panel2.Controls.Add(this.checkboxFormSize);
             this.panel2.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel2.Location = new System.Drawing.Point(0, 53);
+            this.panel2.Location = new System.Drawing.Point(0, 64);
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(364, 173);
             this.panel2.TabIndex = 8;
@@ -211,6 +216,7 @@
             this.Text = "Save project file";
             this.Load += new System.EventHandler(this.SaveConfigurationForm_Load);
             this.panelWarning.ResumeLayout(false);
+            this.panelWarning.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.panel2.ResumeLayout(false);
             this.panel2.PerformLayout();

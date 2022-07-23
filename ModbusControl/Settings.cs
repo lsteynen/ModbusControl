@@ -94,7 +94,6 @@ namespace ModbusControlSpace
 
             // settings
             public bool StopOnError;
-            public bool UseLocalOverrides;
             public bool BeepOnInputError;
             public bool AutoNextRowOnEnter;
             public bool AutoStartEdit;
@@ -124,7 +123,6 @@ namespace ModbusControlSpace
             {
                 // sets defaults
                 StopOnError = false;
-                UseLocalOverrides = true;
                 BeepOnInputError = true;
                 AutoNextRowOnEnter = false;
                 AutoStartEdit = false;
@@ -197,7 +195,6 @@ namespace ModbusControlSpace
 
                 // read elements
                 ReadElementBool(xroot, "stoponerror", ref StopOnError);
-                ReadElementBool(xroot, "uselocaloverrides", ref UseLocalOverrides);
                 ReadElementBool(xroot, "beeponinputerror", ref BeepOnInputError);
                 ReadElementBool(xroot, "autonextrowonenter", ref AutoNextRowOnEnter);
                 ReadElementBool(xroot, "autostartedit", ref AutoStartEdit);
@@ -246,7 +243,6 @@ namespace ModbusControlSpace
 
                 // write data
                 WriteElementBool(xroot, "stoponerror", StopOnError);
-                WriteElementBool(xroot, "uselocaloverrides", UseLocalOverrides);
                 WriteElementBool(xroot, "beeponinputerror", BeepOnInputError);
                 WriteElementBool(xroot, "autonextrowonenter", AutoNextRowOnEnter);
                 WriteElementBool(xroot, "autostartedit", AutoStartEdit);

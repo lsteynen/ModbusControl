@@ -21,15 +21,6 @@ namespace ModbusControlSpace
             }
         }
 
-        public bool UseLocalOverrides
-        {
-            get { return checkboxUseLocalOverrides.Checked; }
-            set
-            {
-                checkboxUseLocalOverrides.Checked = value;
-            }
-        }
-
         public bool BeepOnInputError
         {
             get { return checkboxBeepOnInputError.Checked; }

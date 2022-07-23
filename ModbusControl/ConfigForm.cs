@@ -15,7 +15,7 @@ namespace ModbusControlSpace
 
         // Properties - settings
 
-        public bool LocalOverrideUsed
+        public bool OverridesWarning
         {
             // not used
             get { return panelWarning.Visible; }

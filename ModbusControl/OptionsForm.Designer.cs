@@ -31,7 +31,6 @@
             this.components = new System.ComponentModel.Container();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.buttonOK = new System.Windows.Forms.Button();
-            this.checkboxUseLocalOverrides = new System.Windows.Forms.CheckBox();
             this.checkboxStopOnCommsError = new System.Windows.Forms.CheckBox();
             this.checkboxBeepOnInputError = new System.Windows.Forms.CheckBox();
             this.CheckboxCheckForUpdates = new System.Windows.Forms.CheckBox();
@@ -76,17 +75,6 @@
             this.buttonOK.TabIndex = 10;
             this.buttonOK.Text = "OK";
             this.buttonOK.UseVisualStyleBackColor = true;
-            // 
-            // checkboxUseLocalOverrides
-            // 
-            this.checkboxUseLocalOverrides.AutoSize = true;
-            this.checkboxUseLocalOverrides.Location = new System.Drawing.Point(223, 33);
-            this.checkboxUseLocalOverrides.Name = "checkboxUseLocalOverrides";
-            this.checkboxUseLocalOverrides.Size = new System.Drawing.Size(116, 17);
-            this.checkboxUseLocalOverrides.TabIndex = 1;
-            this.checkboxUseLocalOverrides.Text = "Use local overrides";
-            this.toolTip1.SetToolTip(this.checkboxUseLocalOverrides, "Enables the local overrides mechanism");
-            this.checkboxUseLocalOverrides.UseVisualStyleBackColor = true;
             // 
             // checkboxStopOnCommsError
             // 
@@ -202,7 +190,7 @@
             // checkboxIgnoreFormSizeOnReload
             // 
             this.checkboxIgnoreFormSizeOnReload.AutoSize = true;
-            this.checkboxIgnoreFormSizeOnReload.Location = new System.Drawing.Point(223, 54);
+            this.checkboxIgnoreFormSizeOnReload.Location = new System.Drawing.Point(223, 33);
             this.checkboxIgnoreFormSizeOnReload.Name = "checkboxIgnoreFormSizeOnReload";
             this.checkboxIgnoreFormSizeOnReload.Size = new System.Drawing.Size(182, 17);
             this.checkboxIgnoreFormSizeOnReload.TabIndex = 12;
@@ -346,7 +334,6 @@
             this.Controls.Add(this.numericLoggerCapacity);
             this.Controls.Add(this.CheckboxCheckForUpdates);
             this.Controls.Add(this.checkboxBeepOnInputError);
-            this.Controls.Add(this.checkboxUseLocalOverrides);
             this.Controls.Add(this.checkboxStopOnCommsError);
             this.Controls.Add(this.buttonCancel);
             this.Controls.Add(this.buttonOK);
@@ -370,7 +357,6 @@
 
         private System.Windows.Forms.Button buttonCancel;
         private System.Windows.Forms.Button buttonOK;
-        private System.Windows.Forms.CheckBox checkboxUseLocalOverrides;
         private System.Windows.Forms.CheckBox checkboxStopOnCommsError;
         private System.Windows.Forms.CheckBox checkboxBeepOnInputError;
         private System.Windows.Forms.CheckBox CheckboxCheckForUpdates;

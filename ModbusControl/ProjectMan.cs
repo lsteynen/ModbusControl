@@ -132,9 +132,6 @@ namespace ModbusControlSpace
         public TOptions Options; // Options settings
         public TModbusTcpBridge ModbusTcpBridge; // Modbus/TCP bridge settings
         public List<TTab> TabsList; // List with all tab pages
-        public string LocalOverrideFile;
-        public string LocalOverrideName;
-        public bool LocalOverrideParametersUsed;
 
         private XDocument XmlDoc; // doc holding the current xml mbc project file, for possibility to save
         private XElement XmlRootNode; // root node of the document
@@ -184,9 +181,6 @@ namespace ModbusControlSpace
         /// <param name="path">Path to mbc file</param>
         public void Load(string path)
         {
-            // reset the local override flag
-            LocalOverrideParametersUsed = false;
-
             // Load xml document into XmlDoc
             // A previous document will be discarded when a new is loaded
             //XmlDoc = XDocument.Load(path, LoadOptions.PreserveWhitespace | LoadOptions.SetLineInfo);
@@ -239,77 +233,6 @@ namespace ModbusControlSpace
                     + "Line " + e.Exception.LineNumber.ToString() + ", column " + e.Exception.LinePosition.ToString() + ".";
 
             throw new XmlSchemaException(Msg);
-        }
-
-        /// <summary>
-        /// Load local overrides for this project
-        /// Throws exception on error
-        /// </summary>
-        /// returns true if localoverride is found, else false
-        public bool LoadLocalOverride(string path)
-        {
-            string Filename = System.IO.Path.GetFileName(path);
-            bool IsFound = false;
-            LocalOverrideName = null;
-
-            // Load xml document into xdoc
-            // A previous document will be discarded when a new is loaded
-            XDocument xdoc = XDocument.Load(LocalOverrideFile);
-
-            // select <LocalOverrides> element as our root
-            XElement xroot = xdoc.Element("LocalOverrides");
-            if (xroot == null)
-            {
-                // could not find <LocalOverrides> element
-                // try lower case
-                xroot = xdoc.Element("localoverrides");
-                if (xroot == null)
-                {
-                    throw new XmlException("XML root element <localoverrides> not found. The localoverrides file should have one root element <localoverrides>.");
-                }
-            }
-
-            // search all <Project> elements for a matching project name
-            IEnumerable<XElement> projlist = GetAllElements(xroot, "Project", eReq.Optional);
-            foreach (XElement proj in projlist)
-            {
-                // See if any of the project names match
-                IEnumerable<XElement> namelist = GetAllElements(proj, "Name", eReq.Required);
-                // Parse all names of this project
-                foreach (XElement projname in namelist)
-                {
-                    string pname = projname.Value.Trim();
-                    if (WildcardMatch(Filename, pname, false))
-                    {
-                        // got a match, publish the name, end search
-                        LocalOverrideName = pname;
-                        IsFound = true;
-                        break;
-                    }
-                }
-
-                // if found: use these parameters
-                if (IsFound)
-                {
-                    // process one <Size> element
-                    LocalOverrideParametersUsed |= ProcessSizeElement(proj);
-
-                    // process one <Modbus> element
-                    LocalOverrideParametersUsed |= ProcessModbusElement(proj, eReq.Optional);
-
-                    // process one <modbustcpserver>
-                    LocalOverrideParametersUsed |= ProcessModbustcpserverElement(proj);
-
-                    // process one <autostart>
-                    // do this after the tabs are loaded
-                    ProcessAutostartElement(proj);
-
-                    // end search
-                    break;
-                }
-            }
-
-            return IsFound;
         }
 
         /// <summary>
@@ -456,7 +379,7 @@ namespace ModbusControlSpace
                     Seen = true;
                     string TmpString = xe2.Value.Trim();
                     UInt32 TmpValue;
-                    if ((UInt32.TryParse(TmpString, out TmpValue) && (TmpValue <= 99999999))
+                    if ((UInt32.TryParse(TmpString, out TmpValue) && (TmpValue <= Int32.MaxValue))
                         && (TmpValue >= 50))
                     {
                         Connection.SerialBaudrate = (int)TmpValue;
@@ -464,7 +387,7 @@ namespace ModbusControlSpace
                     else
                     {
                         TFilePosition fp = GetFilePos(xe2);
-                        throw new XmlException("XML element <" + xe2.Name + "> has an invalid value. Valid values are 50 - 99999999." + Environment.NewLine + LimitXmlText(xe2.ToString()) + Environment.NewLine, null, fp.Line, fp.Col);
+                        throw new XmlException("XML element <" + xe2.Name + "> has an invalid value. Valid values are 50 - " + Int32.MaxValue.ToString() + "." + Environment.NewLine + LimitXmlText(xe2.ToString()) + Environment.NewLine, null, fp.Line, fp.Col);
                     }
                 }
 
@@ -492,16 +415,16 @@ namespace ModbusControlSpace
                 {
                     Seen = true;
                     string TmpString = xe2.Value.Trim();
-                    // get value, limit range 1 - 9999999
+                    // get value, limit range 1 - 2147483647
                     UInt32 TmpValue;
-                    if (uint.TryParse(TmpString, out TmpValue) && (TmpValue >= 1) && (TmpValue <= 9999999))
+                    if (uint.TryParse(TmpString, out TmpValue) && (TmpValue >= 1) && (TmpValue <= 2147483647))
                     {
                         Connection.SerialEndOfMessageTimeout = (int)TmpValue;
                     }
                     else
                     {
                         TFilePosition fp = GetFilePos(xe2);
-                        throw new XmlException("XML element <" + xe2.Name + "> has an invalid value. Valid values are 1 - 9999999." + Environment.NewLine + LimitXmlText(xe2.ToString()) + Environment.NewLine, null, fp.Line, fp.Col);
+                        throw new XmlException("XML element <" + xe2.Name + "> has an invalid value. Valid values are 1 - 2147483647." + Environment.NewLine + LimitXmlText(xe2.ToString()) + Environment.NewLine, null, fp.Line, fp.Col);
                     }
                 }
 
@@ -592,16 +515,16 @@ namespace ModbusControlSpace
                 {
                     Seen = true;
                     string TmpString = xe2.Value.Trim();
-                    // get value, limit range 1 - 9999999
+                    // get value, limit range 1 - 2147483647
                     UInt32 TmpValue;
-                    if (UInt32.TryParse(TmpString, out TmpValue) && (TmpValue >= 1) && (TmpValue <= 9999999))
+                    if (UInt32.TryParse(TmpString, out TmpValue) && (TmpValue >= 1) && (TmpValue <= 2147483647))
                     {
                         Connection.ResponseTimeout = (int)TmpValue;
                     }
                     else
                     {
                         TFilePosition fp = GetFilePos(xe2);
-                        throw new XmlException("XML element <" + xe2.Name + "> has an invalid value. Valid values are 1 - 9999999." + Environment.NewLine + LimitXmlText(xe2.ToString()) + Environment.NewLine, null, fp.Line, fp.Col);
+                        throw new XmlException("XML element <" + xe2.Name + "> has an invalid value. Valid values are 1 - 2147483647." + Environment.NewLine + LimitXmlText(xe2.ToString()) + Environment.NewLine, null, fp.Line, fp.Col);
                     }
                 }
 
@@ -767,38 +690,18 @@ namespace ModbusControlSpace
                 {
                     Seen = true;
                     string TmpString = xe2.Value.Trim();
-                    // get value, limit range 0 - 99999999
+                    // get value, limit range 0 - 2147483647
                     UInt32 TmpValue;
-                    if (UInt32.TryParse(TmpString, out TmpValue) && (TmpValue <= 99999999))
+                    if (UInt32.TryParse(TmpString, out TmpValue) && (TmpValue <= 2147483647))
                     {
                         Options.Samplerate = (int)TmpValue;
                     }
                     else
                     {
                         TFilePosition fp = GetFilePos(xe2);
-                        throw new XmlException("XML element <" + xe2.Name + "> has an invalid value. Valid values are 0 - 99999999." + Environment.NewLine + LimitXmlText(xe2.ToString()) + Environment.NewLine, null, fp.Line, fp.Col);
+                        throw new XmlException("XML element <" + xe2.Name + "> has an invalid value. Valid values are 0 - 2147483647." + Environment.NewLine + LimitXmlText(xe2.ToString()) + Environment.NewLine, null, fp.Line, fp.Col);
                     }
                 }
-
-                // ShowInfo 
-                //TODO
-                //xe2 = GetSingleElement(xe1, "ShowInfo", eReq.Optional);
-                //if (xe2 != null)
-                //{
-                //    Seen = true;
-                //    // accept true and false
-                //    string TmpString = xe2.Value.Trim();
-                //    bool TmpBool;
-                //    if (TryParseBool(TmpString, out TmpBool))
-                //    {
-                //        Options.ShowInfo = TmpBool;
-                //    }
-                //    else
-                //    {
-                //        TFilePosition fp = GetFilePos(xe2);
-                //        throw new XmlException("XML element <" + xe2.Name + "> has an invalid value. Valid values are 'true' or 'false'." + Environment.NewLine + LimitXmlText(xe2.ToString()) + Environment.NewLine, null, fp.Line, fp.Col);
-                //    }
-                //}
             }
 
             return Seen;
@@ -2370,33 +2273,5 @@ namespace ModbusControlSpace
             }
         }
 
-        /// <summary>
-        /// Help migrate the old localoverrides file; check if it has active entries.
-        /// Return true if it has active entries.
-        /// </summary>
-        public bool MigrateLocalOverridesHasActiveEntries(string oldFilePath)
-        {
-            // load old file
-            XDocument doc = XDocument.Load(oldFilePath);
-
-            // get doc root
-            XElement root = doc.Element("LocalOverrides");
-            if (root == null)
-            {
-                // try lower case
-                root = doc.Element("localoverrides");
-                if (root == null)
-                {
-                    // no valid root found
-                    return false;
-                }
-            }
-
-            // get all <Project>/<project> nodes
-            IEnumerable<XElement> projlist = GetAllElements(root, "Project", eReq.Optional);
-
-            // return true if <project> defined
-            return (projlist.Count() > 0);
-        }
     }
 }

@@ -42,11 +42,10 @@ namespace ModbusControlSpace
             this.editProjectFileMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openFileLocationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.recentFilesMenuItem = new RecentsToolStripMenuItem();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.saveConfigurationMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator6 = new System.Windows.Forms.ToolStripSeparator();
-            this.editLocalOverridesMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
             this.importExportToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.importRegistersFromFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exportRegistersToFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -96,7 +95,6 @@ namespace ModbusControlSpace
             this.btnFilterClose = new System.Windows.Forms.Button();
             this.btnFilterClear = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
-            this.recentFilesMenuItem = new RecentsToolStripMenuItem();
             this.statusStrip.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
@@ -164,8 +162,6 @@ namespace ModbusControlSpace
             this.toolStripSeparator2,
             this.saveConfigurationMenuItem,
             this.toolStripSeparator6,
-            this.editLocalOverridesMenuItem,
-            this.toolStripSeparator5,
             this.importExportToolStripMenuItem,
             this.toolStripSeparator8,
             this.exitMenuItem});
@@ -210,6 +206,15 @@ namespace ModbusControlSpace
             this.toolStripSeparator1.Name = "toolStripSeparator1";
             this.toolStripSeparator1.Size = new System.Drawing.Size(264, 6);
             // 
+            // recentFilesMenuItem
+            // 
+            this.recentFilesMenuItem.Enabled = false;
+            this.recentFilesMenuItem.Name = "recentFilesMenuItem";
+            this.recentFilesMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.F)));
+            this.recentFilesMenuItem.Size = new System.Drawing.Size(267, 22);
+            this.recentFilesMenuItem.Text = "Recent project &files";
+            this.recentFilesMenuItem.ItemClick += new System.EventHandler(this.recentFilesMenuItem_ItemClick);
+            // 
             // toolStripSeparator2
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
@@ -226,18 +231,6 @@ namespace ModbusControlSpace
             // 
             this.toolStripSeparator6.Name = "toolStripSeparator6";
             this.toolStripSeparator6.Size = new System.Drawing.Size(264, 6);
-            // 
-            // editLocalOverridesMenuItem
-            // 
-            this.editLocalOverridesMenuItem.Name = "editLocalOverridesMenuItem";
-            this.editLocalOverridesMenuItem.Size = new System.Drawing.Size(267, 22);
-            this.editLocalOverridesMenuItem.Text = "Edit local overrides file";
-            this.editLocalOverridesMenuItem.Click += new System.EventHandler(this.editLocalOverridesMenuItem_Click);
-            // 
-            // toolStripSeparator5
-            // 
-            this.toolStripSeparator5.Name = "toolStripSeparator5";
-            this.toolStripSeparator5.Size = new System.Drawing.Size(264, 6);
             // 
             // importExportToolStripMenuItem
             // 
@@ -685,15 +678,6 @@ namespace ModbusControlSpace
             this.label1.TabIndex = 0;
             this.label1.Text = "Find/Filter:";
             // 
-            // recentFilesMenuItem
-            // 
-            this.recentFilesMenuItem.Enabled = false;
-            this.recentFilesMenuItem.Name = "recentFilesMenuItem";
-            this.recentFilesMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.F)));
-            this.recentFilesMenuItem.Size = new System.Drawing.Size(267, 22);
-            this.recentFilesMenuItem.Text = "Recent project &files";
-            this.recentFilesMenuItem.ItemClick += new System.EventHandler(this.recentFilesMenuItem_ItemClick);
-            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
@@ -754,7 +738,6 @@ namespace ModbusControlSpace
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
         private RecentsToolStripMenuItem recentFilesMenuItem;
         private System.Windows.Forms.ToolStripMenuItem saveConfigurationMenuItem;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator5;
         private System.Windows.Forms.ToolStripButton OpenConnectionToolbutton;
         private System.Windows.Forms.ToolStripButton CloseConnectionToolbutton;
         private System.Windows.Forms.ToolStripButton PollOnceToolbutton;
@@ -762,7 +745,6 @@ namespace ModbusControlSpace
         private System.Windows.Forms.ToolStripMenuItem extraMenuItem;
         private System.Windows.Forms.ToolStripMenuItem configurationToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator6;
-        private System.Windows.Forms.ToolStripMenuItem editLocalOverridesMenuItem;
         private System.Windows.Forms.ToolStripMenuItem connectionToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem openConnectionMenuItem;
         private System.Windows.Forms.ToolStripMenuItem closeConnectionMenuItem;

@@ -111,10 +111,10 @@ namespace ModbusControlSpace
         }
 
         /// <summary>
-        /// Split a command line string into command (program) and arguments string
+        /// Split a commandline string into command (program) and arguments string
         /// Both can be quoted
         /// </summary>
-        public static bool SplitCommandString(string input, out string command, out string arguments)
+        public static bool SplitCommandlineString(string input, out string command, out string arguments)
         {
             command = null;
             arguments = null;

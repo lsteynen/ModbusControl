@@ -1,5 +1,5 @@
 ﻿// Afgeleide class van DataGtridView
-// Om processComd te kunnen overriden
+// Om ProcessDialogKey te kunnen overriden
 
 using System;
 using System.Windows.Forms;

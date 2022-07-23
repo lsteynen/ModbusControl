@@ -35,7 +35,6 @@
             this.labelVersion = new System.Windows.Forms.Label();
             this.logoPictureBox = new System.Windows.Forms.PictureBox();
             this.labelName = new System.Windows.Forms.Label();
-            this.labelLocalOverride = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.logoPictureBox)).BeginInit();
             this.SuspendLayout();
             // 
@@ -73,12 +72,12 @@
             this.labelDotNetVersion.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.labelDotNetVersion.UseMnemonic = false;
             // 
-            // labelMyDocuments
+            // labelAppdata
             // 
             this.labelAppdata.AutoSize = true;
             this.labelAppdata.Location = new System.Drawing.Point(147, 58);
             this.labelAppdata.MaximumSize = new System.Drawing.Size(0, 17);
-            this.labelAppdata.Name = "labelMyDocuments";
+            this.labelAppdata.Name = "labelAppdata";
             this.labelAppdata.Size = new System.Drawing.Size(97, 13);
             this.labelAppdata.TabIndex = 2;
             this.labelAppdata.Text = "labelMyDocuments";
@@ -120,18 +119,6 @@
             this.labelName.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.labelName.UseMnemonic = false;
             // 
-            // labelLocalOverride
-            // 
-            this.labelLocalOverride.AutoSize = true;
-            this.labelLocalOverride.Location = new System.Drawing.Point(147, 97);
-            this.labelLocalOverride.MaximumSize = new System.Drawing.Size(0, 17);
-            this.labelLocalOverride.Name = "labelLocalOverride";
-            this.labelLocalOverride.Size = new System.Drawing.Size(95, 13);
-            this.labelLocalOverride.TabIndex = 35;
-            this.labelLocalOverride.Text = "labelLocalOverride";
-            this.labelLocalOverride.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.labelLocalOverride.UseMnemonic = false;
-            // 
             // AboutBox1
             // 
             this.AcceptButton = this.okButton;
@@ -139,7 +126,6 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.AutoSize = true;
             this.ClientSize = new System.Drawing.Size(355, 169);
-            this.Controls.Add(this.labelLocalOverride);
             this.Controls.Add(this.labelName);
             this.Controls.Add(this.labelVersion);
             this.Controls.Add(this.labelAppdata);
@@ -173,6 +159,5 @@
         private System.Windows.Forms.Label labelVersion;
         private System.Windows.Forms.PictureBox logoPictureBox;
         private System.Windows.Forms.Label labelName;
-        private System.Windows.Forms.Label labelLocalOverride;
     }
 }

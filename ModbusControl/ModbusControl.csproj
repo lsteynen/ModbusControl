@@ -91,6 +91,7 @@
     <Compile Include="BytesToString.cs" />
     <Compile Include="ClientConnection.cs" />
     <Compile Include="ColorFromString.cs" />
+    <Compile Include="CommandlineProc.cs" />
     <Compile Include="ConfigForm.cs">
       <SubType>Form</SubType>
     </Compile>

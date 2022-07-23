@@ -17,8 +17,7 @@ namespace ModbusControlSpace
         public string AppdataPath { get; set; }
         public int FormWidth { get; set; }
         public int FormHeight { get; set; }
-        public string LocalOverride { get; set; }
-
+        
         public AboutBox1()
         {
             InitializeComponent();
@@ -34,11 +33,6 @@ namespace ModbusControlSpace
             //this.labelDotNetVersion.Text = ".NET CLR runtime version: " + Environment.Version;      // is the CLR version
             this.labelDotNetVersion.Text = ".NET framework version: " + GetDotnetFrameworkVersion();
             this.labelFormSize.Text = "Form size: " + FormWidth + " x " + FormHeight;
-            if (string.IsNullOrEmpty(LocalOverride))
-            {
-                LocalOverride = "(none)";
-            }
-            this.labelLocalOverride.Text = "Local override used: " + LocalOverride;
         }
 
         #region Assembly Attribute Accessors
