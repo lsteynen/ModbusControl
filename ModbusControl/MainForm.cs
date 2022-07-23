@@ -26,6 +26,7 @@ using LST.ModbusGridView;
 //TODO:
 // X LocalOverrides afvoeren, vervangen door command line opties
 //   - bij project reload: commandline negeren? reload, drag&drop, open-recent,...  melding geven? option? Philip?
+//   - manual bijwerken
 // - een read functie maken die bij een adres error de read in stukjes doet
 //   - moet bij elke deel-read data returnen, dus ik denk dat je een -start- en een -continue- functie nodig hebt, elk blocking zoals gewoonlijk
 // - strings: string2, string4, ... string250 (aantal chars)
@@ -334,6 +335,11 @@ namespace ModbusControlSpace
                 {
                     // got filename
                     ProjectPath = CommandlineArgs.File1;
+
+                    // get the full path of the file
+                    // in case a filename only or relative path was passed
+                    // anders werkt 'openFileLocationToolStripMenuItem.Enabled = ... ' niet met file-only 
+                    ProjectPath = Path.GetFullPath(ProjectPath);
 
                     // load project
                     LoadProject(ProjectPath);
@@ -1024,7 +1030,6 @@ namespace ModbusControlSpace
                 reloadProjectFileMenuItem.Enabled = !String.IsNullOrEmpty(ProjectPath);
                 ReloadToolbutton.Enabled = reloadProjectFileMenuItem.Enabled;
                 editProjectFileMenuItem.Enabled = (!String.IsNullOrEmpty(ProjectPath)) && File.Exists(ProjectPath);
-                //TODO: als je alleen een demo.mbc meegeeft op de command line werkt dit niet
                 openFileLocationToolStripMenuItem.Enabled = !String.IsNullOrEmpty(System.IO.Path.GetDirectoryName(ProjectPath));
                 saveConfigurationMenuItem.Enabled = ProjectIsOpen;
 
