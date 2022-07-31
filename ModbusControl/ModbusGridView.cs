@@ -2048,5 +2048,9 @@ namespace LST.ModbusGridView
             }
         }
 
+        private void grid_CellToolTipTextNeeded(object sender, DataGridViewCellToolTipTextNeededEventArgs e)
+        {
+            e.ToolTipText = "private void grid_CellToolTipTextNeeded(object sender, DataGridViewCellToolTipTextNeededEventArgs e)";
+        }
     }
 }

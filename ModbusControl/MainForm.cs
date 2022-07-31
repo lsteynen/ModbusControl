@@ -29,6 +29,7 @@ using LST.ModbusGridView;
 //   - manual bijwerken
 // - een read functie maken die bij een adres error de read in stukjes doet
 //   - moet bij elke deel-read data returnen, dus ik denk dat je een -start- en een -continue- functie nodig hebt, elk blocking zoals gewoonlijk
+// - Benoit vroeg een toggle button, in nieuwe kolom na value? option aan/uit?
 // - strings: string2, string4, ... string250 (aantal chars)
 //   - opgelet wat als stringlengte > maxframesize? in stukjes doen?
 // - read/write alle types van modbus registers
