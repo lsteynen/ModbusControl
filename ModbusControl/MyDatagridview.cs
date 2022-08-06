@@ -24,7 +24,7 @@ namespace LST.Helpers
         protected override bool ProcessDialogKey(Keys keyData)
         {
             // Option: stay on the same row after entering data
-            if (MoveToNextRowOnEnter == false) 
+            if (MoveToNextRowOnEnter == false)
             {
                 // modify behaviour
                 if (keyData == Keys.Enter)

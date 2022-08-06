@@ -96,6 +96,7 @@ namespace ModbusControlSpace
             public List<TBitfield> Bitfields; // List with bitfields
             public bool Expand;         // expand bitfields
             public Dictionary<int, string> EnumDict; // enum convert dictionary
+            public string HintText;         // hint text
         }
 
         // structure holding a bitfield definition
@@ -109,6 +110,7 @@ namespace ModbusControlSpace
             public Color ForeColor;     // foreground/font color
             public Color BackColor;     // background color
             public Dictionary<int, string> EnumDict; // enum convert dictionary
+            public string HintText;         // hint text
         }
 
         // structure holding a line and column position in the xml file
@@ -1098,30 +1100,30 @@ namespace ModbusControlSpace
                             }
 
                             // get description, optional
-                            textNode = GetSingleElement(fieldNode, "text", eReq.Optional);
-                            if (textNode != null)
+                            XElement node = GetSingleElement(fieldNode, "text", eReq.Optional);
+                            if (node != null)
                             {
-                                newBitfield.Description = textNode.Value;
+                                newBitfield.Description = node.Value;
                             }
 
                             // get type, optional
-                            typeNode = GetSingleElement(fieldNode, "type", eReq.Optional);
-                            if (typeNode != null)
+                            node = GetSingleElement(fieldNode, "type", eReq.Optional);
+                            if (node != null)
                             {
-                                if (GetBitfieldTypestringToFormat(typeNode.Value.Trim(), out newBitfield.Format))
+                                if (GetBitfieldTypestringToFormat(node.Value.Trim(), out newBitfield.Format))
                                 {
                                     // ok
                                 }
                                 else
                                 {
-                                    TFilePosition fp = GetFilePos(typeNode);
-                                    throw new XmlException("XML element <type> has an invalid value. Valid values are int, uint, hex, bin or ascii." + Environment.NewLine + LimitXmlText(typeNode.ToString()) + Environment.NewLine, null, fp.Line, fp.Col);
+                                    TFilePosition fp = GetFilePos(node);
+                                    throw new XmlException("XML element <type> has an invalid value. Valid values are int, uint, hex, bin or ascii." + Environment.NewLine + LimitXmlText(node.ToString()) + Environment.NewLine, null, fp.Line, fp.Col);
                                 }
                             }
 
                             // get minimumlength (optional)
-                            minlenNode = GetSingleElement(fieldNode, "minlen", eReq.Optional);
-                            if (minlenNode != null)
+                            node = GetSingleElement(fieldNode, "minlen", eReq.Optional);
+                            if (node != null)
                             {
                                 if (int.TryParse(minlenNode.Value.Trim(), out newBitfield.MinLen)
                                     && ((newBitfield.MinLen >= 1) && (newBitfield.MinLen <= 32)))
@@ -1130,39 +1132,46 @@ namespace ModbusControlSpace
                                 }
                                 else
                                 {
-                                    TFilePosition fp = GetFilePos(minlenNode);
-                                    throw new XmlException("XML element <minlen> has an invalid value. Valid values are 1 - 32." + Environment.NewLine + LimitXmlText(widthNode.ToString()) + Environment.NewLine, null, fp.Line, fp.Col);
+                                    TFilePosition fp = GetFilePos(node);
+                                    throw new XmlException("XML element <minlen> has an invalid value. Valid values are 1 - 32." + Environment.NewLine + LimitXmlText(node.ToString()) + Environment.NewLine, null, fp.Line, fp.Col);
                                 }
                             }
 
                             // get fcol foregroundcolor, optional
-                            fcolNode = GetSingleElement(fieldNode, "fcol", eReq.Optional);
-                            if (fcolNode != null)
+                            node = GetSingleElement(fieldNode, "fcol", eReq.Optional);
+                            if (node != null)
                             {
                                 try
                                 {
-                                    newBitfield.ForeColor = ColorFromString.ToColor(fcolNode.Value.Trim());
+                                    newBitfield.ForeColor = ColorFromString.ToColor(node.Value.Trim());
                                 }
                                 catch
                                 {
-                                    TFilePosition fp = GetFilePos(fcolNode);
-                                    throw new XmlException("XML element <fcol> has an invalid value. Valid values are RGB values 0-255 like '255,0,0'; HTML style hex colors #RRGGBB like #FF0000, or a color name like 'Red'." + Environment.NewLine + LimitXmlText(fcolNode.ToString()) + Environment.NewLine, null, fp.Line, fp.Col);
+                                    TFilePosition fp = GetFilePos(node);
+                                    throw new XmlException("XML element <fcol> has an invalid value. Valid values are RGB values 0-255 like '255,0,0'; HTML style hex colors #RRGGBB like #FF0000, or a color name like 'Red'." + Environment.NewLine + LimitXmlText(node.ToString()) + Environment.NewLine, null, fp.Line, fp.Col);
                                 }
                             }
 
                             // get bcol backgroundcolor, optional
-                            bcolNode = GetSingleElement(fieldNode, "bcol", eReq.Optional);
-                            if (bcolNode != null)
+                            node = GetSingleElement(fieldNode, "bcol", eReq.Optional);
+                            if (node != null)
                             {
                                 try
                                 {
-                                    newBitfield.BackColor = ColorFromString.ToColor(bcolNode.Value.Trim());
+                                    newBitfield.BackColor = ColorFromString.ToColor(node.Value.Trim());
                                 }
                                 catch
                                 {
-                                    TFilePosition fp = GetFilePos(bcolNode);
-                                    throw new XmlException("XML element <bcol> has an invalid value. Valid values are RGB values 0-255 like '255,0,0'; HTML style hex colors #RRGGBB like #FF0000, or a color name like 'Red'." + Environment.NewLine + LimitXmlText(bcolNode.ToString()) + Environment.NewLine, null, fp.Line, fp.Col);
+                                    TFilePosition fp = GetFilePos(node);
+                                    throw new XmlException("XML element <bcol> has an invalid value. Valid values are RGB values 0-255 like '255,0,0'; HTML style hex colors #RRGGBB like #FF0000, or a color name like 'Red'." + Environment.NewLine + LimitXmlText(node.ToString()) + Environment.NewLine, null, fp.Line, fp.Col);
                                 }
+                            }
+
+                            // get hint text, optional
+                            node = GetSingleElement(fieldNode, "hint", eReq.Optional);
+                            if (node != null)
+                            {
+                                newBitfield.HintText = node.Value;
                             }
 
                             // get enum, optional
@@ -1198,6 +1207,13 @@ namespace ModbusControlSpace
                             TFilePosition fp = GetFilePos(expandNode);
                             throw new XmlException("XML element <expandfields> has an invalid value. Valid values are 'true' or 'false'." + Environment.NewLine + LimitXmlText(expandNode.ToString()) + Environment.NewLine, null, fp.Line, fp.Col);
                         }
+                    }
+
+                    // get hint text, optional
+                    XElement hintNode = GetSingleElement(varNode, "hint", eReq.Optional);
+                    if (hintNode != null)
+                    {
+                        newVar.HintText = hintNode.Value;
                     }
 
                     // get enum, optional

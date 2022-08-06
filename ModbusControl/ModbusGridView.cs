@@ -19,7 +19,7 @@ namespace LST.ModbusGridView
     {
         private enum eRowType { Group, Reg, Field};
         private enum eGridColIndex { Reg, Descr, Properties, Value, Debuginfo};
-        enum dtColIndex { RowType, RowLevel, RowVisible, RegStr, Descr, InfoStr, FCol, BCol, ValueMode, ValueStr, HasChildren, Expanded};
+        enum dtColIndex { RowType, RowLevel, RowVisible, RegStr, Descr, InfoStr, FCol, BCol, ValueMode, ValueStr, HasChildren, Expanded, HintText};
         private const int DefaultVisible = 3;
         private const int ValueModeNormal = 0;
         private const int ValueModeEdited = 1;
@@ -59,6 +59,7 @@ namespace LST.ModbusGridView
             public Int32 Value32;       // actual value in 32-bit
             public string ValueStr;     // value as a string
             public Dictionary<int, string> EnumDict; // enum convert dictionary
+            public string HintText;     // hint / tooltip text
 
             // constructor
             public RegItem()
@@ -94,6 +95,7 @@ namespace LST.ModbusGridView
             public Int32 Value32;       // actual value in 32-bit
             public string ValueStr;     // value as a string
             public Dictionary<int, string> EnumDict; // enum convert dictionary
+            public string HintText;     // hint / tooltip text
 
             // constructor
             public RegfieldItem()
@@ -374,6 +376,20 @@ namespace LST.ModbusGridView
             }
         }
 
+        public void RegSetHintText(ListItem Item, string HintText)
+        {
+            if (Item is RegItem)
+            {
+                RegItem r = Item as RegItem;
+                r.HintText = HintText;
+            }
+            if (Item is RegfieldItem)
+            {
+                RegfieldItem f = Item as RegfieldItem;
+                f.HintText = HintText;
+            }
+        }
+
         private void UpdateInfoStr(ListItem Item)
         {
             if (Item is RegItem)
@@ -460,6 +476,7 @@ namespace LST.ModbusGridView
             data.Columns.Add("ValueStr", System.Type.GetType("System.String"));
             data.Columns.Add("HasChildren", System.Type.GetType("System.Boolean"));
             data.Columns.Add("Expanded", System.Type.GetType("System.Boolean"));
+            data.Columns.Add("HintText", System.Type.GetType("System.String"));
 
             // provide filtering
 #if !DEBUG_VISIBILITY
@@ -476,7 +493,8 @@ namespace LST.ModbusGridView
                         ri.ForeColor, ri.BackColor, 0,
                         "",                             // ValueStr
                         (ri.childrenList != null),      // HasChildren
-                        ri.expanded});                  // Expanded
+                        ri.expanded,                    // Expanded
+                        ri.HintText});                  // hint text
 
                     li.dataRowIndex = data.Rows.Count - 1;
                     li.dataRow = data.Rows[li.dataRowIndex];
@@ -495,7 +513,8 @@ namespace LST.ModbusGridView
                                     fi.ForeColor, fi.BackColor, 0,
                                     "",                             // ValueStr
                                     false,                          // HasChildren
-                                    false});                        // Expanded
+                                    false,                          // Expanded
+                                    fi.HintText});                  // hint text
 
                                 fi.dataRowIndex = data.Rows.Count - 1;
                                 fi.dataRow = data.Rows[fi.dataRowIndex];
@@ -2050,7 +2069,18 @@ namespace LST.ModbusGridView
 
         private void grid_CellToolTipTextNeeded(object sender, DataGridViewCellToolTipTextNeededEventArgs e)
         {
-            e.ToolTipText = "private void grid_CellToolTipTextNeeded(object sender, DataGridViewCellToolTipTextNeededEventArgs e)";
+            if ((e.ColumnIndex == (int)eGridColIndex.Descr) && (e.RowIndex >= 0))
+            {
+                // get datatable row from datagridview row
+                DataRowView dRow = grid.Rows[e.RowIndex].DataBoundItem as DataRowView;
+
+                // got a custom hint text?
+                object ho = dRow[(int)dtColIndex.HintText];
+                if (ho != DBNull.Value)
+                {
+                   e.ToolTipText = (string)dRow[(int)dtColIndex.HintText];
+                }
+            }
         }
     }
 }

@@ -27,6 +27,10 @@ using LST.ModbusGridView;
 // X LocalOverrides afvoeren, vervangen door command line opties
 //   - bij project reload: commandline negeren? reload, drag&drop, open-recent,...  melding geven? option? Philip?
 //   - manual bijwerken
+// - lange multi-line hinttext bij var en bitfield
+//   - lange hint wordt lang genoeg getoond?
+//     https://stackoverflow.com/questions/50400129/how-to-increase-display-time-of-datagridviews-column-header-tooltips
+//   - manual bijwerken
 // - een read functie maken die bij een adres error de read in stukjes doet
 //   - moet bij elke deel-read data returnen, dus ik denk dat je een -start- en een -continue- functie nodig hebt, elk blocking zoals gewoonlijk
 // - Benoit vroeg een toggle button, in nieuwe kolom na value? option aan/uit?
@@ -1233,6 +1237,7 @@ namespace ModbusControlSpace
                     if (var.Bitfields != null) fieldCount = var.Bitfields.Count;
                     newRegView.RegSetOptions(regItem, var.ForeColor, var.BackColor, var.MinLen, var.Decimals, var.Expand);
                     newRegView.RegSetEnums(regItem, var.EnumDict);
+                    newRegView.RegSetHintText(regItem, var.HintText);
 
                     // add the bitfields
                     if (fieldCount > 0)
@@ -1243,6 +1248,7 @@ namespace ModbusControlSpace
                             ModbusGridView.ListItem fieldItem = newRegView.RegAddField(regItem, var.Bitfields[i].Position, var.Bitfields[i].Width, var.Bitfields[i].Description, var.Bitfields[i].Format);
                             newRegView.RegFieldSetOptions(fieldItem, var.Bitfields[i].ForeColor, var.Bitfields[i].BackColor, var.Bitfields[i].MinLen, 0);
                             newRegView.RegSetEnums(fieldItem, var.Bitfields[i].EnumDict);
+                            newRegView.RegSetHintText(fieldItem, var.Bitfields[i].HintText);
                         }
                     }
                 }
