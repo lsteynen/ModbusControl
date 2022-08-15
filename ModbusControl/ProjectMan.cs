@@ -120,8 +120,8 @@ namespace ModbusControlSpace
 
         // list of XML tags to convert to lower case
         List<string> TagsValueToLowerList = new List<string> { "connection", "parity", "writeholdingregisterfc",
-                                        "int32endian", "float32endian" , "ascii16endian", "onewireechosuppression",
-                                        "showinfo", "enable", "rw", "expandfields", "type", "expandfields" };
+                                        "int32endian", "float32endian", "ascii16endian", "onewireechosuppression",
+                                        "showinfo", "enable", "rw", "expandfields", "type"};
 
         // Properties
 
@@ -1190,10 +1190,11 @@ namespace ModbusControlSpace
                         }
                     }
 
-                    // get expandfields, optional
-                    expandNode = GetSingleElement(varNode, "expandfields", eReq.Optional);
+                    // get expanded, optional
+                    // of oude versie <expandfields>
+                    expandNode = GetSingleElement(varNode, "expanded", eReq.Optional);
                     //TODO
-                    if (expandNode == null) expandNode = GetSingleElement(varNode, "expanded", eReq.Optional);
+                    if (expandNode == null) expandNode = GetSingleElement(varNode, "expandfields", eReq.Optional);
                     if (expandNode != null)
                     {
                         string TmpString = expandNode.Value.Trim();
