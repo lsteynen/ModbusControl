@@ -17,9 +17,9 @@ namespace LST.ModbusGridView
 {
     public partial class ModbusGridView : UserControl
     {
-        private enum eRowType { Group, Reg, Field};
-        private enum eGridColIndex { Reg, Descr, Properties, Value, Debuginfo};
-        enum dtColIndex { RowType, RowLevel, RowVisible, RegStr, Descr, InfoStr, FCol, BCol, ValueMode, ValueStr, HasChildren, Expanded, HintText};
+        private enum eRowType { Group, Reg, Field };
+        private enum eGridColIndex { Reg, Descr, Properties, Value, Debuginfo };
+        enum dtColIndex { RowType, RowLevel, RowVisible, RegStr, Descr, InfoStr, FCol, BCol, ValueMode, ValueStr, HasChildren, Expanded, HintText };
         private const int DefaultVisible = 3;
         private const int ValueModeNormal = 0;
         private const int ValueModeEdited = 1;
@@ -218,6 +218,11 @@ namespace LST.ModbusGridView
             set { setShowVarProperties(value); }
         }
 
+        public bool LongHintTime
+        {
+            set { setLongHintTime(value); }
+        }
+
         public void SetFilter(string text, bool caseSensitive)
         {
             if ((text != mFilterString)
@@ -364,15 +369,21 @@ namespace LST.ModbusGridView
         {
             if (Item is RegItem)
             {
-                RegItem r = Item as RegItem;
-                r.EnumDict = dict;
-                UpdateInfoStr(r);
+                if (dict != null)
+                {
+                    RegItem r = Item as RegItem;
+                    r.EnumDict = dict;
+                    UpdateInfoStr(r);
+                }
             }
             if (Item is RegfieldItem)
             {
-                RegfieldItem f = Item as RegfieldItem;
-                f.EnumDict = dict;
-                UpdateInfoStr(f);
+                if (dict != null)
+                {
+                    RegfieldItem f = Item as RegfieldItem;
+                    f.EnumDict = dict;
+                    UpdateInfoStr(f);
+                }
             }
         }
 
@@ -380,13 +391,19 @@ namespace LST.ModbusGridView
         {
             if (Item is RegItem)
             {
-                RegItem r = Item as RegItem;
-                r.HintText = HintText;
+                if (HintText != null)
+                {
+                    RegItem r = Item as RegItem;
+                    r.HintText = HintText;
+                }
             }
             if (Item is RegfieldItem)
             {
-                RegfieldItem f = Item as RegfieldItem;
-                f.HintText = HintText;
+                if (HintText != null)
+                {
+                    RegfieldItem f = Item as RegfieldItem;
+                    f.HintText = HintText;
+                }
             }
         }
 
@@ -766,9 +783,18 @@ namespace LST.ModbusGridView
             grid.Columns[(int)eGridColIndex.Debuginfo].Visible = value;
         }
 
+        private void setLongHintTime(bool value)
+        {
+            if( value)
+            {
+                grid.SetMaxTooltipTime();
+            }
+        }
+
         public void ExpandAll()
         {
             //TODO??
+
             //TFocusPos focus;
 
             //if (data == null)
@@ -2078,7 +2104,7 @@ namespace LST.ModbusGridView
                 object ho = dRow[(int)dtColIndex.HintText];
                 if (ho != DBNull.Value)
                 {
-                   e.ToolTipText = (string)dRow[(int)dtColIndex.HintText];
+                    e.ToolTipText = (string)dRow[(int)dtColIndex.HintText];
                 }
             }
         }

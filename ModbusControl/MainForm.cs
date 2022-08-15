@@ -24,24 +24,20 @@ using LST.Helpers;
 using LST.ModbusGridView;
 
 //TODO:
-// X LocalOverrides afvoeren, vervangen door command line opties
-//   - bij project reload: commandline negeren? reload, drag&drop, open-recent,...  melding geven? option? Philip?
+// >>> LocalOverrides afvoeren, vervangen door command line opties
+//   x implementatie
+//   x bij project reload: bij elke reload commandline negeren, geldt alleen bij opstart via commandline
 //   - manual bijwerken
-// - lange multi-line hinttext bij var en bitfield
-//   - lange hint wordt lang genoeg getoond?
-//     https://stackoverflow.com/questions/50400129/how-to-increase-display-time-of-datagridviews-column-header-tooltips
+
+// >>> lange multi-line hinttext bij var en bitfield
+//   x implementatie
+//   x lange hint wordt lang genoeg getoond?
+//   - in XML: <hint> of <tooltip> of <hinttext> of <longtext> (analog aan <text>) 
+//   - xmlvalidatie bijwerken
+//   - demo.mbc uitbreiden
 //   - manual bijwerken
-// - een read functie maken die bij een adres error de read in stukjes doet
-//   - moet bij elke deel-read data returnen, dus ik denk dat je een -start- en een -continue- functie nodig hebt, elk blocking zoals gewoonlijk
-// - Benoit vroeg een toggle button, in nieuwe kolom na value? option aan/uit?
-// - strings: string2, string4, ... string250 (aantal chars)
-//   - opgelet wat als stringlengte > maxframesize? in stukjes doen?
-// - read/write alle types van modbus registers
-//   - CustomRead en CustomWrite: read/write alle types van modbus registers
-// - Customcommand: uit een lijst kunnen kiezen? alleen de selected lijn? alleen de eerste lijn bij nothingselected?
-// - dynamic connectie: bij elke read of write: poort/connectie open, read/write, daarna terug sluiten
-//   - static connectie: poll_start = connect, read, wait, read, wait, ...   poll stop = disconnect, pollonce = connect/read/disconnect
-//   - de connect/disconnect knop kan dan eigenlijk vervallen
+
+
 
 namespace ModbusControlSpace
 {
@@ -1154,11 +1150,11 @@ namespace ModbusControlSpace
                 Project.FormSize.HeightSeen = false;
             }
 
-            // apply command line parameters as overrides
-            ApplyCommandlineToProjectConfig();
-
             // Here if load was successful
             ProjectIsOpen = true;
+
+            // apply command line parameters as overrides
+            ApplyCommandlineToProjectConfig();
 
             // pass configuration to CStringToValue
             Endians.Int32BigEndian = Project.Connection.Int32Endian == Global.eEndian.Big;
@@ -1251,6 +1247,12 @@ namespace ModbusControlSpace
                             newRegView.RegSetHintText(fieldItem, var.Bitfields[i].HintText);
                         }
                     }
+                }
+
+                // zet de hint tijd lang als er lange hints gebruikt zijn in het project
+                if (Project.HasHintTexts)
+                {
+                    newRegView.LongHintTime = true;
                 }
 
                 newRegView.FinalizeLoad();

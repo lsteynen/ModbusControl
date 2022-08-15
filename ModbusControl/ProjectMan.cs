@@ -14,8 +14,6 @@ using System.Linq;
 
 using LST.Helpers;
 
-//TODO: <expanded> ipv <expandchildren>, <expandfields> nog wel accepteren, updaten
-
 namespace ModbusControlSpace
 {
     /// <summary>
@@ -134,6 +132,7 @@ namespace ModbusControlSpace
         public TOptions Options; // Options settings
         public TModbusTcpBridge ModbusTcpBridge; // Modbus/TCP bridge settings
         public List<TTab> TabsList; // List with all tab pages
+        public bool HasHintTexts; // true if project has variables with hinttext defined
 
         private XDocument XmlDoc; // doc holding the current xml mbc project file, for possibility to save
         private XElement XmlRootNode; // root node of the document
@@ -1172,6 +1171,7 @@ namespace ModbusControlSpace
                             if (node != null)
                             {
                                 newBitfield.HintText = node.Value;
+                                HasHintTexts = true;
                             }
 
                             // get enum, optional
@@ -1214,6 +1214,7 @@ namespace ModbusControlSpace
                     if (hintNode != null)
                     {
                         newVar.HintText = hintNode.Value;
+                        HasHintTexts = true;
                     }
 
                     // get enum, optional
