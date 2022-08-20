@@ -1,6 +1,4 @@
-﻿//#define DEBUG_VISIBILITY
-
-using System;
+﻿using System;
 using System.Data;
 using System.Diagnostics;
 using System.Drawing;
@@ -10,6 +8,8 @@ using System.Runtime.InteropServices;
 
 using LST.Helpers;
 using ModbusControlSpace;
+
+//#define DEBUG_VISIBILITY
 
 //TODO: proberen om de beep bij Edit-Escape te vermijden? Lukte nog niet, is by design :-(
 
@@ -785,7 +785,7 @@ namespace LST.ModbusGridView
 
         private void setLongTooltipTime(bool value)
         {
-            if( value)
+            if (value)
             {
                 grid.SetMaxTooltipTime();
             }
@@ -793,34 +793,32 @@ namespace LST.ModbusGridView
 
         public void ExpandAll()
         {
-            //TODO??
+            TFocusPos focus;
 
-            //TFocusPos focus;
+            if (data == null)
+                return;
 
-            //if (data == null)
-            //    return;
+            // Expand all, show all child rows
+            // Keep focus on same row
 
-            //// Expand all, show all child rows
-            //// Keep focus on same row
+            focus = GetFocusedDataRow();
 
-            //focus = GetFocusedDataRow();
+            for (int dri = 0; dri < data.Rows.Count; ++dri)
+            {
+                DataRow dRow = data.Rows[dri];
 
-            //for (int dri = 0; dri < data.Rows.Count; ++dri)
-            //{
-            //    DataRow dRow = data.Rows[dri];
+                if ((bool)dRow[(int)dtColIndex.HasChildren])
+                {
+                    dRow[(int)dtColIndex.Expanded] = true;
+                }
 
-            //    if ((int)dRow[(int)dtColIndex.ChildrenCount] > 0)
-            //    {
-            //        dRow[(int)dtColIndex.Expanded] = true;
-            //    }
+                if (((int)dRow[(int)dtColIndex.RowVisible] & 1) == 0)
+                {
+                    dRow[(int)dtColIndex.RowVisible] = (int)dRow[(int)dtColIndex.RowVisible] | 1;
+                }
+            }
 
-            //    if (((int)dRow[(int)dtColIndex.RowVisible] & 1) == 0)
-            //    {
-            //        dRow[(int)dtColIndex.RowVisible] = (int)dRow[(int)dtColIndex.RowVisible] | 1;
-            //    }
-            //}
-
-            //FocusDataRow(focus);
+            FocusDataRow(focus);
         }
 
         public void CollapseAll()
@@ -1878,49 +1876,65 @@ namespace LST.ModbusGridView
             // Right button?
             if (e.Button == MouseButtons.Right)
             {
+                // hit in cell?
                 hitTestInfo = this.grid.HitTest(e.X, e.Y);
-
-                // Register/Descr/Properties column?
-                if ((hitTestInfo.Type == DataGridViewHitTestType.Cell) && (hitTestInfo.ColumnIndex < (int)eGridColIndex.Value))
+                if (hitTestInfo.Type == DataGridViewHitTestType.Cell)
                 {
-                    // remember which gridrow was clicked
-                    rightclickRowIndex = hitTestInfo.RowIndex;
+                    // Register column?
+                    if (hitTestInfo.ColumnIndex == (int)eGridColIndex.Reg)
+                    {
+                        // remember which gridrow was clicked
+                        rightclickRowIndex = hitTestInfo.RowIndex;
 
-                    // focus it
-                    grid.CurrentCell = null;
-                    grid.CurrentCell = grid.Rows[rightclickRowIndex].Cells[0];
+                        // focus this row
+                        grid.CurrentCell = null;
+                        grid.CurrentCell = grid.Rows[rightclickRowIndex].Cells[0];
 
-                    // show menu
-                    ContextMenuForFirstColumns.Show(this, e.X, e.Y);
-                }
+                        // show menu
+                        ContextMenuForRegColumn.Show(this, e.X, e.Y);
+                    }
+                    else
+                    // Value column?
+                    if (hitTestInfo.ColumnIndex == (int)eGridColIndex.Value)
+                    {
+                        // remember which gridrow was clicked
+                        rightclickRowIndex = hitTestInfo.RowIndex;
 
-                // Value column?
-                if ((hitTestInfo.Type == DataGridViewHitTestType.Cell) && (hitTestInfo.ColumnIndex == (int)eGridColIndex.Value))
-                {
-                    // remember which gridrow was clicked
-                    rightclickRowIndex = hitTestInfo.RowIndex;
+                        // focus this row
+                        grid.CurrentCell = null;
+                        grid.CurrentCell = grid.Rows[rightclickRowIndex].Cells[0];
 
-                    // focus it
-                    grid.CurrentCell = null;
-                    grid.CurrentCell = grid.Rows[rightclickRowIndex].Cells[0];
+                        // get current format
+                        DataRow dRow = (grid.Rows[rightclickRowIndex].DataBoundItem as DataRowView).Row;
 
-                    // get current format
-                    DataRow dRow = (grid.Rows[rightclickRowIndex].DataBoundItem as DataRowView).Row;
+                        // show current format with checked flags
+                        ModbusControlSpace.Global.eFormat curFormat = GetLineValueFormat(dRow);
+                        int curWidth = GetLineValueWidth(dRow);
+                        ((ToolStripMenuItem)ContextMenuForValueColumn.Items[0]).Checked = (curFormat == ModbusControlSpace.Global.eFormat.Int);
+                        ((ToolStripMenuItem)ContextMenuForValueColumn.Items[1]).Checked = (curFormat == ModbusControlSpace.Global.eFormat.UInt);
+                        ((ToolStripMenuItem)ContextMenuForValueColumn.Items[2]).Checked = (curFormat == ModbusControlSpace.Global.eFormat.Hex);
+                        ((ToolStripMenuItem)ContextMenuForValueColumn.Items[3]).Checked = (curFormat == ModbusControlSpace.Global.eFormat.Bin);
+                        // allow float for registers only, not bitfields
+                        ((ToolStripMenuItem)ContextMenuForValueColumn.Items[4]).Enabled = (curWidth >= 32);
+                        ((ToolStripMenuItem)ContextMenuForValueColumn.Items[4]).Checked = (curFormat == ModbusControlSpace.Global.eFormat.Float);
+                        ((ToolStripMenuItem)ContextMenuForValueColumn.Items[5]).Checked = (curFormat == ModbusControlSpace.Global.eFormat.ASCII);
 
-                    // show current format with checked flags
-                    ModbusControlSpace.Global.eFormat curFormat = GetLineValueFormat(dRow);
-                    int curWidth = GetLineValueWidth(dRow);
-                    ((ToolStripMenuItem)ContextMenuForValueColumn.Items[0]).Checked = (curFormat == ModbusControlSpace.Global.eFormat.Int);
-                    ((ToolStripMenuItem)ContextMenuForValueColumn.Items[1]).Checked = (curFormat == ModbusControlSpace.Global.eFormat.UInt);
-                    ((ToolStripMenuItem)ContextMenuForValueColumn.Items[2]).Checked = (curFormat == ModbusControlSpace.Global.eFormat.Hex);
-                    ((ToolStripMenuItem)ContextMenuForValueColumn.Items[3]).Checked = (curFormat == ModbusControlSpace.Global.eFormat.Bin);
-                    // allow float for registers only, not bitfields
-                    ((ToolStripMenuItem)ContextMenuForValueColumn.Items[4]).Enabled = (curWidth >= 32);
-                    ((ToolStripMenuItem)ContextMenuForValueColumn.Items[4]).Checked = (curFormat == ModbusControlSpace.Global.eFormat.Float);
-                    ((ToolStripMenuItem)ContextMenuForValueColumn.Items[5]).Checked = (curFormat == ModbusControlSpace.Global.eFormat.ASCII);
+                        // show menu
+                        ContextMenuForValueColumn.Show(this, e.X, e.Y);
+                    }
+                    else
+                    // other columns...
+                    {
+                        // remember which gridrow was clicked
+                        rightclickRowIndex = hitTestInfo.RowIndex;
 
-                    // show menu
-                    ContextMenuForValueColumn.Show(this, e.X, e.Y);
+                        // focus this row
+                        grid.CurrentCell = null;
+                        grid.CurrentCell = grid.Rows[rightclickRowIndex].Cells[0];
+
+                        // show menu
+                        ContextMenuForOtherColumns.Show(this, e.X, e.Y);
+                    }
                 }
             }
         }
@@ -2107,6 +2121,16 @@ namespace LST.ModbusGridView
                     e.ToolTipText = (string)dRow[(int)dtColIndex.Longdescr];
                 }
             }
+        }
+
+        private void expandAllToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ExpandAll();
+        }
+
+        private void collapseAllToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            CollapseAll();
         }
     }
 }

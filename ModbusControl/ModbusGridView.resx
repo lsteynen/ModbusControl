@@ -125,7 +125,7 @@
         AAEAAAD/////AQAAAAAAAAAMAgAAAFdTeXN0ZW0uV2luZG93cy5Gb3JtcywgVmVyc2lvbj00LjAuMC4w
         LCBDdWx0dXJlPW5ldXRyYWwsIFB1YmxpY0tleVRva2VuPWI3N2E1YzU2MTkzNGUwODkFAQAAACZTeXN0
         ZW0uV2luZG93cy5Gb3Jtcy5JbWFnZUxpc3RTdHJlYW1lcgEAAAAERGF0YQcCAgAAAAkDAAAADwMAAABq
-        BwAAAk1TRnQBSQFMAgEBAgEAAfABAAHwAQABCQEAAQkBAAT/AQkBAAj/AUIBTQE2AQQGAAE2AQQCAAEo
+        BwAAAk1TRnQBSQFMAgEBAgEAAfgBAAH4AQABCQEAAQkBAAT/AQkBAAj/AUIBTQE2AQQGAAE2AQQCAAEo
         AwABJAMAAQkDAAEBAQABCAUAAUQBARgAAYACAAGAAwACgAEAAYADAAGAAQABgAEAAoACAAPAAQABwAHc
         AcABAAHwAcoBpgEAATMFAAEzAQABMwEAATMBAAIzAgADFgEAAxwBAAMiAQADKQEAA1UBAANNAQADQgEA
         AzkBAAGAAXwB/wEAAlAB/wEAAZMBAAHWAQAB/wHsAcwBAAHGAdYB7wEAAdYC5wEAAZABqQGtAgAB/wEz
@@ -159,7 +159,7 @@
         EgABQgFNAT4HAAE+AwABKAMAASQDAAEJAwABAQEAAQEFAAFIFwAD/0kACw==
 </value>
   </data>
-  <metadata name="ContextMenuForFirstColumns.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+  <metadata name="ContextMenuForOtherColumns.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>127, 17</value>
   </metadata>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
@@ -256,4 +256,97 @@
   <metadata name="ContextMenuForValueColumn.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>341, 17</value>
   </metadata>
+  <metadata name="ContextMenuForRegColumn.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>556, 17</value>
+  </metadata>
+  <data name="toolStripMenuItem2.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        Qk02AwAAAAAAADYAAAAoAAAAEAAAABAAAAABABgAAAAAAAAAAADEDgAAxA4AAAAAAAAAAAAAAAAAAAAA
+        AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAzMz/zMz/zMz/zMz/zMz/
+        zMz/zMz/zMz/zMz/zMz/zMz/zMz/zMz/zMz/AAAAAAAAzMz/zMz/zMz/zMz/zMz/zMz/zMz/zMz/zMz/
+        zMz/zMz/zMz/zMz/zMz/AAAAAAAAzMz/zMz/zMz/zMz/zMz/zMz/zMz/zMz/zMz/zMz/zMz/zMz/zMz/
+        zMz/AAAAAAAAzMz/zMz/zMz/zMz/zMz/zMz/zMz/zMz/zMz/zMz/zMz/zMz/zMz/zMz/AAAAAAAAzMz/
+        zMz/zMz/zMz/zMz/zMz/zMz/zMz/zMz/zMz/zMz/zMz/zMz/zMz/AAAAAAAAzMz/zMz/zMz/zMz/zMz/
+        zMz/zMz/zMz/zMz/zMz/zMz/zMz/zMz/zMz/AAAAAAAAzMz/zMz/zMz/zMz/zMz/zMz/zMz/zMz/zMz/
+        zMz/zMz/zMz/zMz/zMz/AAAAAAAAzMz/zMz/zMz/zMz/zMz/zMz/zMz/zMz/zMz/zMz/zMz/zMz/zMz/
+        zMz/AAAAAAAAzMz/zMz/zMz/zMz/zMz/zMz/zMz/zMz/zMz/zMz/zMz/zMz/zMz/zMz/AAAAAAAAzMz/
+        zMz/zMz/zMz/zMz/zMz/zMz/zMz/zMz/zMz/zMz/zMz/zMz/zMz/AAAAAAAAzMz/zMz/zMz/zMz/zMz/
+        zMz/zMz/zMz/zMz/zMz/zMz/zMz/zMz/zMz/AAAAAAAAzMz/zMz/zMz/zMz/zMz/zMz/zMz/zMz/zMz/
+        zMz/zMz/zMz/zMz/zMz/AAAAAAAAzMz/zMz/zMz/zMz/zMz/zMz/zMz/zMz/zMz/zMz/zMz/zMz/zMz/
+        zMz/AAAAAAAAzMz/zMz/zMz/zMz/zMz/zMz/zMz/zMz/zMz/zMz/zMz/zMz/zMz/zMz/AAAAAAAAAAAA
+        AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+</value>
+  </data>
+  <data name="toolStripMenuItem3.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        Qk02AwAAAAAAADYAAAAoAAAAEAAAABAAAAABABgAAAAAAAAAAADEDgAAxA4AAAAAAAAAAAAAAAAAAAAA
+        AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAzP/MzP/MzP/MzP/MzP/M
+        zP/MzP/MzP/MzP/MzP/MzP/MzP/MzP/MzP/MAAAAAAAAzP/MzP/MzP/MzP/MzP/MzP/MzP/MzP/MzP/M
+        zP/MzP/MzP/MzP/MzP/MAAAAAAAAzP/MzP/MzP/MzP/MzP/MzP/MzP/MzP/MzP/MzP/MzP/MzP/MzP/M
+        zP/MAAAAAAAAzP/MzP/MzP/MzP/MzP/MzP/MzP/MzP/MzP/MzP/MzP/MzP/MzP/MzP/MAAAAAAAAzP/M
+        zP/MzP/MzP/MzP/MzP/MzP/MzP/MzP/MzP/MzP/MzP/MzP/MzP/MAAAAAAAAzP/MzP/MzP/MzP/MzP/M
+        zP/MzP/MzP/MzP/MzP/MzP/MzP/MzP/MzP/MAAAAAAAAzP/MzP/MzP/MzP/MzP/MzP/MzP/MzP/MzP/M
+        zP/MzP/MzP/MzP/MzP/MAAAAAAAAzP/MzP/MzP/MzP/MzP/MzP/MzP/MzP/MzP/MzP/MzP/MzP/MzP/M
+        zP/MAAAAAAAAzP/MzP/MzP/MzP/MzP/MzP/MzP/MzP/MzP/MzP/MzP/MzP/MzP/MzP/MAAAAAAAAzP/M
+        zP/MzP/MzP/MzP/MzP/MzP/MzP/MzP/MzP/MzP/MzP/MzP/MzP/MAAAAAAAAzP/MzP/MzP/MzP/MzP/M
+        zP/MzP/MzP/MzP/MzP/MzP/MzP/MzP/MzP/MAAAAAAAAzP/MzP/MzP/MzP/MzP/MzP/MzP/MzP/MzP/M
+        zP/MzP/MzP/MzP/MzP/MAAAAAAAAzP/MzP/MzP/MzP/MzP/MzP/MzP/MzP/MzP/MzP/MzP/MzP/MzP/M
+        zP/MAAAAAAAAzP/MzP/MzP/MzP/MzP/MzP/MzP/MzP/MzP/MzP/MzP/MzP/MzP/MzP/MAAAAAAAAAAAA
+        AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+</value>
+  </data>
+  <data name="toolStripMenuItem4.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        Qk02AwAAAAAAADYAAAAoAAAAEAAAABAAAAABABgAAAAAAAAAAADEDgAAxA4AAAAAAAAAAAAAAAAAAAAA
+        AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA/+Gg/+Gg/+Gg/+Gg/+Gg
+        /+Gg/+Gg/+Gg/+Gg/+Gg/+Gg/+Gg/+Gg/+GgAAAAAAAA/+Gg/+Gg/+Gg/+Gg/+Gg/+Gg/+Gg/+Gg/+Gg
+        /+Gg/+Gg/+Gg/+Gg/+GgAAAAAAAA/+Gg/+Gg/+Gg/+Gg/+Gg/+Gg/+Gg/+Gg/+Gg/+Gg/+Gg/+Gg/+Gg
+        /+GgAAAAAAAA/+Gg/+Gg/+Gg/+Gg/+Gg/+Gg/+Gg/+Gg/+Gg/+Gg/+Gg/+Gg/+Gg/+GgAAAAAAAA/+Gg
+        /+Gg/+Gg/+Gg/+Gg/+Gg/+Gg/+Gg/+Gg/+Gg/+Gg/+Gg/+Gg/+GgAAAAAAAA/+Gg/+Gg/+Gg/+Gg/+Gg
+        /+Gg/+Gg/+Gg/+Gg/+Gg/+Gg/+Gg/+Gg/+GgAAAAAAAA/+Gg/+Gg/+Gg/+Gg/+Gg/+Gg/+Gg/+Gg/+Gg
+        /+Gg/+Gg/+Gg/+Gg/+GgAAAAAAAA/+Gg/+Gg/+Gg/+Gg/+Gg/+Gg/+Gg/+Gg/+Gg/+Gg/+Gg/+Gg/+Gg
+        /+GgAAAAAAAA/+Gg/+Gg/+Gg/+Gg/+Gg/+Gg/+Gg/+Gg/+Gg/+Gg/+Gg/+Gg/+Gg/+GgAAAAAAAA/+Gg
+        /+Gg/+Gg/+Gg/+Gg/+Gg/+Gg/+Gg/+Gg/+Gg/+Gg/+Gg/+Gg/+GgAAAAAAAA/+Gg/+Gg/+Gg/+Gg/+Gg
+        /+Gg/+Gg/+Gg/+Gg/+Gg/+Gg/+Gg/+Gg/+GgAAAAAAAA/+Gg/+Gg/+Gg/+Gg/+Gg/+Gg/+Gg/+Gg/+Gg
+        /+Gg/+Gg/+Gg/+Gg/+GgAAAAAAAA/+Gg/+Gg/+Gg/+Gg/+Gg/+Gg/+Gg/+Gg/+Gg/+Gg/+Gg/+Gg/+Gg
+        /+GgAAAAAAAA/+Gg/+Gg/+Gg/+Gg/+Gg/+Gg/+Gg/+Gg/+Gg/+Gg/+Gg/+Gg/+Gg/+GgAAAAAAAAAAAA
+        AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+</value>
+  </data>
+  <data name="toolStripMenuItem5.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        Qk02AwAAAAAAADYAAAAoAAAAEAAAABAAAAABABgAAAAAAAAAAADEDgAAxA4AAAAAAAAAAAAAAAAAAAAA
+        AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAoP//oP//oP//oP//oP//
+        oP//oP//oP//oP//oP//oP//oP//oP//oP//AAAAAAAAoP//oP//oP//oP//oP//oP//oP//oP//oP//
+        oP//oP//oP//oP//oP//AAAAAAAAoP//oP//oP//oP//oP//oP//oP//oP//oP//oP//oP//oP//oP//
+        oP//AAAAAAAAoP//oP//oP//oP//oP//oP//oP//oP//oP//oP//oP//oP//oP//oP//AAAAAAAAoP//
+        oP//oP//oP//oP//oP//oP//oP//oP//oP//oP//oP//oP//oP//AAAAAAAAoP//oP//oP//oP//oP//
+        oP//oP//oP//oP//oP//oP//oP//oP//oP//AAAAAAAAoP//oP//oP//oP//oP//oP//oP//oP//oP//
+        oP//oP//oP//oP//oP//AAAAAAAAoP//oP//oP//oP//oP//oP//oP//oP//oP//oP//oP//oP//oP//
+        oP//AAAAAAAAoP//oP//oP//oP//oP//oP//oP//oP//oP//oP//oP//oP//oP//oP//AAAAAAAAoP//
+        oP//oP//oP//oP//oP//oP//oP//oP//oP//oP//oP//oP//oP//AAAAAAAAoP//oP//oP//oP//oP//
+        oP//oP//oP//oP//oP//oP//oP//oP//oP//AAAAAAAAoP//oP//oP//oP//oP//oP//oP//oP//oP//
+        oP//oP//oP//oP//oP//AAAAAAAAoP//oP//oP//oP//oP//oP//oP//oP//oP//oP//oP//oP//oP//
+        oP//AAAAAAAAoP//oP//oP//oP//oP//oP//oP//oP//oP//oP//oP//oP//oP//oP//AAAAAAAAAAAA
+        AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+</value>
+  </data>
+  <data name="toolStripMenuItem6.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        Qk02AwAAAAAAADYAAAAoAAAAEAAAABAAAAABABgAAAAAAAAAAADEDgAAxA4AAAAAAAAAAAAAAAAAAAAA
+        AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA////////////////////
+        ////////////////////////////////////AAAAAAAA////////////////////////////////////
+        ////////////////////AAAAAAAA////////////////////////////////////////////////////
+        ////AAAAAAAA////////////////////////////////////////////////////////AAAAAAAA////
+        ////////////////////////////////////////////////////AAAAAAAA////////////////////
+        ////////////////////////////////////AAAAAAAA////////////////////////////////////
+        ////////////////////AAAAAAAA////////////////////////////////////////////////////
+        ////AAAAAAAA////////////////////////////////////////////////////////AAAAAAAA////
+        ////////////////////////////////////////////////////AAAAAAAA////////////////////
+        ////////////////////////////////////AAAAAAAA////////////////////////////////////
+        ////////////////////AAAAAAAA////////////////////////////////////////////////////
+        ////AAAAAAAA////////////////////////////////////////////////////////AAAAAAAAAAAA
+        AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+</value>
+  </data>
 </root>
