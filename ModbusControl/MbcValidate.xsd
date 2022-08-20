@@ -19,7 +19,7 @@
 							<xs:element name="parity" type="tpParity" minOccurs="0"/>
 							<xs:element name="endofmessagetimeout" type="xs:unsignedInt" minOccurs="0"/>
 							<xs:element name="onewireechosuppression" type="tpBool" minOccurs="0"/>
-							<xs:element name="ipaddress" type="tpIP4Address" minOccurs="0"/>
+							<xs:element name="ipaddress" type="xs:string" minOccurs="0"/>
 							<xs:element name="ipport" type="tpIPPort" minOccurs="0"/>
 							<xs:element name="slaveid" type="tpModbusSlaveID" minOccurs="0"/>
 							<xs:element name="maximumframesize" minOccurs="0">
@@ -91,6 +91,7 @@
 										   </xs:simpleType>
 										</xs:element>
 										<xs:element name="text" type="xs:string"/>
+										<xs:element name="longdescr" type="xs:string"/>
 										<xs:element name="type" type="tpVarType"/>
 										<xs:element name="rw" type="tpReadWrite"/>
 										<xs:element name="minlen">
@@ -133,6 +134,7 @@
 														</xs:simpleType>
 													</xs:element>
 													<xs:element name="text" type="xs:string" minOccurs="0"/>
+													<xs:element name="longdescr" type="xs:string" minOccurs="0"/>
 													<xs:element name="type" type="tpFieldType" minOccurs="0"/>
 													<xs:element name="minlen" minOccurs="0">
 														<xs:simpleType>
@@ -189,11 +191,6 @@
 			<xs:enumeration value="even"/>
 			<xs:enumeration value="mark"/>
 			<xs:enumeration value="space"/>
-		</xs:restriction>
-	</xs:simpleType>
-	<xs:simpleType name="tpIP4Address">
-		<xs:restriction base="xs:string">
-			<xs:pattern value="((2[0-4]\d|25[0-5]|[01]?\d\d?)\.){3}(2[0-4]\d|25[0-5]|[01]?\d\d?)"/>
 		</xs:restriction>
 	</xs:simpleType>
 	<xs:simpleType name="tpIPPort">

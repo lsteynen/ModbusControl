@@ -13,11 +13,11 @@ namespace LST.Helpers
 
         // MoveToNextRowOnEnter: 
         //  true: default behaviour: 
-        //      move to next row on enter
-        //      stay on same row on control-enter
+        //      move to next row on Enter
+        //      stay on same row on Control-Enter
         //  false: change behaviour:
-        //      stay on same row on enter
-        //      move to next row on  control-enter
+        //      stay on same row on Enter
+        //      move to next row on Control-Enter
         public bool MoveToNextRowOnEnter = true;
 
         // implementation

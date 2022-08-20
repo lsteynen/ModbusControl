@@ -19,7 +19,7 @@ namespace LST.ModbusGridView
     {
         private enum eRowType { Group, Reg, Field };
         private enum eGridColIndex { Reg, Descr, Properties, Value, Debuginfo };
-        enum dtColIndex { RowType, RowLevel, RowVisible, RegStr, Descr, InfoStr, FCol, BCol, ValueMode, ValueStr, HasChildren, Expanded, HintText };
+        enum dtColIndex { RowType, RowLevel, RowVisible, RegStr, Descr, InfoStr, FCol, BCol, ValueMode, ValueStr, HasChildren, Expanded, Longdescr };
         private const int DefaultVisible = 3;
         private const int ValueModeNormal = 0;
         private const int ValueModeEdited = 1;
@@ -59,7 +59,7 @@ namespace LST.ModbusGridView
             public Int32 Value32;       // actual value in 32-bit
             public string ValueStr;     // value as a string
             public Dictionary<int, string> EnumDict; // enum convert dictionary
-            public string HintText;     // hint / tooltip text
+            public string LongDescr;      // <longdescr> tooltip text
 
             // constructor
             public RegItem()
@@ -95,7 +95,7 @@ namespace LST.ModbusGridView
             public Int32 Value32;       // actual value in 32-bit
             public string ValueStr;     // value as a string
             public Dictionary<int, string> EnumDict; // enum convert dictionary
-            public string HintText;     // hint / tooltip text
+            public string LongDescr;      // <longdescr> tooltip text
 
             // constructor
             public RegfieldItem()
@@ -218,9 +218,9 @@ namespace LST.ModbusGridView
             set { setShowVarProperties(value); }
         }
 
-        public bool LongHintTime
+        public bool LongTooltipTime
         {
-            set { setLongHintTime(value); }
+            set { setLongTooltipTime(value); }
         }
 
         public void SetFilter(string text, bool caseSensitive)
@@ -387,22 +387,22 @@ namespace LST.ModbusGridView
             }
         }
 
-        public void RegSetHintText(ListItem Item, string HintText)
+        public void RegSetLongdescrText(ListItem Item, string LongdescrText)
         {
             if (Item is RegItem)
             {
-                if (HintText != null)
+                if (LongdescrText != null)
                 {
                     RegItem r = Item as RegItem;
-                    r.HintText = HintText;
+                    r.LongDescr = LongdescrText;
                 }
             }
             if (Item is RegfieldItem)
             {
-                if (HintText != null)
+                if (LongdescrText != null)
                 {
                     RegfieldItem f = Item as RegfieldItem;
-                    f.HintText = HintText;
+                    f.LongDescr = LongdescrText;
                 }
             }
         }
@@ -489,11 +489,11 @@ namespace LST.ModbusGridView
             data.Columns.Add("InfoStr", System.Type.GetType("System.String"));
             data.Columns.Add("FCol", typeof(System.Drawing.Color));                 // foreground color
             data.Columns.Add("BCol", typeof(System.Drawing.Color));                 // background color
-            data.Columns.Add("ValueMode", System.Type.GetType("System.Int32"));      // mode of value column, 0=normal, 1=edit, 2=error
+            data.Columns.Add("ValueMode", System.Type.GetType("System.Int32"));     // mode of value column, 0=normal, 1=edit, 2=error
             data.Columns.Add("ValueStr", System.Type.GetType("System.String"));
             data.Columns.Add("HasChildren", System.Type.GetType("System.Boolean"));
             data.Columns.Add("Expanded", System.Type.GetType("System.Boolean"));
-            data.Columns.Add("HintText", System.Type.GetType("System.String"));
+            data.Columns.Add("Longdescr", System.Type.GetType("System.String"));      // longdescription tooltip text
 
             // provide filtering
 #if !DEBUG_VISIBILITY
@@ -511,7 +511,7 @@ namespace LST.ModbusGridView
                         "",                             // ValueStr
                         (ri.childrenList != null),      // HasChildren
                         ri.expanded,                    // Expanded
-                        ri.HintText});                  // hint text
+                        ri.LongDescr});                 // Longdescr tooltip text
 
                     li.dataRowIndex = data.Rows.Count - 1;
                     li.dataRow = data.Rows[li.dataRowIndex];
@@ -531,7 +531,7 @@ namespace LST.ModbusGridView
                                     "",                             // ValueStr
                                     false,                          // HasChildren
                                     false,                          // Expanded
-                                    fi.HintText});                  // hint text
+                                    fi.LongDescr});                 // Longdescr tooltip text
 
                                 fi.dataRowIndex = data.Rows.Count - 1;
                                 fi.dataRow = data.Rows[fi.dataRowIndex];
@@ -783,7 +783,7 @@ namespace LST.ModbusGridView
             grid.Columns[(int)eGridColIndex.Debuginfo].Visible = value;
         }
 
-        private void setLongHintTime(bool value)
+        private void setLongTooltipTime(bool value)
         {
             if( value)
             {
@@ -2100,11 +2100,11 @@ namespace LST.ModbusGridView
                 // get datatable row from datagridview row
                 DataRowView dRow = grid.Rows[e.RowIndex].DataBoundItem as DataRowView;
 
-                // got a custom hint text?
-                object ho = dRow[(int)dtColIndex.HintText];
+                // got a longdescr tooltip text?
+                object ho = dRow[(int)dtColIndex.Longdescr];
                 if (ho != DBNull.Value)
                 {
-                    e.ToolTipText = (string)dRow[(int)dtColIndex.HintText];
+                    e.ToolTipText = (string)dRow[(int)dtColIndex.Longdescr];
                 }
             }
         }

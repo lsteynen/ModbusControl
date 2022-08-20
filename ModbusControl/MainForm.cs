@@ -23,22 +23,6 @@ using Modbus_net;
 using LST.Helpers;
 using LST.ModbusGridView;
 
-//TODO:
-// >>> LocalOverrides afvoeren, vervangen door command line opties
-//   x implementatie
-//   x bij project reload: bij elke reload commandline negeren, geldt alleen bij opstart via commandline
-//   - manual bijwerken
-
-// >>> lange multi-line hinttext bij var en bitfield
-//   x implementatie
-//   x lange hint wordt lang genoeg getoond?
-//   - in XML: <hint> of <tooltip> of <hinttext> of <longtext> (analog aan <text>) 
-//   - xmlvalidatie bijwerken
-//   - demo.mbc uitbreiden
-//   - manual bijwerken
-
-
-
 namespace ModbusControlSpace
 {
     public partial class MainForm : Form
@@ -1233,7 +1217,7 @@ namespace ModbusControlSpace
                     if (var.Bitfields != null) fieldCount = var.Bitfields.Count;
                     newRegView.RegSetOptions(regItem, var.ForeColor, var.BackColor, var.MinLen, var.Decimals, var.Expand);
                     newRegView.RegSetEnums(regItem, var.EnumDict);
-                    newRegView.RegSetHintText(regItem, var.HintText);
+                    newRegView.RegSetLongdescrText(regItem, var.Longdescr);
 
                     // add the bitfields
                     if (fieldCount > 0)
@@ -1244,15 +1228,15 @@ namespace ModbusControlSpace
                             ModbusGridView.ListItem fieldItem = newRegView.RegAddField(regItem, var.Bitfields[i].Position, var.Bitfields[i].Width, var.Bitfields[i].Description, var.Bitfields[i].Format);
                             newRegView.RegFieldSetOptions(fieldItem, var.Bitfields[i].ForeColor, var.Bitfields[i].BackColor, var.Bitfields[i].MinLen, 0);
                             newRegView.RegSetEnums(fieldItem, var.Bitfields[i].EnumDict);
-                            newRegView.RegSetHintText(fieldItem, var.Bitfields[i].HintText);
+                            newRegView.RegSetLongdescrText(fieldItem, var.Bitfields[i].Longdescr);
                         }
                     }
                 }
 
-                // zet de hint tijd lang als er lange hints gebruikt zijn in het project
-                if (Project.HasHintTexts)
+                // zet de tooltip tijd lang als er <longdescr> gebruikt zijn in het project
+                if (Project.HasLongdescrs)
                 {
-                    newRegView.LongHintTime = true;
+                    newRegView.LongTooltipTime = true;
                 }
 
                 newRegView.FinalizeLoad();

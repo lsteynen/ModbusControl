@@ -1,4 +1,3 @@
-
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -11,6 +10,7 @@ using System.Drawing;
 using System.Xml.Linq;
 using System.Xml.Schema;
 using System.Linq;
+using System.Diagnostics;
 
 using LST.Helpers;
 
@@ -94,7 +94,7 @@ namespace ModbusControlSpace
             public List<TBitfield> Bitfields; // List with bitfields
             public bool Expand;         // expand bitfields
             public Dictionary<int, string> EnumDict; // enum convert dictionary
-            public string HintText;         // hint text
+            public string Longdescr;         // tooltip text
         }
 
         // structure holding a bitfield definition
@@ -108,7 +108,7 @@ namespace ModbusControlSpace
             public Color ForeColor;     // foreground/font color
             public Color BackColor;     // background color
             public Dictionary<int, string> EnumDict; // enum convert dictionary
-            public string HintText;         // hint text
+            public string Longdescr;         // tooltip text
         }
 
         // structure holding a line and column position in the xml file
@@ -119,7 +119,7 @@ namespace ModbusControlSpace
         }
 
         // list of XML tags to convert to lower case
-        List<string> TagsValueToLowerList = new List<string> { "connection", "parity", "writeholdingregisterfc",
+        List<string> TagsToConvertValueToLowerList = new List<string> { "connection", "parity", "writeholdingregisterfc",
                                         "int32endian", "float32endian", "ascii16endian", "onewireechosuppression",
                                         "showinfo", "enable", "rw", "expandfields", "type"};
 
@@ -132,10 +132,13 @@ namespace ModbusControlSpace
         public TOptions Options; // Options settings
         public TModbusTcpBridge ModbusTcpBridge; // Modbus/TCP bridge settings
         public List<TTab> TabsList; // List with all tab pages
-        public bool HasHintTexts; // true if project has variables with hinttext defined
+        public bool HasLongdescrs; // true if project has variables with longdescr defined
+
+        // private data
 
         private XDocument XmlDoc; // doc holding the current xml mbc project file, for possibility to save
         private XElement XmlRootNode; // root node of the document
+        private delegate void XMLIterateAllNodesCallback(XElement xe);
 
         // Constructor
         public CProject()
@@ -492,7 +495,7 @@ namespace ModbusControlSpace
                 }
 
                 // SlaveID
-                xe2 = GetSingleElement(xe1, "SlaveID", eReq.Optional); 
+                xe2 = GetSingleElement(xe1, "SlaveID", eReq.Optional);
                 if (xe2 != null)
                 {
                     Seen = true;
@@ -717,7 +720,7 @@ namespace ModbusControlSpace
         private void ProcessTabs(XElement pxe)
         {
             // get all <tab> elements, optional
-            IEnumerable<XElement> tabList = GetAllElements( pxe, "tab", eReq.Optional);
+            IEnumerable<XElement> tabList = GetAllElements(pxe, "tab", eReq.Optional);
             foreach (XElement tabNode in tabList)
             {
                 // do not allow a <tab> in a <tab>
@@ -759,7 +762,7 @@ namespace ModbusControlSpace
                 DefaultVar.Bitfields = null;
                 DefaultVar.Expand = false;
                 DefaultVar.EnumDict = null;
- 
+
                 // in tab we can set defaults for all var's
 
                 // get rw, optional
@@ -842,8 +845,6 @@ namespace ModbusControlSpace
 
                 // get expandfields, optional
                 XElement expandNode = GetSingleElement(tabNode, "expandfields", eReq.Optional);
-                //TODO
-                if (expandNode == null) expandNode = GetSingleElement(tabNode, "expanded", eReq.Optional);
                 if (expandNode != null)
                 {
                     string TmpString = expandNode.Value.Trim();
@@ -1166,12 +1167,12 @@ namespace ModbusControlSpace
                                 }
                             }
 
-                            // get hint text, optional
-                            node = GetSingleElement(fieldNode, "hint", eReq.Optional);
+                            // get longdescription (tooltip) text, optional
+                            node = GetSingleElement(fieldNode, "longdescr", eReq.Optional);
                             if (node != null)
                             {
-                                newBitfield.HintText = node.Value;
-                                HasHintTexts = true;
+                                newBitfield.Longdescr = node.Value;
+                                HasLongdescrs = true;
                             }
 
                             // get enum, optional
@@ -1190,11 +1191,8 @@ namespace ModbusControlSpace
                         }
                     }
 
-                    // get expanded, optional
-                    // of oude versie <expandfields>
-                    expandNode = GetSingleElement(varNode, "expanded", eReq.Optional);
-                    //TODO
-                    if (expandNode == null) expandNode = GetSingleElement(varNode, "expandfields", eReq.Optional);
+                    // get expand, optional
+                    expandNode = GetSingleElement(varNode, "expandfields", eReq.Optional);
                     if (expandNode != null)
                     {
                         string TmpString = expandNode.Value.Trim();
@@ -1210,12 +1208,12 @@ namespace ModbusControlSpace
                         }
                     }
 
-                    // get hint text, optional
-                    XElement hintNode = GetSingleElement(varNode, "hint", eReq.Optional);
-                    if (hintNode != null)
+                    // get longdescription (tooltip) text, optional
+                    XElement longdescrNode = GetSingleElement(varNode, "longdescr", eReq.Optional);
+                    if (longdescrNode != null)
                     {
-                        newVar.HintText = hintNode.Value;
-                        HasHintTexts = true;
+                        newVar.Longdescr = longdescrNode.Value;
+                        HasLongdescrs = true;
                     }
 
                     // get enum, optional
@@ -1598,7 +1596,7 @@ namespace ModbusControlSpace
             return false;
         }
 
-        
+
         /// <summary>
         /// Check if Holdingreg number is valid, HoldingregistersStart .. HoldingregistersEnd
         /// </summary>
@@ -1715,7 +1713,7 @@ namespace ModbusControlSpace
                 Size = 2;
                 return true;
             }
-            
+
             Format = Global.eFormat.Int;
             Size = 0;
             return false;
@@ -1958,7 +1956,7 @@ namespace ModbusControlSpace
             if (xe != null)
             {
                 xe.Remove();
-        	}
+            }
 
             // Remove ShowReadwrite, obsolete
             xe = GetSingleElement(xeModbus, "ShowReadwrite", eReq.Optional);
@@ -1967,7 +1965,7 @@ namespace ModbusControlSpace
                 xe.Remove();
             }
         }
-        
+
         /// <summary>
         /// Write Modbus/TCP bridge settings to XML document
         /// Create elements if they don't exist yet
@@ -2002,34 +2000,25 @@ namespace ModbusControlSpace
         }
 
         /// <summary>
-        /// Write other settings to XML document, like samplerate, //showinfo
+        /// Write other settings to XML document, like samplerate
         /// Create XML nodes if they don't exist yet
         /// </summary>
         public void WriteOtherSettings()
         {
             // Find Modbus node (case insensitive), or create it
-            XElement xeBridge = GetSingleElement(XmlRootNode, "Modbus", eReq.Optional);
-            if (xeBridge == null)
+            XElement xeModb = GetSingleElement(XmlRootNode, "Modbus", eReq.Optional);
+            if (xeModb == null)
             {
-                xeBridge = new XElement("modbus");
-                XmlRootNode.Add(xeBridge);
+                xeModb = new XElement("modbus");
+                XmlRootNode.Add(xeModb);
             }
 
-            // Find showinfo node, or create it
-            //XElement xe = GetSingleElement(xeBridge, "ShowInfo", eReq.Optional);
-            //if (xe == null)
-            //{
-            //    xe = new XElement("showinfo");
-            //    xeBridge.Add(xe);
-            //}
-            //xe.Value = Options.ShowInfo.ToString();
-
             // Find Samplerate node, or create it
-            XElement xe = GetSingleElement(xeBridge, "SampleRate", eReq.Optional);
+            XElement xe = GetSingleElement(xeModb, "SampleRate", eReq.Optional);
             if (xe == null)
             {
                 xe = new XElement("samplerate");
-                xeBridge.Add(xe);
+                xeModb.Add(xe);
             }
             xe.Value = Options.Samplerate.ToString();
         }
@@ -2080,67 +2069,82 @@ namespace ModbusControlSpace
             //DumpXMLTree();
 
             // convert all XML tags to lowercase
-            XMLConvertAllTagsToLowercase(XmlDoc);
+            XMLIterateAllNodesForHandler(XmlDoc, ConvertAllTagsToLowercaseHandler);
 
             // convert elements with enum keywords to lower case
-            XMLConvertAllEnumsToLowercase(XmlDoc);
+            XMLIterateAllNodesForHandler(XmlDoc, ConvertAllEnumValuesToLowercaseHandler);
 
-            // remove or replace obsolete tags
-            XMLRemoveOrReplaceObsoleteElements(XmlDoc);
+            // replace <expandfields> by <expand>
+            //XMLIterateAllNodesForHandler(XmlDoc, ReplaceExpandfieldsHandler);
 
-            //DumpXMLTree();
+            // remove or replace obsolete tags in <Modbus>
+            XMLRemoveOrReplaceObsoleteModbusElements(XmlDoc);
         }
 
         /// <summary>
-        /// convert all XML tag names to lowercase
+        /// Iterate all XML nodes and call a handler for each
         /// </summary>
-        private void XMLConvertAllTagsToLowercase(XDocument doc)
+        private void XMLIterateAllNodesForHandler(XDocument doc, XMLIterateAllNodesCallback handler)
         {
             foreach (XElement xe in doc.Elements())
             {
-                XMLConvertAllTagsToLowercaseRec(xe);
+                XMLIterateAllNodesForHandlerRec(xe, handler);
             }
         }
 
-        private void XMLConvertAllTagsToLowercaseRec(XElement xe)
+        /// <summary>
+        /// Helper for XMLIterateAllNodesForHandler recursivity
+        /// </summary>
+        private void XMLIterateAllNodesForHandlerRec(XElement xe, XMLIterateAllNodesCallback handler)
         {
-            xe.Name = xe.Name.ToString().ToLower();
+            // call the handler 
+            handler(xe);
+
             foreach (XElement xe2 in xe.Elements())
             {
-                XMLConvertAllTagsToLowercaseRec(xe2);
+                XMLIterateAllNodesForHandlerRec(xe2, handler);
             }
         }
 
         /// <summary>
-        /// convert all enum keywords to lowercase
+        /// Handler for XMLIterateAllNodesForHandler()
+        /// convert all XML tag names to lowercase
         /// </summary>
-        private void XMLConvertAllEnumsToLowercase(XDocument doc)
+        private void ConvertAllTagsToLowercaseHandler(XElement xe)
         {
-            foreach (XElement xe in doc.Elements())
-            {
-                XMLConvertAllEnumsToLowercaseRec(xe);
-            }
+            xe.Name = xe.Name.ToString().ToLower();
         }
 
-        private void XMLConvertAllEnumsToLowercaseRec(XElement xe)
+        /// <summary>
+        /// Handler for XMLIterateAllNodesForHandler()
+        /// convert all enum keywords to lowercase
+        /// </summary>
+        private void ConvertAllEnumValuesToLowercaseHandler(XElement xe)
         {
-            if (TagsValueToLowerList.Contains(xe.Name.ToString()))
+            if (TagsToConvertValueToLowerList.Contains(xe.Name.ToString()))
             {
                 xe.Value = xe.Value.ToString().ToLower().Trim();
             }
+        }
 
-            foreach (XElement xe2 in xe.Elements())
+        /// <summary>
+        /// Handler for XMLIterateAllNodesForHandler()
+        /// replace <expandfields> by <expand>
+        /// </summary>
+        private void ReplaceExpandfieldsHandler(XElement xe)
+        {
+            if (xe.Name.ToString().ToLower() == "expandfields")
             {
-                XMLConvertAllEnumsToLowercaseRec(xe2);
+                xe.Name = "expand";
             }
         }
 
         /// <summary>
-        /// remove or replace obsolete elements
+        /// remove or replace obsolete elements in <modbus>
         /// </summary>
-        private void XMLRemoveOrReplaceObsoleteElements(XDocument doc)
+        private void XMLRemoveOrReplaceObsoleteModbusElements(XDocument doc)
         {
-            // niet itereren en intussen nodes deleten of inserten!
+            // niet itereren en intussen nodes deleten of inserten! dat gaat fout!
             // dus: met iteratie een node zoeken, die deleten, dan nieuwe iteratie beginnen
 
             // Search /modbus
@@ -2266,30 +2270,39 @@ namespace ModbusControlSpace
         /// </summary>
         public void DumpXMLTree()
         {
-            List<string> TL = new List<string>();
             int level = 0;
 
+            Debug.Print("----------------------");
+            Debug.Print("DumpXMLTree:");
             foreach (XElement xel in XmlDoc.Elements())
             {
-                DumpXMLElementRec(xel, level, TL);
+                DumpXMLElementRec(xel, level);
             }
         }
 
-        private void DumpXMLElementRec(XElement xel, int level, List<string> TL)
+        private void DumpXMLElementRec(XElement xel, int level)
         {
             string s;
 
             s = new String(' ', level) + xel.Name.ToString();
-            s += ", " + xel.NodeType.ToString();
-            s += ", " + xel.HasElements.ToString();
-            s += ", " + xel.Value.ToString();
-            TL.Add(s);
+            //s += ", " + xel.NodeType.ToString();
+            //s += ", " + xel.HasElements.ToString();
+            s += ", " + LeftStr(xel.Value.ToString(), 20);
+
+            XmlNodeType t = xel.NodeType;
+
+            Debug.Print(s);
 
             foreach (XElement xel2 in xel.Elements())
             {
-                DumpXMLElementRec(xel2, level + 1, TL);
+                DumpXMLElementRec(xel2, level + 1);
             }
         }
 
+        private string LeftStr(string s, int len)
+        {
+            int fraglen = Math.Min(len, s.Length);
+            return s.Substring(0, fraglen);
+        }
     }
 }

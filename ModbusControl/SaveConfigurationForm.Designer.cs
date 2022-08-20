@@ -104,6 +104,8 @@
             // checkboxUpdateXML
             // 
             this.checkboxUpdateXML.AutoSize = true;
+            this.checkboxUpdateXML.Checked = true;
+            this.checkboxUpdateXML.CheckState = System.Windows.Forms.CheckState.Checked;
             this.checkboxUpdateXML.Location = new System.Drawing.Point(31, 117);
             this.checkboxUpdateXML.Name = "checkboxUpdateXML";
             this.checkboxUpdateXML.Size = new System.Drawing.Size(171, 17);
@@ -154,9 +156,9 @@
             this.checkboxSettings.AutoSize = true;
             this.checkboxSettings.Location = new System.Drawing.Point(31, 54);
             this.checkboxSettings.Name = "checkboxSettings";
-            this.checkboxSettings.Size = new System.Drawing.Size(133, 17);
+            this.checkboxSettings.Size = new System.Drawing.Size(82, 17);
             this.checkboxSettings.TabIndex = 10;
-            this.checkboxSettings.Text = "Sample rate, show info";
+            this.checkboxSettings.Text = "Sample rate";
             this.toolTip1.SetToolTip(this.checkboxSettings, "Save the current sample rate and ShowInfo flag");
             this.checkboxSettings.UseVisualStyleBackColor = true;
             this.checkboxSettings.CheckedChanged += new System.EventHandler(this.checkbox_CheckedChanged);

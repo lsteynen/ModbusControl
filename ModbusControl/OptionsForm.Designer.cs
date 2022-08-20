@@ -106,7 +106,7 @@
             this.CheckboxCheckForUpdates.Size = new System.Drawing.Size(154, 17);
             this.CheckboxCheckForUpdates.TabIndex = 9;
             this.CheckboxCheckForUpdates.Text = "Check for program updates";
-            this.toolTip1.SetToolTip(this.CheckboxCheckForUpdates, "Check for program updates on startup, once per day");
+            this.toolTip1.SetToolTip(this.CheckboxCheckForUpdates, "Check for program update on start, once per day");
             this.CheckboxCheckForUpdates.UseVisualStyleBackColor = true;
             // 
             // label1
@@ -154,7 +154,7 @@
             this.checkboxNextRowOnEnter.Size = new System.Drawing.Size(151, 17);
             this.checkboxNextRowOnEnter.TabIndex = 3;
             this.checkboxNextRowOnEnter.Text = "Move to next row on Enter";
-            this.toolTip1.SetToolTip(this.checkboxNextRowOnEnter, "Move to next row after entering a new value");
+            this.toolTip1.SetToolTip(this.checkboxNextRowOnEnter, "Move to the next row after entering a new value");
             this.checkboxNextRowOnEnter.UseVisualStyleBackColor = true;
             // 
             // checkboxAutostartEdit
@@ -195,7 +195,7 @@
             this.checkboxIgnoreFormSizeOnReload.Size = new System.Drawing.Size(182, 17);
             this.checkboxIgnoreFormSizeOnReload.TabIndex = 12;
             this.checkboxIgnoreFormSizeOnReload.Text = "Ignore form size on project reload";
-            this.toolTip1.SetToolTip(this.checkboxIgnoreFormSizeOnReload, "Do not use the form size specified in the mbc file on project REload");
+            this.toolTip1.SetToolTip(this.checkboxIgnoreFormSizeOnReload, "Do not use the form size specified in the mbc file on project reload");
             this.checkboxIgnoreFormSizeOnReload.UseVisualStyleBackColor = true;
             // 
             // checkboxShowVarProperties
@@ -206,7 +206,7 @@
             this.checkboxShowVarProperties.Size = new System.Drawing.Size(176, 17);
             this.checkboxShowVarProperties.TabIndex = 13;
             this.checkboxShowVarProperties.Text = "Show register properties column";
-            this.toolTip1.SetToolTip(this.checkboxShowVarProperties, "Do not use the form size specified in the mbc file on project REload");
+            this.toolTip1.SetToolTip(this.checkboxShowVarProperties, "Show an extra column with the register properties");
             this.checkboxShowVarProperties.UseVisualStyleBackColor = true;
             // 
             // checkboxAutoRowSize
@@ -217,7 +217,7 @@
             this.checkboxAutoRowSize.Size = new System.Drawing.Size(176, 17);
             this.checkboxAutoRowSize.TabIndex = 14;
             this.checkboxAutoRowSize.Text = "Multiline rows with auto row size";
-            this.toolTip1.SetToolTip(this.checkboxAutoRowSize, "Do not use the form size specified in the mbc file on project REload");
+            this.toolTip1.SetToolTip(this.checkboxAutoRowSize, "Allow multi-line rows and adjust row heights automatically to fit their contents");
             this.checkboxAutoRowSize.UseVisualStyleBackColor = true;
             // 
             // textboxUseValidationSchema
@@ -227,7 +227,7 @@
             this.textboxUseValidationSchema.Name = "textboxUseValidationSchema";
             this.textboxUseValidationSchema.Size = new System.Drawing.Size(291, 20);
             this.textboxUseValidationSchema.TabIndex = 14;
-            this.toolTip1.SetToolTip(this.textboxUseValidationSchema, "Custom editor command, for example [\"c:\\windows\\system32\\notepad.exe\" \"%file\"]");
+            this.toolTip1.SetToolTip(this.textboxUseValidationSchema, "Path to the XSD schema file");
             // 
             // checkboxClearFilterOnTabChange
             // 
@@ -237,7 +237,7 @@
             this.checkboxClearFilterOnTabChange.Size = new System.Drawing.Size(169, 17);
             this.checkboxClearFilterOnTabChange.TabIndex = 19;
             this.checkboxClearFilterOnTabChange.Text = "Clear Find/filter on tab change";
-            this.toolTip1.SetToolTip(this.checkboxClearFilterOnTabChange, "Do not use the form size specified in the mbc file on project REload");
+            this.toolTip1.SetToolTip(this.checkboxClearFilterOnTabChange, "Clear the Find/filter when user switches to other tab page");
             this.checkboxClearFilterOnTabChange.UseVisualStyleBackColor = true;
             // 
             // checkboxUseValidationSchema
@@ -249,6 +249,7 @@
             this.checkboxUseValidationSchema.Size = new System.Drawing.Size(231, 17);
             this.checkboxUseValidationSchema.TabIndex = 13;
             this.checkboxUseValidationSchema.Text = "Use XSD validation schema on project load";
+            this.toolTip1.SetToolTip(this.checkboxUseValidationSchema, "When an mbc project file is loaded, validate it against an XSD schema");
             this.checkboxUseValidationSchema.UseVisualStyleBackColor = true;
             // 
             // openFileDialog1
