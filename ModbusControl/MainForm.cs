@@ -2170,7 +2170,7 @@ namespace ModbusControlSpace
             }
 
             // Set startpage, if given
-            if (ProjectIsOpen && Project.Options.AutostartSeen && (string.IsNullOrEmpty(Project.Options.AutostartTabpage) == false))
+            if (ProjectIsOpen && Project.Options.AutostartEnable && (string.IsNullOrEmpty(Project.Options.AutostartTabpage) == false))
             {
                 SelectTabPage(Project.Options.AutostartTabpage);
             }
