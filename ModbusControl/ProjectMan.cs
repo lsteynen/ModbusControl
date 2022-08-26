@@ -83,6 +83,7 @@ namespace ModbusControlSpace
         {
             public UInt32 Regnr;
             public string Description;
+            public string Longdescr;         // tooltip text
             public Global.eFormat Format;
             public int Size;        // 1 for 16-bit, 2 for 32-bit
             public bool isReadable;
@@ -94,7 +95,6 @@ namespace ModbusControlSpace
             public List<TBitfield> Bitfields; // List with bitfields
             public bool Expand;         // expand bitfields
             public Dictionary<int, string> EnumDict; // enum convert dictionary
-            public string Longdescr;         // tooltip text
         }
 
         // structure holding a bitfield definition
@@ -111,7 +111,7 @@ namespace ModbusControlSpace
             public string Longdescr;         // tooltip text
         }
 
-        // structure holding a line and column position in the xml file
+        // structure holding a line and column position in the XML file
         public struct TFilePosition
         {
             public int Line;
@@ -139,6 +139,8 @@ namespace ModbusControlSpace
         private XDocument XmlDoc; // doc holding the current xml mbc project file, for possibility to save
         private XElement XmlRootNode; // root node of the document
         private delegate void XMLIterateAllNodesCallback(XElement xe);
+        private XElement autostartPageXElement = null;
+
 
         // Constructor
         public CProject()
@@ -185,6 +187,8 @@ namespace ModbusControlSpace
         /// <param name="path">Path to mbc file</param>
         public void Load(string path)
         {
+            bool modbusSeen = false;
+
             // Load xml document into XmlDoc
             // A previous document will be discarded when a new is loaded
             //XmlDoc = XDocument.Load(path, LoadOptions.PreserveWhitespace | LoadOptions.SetLineInfo);
@@ -202,29 +206,70 @@ namespace ModbusControlSpace
             // Parse the document
             // Store all data in this class
 
-            // select <modbuscontrol> element as our root
-            // XmlDoc.Element() throws an exception if the document has multiple root elements
-            XmlRootNode = XmlDoc.Element("modbuscontrol");
-            if (XmlRootNode == null)
+            // check root element
+            XmlRootNode = XmlDoc.Root;
+            string rootElementName = XmlRootNode.Name.LocalName;
+            string expectRootName = "modbuscontrol";
+            if (rootElementName != expectRootName)
             {
-                throw new XmlException("XML root element <modbuscontrol> not found. The mbc project file should have one root element <modbuscontrol>.");
+                throw new XmlException("XML root element <" + expectRootName + "> not found. A <" + expectRootName + "> root element is required in an mbc project file.");
             }
 
-            // process one <Size> element
-            ProcessSizeElement(XmlRootNode);
+            // iterate elements under root
+            foreach (XElement xe in XmlRootNode.Elements())
+            {
+                string elemName = xe.Name.LocalName;
+                Debug.Print("ROOT: " + elemName);
+                // <size> element, optional
+                if (CheckElementNameMatch(elemName, "Size"))
+                {
+                    ProcessSizeElement(xe);
+                }
+                else
+                // <modbus> element, required
+                if (CheckElementNameMatch(elemName, "Modbus"))
+                {
+                    ProcessModbusElement(xe);
+                    modbusSeen = true;
+                }
+                else
+                // <modbustcpserver> element, optional
+                if (CheckElementNameMatch(elemName, "modbustcpserver"))
+                {
+                    ProcessModbustcpserverElement(xe);
+                }
+                else
+                // <autostart> element, optional
+                if (CheckElementNameMatch(elemName, "autostart"))
+                {
+                    // actual processing is with Options.AutostartEnable furtheron
+                    ProcessAutostartElement(xe);
+                }
+                else
+                // <tab> elements, optional, multiple
+                if (CheckElementNameMatch(elemName, "tab"))
+                {
+                    ProcessTabElement(xe);
+                }
+            }
 
-            // process one <Modbus> element
-            ProcessModbusElement(XmlRootNode, eReq.Required);
+            if (modbusSeen == false)
+            {
+                string elName = "modbus";
+                TFilePosition fp = GetFilePos(XmlRootNode);
+                throw new XmlException("XML element <" + elName + "> not found. A <" + elName + "> element is required." + Environment.NewLine, null, fp.Line, fp.Col);
+            }
 
-            // process all <tab>
-            ProcessTabs(XmlRootNode);
-
-            // process one <modbustcpserver>
-            ProcessModbustcpserverElement(XmlRootNode);
-
-            // process one <autostart>
-            // do this after the tabs are loaded
-            ProcessAutostartElement(XmlRootNode);
+            // Got the enable and the page, now validate the page name/number
+            if (Options.AutostartEnable && (string.IsNullOrEmpty(Options.AutostartTabpage) == false))
+            {
+                if (TabPageIsValid(Options.AutostartTabpage) == false)
+                {
+                    Options.AutostartTabpage = null;
+                    TFilePosition fp = GetFilePos(autostartPageXElement);
+                    throw new XmlException("XML element <page> is not a valid tabpage name, or a valid tabpage number 1 .. N." + Environment.NewLine + LimitXmlTextLength(autostartPageXElement.ToString()) + Environment.NewLine, null, fp.Line, fp.Col);
+                }
+            }
 
             // Success, store the path
             Path = path;
@@ -260,26 +305,26 @@ namespace ModbusControlSpace
 
 
         /// <summary>
-        /// Process <Size> element, optional
+        /// Process a <Size> element
         /// The width and height are in pixels at 96dpi. For compatiblity of the mbc file
         /// between standard 96-dpi systems and high-dpi systems.
         /// Throws exception on error
         /// </summary>
-        /// <param name="pxe"></param>
+        /// <param name="pxe">The parent XML element</param>
         /// <return>true if one of the elements was seen</return>
         private bool ProcessSizeElement(XElement pxe)
         {
             bool Seen = false;
 
-            // process one <Size> element
-            XElement xe1 = GetSingleElement(pxe, "Size", eReq.Optional);
-            if (xe1 != null)
+            foreach (XElement xe in pxe.Elements())
             {
-                // Get Width, optional
-                XElement xe2 = GetSingleElement(xe1, "Width", eReq.Optional);
-                if (xe2 != null)
+                string elemName = xe.Name.LocalName;
+                Debug.Print("<Size> " + elemName);
+
+                // Width, optional
+                if (CheckElementNameMatch(elemName, "Width"))
                 {
-                    string TmpString = xe2.Value.Trim();
+                    string TmpString = xe.Value.Trim();
                     UInt32 TmpValue;
                     if (UInt32.TryParse(TmpString, out TmpValue) && (TmpValue <= int.MaxValue))
                     {
@@ -292,16 +337,15 @@ namespace ModbusControlSpace
                     }
                     else
                     {
-                        TFilePosition fp = GetFilePos(xe2);
-                        throw new XmlException("XML element <" + xe2.Name + "> has an invalid value. Valid values are 0 - " + int.MaxValue + "." + Environment.NewLine + LimitXmlText(xe2.ToString()) + Environment.NewLine, null, fp.Line, fp.Col);
+                        TFilePosition fp = GetFilePos(xe);
+                        throw new XmlException("XML element <" + xe.Name.LocalName + "> has an invalid value. Valid values are 0 - " + int.MaxValue + "." + Environment.NewLine + LimitXmlTextLength(xe.ToString()) + Environment.NewLine, null, fp.Line, fp.Col);
                     }
                 }
-
-                // Get Height, optional
-                xe2 = GetSingleElement(xe1, "Height", eReq.Optional);
-                if (xe2 != null)
+                else
+                // Height, optional
+                if (CheckElementNameMatch(elemName, "Height"))
                 {
-                    string TmpString = xe2.Value.Trim();
+                    string TmpString = xe.Value.Trim();
                     UInt32 TmpValue;
                     if (UInt32.TryParse(TmpString, out TmpValue) && (TmpValue <= int.MaxValue))
                     {
@@ -314,9 +358,13 @@ namespace ModbusControlSpace
                     }
                     else
                     {
-                        TFilePosition fp = GetFilePos(xe2);
-                        throw new XmlException("XML element <" + xe2.Name + "> has an invalid value. Valid values are 0 - " + int.MaxValue + "." + Environment.NewLine + LimitXmlText(xe2.ToString()) + Environment.NewLine, null, fp.Line, fp.Col);
+                        TFilePosition fp = GetFilePos(xe);
+                        throw new XmlException("XML element <" + xe.Name.LocalName + "> has an invalid value. Valid values are 0 - " + int.MaxValue + "." + Environment.NewLine + LimitXmlTextLength(xe.ToString()) + Environment.NewLine, null, fp.Line, fp.Col);
                     }
+                }
+                else
+                {
+                    // invalid/unsupported element found
                 }
             }
 
@@ -324,26 +372,26 @@ namespace ModbusControlSpace
         }
 
         /// <summary>
-        /// Process <Modbus> element, may be required or optional
+        /// Process a <Modbus> element
         /// Throws exception on error
         /// </summary>
-        /// <param name="pxe"></param>
+        /// <param name="pxe">The parent XML element</param>
         /// <return>true if one of the elements was seen</return>
-        private bool ProcessModbusElement(XElement pxe, eReq req)
+        private bool ProcessModbusElement(XElement pxe)
         {
             bool Seen = false;
 
-            // process one <Modbus> element
-            XElement xe1 = GetSingleElement(pxe, "Modbus", req);
-            if (xe1 != null)
+            foreach (XElement xe in pxe.Elements())
             {
+                string elemName = xe.Name.LocalName;
+                Debug.Print("<Modbus> " + elemName);
+
                 // Connection, optional
-                XElement xe2 = GetSingleElement(xe1, "Connection", eReq.Optional);
-                if (xe2 != null)
+                if (CheckElementNameMatch(elemName, "Connection"))
                 {
                     Seen = true;
                     // accept a few strings
-                    string TmpString = xe2.Value.Trim();
+                    string TmpString = xe.Value.Trim();
                     if (string.Compare(TmpString, ConnectionTypes[0], StringComparison.OrdinalIgnoreCase) == 0)
                     {
                         Connection.ConnectionType = Global.eConnectionType.SerialRTU;
@@ -358,30 +406,28 @@ namespace ModbusControlSpace
                     }
                     else
                     {
-                        TFilePosition fp = GetFilePos(xe2);
-                        throw new XmlException("XML element <" + xe2.Name + "> has an invalid value. Valid values are 'serial/rtu', 'modbus/tcp' or 'rtu/tcp'." + Environment.NewLine + LimitXmlText(xe2.ToString()) + Environment.NewLine, null, fp.Line, fp.Col);
+                        TFilePosition fp = GetFilePos(xe);
+                        throw new XmlException("XML element <" + xe.Name.LocalName + "> has an invalid value. Valid values are 'serial/rtu', 'modbus/tcp' or 'rtu/tcp'." + Environment.NewLine + LimitXmlTextLength(xe.ToString()) + Environment.NewLine, null, fp.Line, fp.Col);
                     }
                 }
-
+                else
                 // serial Port name, optional
-                xe2 = GetSingleElement(xe1, "Port", eReq.Optional);
-                if (xe2 != null)
+                if (CheckElementNameMatch(elemName, "Port"))
                 {
                     Seen = true;
-                    string TmpString = xe2.Value.Trim();
+                    string TmpString = xe.Value.Trim();
                     if (string.IsNullOrEmpty(TmpString) == false)
                     {
                         Connection.SerialPort = TmpString;
                     }
                 }
-
+                else
                 // serial Baudrate, optional
                 // >= 50
-                xe2 = GetSingleElement(xe1, "Baudrate", eReq.Optional);
-                if (xe2 != null)
+                if (CheckElementNameMatch(elemName, "Baudrate"))
                 {
                     Seen = true;
-                    string TmpString = xe2.Value.Trim();
+                    string TmpString = xe.Value.Trim();
                     UInt32 TmpValue;
                     if ((UInt32.TryParse(TmpString, out TmpValue) && (TmpValue <= Int32.MaxValue))
                         && (TmpValue >= 50))
@@ -390,17 +436,16 @@ namespace ModbusControlSpace
                     }
                     else
                     {
-                        TFilePosition fp = GetFilePos(xe2);
-                        throw new XmlException("XML element <" + xe2.Name + "> has an invalid value. Valid values are 50 - " + Int32.MaxValue.ToString() + "." + Environment.NewLine + LimitXmlText(xe2.ToString()) + Environment.NewLine, null, fp.Line, fp.Col);
+                        TFilePosition fp = GetFilePos(xe);
+                        throw new XmlException("XML element <" + xe.Name.LocalName + "> has an invalid value. Valid values are 50 - " + Int32.MaxValue.ToString() + "." + Environment.NewLine + LimitXmlTextLength(xe.ToString()) + Environment.NewLine, null, fp.Line, fp.Col);
                     }
                 }
-
+                else
                 // serial Parity, optional
-                xe2 = GetSingleElement(xe1, "Parity", eReq.Optional);
-                if (xe2 != null)
+                if (CheckElementNameMatch(elemName, "Parity"))
                 {
                     Seen = true;
-                    string TmpString = xe2.Value.Trim();
+                    string TmpString = xe.Value.Trim();
                     Parity TmpParity;
                     if (Enum.TryParse<Parity>(TmpString, true, out TmpParity))
                     {
@@ -408,17 +453,16 @@ namespace ModbusControlSpace
                     }
                     else
                     {
-                        TFilePosition fp = GetFilePos(xe2);
-                        throw new XmlException("XML element <" + xe2.Name + "> has an invalid value. Valid values are 'None', 'Even', 'Odd', 'Mark' or 'Space'." + Environment.NewLine + LimitXmlText(xe2.ToString()) + Environment.NewLine, null, fp.Line, fp.Col);
+                        TFilePosition fp = GetFilePos(xe);
+                        throw new XmlException("XML element <" + xe.Name.LocalName + "> has an invalid value. Valid values are 'None', 'Even', 'Odd', 'Mark' or 'Space'." + Environment.NewLine + LimitXmlTextLength(xe.ToString()) + Environment.NewLine, null, fp.Line, fp.Col);
                     }
                 }
-
+                else
                 // serial EndofmessageTimeout
-                xe2 = GetSingleElement(xe1, "EndofmessageTimeout", eReq.Optional);
-                if (xe2 != null)
+                if (CheckElementNameMatch(elemName, "EndofmessageTimeout"))
                 {
                     Seen = true;
-                    string TmpString = xe2.Value.Trim();
+                    string TmpString = xe.Value.Trim();
                     // get value, limit range 1 - 2147483647
                     UInt32 TmpValue;
                     if (uint.TryParse(TmpString, out TmpValue) && (TmpValue >= 1) && (TmpValue <= 2147483647))
@@ -427,18 +471,17 @@ namespace ModbusControlSpace
                     }
                     else
                     {
-                        TFilePosition fp = GetFilePos(xe2);
-                        throw new XmlException("XML element <" + xe2.Name + "> has an invalid value. Valid values are 1 - 2147483647." + Environment.NewLine + LimitXmlText(xe2.ToString()) + Environment.NewLine, null, fp.Line, fp.Col);
+                        TFilePosition fp = GetFilePos(xe);
+                        throw new XmlException("XML element <" + xe.Name.LocalName + "> has an invalid value. Valid values are 1 - 2147483647." + Environment.NewLine + LimitXmlTextLength(xe.ToString()) + Environment.NewLine, null, fp.Line, fp.Col);
                     }
                 }
-
+                else
                 // serial One-wire echo suppression
-                xe2 = GetSingleElement(xe1, "OnewireEchoSuppression", eReq.Optional);
-                if (xe2 != null)
+                if (CheckElementNameMatch(elemName, "OnewireEchoSuppression"))
                 {
                     Seen = true;
                     // accept true and false
-                    string TmpString = xe2.Value.Trim();
+                    string TmpString = xe.Value.Trim();
                     bool TmpBool;
                     if (TryParseBool(TmpString, out TmpBool))
                     {
@@ -446,17 +489,16 @@ namespace ModbusControlSpace
                     }
                     else
                     {
-                        TFilePosition fp = GetFilePos(xe2);
-                        throw new XmlException("XML element <" + xe2.Name + "> has an invalid value. Valid values are 'true' or 'false'." + Environment.NewLine + LimitXmlText(xe2.ToString()) + Environment.NewLine, null, fp.Line, fp.Col);
+                        TFilePosition fp = GetFilePos(xe);
+                        throw new XmlException("XML element <" + xe.Name.LocalName + "> has an invalid value. Valid values are 'true' or 'false'." + Environment.NewLine + LimitXmlTextLength(xe.ToString()) + Environment.NewLine, null, fp.Line, fp.Col);
                     }
                 }
-
+                else
                 // IPaddress, optional, must be blank or valid
-                xe2 = GetSingleElement(xe1, "IPaddress", eReq.Optional);
-                if (xe2 != null)
+                if (CheckElementNameMatch(elemName, "IPaddress"))
                 {
                     Seen = true;
-                    string TmpString = xe2.Value.Trim();
+                    string TmpString = xe.Value.Trim();
                     System.Net.IPAddress TmpIPaddress;
                     if (TmpString == "")
                     {
@@ -470,17 +512,16 @@ namespace ModbusControlSpace
                     }
                     else
                     {
-                        TFilePosition fp = GetFilePos(xe2);
-                        throw new XmlException("XML element <" + xe2.Name + "> has an invalid value. Valid values are empty or a valid IPv4 address like '192.168.1.123' or '127.0.0.1'." + Environment.NewLine + LimitXmlText(xe2.ToString()) + Environment.NewLine, null, fp.Line, fp.Col);
+                        TFilePosition fp = GetFilePos(xe);
+                        throw new XmlException("XML element <" + xe.Name.LocalName + "> has an invalid value. Valid values are empty or a valid IPv4 address like '192.168.1.123' or '127.0.0.1'." + Environment.NewLine + LimitXmlTextLength(xe.ToString()) + Environment.NewLine, null, fp.Line, fp.Col);
                     }
                 }
-
+                else
                 // IPport
-                xe2 = GetSingleElement(xe1, "IPport", eReq.Optional);
-                if (xe2 != null)
+                if (CheckElementNameMatch(elemName, "IPport"))
                 {
                     Seen = true;
-                    string TmpString = xe2.Value.Trim();
+                    string TmpString = xe.Value.Trim();
                     // get value, limit range 1 - 65535
                     UInt16 TmpValue;
                     if (UInt16.TryParse(TmpString, out TmpValue) && (TmpValue >= 1) && (TmpValue <= 65535))
@@ -489,17 +530,16 @@ namespace ModbusControlSpace
                     }
                     else
                     {
-                        TFilePosition fp = GetFilePos(xe2);
-                        throw new XmlException("XML element <" + xe2.Name + "> has an invalid value. Valid values are 1 - 65535." + Environment.NewLine + LimitXmlText(xe2.ToString()) + Environment.NewLine, null, fp.Line, fp.Col);
+                        TFilePosition fp = GetFilePos(xe);
+                        throw new XmlException("XML element <" + xe.Name.LocalName + "> has an invalid value. Valid values are 1 - 65535." + Environment.NewLine + LimitXmlTextLength(xe.ToString()) + Environment.NewLine, null, fp.Line, fp.Col);
                     }
                 }
-
+                else
                 // SlaveID
-                xe2 = GetSingleElement(xe1, "SlaveID", eReq.Optional);
-                if (xe2 != null)
+                if (CheckElementNameMatch(elemName, "SlaveID"))
                 {
                     Seen = true;
-                    string TmpString = xe2.Value.Trim();
+                    string TmpString = xe.Value.Trim();
                     // get value, limit range 0 - 255
                     byte TmpValue;
                     if (byte.TryParse(TmpString, out TmpValue))
@@ -508,17 +548,16 @@ namespace ModbusControlSpace
                     }
                     else
                     {
-                        TFilePosition fp = GetFilePos(xe2);
-                        throw new XmlException("XML element <" + xe2.Name + "> has an invalid value. Valid values are 0 - 255." + Environment.NewLine + LimitXmlText(xe2.ToString()) + Environment.NewLine, null, fp.Line, fp.Col);
+                        TFilePosition fp = GetFilePos(xe);
+                        throw new XmlException("XML element <" + xe.Name.LocalName + "> has an invalid value. Valid values are 0 - 255." + Environment.NewLine + LimitXmlTextLength(xe.ToString()) + Environment.NewLine, null, fp.Line, fp.Col);
                     }
                 }
-
+                else
                 // ResponseTimeout
-                xe2 = GetSingleElement(xe1, "ResponseTimeout", eReq.Optional);
-                if (xe2 != null)
+                if (CheckElementNameMatch(elemName, "ResponseTimeout"))
                 {
                     Seen = true;
-                    string TmpString = xe2.Value.Trim();
+                    string TmpString = xe.Value.Trim();
                     // get value, limit range 1 - 2147483647
                     UInt32 TmpValue;
                     if (UInt32.TryParse(TmpString, out TmpValue) && (TmpValue >= 1) && (TmpValue <= 2147483647))
@@ -527,17 +566,16 @@ namespace ModbusControlSpace
                     }
                     else
                     {
-                        TFilePosition fp = GetFilePos(xe2);
-                        throw new XmlException("XML element <" + xe2.Name + "> has an invalid value. Valid values are 1 - 2147483647." + Environment.NewLine + LimitXmlText(xe2.ToString()) + Environment.NewLine, null, fp.Line, fp.Col);
+                        TFilePosition fp = GetFilePos(xe);
+                        throw new XmlException("XML element <" + xe.Name.LocalName + "> has an invalid value. Valid values are 1 - 2147483647." + Environment.NewLine + LimitXmlTextLength(xe.ToString()) + Environment.NewLine, null, fp.Line, fp.Col);
                     }
                 }
-
+                else
                 // MaximumFramesize
-                xe2 = GetSingleElement(xe1, "MaximumFramesize", eReq.Optional);
-                if (xe2 != null)
+                if (CheckElementNameMatch(elemName, "MaximumFramesize"))
                 {
                     Seen = true;
-                    string TmpString = xe2.Value.Trim();
+                    string TmpString = xe.Value.Trim();
                     // get value, limit range 13 - 256
                     UInt32 TmpValue;
                     if (UInt32.TryParse(TmpString, out TmpValue) && (TmpValue >= 13) && (TmpValue <= 256))
@@ -546,17 +584,16 @@ namespace ModbusControlSpace
                     }
                     else
                     {
-                        TFilePosition fp = GetFilePos(xe2);
-                        throw new XmlException("XML element <" + xe2.Name + "> has an invalid value. Valid values are 13 - 256." + Environment.NewLine + LimitXmlText(xe2.ToString()) + Environment.NewLine, null, fp.Line, fp.Col);
+                        TFilePosition fp = GetFilePos(xe);
+                        throw new XmlException("XML element <" + xe.Name.LocalName + "> has an invalid value. Valid values are 13 - 256." + Environment.NewLine + LimitXmlTextLength(xe.ToString()) + Environment.NewLine, null, fp.Line, fp.Col);
                     }
                 }
-
+                else
                 // Inter-frame delay
-                xe2 = GetSingleElement(xe1, "interframedelay", eReq.Optional);
-                if (xe2 != null)
+                if (CheckElementNameMatch(elemName, "interframedelay"))
                 {
                     Seen = true;
-                    string TmpString = xe2.Value.Trim();
+                    string TmpString = xe.Value.Trim();
                     // get value
                     UInt32 TmpValue;
                     if (UInt32.TryParse(TmpString, out TmpValue))
@@ -565,17 +602,16 @@ namespace ModbusControlSpace
                     }
                     else
                     {
-                        TFilePosition fp = GetFilePos(xe2);
-                        throw new XmlException("XML element <" + xe2.Name + "> has an invalid value. Use 0 for default." + Environment.NewLine + LimitXmlText(xe2.ToString()) + Environment.NewLine, null, fp.Line, fp.Col);
+                        TFilePosition fp = GetFilePos(xe);
+                        throw new XmlException("XML element <" + xe.Name.LocalName + "> has an invalid value. Use 0 for default." + Environment.NewLine + LimitXmlTextLength(xe.ToString()) + Environment.NewLine, null, fp.Line, fp.Col);
                     }
                 }
-
+                else
                 // WriteHoldingregisterFC, optional
-                xe2 = GetSingleElement(xe1, "WriteHoldingregisterFC", eReq.Optional);
-                if (xe2 != null)
+                if (CheckElementNameMatch(elemName, "WriteHoldingregisterFC"))
                 {
                     Seen = true;
-                    string TmpString = xe2.Value.Trim();
+                    string TmpString = xe.Value.Trim();
                     byte TmpValue;
                     // get value, must be 6, 16, 'auto' or 'alternate'
                     if (byte.TryParse(TmpString, out TmpValue) && ((TmpValue == 6) || (TmpValue == 16)))
@@ -599,22 +635,18 @@ namespace ModbusControlSpace
                     }
                     else
                     {
-                        TFilePosition fp = GetFilePos(xe2);
-                        throw new XmlException("XML element <" + xe2.Name + "> has an invalid value. Valid values are '6' (or '06'), '16', 'auto' or 'alternate'." + Environment.NewLine + LimitXmlText(xe2.ToString()) + Environment.NewLine, null, fp.Line, fp.Col);
+                        TFilePosition fp = GetFilePos(xe);
+                        throw new XmlException("XML element <" + xe.Name.LocalName + "> has an invalid value. Valid values are '6' (or '06'), '16', 'auto' or 'alternate'." + Environment.NewLine + LimitXmlTextLength(xe.ToString()) + Environment.NewLine, null, fp.Line, fp.Col);
                     }
                 }
-
+                else
                 // int32endian
-                xe2 = GetSingleElement(xe1, "int32endian", eReq.Optional);
                 // if not found, try the old Value32BitEndian for compatibility
-                if (xe2 == null)
-                {
-                    xe2 = GetSingleElement(xe1, "Value32BitEndian", eReq.Optional);
-                }
-                if (xe2 != null)
+                if (CheckElementNameMatch(elemName, "int32endian")
+                    || CheckElementNameMatch(elemName, "Value32BitEndian"))
                 {
                     Seen = true;
-                    string TmpString = xe2.Value.Trim();
+                    string TmpString = xe.Value.Trim();
                     Global.eEndian TmpEndian;
                     if (TryParseEndian(TmpString, out TmpEndian))
                     {
@@ -622,17 +654,16 @@ namespace ModbusControlSpace
                     }
                     else
                     {
-                        TFilePosition fp = GetFilePos(xe2);
-                        throw new XmlException("XML element <" + xe2.Name + "> has an invalid value. Valid values are 'little' or 'big'." + Environment.NewLine + LimitXmlText(xe2.ToString()) + Environment.NewLine, null, fp.Line, fp.Col);
+                        TFilePosition fp = GetFilePos(xe);
+                        throw new XmlException("XML element <" + xe.Name.LocalName + "> has an invalid value. Valid values are 'little' or 'big'." + Environment.NewLine + LimitXmlTextLength(xe.ToString()) + Environment.NewLine, null, fp.Line, fp.Col);
                     }
                 }
-
+                else
                 // float32Endian
-                xe2 = GetSingleElement(xe1, "float32endian", eReq.Optional);
-                if (xe2 != null)
+                if (CheckElementNameMatch(elemName, "float32endian"))
                 {
                     Seen = true;
-                    string TmpString = xe2.Value.Trim();
+                    string TmpString = xe.Value.Trim();
                     Global.eEndian TmpEndian;
                     if (TryParseEndian(TmpString, out TmpEndian))
                     {
@@ -640,17 +671,16 @@ namespace ModbusControlSpace
                     }
                     else
                     {
-                        TFilePosition fp = GetFilePos(xe2);
-                        throw new XmlException("XML element <" + xe2.Name + "> has an invalid value. Valid values are 'little' or 'big'." + Environment.NewLine + LimitXmlText(xe2.ToString()) + Environment.NewLine, null, fp.Line, fp.Col);
+                        TFilePosition fp = GetFilePos(xe);
+                        throw new XmlException("XML element <" + xe.Name.LocalName + "> has an invalid value. Valid values are 'little' or 'big'." + Environment.NewLine + LimitXmlTextLength(xe.ToString()) + Environment.NewLine, null, fp.Line, fp.Col);
                     }
                 }
-
+                else
                 // ascii16endian
-                xe2 = GetSingleElement(xe1, "ascii16endian", eReq.Optional);
-                if (xe2 != null)
+                if (CheckElementNameMatch(elemName, "ascii16endian"))
                 {
                     Seen = true;
-                    string TmpString = xe2.Value.Trim();
+                    string TmpString = xe.Value.Trim();
                     Global.eEndian TmpEndian;
                     if (TryParseEndian(TmpString, out TmpEndian))
                     {
@@ -658,17 +688,16 @@ namespace ModbusControlSpace
                     }
                     else
                     {
-                        TFilePosition fp = GetFilePos(xe2);
-                        throw new XmlException("XML element <" + xe2.Name + "> has an invalid value. Valid values are 'little' or 'big'." + Environment.NewLine + LimitXmlText(xe2.ToString()) + Environment.NewLine, null, fp.Line, fp.Col);
+                        TFilePosition fp = GetFilePos(xe);
+                        throw new XmlException("XML element <" + xe.Name.LocalName + "> has an invalid value. Valid values are 'little' or 'big'." + Environment.NewLine + LimitXmlTextLength(xe.ToString()) + Environment.NewLine, null, fp.Line, fp.Col);
                     }
                 }
-
+                else
                 // HoldingregistersStart
-                xe2 = GetSingleElement(xe1, "HoldingregisterStart", eReq.Optional);
-                if (xe2 != null)
+                if (CheckElementNameMatch(elemName, "HoldingregisterStart"))
                 {
                     Seen = true;
-                    string TmpString = xe2.Value.Trim();
+                    string TmpString = xe.Value.Trim();
                     UInt32 TmpNum;
                     // allow 40.000, 40.001, 400.000 and 400.001 (dots only here for clearness)
                     // use 4xxxx for holding registers to distinguish from input registers 3xxxx
@@ -683,17 +712,16 @@ namespace ModbusControlSpace
                     }
                     else
                     {
-                        TFilePosition fp = GetFilePos(xe2);
-                        throw new XmlException("XML element <" + xe2.Name + "> has an invalid value. Valid values are 40000, 40001, 400000 or 400001. Use 40001 for traditional numbering. Use 400000 or 400001 (6-digit numbering) to access more than 9999 registers. Use 40000 or 400000 if you want to number the holding registers from 0." + Environment.NewLine + LimitXmlText(xe2.ToString()) + Environment.NewLine, null, fp.Line, fp.Col);
+                        TFilePosition fp = GetFilePos(xe);
+                        throw new XmlException("XML element <" + xe.Name.LocalName + "> has an invalid value. Valid values are 40000, 40001, 400000 or 400001. Use 40001 for traditional numbering. Use 400000 or 400001 (6-digit numbering) to access more than 9999 registers. Use 40000 or 400000 if you want to number the holding registers from 0." + Environment.NewLine + LimitXmlTextLength(xe.ToString()) + Environment.NewLine, null, fp.Line, fp.Col);
                     }
                 }
-
+                else
                 // Samplerate
-                xe2 = GetSingleElement(xe1, "SampleRate", eReq.Optional);
-                if (xe2 != null)
+                if (CheckElementNameMatch(elemName, "SampleRate"))
                 {
                     Seen = true;
-                    string TmpString = xe2.Value.Trim();
+                    string TmpString = xe.Value.Trim();
                     // get value, limit range 0 - 2147483647
                     UInt32 TmpValue;
                     if (UInt32.TryParse(TmpString, out TmpValue) && (TmpValue <= 2147483647))
@@ -702,9 +730,13 @@ namespace ModbusControlSpace
                     }
                     else
                     {
-                        TFilePosition fp = GetFilePos(xe2);
-                        throw new XmlException("XML element <" + xe2.Name + "> has an invalid value. Valid values are 0 - 2147483647." + Environment.NewLine + LimitXmlText(xe2.ToString()) + Environment.NewLine, null, fp.Line, fp.Col);
+                        TFilePosition fp = GetFilePos(xe);
+                        throw new XmlException("XML element <" + xe.Name.LocalName + "> has an invalid value. Valid values are 0 - 2147483647." + Environment.NewLine + LimitXmlTextLength(xe.ToString()) + Environment.NewLine, null, fp.Line, fp.Col);
                     }
+                }
+                else
+                {
+                    // invalid/unsupported element found
                 }
             }
 
@@ -713,74 +745,68 @@ namespace ModbusControlSpace
 
 
         /// <summary>
-        /// Process all <tab> elements, optional
+        /// Process a <tab> element
         /// Throws exception on error
         /// </summary>
-        /// <param name="pxe"></param>
-        private void ProcessTabs(XElement pxe)
+        /// <param name="pxe">The parent XML element</param>
+        private void ProcessTabElement(XElement pxe)
         {
-            // get all <tab> elements, optional
-            IEnumerable<XElement> tabList = GetAllElements(pxe, "tab", eReq.Optional);
-            foreach (XElement tabNode in tabList)
+            bool nameSeen = false;
+
+            // create new tab
+            TTab newTab = new TTab();
+            // init with default values
+            newTab.Name = string.Empty;
+            newTab.VarList = new List<TVar>();
+
+            // Must have seen a <reg> in a tab for enabling auto-numbering
+            UInt32 NextAutoRegnr = 0;
+
+            // Create a TVar with the defaults for each var
+            // in <tab> we can set defaults for all var's
+            TVar DefaultVar = new TVar();
+            DefaultVar.Regnr = 0;
+            DefaultVar.Description = String.Empty;
+            DefaultVar.Longdescr = null;
+            DefaultVar.Format = Global.eFormat.Int;
+            DefaultVar.Size = 1;
+            DefaultVar.isReadable = true;
+            DefaultVar.isWriteable = false;
+            DefaultVar.MinLen = 0;
+            DefaultVar.Decimals = 0;
+            DefaultVar.ForeColor = Color.Black;
+            DefaultVar.BackColor = Color.White;
+            DefaultVar.Bitfields = null;
+            DefaultVar.Expand = false;
+            DefaultVar.EnumDict = null;
+
+            // process child elements
+            foreach (XElement xe in pxe.Elements())
             {
-                // do not allow a <tab> in a <tab>
-                XElement xetit = GetSingleElement(tabNode, "tab", eReq.Optional);
-                if (xetit != null)
+                string elemName = xe.Name.LocalName;
+                Debug.Print("<Tab> " + elemName);
+
+                // <name>, required
+                if (CheckElementNameMatch(elemName, "name"))
                 {
-                    TFilePosition fp = GetFilePos(xetit);
-                    throw new XmlException("XML element <tab> is nested in another <tab>. This is not allowed." + Environment.NewLine + LimitXmlText(xetit.ToString()) + Environment.NewLine, null, fp.Line, fp.Col);
+                    newTab.Name = xe.Value.Trim();
+                    nameSeen = true;
                 }
-
-                // create new tab
-                TTab newTab = new TTab();
-                // init with default values
-                newTab.Name = string.Empty;
-                newTab.VarList = new List<TVar>();
-
-                // Must have seen a <reg> in a tab for enabling auto-numbering
-                UInt32 NextAutoRegnr = 0;
-
-                // get name, required
-                XElement xe2 = GetSingleElement(tabNode, "name", eReq.Required);
-                if (xe2 != null)
+                else
+                // <rw>, default for <var>, optional
+                if (CheckElementNameMatch(elemName, "rw"))
                 {
-                    newTab.Name = xe2.Value.Trim();
-                }
-
-                // Create a TVar with the defaults for each var
-                TVar DefaultVar = new TVar();
-                DefaultVar.Regnr = 0;
-                DefaultVar.Description = String.Empty;
-                DefaultVar.Format = Global.eFormat.Int;
-                DefaultVar.Size = 1;
-                DefaultVar.isReadable = true;
-                DefaultVar.isWriteable = false;
-                DefaultVar.MinLen = 0;
-                DefaultVar.Decimals = 0;
-                DefaultVar.ForeColor = Color.Black;
-                DefaultVar.BackColor = Color.White;
-                DefaultVar.Bitfields = null;
-                DefaultVar.Expand = false;
-                DefaultVar.EnumDict = null;
-
-                // in tab we can set defaults for all var's
-
-                // get rw, optional
-                XElement rwNode = GetSingleElement(tabNode, "rw", eReq.Optional);
-                if (rwNode != null)
-                {
-                    if (GetReadWriteFlags(rwNode.Value.Trim(), out DefaultVar.isReadable, out DefaultVar.isWriteable) == false)
+                    if (GetReadWriteFlags(xe.Value.Trim(), out DefaultVar.isReadable, out DefaultVar.isWriteable) == false)
                     {
-                        TFilePosition fp = GetFilePos(rwNode);
-                        throw new XmlException("XML element <rw> has an invalid value. Valid values are 'r', 'rw', wr', or 'w'." + Environment.NewLine + LimitXmlText(rwNode.ToString()) + Environment.NewLine, null, fp.Line, fp.Col);
+                        TFilePosition fp = GetFilePos(xe);
+                        throw new XmlException("XML element <rw> has an invalid value. Valid values are 'r', 'rw', wr', or 'w'." + Environment.NewLine + LimitXmlTextLength(xe.ToString()) + Environment.NewLine, null, fp.Line, fp.Col);
                     }
                 }
-
-                // get minimumlength, optional
-                XElement minlenNode = GetSingleElement(tabNode, "minlen", eReq.Optional);
-                if (minlenNode != null)
+                else
+                // <minlen> minimumlength, default for <var>, optional
+                if (CheckElementNameMatch(elemName, "minlen"))
                 {
-                    string TmpString = minlenNode.Value.Trim();
+                    string TmpString = xe.Value.Trim();
                     int TmpMinlen;
                     if (int.TryParse(TmpString, out TmpMinlen)
                         && ((TmpMinlen >= 1) && (TmpMinlen <= 32)))
@@ -789,16 +815,15 @@ namespace ModbusControlSpace
                     }
                     else
                     {
-                        TFilePosition fp = GetFilePos(minlenNode);
-                        throw new XmlException("XML element <minlen> has an invalid value. Valid values are 1 - 32." + Environment.NewLine + LimitXmlText(minlenNode.ToString()) + Environment.NewLine, null, fp.Line, fp.Col);
+                        TFilePosition fp = GetFilePos(xe);
+                        throw new XmlException("XML element <minlen> has an invalid value. Valid values are 1 - 32." + Environment.NewLine + LimitXmlTextLength(xe.ToString()) + Environment.NewLine, null, fp.Line, fp.Col);
                     }
                 }
-
-                // get decimals, optional
-                XElement decimalsNode = GetSingleElement(tabNode, "decimals", eReq.Optional);
-                if (decimalsNode != null)
+                else
+                // <decimals>, default for <var>, optional
+                if (CheckElementNameMatch(elemName, "decimals"))
                 {
-                    string TmpString = decimalsNode.Value.Trim();
+                    string TmpString = xe.Value.Trim();
                     int TmpDecimals;
                     if (int.TryParse(TmpString, out TmpDecimals)
                         && ((TmpDecimals >= 0) && (TmpDecimals <= 12)))
@@ -808,46 +833,43 @@ namespace ModbusControlSpace
                     }
                     else
                     {
-                        TFilePosition fp = GetFilePos(decimalsNode);
-                        throw new XmlException("XML element <decimals> has an invalid value. Valid values are 0 - 12." + Environment.NewLine + LimitXmlText(decimalsNode.ToString()) + Environment.NewLine, null, fp.Line, fp.Col);
+                        TFilePosition fp = GetFilePos(xe);
+                        throw new XmlException("XML element <decimals> has an invalid value. Valid values are 0 - 12." + Environment.NewLine + LimitXmlTextLength(xe.ToString()) + Environment.NewLine, null, fp.Line, fp.Col);
                     }
                 }
-
-                // get fcol foregroundcolor, optional
-                XElement fcolNode = GetSingleElement(tabNode, "fcol", eReq.Optional);
-                if (fcolNode != null)
+                else
+                // <fcol> foregroundcolor, default for <var>, optional
+                if (CheckElementNameMatch(elemName, "fcol"))
                 {
                     try
                     {
-                        DefaultVar.ForeColor = ColorFromString.ToColor(fcolNode.Value.Trim());
+                        DefaultVar.ForeColor = ColorFromString.ToColor(xe.Value.Trim());
                     }
                     catch
                     {
-                        TFilePosition fp = GetFilePos(fcolNode);
-                        throw new XmlException("XML element <fcol> has an invalid value. Valid values are RGB values 0-255 like '255,0,0'; HTML style hex colors #RRGGBB like #FF0000, or a color name like 'Red'." + Environment.NewLine + LimitXmlText(fcolNode.ToString()) + Environment.NewLine, null, fp.Line, fp.Col);
+                        TFilePosition fp = GetFilePos(xe);
+                        throw new XmlException("XML element <fcol> has an invalid value. Valid values are RGB values 0-255 like '255,0,0'; HTML style hex colors #RRGGBB like #FF0000, or a color name like 'Red'." + Environment.NewLine + LimitXmlTextLength(xe.ToString()) + Environment.NewLine, null, fp.Line, fp.Col);
                     }
                 }
-
-                // get bcol backgroundcolor, optional
-                XElement bcolNode = GetSingleElement(tabNode, "bcol", eReq.Optional);
-                if (bcolNode != null)
+                else
+                // <bcol> backgroundcolor, default for <var>, optional
+                if (CheckElementNameMatch(elemName, "bcol"))
                 {
                     try
                     {
-                        DefaultVar.BackColor = ColorFromString.ToColor(bcolNode.Value.Trim());
+                        DefaultVar.BackColor = ColorFromString.ToColor(xe.Value.Trim());
                     }
                     catch
                     {
-                        TFilePosition fp = GetFilePos(bcolNode);
-                        throw new XmlException("XML element <bcol> has an invalid value. Valid values are RGB values 0-255 like '255,0,0'; HTML style hex colors #RRGGBB like #FF0000, or a color name like 'Red'." + Environment.NewLine + LimitXmlText(bcolNode.ToString()) + Environment.NewLine, null, fp.Line, fp.Col);
+                        TFilePosition fp = GetFilePos(xe);
+                        throw new XmlException("XML element <bcol> has an invalid value. Valid values are RGB values 0-255 like '255,0,0'; HTML style hex colors #RRGGBB like #FF0000, or a color name like 'Red'." + Environment.NewLine + LimitXmlTextLength(xe.ToString()) + Environment.NewLine, null, fp.Line, fp.Col);
                     }
                 }
-
-                // get expandfields, optional
-                XElement expandNode = GetSingleElement(tabNode, "expandfields", eReq.Optional);
-                if (expandNode != null)
+                else
+                // <expandfields>, default for <var>, optional
+                if (CheckElementNameMatch(elemName, "expandfields"))
                 {
-                    string TmpString = expandNode.Value.Trim();
+                    string TmpString = xe.Value.Trim();
                     bool TmpBool;
                     if (TryParseBool(TmpString, out TmpBool))
                     {
@@ -855,456 +877,590 @@ namespace ModbusControlSpace
                     }
                     else
                     {
-                        TFilePosition fp = GetFilePos(expandNode);
-                        throw new XmlException("XML element <expandfields> has an invalid value. Valid values are 'true' or 'false'." + Environment.NewLine + LimitXmlText(expandNode.ToString()) + Environment.NewLine, null, fp.Line, fp.Col);
+                        TFilePosition fp = GetFilePos(xe);
+                        throw new XmlException("XML element <expandfields> has an invalid value. Valid values are 'true' or 'false'." + Environment.NewLine + LimitXmlTextLength(xe.ToString()) + Environment.NewLine, null, fp.Line, fp.Col);
                     }
                 }
-
-                // get all <var> elements, optional
-                IEnumerable<XElement> varList = GetAllElements(tabNode, "var", eReq.Optional);
-                foreach (XElement varNode in varList)
+                else
+                // <var> elements, optional, multiple
+                if (CheckElementNameMatch(elemName, "var"))
                 {
-                    // do not allow a <var> in a <var>
-                    XElement xeviv = GetSingleElement(varNode, "var", eReq.Optional);
-                    if (xeviv != null)
-                    {
-                        TFilePosition fp = GetFilePos(xeviv);
-                        throw new XmlException("XML element <var> is nested in another <var>. This is not allowed." + Environment.NewLine + LimitXmlText(xeviv.ToString()) + Environment.NewLine, null, fp.Line, fp.Col);
-                    }
+                    // make new var, and init with the defaults, support autonumbering
+                    TVar newVar = ProcessVarElement(xe, NextAutoRegnr, DefaultVar);
 
-                    // make new var, and init with the defauls
-                    TVar newVar = DefaultVar;
-
-                    // get reg, required
-                    XElement regNode = GetSingleElement(varNode, "reg", eReq.Required);
-                    if (regNode != null)
-                    {
-                        string regString = regNode.Value.Trim();
-                        // auto numbering?
-                        if (regString == "*")
-                        {
-                            // auto numbering
-                            if (NextAutoRegnr > 0)
-                            {
-                                newVar.Regnr = NextAutoRegnr;
-                            }
-                            else
-                            {
-                                TFilePosition fp = GetFilePos(regNode);
-                                throw new XmlException("Must have seen a valid register number before auto-numbering can be used." + Environment.NewLine + LimitXmlText(regNode.ToString()) + Environment.NewLine, null, fp.Line, fp.Col);
-                            }
-                        }
-                        else
-                        {
-                            // parse number
-                            // and check register number
-                            UInt32 Regnr;
-                            if (UInt32.TryParse(regString, out Regnr)
-                                && ValidateHoldingregNr(Regnr))
-                            {
-                                // okay
-                                newVar.Regnr = Regnr;
-                            }
-                            else
-                            {
-                                TFilePosition fp = GetFilePos(regNode);
-                                throw new XmlException("<reg> has an invalid value (range defined by <HoldingregisterStart>)" + Environment.NewLine + LimitXmlText(regNode.ToString()) + Environment.NewLine, null, fp.Line, fp.Col);
-                            }
-                        }
-                    }
-
-                    // get description, optional
-                    XElement textNode = GetSingleElement(varNode, "text", eReq.Optional);
-                    if (textNode != null)
-                    {
-                        newVar.Description = textNode.Value;
-                    }
-
-                    // get type, optional
-                    XElement typeNode = GetSingleElement(varNode, "type", eReq.Optional);
-                    if (typeNode != null)
-                    {
-                        if (GetVarTypestringToFormatAndSize(typeNode.Value.Trim(), out newVar.Format, out newVar.Size))
-                        {
-                            // ok
-                            // if the type is not int or uint: reset the default decimals
-                            if ((newVar.Format != Global.eFormat.Int) && (newVar.Format != Global.eFormat.UInt))
-                            {
-                                newVar.Decimals = 0;
-                            }
-                        }
-                        else
-                        {
-                            TFilePosition fp = GetFilePos(typeNode);
-                            throw new XmlException("XML element <type> has an invalid value. Valid values are int16, uint16, int32, uint32, hex16, hex32, bin16, bin32, float32, ascii16 or ascii32." + Environment.NewLine + LimitXmlText(typeNode.ToString()) + Environment.NewLine, null, fp.Line, fp.Col);
-                        }
-                    }
-
-                    // get minimumlength, optional
-                    minlenNode = GetSingleElement(varNode, "minlen", eReq.Optional);
-                    if (minlenNode != null)
-                    {
-                        string TmpString = minlenNode.Value.Trim();
-                        int TmpMinlen;
-                        if (int.TryParse(TmpString, out TmpMinlen)
-                            && ((TmpMinlen >= 1) && (TmpMinlen <= 32)))
-                        {
-                            newVar.MinLen = TmpMinlen;
-                        }
-                        else
-                        {
-                            TFilePosition fp = GetFilePos(minlenNode);
-                            throw new XmlException("XML element <minlen> has an invalid value. Valid values are 1 - 32." + Environment.NewLine + LimitXmlText(minlenNode.ToString()) + Environment.NewLine, null, fp.Line, fp.Col);
-                        }
-                    }
-
-                    // get rw, optional
-                    rwNode = GetSingleElement(varNode, "rw", eReq.Optional);
-                    if (rwNode != null)
-                    {
-                        if (GetReadWriteFlags(rwNode.Value.Trim(), out newVar.isReadable, out newVar.isWriteable) == false)
-                        {
-                            TFilePosition fp = GetFilePos(rwNode);
-                            throw new XmlException("XML element <rw> has an invalid value. Valid values are 'r', 'rw', wr', or 'w'." + Environment.NewLine + LimitXmlText(rwNode.ToString()) + Environment.NewLine, null, fp.Line, fp.Col);
-                        }
-                    }
-
-                    // get fcol foregroundcolor, optional
-                    fcolNode = GetSingleElement(varNode, "fcol", eReq.Optional);
-                    if (fcolNode != null)
-                    {
-                        try
-                        {
-                            newVar.ForeColor = ColorFromString.ToColor(fcolNode.Value.Trim());
-                        }
-                        catch
-                        {
-                            TFilePosition fp = GetFilePos(fcolNode);
-                            throw new XmlException("XML element <fcol> has an invalid value. Valid values are RGB values 0-255 like '255,0,0'; HTML style hex colors #RRGGBB like #FF0000, or a color name like 'Red'." + Environment.NewLine + LimitXmlText(fcolNode.ToString()) + Environment.NewLine, null, fp.Line, fp.Col);
-                        }
-                    }
-
-                    // get bcol backgroundcolor, optional
-                    bcolNode = GetSingleElement(varNode, "bcol", eReq.Optional);
-                    if (bcolNode != null)
-                    {
-                        try
-                        {
-                            newVar.BackColor = ColorFromString.ToColor(bcolNode.Value.Trim());
-                        }
-                        catch
-                        {
-                            TFilePosition fp = GetFilePos(bcolNode);
-                            throw new XmlException("XML element <bcol> has an invalid value. Valid values are RGB values 0-255 like '255,0,0'; HTML style hex colors #RRGGBB like #FF0000, or a color name like 'Red'." + Environment.NewLine + LimitXmlText(bcolNode.ToString()) + Environment.NewLine, null, fp.Line, fp.Col);
-                        }
-                    }
-
-                    // get decimals, optional
-                    decimalsNode = GetSingleElement(varNode, "decimals", eReq.Optional);
-                    if (decimalsNode != null)
-                    {
-                        string TmpString = decimalsNode.Value.Trim();
-                        int TmpDecimals;
-                        if (int.TryParse(TmpString, out TmpDecimals)
-                            && ((TmpDecimals >= 0) && (TmpDecimals <= 12)))
-                        {
-                            // ok
-                            newVar.Decimals = TmpDecimals;
-                        }
-                        else
-                        {
-                            TFilePosition fp = GetFilePos(decimalsNode);
-                            throw new XmlException("XML element <decimals> has an invalid value. Valid values are 0 - 12." + Environment.NewLine + LimitXmlText(decimalsNode.ToString()) + Environment.NewLine, null, fp.Line, fp.Col);
-                        }
-
-                        // Check: decimals != 0 is allowed only for int and uint types
-                        if ((newVar.Decimals != 0) && (newVar.Format != Global.eFormat.Int) && (newVar.Format != Global.eFormat.UInt))
-                        {
-                            TFilePosition fp = GetFilePos(decimalsNode);
-                            throw new XmlException("XML element <decimals> with value > 0 is only allowed for int and uint types." + Environment.NewLine + LimitXmlText(decimalsNode.ToString()) + Environment.NewLine, null, fp.Line, fp.Col);
-                        }
-                    }
-
-                    // get all bitfields <field> in this var, optional
-                    IEnumerable<XElement> fieldsList = GetAllElements(varNode, "field", eReq.Optional);
-                    if (fieldsList.Count() >= 1)
-                    {
-                        // auto count capability for position
-                        int AutoPosition = 0;
-                        foreach (XElement fieldNode in fieldsList)
-                        {
-                            // do not allow a <field> in a <field>
-                            XElement xefif = GetSingleElement(fieldNode, "field", eReq.Optional);
-                            if (xefif != null)
-                            {
-                                TFilePosition fp = GetFilePos(xefif);
-                                throw new XmlException("XML element <field> is nested in another <field>. This is not allowed." + Environment.NewLine + LimitXmlText(xefif.ToString()) + Environment.NewLine, null, fp.Line, fp.Col);
-                            }
-
-                            // new bitfield
-                            TBitfield newBitfield = new TBitfield();
-                            // init with default values
-                            newBitfield.Position = 0;
-                            newBitfield.Width = 1;
-                            newBitfield.Description = string.Empty;
-                            newBitfield.Format = Global.eFormat.UInt;
-                            newBitfield.MinLen = 0;
-                            newBitfield.ForeColor = newVar.ForeColor;
-                            newBitfield.BackColor = newVar.BackColor;
-                            newBitfield.EnumDict = null;
-
-                            // default position is auto count
-                            newBitfield.Position = AutoPosition;
-
-                            // get bitfield position, optional
-                            XElement positionNode = GetSingleElement(fieldNode, "pos", eReq.Optional);
-                            if (positionNode != null)
-                            {
-                                if (int.TryParse(positionNode.Value.Trim(), out newBitfield.Position)
-                                    && (newBitfield.Position >= 0) && (newBitfield.Position <= 31))
-                                {
-                                    // ok
-                                }
-                                else
-                                {
-                                    TFilePosition fp = GetFilePos(positionNode);
-                                    throw new XmlException("XML element <pos> has an invalid value. Valid values are 0 - 31." + Environment.NewLine + LimitXmlText(positionNode.ToString()) + Environment.NewLine, null, fp.Line, fp.Col);
-                                }
-                            }
-
-                            // get bitfield width, optional
-                            XElement widthNode = GetSingleElement(fieldNode, "width", eReq.Optional);
-                            if (widthNode != null)
-                            {
-                                if (int.TryParse(widthNode.Value.Trim(), out newBitfield.Width)
-                                    && (newBitfield.Width >= 1) && (newBitfield.Width <= 32))
-                                {
-                                    // ok
-                                }
-                                else
-                                {
-                                    TFilePosition fp = GetFilePos(widthNode);
-                                    throw new XmlException("XML element <width> has an invalid value. Valid values are 1 - 32." + Environment.NewLine + LimitXmlText(widthNode.ToString()) + Environment.NewLine, null, fp.Line, fp.Col);
-                                }
-                            }
-
-                            // validate position and width
-                            if ((newBitfield.Position + newBitfield.Width) <= (newVar.Size * 16))
-                            {
-                                // okay
-                            }
-                            else
-                            {
-                                TFilePosition fp = GetFilePos(fieldNode);
-                                throw new XmlException("XML element <field> has an invalid position + width value. Position + width is " + (newBitfield.Position + newBitfield.Width).ToString() + " but must be <= " + (newVar.Size * 16).ToString() + " to fit." + Environment.NewLine + LimitXmlText(fieldNode.ToString()) + Environment.NewLine, null, fp.Line, fp.Col);
-                            }
-
-                            // get description, optional
-                            XElement node = GetSingleElement(fieldNode, "text", eReq.Optional);
-                            if (node != null)
-                            {
-                                newBitfield.Description = node.Value;
-                            }
-
-                            // get type, optional
-                            node = GetSingleElement(fieldNode, "type", eReq.Optional);
-                            if (node != null)
-                            {
-                                if (GetBitfieldTypestringToFormat(node.Value.Trim(), out newBitfield.Format))
-                                {
-                                    // ok
-                                }
-                                else
-                                {
-                                    TFilePosition fp = GetFilePos(node);
-                                    throw new XmlException("XML element <type> has an invalid value. Valid values are int, uint, hex, bin or ascii." + Environment.NewLine + LimitXmlText(node.ToString()) + Environment.NewLine, null, fp.Line, fp.Col);
-                                }
-                            }
-
-                            // get minimumlength (optional)
-                            node = GetSingleElement(fieldNode, "minlen", eReq.Optional);
-                            if (node != null)
-                            {
-                                if (int.TryParse(minlenNode.Value.Trim(), out newBitfield.MinLen)
-                                    && ((newBitfield.MinLen >= 1) && (newBitfield.MinLen <= 32)))
-                                {
-                                    // ok
-                                }
-                                else
-                                {
-                                    TFilePosition fp = GetFilePos(node);
-                                    throw new XmlException("XML element <minlen> has an invalid value. Valid values are 1 - 32." + Environment.NewLine + LimitXmlText(node.ToString()) + Environment.NewLine, null, fp.Line, fp.Col);
-                                }
-                            }
-
-                            // get fcol foregroundcolor, optional
-                            node = GetSingleElement(fieldNode, "fcol", eReq.Optional);
-                            if (node != null)
-                            {
-                                try
-                                {
-                                    newBitfield.ForeColor = ColorFromString.ToColor(node.Value.Trim());
-                                }
-                                catch
-                                {
-                                    TFilePosition fp = GetFilePos(node);
-                                    throw new XmlException("XML element <fcol> has an invalid value. Valid values are RGB values 0-255 like '255,0,0'; HTML style hex colors #RRGGBB like #FF0000, or a color name like 'Red'." + Environment.NewLine + LimitXmlText(node.ToString()) + Environment.NewLine, null, fp.Line, fp.Col);
-                                }
-                            }
-
-                            // get bcol backgroundcolor, optional
-                            node = GetSingleElement(fieldNode, "bcol", eReq.Optional);
-                            if (node != null)
-                            {
-                                try
-                                {
-                                    newBitfield.BackColor = ColorFromString.ToColor(node.Value.Trim());
-                                }
-                                catch
-                                {
-                                    TFilePosition fp = GetFilePos(node);
-                                    throw new XmlException("XML element <bcol> has an invalid value. Valid values are RGB values 0-255 like '255,0,0'; HTML style hex colors #RRGGBB like #FF0000, or a color name like 'Red'." + Environment.NewLine + LimitXmlText(node.ToString()) + Environment.NewLine, null, fp.Line, fp.Col);
-                                }
-                            }
-
-                            // get longdescription (tooltip) text, optional
-                            node = GetSingleElement(fieldNode, "longdescr", eReq.Optional);
-                            if (node != null)
-                            {
-                                newBitfield.Longdescr = node.Value;
-                                HasLongdescrs = true;
-                            }
-
-                            // get enum, optional
-                            newBitfield.EnumDict = GetEnum(fieldNode);
-
-                            // auto count capability for Position
-                            AutoPosition += newBitfield.Width;
-
-                            // Add new bitfield to the list
-                            // If we haven't yet got a list: create one
-                            if (newVar.Bitfields == null)
-                            {
-                                newVar.Bitfields = new List<TBitfield>();
-                            }
-                            newVar.Bitfields.Add(newBitfield);
-                        }
-                    }
-
-                    // get expand, optional
-                    expandNode = GetSingleElement(varNode, "expandfields", eReq.Optional);
-                    if (expandNode != null)
-                    {
-                        string TmpString = expandNode.Value.Trim();
-                        bool TmpBool;
-                        if (TryParseBool(TmpString, out TmpBool))
-                        {
-                            newVar.Expand = TmpBool;
-                        }
-                        else
-                        {
-                            TFilePosition fp = GetFilePos(expandNode);
-                            throw new XmlException("XML element <expandfields> has an invalid value. Valid values are 'true' or 'false'." + Environment.NewLine + LimitXmlText(expandNode.ToString()) + Environment.NewLine, null, fp.Line, fp.Col);
-                        }
-                    }
-
-                    // get longdescription (tooltip) text, optional
-                    XElement longdescrNode = GetSingleElement(varNode, "longdescr", eReq.Optional);
-                    if (longdescrNode != null)
-                    {
-                        newVar.Longdescr = longdescrNode.Value;
-                        HasLongdescrs = true;
-                    }
-
-                    // get enum, optional
-                    newVar.EnumDict = GetEnum(varNode);
-
-                    // Add new var to the list
+                    // Add new var to the tab list
                     newTab.VarList.Add(newVar);
                     // update next auto register numbering
                     NextAutoRegnr = (UInt32)(newVar.Regnr + newVar.Size);
                 }
-
-                TabsList.Add(newTab);
+                else
+                // do not allow a <tab> in a <tab>
+                if (CheckElementNameMatch(elemName, "tab"))
+                {
+                    TFilePosition fp = GetFilePos(xe);
+                    throw new XmlException("XML element <tab> is nested in another <tab>. This is not allowed." + Environment.NewLine + LimitXmlTextLength(xe.ToString()) + Environment.NewLine, null, fp.Line, fp.Col);
+                }
+                else
+                {
+                    // invalid/unsupported element found
+                }
             }
+
+            // <name> is required
+            if (nameSeen == false)
+            {
+                string elName = "name";
+                TFilePosition fp = GetFilePos(pxe);
+                throw new XmlException("XML element <" + elName + "> not found. A <" + elName + "> element is required in a <" + pxe.Name.LocalName + "> element." + Environment.NewLine, null, fp.Line, fp.Col);
+            }
+
+            TabsList.Add(newTab);
         }
 
-        Dictionary<int, string> GetEnum(XElement node)
+        /// <summary>
+        /// Process a <var> element
+        /// Throws exception on error
+        /// </summary>
+        /// <param name="pxe">The parent XML element</param>
+        private TVar ProcessVarElement(XElement pxe, uint nextAutoRegnr, TVar defaultVar)
         {
-            Dictionary<int, string> dict = null;
+            TVar newVar = defaultVar;
 
-            // get enum, optional
-            XElement enumNode = GetSingleElement(node, "enum", eReq.Optional);
-            if (enumNode != null)
+            // auto count capability for position
+            int autoFieldPos = 0;
+
+            // reg is required
+            bool regSeen = false;
+
+            // process child elements
+            foreach (XElement xe in pxe.Elements())
             {
-                // get all <item> in this enum, optional
-                IEnumerable<XElement> itemList = GetAllElements(enumNode, "item", eReq.Optional);
-                if (itemList.Count() >= 1)
-                {
-                    dict = new Dictionary<int, string>();
+                string elemName = xe.Name.LocalName;
+                Debug.Print("<Var> " + elemName);
 
-                    // get all items, each item requires value and text
-                    foreach (XElement item in itemList)
+                // <reg>, required
+                if (CheckElementNameMatch(elemName, "reg"))
+                {
+                    string regString = xe.Value.Trim();
+                    // auto numbering?
+                    if (regString == "*")
                     {
-                        XElement itemValue = GetSingleElement(item, "value", eReq.Required);
-                        string TmpString = itemValue.Value.Trim();
-                        int TmpValue;
-                        if (int.TryParse(TmpString, out TmpValue))
+                        // auto numbering
+                        // initialized?
+                        if (nextAutoRegnr > 0)
                         {
-                            // OK
+                            newVar.Regnr = nextAutoRegnr;
                         }
                         else
                         {
-                            TFilePosition fp = GetFilePos(itemValue);
-                            throw new XmlException("XML element <" + itemValue.Name + "> has an invalid value. Must be valid integer." + Environment.NewLine + LimitXmlText(itemValue.ToString()) + Environment.NewLine, null, fp.Line, fp.Col);
+                            TFilePosition fp = GetFilePos(xe);
+                            throw new XmlException("Must have seen a valid register number before auto-numbering can be used." + Environment.NewLine + LimitXmlTextLength(xe.ToString()) + Environment.NewLine, null, fp.Line, fp.Col);
+                        }
+                    }
+                    else
+                    {
+                        // parse number
+                        // and check register number
+                        UInt32 Regnr;
+                        if (UInt32.TryParse(regString, out Regnr)
+                            && ValidateHoldingregNr(Regnr))
+                        {
+                            // okay
+                            newVar.Regnr = Regnr;
+                        }
+                        else
+                        {
+                            TFilePosition fp = GetFilePos(xe);
+                            throw new XmlException("<reg> has an invalid value (range defined by <HoldingregisterStart>)" + Environment.NewLine + LimitXmlTextLength(xe.ToString()) + Environment.NewLine, null, fp.Line, fp.Col);
+                        }
+                    }
+                    regSeen = true;
+                }
+                else
+                // <text> description, optional
+                if (CheckElementNameMatch(elemName, "text"))
+                {
+                    newVar.Description = xe.Value;
+                }
+                else
+                // <longdescr> longdescription (tooltip) text, optional
+                if (CheckElementNameMatch(elemName, "longdescr"))
+                {
+                    newVar.Longdescr = xe.Value;
+                    HasLongdescrs = true;
+                }
+                else
+                // <type>, optional
+                if (CheckElementNameMatch(elemName, "type"))
+                {
+                    if (GetVarTypestringToFormatAndSize(xe.Value.Trim(), out newVar.Format, out newVar.Size))
+                    {
+                        // ok
+                        // if the type is not int or uint: reset the default decimals
+                        if ((newVar.Format != Global.eFormat.Int) && (newVar.Format != Global.eFormat.UInt))
+                        {
+                            newVar.Decimals = 0;
+                        }
+                    }
+                    else
+                    {
+                        TFilePosition fp = GetFilePos(xe);
+                        throw new XmlException("XML element <type> has an invalid value. Valid values are int16, uint16, int32, uint32, hex16, hex32, bin16, bin32, float32, ascii16 or ascii32." + Environment.NewLine + LimitXmlTextLength(xe.ToString()) + Environment.NewLine, null, fp.Line, fp.Col);
+                    }
+                }
+                else
+                // get minimumlength, optional
+                if (CheckElementNameMatch(elemName, "minlen"))
+                {
+                    string TmpString = xe.Value.Trim();
+                    int TmpMinlen;
+                    if (int.TryParse(TmpString, out TmpMinlen)
+                        && ((TmpMinlen >= 1) && (TmpMinlen <= 32)))
+                    {
+                        newVar.MinLen = TmpMinlen;
+                    }
+                    else
+                    {
+                        TFilePosition fp = GetFilePos(xe);
+                        throw new XmlException("XML element <minlen> has an invalid value. Valid values are 1 - 32." + Environment.NewLine + LimitXmlTextLength(xe.ToString()) + Environment.NewLine, null, fp.Line, fp.Col);
+                    }
+                }
+                else
+                // <rw>, optional
+                if (CheckElementNameMatch(elemName, "rw"))
+                {
+                    if (GetReadWriteFlags(xe.Value.Trim(), out newVar.isReadable, out newVar.isWriteable) == false)
+                    {
+                        TFilePosition fp = GetFilePos(xe);
+                        throw new XmlException("XML element <rw> has an invalid value. Valid values are 'r', 'rw', wr', or 'w'." + Environment.NewLine + LimitXmlTextLength(xe.ToString()) + Environment.NewLine, null, fp.Line, fp.Col);
+                    }
+                }
+                else
+                // <fcol> foregroundcolor, optional
+                if (CheckElementNameMatch(elemName, "fcol"))
+                {
+                    try
+                    {
+                        newVar.ForeColor = ColorFromString.ToColor(xe.Value.Trim());
+                    }
+                    catch
+                    {
+                        TFilePosition fp = GetFilePos(xe);
+                        throw new XmlException("XML element <fcol> has an invalid value. Valid values are RGB values 0-255 like '255,0,0'; HTML style hex colors #RRGGBB like #FF0000, or a color name like 'Red'." + Environment.NewLine + LimitXmlTextLength(xe.ToString()) + Environment.NewLine, null, fp.Line, fp.Col);
+                    }
+                }
+                else
+                // <bcol> backgroundcolor, optional
+                if (CheckElementNameMatch(elemName, "bcol"))
+                {
+                    try
+                    {
+                        newVar.BackColor = ColorFromString.ToColor(xe.Value.Trim());
+                    }
+                    catch
+                    {
+                        TFilePosition fp = GetFilePos(xe);
+                        throw new XmlException("XML element <bcol> has an invalid value. Valid values are RGB values 0-255 like '255,0,0'; HTML style hex colors #RRGGBB like #FF0000, or a color name like 'Red'." + Environment.NewLine + LimitXmlTextLength(xe.ToString()) + Environment.NewLine, null, fp.Line, fp.Col);
+                    }
+                }
+                else
+                // <decimals>, optional
+                if (CheckElementNameMatch(elemName, "decimals"))
+                {
+                    string TmpString = xe.Value.Trim();
+                    int TmpDecimals;
+                    if (int.TryParse(TmpString, out TmpDecimals)
+                        && ((TmpDecimals >= 0) && (TmpDecimals <= 12)))
+                    {
+                        // ok
+                        newVar.Decimals = TmpDecimals;
+                    }
+                    else
+                    {
+                        TFilePosition fp = GetFilePos(xe);
+                        throw new XmlException("XML element <decimals> has an invalid value. Valid values are 0 - 12." + Environment.NewLine + LimitXmlTextLength(xe.ToString()) + Environment.NewLine, null, fp.Line, fp.Col);
+                    }
+                }
+                else
+                // <expandfields>, optional
+                if (CheckElementNameMatch(elemName, "expandfields"))
+                {
+                    string TmpString = xe.Value.Trim();
+                    bool TmpBool;
+                    if (TryParseBool(TmpString, out TmpBool))
+                    {
+                        newVar.Expand = TmpBool;
+                    }
+                    else
+                    {
+                        TFilePosition fp = GetFilePos(xe);
+                        throw new XmlException("XML element <expandfields> has an invalid value. Valid values are 'true' or 'false'." + Environment.NewLine + LimitXmlTextLength(xe.ToString()) + Environment.NewLine, null, fp.Line, fp.Col);
+                    }
+                }
+                else
+                // <enum>, optional
+                if (CheckElementNameMatch(elemName, "enum"))
+                {
+                    newVar.EnumDict = ProcessEnumElementIntoDict(xe);
+                }
+                else
+                // <field> bitfields in this var, optional, multiple
+                if (CheckElementNameMatch(elemName, "field"))
+                {
+                    // new bitfield
+                    TBitfield defaultField = new TBitfield();
+                    // init with default values
+                    defaultField.Position = autoFieldPos;           // default position is auto count
+                    defaultField.Width = 1;
+                    defaultField.Description = string.Empty;
+                    defaultField.Format = Global.eFormat.UInt;
+                    defaultField.MinLen = 0;
+                    defaultField.ForeColor = newVar.ForeColor;
+                    defaultField.BackColor = newVar.BackColor;
+                    defaultField.EnumDict = null;
+
+                    TBitfield newField = ProcessVarFieldElement(xe, defaultField);
+
+                    // validate position and width fits in parent
+                    if ((newField.Position + newField.Width) <= (newVar.Size * 16))
+                    {
+                        // okay
+                    }
+                    else
+                    {
+                        TFilePosition fp = GetFilePos(xe);
+                        throw new XmlException("XML element <field> has an invalid position + width value. Position + width is " + (newField.Position + newField.Width).ToString() + " but must be <= " + (newVar.Size * 16).ToString() + " to fit." + Environment.NewLine + LimitXmlTextLength(xe.ToString()) + Environment.NewLine, null, fp.Line, fp.Col);
+                    }
+
+                    // auto count capability for Position
+                    autoFieldPos += newField.Width;
+
+                    // Add new bitfield to the list
+                    // If we haven't yet got a list: create one
+                    if (newVar.Bitfields == null)
+                    {
+                        newVar.Bitfields = new List<TBitfield>();
+                    }
+                    newVar.Bitfields.Add(newField);
+
+                }
+                else
+                // do not allow a <var> in a <var>
+                if (CheckElementNameMatch(elemName, "var"))
+                {
+                    TFilePosition fp = GetFilePos(xe);
+                    throw new XmlException("XML element <var> is nested in another <var>. This is not allowed." + Environment.NewLine + LimitXmlTextLength(xe.ToString()) + Environment.NewLine, null, fp.Line, fp.Col);
+                }
+                else
+                {
+                    // invalid/unsupported element found
+                }
+            }
+
+            // <reg> is required
+            if (regSeen == false)
+            {
+                string elName = "reg";
+                TFilePosition fp = GetFilePos(pxe);
+                throw new XmlException("XML element <" + elName + "> not found. A <" + elName + "> element is required in a <" + pxe.Name.LocalName + "> element." + Environment.NewLine, null, fp.Line, fp.Col);
+            }
+
+            // Check: decimals != 0 is allowed only for int and uint types
+            if ((newVar.Decimals != 0) && (newVar.Format != Global.eFormat.Int) && (newVar.Format != Global.eFormat.UInt))
+            {
+                TFilePosition fp = GetFilePos(pxe);
+                throw new XmlException("XML element <decimals> with value > 0 is only allowed for int and uint types." + Environment.NewLine + LimitXmlTextLength(pxe.ToString()) + Environment.NewLine, null, fp.Line, fp.Col);
+            }
+
+            return newVar;
+        }
+
+        /// <summary>
+        /// Process a <var> element
+        /// Throws exception on error
+        /// </summary>
+        /// <param name="pxe">The parent XML element</param>
+        private TBitfield ProcessVarFieldElement(XElement pxe, TBitfield defaultField)
+        {
+            TBitfield newField = defaultField;
+
+            foreach (XElement xe in pxe.Elements())
+            {
+                string elemName = xe.Name.LocalName;
+                Debug.Print("<Field> " + elemName);
+
+                // <pos> bitfield position, optional
+                if (CheckElementNameMatch(elemName, "pos"))
+                {
+                    if (int.TryParse(xe.Value.Trim(), out newField.Position)
+                        && (newField.Position >= 0) && (newField.Position <= 31))
+                    {
+                        // ok
+                    }
+                    else
+                    {
+                        TFilePosition fp = GetFilePos(xe);
+                        throw new XmlException("XML element <pos> has an invalid value. Valid values are 0 - 31." + Environment.NewLine + LimitXmlTextLength(xe.ToString()) + Environment.NewLine, null, fp.Line, fp.Col);
+                    }
+                }
+                else
+                // <width> bitfield width, optional
+                if (CheckElementNameMatch(elemName, "width"))
+                {
+                    if (int.TryParse(xe.Value.Trim(), out newField.Width)
+                        && (newField.Width >= 1) && (newField.Width <= 32))
+                    {
+                        // ok
+                    }
+                    else
+                    {
+                        TFilePosition fp = GetFilePos(xe);
+                        throw new XmlException("XML element <width> has an invalid value. Valid values are 1 - 32." + Environment.NewLine + LimitXmlTextLength(xe.ToString()) + Environment.NewLine, null, fp.Line, fp.Col);
+                    }
+                }
+                else
+                // <text> description, optional
+                if (CheckElementNameMatch(elemName, "text"))
+                {
+                    newField.Description = xe.Value;
+                }
+                else
+                // <type>, optional
+                if (CheckElementNameMatch(elemName, "type"))
+                {
+                    if (GetBitfieldTypestringToFormat(xe.Value.Trim(), out newField.Format))
+                    {
+                        // ok
+                    }
+                    else
+                    {
+                        TFilePosition fp = GetFilePos(xe);
+                        throw new XmlException("XML element <type> has an invalid value. Valid values are int, uint, hex, bin or ascii." + Environment.NewLine + LimitXmlTextLength(xe.ToString()) + Environment.NewLine, null, fp.Line, fp.Col);
+                    }
+                }
+                else
+                // <minlen> minimumlength, optional
+                if (CheckElementNameMatch(elemName, "minlen"))
+                {
+                    if (int.TryParse(xe.Value.Trim(), out newField.MinLen)
+                        && ((newField.MinLen >= 1) && (newField.MinLen <= 32)))
+                    {
+                        // ok
+                    }
+                    else
+                    {
+                        TFilePosition fp = GetFilePos(xe);
+                        throw new XmlException("XML element <minlen> has an invalid value. Valid values are 1 - 32." + Environment.NewLine + LimitXmlTextLength(xe.ToString()) + Environment.NewLine, null, fp.Line, fp.Col);
+                    }
+                }
+                else
+                // <fcol> foreground color, optional
+                if (CheckElementNameMatch(elemName, "fcol"))
+                {
+                    try
+                    {
+                        newField.ForeColor = ColorFromString.ToColor(xe.Value.Trim());
+                    }
+                    catch
+                    {
+                        TFilePosition fp = GetFilePos(xe);
+                        throw new XmlException("XML element <fcol> has an invalid value. Valid values are RGB values 0-255 like '255,0,0'; HTML style hex colors #RRGGBB like #FF0000, or a color name like 'Red'." + Environment.NewLine + LimitXmlTextLength(xe.ToString()) + Environment.NewLine, null, fp.Line, fp.Col);
+                    }
+                }
+
+                // <bcol> backgroundcolor, optional
+                if (CheckElementNameMatch(elemName, "bcol"))
+                {
+                    try
+                    {
+                        newField.BackColor = ColorFromString.ToColor(xe.Value.Trim());
+                    }
+                    catch
+                    {
+                        TFilePosition fp = GetFilePos(xe);
+                        throw new XmlException("XML element <bcol> has an invalid value. Valid values are RGB values 0-255 like '255,0,0'; HTML style hex colors #RRGGBB like #FF0000, or a color name like 'Red'." + Environment.NewLine + LimitXmlTextLength(xe.ToString()) + Environment.NewLine, null, fp.Line, fp.Col);
+                    }
+                }
+                else
+                // <longdescr> longdescription (tooltip) text, optional
+                if (CheckElementNameMatch(elemName, "longdescr"))
+                {
+                    newField.Longdescr = xe.Value;
+                    HasLongdescrs = true;
+                }
+                else
+                // <enum>, optional
+                if (CheckElementNameMatch(elemName, "enum"))
+                {
+                    newField.EnumDict = ProcessEnumElementIntoDict(xe);
+                }
+                else
+                // do not allow a <field> in a <field>
+                if (CheckElementNameMatch(elemName, "field"))
+                {
+                    TFilePosition fp = GetFilePos(xe);
+                    throw new XmlException("XML element <field> is nested in another <field>. This is not allowed." + Environment.NewLine + LimitXmlTextLength(xe.ToString()) + Environment.NewLine, null, fp.Line, fp.Col);
+                }
+                else
+                {
+                    // invalid/unsupported element found
+                }
+            }
+
+            return newField;
+        }
+
+        /// <summary>
+        /// Get enum items list as a dictionary
+        /// </summary>
+        /// <param name="pxe"></param>
+        /// <returns>Dictionary with items. Null if there are no items. </returns>
+        Dictionary<int, string> ProcessEnumElementIntoDict(XElement pxe)
+        {
+            Dictionary<int, string> dict = null;
+
+            foreach (XElement xitem in pxe.Elements())
+            {
+                string elemName = xitem.Name.LocalName;
+                Debug.Print("<enum> " + elemName);
+
+                // <item>, optional, multiple
+                if (CheckElementNameMatch(elemName, "item"))
+                {
+                    bool valueSeen = false;
+                    int valueInt = 0;
+                    bool textSeen = false;
+                    string textStr = null;
+
+                    // for this item, get <value> and <text>, required
+                    foreach (XElement xe in xitem.Elements())
+                    {
+                        string elem2Name = xe.Name.LocalName;
+                        Debug.Print("<item> " + elem2Name);
+
+                        // item <value>
+                        if (CheckElementNameMatch(elem2Name, "value"))
+                        {
+                            if (valueSeen)
+                            {
+                                // found more than 1
+                                // throw exception with fileposition of 2nd
+                                TFilePosition fp = GetFilePos(xe);
+                                throw new XmlException("XML element <" + xe.Name.LocalName + "> is found multiple times. It is allowed only once in its parent <" + xe.Parent.Name.LocalName + "> element." + Environment.NewLine + LimitXmlTextLength(xe.ToString()) + Environment.NewLine, null, fp.Line, fp.Col);
+                            }
+                            else
+                            {
+                                // store value in valueInt
+                                string TmpString = xe.Value.Trim();
+                                if (int.TryParse(TmpString, out valueInt))
+                                {
+                                    // OK
+                                }
+                                else
+                                {
+                                    TFilePosition fp = GetFilePos(xe);
+                                    throw new XmlException("XML element <" + xe.Name + "> has an invalid value. Must be valid integer." + Environment.NewLine + LimitXmlTextLength(xe.ToString()) + Environment.NewLine, null, fp.Line, fp.Col);
+                                }
+                                valueSeen = true;
+                            }
+                        }
+                        else
+                        // item <text>
+                        if (CheckElementNameMatch(elem2Name, "text"))
+                        {
+                            if (textSeen)
+                            {
+                                // found more than 1
+                                // throw exception with fileposition of 2nd
+                                TFilePosition fp = GetFilePos(xe);
+                                throw new XmlException("XML element <" + xe.Name.LocalName + "> is found multiple times. It is allowed only once in its parent <" + xe.Parent.Name.LocalName + "> element." + Environment.NewLine + LimitXmlTextLength(xe.ToString()) + Environment.NewLine, null, fp.Line, fp.Col);
+                            }
+                            else
+                            {
+                                textStr = xe.Value.Trim();
+                                textSeen = true;
+                            }
+                        }
+                        else
+                        {
+                            // invalid/unsupported element found
+                        }
+                    }
+
+                    // <value> and <text> required, seen?
+                    if (valueSeen && textSeen)
+                    {
+                        // add item to dictionary
+
+                        // create dictionary if we don't have one yet
+                        if (dict == null)
+                        {
+                            dict = new Dictionary<int, string>();
                         }
 
-                        XElement itemText = GetSingleElement(item, "text", eReq.Required);
-                        TmpString = itemText.Value.Trim();
-
+                        // add
                         try
                         {
                             // throws exception on duplicate key
-                            dict.Add(TmpValue, TmpString);
+                            dict.Add(valueInt, textStr);
                         }
                         catch
                         {
-                            TFilePosition fp = GetFilePos(itemValue);
-                            throw new XmlException("XML element <" + itemValue.Name + "> has an invalid value. Enum integers must be unique." + Environment.NewLine + LimitXmlText(itemValue.ToString()) + Environment.NewLine, null, fp.Line, fp.Col);
+                            TFilePosition fp = GetFilePos(xitem);
+                            throw new XmlException("XML element <" + xitem.Name + "> has an invalid value. Enum integers must be unique." + Environment.NewLine + LimitXmlTextLength(xitem.ToString()) + Environment.NewLine, null, fp.Line, fp.Col);
+                        }
+
+                    }
+                    else
+                    {
+                        if (valueSeen == false)
+                        {
+                            string elName = "value";
+                            TFilePosition fp = GetFilePos(xitem);
+                            throw new XmlException("XML element <" + elName + "> not found. A <" + elName + "> element is required in a <" + xitem.Name.LocalName + "> element." + Environment.NewLine, null, fp.Line, fp.Col);
+                        }
+                        if (textSeen == false)
+                        {
+                            string elName = "text";
+                            TFilePosition fp = GetFilePos(xitem);
+                            throw new XmlException("XML element <" + elName + "> not found. A <" + elName + "> element is required in a <" + xitem.Name.LocalName + "> element." + Environment.NewLine, null, fp.Line, fp.Col);
                         }
                     }
-
-                    // got no items? then no dictionary
-                    if (dict.Count == 0)
-                    {
-                        dict = null;
-                    }
+                }
+                else
+                {
+                    // invalid/unsupported element found
                 }
             }
 
             return dict;
         }
 
+
         /// <summary>
-        /// Process the autostart element
+        /// Process an <autostart></autostart> element
         /// This should be done *after* loading all tab pages
         /// </summary>
+        /// <param name="pxe">The parent XML element</param>
+        /// <return>true if one of the elements was seen</return>
         private bool ProcessAutostartElement(XElement pxe)
         {
-            // process one <autostart> element
-            XElement xe1 = GetSingleElement(pxe, "autostart", eReq.Optional);
-            if (xe1 != null)
-            {
-                // if there is an <autostart> tag, the <enable> must be present and true to activate autostart
-                Options.AutostartSeen = true;
-                Options.AutostartEnable = false;
+            bool seen = false;
 
-                // Enable
-                XElement xe2 = GetSingleElement(xe1, "enable", eReq.Optional);
-                if (xe2 != null)
+            // if there is an <autostart> tag, the <enable> must be present and true to activate autostart
+            Options.AutostartSeen = true;
+            Options.AutostartEnable = false;
+
+            foreach (XElement xe in pxe.Elements())
+            {
+                string elemName = xe.Name.LocalName;
+                Debug.Print("<Autostart> " + elemName);
+
+                // Enable, optional
+                if (CheckElementNameMatch(elemName, "enable"))
                 {
                     // accept true and false
-                    string TmpString = xe2.Value.Trim();
+                    string TmpString = xe.Value.Trim();
                     bool TmpBool;
                     if (TryParseBool(TmpString, out TmpBool))
                     {
@@ -1312,32 +1468,25 @@ namespace ModbusControlSpace
                     }
                     else
                     {
-                        TFilePosition fp = GetFilePos(xe2);
-                        throw new XmlException("XML element <enable> has an invalid value. Valid values are 'true' or 'false'." + Environment.NewLine + LimitXmlText(xe2.ToString()) + Environment.NewLine, null, fp.Line, fp.Col);
+                        TFilePosition fp = GetFilePos(xe);
+                        throw new XmlException("XML element <enable> has an invalid value. Valid values are 'true' or 'false'." + Environment.NewLine + LimitXmlTextLength(xe.ToString()) + Environment.NewLine, null, fp.Line, fp.Col);
                     }
+
+                    seen = true;
                 }
 
-                // Page
-                xe2 = GetSingleElement(xe1, "page", eReq.Optional);
-                if (xe2 != null)
+                // Page, optional
+                if (CheckElementNameMatch(elemName, "page"))
                 {
                     // the page can be the name or a numeric (1 for first tab page)
-                    Options.AutostartTabpage = xe2.Value.Trim();
-                }
+                    Options.AutostartTabpage = xe.Value.Trim();
 
-                // Got the enable and the page, now validate the page name/number
-                if (Options.AutostartEnable && (string.IsNullOrEmpty(Options.AutostartTabpage) == false))
-                {
-                    if (TabPageIsValid(Options.AutostartTabpage) == false)
-                    {
-                        Options.AutostartTabpage = null;
-                        TFilePosition fp = GetFilePos(xe2);
-                        throw new XmlException("XML element <page> is not a valid tabpage name, or a valid tabpage number 1 .. N." + Environment.NewLine + LimitXmlText(xe2.ToString()) + Environment.NewLine, null, fp.Line, fp.Col);
-                    }
+                    autostartPageXElement = xe;
+                    seen = true;
                 }
             }
 
-            return true;
+            return seen;
         }
 
         /// <summary>
@@ -1374,25 +1523,25 @@ namespace ModbusControlSpace
         }
 
         /// <summary>
-        /// Process <modbustcpserver> element, optional
+        /// Process a <modbustcpserver> element
         /// Throws exception on error
         /// </summary>
-        /// <param name="pxe"></param>
+        /// <param name="pxe">The parent XML element</param>
         /// <return>true if one of the elements was seen</return>
         private bool ProcessModbustcpserverElement(XElement pxe)
         {
             bool Seen = false;
 
-            // process one <modbustcpserver> element
-            XElement xe1 = GetSingleElement(pxe, "modbustcpserver", eReq.Optional);
-            if (xe1 != null)
+            foreach (XElement xe in pxe.Elements())
             {
+                string elemName = xe.Name.LocalName;
+                Debug.Print("<Modbustcpserver> " + elemName);
+
                 // Enable
-                XElement xe2 = GetSingleElement(xe1, "enable", eReq.Optional);
-                if (xe2 != null)
+                if (CheckElementNameMatch(elemName, "enable"))
                 {
                     // accept true and false
-                    string TmpString = xe2.Value.Trim();
+                    string TmpString = xe.Value.Trim();
                     bool TmpBool;
                     if (TryParseBool(TmpString, out TmpBool))
                     {
@@ -1401,16 +1550,15 @@ namespace ModbusControlSpace
                     }
                     else
                     {
-                        TFilePosition fp = GetFilePos(xe2);
-                        throw new XmlException("XML element <enable> has an invalid value. Valid values are 'true' or 'false'." + Environment.NewLine + LimitXmlText(xe2.ToString()) + Environment.NewLine, null, fp.Line, fp.Col);
+                        TFilePosition fp = GetFilePos(xe);
+                        throw new XmlException("XML element <enable> has an invalid value. Valid values are 'true' or 'false'." + Environment.NewLine + LimitXmlTextLength(xe.ToString()) + Environment.NewLine, null, fp.Line, fp.Col);
                     }
                 }
 
                 // Port
-                xe2 = GetSingleElement(xe1, "port", eReq.Optional);
-                if (xe2 != null)
+                if (CheckElementNameMatch(elemName, "port"))
                 {
-                    string TmpString = xe2.Value.Trim();
+                    string TmpString = xe.Value.Trim();
                     // get value, limit range 1 - 65535
                     UInt16 TmpValue;
                     if (UInt16.TryParse(TmpString, out TmpValue) && (TmpValue >= 1) && (TmpValue <= 65535))
@@ -1422,8 +1570,9 @@ namespace ModbusControlSpace
                     else
                     {
                         // error
-                        TFilePosition fp = GetFilePos(xe2);
-                        throw new XmlException("XML element <port> has an invalid value. Valid values are 1 - 65535." + Environment.NewLine + LimitXmlText(xe2.ToString()) + Environment.NewLine, null, fp.Line, fp.Col);
+                        ModbusTcpBridge.Enable = false;
+                        TFilePosition fp = GetFilePos(xe);
+                        throw new XmlException("XML element <port> has an invalid value. Valid values are 1 - 65535." + Environment.NewLine + LimitXmlTextLength(xe.ToString()) + Environment.NewLine, null, fp.Line, fp.Col);
                     }
                 }
             }
@@ -1431,102 +1580,36 @@ namespace ModbusControlSpace
             return Seen;
         }
 
-
         /// <summary>
-        /// Get a single XML element with this name
-        /// Finds elements with the given case and in lower case. Use both.
-        /// Throw exception if not found but it's required
-        /// Throw exception if found more than once
-        /// Return: null if not found
+        /// Get the first XML element with this name.
+        /// Finds elements with the given case and in lower case.
         /// </summary>
-        private XElement GetSingleElement(XElement parent, string name, eReq required)
+        /// <return>null if not found</return>
+        private XElement FindElement(XElement parent, string name)
         {
-            // make parent's name in lowercase for error message
-            string parentNameLC = parent.Name.ToString().ToLower();
             // get elements with this name
-            IEnumerable<XElement> xecoll = parent.Elements(name);
-            TFilePosition fp;
-            // if the name hase upper case letters, search again with lower case
-            if (name.Any(char.IsUpper))
+            XElement xel = parent.Element(name);
+            // if not found, and name has upper case letters, try again with lower case
+            if ((xel == null) && name.Any(char.IsUpper))
             {
                 name = name.ToLower();
-                IEnumerable<XElement> xecollLC = parent.Elements(name);
-                // append to the list
-                xecoll = xecoll.Concat(xecollLC);
-            }
-            // found 1?
-            if (xecoll.Count() == 1)
-            {
-                // found 1, return 1
-                return xecoll.ElementAt(0);
-            }
-            // not found?
-            if (xecoll.Count() == 0)
-            {
-                // not found but required?
-                if (required == eReq.Required)
-                {
-                    fp = GetFilePos(parent);
-                    throw new XmlException("XML element <" + name + "> not found. There should be one <" + name + "> element in a <" + parentNameLC + "> element." + Environment.NewLine, null, fp.Line, fp.Col);
-                }
-                return null;
+                xel = parent.Element(name);
             }
 
-            // found more than 1
-            // throw exception with fileposition of 2nd
-            XElement xe = xecoll.ElementAt(1);
-            fp = GetFilePos(xe);
-            throw new XmlException("XML element <" + name + "> is found " + xecoll.Count() + " times. It is allowed only once in its parent <" + parentNameLC + "> element." + Environment.NewLine + LimitXmlText(xe.ToString()) + Environment.NewLine, null, fp.Line, fp.Col);
-
-            //return null;
-        }
-
-        /// <summary>
-        /// Get all XML elements with this name
-        /// Finds elements with the given case and in lower case. Use both.
-        /// Throw exception if not found but it's required
-        /// Return: an empty collection if not found
-        /// </summary>
-        private IEnumerable<XElement> GetAllElements(XElement parent, string name, eReq required)
-        {
-            // make parent's name in lowercase for error message
-            string parentNameLC = parent.Name.ToString().ToLower();
-            // get elements with this name
-            IEnumerable<XElement> xecoll = parent.Elements(name);
-            // if the tag hase upper case letters, search again with lower case
-            if (name.Any(char.IsUpper))
-            {
-                name = name.ToLower();
-                IEnumerable<XElement> xecollLC = parent.Elements(name);
-                // append to the list
-                xecoll = xecoll.Concat(xecollLC);
-            }
-            // found?
-            if (xecoll.Count() > 0)
-            {
-                return xecoll;
-            }
-            // not found but required?
-            if (required == eReq.Required)
-            {
-                TFilePosition fp = GetFilePos(parent);
-                throw new XmlException("XML element <" + name + "> not found. There should be at least one <" + name + "> element in a <" + parentNameLC + "> element." + Environment.NewLine, null, fp.Line, fp.Col);
-            }
-            // return the empty list
-            return xecoll;
+            return xel;
         }
 
         /// <summary>
         /// Remove whitespace and limit the string in length
         /// </summary>
-        private string LimitXmlText(string text)
+        private string LimitXmlTextLength(string text)
         {
             const int maxlen = 180;
             char[] outs = new char[maxlen];
             int j = 0;
             int len = text.Length;
 
-            // copy all characters that are not whitespace, till max length
+            // copy all characters except CR/LF/TAB, till max length
             for (int i = 0; (i < len) && (j < maxlen); i++)
             {
                 if ((text[i] == '\r') || (text[i] == '\n') || (text[i] == '\t'))
@@ -1538,7 +1621,7 @@ namespace ModbusControlSpace
                     outs[j++] = text[i];
                 }
             }
-            // max length reached? Then end with ...
+            // max length reached? Then end with '...'
             if (j >= maxlen)
             {
                 outs[j - 3] = '.';
@@ -1791,7 +1874,7 @@ namespace ModbusControlSpace
         public void WriteConnection()
         {
             // Find Modbus node (case insensitive), or create it
-            XElement xeModbus = GetSingleElement(XmlRootNode, "Modbus", eReq.Optional);
+            XElement xeModbus = FindElement(XmlRootNode, "Modbus");
             if (xeModbus == null)
             {
                 xeModbus = new XElement("modbus");
@@ -1799,7 +1882,7 @@ namespace ModbusControlSpace
             }
 
             // Find Connection node, or create it
-            XElement xe = GetSingleElement(xeModbus, "Connection", eReq.Optional);
+            XElement xe = FindElement(xeModbus, "Connection");
             if (xe == null)
             {
                 xe = new XElement("connection");
@@ -1808,7 +1891,7 @@ namespace ModbusControlSpace
             xe.Value = ConnectionTypes[(int)Connection.ConnectionType];
 
             // Find Serial port node, or create it
-            xe = GetSingleElement(xeModbus, "Port", eReq.Optional);
+            xe = FindElement(xeModbus, "Port");
             if (xe == null)
             {
                 xe = new XElement("port");
@@ -1817,7 +1900,7 @@ namespace ModbusControlSpace
             xe.Value = Connection.SerialPort;
 
             // Find Serial Baudrate node, or create it
-            xe = GetSingleElement(xeModbus, "Baudrate", eReq.Optional);
+            xe = FindElement(xeModbus, "Baudrate");
             if (xe == null)
             {
                 xe = new XElement("baudrate");
@@ -1826,7 +1909,7 @@ namespace ModbusControlSpace
             xe.Value = Connection.SerialBaudrate.ToString();
 
             // Find Serial Parity node, or create it
-            xe = GetSingleElement(xeModbus, "Parity", eReq.Optional);
+            xe = FindElement(xeModbus, "Parity");
             if (xe == null)
             {
                 xe = new XElement("parity");
@@ -1835,7 +1918,7 @@ namespace ModbusControlSpace
             xe.Value = Connection.SerialParity.ToString().ToLower();
 
             // Find Serial EndofmessageTimeout node, or create it
-            xe = GetSingleElement(xeModbus, "EndofmessageTimeout", eReq.Optional);
+            xe = FindElement(xeModbus, "EndofmessageTimeout");
             if (xe == null)
             {
                 xe = new XElement("endofmessagetimeout");
@@ -1844,7 +1927,7 @@ namespace ModbusControlSpace
             xe.Value = Connection.SerialEndOfMessageTimeout.ToString();
 
             // Find Serial OneWireEchoSuppression node, or create it
-            xe = GetSingleElement(xeModbus, "OnewireEchoSuppression", eReq.Optional);
+            xe = FindElement(xeModbus, "OnewireEchoSuppression");
             if (xe == null)
             {
                 xe = new XElement("onewireechosuppression");
@@ -1853,7 +1936,7 @@ namespace ModbusControlSpace
             xe.Value = Connection.SerialOneWireEchoSuppression.ToString().ToLower();
 
             // Find IPAddress node, or create it
-            xe = GetSingleElement(xeModbus, "IPaddress", eReq.Optional);
+            xe = FindElement(xeModbus, "IPaddress");
             if (xe == null)
             {
                 xe = new XElement("ipaddress");
@@ -1862,7 +1945,7 @@ namespace ModbusControlSpace
             xe.Value = Connection.IPAddress.ToString();
 
             // Find IPPort node, or create it
-            xe = GetSingleElement(xeModbus, "IPport", eReq.Optional);
+            xe = FindElement(xeModbus, "IPport");
             if (xe == null)
             {
                 xe = new XElement("ipport");
@@ -1873,7 +1956,7 @@ namespace ModbusControlSpace
             //TODO:  Global.eTcpConnectMode TcpConnectMode
 
             // Find SlaveID node, or create it
-            xe = GetSingleElement(xeModbus, "SlaveID", eReq.Optional);
+            xe = FindElement(xeModbus, "SlaveID");
             if (xe == null)
             {
                 xe = new XElement("slaveid");
@@ -1882,7 +1965,7 @@ namespace ModbusControlSpace
             xe.Value = Connection.SlaveID.ToString();
 
             // Find ResponseTimeout node, or create it
-            xe = GetSingleElement(xeModbus, "ResponseTimeout", eReq.Optional);
+            xe = FindElement(xeModbus, "ResponseTimeout");
             if (xe == null)
             {
                 xe = new XElement("responsetimeout");
@@ -1891,7 +1974,7 @@ namespace ModbusControlSpace
             xe.Value = Connection.ResponseTimeout.ToString();
 
             // Find MaximumFramesize node, or create it
-            xe = GetSingleElement(xeModbus, "MaximumFramesize", eReq.Optional);
+            xe = FindElement(xeModbus, "MaximumFramesize");
             if (xe == null)
             {
                 xe = new XElement("maximumframesize");
@@ -1900,7 +1983,7 @@ namespace ModbusControlSpace
             xe.Value = Connection.MaximumFrameSize.ToString();
 
             // Find interframedelay node, or create it
-            xe = GetSingleElement(xeModbus, "interframedelay", eReq.Optional);
+            xe = FindElement(xeModbus, "interframedelay");
             if (xe == null)
             {
                 xe = new XElement("interframedelay");
@@ -1909,7 +1992,7 @@ namespace ModbusControlSpace
             xe.Value = Connection.InterFrameDelay.ToString();
 
             // Find WriteHoldingregisterFC node, or create it
-            xe = GetSingleElement(xeModbus, "WriteHoldingregisterFC", eReq.Optional);
+            xe = FindElement(xeModbus, "WriteHoldingregisterFC");
             if (xe == null)
             {
                 xe = new XElement("writeholdingregisterfc");
@@ -1918,14 +2001,14 @@ namespace ModbusControlSpace
             xe.Value = WriteHoldingregisterFCs[(int)Connection.WriteHoldingregFunctioncode];
 
             // Remove Value32BitEndian, obsolete
-            xe = GetSingleElement(xeModbus, "Value32BitEndian", eReq.Optional);
+            xe = FindElement(xeModbus, "Value32BitEndian");
             if (xe != null)
             {
                 xe.Remove();
             }
 
             // Find int32endian node, or create it
-            xe = GetSingleElement(xeModbus, "int32endian", eReq.Optional);
+            xe = FindElement(xeModbus, "int32endian");
             if (xe == null)
             {
                 xe = new XElement("int32endian");
@@ -1934,7 +2017,7 @@ namespace ModbusControlSpace
             xe.Value = Connection.Int32Endian.ToString().ToLower();
 
             // Find float32endian node, or create it
-            xe = GetSingleElement(xeModbus, "float32endian", eReq.Optional);
+            xe = FindElement(xeModbus, "float32endian");
             if (xe == null)
             {
                 xe = new XElement("float32endian");
@@ -1943,7 +2026,7 @@ namespace ModbusControlSpace
             xe.Value = Connection.Float32Endian.ToString().ToLower();
 
             // Find ascii16endian node, or create it
-            xe = GetSingleElement(xeModbus, "ascii16endian", eReq.Optional);
+            xe = FindElement(xeModbus, "ascii16endian");
             if (xe == null)
             {
                 xe = new XElement("ascii16endian");
@@ -1952,14 +2035,14 @@ namespace ModbusControlSpace
             xe.Value = Connection.Ascii16Endian.ToString().ToLower();
 
             // Remove ShowType, obsolete
-            xe = GetSingleElement(xeModbus, "ShowType", eReq.Optional);
+            xe = FindElement(xeModbus, "ShowType");
             if (xe != null)
             {
                 xe.Remove();
             }
 
             // Remove ShowReadwrite, obsolete
-            xe = GetSingleElement(xeModbus, "ShowReadwrite", eReq.Optional);
+            xe = FindElement(xeModbus, "ShowReadwrite");
             if (xe != null)
             {
                 xe.Remove();
@@ -1973,7 +2056,7 @@ namespace ModbusControlSpace
         public void WriteBridgeSettings()
         {
             // Find modbustcpserver node, or create it
-            XElement xeBridge = GetSingleElement(XmlRootNode, "modbustcpserver", eReq.Optional);
+            XElement xeBridge = FindElement(XmlRootNode, "modbustcpserver");
             if (xeBridge == null)
             {
                 xeBridge = new XElement("modbustcpserver");
@@ -1981,7 +2064,7 @@ namespace ModbusControlSpace
             }
 
             // Find Enable node, or create it
-            XElement xe = GetSingleElement(xeBridge, "enable", eReq.Optional);
+            XElement xe = FindElement(xeBridge, "enable");
             if (xe == null)
             {
                 xe = new XElement("enable");
@@ -1990,7 +2073,7 @@ namespace ModbusControlSpace
             xe.Value = ModbusTcpBridge.Enable.ToString().ToLower();
 
             // Find Port node, or create it
-            xe = GetSingleElement(xeBridge, "port", eReq.Optional);
+            xe = FindElement(xeBridge, "port");
             if (xe == null)
             {
                 xe = new XElement("port");
@@ -2006,7 +2089,7 @@ namespace ModbusControlSpace
         public void WriteOtherSettings()
         {
             // Find Modbus node (case insensitive), or create it
-            XElement xeModb = GetSingleElement(XmlRootNode, "Modbus", eReq.Optional);
+            XElement xeModb = FindElement(XmlRootNode, "Modbus");
             if (xeModb == null)
             {
                 xeModb = new XElement("modbus");
@@ -2014,7 +2097,7 @@ namespace ModbusControlSpace
             }
 
             // Find Samplerate node, or create it
-            XElement xe = GetSingleElement(xeModb, "SampleRate", eReq.Optional);
+            XElement xe = FindElement(xeModb, "SampleRate");
             if (xe == null)
             {
                 xe = new XElement("samplerate");
@@ -2030,7 +2113,7 @@ namespace ModbusControlSpace
         public void WriteFormSize()
         {
             // Find Size node, or create it
-            XElement xeSize = GetSingleElement(XmlRootNode, "Size", eReq.Optional);
+            XElement xeSize = FindElement(XmlRootNode, "Size");
             if (xeSize == null)
             {
                 xeSize = new XElement("size");
@@ -2038,7 +2121,7 @@ namespace ModbusControlSpace
             }
 
             // Find Width node, or create it
-            XElement widthNode = GetSingleElement(xeSize, "Width", eReq.Optional);
+            XElement widthNode = FindElement(xeSize, "Width");
             if (widthNode == null)
             {
                 widthNode = new XElement("width");
@@ -2049,7 +2132,7 @@ namespace ModbusControlSpace
             widthNode.Value = Global.ScaleXcoordFromSystemDpiTo96Dpi(FormSize.Width).ToString();
 
             // Find Height node, or create it
-            XElement heightNode = GetSingleElement(xeSize, "Height", eReq.Optional);
+            XElement heightNode = FindElement(xeSize, "Height");
             if (heightNode == null)
             {
                 heightNode = new XElement("height");
@@ -2303,6 +2386,23 @@ namespace ModbusControlSpace
         {
             int fraglen = Math.Min(len, s.Length);
             return s.Substring(0, fraglen);
+        }
+
+        /// <summary>
+        /// Check element name, with old camelcase and new lowercase
+        /// </summary>
+        /// <param name="elemName">Name that was found</param>
+        /// <param name="name">Name we are looking for</param>
+        /// <returns></returns>
+        private bool CheckElementNameMatch(string elemName, string name)
+        {
+            if (elemName == name)
+                return true;
+
+            if (elemName == name.ToLower())
+                return true;
+
+            return false;
         }
     }
 }
