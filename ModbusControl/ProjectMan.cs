@@ -125,7 +125,6 @@ namespace ModbusControlSpace
 
         // Properties
 
-        public string Path; // path to loaded mbc project file
         public string ValidationSchemaPath; // path to validation XSD file
         public TSize FormSize; // Form size
         public TConnection Connection; // Modbus connection settings
@@ -136,6 +135,8 @@ namespace ModbusControlSpace
 
         // private data
 
+        private string Path; // path to loaded mbc project file
+        private List<string> fileList;  // list of main mbc file and nested include files
         private XDocument XmlDoc; // doc holding the current xml mbc project file, for possibility to save
         private XElement XmlRootNode; // root node of the document
         private delegate void XMLIterateAllNodesCallback(XElement xe);
@@ -188,6 +189,12 @@ namespace ModbusControlSpace
         public void Load(string path)
         {
             bool modbusSeen = false;
+
+            // store path of project file
+            Path = path;
+            // add to nested files list
+            fileList = new List<string>();
+            fileList.Add(path);
 
             // Load xml document into XmlDoc
             // A previous document will be discarded when a new is loaded
@@ -251,6 +258,16 @@ namespace ModbusControlSpace
                 {
                     ProcessTabElement(xe);
                 }
+                else
+                // <include> elements, optional, multiple
+                if (CheckElementNameMatch(elemName, "include"))
+                {
+                    ProcessIncludeElement(xe);
+                }
+                else
+                {
+                    // invalid/unsupported element found
+                }
             }
 
             if (modbusSeen == false)
@@ -270,9 +287,6 @@ namespace ModbusControlSpace
                     throw new XmlException("XML element <page> is not a valid tabpage name, or a valid tabpage number 1 .. N." + Environment.NewLine + LimitXmlTextLength(autostartPageXElement.ToString()) + Environment.NewLine, null, fp.Line, fp.Col);
                 }
             }
-
-            // Success, store the path
-            Path = path;
         }
 
         static void ValidationEventHandler(object sender, ValidationEventArgs e)
@@ -1578,6 +1592,168 @@ namespace ModbusControlSpace
             }
 
             return Seen;
+        }
+
+        /// <summary>
+        /// Process an <include> element
+        /// Throws exception on error
+        /// </summary>
+        /// <param name="pxe">The parent XML element</param>
+        private void ProcessIncludeElement(XElement pxe)
+        {
+            bool fileSeen = false;
+            string fileName = string.Empty;
+            bool mandatory = true;
+            XElement fileXElement = null;
+
+            // process child elements
+            foreach (XElement xe in pxe.Elements())
+            {
+                string elemName = xe.Name.LocalName;
+                Debug.Print("<Include> " + elemName);
+
+                // <file>, required
+                if (CheckElementNameMatch(elemName, "file"))
+                {
+                    fileName = xe.Value.Trim();
+                    fileXElement = xe;
+                    fileSeen = true;
+
+                    if (fileName == string.Empty)
+                    {
+                        string elName = "name";
+                        TFilePosition fp = GetFilePos(pxe);
+                        throw new XmlException("XML element <" + elName + "> is empty. A <" + elName + "> element is required to have a value." + Environment.NewLine, null, fp.Line, fp.Col);
+                    }
+                }
+                else
+                // <mandatory>, optional
+                if (CheckElementNameMatch(elemName, "mandatory"))
+                {
+                    string TmpString = xe.Value.Trim();
+                    if (TryParseBool(TmpString, out mandatory))
+                    {
+                        // mandatory is set
+                    }
+                    else
+                    {
+                        TFilePosition fp = GetFilePos(xe);
+                        throw new XmlException("XML element <" + xe.Name.LocalName + "> has an invalid value. Valid values are 'true' or 'false'." + Environment.NewLine + LimitXmlTextLength(xe.ToString()) + Environment.NewLine, null, fp.Line, fp.Col);
+                    }
+                }
+                else
+                {
+                    // invalid/unsupported element found
+                }
+            }
+
+            // <file> is required
+            if (fileSeen == false)
+            {
+                string elName = "file";
+                TFilePosition fp = GetFilePos(pxe);
+                throw new XmlException("XML element <" + elName + "> not found. A <" + elName + "> element is required in a <" + pxe.Name.LocalName + "> element." + Environment.NewLine, null, fp.Line, fp.Col);
+            }
+
+            if (fileSeen && (string.IsNullOrEmpty(fileName) == false))
+            {
+                //TODO werkt include volledig?
+                //TODO: bij error path van mbc file tonen? anders zoek je in main file terwijl fout in include file is
+                //TODO: nested include files?
+
+                string incFilePath = System.IO.Path.GetFullPath(fileName);
+
+                // get path of include file
+                // if it is absolute (rooted) take that
+                // if it is relative: combine with the parent file path
+                if (System.IO.Path.IsPathRooted(fileName))
+                {
+                    incFilePath = fileName;
+                }
+                else
+                {
+                    string parentDir = System.IO.Path.GetDirectoryName(Path);
+                    incFilePath = System.IO.Path.Combine(parentDir, fileName);
+                }
+
+                // File exists?
+                if (File.Exists(incFilePath))
+                {
+                    ProcessIncludeFile(incFilePath);
+                }
+                else
+                {
+                    if (mandatory)
+                    {
+                        TFilePosition fp = GetFilePos(fileXElement);
+                        throw new XmlException("<include> element: file not found: " + Environment.NewLine + incFilePath, null, fp.Line, fp.Col);
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Process an include file
+        /// load only the <tab> and <include> elements
+        /// </summary>
+        /// <param name="path"></param>
+        private void ProcessIncludeFile(string path)
+        {
+            // add file to list of nested files
+            fileList.Add(path);
+
+            // Load xml document into incXmlDoc
+            XDocument incXmlDoc = XDocument.Load(path, LoadOptions.SetLineInfo);
+
+            //TODO: vaidation doen?
+#if false            // got validation schema?
+            // throws exception on validation error
+            if (ValidationSchemaPath != "")
+            {
+                XmlSchemaSet schemas = new XmlSchemaSet();
+                schemas.Add("", XmlReader.Create(ValidationSchemaPath));
+                incXmlDoc.Validate(schemas, ValidationEventHandler);
+            }
+#endif
+
+            // Parse the document
+            // Store all data in this class
+
+            // check root element
+            XElement incXmlRootNode = incXmlDoc.Root;
+            string rootElementName = incXmlRootNode.Name.LocalName;
+            string expectRootName = "modbuscontrol";
+            if (rootElementName != expectRootName)
+            {
+                //TODO: is dit juist?
+                throw new XmlException("XML root element <" + expectRootName + "> not found. A <" + expectRootName + "> root element is required in an mbc project file.");
+            }
+
+            // iterate elements under root
+            foreach (XElement xe in incXmlRootNode.Elements())
+            {
+                string elemName = xe.Name.LocalName;
+                Debug.Print("Include: root: " + elemName);
+
+                // <tab> elements, optional, multiple
+                if (CheckElementNameMatch(elemName, "tab"))
+                {
+                    ProcessTabElement(xe);
+                }
+                else
+                // <include> elements, optional, multiple
+                if (CheckElementNameMatch(elemName, "include"))
+                {
+                    ProcessIncludeElement(xe);
+                }
+                else
+                {
+                    // invalid/unsupported element found
+                }
+            }
+
+            // remove from nested files list
+            fileList.RemoveAt(fileList.Count - 1);
         }
 
         /// <summary>

@@ -326,6 +326,7 @@ namespace ModbusControlSpace
                     // anders werkt 'openFileLocationToolStripMenuItem.Enabled = ... ' niet met file-only 
                     ProjectPath = Path.GetFullPath(ProjectPath);
 
+
                     // load project
                     LoadProject(ProjectPath);
 
