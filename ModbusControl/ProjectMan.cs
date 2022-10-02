@@ -1603,7 +1603,7 @@ namespace ModbusControlSpace
         {
             bool fileSeen = false;
             string fileName = string.Empty;
-            bool mandatory = true;
+            bool isRequired = true;
             XElement fileXElement = null;
 
             // process child elements
@@ -1627,13 +1627,13 @@ namespace ModbusControlSpace
                     }
                 }
                 else
-                // <mandatory>, optional
-                if (CheckElementNameMatch(elemName, "mandatory"))
+                // <required>, optional
+                if (CheckElementNameMatch(elemName, "required"))
                 {
                     string TmpString = xe.Value.Trim();
-                    if (TryParseBool(TmpString, out mandatory))
+                    if (TryParseBool(TmpString, out isRequired))
                     {
-                        // mandatory is set
+                        // required is set
                     }
                     else
                     {
@@ -1683,7 +1683,7 @@ namespace ModbusControlSpace
                 }
                 else
                 {
-                    if (mandatory)
+                    if (isRequired)
                     {
                         TFilePosition fp = GetFilePos(fileXElement);
                         throw new XmlException("<include> element: file not found: " + Environment.NewLine + incFilePath, null, fp.Line, fp.Col);
