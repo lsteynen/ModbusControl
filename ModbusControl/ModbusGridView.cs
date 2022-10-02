@@ -30,9 +30,9 @@ namespace LST.ModbusGridView
         static extern bool PostMessage(IntPtr hWnd, uint Msg, int wParam, int lParam);
         private const int WM_CHAR = 0x0102;
 
-        private Color InputErrorColor = Color.Red;
+        // some GUI coloring
         private Color EditedColor = Color.FromArgb(50, 50, 255);
-
+        private Color InputErrorColor = Color.Red;
 
         // items root class
         public class ListItem
@@ -597,7 +597,7 @@ namespace LST.ModbusGridView
                 int valueMode = (int)dRow[(int)dtColIndex.ValueMode];
                 if (valueMode == ValueModeEdited)
                     e.CellStyle.ForeColor = EditedColor;
-                if (valueMode == ValueModeError)
+                else if (valueMode == ValueModeError)
                     e.CellStyle.ForeColor = InputErrorColor;
             }
 
@@ -1740,7 +1740,8 @@ namespace LST.ModbusGridView
                         dRow[(int)dtColIndex.ValueStr] = dispStr;
                     }
                     // Show error in red
-                    dRow[(int)dtColIndex.FCol] = InputErrorColor;
+                    dRow[(int)dtColIndex.ValueMode] = ValueModeError;
+
                     // report error on status bar
                     OnReportErrorMessageEvent("Input error: invalid value entered for register " + editingReg.Reg.ToString() + ": value: " + newValueStr);
                     // beep
