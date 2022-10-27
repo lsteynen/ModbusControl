@@ -146,7 +146,6 @@ namespace LST.ModbusGridView
         private bool mFilterCaseSensitive;
         private float originalFontSize;
         private float currentZoomFactor = 1;
-        private bool CurrentEditIsEntered;
         public bool customPainting = true;
         private RegItem editingReg;
         private RegfieldItem editingRegfield;
@@ -1655,7 +1654,7 @@ namespace LST.ModbusGridView
         {
             Debug.Print("grid_CellBeginEdit: e.rowindex=" + e.RowIndex.ToString() + ", grid.rowcount=" + grid.RowCount.ToString() + "/" + grid.Rows.Count.ToString());
 
-            CurrentEditIsEntered = false;
+            grid.EscapeDetected = false;
         }
 
         private void grid_CellEndEdit(object sender, DataGridViewCellEventArgs e)
@@ -1663,7 +1662,7 @@ namespace LST.ModbusGridView
             Debug.Print("grid_CellEndEdit");
 
             // entered of canceled?
-            if (CurrentEditIsEntered)
+            if (grid.EscapeDetected == false)
             {
                 // get datatable row from datagridview row
                 // datagridrowindex != datatableindex if datagridview rows are invisible
@@ -1762,13 +1761,6 @@ namespace LST.ModbusGridView
                                       | ((UInt32)BitfieldValue << Position));
 
             return Newvalue;
-        }
-
-        private void grid_CellValidating(object sender, DataGridViewCellValidatingEventArgs e)
-        {
-            Debug.Print("grid_CellValidating");
-
-            CurrentEditIsEntered = true;
         }
 
         private ListItem FindListItemByRow(DataRow dRow)

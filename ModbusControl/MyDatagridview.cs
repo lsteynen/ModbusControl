@@ -20,6 +20,11 @@ namespace LST.Helpers
         //      move to next row on Control-Enter
         public bool MoveToNextRowOnEnter = true;
 
+        // EscapeDetected
+        // Flag that goes true when Escape press was detected
+        // For better detecting entering/escape action
+        public bool EscapeDetected = false;
+
         // implementation
 
         /// <summary>
@@ -81,6 +86,12 @@ namespace LST.Helpers
 
         protected override bool ProcessDialogKey(Keys keyData)
         {
+            // If escape was pressed, set a flag so that caller knows that the input was entered or canceled
+            if (keyData == Keys.Escape)
+            {
+                EscapeDetected = true;
+            }
+
             // Option: stay on the same row after entering data
             if (MoveToNextRowOnEnter == false)
             {
