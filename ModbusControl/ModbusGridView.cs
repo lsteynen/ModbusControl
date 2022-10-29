@@ -1643,6 +1643,9 @@ namespace LST.ModbusGridView
             // make the value column the one to edit
             grid.CurrentCell = grid.Rows[gridRowIndex].Cells[(int)eGridColIndex.Value];
 
+            // revert to normal color
+            dRow[(int)dtColIndex.ValueMode] = ValueModeNormal;
+
             // start edit cell
             Debug.Print("before editingDatarow = dRow");
             editingDatarow = dRow;
