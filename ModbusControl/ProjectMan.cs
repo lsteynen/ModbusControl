@@ -2129,7 +2129,7 @@ namespace ModbusControlSpace
             }
             xe.Value = Connection.IPPort.ToString();
 
-            //TODO:  Global.eTcpConnectMode TcpConnectMode
+            //TODO:  Global.eTcpConnectMode TcpConnectMode  static/dynamic
 
             // Find SlaveID node, or create it
             xe = FindElement(xeModbus, "SlaveID");

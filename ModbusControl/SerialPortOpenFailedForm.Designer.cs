@@ -29,13 +29,13 @@
         private void InitializeComponent()
         {
             this.label1 = new System.Windows.Forms.Label();
-            this.comboSerialPort = new System.Windows.Forms.ComboBox();
             this.labelErrortext = new System.Windows.Forms.Label();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.buttonOK = new System.Windows.Forms.Button();
-            this.pic = new System.Windows.Forms.PictureBox();
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
+            this.comboSerialPort = new ModbusControlSpace.SerialPortCombobox();
+            this.pic = new System.Windows.Forms.PictureBox();
             ((System.ComponentModel.ISupportInitialize)(this.pic)).BeginInit();
             this.SuspendLayout();
             // 
@@ -47,15 +47,6 @@
             this.label1.Size = new System.Drawing.Size(29, 13);
             this.label1.TabIndex = 2;
             this.label1.Text = "Port:";
-            // 
-            // comboSerialPort
-            // 
-            this.comboSerialPort.FormattingEnabled = true;
-            this.comboSerialPort.Location = new System.Drawing.Point(55, 108);
-            this.comboSerialPort.MaxLength = 20;
-            this.comboSerialPort.Name = "comboSerialPort";
-            this.comboSerialPort.Size = new System.Drawing.Size(91, 21);
-            this.comboSerialPort.TabIndex = 3;
             // 
             // labelErrortext
             // 
@@ -86,14 +77,6 @@
             this.buttonOK.Text = "OK";
             this.buttonOK.UseVisualStyleBackColor = true;
             // 
-            // pic
-            // 
-            this.pic.Location = new System.Drawing.Point(21, 18);
-            this.pic.Name = "pic";
-            this.pic.Size = new System.Drawing.Size(40, 40);
-            this.pic.TabIndex = 17;
-            this.pic.TabStop = false;
-            // 
             // label2
             // 
             this.label2.AutoSize = true;
@@ -112,7 +95,24 @@
             this.label3.TabIndex = 19;
             this.label3.Text = "or press Cancel";
             // 
-            // SerialPortOpenFailed
+            // comboSerialPort
+            // 
+            this.comboSerialPort.FormattingEnabled = true;
+            this.comboSerialPort.Location = new System.Drawing.Point(53, 108);
+            this.comboSerialPort.MaxLength = 30;
+            this.comboSerialPort.Name = "comboSerialPort";
+            this.comboSerialPort.Size = new System.Drawing.Size(91, 21);
+            this.comboSerialPort.TabIndex = 20;
+            // 
+            // pic
+            // 
+            this.pic.Location = new System.Drawing.Point(21, 18);
+            this.pic.Name = "pic";
+            this.pic.Size = new System.Drawing.Size(40, 40);
+            this.pic.TabIndex = 17;
+            this.pic.TabStop = false;
+            // 
+            // SerialPortOpenFailedForm
             // 
             this.AcceptButton = this.buttonOK;
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
@@ -121,6 +121,7 @@
             this.CancelButton = this.buttonCancel;
             this.ClientSize = new System.Drawing.Size(295, 177);
             this.ControlBox = false;
+            this.Controls.Add(this.comboSerialPort);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.pic);
@@ -128,11 +129,10 @@
             this.Controls.Add(this.buttonOK);
             this.Controls.Add(this.labelErrortext);
             this.Controls.Add(this.label1);
-            this.Controls.Add(this.comboSerialPort);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            this.Name = "SerialPortOpenFailed";
+            this.Name = "SerialPortOpenFailedForm";
             this.Padding = new System.Windows.Forms.Padding(0, 0, 0, 6);
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
@@ -147,12 +147,12 @@
         #endregion
 
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.ComboBox comboSerialPort;
         private System.Windows.Forms.Label labelErrortext;
         private System.Windows.Forms.Button buttonCancel;
         private System.Windows.Forms.Button buttonOK;
         private System.Windows.Forms.PictureBox pic;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label3;
+        private SerialPortCombobox comboSerialPort;
     }
 }

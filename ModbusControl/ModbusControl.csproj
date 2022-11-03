@@ -209,6 +209,12 @@
     <Compile Include="SaveConfigurationForm.Designer.cs">
       <DependentUpon>SaveConfigurationForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="SerialPortCombobox.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="SerialPortCombobox.Designer.cs">
+      <DependentUpon>SerialPortCombobox.cs</DependentUpon>
+    </Compile>
     <Compile Include="SerialPortOpenFailedForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -280,6 +286,9 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
+    <EmbeddedResource Include="SerialPortCombobox.resx">
+      <DependentUpon>SerialPortCombobox.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="SerialPortOpenFailedForm.resx">
       <DependentUpon>SerialPortOpenFailedForm.cs</DependentUpon>
     </EmbeddedResource>

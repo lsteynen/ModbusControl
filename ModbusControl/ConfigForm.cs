@@ -275,26 +275,7 @@ namespace ModbusControlSpace
             ((TextBox)numericSamplerate.Controls[1]).MaxLength = numericSamplerate.Maximum.ToString().Length;
 
             // fill listbox with available serial ports
-            comboSerialPort.Items.Clear();
-            comboSerialPort.Text = string.Empty;
-            comboSerialPort.Items.AddRange(SerialPort.GetPortNames());
-            // select first port if we have any
-            if (comboSerialPort.Items.Count > 0)
-            {
-                comboSerialPort.SelectedIndex = 0;
-            }
-        }
-
-        private void comboSerialPort_DropDown(object sender, EventArgs e)
-        {
-            ComboBox box = (ComboBox)sender;
-
-            // fill listbox with available serial ports
-            // keep the previously selected port selected, if possible
-            string PrevSelected = box.Text;
-            box.Items.Clear();
-            box.Items.AddRange(SerialPort.GetPortNames());
-            box.SelectedIndex = box.Items.IndexOf(PrevSelected);
+            comboSerialPort.LoadWithFirstSerialPort();
         }
 
         private void comboConnection_SelectedIndexChanged(object sender, EventArgs e)

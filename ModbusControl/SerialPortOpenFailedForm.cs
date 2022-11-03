@@ -30,14 +30,7 @@ namespace ModbusControlSpace
             //e.Graphics.DrawIcon(SystemIcons.Error, 16, 16);
 
             // fill listbox with available serial ports
-            comboSerialPort.Items.Clear();
-            comboSerialPort.Text = string.Empty;
-            comboSerialPort.Items.AddRange(SerialPort.GetPortNames());
-            // select first port if we have any
-            if (comboSerialPort.Items.Count > 0)
-            {
-                comboSerialPort.SelectedIndex = 0;
-            }
+            comboSerialPort.LoadWithFirstSerialPort();
         }
 
     }

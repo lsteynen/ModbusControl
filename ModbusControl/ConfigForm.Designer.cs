@@ -55,9 +55,7 @@
             this.checkboxSerialOneWireEchoSuppression = new System.Windows.Forms.CheckBox();
             this.comboSerialParity = new System.Windows.Forms.ComboBox();
             this.comboSerialBaudrate = new System.Windows.Forms.ComboBox();
-            this.comboSerialPort = new System.Windows.Forms.ComboBox();
             this.comboConnection = new System.Windows.Forms.ComboBox();
-            this.numericInterFrameDelay = new LST.Controls.NumericUpDown2();
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
             this.panel2 = new System.Windows.Forms.Panel();
             this.buttonApply = new System.Windows.Forms.Button();
@@ -91,6 +89,8 @@
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.label16 = new System.Windows.Forms.Label();
             this.panelWarning = new System.Windows.Forms.Panel();
+            this.numericInterFrameDelay = new LST.Controls.NumericUpDown2();
+            this.comboSerialPort = new ModbusControlSpace.SerialPortCombobox();
             ((System.ComponentModel.ISupportInitialize)(this.numericSamplerate)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericTcpServerPort)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericMaximumFrameSize)).BeginInit();
@@ -98,7 +98,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.numericSlaveAddress)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericIpPort)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericSerialEndOfMessageTimeout)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericInterFrameDelay)).BeginInit();
             this.panel2.SuspendLayout();
             this.groupBox3.SuspendLayout();
             this.groupBox4.SuspendLayout();
@@ -110,6 +109,7 @@
             this.groupBoxSerialInterface.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.panelWarning.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericInterFrameDelay)).BeginInit();
             this.SuspendLayout();
             // 
             // label5
@@ -492,17 +492,6 @@
             this.comboSerialBaudrate.TabIndex = 3;
             this.toolTip1.SetToolTip(this.comboSerialBaudrate, "Baudrate, bits per second");
             // 
-            // comboSerialPort
-            // 
-            this.comboSerialPort.FormattingEnabled = true;
-            this.comboSerialPort.Location = new System.Drawing.Point(95, 13);
-            this.comboSerialPort.MaxLength = 20;
-            this.comboSerialPort.Name = "comboSerialPort";
-            this.comboSerialPort.Size = new System.Drawing.Size(91, 21);
-            this.comboSerialPort.TabIndex = 1;
-            this.toolTip1.SetToolTip(this.comboSerialPort, "Serial port name. Dropdown shows existing ports");
-            this.comboSerialPort.DropDown += new System.EventHandler(this.comboSerialPort_DropDown);
-            // 
             // comboConnection
             // 
             this.comboConnection.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
@@ -517,20 +506,6 @@
             this.comboConnection.TabIndex = 1;
             this.toolTip1.SetToolTip(this.comboConnection, "Select connection and protocol");
             this.comboConnection.SelectedIndexChanged += new System.EventHandler(this.comboConnection_SelectedIndexChanged);
-            // 
-            // numericInterFrameDelay
-            // 
-            this.numericInterFrameDelay.Location = new System.Drawing.Point(126, 344);
-            this.numericInterFrameDelay.Maximum = new decimal(new int[] {
-            2147483647,
-            0,
-            0,
-            0});
-            this.numericInterFrameDelay.Name = "numericInterFrameDelay";
-            this.numericInterFrameDelay.Size = new System.Drawing.Size(61, 20);
-            this.numericInterFrameDelay.TabIndex = 11;
-            this.toolTip1.SetToolTip(this.numericInterFrameDelay, "Delay between response and next query, in milliseconds, 0 is auto, auto is 4Tchar" +
-        " for serial channels and 0ms for TCP channels");
             // 
             // panel2
             // 
@@ -764,6 +739,7 @@
             // 
             // groupBoxSerialInterface
             // 
+            this.groupBoxSerialInterface.Controls.Add(this.comboSerialPort);
             this.groupBoxSerialInterface.Controls.Add(this.numericSerialEndOfMessageTimeout);
             this.groupBoxSerialInterface.Controls.Add(this.checkboxSerialOneWireEchoSuppression);
             this.groupBoxSerialInterface.Controls.Add(this.label12);
@@ -772,7 +748,6 @@
             this.groupBoxSerialInterface.Controls.Add(this.label4);
             this.groupBoxSerialInterface.Controls.Add(this.comboSerialParity);
             this.groupBoxSerialInterface.Controls.Add(this.comboSerialBaudrate);
-            this.groupBoxSerialInterface.Controls.Add(this.comboSerialPort);
             this.groupBoxSerialInterface.Location = new System.Drawing.Point(0, 45);
             this.groupBoxSerialInterface.Name = "groupBoxSerialInterface";
             this.groupBoxSerialInterface.Size = new System.Drawing.Size(194, 128);
@@ -881,6 +856,29 @@
             this.panelWarning.Size = new System.Drawing.Size(668, 46);
             this.panelWarning.TabIndex = 22;
             // 
+            // numericInterFrameDelay
+            // 
+            this.numericInterFrameDelay.Location = new System.Drawing.Point(126, 344);
+            this.numericInterFrameDelay.Maximum = new decimal(new int[] {
+            2147483647,
+            0,
+            0,
+            0});
+            this.numericInterFrameDelay.Name = "numericInterFrameDelay";
+            this.numericInterFrameDelay.Size = new System.Drawing.Size(61, 20);
+            this.numericInterFrameDelay.TabIndex = 11;
+            this.toolTip1.SetToolTip(this.numericInterFrameDelay, "Delay between response and next query, in milliseconds, 0 is auto, auto is 4Tchar" +
+        " for serial channels and 0ms for TCP channels");
+            // 
+            // comboSerialPort
+            // 
+            this.comboSerialPort.FormattingEnabled = true;
+            this.comboSerialPort.Location = new System.Drawing.Point(95, 13);
+            this.comboSerialPort.Name = "comboSerialPort";
+            this.comboSerialPort.Size = new System.Drawing.Size(91, 21);
+            this.comboSerialPort.TabIndex = 9;
+            this.toolTip1.SetToolTip(this.comboSerialPort, "Serial port name. Dropdown shows existing ports");
+            // 
             // ConfigForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
@@ -907,7 +905,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.numericSlaveAddress)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericIpPort)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericSerialEndOfMessageTimeout)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericInterFrameDelay)).EndInit();
             this.panel2.ResumeLayout(false);
             this.panel2.PerformLayout();
             this.groupBox3.ResumeLayout(false);
@@ -928,6 +925,7 @@
             this.groupBoxSerialInterface.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.panelWarning.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.numericInterFrameDelay)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -986,7 +984,6 @@
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.ComboBox comboSerialParity;
         private System.Windows.Forms.ComboBox comboSerialBaudrate;
-        private System.Windows.Forms.ComboBox comboSerialPort;
         private System.Windows.Forms.Label labelConnection;
         private System.Windows.Forms.ComboBox comboConnection;
         private System.Windows.Forms.Label label8;
@@ -995,5 +992,6 @@
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.Label label16;
         private System.Windows.Forms.Panel panelWarning;
+        private SerialPortCombobox comboSerialPort;
     }
 }
