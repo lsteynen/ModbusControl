@@ -1657,10 +1657,6 @@ namespace ModbusControlSpace
 
             if (fileSeen && (string.IsNullOrEmpty(fileName) == false))
             {
-                //TODO werkt include volledig?
-                //TODO: bij error path van mbc file tonen? anders zoek je in main file terwijl fout in include file is
-                //TODO: nested include files?
-
                 string incFilePath = System.IO.Path.GetFullPath(fileName);
 
                 // get path of include file
@@ -1705,8 +1701,9 @@ namespace ModbusControlSpace
             // Load xml document into incXmlDoc
             XDocument incXmlDoc = XDocument.Load(path, LoadOptions.SetLineInfo);
 
-            //TODO: vaidation doen?
-#if false            // got validation schema?
+//TODO: vaidation doen?
+#if false            
+            // got validation schema?
             // throws exception on validation error
             if (ValidationSchemaPath != "")
             {
@@ -1725,7 +1722,6 @@ namespace ModbusControlSpace
             string expectRootName = "modbuscontrol";
             if (rootElementName != expectRootName)
             {
-                //TODO: is dit juist?
                 throw new XmlException("XML root element <" + expectRootName + "> not found. A <" + expectRootName + "> root element is required in an mbc project file.");
             }
 

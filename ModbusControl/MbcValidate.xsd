@@ -156,6 +156,14 @@
 						</xs:choice>
 					</xs:complexType>
 				</xs:element>
+				<xs:element name="include">
+					<xs:complexType>
+						<xs:all>
+							<xs:element name="file" type="xs:string" minOccurs="1"/>
+							<xs:element name="required" type="tpBool" minOccurs="0"/>
+						</xs:all>
+					</xs:complexType>
+				</xs:element>
 			</xs:choice>
 		</xs:complexType>
 	</xs:element>
