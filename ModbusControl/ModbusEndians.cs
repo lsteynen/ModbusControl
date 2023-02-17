@@ -89,7 +89,7 @@ namespace LST.Helpers
             switch (Type)
             {
                 case Global.eType.Int:
-                    if (result.Length >= 2)
+                    if (Size >= 2)
                     {
                         if (Int32BigEndian)
                         {
@@ -108,7 +108,7 @@ namespace LST.Helpers
                     }
                     break;
                 case Global.eType.Float:
-                    if (result.Length == 2)
+                    if (Size == 2)
                     {
                         if (Float32BigEndian)
                         {
@@ -127,7 +127,7 @@ namespace LST.Helpers
                     }
                     break;
                 case Global.eType.ASCII: // no swap
-                    if (Size == 32)
+                    if (Size == 2)
                     {
                         result[1] = (Int16)(((UInt32)Value) >> 16);
                         result[0] = (Int16)(UInt16)Value;
