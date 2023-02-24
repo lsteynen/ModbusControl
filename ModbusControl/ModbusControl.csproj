@@ -129,6 +129,7 @@
     <Compile Include="DropDownControl.designer.cs">
       <DependentUpon>DropDownControl.cs</DependentUpon>
     </Compile>
+    <Compile Include="EnumValueColumn.cs" />
     <Compile Include="Export.cs">
       <SubType>Form</SubType>
     </Compile>

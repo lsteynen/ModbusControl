@@ -19,11 +19,14 @@ namespace LST.ModbusGridView
     {
         private enum eRowType { Group, Reg, Field };
         private enum eGridColIndex { Reg, Descr, Properties, Value, Debuginfo };
-        enum dtColIndex { RowType, RowLevel, RowVisible, RegStr, Descr, InfoStr, FCol, BCol, ValueMode, ValueStr, HasChildren, Expanded, Longdescr };
+        enum dtColIndex { RowType, RowLevel, RowVisible, RegStr, Descr, InfoStr, FCol, BCol, ValueMode, ValueStr, Flags, Longdescr };
         private const int DefaultVisible = 3;
         private const int ValueModeNormal = 0;
         private const int ValueModeEdited = 1;
         private const int ValueModeError = 2;
+        private const int FlagHasChildren = 1;
+        private const int FlagIsExpanded = 2;
+        private const int FlagIsEnum = 4;
 
         // needed for PostMessage
         [DllImport("user32.dll")]
@@ -194,11 +197,6 @@ namespace LST.ModbusGridView
             set { setCustomFormattingAndPainting(value); }
         }
 
-        public bool ShowDebugInfoColumn
-        {
-            set { setShowDebugInfoColumn(value); }
-        }
-
         public bool StartEditOnAnyCharacter
         {
             get { return mStartEditOnAnyCharacter; }
@@ -279,6 +277,9 @@ namespace LST.ModbusGridView
             expandIconWidth = expandImage.Width;
             expandIconHeight = expandImage.Height;
             indentWidth = expandIconPadding + expandIconWidth; // + ExpandIconPadding;
+
+            // show debugging columns
+            //.Columns[(int)eGridColIndex.Debuginfo].Visible = true;
 
             this.AutosizeRows = false;
             this.WrapRows = false;
@@ -490,8 +491,7 @@ namespace LST.ModbusGridView
             data.Columns.Add("BCol", typeof(System.Drawing.Color));                 // background color
             data.Columns.Add("ValueMode", System.Type.GetType("System.Int32"));     // mode of value column, 0=normal, 1=edit, 2=error
             data.Columns.Add("ValueStr", System.Type.GetType("System.String"));
-            data.Columns.Add("HasChildren", System.Type.GetType("System.Boolean"));
-            data.Columns.Add("Expanded", System.Type.GetType("System.Boolean"));
+            data.Columns.Add("Flags", System.Type.GetType("System.Int32"));
             data.Columns.Add("Longdescr", System.Type.GetType("System.String"));      // longdescription tooltip text
 
             // provide filtering
@@ -504,12 +504,17 @@ namespace LST.ModbusGridView
                 if (li is RegItem)
                 {
                     RegItem ri = li as RegItem;
+
+                    int Flags = 0;
+                    if (ri.childrenList != null) Flags |= FlagHasChildren;
+                    if (ri.expanded) Flags |= FlagIsExpanded;
+                    if (ri.EnumDict != null) Flags |= FlagIsEnum;
+
                     data.Rows.Add(new object[] { eRowType.Reg, 0, DefaultVisible,        // rowtype, level, visible
                         ri.Reg.ToString(), ri.Descr, ri.InfoStr,
                         ri.ForeColor, ri.BackColor, 0,
                         "",                             // ValueStr
-                        (ri.childrenList != null),      // HasChildren
-                        ri.expanded,                    // Expanded
+                        Flags,                          // Flags
                         ri.LongDescr});                 // Longdescr tooltip text
 
                     li.dataRowIndex = data.Rows.Count - 1;
@@ -524,12 +529,16 @@ namespace LST.ModbusGridView
                             {
                                 RegfieldItem fi = li2 as RegfieldItem;
 
+                                Flags = 0;
+                                if (fi.childrenList != null) Flags |= FlagHasChildren;
+                                if (fi.expanded) Flags |= FlagIsExpanded;
+                                if (fi.EnumDict != null) Flags |= FlagIsEnum;
+
                                 data.Rows.Add(new object[] { eRowType.Field, 1, DefaultVisible,        // rowtype, level, visible
                                     fi.RegStr, fi.Descr, fi.InfoStr,
                                     fi.ForeColor, fi.BackColor, 0,
                                     "",                             // ValueStr
-                                    false,                          // HasChildren
-                                    false,                          // Expanded
+                                    Flags,                          // Flags
                                     fi.LongDescr});                 // Longdescr tooltip text
 
                                 fi.dataRowIndex = data.Rows.Count - 1;
@@ -568,9 +577,25 @@ namespace LST.ModbusGridView
 
             s += "V=" + ((int)dRow[(int)dtColIndex.RowVisible]).ToString() + "; ";
 
-            s += "E=" + (((bool)dRow[(int)dtColIndex.Expanded]) ? "1" : "0");
+            int Flags = (int)dRow[(int)dtColIndex.Flags];
+            s += "C=" + (((Flags & FlagHasChildren) == FlagHasChildren) ? "1" : "0") + "; ";
+            s += "X=" + (((Flags & FlagIsExpanded) == FlagIsExpanded) ? "1" : "0") + "; ";
+            s += "E=" + (((Flags & FlagIsEnum) == FlagIsEnum) ? "1" : "0");
 
             return s;
+        }
+
+        private void grid_RowPrePaint(object sender, DataGridViewRowPrePaintEventArgs e)
+        {
+            // get datatable row from datagridview row
+            DataRow dRow = (grid.Rows[e.RowIndex].DataBoundItem as DataRowView).Row;
+            int Flags = (int)dRow[(int)dtColIndex.Flags];
+
+            if ((Flags & FlagIsEnum) == FlagIsEnum)
+            {
+                EnumValueCell c = grid.Rows[e.RowIndex].Cells[(int)eGridColIndex.Value] as EnumValueCell;
+                c.IsEnum = true;
+            }
         }
 
         private void grid_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
@@ -633,10 +658,11 @@ namespace LST.ModbusGridView
                 e.PaintBackground(e.ClipBounds, true);
 
                 // Paint expand/collapse icon	
-                if ((bool)dRow[(int)dtColIndex.HasChildren])
+                int Flags = (int)dRow[(int)dtColIndex.Flags];
+                if ((Flags & FlagHasChildren) == FlagHasChildren)
                 {
                     int ypos = e.CellBounds.Y + ((e.CellBounds.Height - expandIconHeight) / 2);
-                    if ((bool)dRow[(int)dtColIndex.Expanded])
+                    if ((Flags & FlagIsExpanded) == FlagIsExpanded)
                     {
                         e.Graphics.DrawImage(collapseImage, e.CellBounds.X + xpos + expandIconPadding, ypos);
                     }
@@ -777,11 +803,6 @@ namespace LST.ModbusGridView
             grid.Invalidate();
         }
 
-        private void setShowDebugInfoColumn(bool value)
-        {
-            grid.Columns[(int)eGridColIndex.Debuginfo].Visible = value;
-        }
-
         private void setLongTooltipTime(bool value)
         {
             if (value)
@@ -806,9 +827,11 @@ namespace LST.ModbusGridView
             {
                 DataRow dRow = data.Rows[dri];
 
-                if ((bool)dRow[(int)dtColIndex.HasChildren])
+                int Flags = (int)dRow[(int)dtColIndex.Flags];
+                if ((Flags & FlagHasChildren) == FlagHasChildren)
                 {
-                    dRow[(int)dtColIndex.Expanded] = true;
+                    Flags |= FlagIsExpanded;
+                    dRow[(int)dtColIndex.Flags] = Flags;
                 }
 
                 if (((int)dRow[(int)dtColIndex.RowVisible] & 1) == 0)
@@ -837,10 +860,12 @@ namespace LST.ModbusGridView
             for (int dri = 0; dri < data.Rows.Count; ++dri)
             {
                 DataRow dRow = data.Rows[dri];
+                int Flags = (int)dRow[(int)dtColIndex.Flags];
 
-                if ((bool)dRow[(int)dtColIndex.Expanded])
+                if ((Flags & FlagIsExpanded) == FlagIsExpanded)
                 {
-                    dRow[(int)dtColIndex.Expanded] = false;
+                    Flags &= ~FlagIsExpanded;
+                    dRow[(int)dtColIndex.Flags] = Flags;
                 }
 
                 int level = (int)dRow[(int)dtColIndex.RowLevel];
@@ -943,9 +968,11 @@ namespace LST.ModbusGridView
                 {
                     if (bufRowsParentExpand[dri])
                     {
-                        if ((bool)data.Rows[dri][(int)dtColIndex.Expanded] == false)
+                        int Flags = (int)data.Rows[dri][(int)dtColIndex.Flags];
+                        if ((Flags & FlagIsExpanded) == 0)
                         {
-                            data.Rows[dri][(int)dtColIndex.Expanded] = true;
+                            Flags |= FlagIsExpanded;
+                            data.Rows[dri][(int)dtColIndex.Flags] = Flags;
                             ExpandParent(dri);
                         }
                     }
@@ -985,7 +1012,8 @@ namespace LST.ModbusGridView
             for (int dri = 0; dri < numRows; ++dri)
             {
                 DataRow dRow = data.Rows[dri];
-                if ((bool)dRow[(int)dtColIndex.HasChildren] && ((bool)dRow[(int)dtColIndex.Expanded] == false))
+                int Flags = (int)dRow[(int)dtColIndex.Flags];
+                if (((Flags & (FlagHasChildren | FlagIsExpanded)) == (FlagHasChildren)))
                 {
                     CollapseParent_ref(ref dri);
                     --dri;
@@ -1081,7 +1109,8 @@ namespace LST.ModbusGridView
             DataRowView drv = grid.Rows[e.RowIndex].DataBoundItem as DataRowView;
             DataRow dRow = drv.Row;                 // data row
 
-            if ((bool)dRow[(int)dtColIndex.HasChildren])
+            int Flags = (int)dRow[(int)dtColIndex.Flags];
+            if ((Flags & FlagHasChildren) == FlagHasChildren)
             {
                 Debug.Print(" isExpandable");
                 int level = (int)dRow[(int)dtColIndex.RowLevel];
@@ -1104,11 +1133,13 @@ namespace LST.ModbusGridView
                 {
                     //Debug.Print(" hitRect.Contains");
                     // toggle
-                    dRow[(int)dtColIndex.Expanded] = !(bool)dRow[(int)dtColIndex.Expanded];
+                    Flags = (int)dRow[(int)dtColIndex.Flags];
+                    Flags ^= FlagIsExpanded;
+                    dRow[(int)dtColIndex.Flags] = Flags;
 
                     // update
                     int dri = data.Rows.IndexOf(dRow);      // data row index
-                    if ((bool)dRow[(int)dtColIndex.Expanded])
+                    if ((Flags & FlagIsExpanded) == FlagIsExpanded)
                     {
                         //Debug.Print(" UpdateExpandParent");
                         ExpandParent(dri);
@@ -1164,10 +1195,11 @@ namespace LST.ModbusGridView
                 }
 
                 // has children?
-                if ((bool)dRow[(int)dtColIndex.HasChildren])
+                int Flags = (int)dRow[(int)dtColIndex.Flags];
+                if ((Flags & FlagHasChildren) == FlagHasChildren)
                 {
                     // is status=expanded: expand
-                    if ((bool)dRow[(int)dtColIndex.Expanded])
+                    if ((Flags & FlagIsExpanded) == FlagIsExpanded)
                     {
                         ExpandParent_rec(ref dri);
                     }
@@ -1301,16 +1333,45 @@ namespace LST.ModbusGridView
         /// </summary>
         private void grid_EditingControlShowing(object sender, DataGridViewEditingControlShowingEventArgs e)
         {
-            DataGridViewTextBoxEditingControl ed = e.Control as DataGridViewTextBoxEditingControl;
-
-            if (ed != null)
+            if (grid.CurrentCell.ColumnIndex == (int)eGridColIndex.Value)
             {
-                // got a buffered key?
-                // then send it to the editing control
-                if (editingBufferedChar > 0)
+                EnumValueEditingControl cb = e.Control as EnumValueEditingControl;
+                if (cb != null)
                 {
-                    PostMessage(ed.Handle, WM_CHAR, (int)editingBufferedChar, 0);
-                    editingBufferedChar = (char)0;
+                    // get IsEnum property 
+                    EnumValueCell c = this.grid.CurrentCell as EnumValueCell;
+                    if (c.IsEnum)
+                    {
+                        //editingReg and editingRegfield are already set when edit started
+                        // get the enum dictionary of that register/field
+                        Dictionary<int, string> EnumDict = null;
+                        if (editingRegfield != null)
+                        {
+                            EnumDict = editingRegfield.EnumDict;
+                        }
+                        else
+                        {
+                            EnumDict = editingReg.EnumDict;
+                        }
+
+                        // fill the combo dropdown with the enum values
+                        cb.Items.Clear();
+                        foreach (var item in EnumDict)
+                        {
+                            cb.Items.Add(item.Key.ToString() + " (" + item.Value + ")");
+                        }
+                    }
+                }
+
+                if (cb != null)
+                {
+                    // got a buffered key?
+                    // then send it to the editing control
+                    if (editingBufferedChar > 0)
+                    {
+                        PostMessage(cb.Handle, WM_CHAR, (int)editingBufferedChar, 0);
+                        editingBufferedChar = (char)0;
+                    }
                 }
             }
         }
@@ -1678,6 +1739,7 @@ namespace LST.ModbusGridView
                 ModbusControlSpace.Global.eFormat edFormat = ModbusControlSpace.Global.eFormat.Int;
                 int edWidth = 1;
                 int edDecimals = 0;
+                bool edIsEnum = false;
 
                 // edited a field or register?
                 if (editingRegfield != null)
@@ -1685,17 +1747,27 @@ namespace LST.ModbusGridView
                     edFormat = editingRegfield.Format;
                     edWidth = editingRegfield.Width;
                     edDecimals = editingRegfield.Decimals;
+                    edIsEnum = editingRegfield.EnumDict != null;
                 }
                 else
                 {
                     edFormat = editingReg.Format;
                     edWidth = editingReg.Size * 16;
                     edDecimals = editingReg.Decimals;
+                    edIsEnum = editingReg.EnumDict != null;
                 }
 
                 // convert string to value
                 // is it a float?
                 bool IsFloat = (edFormat == ModbusControlSpace.Global.eFormat.Float);
+
+                // is it an enum?
+                // the remove the (enum descr) part
+                if (edIsEnum)
+                {
+                    newValueStr = CleanValuestrEnumText(newValueStr);
+                }
+
                 // convert & check
                 Int32 NewValue;
                 Global.eType Type;
@@ -2127,6 +2199,19 @@ namespace LST.ModbusGridView
         private void collapseAllToolStripMenuItem_Click(object sender, EventArgs e)
         {
             CollapseAll();
+        }
+
+        private string CleanValuestrEnumText(string str)
+        {
+            // expected formats: "123", " 123 (text)", " 123 (...", ...
+
+            int i = str.IndexOf('(');
+            if (i >= 0)
+            {
+                str = str.Substring(0, i);
+            }
+
+            return str;
         }
     }
 }

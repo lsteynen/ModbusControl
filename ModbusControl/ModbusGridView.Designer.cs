@@ -49,12 +49,6 @@ namespace LST.ModbusGridView
             this.showValueAsASCIIToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.copyValueToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.grid = new LST.Helpers.MyDataGridView();
-            this.colReg = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colDescr = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colProps = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colValue = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colDebuginfo = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ContextMenuForRegColumn = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripMenuItem();
@@ -65,10 +59,16 @@ namespace LST.ModbusGridView
             this.toolStripMenuItem7 = new System.Windows.Forms.ToolStripMenuItem();
             this.expandAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.collapseAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.grid = new LST.Helpers.MyDataGridView();
+            this.colReg = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colDescr = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colProps = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colValue = new EnumValueColumn();
+            this.colDebuginfo = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ContextMenuForOtherColumns.SuspendLayout();
             this.ContextMenuForValueColumn.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.grid)).BeginInit();
             this.ContextMenuForRegColumn.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.grid)).BeginInit();
             this.SuspendLayout();
             // 
             // imageList1
@@ -211,84 +211,6 @@ namespace LST.ModbusGridView
             this.copyValueToolStripMenuItem.Text = "Copy value";
             this.copyValueToolStripMenuItem.Click += new System.EventHandler(this.CopyValueToolStripMenuItem_Click);
             // 
-            // grid
-            // 
-            this.grid.AllowUserToAddRows = false;
-            this.grid.AllowUserToDeleteRows = false;
-            this.grid.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
-            this.grid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.grid.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.colReg,
-            this.colDescr,
-            this.colProps,
-            this.colValue,
-            this.colDebuginfo});
-            this.grid.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.grid.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
-            this.grid.Location = new System.Drawing.Point(0, 0);
-            this.grid.Margin = new System.Windows.Forms.Padding(2);
-            this.grid.MultiSelect = false;
-            this.grid.Name = "grid";
-            this.grid.RowHeadersVisible = false;
-            this.grid.RowHeadersWidth = 25;
-            this.grid.RowTemplate.Height = 23;
-            this.grid.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.grid.Size = new System.Drawing.Size(669, 222);
-            this.grid.TabIndex = 0;
-            this.grid.CellBeginEdit += new System.Windows.Forms.DataGridViewCellCancelEventHandler(this.grid_CellBeginEdit);
-            this.grid.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.grid_CellDoubleClick);
-            this.grid.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.grid_CellEndEdit);
-            this.grid.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.grid_CellFormatting);
-            this.grid.CellMouseDown += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.grid_CellMouseDown);
-            this.grid.CellPainting += new System.Windows.Forms.DataGridViewCellPaintingEventHandler(this.grid_CellPainting);
-            this.grid.CellToolTipTextNeeded += new System.Windows.Forms.DataGridViewCellToolTipTextNeededEventHandler(this.grid_CellToolTipTextNeeded);
-            this.grid.EditingControlShowing += new System.Windows.Forms.DataGridViewEditingControlShowingEventHandler(this.grid_EditingControlShowing);
-            this.grid.KeyDown += new System.Windows.Forms.KeyEventHandler(this.grid_KeyDown);
-            this.grid.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.grid_KeyPress);
-            this.grid.MouseUp += new System.Windows.Forms.MouseEventHandler(this.grid_MouseUp);
-            // 
-            // colReg
-            // 
-            this.colReg.HeaderText = "Register";
-            this.colReg.MinimumWidth = 6;
-            this.colReg.Name = "colReg";
-            this.colReg.ReadOnly = true;
-            this.colReg.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            // 
-            // colDescr
-            // 
-            this.colDescr.FillWeight = 400F;
-            this.colDescr.HeaderText = "Description";
-            this.colDescr.MinimumWidth = 6;
-            this.colDescr.Name = "colDescr";
-            this.colDescr.ReadOnly = true;
-            this.colDescr.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            // 
-            // colProps
-            // 
-            this.colProps.HeaderText = "Properties";
-            this.colProps.MinimumWidth = 6;
-            this.colProps.Name = "colProps";
-            this.colProps.ReadOnly = true;
-            this.colProps.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            // 
-            // colValue
-            // 
-            this.colValue.HeaderText = "Value";
-            this.colValue.MinimumWidth = 6;
-            this.colValue.Name = "colValue";
-            this.colValue.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            // 
-            // colDebuginfo
-            // 
-            this.colDebuginfo.FillWeight = 400F;
-            this.colDebuginfo.HeaderText = "Debuginfo";
-            this.colDebuginfo.MinimumWidth = 6;
-            this.colDebuginfo.Name = "colDebuginfo";
-            this.colDebuginfo.ReadOnly = true;
-            this.colDebuginfo.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            this.colDebuginfo.Visible = false;
-            // 
             // ContextMenuForRegColumn
             // 
             this.ContextMenuForRegColumn.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -302,7 +224,7 @@ namespace LST.ModbusGridView
             this.expandAllToolStripMenuItem,
             this.collapseAllToolStripMenuItem});
             this.ContextMenuForRegColumn.Name = "ContextMenuForFirstColumns";
-            this.ContextMenuForRegColumn.Size = new System.Drawing.Size(236, 208);
+            this.ContextMenuForRegColumn.Size = new System.Drawing.Size(236, 186);
             // 
             // toolStripMenuItem2
             // 
@@ -370,6 +292,83 @@ namespace LST.ModbusGridView
             this.collapseAllToolStripMenuItem.Text = "Collapse all";
             this.collapseAllToolStripMenuItem.Click += new System.EventHandler(this.collapseAllToolStripMenuItem_Click);
             // 
+            // grid
+            // 
+            this.grid.AllowUserToAddRows = false;
+            this.grid.AllowUserToDeleteRows = false;
+            this.grid.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+            this.grid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.grid.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.colReg,
+            this.colDescr,
+            this.colProps,
+            this.colValue,
+            this.colDebuginfo});
+            this.grid.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.grid.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
+            this.grid.Location = new System.Drawing.Point(0, 0);
+            this.grid.Margin = new System.Windows.Forms.Padding(2);
+            this.grid.MultiSelect = false;
+            this.grid.Name = "grid";
+            this.grid.RowHeadersVisible = false;
+            this.grid.RowHeadersWidth = 25;
+            this.grid.RowTemplate.Height = 23;
+            this.grid.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.grid.Size = new System.Drawing.Size(669, 222);
+            this.grid.TabIndex = 0;
+            this.grid.CellBeginEdit += new System.Windows.Forms.DataGridViewCellCancelEventHandler(this.grid_CellBeginEdit);
+            this.grid.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.grid_CellDoubleClick);
+            this.grid.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.grid_CellEndEdit);
+            this.grid.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.grid_CellFormatting);
+            this.grid.CellMouseDown += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.grid_CellMouseDown);
+            this.grid.CellPainting += new System.Windows.Forms.DataGridViewCellPaintingEventHandler(this.grid_CellPainting);
+            this.grid.CellToolTipTextNeeded += new System.Windows.Forms.DataGridViewCellToolTipTextNeededEventHandler(this.grid_CellToolTipTextNeeded);
+            this.grid.EditingControlShowing += new System.Windows.Forms.DataGridViewEditingControlShowingEventHandler(this.grid_EditingControlShowing);
+            this.grid.RowPrePaint += new System.Windows.Forms.DataGridViewRowPrePaintEventHandler(this.grid_RowPrePaint);
+            this.grid.KeyDown += new System.Windows.Forms.KeyEventHandler(this.grid_KeyDown);
+            this.grid.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.grid_KeyPress);
+            this.grid.MouseUp += new System.Windows.Forms.MouseEventHandler(this.grid_MouseUp);
+            // 
+            // colReg
+            // 
+            this.colReg.HeaderText = "Register";
+            this.colReg.MinimumWidth = 6;
+            this.colReg.Name = "colReg";
+            this.colReg.ReadOnly = true;
+            this.colReg.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            // 
+            // colDescr
+            // 
+            this.colDescr.FillWeight = 400F;
+            this.colDescr.HeaderText = "Description";
+            this.colDescr.MinimumWidth = 6;
+            this.colDescr.Name = "colDescr";
+            this.colDescr.ReadOnly = true;
+            this.colDescr.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            // 
+            // colProps
+            // 
+            this.colProps.HeaderText = "Properties";
+            this.colProps.MinimumWidth = 6;
+            this.colProps.Name = "colProps";
+            this.colProps.ReadOnly = true;
+            this.colProps.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            // 
+            // colValue
+            // 
+            this.colValue.HeaderText = "Value";
+            this.colValue.Name = "colValue";
+            // 
+            // colDebuginfo
+            // 
+            this.colDebuginfo.FillWeight = 400F;
+            this.colDebuginfo.HeaderText = "Debuginfo";
+            this.colDebuginfo.MinimumWidth = 6;
+            this.colDebuginfo.Name = "colDebuginfo";
+            this.colDebuginfo.ReadOnly = true;
+            this.colDebuginfo.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            this.colDebuginfo.Visible = false;
+            // 
             // ModbusGridView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -380,8 +379,8 @@ namespace LST.ModbusGridView
             this.Size = new System.Drawing.Size(669, 222);
             this.ContextMenuForOtherColumns.ResumeLayout(false);
             this.ContextMenuForValueColumn.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.grid)).EndInit();
             this.ContextMenuForRegColumn.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.grid)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -390,11 +389,6 @@ namespace LST.ModbusGridView
 
         private LST.Helpers.MyDataGridView grid;
         private System.Windows.Forms.ImageList imageList1;
-        private System.Windows.Forms.DataGridViewTextBoxColumn colReg;
-        private System.Windows.Forms.DataGridViewTextBoxColumn colDescr;
-        private System.Windows.Forms.DataGridViewTextBoxColumn colProps;
-        private System.Windows.Forms.DataGridViewTextBoxColumn colValue;
-        private System.Windows.Forms.DataGridViewTextBoxColumn colDebuginfo;
         private System.Windows.Forms.ContextMenuStrip ContextMenuForOtherColumns;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem markThisLineInGreenToolStripMenuItem;
@@ -422,5 +416,10 @@ namespace LST.ModbusGridView
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem7;
         private System.Windows.Forms.ToolStripMenuItem expandAllToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem collapseAllToolStripMenuItem;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colReg;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colDescr;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colProps;
+        private EnumValueColumn colValue;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colDebuginfo;
     }
 }

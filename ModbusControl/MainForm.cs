@@ -1203,10 +1203,9 @@ namespace ModbusControlSpace
                 newRegView.AutosizeColumns = true;
                 newRegView.AutosizeRows = true;
 
+                // set callbacks
                 newRegView.OnRegisterWrite += new ModbusGridView.RegisterWriteHandler(this.OnRegisterWrite);
                 newRegView.OnBeep += new ModbusGridView.BeepHandler(this.BeepHandler);
-
-                // ReportErrorMessage callback
                 newRegView.OnReportErrorMessage += this.ReportInputError;
 
                 // add info to Description?
