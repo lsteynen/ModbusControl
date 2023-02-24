@@ -231,6 +231,42 @@ namespace LST.ModbusGridView
             }
         }
 
+        public float RegisterColumnWidthWeight
+        {
+            get { return colReg.FillWeight; }
+            set
+            {
+                if (value != colReg.FillWeight) colReg.FillWeight = value;
+            }
+        }
+
+        public float DescriptionColumnWidthWeight
+        {
+            get { return colDescr.FillWeight; }
+            set
+            {
+                if (value != colDescr.FillWeight) colDescr.FillWeight = value;
+            }
+        }
+
+        public float PropertiesColumnWidthWeight
+        {
+            get { return colProps.FillWeight; }
+            set
+            {
+                if (value != colProps.FillWeight) colProps.FillWeight = value;
+            }
+        }
+
+        public float ValueColumnWidthWeight
+        {
+            get { return colValue.FillWeight; }
+            set
+            {
+                if (value != colValue.FillWeight) colValue.FillWeight = value;
+            }
+        }
+
         #endregion
 
         #region events
@@ -2213,5 +2249,6 @@ namespace LST.ModbusGridView
 
             return str;
         }
+
     }
 }

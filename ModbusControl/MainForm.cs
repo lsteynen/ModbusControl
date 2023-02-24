@@ -75,6 +75,7 @@ namespace ModbusControlSpace
         private Thread CommsThread;
         private volatile bool CommsThread_StopFlag;
         private TabPage CurrentTabPage; // null if none
+        private TabPage PreviousTabPage; // null if none
         public bool MainPollingIsEnabled = true;
         private bool TabIsChanged;
         private float ZoomFactor = 1.0F;
@@ -84,7 +85,7 @@ namespace ModbusControlSpace
         private bool AlternateWriteUseFC16;
         private bool Loading;
         private CommandlineProc CommandlineArgs;
-
+        
         // a write entry
         private class WriteEntry
         {
@@ -1175,6 +1176,7 @@ namespace ModbusControlSpace
         {
             tabControl1.TabPages.Clear();
             CurrentTabPage = null;
+            PreviousTabPage = null;
         }
 
         public void LoadProjectInTabs()
@@ -1269,11 +1271,23 @@ namespace ModbusControlSpace
         {
             ModbusGridView mgv = CurrentTabPage.Tag as ModbusGridView;
 
-            // Static for all tabs
+            // set properties for this gridview
             mgv.ReadOnly = !ConnectionIsOpen;
             mgv.StartEditOnAnyCharacter = Options.AutoStartEdit;
             mgv.NextRowOnEnter = Options.AutoNextRowOnEnter;
             mgv.ShowVarProperties = Options.ShowVarProperties;
+
+            // copy some properties from the previous page
+            if (PreviousTabPage != null)
+            {
+                ModbusGridView prevmgv = PreviousTabPage.Tag as ModbusGridView;
+                mgv.RegisterColumnWidthWeight = prevmgv.RegisterColumnWidthWeight;
+                mgv.DescriptionColumnWidthWeight = prevmgv.DescriptionColumnWidthWeight;
+                mgv.PropertiesColumnWidthWeight = prevmgv.PropertiesColumnWidthWeight;
+                mgv.ValueColumnWidthWeight = prevmgv.ValueColumnWidthWeight;
+            }
+
+            // set some more properties
             //mgv.AutosizeAndWrapRows = Options.AutoRowSize;
             mgv.WrapRows = Options.AutoRowSize;
             mgv.SetFilter(tbFilterText.Text, chkFilterCaseSensitive.Checked);
@@ -1739,6 +1753,9 @@ namespace ModbusControlSpace
 
         private void tabControl1_Selected(object sender, TabControlEventArgs e)
         {
+            // remember previous page
+            PreviousTabPage = CurrentTabPage;
+            // set new current page
             CurrentTabPage = tabControl1.SelectedTab;
 
             if (Options.ClearFilterOnTabChange)
