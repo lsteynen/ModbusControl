@@ -1418,7 +1418,9 @@ namespace LST.ModbusGridView
             {
                 // zoom this grid
                 float newFontSize = originalFontSize * factor;
-                grid.DefaultCellStyle.Font = new Font(Font.FontFamily, newFontSize, Font.Style, Font.Unit);
+                Font newFont = new Font(Font.FontFamily, newFontSize, Font.Style, Font.Unit);
+                grid.ColumnHeadersDefaultCellStyle.Font = newFont;
+                grid.DefaultCellStyle.Font = newFont;
 
                 currentZoomFactor = factor;
             }
