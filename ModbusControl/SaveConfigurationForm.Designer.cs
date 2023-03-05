@@ -201,6 +201,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.AutoSize = true;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.CancelButton = this.buttonCancel;
             this.ClientSize = new System.Drawing.Size(364, 234);
             this.ControlBox = false;
             this.Controls.Add(this.panel2);

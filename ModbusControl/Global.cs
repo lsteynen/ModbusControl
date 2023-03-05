@@ -23,6 +23,11 @@ namespace ModbusControlSpace
         public enum eFormat { Int = 0, UInt, Hex, Bin, Float, ASCII };
         public static string[] FormatText = { "int", "uint", "hex", "bin", "float", "ASCII" };
         public enum eType { Int, Float, ASCII };
+        public class CEnum
+        {
+            public Dictionary<int, string> Dict; // enum convert dictionary
+            public string ElseText;              // can be null or empty
+        }
 
         public static Version VersionNum;
         public static string VersionString;

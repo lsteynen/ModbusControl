@@ -125,6 +125,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.AutoSize = true;
+            this.CancelButton = this.okButton;
             this.ClientSize = new System.Drawing.Size(355, 169);
             this.Controls.Add(this.labelName);
             this.Controls.Add(this.labelVersion);

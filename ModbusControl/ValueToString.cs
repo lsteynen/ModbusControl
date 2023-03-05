@@ -31,7 +31,7 @@ namespace LST.Helpers
         /// <param name="MinLen">Optional: minimum number of digits</param>
         /// <param name="EnumDict">Optional: enum dictionary</param>
         /// <returns></returns>
-        public static string ValueToString(Int32 Value, int Width, ModbusControlSpace.Global.eFormat Format, int Decimals = 0, int MinLen = 0, Dictionary<int, string> EnumDict = null)
+        public static string ValueToString(Int32 Value, int Width, ModbusControlSpace.Global.eFormat Format, int Decimals = 0, int MinLen = 0, ModbusControlSpace.Global.CEnum EnumDict = null)
         {
             string Result = string.Empty;
             UInt32 UValue;
@@ -86,7 +86,7 @@ namespace LST.Helpers
             if (EnumDict != null)
             {
                 string Enumstr;
-                if (EnumDict.TryGetValue(Value, out Enumstr))
+                if ((EnumDict.Dict!= null) && EnumDict.Dict.TryGetValue(Value, out Enumstr))
                 {
                     // found
                     Result += " (" + Enumstr + ")";
@@ -94,7 +94,8 @@ namespace LST.Helpers
                 else
                 {
                     // not found
-                    Result += " (enum?)";
+                    if (string.IsNullOrEmpty(EnumDict.ElseText) == false)
+                        Result += " " + EnumDict.ElseText;
                 }
             }
 

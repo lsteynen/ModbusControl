@@ -94,7 +94,7 @@ namespace ModbusControlSpace
             public Color BackColor; // background color
             public List<TBitfield> Bitfields; // List with bitfields
             public bool Expand;         // expand bitfields
-            public Dictionary<int, string> EnumDict; // enum convert dictionary
+            public Global.CEnum EnumDict;      // enum convert dictionary
         }
 
         // structure holding a bitfield definition
@@ -107,7 +107,7 @@ namespace ModbusControlSpace
             public int MinLen;          // minimum number of digits to display
             public Color ForeColor;     // foreground/font color
             public Color BackColor;     // background color
-            public Dictionary<int, string> EnumDict; // enum convert dictionary
+            public Global.CEnum EnumDict;      // enum convert dictionary
             public string Longdescr;         // tooltip text
         }
 
@@ -1115,7 +1115,7 @@ namespace ModbusControlSpace
                 // <enum>, optional
                 if (CheckElementNameMatch(elemName, "enum"))
                 {
-                    newVar.EnumDict = ProcessEnumElementIntoDict(xe);
+                    newVar.EnumDict = ProcessEnumElementIntoCEnum(xe);
                 }
                 else
                 // <field> bitfields in this var, optional, multiple
@@ -1306,7 +1306,7 @@ namespace ModbusControlSpace
                 // <enum>, optional
                 if (CheckElementNameMatch(elemName, "enum"))
                 {
-                    newField.EnumDict = ProcessEnumElementIntoDict(xe);
+                    newField.EnumDict = ProcessEnumElementIntoCEnum(xe);
                 }
                 else
                 // do not allow a <field> in a <field>
@@ -1328,10 +1328,14 @@ namespace ModbusControlSpace
         /// Get enum items list as a dictionary
         /// </summary>
         /// <param name="pxe"></param>
-        /// <returns>Dictionary with items. Null if there are no items. </returns>
-        Dictionary<int, string> ProcessEnumElementIntoDict(XElement pxe)
+        /// <returns>Dictionary with items. Null if there are no items or Elsetext. </returns>
+        private Global.CEnum ProcessEnumElementIntoCEnum(XElement pxe)
         {
-            Dictionary<int, string> dict = null;
+            Global.CEnum myEnum = new Global.CEnum();
+            myEnum.Dict = new Dictionary<int, string>();
+            string ElseText = null;
+
+            bool elseSeen = false;
 
             foreach (XElement xitem in pxe.Elements())
             {
@@ -1405,18 +1409,10 @@ namespace ModbusControlSpace
                     if (valueSeen && textSeen)
                     {
                         // add item to dictionary
-
-                        // create dictionary if we don't have one yet
-                        if (dict == null)
-                        {
-                            dict = new Dictionary<int, string>();
-                        }
-
-                        // add
                         try
                         {
                             // throws exception on duplicate key
-                            dict.Add(valueInt, textStr);
+                            myEnum.Dict.Add(valueInt, textStr);
                         }
                         catch
                         {
@@ -1442,12 +1438,41 @@ namespace ModbusControlSpace
                     }
                 }
                 else
+                // else
+                if (CheckElementNameMatch(elemName, "else"))
+                {
+                    if (elseSeen)
+                    {
+                        // found more than 1
+                        // throw exception with fileposition of 2nd
+                        TFilePosition fp = GetFilePos(xitem);
+                        throw new XmlException("XML element <" + xitem.Name.LocalName + "> is found multiple times. It is allowed only once in its parent <" + xitem.Parent.Name.LocalName + "> element." + Environment.NewLine + LimitXmlTextLength(xitem.ToString()) + Environment.NewLine, null, fp.Line, fp.Col);
+                    }
+                    else
+                    {
+                        ElseText = xitem.Value.Trim();
+                        elseSeen = true;
+                    }
+                }
+                else
                 {
                     // invalid/unsupported element found
                 }
             }
 
-            return dict;
+            // pass elsetext, or use default text if it was not specified
+            // can be specified as ""
+            if (ElseText != null)
+            {
+                myEnum.ElseText = ElseText;
+            }
+            else
+            {
+                myEnum.ElseText = "(enum?)";
+            }
+
+
+            return myEnum;
         }
 
 
@@ -1701,8 +1726,8 @@ namespace ModbusControlSpace
             // Load xml document into incXmlDoc
             XDocument incXmlDoc = XDocument.Load(path, LoadOptions.SetLineInfo);
 
-//TODO: vaidation doen?
-#if false            
+            //TODO: validation doen?
+#if false
             // got validation schema?
             // throws exception on validation error
             if (ValidationSchemaPath != "")

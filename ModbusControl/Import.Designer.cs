@@ -147,6 +147,5 @@
         private System.Windows.Forms.Button buttonClearLog;
         private System.Windows.Forms.Button buttonCancel;
         private System.Windows.Forms.ToolTip toolTip1;
-
     }
 }

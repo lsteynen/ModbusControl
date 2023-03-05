@@ -874,6 +874,7 @@
             // 
             this.comboSerialPort.FormattingEnabled = true;
             this.comboSerialPort.Location = new System.Drawing.Point(95, 13);
+            this.comboSerialPort.MaxLength = 30;
             this.comboSerialPort.Name = "comboSerialPort";
             this.comboSerialPort.Size = new System.Drawing.Size(91, 21);
             this.comboSerialPort.TabIndex = 9;
@@ -881,10 +882,12 @@
             // 
             // ConfigForm
             // 
+            this.AcceptButton = this.buttonOK;
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.AutoSize = true;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.CancelButton = this.buttonCancel;
             this.ClientSize = new System.Drawing.Size(668, 453);
             this.ControlBox = false;
             this.Controls.Add(this.panel2);

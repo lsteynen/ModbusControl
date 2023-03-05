@@ -61,8 +61,8 @@ namespace LST.ModbusGridView
             public Color? BackColor;    // the background color, nullable
             public Int32 Value32;       // actual value in 32-bit
             public string ValueStr;     // value as a string
-            public Dictionary<int, string> EnumDict; // enum convert dictionary
-            public string LongDescr;      // <longdescr> tooltip text
+            public Global.CEnum EnumDict;   // enum convert dictionary
+            public string LongDescr;    // <longdescr> tooltip text
 
             // constructor
             public RegItem()
@@ -97,8 +97,8 @@ namespace LST.ModbusGridView
             public Color? BackColor;     // the background color
             public Int32 Value32;       // actual value in 32-bit
             public string ValueStr;     // value as a string
-            public Dictionary<int, string> EnumDict; // enum convert dictionary
-            public string LongDescr;      // <longdescr> tooltip text
+            public Global.CEnum EnumDict;   // enum convert dictionary
+            public string LongDescr;    // <longdescr> tooltip text
 
             // constructor
             public RegfieldItem()
@@ -401,7 +401,7 @@ namespace LST.ModbusGridView
             }
         }
 
-        public void RegSetEnums(ListItem Item, Dictionary<int, string> dict)
+        public void RegSetEnums(ListItem Item, Global.CEnum dict)
         {
             if (Item is RegItem)
             {
@@ -1380,7 +1380,7 @@ namespace LST.ModbusGridView
                     {
                         //editingReg and editingRegfield are already set when edit started
                         // get the enum dictionary of that register/field
-                        Dictionary<int, string> EnumDict = null;
+                        Global.CEnum EnumDict = null;
                         if (editingRegfield != null)
                         {
                             EnumDict = editingRegfield.EnumDict;
@@ -1392,11 +1392,14 @@ namespace LST.ModbusGridView
 
                         // fill the combo dropdown with the enum values
                         cb.Items.Clear();
-                        foreach (var item in EnumDict)
+                        if (EnumDict.Dict != null)
                         {
-                            cb.Items.Add(item.Key.ToString() + " (" + item.Value + ")");
+                            foreach (var item in EnumDict.Dict)
+                            {
+                                cb.Items.Add(item.Key.ToString() + " (" + item.Value + ")");
+                            }
                         }
-                    }
+                     }
                 }
 
                 if (cb != null)
