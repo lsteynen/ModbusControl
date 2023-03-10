@@ -32,7 +32,8 @@ namespace LST.Helpers
         /// </summary>
         public MyDataGridView()
         {
-            // nothing to do
+            // set double buffered
+            DoubleBuffered = true;
         }
 
         public void SetMaxTooltipTime()
