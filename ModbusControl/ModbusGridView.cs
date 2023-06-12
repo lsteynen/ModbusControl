@@ -8,6 +8,7 @@ using System.Runtime.InteropServices;
 
 using LST.Helpers;
 using ModbusControlSpace;
+using System.Resources;
 
 //#define DEBUG_VISIBILITY
 
@@ -138,13 +139,14 @@ namespace LST.ModbusGridView
         // the data table
         private DataTable data;
 
-        private int expandIconWidth;
-        private int expandIconHeight;
-        private int expandIconPadding = 4;
+        private Icon expandIcon;                        // tree expand icon, size depends on zoom
+        private Icon collapseIcon;                      // tree collapse icon, size depends on zoom
+        private Icon enumIndicatorIcon;                 // enum indicator icon, size depends on zoom
+        private int expandIconWidth;                    // tree expand/collapse icon width
+        private int expandIconHeight;                   // tree expand/collapse icon height
+        private int expandIconPadding = 4;              // tree expand/collapse icon padding
         private int indentWidth;
         private int[] columnWidths;
-        private Image expandImage;
-        private Image collapseImage;
         private string mFilterString;
         private bool mFilterCaseSensitive;
         private float originalFontSize;
@@ -307,12 +309,10 @@ namespace LST.ModbusGridView
             grid.Columns[(int)eGridColIndex.Properties].DataPropertyName = "InfoStr";
             grid.Columns[(int)eGridColIndex.Value].DataPropertyName = "ValueStr";
 
+            // set grid icons and their sizes
+            SetIconSizes();
+
             originalFontSize = Font.Size;
-            expandImage = imageList1.Images["TreeExpand.bmp"];
-            collapseImage = imageList1.Images["TreeCollapse.bmp"];
-            expandIconWidth = expandImage.Width;
-            expandIconHeight = expandImage.Height;
-            indentWidth = expandIconPadding + expandIconWidth; // + ExpandIconPadding;
 
             // show debugging columns
             //.Columns[(int)eGridColIndex.Debuginfo].Visible = true;
@@ -679,9 +679,12 @@ namespace LST.ModbusGridView
         {
             //Debug.Print("grid_CellPainting() Row=" + e.RowIndex.ToString() + " Col=" + e.ColumnIndex.ToString());
 
+            indentWidth = expandIconPadding + expandIconWidth; // + ExpandIconPadding;
+
             if (customPainting == false) return;
 
             // Reg column?
+            // custom paint for expand/collapse icons
             if ((e.ColumnIndex == (int)eGridColIndex.Reg) && (e.RowIndex >= 0))
             {
                 // get datatable row from datagridview row
@@ -700,11 +703,11 @@ namespace LST.ModbusGridView
                     int ypos = e.CellBounds.Y + ((e.CellBounds.Height - expandIconHeight) / 2);
                     if ((Flags & FlagIsExpanded) == FlagIsExpanded)
                     {
-                        e.Graphics.DrawImage(collapseImage, e.CellBounds.X + xpos + expandIconPadding, ypos);
+                        e.Graphics.DrawIcon(collapseIcon, e.CellBounds.X + xpos + expandIconPadding, ypos);
                     }
                     else
                     {
-                        e.Graphics.DrawImage(expandImage, e.CellBounds.X + xpos + expandIconPadding, ypos);
+                        e.Graphics.DrawIcon(expandIcon, e.CellBounds.X + xpos + expandIconPadding, ypos);
                     }
                 }
                 // indent
@@ -714,6 +717,35 @@ namespace LST.ModbusGridView
                 Rectangle trec = e.CellBounds;
                 trec.X += xpos;
                 TextRenderer.DrawText(e.Graphics, e.Value.ToString(), e.CellStyle.Font, trec, e.CellStyle.ForeColor, TextFormatFlags.Left | TextFormatFlags.VerticalCenter);
+
+                e.Handled = true;
+            }
+            // Value column?
+            // custom paint for enum-indicator icon
+            if ((e.ColumnIndex == (int)eGridColIndex.Value) && (e.RowIndex >= 0))
+            {
+                // get datatable row from datagridview row
+                DataRowView dRow = grid.Rows[e.RowIndex].DataBoundItem as DataRowView;
+
+                //int level = (int)dRow[(int)dtColIndex.RowLevel];
+                //int xpos = level * indentWidth;
+
+                // erase background
+                e.PaintBackground(e.ClipBounds, true);
+
+                // paint text
+                Rectangle trec = e.CellBounds;
+                TextRenderer.DrawText(e.Graphics, e.Value.ToString(), e.CellStyle.Font, e.CellBounds, e.CellStyle.ForeColor, TextFormatFlags.Left | TextFormatFlags.VerticalCenter);
+
+                // Paint enum indicator icon
+                int Flags = (int)dRow[(int)dtColIndex.Flags];
+                if ((Flags & FlagIsEnum) == FlagIsEnum)
+                {
+                    // position in upper right corner
+                    int ypos = e.CellBounds.Y + (enumIndicatorIcon.Height / 9);
+                    int xpos = e.CellBounds.X + e.CellBounds.Width - 1 - enumIndicatorIcon.Width - (enumIndicatorIcon.Width / 9);
+                    e.Graphics.DrawIcon(enumIndicatorIcon, xpos, ypos);
+                }
 
                 e.Handled = true;
             }
@@ -1162,6 +1194,7 @@ namespace LST.ModbusGridView
                 int clickMargin = 3;
                 int iconXPos = (indentWidth * level) + expandIconPadding - clickMargin;
                 int iconYPos = (grid.Rows[e.RowIndex].Height - expandIconHeight - (2 * clickMargin)) / 2;
+
                 Rectangle hitRect = new Rectangle(iconXPos, iconYPos, expandIconWidth + (2 * clickMargin), expandIconHeight + (2 * clickMargin));
                 // end toleranter
 
@@ -1312,7 +1345,7 @@ namespace LST.ModbusGridView
 
         private void grid_KeyDown(object sender, KeyEventArgs e)
         {
-            Debug.Print("e.Control=" + e.Control.ToString() + ", e.KeyCode=" + e.KeyCode.ToString());
+            //Debug.Print("e.Control=" + e.Control.ToString() + ", e.KeyCode=" + e.KeyCode.ToString());
 
             // use F2 key to start edit via keyboard
             if (e.KeyCode == Keys.F2)
@@ -1419,13 +1452,16 @@ namespace LST.ModbusGridView
         {
             if (factor != currentZoomFactor)
             {
+                currentZoomFactor = factor;
+
                 // zoom this grid
-                float newFontSize = originalFontSize * factor;
+                float newFontSize = originalFontSize * currentZoomFactor;
                 Font newFont = new Font(Font.FontFamily, newFontSize, Font.Style, Font.Unit);
                 grid.ColumnHeadersDefaultCellStyle.Font = newFont;
                 grid.DefaultCellStyle.Font = newFont;
 
-                currentZoomFactor = factor;
+                // adjust the grid icons 
+                SetIconSizes();
             }
         }
 
@@ -2255,5 +2291,24 @@ namespace LST.ModbusGridView
             return str;
         }
 
+        private void SetIconSizes()
+        {
+            // the icons in ModbusGridViewRes2 have images in multiple sizes
+            // select one mathing the zoom factor
+            
+            // default size at zoomfactor=1 = 9x9 pixels
+            int size = (int)(9.0 * currentZoomFactor + 0.5);    // round
+
+            expandIcon = new Icon(ModbusGridViewRes2.TreeExpand, size, size);
+            collapseIcon = new Icon(ModbusGridViewRes2.TreeCollapse, size, size);
+            enumIndicatorIcon = new Icon(ModbusGridViewRes2.EnumIndicator, size, size);
+
+            // size is used multiple times
+            expandIconWidth = expandIcon.Width;
+            expandIconHeight = expandIcon.Height;
+
+            Debug.Print("SetIconSizes(): currentZoomFactor=" + currentZoomFactor.ToString() + ", size=" + size.ToString() + ", iconWidth=" + expandIcon.Width.ToString());
+
+        }
     }
 }

@@ -31,7 +31,6 @@ namespace LST.ModbusGridView
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ModbusGridView));
-            this.imageList1 = new System.Windows.Forms.ImageList(this.components);
             this.ContextMenuForOtherColumns = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.markThisLineInGreenToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -71,15 +70,9 @@ namespace LST.ModbusGridView
             ((System.ComponentModel.ISupportInitialize)(this.grid)).BeginInit();
             this.SuspendLayout();
             // 
-            // imageList1
-            // 
-            this.imageList1.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageList1.ImageStream")));
-            this.imageList1.TransparentColor = System.Drawing.Color.Transparent;
-            this.imageList1.Images.SetKeyName(0, "TreeCollapse.bmp");
-            this.imageList1.Images.SetKeyName(1, "TreeExpand.bmp");
-            // 
             // ContextMenuForOtherColumns
             // 
+            this.ContextMenuForOtherColumns.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.ContextMenuForOtherColumns.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripMenuItem1,
             this.markThisLineInGreenToolStripMenuItem,
@@ -89,13 +82,13 @@ namespace LST.ModbusGridView
             this.toolStripSeparator1,
             this.copyGridLineToolStripMenuItem});
             this.ContextMenuForOtherColumns.Name = "ContextMenuForFirstColumns";
-            this.ContextMenuForOtherColumns.Size = new System.Drawing.Size(236, 142);
+            this.ContextMenuForOtherColumns.Size = new System.Drawing.Size(240, 166);
             // 
             // toolStripMenuItem1
             // 
             this.toolStripMenuItem1.Image = ((System.Drawing.Image)(resources.GetObject("toolStripMenuItem1.Image")));
             this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-            this.toolStripMenuItem1.Size = new System.Drawing.Size(235, 22);
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(239, 26);
             this.toolStripMenuItem1.Text = "Mark this line in red";
             this.toolStripMenuItem1.Click += new System.EventHandler(this.Menu_SetColorRed);
             // 
@@ -103,7 +96,7 @@ namespace LST.ModbusGridView
             // 
             this.markThisLineInGreenToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("markThisLineInGreenToolStripMenuItem.Image")));
             this.markThisLineInGreenToolStripMenuItem.Name = "markThisLineInGreenToolStripMenuItem";
-            this.markThisLineInGreenToolStripMenuItem.Size = new System.Drawing.Size(235, 22);
+            this.markThisLineInGreenToolStripMenuItem.Size = new System.Drawing.Size(239, 26);
             this.markThisLineInGreenToolStripMenuItem.Text = "Mark this line in green";
             this.markThisLineInGreenToolStripMenuItem.Click += new System.EventHandler(this.Menu_SetColorGreen);
             // 
@@ -111,7 +104,7 @@ namespace LST.ModbusGridView
             // 
             this.markThisLineInBlueToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("markThisLineInBlueToolStripMenuItem.Image")));
             this.markThisLineInBlueToolStripMenuItem.Name = "markThisLineInBlueToolStripMenuItem";
-            this.markThisLineInBlueToolStripMenuItem.Size = new System.Drawing.Size(235, 22);
+            this.markThisLineInBlueToolStripMenuItem.Size = new System.Drawing.Size(239, 26);
             this.markThisLineInBlueToolStripMenuItem.Text = "Mark this line in blue";
             this.markThisLineInBlueToolStripMenuItem.Click += new System.EventHandler(this.Menu_SetColorBlue);
             // 
@@ -119,7 +112,7 @@ namespace LST.ModbusGridView
             // 
             this.markThisLineInYellowToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("markThisLineInYellowToolStripMenuItem.Image")));
             this.markThisLineInYellowToolStripMenuItem.Name = "markThisLineInYellowToolStripMenuItem";
-            this.markThisLineInYellowToolStripMenuItem.Size = new System.Drawing.Size(235, 22);
+            this.markThisLineInYellowToolStripMenuItem.Size = new System.Drawing.Size(239, 26);
             this.markThisLineInYellowToolStripMenuItem.Text = "Mark this line in yellow";
             this.markThisLineInYellowToolStripMenuItem.Click += new System.EventHandler(this.Menu_SetColorYellow);
             // 
@@ -127,24 +120,25 @@ namespace LST.ModbusGridView
             // 
             this.removeColorMarkOfThisLineToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("removeColorMarkOfThisLineToolStripMenuItem.Image")));
             this.removeColorMarkOfThisLineToolStripMenuItem.Name = "removeColorMarkOfThisLineToolStripMenuItem";
-            this.removeColorMarkOfThisLineToolStripMenuItem.Size = new System.Drawing.Size(235, 22);
+            this.removeColorMarkOfThisLineToolStripMenuItem.Size = new System.Drawing.Size(239, 26);
             this.removeColorMarkOfThisLineToolStripMenuItem.Text = "Remove color mark of this line";
             this.removeColorMarkOfThisLineToolStripMenuItem.Click += new System.EventHandler(this.Menu_SetColorDefault);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(232, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(236, 6);
             // 
             // copyGridLineToolStripMenuItem
             // 
             this.copyGridLineToolStripMenuItem.Name = "copyGridLineToolStripMenuItem";
-            this.copyGridLineToolStripMenuItem.Size = new System.Drawing.Size(235, 22);
+            this.copyGridLineToolStripMenuItem.Size = new System.Drawing.Size(239, 26);
             this.copyGridLineToolStripMenuItem.Text = "Copy grid line";
             this.copyGridLineToolStripMenuItem.Click += new System.EventHandler(this.Menu_CopyLine);
             // 
             // ContextMenuForValueColumn
             // 
+            this.ContextMenuForValueColumn.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.ContextMenuForValueColumn.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.showValueAsIntToolStripMenuItem,
             this.showValueAsUIntToolStripMenuItem,
@@ -213,6 +207,7 @@ namespace LST.ModbusGridView
             // 
             // ContextMenuForRegColumn
             // 
+            this.ContextMenuForRegColumn.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.ContextMenuForRegColumn.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripMenuItem2,
             this.toolStripMenuItem3,
@@ -224,13 +219,13 @@ namespace LST.ModbusGridView
             this.expandAllToolStripMenuItem,
             this.collapseAllToolStripMenuItem});
             this.ContextMenuForRegColumn.Name = "ContextMenuForFirstColumns";
-            this.ContextMenuForRegColumn.Size = new System.Drawing.Size(236, 186);
+            this.ContextMenuForRegColumn.Size = new System.Drawing.Size(240, 218);
             // 
             // toolStripMenuItem2
             // 
             this.toolStripMenuItem2.Image = ((System.Drawing.Image)(resources.GetObject("toolStripMenuItem2.Image")));
             this.toolStripMenuItem2.Name = "toolStripMenuItem2";
-            this.toolStripMenuItem2.Size = new System.Drawing.Size(235, 22);
+            this.toolStripMenuItem2.Size = new System.Drawing.Size(239, 26);
             this.toolStripMenuItem2.Text = "Mark this line in red";
             this.toolStripMenuItem2.Click += new System.EventHandler(this.Menu_SetColorRed);
             // 
@@ -238,7 +233,7 @@ namespace LST.ModbusGridView
             // 
             this.toolStripMenuItem3.Image = ((System.Drawing.Image)(resources.GetObject("toolStripMenuItem3.Image")));
             this.toolStripMenuItem3.Name = "toolStripMenuItem3";
-            this.toolStripMenuItem3.Size = new System.Drawing.Size(235, 22);
+            this.toolStripMenuItem3.Size = new System.Drawing.Size(239, 26);
             this.toolStripMenuItem3.Text = "Mark this line in green";
             this.toolStripMenuItem3.Click += new System.EventHandler(this.Menu_SetColorGreen);
             // 
@@ -246,7 +241,7 @@ namespace LST.ModbusGridView
             // 
             this.toolStripMenuItem4.Image = ((System.Drawing.Image)(resources.GetObject("toolStripMenuItem4.Image")));
             this.toolStripMenuItem4.Name = "toolStripMenuItem4";
-            this.toolStripMenuItem4.Size = new System.Drawing.Size(235, 22);
+            this.toolStripMenuItem4.Size = new System.Drawing.Size(239, 26);
             this.toolStripMenuItem4.Text = "Mark this line in blue";
             this.toolStripMenuItem4.Click += new System.EventHandler(this.Menu_SetColorBlue);
             // 
@@ -254,7 +249,7 @@ namespace LST.ModbusGridView
             // 
             this.toolStripMenuItem5.Image = ((System.Drawing.Image)(resources.GetObject("toolStripMenuItem5.Image")));
             this.toolStripMenuItem5.Name = "toolStripMenuItem5";
-            this.toolStripMenuItem5.Size = new System.Drawing.Size(235, 22);
+            this.toolStripMenuItem5.Size = new System.Drawing.Size(239, 26);
             this.toolStripMenuItem5.Text = "Mark this line in yellow";
             this.toolStripMenuItem5.Click += new System.EventHandler(this.Menu_SetColorYellow);
             // 
@@ -262,33 +257,33 @@ namespace LST.ModbusGridView
             // 
             this.toolStripMenuItem6.Image = ((System.Drawing.Image)(resources.GetObject("toolStripMenuItem6.Image")));
             this.toolStripMenuItem6.Name = "toolStripMenuItem6";
-            this.toolStripMenuItem6.Size = new System.Drawing.Size(235, 22);
+            this.toolStripMenuItem6.Size = new System.Drawing.Size(239, 26);
             this.toolStripMenuItem6.Text = "Remove color mark of this line";
             this.toolStripMenuItem6.Click += new System.EventHandler(this.Menu_SetColorDefault);
             // 
             // toolStripSeparator3
             // 
             this.toolStripSeparator3.Name = "toolStripSeparator3";
-            this.toolStripSeparator3.Size = new System.Drawing.Size(232, 6);
+            this.toolStripSeparator3.Size = new System.Drawing.Size(236, 6);
             // 
             // toolStripMenuItem7
             // 
             this.toolStripMenuItem7.Name = "toolStripMenuItem7";
-            this.toolStripMenuItem7.Size = new System.Drawing.Size(235, 22);
+            this.toolStripMenuItem7.Size = new System.Drawing.Size(239, 26);
             this.toolStripMenuItem7.Text = "Copy grid line";
             this.toolStripMenuItem7.Click += new System.EventHandler(this.Menu_CopyLine);
             // 
             // expandAllToolStripMenuItem
             // 
             this.expandAllToolStripMenuItem.Name = "expandAllToolStripMenuItem";
-            this.expandAllToolStripMenuItem.Size = new System.Drawing.Size(235, 22);
+            this.expandAllToolStripMenuItem.Size = new System.Drawing.Size(239, 26);
             this.expandAllToolStripMenuItem.Text = "Expand all";
             this.expandAllToolStripMenuItem.Click += new System.EventHandler(this.expandAllToolStripMenuItem_Click);
             // 
             // collapseAllToolStripMenuItem
             // 
             this.collapseAllToolStripMenuItem.Name = "collapseAllToolStripMenuItem";
-            this.collapseAllToolStripMenuItem.Size = new System.Drawing.Size(235, 22);
+            this.collapseAllToolStripMenuItem.Size = new System.Drawing.Size(239, 26);
             this.collapseAllToolStripMenuItem.Text = "Collapse all";
             this.collapseAllToolStripMenuItem.Click += new System.EventHandler(this.collapseAllToolStripMenuItem_Click);
             // 
@@ -357,6 +352,7 @@ namespace LST.ModbusGridView
             // colValue
             // 
             this.colValue.HeaderText = "Value";
+            this.colValue.MinimumWidth = 6;
             this.colValue.Name = "colValue";
             // 
             // colDebuginfo
@@ -388,7 +384,6 @@ namespace LST.ModbusGridView
         #endregion
 
         private LST.Helpers.MyDataGridView grid;
-        private System.Windows.Forms.ImageList imageList1;
         private System.Windows.Forms.ContextMenuStrip ContextMenuForOtherColumns;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem markThisLineInGreenToolStripMenuItem;
