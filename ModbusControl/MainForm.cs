@@ -327,7 +327,6 @@ namespace ModbusControlSpace
                     // anders werkt 'openFileLocationToolStripMenuItem.Enabled = ... ' niet met file-only 
                     ProjectPath = Path.GetFullPath(ProjectPath);
 
-
                     // load project
                     LoadProject(ProjectPath);
 
@@ -337,10 +336,13 @@ namespace ModbusControlSpace
                     UpdateMenus();
                     UpdateStatusBar();
 
-                    // autostart communication
-                    // if configured in mbc: use that
-                    // if not configured: autostart
-                    CheckAutoStart(true, true);
+                    if (ProjectIsOpen)
+                    {
+                        // autostart communication
+                        // if configured in mbc: use that
+                        // if not configured: autostart
+                        CheckAutoStart(true, true);
+                    }
                 }
             }
             catch (Exception ex)
@@ -570,10 +572,13 @@ namespace ModbusControlSpace
             UpdateMenus();
             UpdateStatusBar();
 
-            // autostart communication
-            // if configured in mbc: use that
-            // if not configured: no autostart
-            CheckAutoStart(false, false);
+            if (ProjectIsOpen)
+            {
+                // autostart communication
+                // if configured in mbc: use that
+                // if not configured: no autostart
+                CheckAutoStart(false, false);
+            }
         }
 
         /// <summary>
@@ -686,10 +691,13 @@ namespace ModbusControlSpace
                 UpdateMenus();
                 UpdateStatusBar();
 
-                // autostart communication
-                // if configured in mbc: use that
-                // if not configured: no autostart
-                CheckAutoStart(false, false);
+                if (ProjectIsOpen)
+                {
+                    // autostart communication
+                    // if configured in mbc: use that
+                    // if not configured: no autostart
+                    CheckAutoStart(false, false);
+                }
             }
         }
 
@@ -721,10 +729,13 @@ namespace ModbusControlSpace
                 UpdateMenus();
                 UpdateStatusBar();
 
-                // autostart communication
-                // if configured in mbc: use that
-                // if not configured: use saved state
-                CheckAutoStart(SavedConnectionIsOpen, SavedPollingIsStarted);
+                if (ProjectIsOpen)
+                {
+                    // autostart communication
+                    // if configured in mbc: use that
+                    // if not configured: use saved state
+                    CheckAutoStart(SavedConnectionIsOpen, SavedPollingIsStarted);
+                }
             }
         }
 
@@ -2033,10 +2044,13 @@ namespace ModbusControlSpace
                 UpdateMenus();
                 UpdateStatusBar();
 
-                // autostart communication
-                // if configured in mbc: use that
-                // if not configured: no autostart
-                CheckAutoStart(false, false);
+                if (ProjectIsOpen)
+                {
+                    // autostart communication
+                    // if configured in mbc: use that
+                    // if not configured: no autostart
+                    CheckAutoStart(false, false);
+                }
             }
             else
             {
@@ -2174,12 +2188,12 @@ namespace ModbusControlSpace
         {
             // if configured in mbc: use that
             // if not configured: DefaultStart
-            bool startcomm = ProjectIsOpen && Project.Options.AutostartSeen ? Project.Options.AutostartEnable : aDefaultOpen;
+            bool startcomm = ProjectIsOpen && (Project.Options.AutostartSeen ? Project.Options.AutostartEnable : aDefaultOpen);
             if (startcomm)
             {
                 OpenConnection();
 
-                bool startPolling = ConnectionIsOpen && Project.Options.AutostartSeen ? Project.Options.AutostartEnable : aStartPolling;
+                bool startPolling = ConnectionIsOpen && (Project.Options.AutostartSeen ? Project.Options.AutostartEnable : aStartPolling);
                 if (startPolling)
                 {
                     StartPolling();
@@ -2818,10 +2832,13 @@ namespace ModbusControlSpace
                 UpdateMenus();
                 UpdateStatusBar();
 
-                // autostart communication
-                // if configured in mbc: use that
-                // if not configured: no autostart
-                CheckAutoStart(false, false);
+                if (ProjectIsOpen)
+                {
+                    // autostart communication
+                    // if configured in mbc: use that
+                    // if not configured: no autostart
+                    CheckAutoStart(false, false);
+                }
             }
             else
             {
