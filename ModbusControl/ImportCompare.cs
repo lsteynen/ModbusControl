@@ -171,7 +171,7 @@ namespace ModbusControlSpace
                 Global.eType Type = Global.ConvertFormatToType(line.Format);
 
                 // convert value in file to modbus shorts[], watching endians
-                Int16[] aFileValues = Endians.ConvertValueToShorts(line.Value, Type, line.Width);
+                Int16[] aFileValues = Endians.ConvertValueToShorts(line.Value, Type, (line.Width / 16));
 
                 // convert register to protocol offset
                 ushort RegOffset = mParent.GetRegOffset(line.Reg);

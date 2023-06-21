@@ -156,7 +156,7 @@ namespace ModbusControlSpace
                     if (bIsValid)
                     {
                         // create the modbus values to write
-                        Int16[] TmpsShorts = Endians.ConvertValueToShorts(Value, Type, 32);
+                        Int16[] TmpsShorts = Endians.ConvertValueToShorts(Value, Type, 2);
 
                         a16bitValues[i * 2] = TmpsShorts[0];
                         a16bitValues[(i * 2) + 1] = TmpsShorts[1];
@@ -182,7 +182,7 @@ namespace ModbusControlSpace
                     if (bIsValid)
                     {
                         // create the modbus values to write
-                        Int16[] TmpsShorts = Endians.ConvertValueToShorts(Value, Type, 16);
+                        Int16[] TmpsShorts = Endians.ConvertValueToShorts(Value, Type, 1);
 
                         a16bitValues[i] = TmpsShorts[0];
                     }

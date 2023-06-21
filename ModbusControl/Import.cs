@@ -28,7 +28,7 @@ namespace ModbusControlSpace
         private class ImportLine
         {
             public UInt32 Reg;
-            public int Size;
+            public int Width;
             public string Description;
             public bool isReadable;
             public bool isWriteable;
@@ -40,7 +40,7 @@ namespace ModbusControlSpace
             public ImportLine()
             {
                 Reg = 0;
-                Size = 16;
+                Width = 16;
                 Description = null;
                 isReadable = true;
                 isWriteable = true;
@@ -163,21 +163,21 @@ namespace ModbusControlSpace
                 Global.eType Type = Global.ConvertFormatToType(line.Format);
 
                 // create the modbus values to write
-                Int16[] Data = Endians.ConvertValueToShorts(line.Value, Type, line.Size);
+                Int16[] Data = Endians.ConvertValueToShorts(line.Value, Type, (line.Width / 16));
 
                 // write
-                ModbusProtocol.Result result = mParent.DoWriteHoldingRegs(line.Reg, (ushort)(line.Size / 16), Data);
+                ModbusProtocol.Result result = mParent.DoWriteHoldingRegs(line.Reg, (ushort)(line.Width / 16), Data);
 
                 if (result == ModbusProtocol.Result.SUCCESS)
                 {
                     // success
-                    WriteImportLine( line.Reg, line.Size, line.Description, line.Format, line.isReadable, line.isWriteable, line.ValueString);
+                    WriteImportLine( line.Reg, line.Width, line.Description, line.Format, line.isReadable, line.isWriteable, line.ValueString);
                     ++mWrittenCount;
                 }
                 else
                 {
                     // error
-                    WriteImportLineError(line.Reg, line.Size, line.Description, line.Format, line.isReadable, line.isWriteable, line.ValueString, ModbusProtocol.GetResultText(result));
+                    WriteImportLineError(line.Reg, line.Width, line.Description, line.Format, line.isReadable, line.isWriteable, line.ValueString, ModbusProtocol.GetResultText(result));
                     ++mErrorCount;
                 }
 
@@ -382,7 +382,7 @@ namespace ModbusControlSpace
                     bValid = false;
                     continue;
                 }
-                if( GetSize(SizeString, out imp.Size) == false)
+                if( GetSize(SizeString, out imp.Width) == false)
                 {
                     textboxLog.AppendText("ERROR: line " + csvreader.LineNumber + ": Register size field is invalid!" + Environment.NewLine);
                     textboxLog.AppendText(csvreader.CurrentLine + Environment.NewLine);
@@ -405,7 +405,7 @@ namespace ModbusControlSpace
                     continue;
                 }
                 bool bIsFloat = (imp.Format == Global.eFormat.Float);
-                if (bIsFloat && (imp.Size!=32))
+                if (bIsFloat && (imp.Width!=32))
                 {
                     textboxLog.AppendText("ERROR: line " + csvreader.LineNumber + ": Float format size is not 32-bit!" + Environment.NewLine);
                     textboxLog.AppendText(csvreader.CurrentLine + Environment.NewLine);
@@ -414,7 +414,7 @@ namespace ModbusControlSpace
                 }
                 imp.ValueString = ValueString;
                 Global.eType Type;
-                if (CValueToString.StringToValue(ValueString, bIsFloat, imp.Size, 0, out imp.Value, out Type) == false)
+                if (CValueToString.StringToValue(ValueString, bIsFloat, imp.Width, 0, out imp.Value, out Type) == false)
                 {
                     textboxLog.AppendText("ERROR: line " + csvreader.LineNumber + ": Value field is invalid!" + Environment.NewLine);
                     textboxLog.AppendText(csvreader.CurrentLine + Environment.NewLine);

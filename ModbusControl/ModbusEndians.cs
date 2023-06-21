@@ -81,7 +81,7 @@ namespace LST.Helpers
         {
             // Int: size 1: return 1 short
             //      size 2: return 2 shorts, afh van Int32BigEndian
-            // Float: moet size 32 zijn, return 2 shorts, afh van Float32BigEndian
+            // Float: moet size 2 zijn, return 2 shorts, afh van Float32BigEndian
             // ASCII: endian is op byte level
 
             Int16[] result = new Int16[Size];
