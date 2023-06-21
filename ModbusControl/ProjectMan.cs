@@ -59,7 +59,6 @@ namespace ModbusControlSpace
         public struct TOptions
         {
             public int HoldingregistersStart;
-            public int HoldingregistersEnd;
             public int Samplerate;
             //public bool ShowInfo;
             public bool AutostartSeen;
@@ -167,7 +166,6 @@ namespace ModbusControlSpace
             Connection.Float32Endian = Global.eEndian.Little;
             Connection.Ascii16Endian = Global.eEndian.Big;
             Options.HoldingregistersStart = 40001;
-            Options.HoldingregistersEnd = GetHoldingRegistersEnd(Options.HoldingregistersStart);
             Options.Samplerate = 1000;
             //Options.ShowInfo = true;
             Options.AutostartSeen = false;
@@ -714,7 +712,7 @@ namespace ModbusControlSpace
                     string TmpString = xe.Value.Trim();
                     UInt32 TmpNum;
                     // allow 40.000, 40.001, 400.000 and 400.001 (dots only here for clearness)
-                    // use 4xxxx for holding registers to distinguish from input registers 3xxxx
+                    // use 4xxxx for holding registers 
                     // use 40001 for traditional numbering 
                     // use 400001 for 6-digit numbering when using > 9999 holding registers
                     // use 40000 or 400000 for numbering that actually starts from 0
@@ -722,7 +720,6 @@ namespace ModbusControlSpace
                         && ((TmpNum == 40000) || (TmpNum == 40001) || (TmpNum == 400000) || (TmpNum == 400001)))
                     {
                         Options.HoldingregistersStart = (int)TmpNum;
-                        Options.HoldingregistersEnd = GetHoldingRegistersEnd(Options.HoldingregistersStart);
                     }
                     else
                     {
@@ -1878,17 +1875,41 @@ namespace ModbusControlSpace
 
 
         /// <summary>
-        /// Check if Holdingreg number is valid, HoldingregistersStart .. HoldingregistersEnd
+        /// Check if Holdingreg number is valid
         /// </summary>
         /// <returns>true if valid</returns>
         private bool ValidateHoldingregNr(UInt32 Regnr)
         {
-            if ((Regnr >= Options.HoldingregistersStart) && (Regnr <= Options.HoldingregistersEnd))
+            // accepts:
+            // 40000/400000: 40000-49999 + 400000-465535
+            // 40001/400001: 40001-49999 + 400001-465536
+
+            bool ret = false;
+  
+            if ((Options.HoldingregistersStart == 40000) || (Options.HoldingregistersStart == 400000))
             {
-                return true;
+                if ((Regnr >= 40000) && (Regnr <= 49999))
+                {
+                    ret = true;
+                }
+                else if ((Regnr >= 400000) && (Regnr <= 465535))
+                {
+                    ret = true;
+                }
+            }
+            if ((Options.HoldingregistersStart == 40001) || (Options.HoldingregistersStart == 400001))
+            {
+                if ((Regnr >= 40001) && (Regnr <= 49999))
+                {
+                    ret = true;
+                }
+                else if ((Regnr >= 400001) && (Regnr <= 465536))
+                {
+                    ret = true;
+                }
             }
 
-            return false;
+            return ret;
         }
 
 
@@ -2031,21 +2052,6 @@ namespace ModbusControlSpace
 
             Format = Global.eFormat.Int;
             return false;
-        }
-
-        /// <summary>
-        /// Determine last holding register user number, from first holding register user number
-        /// </summary>
-        static public int GetHoldingRegistersEnd(int holdingRegistersStart)
-        {
-            // 40000-49999, 40001-49999
-            // 400000-465535, 400001-465536
-            if (holdingRegistersStart >= 400000)
-            {
-                return holdingRegistersStart + 65535;
-            }
-
-            return 49999;
         }
 
         private TFilePosition GetFilePos(XElement xe)

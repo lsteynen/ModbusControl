@@ -85,7 +85,7 @@ namespace ModbusControlSpace
         private bool AlternateWriteUseFC16;
         private bool Loading;
         private CommandlineProc CommandlineArgs;
-        
+
         // a write entry
         private class WriteEntry
         {
@@ -1901,7 +1901,7 @@ namespace ModbusControlSpace
 
             UInt16 Offset;
 
-            if (TryGetRegOffset(Regnr, out Offset))
+            if (TryHoldingregisterGetOffset(Regnr, out Offset))
             {
                 return Offset;
             }
@@ -1914,38 +1914,67 @@ namespace ModbusControlSpace
         /// Convert holding register number to register offset 0-65536
         /// </summary>
         /// <returns>true if valid, false if not</returns>
-        public bool TryGetRegOffset(UInt32 Regnr, out UInt16 Offset)
+        public bool TryHoldingregisterGetOffset(UInt32 Regnr, out UInt16 Offset)
         {
-            // 40000-49999, 40001-49999
-            // 400000-465535, 400001-465536
+            // accepts:
+            // 40000/400000: 40000-49999 + 400000-465535
+            // 40001/400001: 40001-49999 + 400001-465536
 
+            bool ret = false;
             Offset = 0;
 
+            if ((Project.Options.HoldingregistersStart == 40000) || (Project.Options.HoldingregistersStart == 400000))
+            { 
+                if ((Regnr >= 40000) && (Regnr <= 49999))
+                {
+                    Offset = (UInt16)(Regnr - 40000);
+                    ret = true;
+                }
+                else if ((Regnr >= 400000) && (Regnr <= 465535))
+                {
+                    Offset = (UInt16)(Regnr - 400000);
+                    ret = true;
+                }
+            }
+            if ((Project.Options.HoldingregistersStart == 40001) || (Project.Options.HoldingregistersStart == 400001))
+            {
+                if ((Regnr >= 40001) && (Regnr <= 49999))
+                {
+                    Offset = (UInt16)(Regnr - 40001);
+                    ret = true;
+                }
+                else if ((Regnr >= 400001) && (Regnr <= 465536))
+                {
+                    Offset = (UInt16)(Regnr - 400001);
+                    ret = true;
+                }
+            }
+
+            return ret;
+        }
+
+        /// <summary>
+        /// Convert holding register number to register offset 0-65536
+        /// </summary>
+        /// <returns>true if valid, false if not</returns>
+        public string HoldingregisterGetRangeString()
+        {
+            // 40000/400000: 40000-49999 + 400000-465535
+            // 40001/400001: 40001-49999 + 400001-465536
+
+            string str = "?";
+
             // check and calculate registeroffset
-            if ((Regnr >= Project.Options.HoldingregistersStart) && (Regnr <= GetHoldingRegistersEnd()))
+            if ((Project.Options.HoldingregistersStart == 40000) || (Project.Options.HoldingregistersStart == 400000))
             {
-                Offset = (UInt16)(Regnr - Project.Options.HoldingregistersStart);
-                return true;
+                str = "40000-49999, 400000-465535";
+            }
+            if ((Project.Options.HoldingregistersStart == 40001) || (Project.Options.HoldingregistersStart == 400001))
+            {
+                str = "40001-49999, 400001-465536";
             }
 
-            // failed
-            return false;
-        }
-
-        public UInt32 GetHoldingRegistersStart()
-        {
-            return (UInt32)Project.Options.HoldingregistersStart;
-        }
-
-        public UInt32 GetHoldingRegistersEnd()
-        {
-            // determine holdingRegistersEnd
-            UInt32 holdingRegistersEnd = 49999;
-            if (Project.Options.HoldingregistersStart >= 400000)
-            {
-                holdingRegistersEnd = (UInt32)(Project.Options.HoldingregistersStart + 65535);
-            }
-            return holdingRegistersEnd;
+            return str;
         }
 
         public int GetMaxRegistersInSingleRead()

@@ -222,9 +222,16 @@ namespace ModbusControlSpace
             get { return ValueFromString(textboxHoldingRegistersStart.Text); }
             set
             {
-                string[] hrArray = { "40000-49999", "40001-49999", "400000-465535", "400001-465536" };
-                // Find first element starting with substring
-                textboxHoldingRegistersStart.Text = Array.Find(hrArray, element => element.StartsWith(value.ToString()));
+                string str = "?";
+                if ((value == 40000) || (value == 400000))
+                {
+                    str = "40000/400000";
+                }
+                if ((value == 40001) || (value == 400001))
+                {
+                    str = "40001/400001";
+                }
+                textboxHoldingRegistersStart.Text = str;
             }
         }
 

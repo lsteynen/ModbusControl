@@ -89,16 +89,14 @@ namespace ModbusControlSpace
             SlaveID = (byte)numericSlaveAddress.Value;
 
             Register = (UInt32)numericRegister.Value;
-            if (mParent.TryGetRegOffset(Register, out RegOffset))
+            if (mParent.TryHoldingregisterGetOffset(Register, out RegOffset))
             {
                 // ok
             }
             else
             {
                 textboxLog.AppendText("ERROR: Register is invalid! "
-                    + "Must be " + mParent.GetHoldingRegistersStart().ToString() 
-                    + " - " + mParent.GetHoldingRegistersEnd().ToString() + "."
-                    + Environment.NewLine);
+                    + "Must be " + mParent.HoldingregisterGetRangeString() + "." + Environment.NewLine);
                 
                 return;
             }

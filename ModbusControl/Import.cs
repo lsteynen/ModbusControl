@@ -371,7 +371,7 @@ namespace ModbusControlSpace
                 ushort DummyOffset;
 
                 if (   uint.TryParse(RegString, out imp.Reg)
-                    && mParent.TryGetRegOffset(imp.Reg, out DummyOffset))
+                    && mParent.TryHoldingregisterGetOffset(imp.Reg, out DummyOffset))
                 {
                     // okay
                 }
