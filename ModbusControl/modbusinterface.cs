@@ -27,6 +27,7 @@ namespace ModbusControlSpace
         private Object mQueryLock = new Object();
         private Logger mLogger;
         private bool mClosing;
+        private int HoldingregisterStart = 40001;
 
         #region constructor
 
@@ -366,7 +367,7 @@ namespace ModbusControlSpace
 
                 if (mLogger.LogReads)
                 {
-                    mLogger.Log(Logger.LogType.Read, "Read holding reg: slave=" + address + ", addr=" + (40001 + startreg) + ", quant=" + regcount);
+                    mLogger.Log(Logger.LogType.Read, "Read holding reg: slave=" + address + ", addr=" + (HoldingregisterStart + startreg).ToString() + ", quant=" + regcount);
                 }
 
                 // send query, get response
@@ -413,7 +414,7 @@ namespace ModbusControlSpace
 
                 if (mLogger.LogWrites)
                 {
-                    mLogger.Log(Logger.LogType.Write, "Write single holding reg: slave=" + address + ", addr=" + (40001 + startreg) + ", value=" + value);
+                    mLogger.Log(Logger.LogType.Write, "Write single holding reg: slave=" + address + ", addr=" + (HoldingregisterStart + startreg).ToString() + ", value=" + value);
                 }
 
                 // send query, get response
@@ -460,7 +461,7 @@ namespace ModbusControlSpace
 
                 if (mLogger.LogWrites)
                 {
-                    mLogger.Log(Logger.LogType.Write, "Write multiple holding reg: slave=" + address + ", addr=" + (40001 + startreg) + ", quant=" + regcount + ", values=" + ValuesToString(values, regcount));
+                    mLogger.Log(Logger.LogType.Write, "Write multiple holding reg: slave=" + address + ", addr=" + (HoldingregisterStart + startreg).ToString() + ", quant=" + regcount + ", values=" + ValuesToString(values, regcount));
                 }
 
                 // send query, get response
