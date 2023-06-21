@@ -272,6 +272,8 @@
 				</xs:sequence>  
 			</xs:complexType>
 		</xs:element>
+		<xs:element name="else" type="xs:string" minOccurs="0" maxOccurs="1">
+		</xs:element>
 	  </xs:sequence>  
 	</xs:complexType>  
 	<xs:simpleType name="tpRegNum40000">
