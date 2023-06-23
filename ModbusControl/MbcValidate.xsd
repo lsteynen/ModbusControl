@@ -13,15 +13,15 @@
 				<xs:element name="modbus">
 					<xs:complexType>
 						<xs:all>
-							<xs:element name="connection" type="tpConnection" minOccurs="0"/>
+							<xs:element name="connection" type="ConnectionType" minOccurs="0"/>
 							<xs:element name="port" type="xs:string" minOccurs="0"/>
-							<xs:element name="baudrate" type="tpBaudrate" minOccurs="0"/>
-							<xs:element name="parity" type="tpParity" minOccurs="0"/>
+							<xs:element name="baudrate" type="BaudrateType" minOccurs="0"/>
+							<xs:element name="parity" type="ParityType" minOccurs="0"/>
 							<xs:element name="endofmessagetimeout" type="xs:unsignedInt" minOccurs="0"/>
-							<xs:element name="onewireechosuppression" type="tpBool" minOccurs="0"/>
+							<xs:element name="onewireechosuppression" type="BoolType" minOccurs="0"/>
 							<xs:element name="ipaddress" type="xs:string" minOccurs="0"/>
-							<xs:element name="ipport" type="tpIPPort" minOccurs="0"/>
-							<xs:element name="slaveid" type="tpModbusSlaveID" minOccurs="0"/>
+							<xs:element name="ipport" type="IPPortType" minOccurs="0"/>
+							<xs:element name="slaveid" type="ModbusSlaveIDType" minOccurs="0"/>
 							<xs:element name="maximumframesize" minOccurs="0">
 								<xs:simpleType>
 									<xs:restriction base="xs:integer">
@@ -31,12 +31,12 @@
 								</xs:simpleType>
 							</xs:element>
 							<xs:element name="interframedelay" type="xs:unsignedInt" minOccurs="0"/>
-							<xs:element name="writeholdingregisterfc" type="tpModbusWriteFC" minOccurs="0"/>
-							<xs:element name="int32endian" type="tpEndian" minOccurs="0"/>
-							<xs:element name="float32endian" type="tpEndian" minOccurs="0"/>
-							<xs:element name="ascii16endian" type="tpEndian" minOccurs="0"/>
-							<xs:element name="showinfo" type="tpBool" minOccurs="0"/>
-							<xs:element name="holdingregisterstart" type="tpModbusHoldingRegisterStart" minOccurs="0"/>
+							<xs:element name="writeholdingregisterfc" type="ModbusWriteFCType" minOccurs="0"/>
+							<xs:element name="int32endian" type="EndianType" minOccurs="0"/>
+							<xs:element name="float32endian" type="EndianType" minOccurs="0"/>
+							<xs:element name="ascii16endian" type="EndianType" minOccurs="0"/>
+							<xs:element name="showinfo" type="BoolType" minOccurs="0"/>
+							<xs:element name="holdingregisterstart" type="ModbusHoldingRegisterStartType" minOccurs="0"/>
 							<xs:element name="responsetimeout" type="xs:unsignedInt" minOccurs="0"/>
 							<xs:element name="samplerate" type="xs:unsignedInt" minOccurs="0"/>
 						</xs:all>
@@ -45,7 +45,7 @@
 				<xs:element name="autostart">
 					<xs:complexType>
 						<xs:all>
-							<xs:element name="enable" type="tpBool" minOccurs="0"/>
+							<xs:element name="enable" type="BoolType" minOccurs="0"/>
 							<xs:element name="page" type="xs:string" minOccurs="0"/>
 						</xs:all>
 					</xs:complexType>
@@ -53,8 +53,8 @@
 				<xs:element name="modbustcpserver">
 					<xs:complexType>
 						<xs:all>
-							<xs:element name="enable" type="tpBool" minOccurs="0"/>
-							<xs:element name="port" type="tpIPPort" minOccurs="0"/>
+							<xs:element name="enable" type="BoolType" minOccurs="0"/>
+							<xs:element name="port" type="IPPortType" minOccurs="0"/>
 						</xs:all>
 					</xs:complexType>
 				</xs:element>
@@ -62,7 +62,7 @@
 					<xs:complexType>
 						<xs:choice maxOccurs="unbounded">
 							<xs:element name="name" type="xs:string" minOccurs="1"/>
-							<xs:element name="rw" type="tpReadWrite"/>
+							<xs:element name="rw" type="ReadWriteType"/>
 							<xs:element name="minlen">
 								<xs:simpleType>
 									<xs:restriction base="xs:integer">
@@ -81,19 +81,19 @@
 							</xs:element>
 							<xs:element name="fcol" type="xs:string"/>
 							<xs:element name="bcol" type="xs:string"/>
-							<xs:element name="expandfields" type="tpBool"/>
+							<xs:element name="expandfields" type="BoolType"/>
 							<xs:element name="var">
 								<xs:complexType>
 									<xs:choice maxOccurs="unbounded">
 										<xs:element name="reg" minOccurs="1">
 										   <xs:simpleType>
-											 <xs:union memberTypes="tpRegNum40000 tpRegNum400000 tpRegAutonum"/>
+											 <xs:union memberTypes="RegNum40000Type RegNum400000Type RegAutonumType"/>
 										   </xs:simpleType>
 										</xs:element>
 										<xs:element name="text" type="xs:string"/>
 										<xs:element name="longdescr" type="xs:string"/>
-										<xs:element name="type" type="tpVarType"/>
-										<xs:element name="rw" type="tpReadWrite"/>
+										<xs:element name="type" type="VartypeType"/>
+										<xs:element name="rw" type="ReadWriteType"/>
 										<xs:element name="minlen">
 											<xs:simpleType>
 												<xs:restriction base="xs:integer">
@@ -112,8 +112,8 @@
 										</xs:element>
 										<xs:element name="fcol" type="xs:string"/>
 										<xs:element name="bcol" type="xs:string"/>
-										<xs:element name="expandfields" type="tpBool"/>
-										<xs:element name="enum" type="tpEnum"/>
+										<xs:element name="expandfields" type="BoolType"/>
+										<xs:element name="enum" type="EnumType"/>
 										<xs:element name="field">
 											<xs:complexType>
 												<xs:all>
@@ -135,7 +135,7 @@
 													</xs:element>
 													<xs:element name="text" type="xs:string" minOccurs="0"/>
 													<xs:element name="longdescr" type="xs:string" minOccurs="0"/>
-													<xs:element name="type" type="tpFieldType" minOccurs="0"/>
+													<xs:element name="type" type="FieldtypeType" minOccurs="0"/>
 													<xs:element name="minlen" minOccurs="0">
 														<xs:simpleType>
 															<xs:restriction base="xs:integer">
@@ -146,7 +146,7 @@
 													</xs:element>
 													<xs:element name="fcol" type="xs:string" minOccurs="0"/>
 													<xs:element name="bcol" type="xs:string" minOccurs="0"/>
-													<xs:element name="enum" type="tpEnum" minOccurs="0"/>
+													<xs:element name="enum" type="EnumType" minOccurs="0"/>
 												</xs:all>
 											</xs:complexType>
 										</xs:element>
@@ -160,39 +160,39 @@
 					<xs:complexType>
 						<xs:all>
 							<xs:element name="file" type="xs:string" minOccurs="1"/>
-							<xs:element name="required" type="tpBool" minOccurs="0"/>
+							<xs:element name="required" type="BoolType" minOccurs="0"/>
 						</xs:all>
 					</xs:complexType>
 				</xs:element>
 			</xs:choice>
 		</xs:complexType>
 	</xs:element>
-	<xs:simpleType name="tpConnection">
+	<xs:simpleType name="ConnectionType">
 		<xs:restriction base="xs:string">
 			<xs:enumeration value="serial/rtu"/>
 			<xs:enumeration value="modbus/tcp"/>
 			<xs:enumeration value="rtu/tcp"/>
 		</xs:restriction>
 	</xs:simpleType>
-	<xs:simpleType name="tpBaudrate">
+	<xs:simpleType name="BaudrateType">
 		<xs:restriction base="xs:integer">
 			<xs:minInclusive value="50"/>
 			<xs:maxInclusive value="99999999"/>
 		</xs:restriction>
 	</xs:simpleType>
-	<xs:simpleType name="tpBool">
+	<xs:simpleType name="BoolType">
 		<xs:restriction base="xs:string">
 			<xs:enumeration value="true"/>
 			<xs:enumeration value="false"/>
 		</xs:restriction>
 	</xs:simpleType>
-	<xs:simpleType name="tpEndian">
+	<xs:simpleType name="EndianType">
 		<xs:restriction base="xs:string">
 			<xs:enumeration value="big"/>
 			<xs:enumeration value="little"/>
 		</xs:restriction>
 	</xs:simpleType>
-	<xs:simpleType name="tpParity">
+	<xs:simpleType name="ParityType">
 		<xs:restriction base="xs:string">
 			<xs:enumeration value="none"/>
 			<xs:enumeration value="odd"/>
@@ -201,19 +201,19 @@
 			<xs:enumeration value="space"/>
 		</xs:restriction>
 	</xs:simpleType>
-	<xs:simpleType name="tpIPPort">
+	<xs:simpleType name="IPPortType">
 		<xs:restriction base="xs:integer">
 			<xs:minInclusive value="1"/>
 			<xs:maxInclusive value="65535"/>
 		</xs:restriction>
 	</xs:simpleType>
-	<xs:simpleType name="tpModbusSlaveID">
+	<xs:simpleType name="ModbusSlaveIDType">
 		<xs:restriction base="xs:integer">
 			<xs:minInclusive value="0"/>
 			<xs:maxInclusive value="255"/>
 		</xs:restriction>
 	</xs:simpleType>
-	<xs:simpleType name="tpModbusHoldingRegisterStart">
+	<xs:simpleType name="ModbusHoldingRegisterStartType">
 		<xs:restriction base="xs:integer">
 			<xs:enumeration value="40000"/>
 			<xs:enumeration value="40001"/>
@@ -221,7 +221,7 @@
 			<xs:enumeration value="400001"/>
 		</xs:restriction>
 	</xs:simpleType>
-	<xs:simpleType name="tpModbusWriteFC">
+	<xs:simpleType name="ModbusWriteFCType">
 		<xs:restriction base="xs:string">
 			<xs:enumeration value="6"/>
 			<xs:enumeration value="06"/>
@@ -230,7 +230,7 @@
 			<xs:enumeration value="alternate"/>
 		</xs:restriction>
 	</xs:simpleType>
-	<xs:simpleType name="tpReadWrite">
+	<xs:simpleType name="ReadWriteType">
 		<xs:restriction base="xs:string">
 			<xs:enumeration value="r"/>
 			<xs:enumeration value="w"/>
@@ -238,7 +238,7 @@
 			<xs:enumeration value="wr"/>
 		</xs:restriction>
 	</xs:simpleType>
-	<xs:simpleType name="tpVarType">
+	<xs:simpleType name="VartypeType">
 		<xs:restriction base="xs:string">
 			<xs:enumeration value="int16"/>
 			<xs:enumeration value="uint16"/>
@@ -253,7 +253,7 @@
 			<xs:enumeration value="ascii32"/>
 		</xs:restriction>
 	</xs:simpleType>
-	<xs:simpleType name="tpFieldType">
+	<xs:simpleType name="FieldtypeType">
 		<xs:restriction base="xs:string">
 			<xs:enumeration value="int"/>
 			<xs:enumeration value="uint"/>
@@ -262,7 +262,7 @@
 			<xs:enumeration value="ascii"/>
 		</xs:restriction>
 	</xs:simpleType>
-	<xs:complexType name="tpEnum">
+	<xs:complexType name="EnumType">
 	  <xs:sequence>  
 		<xs:element name="item" maxOccurs="unbounded">
 			<xs:complexType>
@@ -276,19 +276,19 @@
 		</xs:element>
 	  </xs:sequence>  
 	</xs:complexType>  
-	<xs:simpleType name="tpRegNum40000">
+	<xs:simpleType name="RegNum40000Type">
 		<xs:restriction base="xs:integer">
 			<xs:minInclusive value="40000"/>
 			<xs:maxInclusive value="49999"/>
 		</xs:restriction>
 	</xs:simpleType>
-	<xs:simpleType name="tpRegNum400000">
+	<xs:simpleType name="RegNum400000Type">
 		<xs:restriction base="xs:integer">
 			<xs:minInclusive value="400000"/>
 			<xs:maxInclusive value="465536"/>
 		</xs:restriction>
 	</xs:simpleType>
-	<xs:simpleType name="tpRegAutonum">
+	<xs:simpleType name="RegAutonumType">
 	   <xs:restriction base="xs:string">
 		 <xs:enumeration value="*"/>
 	   </xs:restriction>

@@ -372,6 +372,9 @@
     <None Include="Resources\YellowIcon.bmp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\EnumIndicator.ico" />
+    <None Include="Resources\TreeCollapse.ico" />
+    <None Include="Resources\TreeExpand.ico" />
     <None Include="EnumIndicator.ico" />
     <Content Include="Ico5.ico" />
     <None Include="TreeCollapse.ico" />

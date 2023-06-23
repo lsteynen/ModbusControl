@@ -60,22 +60,20 @@
             this.textboxLog.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.textboxLog.Location = new System.Drawing.Point(20, 272);
-            this.textboxLog.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.textboxLog.Location = new System.Drawing.Point(16, 218);
             this.textboxLog.Multiline = true;
             this.textboxLog.Name = "textboxLog";
             this.textboxLog.ReadOnly = true;
             this.textboxLog.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.textboxLog.Size = new System.Drawing.Size(644, 198);
+            this.textboxLog.Size = new System.Drawing.Size(516, 159);
             this.textboxLog.TabIndex = 13;
             this.textboxLog.WordWrap = false;
             // 
             // buttonClear
             // 
-            this.buttonClear.Location = new System.Drawing.Point(215, 236);
-            this.buttonClear.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.buttonClear.Location = new System.Drawing.Point(172, 189);
             this.buttonClear.Name = "buttonClear";
-            this.buttonClear.Size = new System.Drawing.Size(94, 29);
+            this.buttonClear.Size = new System.Drawing.Size(75, 23);
             this.buttonClear.TabIndex = 12;
             this.buttonClear.Text = "Clear log";
             this.toolTip1.SetToolTip(this.buttonClear, "Clear the result log window");
@@ -84,10 +82,9 @@
             // 
             // buttonSend
             // 
-            this.buttonSend.Location = new System.Drawing.Point(20, 236);
-            this.buttonSend.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.buttonSend.Location = new System.Drawing.Point(16, 189);
             this.buttonSend.Name = "buttonSend";
-            this.buttonSend.Size = new System.Drawing.Size(188, 29);
+            this.buttonSend.Size = new System.Drawing.Size(150, 23);
             this.buttonSend.TabIndex = 11;
             this.buttonSend.Text = "Send";
             this.toolTip1.SetToolTip(this.buttonSend, "Send the write command");
@@ -98,11 +95,9 @@
             // 
             this.groupboxDatasize.Controls.Add(this.radiobuttonSize16bit);
             this.groupboxDatasize.Controls.Add(this.radiobuttonSize32bit);
-            this.groupboxDatasize.Location = new System.Drawing.Point(184, 51);
-            this.groupboxDatasize.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.groupboxDatasize.Location = new System.Drawing.Point(147, 41);
             this.groupboxDatasize.Name = "groupboxDatasize";
-            this.groupboxDatasize.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
-            this.groupboxDatasize.Size = new System.Drawing.Size(99, 66);
+            this.groupboxDatasize.Size = new System.Drawing.Size(79, 53);
             this.groupboxDatasize.TabIndex = 8;
             this.groupboxDatasize.TabStop = false;
             this.groupboxDatasize.Text = "Data size:";
@@ -111,10 +106,9 @@
             // 
             this.radiobuttonSize16bit.AutoSize = true;
             this.radiobuttonSize16bit.Checked = true;
-            this.radiobuttonSize16bit.Location = new System.Drawing.Point(11, 16);
-            this.radiobuttonSize16bit.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.radiobuttonSize16bit.Location = new System.Drawing.Point(9, 13);
             this.radiobuttonSize16bit.Name = "radiobuttonSize16bit";
-            this.radiobuttonSize16bit.Size = new System.Drawing.Size(65, 21);
+            this.radiobuttonSize16bit.Size = new System.Drawing.Size(51, 17);
             this.radiobuttonSize16bit.TabIndex = 0;
             this.radiobuttonSize16bit.TabStop = true;
             this.radiobuttonSize16bit.Tag = "16";
@@ -125,10 +119,9 @@
             // radiobuttonSize32bit
             // 
             this.radiobuttonSize32bit.AutoSize = true;
-            this.radiobuttonSize32bit.Location = new System.Drawing.Point(11, 38);
-            this.radiobuttonSize32bit.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.radiobuttonSize32bit.Location = new System.Drawing.Point(9, 30);
             this.radiobuttonSize32bit.Name = "radiobuttonSize32bit";
-            this.radiobuttonSize32bit.Size = new System.Drawing.Size(65, 21);
+            this.radiobuttonSize32bit.Size = new System.Drawing.Size(51, 17);
             this.radiobuttonSize32bit.TabIndex = 1;
             this.radiobuttonSize32bit.Tag = "32";
             this.radiobuttonSize32bit.Text = "32-bit";
@@ -139,12 +132,11 @@
             // 
             this.textboxData.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.textboxData.Location = new System.Drawing.Point(148, 130);
-            this.textboxData.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.textboxData.Location = new System.Drawing.Point(118, 104);
             this.textboxData.Multiline = true;
             this.textboxData.Name = "textboxData";
             this.textboxData.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.textboxData.Size = new System.Drawing.Size(516, 93);
+            this.textboxData.Size = new System.Drawing.Size(414, 75);
             this.textboxData.TabIndex = 10;
             this.toolTip1.SetToolTip(this.textboxData, "Enter the decimal or hex values to be writtten, 16 or 32-bit values, comma separa" +
         "ted. Must match quantity.");
@@ -152,10 +144,9 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(16, 134);
-            this.label4.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label4.Location = new System.Drawing.Point(13, 107);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(131, 34);
+            this.label4.Size = new System.Drawing.Size(97, 26);
             this.label4.TabIndex = 9;
             this.label4.Text = "Write data:\r\n(comma separated)\r\n";
             // 
@@ -163,11 +154,9 @@
             // 
             this.groupboxFunctioncode.Controls.Add(this.radiobuttonWriteFC16);
             this.groupboxFunctioncode.Controls.Add(this.radiobuttonWriteFC6);
-            this.groupboxFunctioncode.Location = new System.Drawing.Point(20, 51);
-            this.groupboxFunctioncode.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.groupboxFunctioncode.Location = new System.Drawing.Point(16, 41);
             this.groupboxFunctioncode.Name = "groupboxFunctioncode";
-            this.groupboxFunctioncode.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
-            this.groupboxFunctioncode.Size = new System.Drawing.Size(159, 66);
+            this.groupboxFunctioncode.Size = new System.Drawing.Size(127, 53);
             this.groupboxFunctioncode.TabIndex = 7;
             this.groupboxFunctioncode.TabStop = false;
             this.groupboxFunctioncode.Text = "Use function code:";
@@ -176,10 +165,9 @@
             // 
             this.radiobuttonWriteFC16.AutoSize = true;
             this.radiobuttonWriteFC16.Checked = true;
-            this.radiobuttonWriteFC16.Location = new System.Drawing.Point(11, 38);
-            this.radiobuttonWriteFC16.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.radiobuttonWriteFC16.Location = new System.Drawing.Point(9, 30);
             this.radiobuttonWriteFC16.Name = "radiobuttonWriteFC16";
-            this.radiobuttonWriteFC16.Size = new System.Drawing.Size(155, 21);
+            this.radiobuttonWriteFC16.Size = new System.Drawing.Size(116, 17);
             this.radiobuttonWriteFC16.TabIndex = 1;
             this.radiobuttonWriteFC16.TabStop = true;
             this.radiobuttonWriteFC16.Tag = "16";
@@ -190,10 +178,9 @@
             // radiobuttonWriteFC6
             // 
             this.radiobuttonWriteFC6.AutoSize = true;
-            this.radiobuttonWriteFC6.Location = new System.Drawing.Point(11, 16);
-            this.radiobuttonWriteFC6.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.radiobuttonWriteFC6.Location = new System.Drawing.Point(9, 13);
             this.radiobuttonWriteFC6.Name = "radiobuttonWriteFC6";
-            this.radiobuttonWriteFC6.Size = new System.Drawing.Size(136, 21);
+            this.radiobuttonWriteFC6.Size = new System.Drawing.Size(102, 17);
             this.radiobuttonWriteFC6.TabIndex = 0;
             this.radiobuttonWriteFC6.TabStop = true;
             this.radiobuttonWriteFC6.Tag = "6";
@@ -203,15 +190,14 @@
             // 
             // numericQuantity
             // 
-            this.numericQuantity.Location = new System.Drawing.Point(394, 16);
-            this.numericQuantity.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.numericQuantity.Location = new System.Drawing.Point(315, 13);
             this.numericQuantity.Maximum = new decimal(new int[] {
             255,
             0,
             0,
             0});
             this.numericQuantity.Name = "numericQuantity";
-            this.numericQuantity.Size = new System.Drawing.Size(70, 22);
+            this.numericQuantity.Size = new System.Drawing.Size(56, 20);
             this.numericQuantity.TabIndex = 5;
             this.toolTip1.SetToolTip(this.numericQuantity, "Number of 16-bit registers to write");
             this.numericQuantity.Value = new decimal(new int[] {
@@ -222,29 +208,27 @@
             // 
             // numericRegister
             // 
-            this.numericRegister.Location = new System.Drawing.Point(219, 16);
-            this.numericRegister.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.numericRegister.Location = new System.Drawing.Point(175, 13);
             this.numericRegister.Maximum = new decimal(new int[] {
             999999,
             0,
             0,
             0});
             this.numericRegister.Name = "numericRegister";
-            this.numericRegister.Size = new System.Drawing.Size(102, 22);
+            this.numericRegister.Size = new System.Drawing.Size(82, 20);
             this.numericRegister.TabIndex = 3;
             this.toolTip1.SetToolTip(this.numericRegister, "First register to write");
             // 
             // numericSlaveAddress
             // 
-            this.numericSlaveAddress.Location = new System.Drawing.Point(80, 16);
-            this.numericSlaveAddress.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.numericSlaveAddress.Location = new System.Drawing.Point(64, 13);
             this.numericSlaveAddress.Maximum = new decimal(new int[] {
             255,
             0,
             0,
             0});
             this.numericSlaveAddress.Name = "numericSlaveAddress";
-            this.numericSlaveAddress.Size = new System.Drawing.Size(66, 22);
+            this.numericSlaveAddress.Size = new System.Drawing.Size(53, 20);
             this.numericSlaveAddress.TabIndex = 1;
             this.toolTip1.SetToolTip(this.numericSlaveAddress, "Slave address (0-255)");
             this.numericSlaveAddress.Value = new decimal(new int[] {
@@ -256,38 +240,35 @@
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(331, 19);
-            this.label5.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label5.Location = new System.Drawing.Point(265, 15);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(65, 17);
+            this.label5.Size = new System.Drawing.Size(49, 13);
             this.label5.TabIndex = 4;
             this.label5.Text = "Quantity:";
             // 
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(156, 19);
-            this.label6.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label6.Location = new System.Drawing.Point(125, 15);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(65, 17);
+            this.label6.Size = new System.Drawing.Size(49, 13);
             this.label6.TabIndex = 2;
             this.label6.Text = "Register:";
             // 
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(15, 19);
-            this.label7.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label7.Location = new System.Drawing.Point(12, 15);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(64, 17);
+            this.label7.Size = new System.Drawing.Size(51, 13);
             this.label7.TabIndex = 0;
             this.label7.Text = "Slave ID:";
             // 
             // CustomWrite
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(120F, 120F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(680, 486);
+            this.ClientSize = new System.Drawing.Size(544, 389);
             this.Controls.Add(this.numericQuantity);
             this.Controls.Add(this.numericRegister);
             this.Controls.Add(this.numericSlaveAddress);
@@ -302,7 +283,6 @@
             this.Controls.Add(this.buttonSend);
             this.Controls.Add(this.groupboxDatasize);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.Name = "CustomWrite";
             this.Text = "Custom write (holding registers)";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.OnFormClosing);
