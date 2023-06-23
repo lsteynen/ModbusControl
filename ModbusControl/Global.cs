@@ -26,7 +26,7 @@ namespace ModbusControlSpace
         public class CEnum
         {
             public Dictionary<int, string> Dict; // enum convert dictionary
-            public string ElseText;              // can be null or empty
+            public string ElseText;              // can be null or empty, no ()
         }
 
         public static Version VersionNum;

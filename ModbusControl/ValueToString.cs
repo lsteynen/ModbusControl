@@ -94,8 +94,9 @@ namespace LST.Helpers
                 else
                 {
                     // not found
+                    // show ElseText?
                     if (string.IsNullOrEmpty(EnumDict.ElseText) == false)
-                        Result += " " + EnumDict.ElseText;
+                        Result += " (" + EnumDict.ElseText + ")";
                 }
             }
 

@@ -1465,7 +1465,7 @@ namespace ModbusControlSpace
             }
             else
             {
-                myEnum.ElseText = "(enum?)";
+                myEnum.ElseText = "enum?";
             }
 
 
