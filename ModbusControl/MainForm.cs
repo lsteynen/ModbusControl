@@ -596,7 +596,7 @@ namespace ModbusControlSpace
             SaveConfigurationForm1.SizeWidth = this.Width;
             SaveConfigurationForm1.SizeHeight = this.Height;
             SaveConfigurationForm1.Project = Project;
-            SaveConfigurationForm1.OverridesWarning = CommandlineArgs.IsOverrideUsed();
+            SaveConfigurationForm1.OverridesWarning = CommandlineArgs.IsAnyOverrideUsed;
             SaveConfigurationForm1.ShowDialog();
         }
 
@@ -765,7 +765,18 @@ namespace ModbusControlSpace
             ConfigForm configform = new ConfigForm();
 
             // commandline overrides melden
-            configform.OverridesWarning = CommandlineArgs.IsOverrideUsed();
+            configform.ConnectionTypeIsOverride = (CommandlineArgs.ArgConnectionType != null);
+            configform.PortIsOverride = (CommandlineArgs.ArgPort != null);
+            configform.BaudrateIsOverride = (CommandlineArgs.ArgBaudrate != null);
+            configform.ParityIsOverride = (CommandlineArgs.ArgParity != null);
+            configform.EndofmessagetimeoutIsOverride = (CommandlineArgs.ArgEndofmessagetimeout != null);
+            configform.OnewireechosuppressionIsOverride = (CommandlineArgs.ArgOnewireechosuppression != null);
+            configform.IPAddressIsOverride = (CommandlineArgs.ArgIPAddress != null);
+            configform.IPPortIsOverride = (CommandlineArgs.ArgIPPort != null);
+            configform.SlaveIDIsOverride = (CommandlineArgs.ArgSlaveID != null);
+            configform.ResponsetimeoutIsOverride = (CommandlineArgs.ArgResponsetimeout != null);
+            configform.InterframedelayIsOverride = (CommandlineArgs.ArgInterframedelay != null);
+            configform.SamplerateIsOverride = (CommandlineArgs.ArgSamplerate != null);
 
             // pass project values to form
             configform.ConnectionInUse = ConnectionInUse;

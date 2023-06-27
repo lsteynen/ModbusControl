@@ -8,7 +8,7 @@ using System.Net;
 
 // Handle command line arguments.
 // Example:
-// Modbuscontrl.exe -connection serialrtu - port COM1 - baudrate 19200 - parity even - EndofmessageTimeout  10 - onewireechosuppression false - ipaddress 192.168.1.154 - ipport 503 - responsetimeout 3000 - Interframedelay 25 - samplerate 110 "C:\ED&A\Modbuscontrol - recompile\modbuscontrol\bin\Debug\Demo.mbc"
+// Modbuscontrl.exe -connection serialrtu -port COM1 -baudrate 19200 -parity even -EndofmessageTimeout  10 -onewireechosuppression -ipaddress 192.168.1.154 -ipport 503 -responsetimeout 3000 -Interframedelay 25 -samplerate 110 "C:\ED&A\Modbuscontrol - recompile\modbuscontrol\bin\Debug\Demo.mbc"
 
 namespace ModbusControlSpace
 {
@@ -17,21 +17,28 @@ namespace ModbusControlSpace
         // properties
 
         // processed arguments
-        // null if not specified
+        // null if not specified on commandline
 
         public string File1;
+
+        // options
         public eConnectionType? ArgConnectionType;
-        public string ArgPort;
+        public string ArgPort;                  // string is already nullable
         public int? ArgBaudrate;
         public Parity? ArgParity;
         public int? ArgEndofmessagetimeout;
         public bool? ArgOnewireechosuppression;
-        public string ArgIPAddress;
+        public string ArgIPAddress;             // string is already nullable
         public int? ArgIPPort;
         public int? ArgSlaveID;
         public int? ArgResponsetimeout;
         public int? ArgInterframedelay;
         public int? ArgSamplerate;
+
+        public bool IsAnyOverrideUsed
+        {
+            get { return GetIsAnyOverrideUsed(); }
+        }
 
         public enum eConnectionType { SerialRTU = 0, ModbusTcp = 1, RtuOverTcp = 2 }
 
@@ -179,7 +186,7 @@ namespace ModbusControlSpace
         /// <summary>
         /// Check if overrides are used
         /// </summary>
-        public bool IsOverrideUsed()
+        private bool GetIsAnyOverrideUsed()
         {
             return (ArgConnectionType != null)
                     || (ArgPort != null)

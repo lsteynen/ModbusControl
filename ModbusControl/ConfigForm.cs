@@ -15,13 +15,6 @@ namespace ModbusControlSpace
 
         // Properties - settings
 
-        public bool OverridesWarning
-        {
-            // not used
-            get { return panelWarning.Visible; }
-            set { panelWarning.Visible = value; }
-        }
-
         public bool ConnectionInUse
         {
             // not used
@@ -32,9 +25,9 @@ namespace ModbusControlSpace
         public Global.eConnectionType ConnectionType
         {
             get { return (Global.eConnectionType)comboConnection.SelectedIndex; }
-            set 
-            { 
-                comboConnection.SelectedIndex = (int)value; 
+            set
+            {
+                comboConnection.SelectedIndex = (int)value;
             }
         }
 
@@ -44,7 +37,7 @@ namespace ModbusControlSpace
             set
             {
                 comboSerialPort.Text = value;
-                comboSerialPort.SelectedIndex = comboSerialPort.Items.IndexOf(value); 
+                comboSerialPort.SelectedIndex = comboSerialPort.Items.IndexOf(value);
             }
         }
 
@@ -157,19 +150,79 @@ namespace ModbusControlSpace
             }
         }
 
+        public bool ConnectionTypeIsOverride
+        {
+            set { picConnectionTypeIsOverride.Visible = value; }
+        }
+
+        public bool PortIsOverride
+        {
+            set { picPortIsOverride.Visible = value; }
+        }
+
+        public bool BaudrateIsOverride
+        {
+            set { picBaudrateIsOverride.Visible = value; }
+        }
+
+        public bool ParityIsOverride
+        {
+            set { picParityIsOverride.Visible = value; }
+        }
+
+        public bool EndofmessagetimeoutIsOverride
+        {
+            set { picEndofmessagetimeoutIsOverride.Visible = value; }
+        }
+
+        public bool OnewireechosuppressionIsOverride
+        {
+            set { picOnewireechosuppressionIsOverride.Visible = value; }
+        }
+
+        public bool IPAddressIsOverride
+        {
+            set { picIPAddressIsOverride.Visible = value; }
+        }
+
+        public bool IPPortIsOverride
+        {
+            set { picIPPortIsOverride.Visible = value; }
+        }
+
+        public bool SlaveIDIsOverride
+        {
+            set { picSlaveIDIsOverride.Visible = value; }
+        }
+
+        public bool ResponsetimeoutIsOverride
+        {
+            set { picResponsetimeoutIsOverride.Visible = value; }
+        }
+
+        public bool InterframedelayIsOverride
+        {
+            set { picInterframedelayIsOverride.Visible = value; }
+        }
+
+        public bool SamplerateIsOverride
+        {
+            set { picSamplerateIsOverride.Visible = value; }
+        }
+
         public Global.eWriteHoldingregFunctionCode ConnectionWriteHoldingregFunctionCode
         {
-            get 
-            { 
-                if( radiobuttonWriteFC6.Checked) return Global.eWriteHoldingregFunctionCode.FC6; 
-                if( radiobuttonWriteFC16.Checked) return Global.eWriteHoldingregFunctionCode.FC16;
+            get
+            {
+                if (radiobuttonWriteFC6.Checked) return Global.eWriteHoldingregFunctionCode.FC6;
+                if (radiobuttonWriteFC16.Checked) return Global.eWriteHoldingregFunctionCode.FC16;
                 if (radiobuttonWriteFCAuto.Checked) return Global.eWriteHoldingregFunctionCode.Auto;
-                return Global.eWriteHoldingregFunctionCode.Alternate; 
+                return Global.eWriteHoldingregFunctionCode.Alternate;
             }
             set
             {
-                radiobuttonWriteFC6.Checked = (value == Global.eWriteHoldingregFunctionCode.FC6); 
-                radiobuttonWriteFC16.Checked = (value == Global.eWriteHoldingregFunctionCode.FC16); 
+                radiobuttonWriteFC6.Checked = (value == Global.eWriteHoldingregFunctionCode.FC6);
+                radiobuttonWriteFC16.Checked = (value == Global.eWriteHoldingregFunctionCode.FC16);
                 radiobuttonWriteFCAuto.Checked = (value == Global.eWriteHoldingregFunctionCode.Auto);
                 radiobuttonWriteFCAlternate.Checked = (value == Global.eWriteHoldingregFunctionCode.Alternate);
             }
@@ -177,29 +230,29 @@ namespace ModbusControlSpace
 
         public Global.eEndian ConnectionInt32Endian
         {
-            get 
-            { 
-                if( radiobuttonInt32LittleEndian.Checked) return Global.eEndian.Little; 
-                return Global.eEndian.Big; 
+            get
+            {
+                if (radiobuttonInt32LittleEndian.Checked) return Global.eEndian.Little;
+                return Global.eEndian.Big;
             }
             set
             {
-                radiobuttonInt32LittleEndian.Checked = (value == Global.eEndian.Little); 
-                radiobuttonInt32BigEndian.Checked = (value == Global.eEndian.Big); 
+                radiobuttonInt32LittleEndian.Checked = (value == Global.eEndian.Little);
+                radiobuttonInt32BigEndian.Checked = (value == Global.eEndian.Big);
             }
         }
 
         public Global.eEndian ConnectionFloat32Endian
         {
-            get 
-            { 
-                if( radiobuttonFloat32LittleEndian.Checked) return Global.eEndian.Little; 
-                return Global.eEndian.Big; 
+            get
+            {
+                if (radiobuttonFloat32LittleEndian.Checked) return Global.eEndian.Little;
+                return Global.eEndian.Big;
             }
             set
             {
-                radiobuttonFloat32LittleEndian.Checked = (value == Global.eEndian.Little); 
-                radiobuttonFloat32BigEndian.Checked = (value == Global.eEndian.Big); 
+                radiobuttonFloat32LittleEndian.Checked = (value == Global.eEndian.Little);
+                radiobuttonFloat32BigEndian.Checked = (value == Global.eEndian.Big);
             }
         }
 
@@ -312,5 +365,20 @@ namespace ModbusControlSpace
             }
         }
 
+        private bool IsAnyOverride()
+        {
+            return (picConnectionTypeIsOverride.Visible
+                || picPortIsOverride.Visible
+                || picBaudrateIsOverride.Visible
+                || picParityIsOverride.Visible
+                || picEndofmessagetimeoutIsOverride.Visible
+                || picOnewireechosuppressionIsOverride.Visible
+                || picIPAddressIsOverride.Visible
+                || picIPPortIsOverride.Visible
+                || picSlaveIDIsOverride.Visible
+                || picResponsetimeoutIsOverride.Visible
+                || picInterframedelayIsOverride.Visible
+                || picSamplerateIsOverride.Visible);
+        }
     }
 }
