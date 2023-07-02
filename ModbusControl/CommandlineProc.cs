@@ -7,6 +7,9 @@ using System.IO.Ports;
 using System.Net;
 
 // Handle command line arguments.
+// may have filenames
+// options start with - or /
+// switch options have no value
 // Example:
 // Modbuscontrl.exe -connection serialrtu -port COM1 -baudrate 19200 -parity even -EndofmessageTimeout  10 -onewireechosuppression -ipaddress 192.168.1.154 -ipport 503 -responsetimeout 3000 -Interframedelay 25 -samplerate 110 "C:\ED&A\Modbuscontrol - recompile\modbuscontrol\bin\Debug\Demo.mbc"
 
@@ -17,46 +20,44 @@ namespace ModbusControlSpace
         // properties
 
         // processed arguments
-        // null if not specified on commandline
+        // List of filenames
+        public List<string> FileList = new List<string>();
 
-        public string File1;
-
-        // options
+        // processed options
+        // switches (bool values) are false or true
+        // other parameters are null if not specified 
         public eConnectionType? ArgConnectionType;
         public string ArgPort;                  // string is already nullable
         public int? ArgBaudrate;
         public Parity? ArgParity;
         public int? ArgEndofmessagetimeout;
-        public bool? ArgOnewireechosuppression;
+        public bool ArgOnewireechosuppression;
         public string ArgIPAddress;             // string is already nullable
         public int? ArgIPPort;
         public int? ArgSlaveID;
         public int? ArgResponsetimeout;
         public int? ArgInterframedelay;
         public int? ArgSamplerate;
-
-        public bool IsAnyOverrideUsed
-        {
-            get { return GetIsAnyOverrideUsed(); }
-        }
+        public bool ArgHelp;
 
         public enum eConnectionType { SerialRTU = 0, ModbusTcp = 1, RtuOverTcp = 2 }
 
         public void Clear()
         {
-            File1 = null;
+            FileList = new List<string>();
             ArgConnectionType = null;
             ArgPort = null;
             ArgBaudrate = null;
             ArgParity = null;
             ArgEndofmessagetimeout = null;
-            ArgOnewireechosuppression = null;
+            ArgOnewireechosuppression = false;
             ArgIPAddress = null;
             ArgIPPort = null;
             ArgSlaveID = null;
             ArgResponsetimeout = null;
             ArgInterframedelay = null;
             ArgSamplerate = null;
+            ArgHelp = false;
         }
 
         /// <summary>
@@ -72,12 +73,12 @@ namespace ModbusControlSpace
                 string arg = Environment.GetCommandLineArgs()[i];
 
                 // is option?
-                if ((arg.Length >= 1) && (arg.Substring(0, 1) == "-"))
+                if (IsOption(arg))
                 {
                     string opt = arg.Substring(1);
-                    string opt2 = opt.ToLower();
+                    string optlower = opt.ToLower();
 
-                    if (opt2 == "connection")
+                    if (optlower == "connection")
                     {
                         string val = GetOptString(arg, ref i);
                         string val2 = val.ToLower();
@@ -99,15 +100,15 @@ namespace ModbusControlSpace
                             throw new ArgumentException("Invalid switch value: " + arg + " " + val);
                         }
                     }
-                    else if (opt2 == "port")
+                    else if (optlower == "port")
                     {
                         ArgPort = GetOptString(arg, ref i);
                     }
-                    else if (opt2 == "baudrate")
+                    else if (optlower == "baudrate")
                     {
                         ArgBaudrate = GetOptInt(arg, ref i, 50, Int32.MaxValue);
                     }
-                    else if (opt2 == "parity")
+                    else if (optlower == "parity")
                     {
                         string val = GetOptString(arg, ref i);
 
@@ -121,15 +122,15 @@ namespace ModbusControlSpace
                             throw new ArgumentException("Invalid switch value: " + arg + " " + val);
                         }
                     }
-                    else if (opt2 == "endofmessagetimeout")
+                    else if (optlower == "endofmessagetimeout")
                     {
                         ArgEndofmessagetimeout = GetOptInt(arg, ref i, 1, Int32.MaxValue);
                     }
-                    else if (opt2 == "onewireechosuppression")
+                    else if (optlower == "onewireechosuppression")
                     {
                         ArgOnewireechosuppression = GetOptBool(arg, ref i);
                     }
-                    else if (opt2 == "ipaddress")
+                    else if (optlower == "ipaddress")
                     {
                         System.Net.IPAddress TmpIPaddress;
                         string val = GetOptString(arg, ref i);
@@ -143,25 +144,29 @@ namespace ModbusControlSpace
                             throw new ArgumentException("Invalid switch value: " + arg + " " + val);
                         }
                     }
-                    else if (opt2 == "ipport")
+                    else if (optlower == "ipport")
                     {
                         ArgIPPort = GetOptInt(arg, ref i, 1, 65535);
                     }
-                    else if (opt2 == "slaveid")
+                    else if (optlower == "slaveid")
                     {
                         ArgSlaveID = GetOptInt(arg, ref i, 1, 255);
                     }
-                    else if (opt2 == "responsetimeout")
+                    else if (optlower == "responsetimeout")
                     {
                         ArgResponsetimeout = GetOptInt(arg, ref i, 1, Int32.MaxValue);
                     }
-                    else if (opt2 == "interframedelay")
+                    else if (optlower == "interframedelay")
                     {
                         ArgInterframedelay = GetOptInt(arg, ref i, 1, Int32.MaxValue);
                     }
-                    else if (opt2 == "samplerate")
+                    else if (optlower == "samplerate")
                     {
                         ArgSamplerate = GetOptInt(arg, ref i, 0, Int32.MaxValue);
+                    }
+                    else if ((optlower == "?") || (optlower == "help"))
+                    {
+                        ArgHelp = GetOptBool(arg, ref i);
                     }
                     else
                     {
@@ -171,35 +176,9 @@ namespace ModbusControlSpace
                 else
                 {
                     // is file parameter
-                    if (File1 == null)
-                    {
-                        File1 = arg;
-                    }
-                    else
-                    {
-                        throw new ArgumentException("More than 1 filename was passed! ('" + arg + "')");
-                    }
+                    FileList.Add(arg.Trim());
                 }
             }
-        }
-
-        /// <summary>
-        /// Check if overrides are used
-        /// </summary>
-        private bool GetIsAnyOverrideUsed()
-        {
-            return (ArgConnectionType != null)
-                    || (ArgPort != null)
-                    || (ArgBaudrate != null)
-                    || (ArgParity != null)
-                    || (ArgEndofmessagetimeout != null)
-                    || (ArgOnewireechosuppression != null)
-                    || (ArgIPAddress != null)
-                    || (ArgIPPort != null)
-                    || (ArgSlaveID != null)
-                    || (ArgResponsetimeout != null)
-                    || (ArgInterframedelay != null)
-                    || (ArgSamplerate != null);
         }
 
         /// <summary>
@@ -273,9 +252,9 @@ namespace ModbusControlSpace
             if (i < Environment.GetCommandLineArgs().Length)
             {
                 string val = Environment.GetCommandLineArgs()[i];
-                if ((val.Length >= 1) && (val.Substring(0, 1) == "-"))
+                if (IsOption(val))
                 {
-                    // next is a switch
+                    // next is an option
                     return null;
                 }
                 else
@@ -286,6 +265,39 @@ namespace ModbusControlSpace
 
             // no left
             return null;
+        }
+
+        private bool IsOption(string s)
+        {
+            if (s.Length >= 1)
+            {
+                string f = s.Substring(0, 1);
+                if ((f == "-") || (f == "/"))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        public string GetOptionsUsageString()
+        {
+            return "Example: Modbuscontrol Test1.mbc -connection serialrtu -port COM1 -baudrate 19200" + Environment.NewLine
+                 + "Use - or / for options." + Environment.NewLine
+                 + "-connection <type> ➝ Connection type: serialrtu, modbustcp or rtutcp" + Environment.NewLine
+                 + "-port <comport> ➝ Serial port name: COM1, …" + Environment.NewLine
+                 + "-baudrate <19200> ➝ Serial baudrate" + Environment.NewLine
+                 + "-parity <mode> ➝ Serial parity: odd, even, none, mark or space" + Environment.NewLine
+                 + "-endofmessagetimeout ### ➝ Serial end-of-message timeout (ms)" + Environment.NewLine
+                 + "-onewireechosuppression ➝ Ignore query command being echoed back " + Environment.NewLine
+                 + "-ipaddress ##.##.##.## ➝ Slave/server IP address: 192.168.1.100" + Environment.NewLine
+                 + "-ipport ### ➝ Slave/server IP port: 502" + Environment.NewLine
+                 + "-slaveid ### ➝ Slave ID number: 1..255" + Environment.NewLine
+                 + "-responsetimeout ### ➝ Max wait time for first byte of response (ms)" + Environment.NewLine
+                 + "-interframedelay ### ➝ Delay before sending next query (ms)" + Environment.NewLine
+                 + "-samplerate ### ➝ Registers polling speed (ms)" + Environment.NewLine
+                 + "-? or -help ➝ Shows this help screen";
         }
     }
 }

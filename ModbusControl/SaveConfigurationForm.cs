@@ -6,6 +6,8 @@ using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 
+using LST.Helpers;
+
 namespace ModbusControlSpace
 {
     public partial class SaveConfigurationForm : Form
@@ -69,8 +71,9 @@ namespace ModbusControlSpace
                 if (checkboxFormSize.Checked)
                 {
                     // put new size in Project
-                    Project.FormSize.Width = SizeWidth;
-                    Project.FormSize.Height = SizeHeight;
+                    // Project holds width in 96DPI
+                    Project.FormSize.Width = AppDpiHelpers.ScaleXcoordFromSystemDpiTo96Dpi(SizeWidth);
+                    Project.FormSize.Height = AppDpiHelpers.ScaleYcoordFromSystemDpiTo96Dpi(SizeHeight);
                     Project.WriteFormSize();
                     Changed = true;
                 }

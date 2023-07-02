@@ -88,6 +88,8 @@
     <Compile Include="AboutBox1.Designer.cs">
       <DependentUpon>AboutBox1.cs</DependentUpon>
     </Compile>
+    <Compile Include="AppDpiHelpers.cs" />
+    <Compile Include="AppHelpers.cs" />
     <Compile Include="BytesToString.cs" />
     <Compile Include="ClientConnection.cs" />
     <Compile Include="ColorFromString.cs" />
@@ -206,6 +208,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="ProjectMan.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RadioGroupHelpers.cs" />
     <Compile Include="RecentsToolStripMenuItem.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -377,10 +380,6 @@
     <None Include="Resources\TreeExpand.ico" />
     <None Include="EnumIndicator.ico" />
     <Content Include="Ico5.ico" />
-    <None Include="TreeCollapse.ico" />
-    <None Include="TreeCollapse7.ico" />
-    <None Include="TreeExpand7.ico" />
-    <None Include="TreeExpand.ico" />
     <None Include="Resources\ExpandIcon.ico" />
     <None Include="Resources\Erase.png" />
     <None Include="Resources\EraseButton.bmp" />

@@ -40,15 +40,15 @@ namespace ModbusControlSpace
         public string Functioncode
         {
             // uses Radiobutton.Tag
-            get { return Global.GetRadioGroupTag(groupboxFunctioncode); }
-            set { Global.SetRadioGroupByTag(groupboxFunctioncode, value); }
+            get { return RadioGroupHelpers.GetRadioGroupTag(groupboxFunctioncode); }
+            set { RadioGroupHelpers.SetRadioGroupByTag(groupboxFunctioncode, value); }
         }
         
         public string Datasize
         {
             // uses Radiobutton.Tag
-            get { return Global.GetRadioGroupTag(groupboxDatasize); }
-            set { Global.SetRadioGroupByTag(groupboxDatasize, value); }
+            get { return RadioGroupHelpers.GetRadioGroupTag(groupboxDatasize); }
+            set { RadioGroupHelpers.SetRadioGroupByTag(groupboxDatasize, value); }
         }
 
         public string Data

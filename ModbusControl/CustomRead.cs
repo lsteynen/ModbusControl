@@ -40,15 +40,15 @@ namespace ModbusControlSpace
         public string Datasize
         {
             // uses Radiobutton.Tag
-            get { return Global.GetRadioGroupTag( groupboxDatasize); }
-            set { Global.SetRadioGroupByTag(groupboxDatasize, value); }
+            get { return RadioGroupHelpers.GetRadioGroupTag( groupboxDatasize); }
+            set { RadioGroupHelpers.SetRadioGroupByTag(groupboxDatasize, value); }
         }
 
         public string Showvaluesas
         {
             // uses Radiobutton.Tag
-            get { return Global.GetRadioGroupTag(groupboxShowas); }
-            set { Global.SetRadioGroupByTag(groupboxShowas, value); }
+            get { return RadioGroupHelpers.GetRadioGroupTag(groupboxShowas); }
+            set { RadioGroupHelpers.SetRadioGroupByTag(groupboxShowas, value); }
         }
 
         public bool ShortLivedTcpConnection

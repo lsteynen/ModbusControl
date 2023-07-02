@@ -125,7 +125,7 @@ namespace ModbusControlSpace
         // Properties
 
         public string ValidationSchemaPath; // path to validation XSD file
-        public TSize FormSize; // Form size
+        public TSize FormSize; // Form size in 96DPI
         public TConnection Connection; // Modbus connection settings
         public TOptions Options; // Options settings
         public TModbusTcpBridge ModbusTcpBridge; // Modbus/TCP bridge settings
@@ -345,7 +345,7 @@ namespace ModbusControlSpace
                         // value in mbc file is standarized to 96DPI
                         FormSize.WidthSeen = true;
                         Seen = true;
-                        FormSize.Width = Global.ScaleXcoordFrom96DpiToSystemDpi((int)TmpValue);
+                        FormSize.Width = (int)TmpValue;
                     }
                     else
                     {
@@ -366,7 +366,7 @@ namespace ModbusControlSpace
                         // value in mbc file is standarized to 96DPI
                         FormSize.HeightSeen = true;
                         Seen = true;
-                        FormSize.Height = Global.ScaleYcoordFrom96DpiToSystemDpi((int)TmpValue);
+                        FormSize.Height = (int)TmpValue;
                     }
                     else
                     {
@@ -2332,7 +2332,7 @@ namespace ModbusControlSpace
             }
             // write value
             // value in mbc file is standarized to 96DPI
-            widthNode.Value = Global.ScaleXcoordFromSystemDpiTo96Dpi(FormSize.Width).ToString();
+            widthNode.Value = FormSize.Width.ToString();
 
             // Find Height node, or create it
             XElement heightNode = FindElement(xeSize, "Height");
@@ -2343,7 +2343,7 @@ namespace ModbusControlSpace
             }
             // write value
             // value in mbc file is standarized to 96DPI
-            heightNode.Value = Global.ScaleYcoordFromSystemDpiTo96Dpi(FormSize.Height).ToString();
+            heightNode.Value = FormSize.Height.ToString();
         }
 
         /// Update the project mbc XML to the current version

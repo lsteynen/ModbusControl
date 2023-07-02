@@ -35,22 +35,22 @@ namespace ModbusControlSpace
         public string TabSelect
         {
             // uses Radiobutton.Tag
-            get { return Global.GetRadioGroupTag( panelTab); }
-            set { Global.SetRadioGroupByTag(panelTab, value); }
+            get { return RadioGroupHelpers.GetRadioGroupTag( panelTab); }
+            set { RadioGroupHelpers.SetRadioGroupByTag(panelTab, value); }
         }
 
         public string ExportFormatSelect
         {
             // uses Radiobutton.Tag
-            get { return Global.GetRadioGroupTag(groupboxExportFormat); }
-            set { Global.SetRadioGroupByTag(groupboxExportFormat, value); }
+            get { return RadioGroupHelpers.GetRadioGroupTag(groupboxExportFormat); }
+            set { RadioGroupHelpers.SetRadioGroupByTag(groupboxExportFormat, value); }
         }
 
         public string AsciiFormatSelect
         {
             // uses Radiobutton.Tag
-            get { return Global.GetRadioGroupTag(FormatAsciiPanel); }
-            set { Global.SetRadioGroupByTag(FormatAsciiPanel, value); }
+            get { return RadioGroupHelpers.GetRadioGroupTag(FormatAsciiPanel); }
+            set { RadioGroupHelpers.SetRadioGroupByTag(FormatAsciiPanel, value); }
         }
 
         public int MaximumFrameSize
@@ -176,7 +176,7 @@ namespace ModbusControlSpace
             // background worker thread
 
             // export file header info
-            mCsvWriter.WriteComment("Export file created by ModbusControl " + Global.VersionString + " - " + DateTime.Now.ToString());
+            mCsvWriter.WriteComment("Export file created by ModbusControl " + AppHelpers.VersionString + " - " + DateTime.Now.ToString());
             mCsvWriter.WriteComment("Project file: " + System.IO.Path.GetFileName(mParent.ProjectPath));
             mCsvWriter.WriteComment("Fields: Register;Size;Description;Read/write;Format;Value");
 

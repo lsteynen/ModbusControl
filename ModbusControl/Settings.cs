@@ -6,6 +6,8 @@ using System.Xml.Serialization;
 using System.IO;
 using System.Windows.Forms;
 
+using LST.Helpers;
+
 // Note: Installer maakt geen default settings file, app doet dat bij eerste close.
 // We laden en schrijven de XML files manueel. Als we de class naar een XML file zouden schrijven
 // ontstaat het probleem dat een aantal XML elementen verdwijnen als je even een oudere versie
@@ -144,7 +146,7 @@ namespace ModbusControlSpace
                 Logger = new CLogger();
 
                 // setup ValidationXSDFile, if we find it
-                string Filepath = Path.Combine(Global.ApplicationStartupPath, "MbcValidate.xsd");
+                string Filepath = Path.Combine(AppHelpers.ApplicationStartupPath, "MbcValidate.xsd");
                 if (File.Exists(Filepath))
                 {
                     MbcfileValidationEnable = true;

@@ -45,20 +45,6 @@ namespace ModbusControlSpace
             public bool CheckForUpdates;
         }
 
-        public class CLoadOptions
-        {
-            public bool IgnoreFormSize;
-
-            // constructor
-            public CLoadOptions()
-            {
-                // sets default values
-                IgnoreFormSize = false;
-            }
-        }
-
-        private int DefaultFormWidth;
-        private int DefaultFormHeight;
         private CSettings Settings1;
         public string ProjectPath; // Path of current project file (null if none, assigned if open or tried to open)
         public CProject Project; // Loaded project
@@ -114,17 +100,9 @@ namespace ModbusControlSpace
         {
             InitializeComponent();
 
-            // Store this program's default size, as defined by designer
-            DefaultFormWidth = this.Width;
-            DefaultFormHeight = this.Height;
-
             // This app is DPI-aware, get system DPI
-            // We support system DPI. We do not support per-monitor-DPI yet.
-            // Store it in the Global class
-            Graphics g = this.CreateGraphics();
-            Global.SystemDpiX = g.DpiX;
-            Global.SystemDpiY = g.DpiY;
-            g.Dispose();
+            // We support system DPI. We do not support per-monitor-DPI yet.    //TODO???
+            AppDpiHelpers.GetCurrentSystemDpi(this);
 
             SaveStatusbarDefaultValues();
 
@@ -236,7 +214,7 @@ namespace ModbusControlSpace
             try
             {
                 // throws exception if directory does not exist
-                string[] files = Directory.GetFiles(Global.ApplicationStartupPath, "*.pdf");
+                string[] files = Directory.GetFiles(AppHelpers.ApplicationStartupPath, "*.pdf");
                 // add PDF files to help menu, if any
                 if (files.Length > 0)
                 {
@@ -261,7 +239,7 @@ namespace ModbusControlSpace
             try
             {
                 // throws exception if directory does not exist
-                string[] files = Directory.GetFiles(Global.ApplicationStartupPath, "*.mbc");
+                string[] files = Directory.GetFiles(AppHelpers.ApplicationStartupPath, "*.mbc");
                 // add mbc files to help menu, if any
                 if (files.Length > 0)
                 {
@@ -290,7 +268,7 @@ namespace ModbusControlSpace
         {
             // Is dit een nieuwe release? Vraag dan om de release notes te tonen.
             // We negeren Revision om te voorkomen dat gebruikers deze dialog krijgen als ze een pre-release nieuwe exe kregen.
-            Version CurVers = new Version(Global.VersionNum.Major, Global.VersionNum.Minor, Global.VersionNum.Build);
+            Version CurVers = new Version(AppHelpers.VersionNum.Major, AppHelpers.VersionNum.Minor, AppHelpers.VersionNum.Build);
             Version PrevVers = new Version(Settings1.Shared.LastRunVersion.Major, Settings1.Shared.LastRunVersion.Minor, Settings1.Shared.LastRunVersion.Build);
             if (CurVers.CompareTo(PrevVers) > 0)
             {
@@ -316,11 +294,24 @@ namespace ModbusControlSpace
             {
                 CommandlineArgs.Load();
 
+                if (CommandlineArgs.ArgHelp)
+                {
+                    // show command line usage
+                    string s = "Command line help:" + Environment.NewLine + CommandlineArgs.GetOptionsUsageString();
+                    MessageBox.Show(s, "ModbusControl", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }    
+
+                if (CommandlineArgs.FileList.Count > 1)
+                {
+                    string File2 = CommandlineArgs.FileList[1];
+                    throw new ArgumentException("More than 1 filename was passed! ('" + File2 + "')");
+                }
+
                 // filename passed?
-                if (!String.IsNullOrEmpty(CommandlineArgs.File1))
+                if (CommandlineArgs.FileList.Count >= 1)
                 {
                     // got filename
-                    ProjectPath = CommandlineArgs.File1;
+                    ProjectPath = CommandlineArgs.FileList[0]; 
 
                     // get the full path of the file
                     // in case a filename only or relative path was passed
@@ -450,7 +441,7 @@ namespace ModbusControlSpace
             Settings1.Roaming.Logger.LogBridgeData = Logger1.TheLogFilter.LogBridgeData;
             Settings1.Roaming.Logger.LogBridgeDecode = Logger1.TheLogFilter.LogBridgeDecode;
 
-            Settings1.Shared.LastRunVersion = Global.VersionNum;
+            Settings1.Shared.LastRunVersion = AppHelpers.VersionNum;
 
             // And save
             // Exception opvangen en deftige melding geven
@@ -596,7 +587,18 @@ namespace ModbusControlSpace
             SaveConfigurationForm1.SizeWidth = this.Width;
             SaveConfigurationForm1.SizeHeight = this.Height;
             SaveConfigurationForm1.Project = Project;
-            SaveConfigurationForm1.OverridesWarning = CommandlineArgs.IsAnyOverrideUsed;
+            SaveConfigurationForm1.OverridesWarning = (CommandlineArgs.ArgConnectionType != null)
+                                                    || (CommandlineArgs.ArgPort != null)
+                                                    || (CommandlineArgs.ArgBaudrate != null)
+                                                    || (CommandlineArgs.ArgParity != null)
+                                                    || (CommandlineArgs.ArgEndofmessagetimeout != null)
+                                                    || (CommandlineArgs.ArgOnewireechosuppression == true)
+                                                    || (CommandlineArgs.ArgIPAddress != null)
+                                                    || (CommandlineArgs.ArgIPPort != null)
+                                                    || (CommandlineArgs.ArgSlaveID != null)
+                                                    || (CommandlineArgs.ArgResponsetimeout != null)
+                                                    || (CommandlineArgs.ArgInterframedelay != null)
+                                                    || (CommandlineArgs.ArgSamplerate != null);
             SaveConfigurationForm1.ShowDialog();
         }
 
@@ -718,10 +720,8 @@ namespace ModbusControlSpace
                 // Reset some stuff
                 ResetBeforeLoad();
 
-                // load project
-                CLoadOptions opt = new CLoadOptions();
-                opt.IgnoreFormSize = Options.IgnoreSizeOnReload;
-                LoadProject(ProjectPath, opt);
+                // load project, possibly ignore formsize
+                LoadProject(ProjectPath, Options.IgnoreSizeOnReload);
 
                 // Update program's title
                 UpdateTitle();
@@ -770,7 +770,7 @@ namespace ModbusControlSpace
             configform.BaudrateIsOverride = (CommandlineArgs.ArgBaudrate != null);
             configform.ParityIsOverride = (CommandlineArgs.ArgParity != null);
             configform.EndofmessagetimeoutIsOverride = (CommandlineArgs.ArgEndofmessagetimeout != null);
-            configform.OnewireechosuppressionIsOverride = (CommandlineArgs.ArgOnewireechosuppression != null);
+            configform.OnewireechosuppressionIsOverride = CommandlineArgs.ArgOnewireechosuppression;
             configform.IPAddressIsOverride = (CommandlineArgs.ArgIPAddress != null);
             configform.IPPortIsOverride = (CommandlineArgs.ArgIPPort != null);
             configform.SlaveIDIsOverride = (CommandlineArgs.ArgSlaveID != null);
@@ -941,7 +941,7 @@ namespace ModbusControlSpace
         private void aboutMenuItem_Click(object sender, EventArgs e)
         {
             AboutBox1 about = new AboutBox1();
-            about.VersionString = Global.VersionString;
+            about.VersionString = AppHelpers.VersionString;
             about.AppdataPath = Settings1.StoreRoamingPath;
             about.FormWidth = this.Width;
             about.FormHeight = this.Height;
@@ -985,8 +985,8 @@ namespace ModbusControlSpace
                 Project.Connection.SerialParity = (Parity)CommandlineArgs.ArgParity;
             if (CommandlineArgs.ArgEndofmessagetimeout != null)
                 Project.Connection.SerialEndOfMessageTimeout = (int)CommandlineArgs.ArgEndofmessagetimeout;
-            if (CommandlineArgs.ArgOnewireechosuppression != null)
-                Project.Connection.SerialOneWireEchoSuppression = (bool)CommandlineArgs.ArgOnewireechosuppression;
+            if (CommandlineArgs.ArgOnewireechosuppression == true)
+                Project.Connection.SerialOneWireEchoSuppression = CommandlineArgs.ArgOnewireechosuppression;
             if (CommandlineArgs.ArgIPAddress != null)
                 Project.Connection.IPAddress = CommandlineArgs.ArgIPAddress;
             if (CommandlineArgs.ArgIPPort != null)
@@ -1077,7 +1077,7 @@ namespace ModbusControlSpace
         /// into Project class
         /// Keep it in memory for change & save
         /// </summary>
-        private bool LoadProject(string path, CLoadOptions options = null)
+        private bool LoadProject(string path, bool ignoreFormSize = false)
         {
             // Store new project path
             ProjectPath = path;
@@ -1151,13 +1151,6 @@ namespace ModbusControlSpace
                 }
             } while (bRetry);
 
-            // ignore form size? then reset the 'seen' flags
-            if ((options != null) && options.IgnoreFormSize)
-            {
-                Project.FormSize.WidthSeen = false;
-                Project.FormSize.HeightSeen = false;
-            }
-
             // Here if load was successful
             ProjectIsOpen = true;
 
@@ -1179,13 +1172,15 @@ namespace ModbusControlSpace
             UpdateModbusTcpBridge();
 
             // Set the form size
-            if (Project.FormSize.WidthSeen)
+            if (Project.FormSize.WidthSeen && (ignoreFormSize == false))
             {
-                this.Width = Project.FormSize.Width;
+                // Project holds width in 96DPI
+                this.Width = AppDpiHelpers.ScaleXcoordFrom96DpiToSystemDpi(Project.FormSize.Width);
             }
-            if (Project.FormSize.HeightSeen)
+            if (Project.FormSize.HeightSeen && (ignoreFormSize == false))
             {
-                this.Height = Project.FormSize.Height;
+                // Project holds width in 96DPI
+                this.Height = AppDpiHelpers.ScaleYcoordFrom96DpiToSystemDpi(Project.FormSize.Height);
             }
 
             // Add to MRU list
@@ -2118,7 +2113,7 @@ namespace ModbusControlSpace
 
             // Zoek een pdf met 'release' in de naam
             // throws exception if directory does not exist
-            string[] files = Directory.GetFiles(Global.ApplicationStartupPath, "*release*.pdf");
+            string[] files = Directory.GetFiles(AppHelpers.ApplicationStartupPath, "*release*.pdf");
             if (files.Length > 0)
             {
                 DialogResult dr = MessageBox.Show("ModbusControl has been updated. Do you want to see the release notes?",
@@ -2784,7 +2779,7 @@ namespace ModbusControlSpace
                 {
                     // assuming the user has put quotes around %file if required
                     CmdLine = CmdLine.Replace("%file", file);
-                    Global.SplitCommandlineString(CmdLine, out EdCommand, out EdArg);
+                    AppHelpers.SplitCommandlineString(CmdLine, out EdCommand, out EdArg);
 #if DEBUGXX
                     MessageBox.Show(EdCommand + " " + EdArg, "Command line:", MessageBoxButtons.OK, MessageBoxIcon.Information);
 #endif
