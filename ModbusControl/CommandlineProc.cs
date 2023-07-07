@@ -35,6 +35,7 @@ namespace ModbusControlSpace
         public string ArgIPAddress;             // string is already nullable
         public int? ArgIPPort;
         public int? ArgSlaveID;
+        public int? ArgMaxFrameSize;
         public int? ArgResponsetimeout;
         public int? ArgInterframedelay;
         public int? ArgSamplerate;
@@ -54,6 +55,7 @@ namespace ModbusControlSpace
             ArgIPAddress = null;
             ArgIPPort = null;
             ArgSlaveID = null;
+            ArgMaxFrameSize = null;
             ArgResponsetimeout = null;
             ArgInterframedelay = null;
             ArgSamplerate = null;
@@ -152,6 +154,10 @@ namespace ModbusControlSpace
                     {
                         ArgSlaveID = GetOptInt(arg, ref i, 1, 255);
                     }
+                    else if (optlower == "maxframesize")
+                    {
+                        ArgMaxFrameSize = GetOptInt(arg, ref i, 13, 256);
+                    }                    
                     else if (optlower == "responsetimeout")
                     {
                         ArgResponsetimeout = GetOptInt(arg, ref i, 1, Int32.MaxValue);

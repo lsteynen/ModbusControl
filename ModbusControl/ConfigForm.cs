@@ -195,6 +195,11 @@ namespace ModbusControlSpace
             set { picSlaveIDIsOverride.Visible = value; }
         }
 
+        public bool MaxFrameSizeIsOverride
+        {
+            set { picMaxFrameSizeIsOverride.Visible = value; }
+        }
+
         public bool ResponsetimeoutIsOverride
         {
             set { picResponsetimeoutIsOverride.Visible = value; }
@@ -376,6 +381,7 @@ namespace ModbusControlSpace
                 || picIPAddressIsOverride.Visible
                 || picIPPortIsOverride.Visible
                 || picSlaveIDIsOverride.Visible
+                || picMaxFrameSizeIsOverride.Visible
                 || picResponsetimeoutIsOverride.Visible
                 || picInterframedelayIsOverride.Visible
                 || picSamplerateIsOverride.Visible);

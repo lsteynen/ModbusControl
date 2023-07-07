@@ -596,6 +596,7 @@ namespace ModbusControlSpace
                                                     || (CommandlineArgs.ArgIPAddress != null)
                                                     || (CommandlineArgs.ArgIPPort != null)
                                                     || (CommandlineArgs.ArgSlaveID != null)
+                                                    || (CommandlineArgs.ArgMaxFrameSize != null)
                                                     || (CommandlineArgs.ArgResponsetimeout != null)
                                                     || (CommandlineArgs.ArgInterframedelay != null)
                                                     || (CommandlineArgs.ArgSamplerate != null);
@@ -764,20 +765,6 @@ namespace ModbusControlSpace
         {
             ConfigForm configform = new ConfigForm();
 
-            // commandline overrides melden
-            configform.ConnectionTypeIsOverride = (CommandlineArgs.ArgConnectionType != null);
-            configform.PortIsOverride = (CommandlineArgs.ArgPort != null);
-            configform.BaudrateIsOverride = (CommandlineArgs.ArgBaudrate != null);
-            configform.ParityIsOverride = (CommandlineArgs.ArgParity != null);
-            configform.EndofmessagetimeoutIsOverride = (CommandlineArgs.ArgEndofmessagetimeout != null);
-            configform.OnewireechosuppressionIsOverride = CommandlineArgs.ArgOnewireechosuppression;
-            configform.IPAddressIsOverride = (CommandlineArgs.ArgIPAddress != null);
-            configform.IPPortIsOverride = (CommandlineArgs.ArgIPPort != null);
-            configform.SlaveIDIsOverride = (CommandlineArgs.ArgSlaveID != null);
-            configform.ResponsetimeoutIsOverride = (CommandlineArgs.ArgResponsetimeout != null);
-            configform.InterframedelayIsOverride = (CommandlineArgs.ArgInterframedelay != null);
-            configform.SamplerateIsOverride = (CommandlineArgs.ArgSamplerate != null);
-
             // pass project values to form
             configform.ConnectionInUse = ConnectionInUse;
             configform.ConnectionType = Project.Connection.ConnectionType;
@@ -802,11 +789,26 @@ namespace ModbusControlSpace
             //configform.OptionsShowInfo = Project.Options.ShowInfo;
             configform.ModbusTcpBridgeEnable = Project.ModbusTcpBridge.Enable;
             configform.ModbusTcpBridgeIPPort = Project.ModbusTcpBridge.IPPort;
-            // Apply button callback
 
-            // set Apply handler
+            // pass commandline override indicators
+            configform.ConnectionTypeIsOverride = (CommandlineArgs.ArgConnectionType != null);
+            configform.PortIsOverride = (CommandlineArgs.ArgPort != null);
+            configform.BaudrateIsOverride = (CommandlineArgs.ArgBaudrate != null);
+            configform.ParityIsOverride = (CommandlineArgs.ArgParity != null);
+            configform.EndofmessagetimeoutIsOverride = (CommandlineArgs.ArgEndofmessagetimeout != null);
+            configform.OnewireechosuppressionIsOverride = CommandlineArgs.ArgOnewireechosuppression;
+            configform.IPAddressIsOverride = (CommandlineArgs.ArgIPAddress != null);
+            configform.IPPortIsOverride = (CommandlineArgs.ArgIPPort != null);
+            configform.SlaveIDIsOverride = (CommandlineArgs.ArgSlaveID != null);
+            configform.MaxFrameSizeIsOverride = (CommandlineArgs.ArgMaxFrameSize != null);
+            configform.ResponsetimeoutIsOverride = (CommandlineArgs.ArgResponsetimeout != null);
+            configform.InterframedelayIsOverride = (CommandlineArgs.ArgInterframedelay != null);
+            configform.SamplerateIsOverride = (CommandlineArgs.ArgSamplerate != null);
+
+            // set Apply button handler
             configform.OnApply += this.ConfigApplyHandler;
 
+            // show
             if (configform.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
                 // apply the new settings
@@ -993,6 +995,8 @@ namespace ModbusControlSpace
                 Project.Connection.IPPort = (ushort)CommandlineArgs.ArgIPPort;
             if (CommandlineArgs.ArgSlaveID != null)
                 Project.Connection.SlaveID = (byte)CommandlineArgs.ArgSlaveID;
+            if (CommandlineArgs.ArgMaxFrameSize != null)
+                Project.Connection.MaximumFrameSize = (int)CommandlineArgs.ArgMaxFrameSize;
             if (CommandlineArgs.ArgResponsetimeout != null)
                 Project.Connection.ResponseTimeout = (int)CommandlineArgs.ArgResponsetimeout;
             if (CommandlineArgs.ArgInterframedelay != null)
