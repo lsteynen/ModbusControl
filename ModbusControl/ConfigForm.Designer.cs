@@ -103,6 +103,7 @@
             this.picMaxFrameSizeIsOverride = new System.Windows.Forms.PictureBox();
             this.numericInterFrameDelay = new LST.Controls.NumericUpDown2();
             this.comboSerialPort = new ModbusControlSpace.SerialPortCombobox();
+            this.picwriteregFCIsOverride = new System.Windows.Forms.PictureBox();
             ((System.ComponentModel.ISupportInitialize)(this.numericSamplerate)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericTcpServerPort)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericMaximumFrameSize)).BeginInit();
@@ -135,6 +136,7 @@
             this.panelWarning.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picMaxFrameSizeIsOverride)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericInterFrameDelay)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.picwriteregFCIsOverride)).BeginInit();
             this.SuspendLayout();
             // 
             // numericSamplerate
@@ -810,6 +812,7 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.picwriteregFCIsOverride);
             this.groupBox1.Controls.Add(this.radiobuttonWriteFC6);
             this.groupBox1.Controls.Add(this.radiobuttonWriteFC16);
             this.groupBox1.Controls.Add(this.radiobuttonWriteFCAuto);
@@ -1063,6 +1066,18 @@
             this.comboSerialPort.TabIndex = 9;
             this.toolTip1.SetToolTip(this.comboSerialPort, "Serial port name. Dropdown shows existing ports");
             // 
+            // picwriteregFCIsOverride
+            // 
+            this.picwriteregFCIsOverride.Image = ((System.Drawing.Image)(resources.GetObject("picwriteregFCIsOverride.Image")));
+            this.picwriteregFCIsOverride.Location = new System.Drawing.Point(188, 13);
+            this.picwriteregFCIsOverride.Name = "picwriteregFCIsOverride";
+            this.picwriteregFCIsOverride.Size = new System.Drawing.Size(20, 20);
+            this.picwriteregFCIsOverride.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.picwriteregFCIsOverride.TabIndex = 13;
+            this.picwriteregFCIsOverride.TabStop = false;
+            this.toolTip1.SetToolTip(this.picwriteregFCIsOverride, "This parameter is overridden by the command line! It shows the value as set by th" +
+        "e command line, not the value configured in the mbc project file!");
+            // 
             // ConfigForm
             // 
             this.AcceptButton = this.buttonOK;
@@ -1126,6 +1141,7 @@
             this.panelWarning.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picMaxFrameSizeIsOverride)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericInterFrameDelay)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.picwriteregFCIsOverride)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1205,5 +1221,6 @@
         private System.Windows.Forms.PictureBox picSlaveIDIsOverride;
         private System.Windows.Forms.PictureBox picSamplerateIsOverride;
         private System.Windows.Forms.PictureBox picMaxFrameSizeIsOverride;
+        private System.Windows.Forms.PictureBox picwriteregFCIsOverride;
     }
 }

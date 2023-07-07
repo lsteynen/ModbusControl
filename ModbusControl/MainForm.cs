@@ -1,23 +1,14 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
 using System.Diagnostics;
 using System.Drawing;
-using System.Globalization;
 using System.IO;
 using System.IO.Ports;
-using System.Net;
-using System.Reflection;
-using System.Resources;
-using System.Text;
-using System.Text.RegularExpressions;
 using System.Threading;
-using System.Timers;
 using System.Windows.Forms;
 using System.Xml;
 using System.Xml.Schema;
-using System.Xml.Linq;
 
 using Modbus_net;
 using LST.Helpers;
@@ -598,6 +589,7 @@ namespace ModbusControlSpace
                                                     || (CommandlineArgs.ArgMaxFrameSize != null)
                                                     || (CommandlineArgs.ArgResponsetimeout != null)
                                                     || (CommandlineArgs.ArgInterframedelay != null)
+                                                    || (CommandlineArgs.ArgWriteholdingregFC != null)
                                                     || (CommandlineArgs.ArgSamplerate != null);
             SaveConfigurationForm1.ShowDialog();
         }
@@ -801,7 +793,8 @@ namespace ModbusControlSpace
             configform.SlaveIDIsOverride = (CommandlineArgs.ArgSlaveID != null);
             configform.MaxFrameSizeIsOverride = (CommandlineArgs.ArgMaxFrameSize != null);
             configform.ResponsetimeoutIsOverride = (CommandlineArgs.ArgResponsetimeout != null);
-            configform.InterframedelayIsOverride = (CommandlineArgs.ArgInterframedelay != null);
+            configform.InterframedelayIsOverride = (CommandlineArgs.ArgInterframedelay != null); 
+            configform.WriteregFCIsOverride = (CommandlineArgs.ArgWriteholdingregFC != null);
             configform.SamplerateIsOverride = (CommandlineArgs.ArgSamplerate != null);
 
             // set Apply button handler
@@ -815,13 +808,13 @@ namespace ModbusControlSpace
             }
         }
 
-        /// <summary>
+         /// <summary>
         /// Apply the new configuration settings
         /// </summary>
         private void ApplyConfiguration(ConfigForm configform)
         {
             // check if the new settings change the current connection
-            // if connection type changes, or connection is serial and serial parameters change...
+            // if connection type changes, or connection parameters change...
             bool ConnectionChange =
                   ((configform.ConnectionType != Project.Connection.ConnectionType)
                    || ((Project.Connection.ConnectionType == Global.eConnectionType.SerialRTU)
@@ -1000,9 +993,26 @@ namespace ModbusControlSpace
                 Project.Connection.ResponseTimeout = (int)CommandlineArgs.ArgResponsetimeout;
             if (CommandlineArgs.ArgInterframedelay != null)
                 Project.Connection.InterFrameDelay = (int)CommandlineArgs.ArgInterframedelay;
+            if (CommandlineArgs.ArgWriteholdingregFC != null)
+                Project.Connection.WriteHoldingregFunctioncode = ConvertCommandlineWriteholdregFCToEnum((int)CommandlineArgs.ArgWriteholdingregFC);
             if (CommandlineArgs.ArgSamplerate != null)
                 Project.Options.Samplerate = (int)CommandlineArgs.ArgSamplerate;
         }
+
+        private Global.eWriteHoldingregFunctionCode ConvertCommandlineWriteholdregFCToEnum(int cmdcode)
+        {
+            Global.eWriteHoldingregFunctionCode e = Global.eWriteHoldingregFunctionCode.Auto;
+
+            if (cmdcode == 6)
+                e = Global.eWriteHoldingregFunctionCode.FC6;
+            if (cmdcode == 16)
+                e = Global.eWriteHoldingregFunctionCode.FC16;
+            if (cmdcode == 0)
+                e = Global.eWriteHoldingregFunctionCode.Auto;
+
+            return e;
+        }
+
 
         /// <summary>
         /// Update the form's title

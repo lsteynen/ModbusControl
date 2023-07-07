@@ -424,6 +424,31 @@
   <metadata name="backgroundWorker1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>114, 17</value>
   </metadata>
+  <data name="picwriteregFCIsOverride.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAABGdBTUEAALGPC/xhBQAABG5JREFUWEfF
+        Vm9MlWUcFSwtP9TWZqu1VavVwEkRcq9gkJia/y2lqwwxQhAVFJe2GHATW+vP6gN9an6pVmtrM3OxmGgI
+        xCXuFfQCBQglCVzwurnm1peWa3Y65z731pW93D9uwG873tfnd37nnPd9n/d9mQNgVmG5OJOwXJxJmH/i
+        r8SWaltxZ60Ngo61Zlpx1u0EKFv18MLz72QBVz8NQMdaC7bjq9sIcKerJt3lbzwIeHcEoGOtqWcocVSc
+        ARI+K12c7f1wJc/8GHDiIeAbYrwOWlNPHEONseIMMN9zxP7XH91vAT+uB44/YMBjraknjqHGWHEESGw4
+        nFZ18diLwOhRnv2DwMlHDHTMNfXEEdeMxFBxBFjgdtrwz/hHQNMSoP5R4LvHDXTMNfXEEdeMxFAxBpjb
+        WpX+rf9UKfBLOU0fAxqfBM4+YXCaxw1cY08ccTVjRqNUDAESvtj3VHb3ByuAifdptojmyUBzEpatL0XW
+        hlIMfb6U60nAGfbIEVczmjUSESqGAPM7nDb/9fYKoHebCdCUArQvwrrcPdjo2IORrzIZaLEJQI64mtGs
+        kYhQUQIknnp9CTced/xEDY1p0pwKtD4DuFOwOa8cW/LLMPL1s8APXFdPHHI1o1lpGKkpKkqABR6nHTcG
+        q4DO1UBLGs3TgTbiXCpydxzEtp0VGD25HHBxY6onDrma0aw0jNQUFSHA3KbK9E/GTuQBl7nx2mjg4r12
+        ZfC55+/5NOS9ehj5RYcwVv880GE3PXHE5YxmpSEtI2lRUwRIqCtISu56m5fWV8kzyuE9X0Zjvv8FN9e9
+        dhSUVKJw9xvwNbwAeML64mqGs9KQljSN9KSaIsC89hpb//W2XcAQ3/duinqeI3iphU4e92aicG8NdpVV
+        Y7xxHdCV/X9fXM1wVhrSkqaRnlQWARLrX0srufjxGsB/iJeal7eLj2CXfoO4wP/3ZaG4/Ch2H6jF+JmN
+        vCI843COZjRLDWlJU9rGIqwsAtztcS7FjYF9wMAWmvHDc4EbMBzeVQyQg6L976H4wLsY/X4r0G3B0yw1
+        pCVNaRuLsJoUILDxfvuSZ+TjW6+HIj28Ej1rb0Uv0bcaY80O+FocuNnNx/QnC15glhrUkqblhgwLwI2X
+        HNx4e5l8E0U3EAxjhQH2LvHeDxODDNBnwQmAPGlR02zI5Fs3ZFiAee1Oe/+107l8hAqA/s0Ev3xWGCCG
+        NyF7TQmWry3GUCNvwWAEvrSoKW15yMtYsoIBEo5XpG79uY4b6UoJPyoSjAD1R16C45VqbC+swuXWfOBX
+        7hcrbgiaobY85CVPGYcC3HWuNvPvP73b+V2n2CVHdIy8jLGOIvjcRbg5xJfVsAVnMqgtD3nJU8ahAPd1
+        1vKD8nshH5udfJfzFkzoNwKukHM1CL/40WbE4y895CVPGYcCLDxbbe9nMnjezOAjM02gtjxcRzLG5Snj
+        UIB7iBQih1g5zVhBPE3cS/wX4A5CIZTq/mmGPGRu/oQPBpi9UoDZhOXizAFz/gXnHtNcfNdeYwAAAABJ
+        RU5ErkJggg==
+</value>
+  </data>
   <data name="picMaxFrameSizeIsOverride.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAABGdBTUEAALGPC/xhBQAABG5JREFUWEfF

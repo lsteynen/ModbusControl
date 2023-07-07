@@ -150,71 +150,6 @@ namespace ModbusControlSpace
             }
         }
 
-        public bool ConnectionTypeIsOverride
-        {
-            set { picConnectionTypeIsOverride.Visible = value; }
-        }
-
-        public bool PortIsOverride
-        {
-            set { picPortIsOverride.Visible = value; }
-        }
-
-        public bool BaudrateIsOverride
-        {
-            set { picBaudrateIsOverride.Visible = value; }
-        }
-
-        public bool ParityIsOverride
-        {
-            set { picParityIsOverride.Visible = value; }
-        }
-
-        public bool EndofmessagetimeoutIsOverride
-        {
-            set { picEndofmessagetimeoutIsOverride.Visible = value; }
-        }
-
-        public bool OnewireechosuppressionIsOverride
-        {
-            set { picOnewireechosuppressionIsOverride.Visible = value; }
-        }
-
-        public bool IPAddressIsOverride
-        {
-            set { picIPAddressIsOverride.Visible = value; }
-        }
-
-        public bool IPPortIsOverride
-        {
-            set { picIPPortIsOverride.Visible = value; }
-        }
-
-        public bool SlaveIDIsOverride
-        {
-            set { picSlaveIDIsOverride.Visible = value; }
-        }
-
-        public bool MaxFrameSizeIsOverride
-        {
-            set { picMaxFrameSizeIsOverride.Visible = value; }
-        }
-
-        public bool ResponsetimeoutIsOverride
-        {
-            set { picResponsetimeoutIsOverride.Visible = value; }
-        }
-
-        public bool InterframedelayIsOverride
-        {
-            set { picInterframedelayIsOverride.Visible = value; }
-        }
-
-        public bool SamplerateIsOverride
-        {
-            set { picSamplerateIsOverride.Visible = value; }
-        }
-
         public Global.eWriteHoldingregFunctionCode ConnectionWriteHoldingregFunctionCode
         {
             get
@@ -299,6 +234,77 @@ namespace ModbusControlSpace
                 numericSamplerate.Value = value;
             }
         }
+
+        public bool ConnectionTypeIsOverride
+        {
+            set { picConnectionTypeIsOverride.Visible = value; }
+        }
+
+        public bool PortIsOverride
+        {
+            set { picPortIsOverride.Visible = value; }
+        }
+
+        public bool BaudrateIsOverride
+        {
+            set { picBaudrateIsOverride.Visible = value; }
+        }
+
+        public bool ParityIsOverride
+        {
+            set { picParityIsOverride.Visible = value; }
+        }
+
+        public bool EndofmessagetimeoutIsOverride
+        {
+            set { picEndofmessagetimeoutIsOverride.Visible = value; }
+        }
+
+        public bool OnewireechosuppressionIsOverride
+        {
+            set { picOnewireechosuppressionIsOverride.Visible = value; }
+        }
+
+        public bool IPAddressIsOverride
+        {
+            set { picIPAddressIsOverride.Visible = value; }
+        }
+
+        public bool IPPortIsOverride
+        {
+            set { picIPPortIsOverride.Visible = value; }
+        }
+
+        public bool SlaveIDIsOverride
+        {
+            set { picSlaveIDIsOverride.Visible = value; }
+        }
+
+        public bool MaxFrameSizeIsOverride
+        {
+            set { picMaxFrameSizeIsOverride.Visible = value; }
+        }
+
+        public bool ResponsetimeoutIsOverride
+        {
+            set { picResponsetimeoutIsOverride.Visible = value; }
+        }
+
+        public bool InterframedelayIsOverride
+        {
+            set { picInterframedelayIsOverride.Visible = value; }
+        }
+
+        public bool SamplerateIsOverride
+        {
+            set { picSamplerateIsOverride.Visible = value; }
+        }
+
+        public bool WriteregFCIsOverride
+        {
+            set { picwriteregFCIsOverride.Visible = value; }
+        }
+
 
         public bool ModbusTcpBridgeEnable
         {

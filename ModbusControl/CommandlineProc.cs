@@ -8,8 +8,8 @@ using System.Net;
 
 // Handle command line arguments.
 // may have filenames
-// options start with - or /
-// switch options have no value
+// options start with - or / and have a value
+// switches have no value
 // Example:
 // Modbuscontrl.exe -connection serialrtu -port COM1 -baudrate 19200 -parity even -EndofmessageTimeout  10 -onewireechosuppression -ipaddress 192.168.1.154 -ipport 503 -responsetimeout 3000 -Interframedelay 25 -samplerate 110 "C:\ED&A\Modbuscontrol - recompile\modbuscontrol\bin\Debug\Demo.mbc"
 
@@ -24,7 +24,7 @@ namespace ModbusControlSpace
         public List<string> FileList = new List<string>();
 
         // processed options
-        // switches (bool values) are false or true
+        // switches (bool values) are false if absent, true if present
         // other parameters are null if not specified 
         public eConnectionType? ArgConnectionType;
         public string ArgPort;                  // string is already nullable
@@ -38,6 +38,7 @@ namespace ModbusControlSpace
         public int? ArgMaxFrameSize;
         public int? ArgResponsetimeout;
         public int? ArgInterframedelay;
+        public int? ArgWriteholdingregFC;     // 6, 16, 0=auto
         public int? ArgSamplerate;
         public bool ArgHelp;
 
@@ -58,6 +59,7 @@ namespace ModbusControlSpace
             ArgMaxFrameSize = null;
             ArgResponsetimeout = null;
             ArgInterframedelay = null;
+            ArgWriteholdingregFC = null;
             ArgSamplerate = null;
             ArgHelp = false;
         }
@@ -83,23 +85,23 @@ namespace ModbusControlSpace
                     if (optlower == "connection")
                     {
                         string val = GetOptString(arg, ref i);
-                        string val2 = val.ToLower();
+                        string vallow = val.ToLower();
                         // use these string to avoid problems with / in command line
-                        if (val2 == "serialrtu")
+                        if (vallow == "serialrtu")
                         {
                             ArgConnectionType = eConnectionType.SerialRTU;
                         }
-                        else if (val2 == "modbustcp")
+                        else if (vallow == "modbustcp")
                         {
                             ArgConnectionType = eConnectionType.ModbusTcp;
                         }
-                        else if (val2 == "rtutcp")
+                        else if (vallow == "rtutcp")
                         {
                             ArgConnectionType = eConnectionType.RtuOverTcp;
                         }
                         else
                         {
-                            throw new ArgumentException("Invalid switch value: " + arg + " " + val);
+                            throw new ArgumentException("Invalid option value: " + arg + " " + val);
                         }
                     }
                     else if (optlower == "port")
@@ -121,7 +123,7 @@ namespace ModbusControlSpace
                         }
                         else
                         {
-                            throw new ArgumentException("Invalid switch value: " + arg + " " + val);
+                            throw new ArgumentException("Invalid option value: " + arg + " " + val);
                         }
                     }
                     else if (optlower == "endofmessagetimeout")
@@ -143,7 +145,7 @@ namespace ModbusControlSpace
                         }
                         else
                         {
-                            throw new ArgumentException("Invalid switch value: " + arg + " " + val);
+                            throw new ArgumentException("Invalid option value: " + arg + " " + val);
                         }
                     }
                     else if (optlower == "ipport")
@@ -166,6 +168,29 @@ namespace ModbusControlSpace
                     {
                         ArgInterframedelay = GetOptInt(arg, ref i, 1, Int32.MaxValue);
                     }
+                    else if (optlower == "writeregfc")
+                    {
+                        string val = GetOptString(arg, ref i);
+                        string vallow = val.ToLower();
+                        if ((vallow == "6") || (vallow == "06"))
+                        {
+                            ArgWriteholdingregFC = 6;
+                        }
+                        else
+                        if (vallow == "16")
+                        {
+                            ArgWriteholdingregFC = 16;
+                        }
+                        else
+                        if (vallow == "auto")
+                        {
+                            ArgWriteholdingregFC = 0;
+                        }
+                        else
+                        {
+                            throw new ArgumentException("Invalid option value: " + arg + " " + val);
+                        }
+                    }
                     else if (optlower == "samplerate")
                     {
                         ArgSamplerate = GetOptInt(arg, ref i, 0, Int32.MaxValue);
@@ -176,7 +201,7 @@ namespace ModbusControlSpace
                     }
                     else
                     {
-                        throw new ArgumentException("Invalid switch '" + arg + "'");
+                        throw new ArgumentException("Invalid option '" + arg + "'");
                     }
                 }
                 else
@@ -197,7 +222,7 @@ namespace ModbusControlSpace
             string val = ArgValue(ref i);
             if (val == null)
             {
-                throw new ArgumentException("Switch '" + optName + "' missing value!");
+                throw new ArgumentException("Option '" + optName + "' has no value!");
             }
 
             return val;
@@ -213,13 +238,13 @@ namespace ModbusControlSpace
             string val = ArgValue(ref i);
             if (val == null)
             {
-                throw new ArgumentException("Switch '" + optName + "' missing value!");
+                throw new ArgumentException("Option '" + optName + "' has no value!");
             }
 
             Int32 tmpValue;
             if (Int32.TryParse(val, out tmpValue) == false)
             {
-                throw new ArgumentException("Switch '" + optName + " " + val + "' invalid value!");
+                throw new ArgumentException("Option '" + optName + " " + val + "' invalid value!");
             }
 
             if ((tmpValue >= min) && (tmpValue <= max))
@@ -228,7 +253,7 @@ namespace ModbusControlSpace
             }
             else
             {
-                throw new ArgumentException("Switch '" + optName + " " + val + "' value out of range!");
+                throw new ArgumentException("Option '" + optName + " " + val + "' value out of range!");
             }
 
             return tmpValue;
