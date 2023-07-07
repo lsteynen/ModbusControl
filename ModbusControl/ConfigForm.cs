@@ -221,15 +221,13 @@ namespace ModbusControlSpace
             {
                 if (radiobuttonWriteFC6.Checked) return Global.eWriteHoldingregFunctionCode.FC6;
                 if (radiobuttonWriteFC16.Checked) return Global.eWriteHoldingregFunctionCode.FC16;
-                if (radiobuttonWriteFCAuto.Checked) return Global.eWriteHoldingregFunctionCode.Auto;
-                return Global.eWriteHoldingregFunctionCode.Alternate;
+                return Global.eWriteHoldingregFunctionCode.Auto;
             }
             set
             {
                 radiobuttonWriteFC6.Checked = (value == Global.eWriteHoldingregFunctionCode.FC6);
                 radiobuttonWriteFC16.Checked = (value == Global.eWriteHoldingregFunctionCode.FC16);
                 radiobuttonWriteFCAuto.Checked = (value == Global.eWriteHoldingregFunctionCode.Auto);
-                radiobuttonWriteFCAlternate.Checked = (value == Global.eWriteHoldingregFunctionCode.Alternate);
             }
         }
 

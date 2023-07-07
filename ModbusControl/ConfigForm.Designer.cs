@@ -40,7 +40,6 @@
             this.checkboxTcpServerEnable = new System.Windows.Forms.CheckBox();
             this.radiobuttonInt32LittleEndian = new System.Windows.Forms.RadioButton();
             this.radiobuttonInt32BigEndian = new System.Windows.Forms.RadioButton();
-            this.radiobuttonWriteFCAlternate = new System.Windows.Forms.RadioButton();
             this.radiobuttonWriteFC6 = new System.Windows.Forms.RadioButton();
             this.radiobuttonWriteFC16 = new System.Windows.Forms.RadioButton();
             this.radiobuttonWriteFCAuto = new System.Windows.Forms.RadioButton();
@@ -68,8 +67,6 @@
             this.picResponsetimeoutIsOverride = new System.Windows.Forms.PictureBox();
             this.picInterframedelayIsOverride = new System.Windows.Forms.PictureBox();
             this.picSamplerateIsOverride = new System.Windows.Forms.PictureBox();
-            this.numericInterFrameDelay = new LST.Controls.NumericUpDown2();
-            this.comboSerialPort = new ModbusControlSpace.SerialPortCombobox();
             this.label5 = new System.Windows.Forms.Label();
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
             this.panel2 = new System.Windows.Forms.Panel();
@@ -104,6 +101,8 @@
             this.label16 = new System.Windows.Forms.Label();
             this.panelWarning = new System.Windows.Forms.Panel();
             this.picMaxFrameSizeIsOverride = new System.Windows.Forms.PictureBox();
+            this.numericInterFrameDelay = new LST.Controls.NumericUpDown2();
+            this.comboSerialPort = new ModbusControlSpace.SerialPortCombobox();
             ((System.ComponentModel.ISupportInitialize)(this.numericSamplerate)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericTcpServerPort)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericMaximumFrameSize)).BeginInit();
@@ -123,7 +122,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.picResponsetimeoutIsOverride)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.picInterframedelayIsOverride)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.picSamplerateIsOverride)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericInterFrameDelay)).BeginInit();
             this.panel2.SuspendLayout();
             this.groupBox3.SuspendLayout();
             this.groupBox4.SuspendLayout();
@@ -136,6 +134,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.panelWarning.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picMaxFrameSizeIsOverride)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericInterFrameDelay)).BeginInit();
             this.SuspendLayout();
             // 
             // numericSamplerate
@@ -266,19 +265,6 @@
             this.radiobuttonInt32BigEndian.Text = "High-Low";
             this.toolTip1.SetToolTip(this.radiobuttonInt32BigEndian, "First register is higher 16 bits of 32-bit value");
             this.radiobuttonInt32BigEndian.UseVisualStyleBackColor = true;
-            // 
-            // radiobuttonWriteFCAlternate
-            // 
-            this.radiobuttonWriteFCAlternate.AutoSize = true;
-            this.radiobuttonWriteFCAlternate.Location = new System.Drawing.Point(6, 65);
-            this.radiobuttonWriteFCAlternate.Name = "radiobuttonWriteFCAlternate";
-            this.radiobuttonWriteFCAlternate.Size = new System.Drawing.Size(165, 17);
-            this.radiobuttonWriteFCAlternate.TabIndex = 3;
-            this.radiobuttonWriteFCAlternate.TabStop = true;
-            this.radiobuttonWriteFCAlternate.Tag = "";
-            this.radiobuttonWriteFCAlternate.Text = "Alternately use FC6 and FC16";
-            this.toolTip1.SetToolTip(this.radiobuttonWriteFCAlternate, "Use FC6 and FC16 in turn to test both");
-            this.radiobuttonWriteFCAlternate.UseVisualStyleBackColor = true;
             // 
             // radiobuttonWriteFC6
             // 
@@ -677,30 +663,6 @@
             this.toolTip1.SetToolTip(this.picSamplerateIsOverride, "This parameter is overridden by the command line! It shows the value as set by th" +
         "e command line, not the value configured in the mbc project file!");
             // 
-            // numericInterFrameDelay
-            // 
-            this.numericInterFrameDelay.Location = new System.Drawing.Point(126, 344);
-            this.numericInterFrameDelay.Maximum = new decimal(new int[] {
-            2147483647,
-            0,
-            0,
-            0});
-            this.numericInterFrameDelay.Name = "numericInterFrameDelay";
-            this.numericInterFrameDelay.Size = new System.Drawing.Size(61, 20);
-            this.numericInterFrameDelay.TabIndex = 11;
-            this.toolTip1.SetToolTip(this.numericInterFrameDelay, "Delay between response and next query, in milliseconds, 0 is auto, auto is 4Tchar" +
-        " for serial channels and 0ms for TCP channels");
-            // 
-            // comboSerialPort
-            // 
-            this.comboSerialPort.FormattingEnabled = true;
-            this.comboSerialPort.Location = new System.Drawing.Point(95, 13);
-            this.comboSerialPort.MaxLength = 30;
-            this.comboSerialPort.Name = "comboSerialPort";
-            this.comboSerialPort.Size = new System.Drawing.Size(91, 21);
-            this.comboSerialPort.TabIndex = 9;
-            this.toolTip1.SetToolTip(this.comboSerialPort, "Serial port name. Dropdown shows existing ports");
-            // 
             // label5
             // 
             this.label5.AutoSize = true;
@@ -786,7 +748,7 @@
             // 
             this.groupBox3.Controls.Add(this.radiobuttonFloat32LittleEndian);
             this.groupBox3.Controls.Add(this.radiobuttonFloat32BigEndian);
-            this.groupBox3.Location = new System.Drawing.Point(227, 147);
+            this.groupBox3.Location = new System.Drawing.Point(227, 133);
             this.groupBox3.Name = "groupBox3";
             this.groupBox3.Size = new System.Drawing.Size(210, 39);
             this.groupBox3.TabIndex = 21;
@@ -798,7 +760,7 @@
             this.groupBox4.Controls.Add(this.radiobuttonAsciiLittleEndian);
             this.groupBox4.Controls.Add(this.radiobuttonAsciiBigEndian);
             this.groupBox4.Controls.Add(this.label14);
-            this.groupBox4.Location = new System.Drawing.Point(227, 192);
+            this.groupBox4.Location = new System.Drawing.Point(227, 180);
             this.groupBox4.Name = "groupBox4";
             this.groupBox4.Size = new System.Drawing.Size(210, 63);
             this.groupBox4.TabIndex = 22;
@@ -839,7 +801,7 @@
             // 
             this.groupBox2.Controls.Add(this.radiobuttonInt32LittleEndian);
             this.groupBox2.Controls.Add(this.radiobuttonInt32BigEndian);
-            this.groupBox2.Location = new System.Drawing.Point(227, 105);
+            this.groupBox2.Location = new System.Drawing.Point(227, 89);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(210, 36);
             this.groupBox2.TabIndex = 20;
@@ -848,13 +810,12 @@
             // 
             // groupBox1
             // 
-            this.groupBox1.Controls.Add(this.radiobuttonWriteFCAlternate);
             this.groupBox1.Controls.Add(this.radiobuttonWriteFC6);
             this.groupBox1.Controls.Add(this.radiobuttonWriteFC16);
             this.groupBox1.Controls.Add(this.radiobuttonWriteFCAuto);
             this.groupBox1.Location = new System.Drawing.Point(227, 10);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(210, 89);
+            this.groupBox1.Size = new System.Drawing.Size(210, 71);
             this.groupBox1.TabIndex = 19;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Functioncode to write holding registers";
@@ -1078,6 +1039,30 @@
             this.toolTip1.SetToolTip(this.picMaxFrameSizeIsOverride, "This parameter is overridden by the command line! It shows the value as set by th" +
         "e command line, not the value configured in the mbc project file!");
             // 
+            // numericInterFrameDelay
+            // 
+            this.numericInterFrameDelay.Location = new System.Drawing.Point(126, 344);
+            this.numericInterFrameDelay.Maximum = new decimal(new int[] {
+            2147483647,
+            0,
+            0,
+            0});
+            this.numericInterFrameDelay.Name = "numericInterFrameDelay";
+            this.numericInterFrameDelay.Size = new System.Drawing.Size(61, 20);
+            this.numericInterFrameDelay.TabIndex = 11;
+            this.toolTip1.SetToolTip(this.numericInterFrameDelay, "Delay between response and next query, in milliseconds, 0 is auto, auto is 4Tchar" +
+        " for serial channels and 0ms for TCP channels");
+            // 
+            // comboSerialPort
+            // 
+            this.comboSerialPort.FormattingEnabled = true;
+            this.comboSerialPort.Location = new System.Drawing.Point(95, 13);
+            this.comboSerialPort.MaxLength = 30;
+            this.comboSerialPort.Name = "comboSerialPort";
+            this.comboSerialPort.Size = new System.Drawing.Size(91, 21);
+            this.comboSerialPort.TabIndex = 9;
+            this.toolTip1.SetToolTip(this.comboSerialPort, "Serial port name. Dropdown shows existing ports");
+            // 
             // ConfigForm
             // 
             this.AcceptButton = this.buttonOK;
@@ -1118,7 +1103,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.picResponsetimeoutIsOverride)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.picInterframedelayIsOverride)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.picSamplerateIsOverride)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericInterFrameDelay)).EndInit();
             this.panel2.ResumeLayout(false);
             this.panel2.PerformLayout();
             this.groupBox3.ResumeLayout(false);
@@ -1141,6 +1125,7 @@
             this.panelWarning.ResumeLayout(false);
             this.panelWarning.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picMaxFrameSizeIsOverride)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericInterFrameDelay)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1173,7 +1158,6 @@
         private System.Windows.Forms.RadioButton radiobuttonInt32LittleEndian;
         private System.Windows.Forms.RadioButton radiobuttonInt32BigEndian;
         private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.RadioButton radiobuttonWriteFCAlternate;
         private System.Windows.Forms.RadioButton radiobuttonWriteFC6;
         private System.Windows.Forms.RadioButton radiobuttonWriteFC16;
         private System.Windows.Forms.RadioButton radiobuttonWriteFCAuto;

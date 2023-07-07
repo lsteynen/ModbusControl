@@ -25,7 +25,7 @@ namespace ModbusControlSpace
 
         private enum eReq { Optional, Required }
         private string[] ConnectionTypes = new string[] { "serial/rtu", "modbus/tcp", "rtu/tcp" }; // Must be order of Global.eConnectionType.SerialRTU
-        private string[] WriteHoldingregisterFCs = new string[] { "6", "16", "auto", "alternate" };
+        private string[] WriteHoldingregisterFCs = new string[] { "6", "16", "auto" };
 
         public struct TSize
         {
@@ -625,7 +625,7 @@ namespace ModbusControlSpace
                     Seen = true;
                     string TmpString = xe.Value.Trim();
                     byte TmpValue;
-                    // get value, must be 6, 16, 'auto' or 'alternate'
+                    // get value, must be 6, 16 or 'auto'
                     if (byte.TryParse(TmpString, out TmpValue) && ((TmpValue == 6) || (TmpValue == 16)))
                     {
                         if (TmpValue == 16)
@@ -637,13 +637,11 @@ namespace ModbusControlSpace
                             Connection.WriteHoldingregFunctioncode = Global.eWriteHoldingregFunctionCode.FC6;
                         }
                     }
-                    else if (string.Compare(TmpString, "auto", StringComparison.OrdinalIgnoreCase) == 0)
+                    // accept obsolete 'alternate" as 'auto'
+                    else if ((string.Compare(TmpString, "auto", StringComparison.OrdinalIgnoreCase) == 0)
+                          || (string.Compare(TmpString, "alternate", StringComparison.OrdinalIgnoreCase) == 0))
                     {
                         Connection.WriteHoldingregFunctioncode = Global.eWriteHoldingregFunctionCode.Auto;
-                    }
-                    else if (string.Compare(TmpString, "alternate", StringComparison.OrdinalIgnoreCase) == 0)
-                    {
-                        Connection.WriteHoldingregFunctioncode = Global.eWriteHoldingregFunctionCode.Alternate;
                     }
                     else
                     {
@@ -1885,7 +1883,7 @@ namespace ModbusControlSpace
             // 40001/400001: 40001-49999 + 400001-465536
 
             bool ret = false;
-  
+
             if ((Options.HoldingregistersStart == 40000) || (Options.HoldingregistersStart == 400000))
             {
                 if ((Regnr >= 40000) && (Regnr <= 49999))
