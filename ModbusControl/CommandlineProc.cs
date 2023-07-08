@@ -24,14 +24,14 @@ namespace ModbusControlSpace
         public List<string> FileList = new List<string>();
 
         // processed options
-        // switches (bool values) are false if absent, true if present
+        // switches (bool values) are null if not specified, true if present
         // other parameters are null if not specified 
         public eConnectionType? ArgConnectionType;
         public string ArgPort;                  // string is already nullable
         public int? ArgBaudrate;
         public Parity? ArgParity;
         public int? ArgEndofmessagetimeout;
-        public bool ArgOnewireechosuppression;
+        public bool? ArgOnewireechosuppression;
         public string ArgIPAddress;             // string is already nullable
         public int? ArgIPPort;
         public int? ArgSlaveID;
@@ -40,7 +40,7 @@ namespace ModbusControlSpace
         public int? ArgInterframedelay;
         public int? ArgWriteholdingregFC;     // 6, 16, 0=auto
         public int? ArgSamplerate;
-        public bool ArgHelp;
+        public bool? ArgHelp;
 
         public enum eConnectionType { SerialRTU = 0, ModbusTcp = 1, RtuOverTcp = 2 }
 
@@ -52,7 +52,7 @@ namespace ModbusControlSpace
             ArgBaudrate = null;
             ArgParity = null;
             ArgEndofmessagetimeout = null;
-            ArgOnewireechosuppression = false;
+            ArgOnewireechosuppression = null;
             ArgIPAddress = null;
             ArgIPPort = null;
             ArgSlaveID = null;
@@ -61,7 +61,7 @@ namespace ModbusControlSpace
             ArgInterframedelay = null;
             ArgWriteholdingregFC = null;
             ArgSamplerate = null;
-            ArgHelp = false;
+            ArgHelp = null;
         }
 
         /// <summary>

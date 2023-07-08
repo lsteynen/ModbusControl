@@ -284,7 +284,7 @@ namespace ModbusControlSpace
             {
                 CommandlineArgs.Load();
 
-                if (CommandlineArgs.ArgHelp)
+                if (CommandlineArgs.ArgHelp == true)    // allows null as false
                 {
                     // show command line usage
                     string s = "Command line help:" + Environment.NewLine + CommandlineArgs.GetOptionsUsageString();
@@ -582,7 +582,7 @@ namespace ModbusControlSpace
                                                     || (CommandlineArgs.ArgBaudrate != null)
                                                     || (CommandlineArgs.ArgParity != null)
                                                     || (CommandlineArgs.ArgEndofmessagetimeout != null)
-                                                    || (CommandlineArgs.ArgOnewireechosuppression == true)
+                                                    || (CommandlineArgs.ArgOnewireechosuppression != null)
                                                     || (CommandlineArgs.ArgIPAddress != null)
                                                     || (CommandlineArgs.ArgIPPort != null)
                                                     || (CommandlineArgs.ArgSlaveID != null)
@@ -787,7 +787,7 @@ namespace ModbusControlSpace
             configform.BaudrateIsOverride = (CommandlineArgs.ArgBaudrate != null);
             configform.ParityIsOverride = (CommandlineArgs.ArgParity != null);
             configform.EndofmessagetimeoutIsOverride = (CommandlineArgs.ArgEndofmessagetimeout != null);
-            configform.OnewireechosuppressionIsOverride = CommandlineArgs.ArgOnewireechosuppression;
+            configform.OnewireechosuppressionIsOverride = CommandlineArgs.ArgOnewireechosuppression != null;
             configform.IPAddressIsOverride = (CommandlineArgs.ArgIPAddress != null);
             configform.IPPortIsOverride = (CommandlineArgs.ArgIPPort != null);
             configform.SlaveIDIsOverride = (CommandlineArgs.ArgSlaveID != null);
@@ -979,8 +979,8 @@ namespace ModbusControlSpace
                 Project.Connection.SerialParity = (Parity)CommandlineArgs.ArgParity;
             if (CommandlineArgs.ArgEndofmessagetimeout != null)
                 Project.Connection.SerialEndOfMessageTimeout = (int)CommandlineArgs.ArgEndofmessagetimeout;
-            if (CommandlineArgs.ArgOnewireechosuppression == true)
-                Project.Connection.SerialOneWireEchoSuppression = CommandlineArgs.ArgOnewireechosuppression;
+            if (CommandlineArgs.ArgOnewireechosuppression != null)
+                Project.Connection.SerialOneWireEchoSuppression = CommandlineArgs.ArgOnewireechosuppression == true;
             if (CommandlineArgs.ArgIPAddress != null)
                 Project.Connection.IPAddress = CommandlineArgs.ArgIPAddress;
             if (CommandlineArgs.ArgIPPort != null)
