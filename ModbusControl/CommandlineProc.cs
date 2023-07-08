@@ -325,8 +325,10 @@ namespace ModbusControlSpace
                  + "-ipaddress ##.##.##.## ➝ Slave/server IP address: 192.168.1.100" + Environment.NewLine
                  + "-ipport ### ➝ Slave/server IP port: 502" + Environment.NewLine
                  + "-slaveid ### ➝ Slave ID number: 1..255" + Environment.NewLine
+                 + "-maxframesize ### ➝ Maximum frame size: 13..256" + Environment.NewLine
                  + "-responsetimeout ### ➝ Max wait time for first byte of response (ms)" + Environment.NewLine
                  + "-interframedelay ### ➝ Delay before sending next query (ms)" + Environment.NewLine
+                 + "-writeregfc <fc> ➝ Write holding registers function code: 6, 16 or auto" + Environment.NewLine
                  + "-samplerate ### ➝ Registers polling speed (ms)" + Environment.NewLine
                  + "-? or -help ➝ Shows this help screen";
         }

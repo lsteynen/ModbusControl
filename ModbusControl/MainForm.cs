@@ -288,7 +288,7 @@ namespace ModbusControlSpace
                 {
                     // show command line usage
                     string s = "Command line help:" + Environment.NewLine + CommandlineArgs.GetOptionsUsageString();
-                    MessageBox.Show(s, "ModbusControl", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show(s, "ModbusControl", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }    
 
                 if (CommandlineArgs.FileList.Count > 1)
