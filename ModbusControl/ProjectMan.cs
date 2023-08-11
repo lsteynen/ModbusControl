@@ -131,6 +131,7 @@ namespace ModbusControlSpace
         public TModbusTcpBridge ModbusTcpBridge; // Modbus/TCP bridge settings
         public List<TTab> TabsList; // List with all tab pages
         public bool HasLongdescrs; // true if project has variables with longdescr defined
+        public bool LoadModbusOnly; //true to only load the <modbus> connection settings
 
         // private data
 
@@ -225,10 +226,14 @@ namespace ModbusControlSpace
             {
                 string elemName = xe.Name.LocalName;
                 Debug.Print("ROOT: " + elemName);
+
                 // <size> element, optional
                 if (CheckElementNameMatch(elemName, "Size"))
                 {
-                    ProcessSizeElement(xe);
+                    if (LoadModbusOnly == false)
+                    {
+                        ProcessSizeElement(xe);
+                    }
                 }
                 else
                 // <modbus> element, required
@@ -241,26 +246,38 @@ namespace ModbusControlSpace
                 // <modbustcpserver> element, optional
                 if (CheckElementNameMatch(elemName, "modbustcpserver"))
                 {
-                    ProcessModbustcpserverElement(xe);
+                    if (LoadModbusOnly == false)
+                    {
+                        ProcessModbustcpserverElement(xe);
+                    }
                 }
                 else
                 // <autostart> element, optional
                 if (CheckElementNameMatch(elemName, "autostart"))
                 {
-                    // actual processing is with Options.AutostartEnable furtheron
-                    ProcessAutostartElement(xe);
+                    if (LoadModbusOnly == false)
+                    {
+                        // actual processing is with Options.AutostartEnable furtheron
+                        ProcessAutostartElement(xe);
+                    }
                 }
                 else
                 // <tab> elements, optional, multiple
                 if (CheckElementNameMatch(elemName, "tab"))
                 {
-                    ProcessTabElement(xe);
+                    if (LoadModbusOnly == false)
+                    {
+                        ProcessTabElement(xe);
+                    }
                 }
                 else
                 // <include> elements, optional, multiple
                 if (CheckElementNameMatch(elemName, "include"))
                 {
-                    ProcessIncludeElement(xe);
+                    if (LoadModbusOnly == false)
+                    {
+                        ProcessIncludeElement(xe);
+                    }
                 }
                 else
                 {
@@ -276,7 +293,7 @@ namespace ModbusControlSpace
             }
 
             // Got the enable and the page, now validate the page name/number
-            if (Options.AutostartEnable && (string.IsNullOrEmpty(Options.AutostartTabpage) == false))
+            if ((LoadModbusOnly == false) && Options.AutostartEnable && (string.IsNullOrEmpty(Options.AutostartTabpage) == false))
             {
                 if (TabPageIsValid(Options.AutostartTabpage) == false)
                 {

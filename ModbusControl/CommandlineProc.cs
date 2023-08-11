@@ -80,9 +80,9 @@ namespace ModbusControlSpace
                 if (IsOption(arg))
                 {
                     string opt = arg.Substring(1);
-                    string optlower = opt.ToLower();
+                    string optlow = opt.ToLower();
 
-                    if (optlower == "connection")
+                    if (optlow == "connection")
                     {
                         string val = GetOptString(arg, ref i);
                         string vallow = val.ToLower();
@@ -104,15 +104,15 @@ namespace ModbusControlSpace
                             throw new ArgumentException("Invalid option value: " + arg + " " + val);
                         }
                     }
-                    else if (optlower == "port")
+                    else if (optlow == "port")
                     {
                         ArgPort = GetOptString(arg, ref i);
                     }
-                    else if (optlower == "baudrate")
+                    else if (optlow == "baudrate")
                     {
                         ArgBaudrate = GetOptInt(arg, ref i, 50, Int32.MaxValue);
                     }
-                    else if (optlower == "parity")
+                    else if (optlow == "parity")
                     {
                         string val = GetOptString(arg, ref i);
 
@@ -126,15 +126,15 @@ namespace ModbusControlSpace
                             throw new ArgumentException("Invalid option value: " + arg + " " + val);
                         }
                     }
-                    else if (optlower == "endofmessagetimeout")
+                    else if (optlow == "endofmessagetimeout")
                     {
                         ArgEndofmessagetimeout = GetOptInt(arg, ref i, 1, Int32.MaxValue);
                     }
-                    else if (optlower == "onewireechosuppression")
+                    else if (optlow == "onewireechosuppression")
                     {
                         ArgOnewireechosuppression = GetOptBool(arg, ref i);
                     }
-                    else if (optlower == "ipaddress")
+                    else if (optlow == "ipaddress")
                     {
                         System.Net.IPAddress TmpIPaddress;
                         string val = GetOptString(arg, ref i);
@@ -148,27 +148,27 @@ namespace ModbusControlSpace
                             throw new ArgumentException("Invalid option value: " + arg + " " + val);
                         }
                     }
-                    else if (optlower == "ipport")
+                    else if (optlow == "ipport")
                     {
                         ArgIPPort = GetOptInt(arg, ref i, 1, 65535);
                     }
-                    else if (optlower == "slaveid")
+                    else if (optlow == "slaveid")
                     {
                         ArgSlaveID = GetOptInt(arg, ref i, 1, 255);
                     }
-                    else if (optlower == "maxframesize")
+                    else if (optlow == "maxframesize")
                     {
                         ArgMaxFrameSize = GetOptInt(arg, ref i, 13, 256);
                     }                    
-                    else if (optlower == "responsetimeout")
+                    else if (optlow == "responsetimeout")
                     {
                         ArgResponsetimeout = GetOptInt(arg, ref i, 1, Int32.MaxValue);
                     }
-                    else if (optlower == "interframedelay")
+                    else if (optlow == "interframedelay")
                     {
                         ArgInterframedelay = GetOptInt(arg, ref i, 1, Int32.MaxValue);
                     }
-                    else if (optlower == "writeregfc")
+                    else if (optlow == "writeregfc")
                     {
                         string val = GetOptString(arg, ref i);
                         string vallow = val.ToLower();
@@ -191,11 +191,11 @@ namespace ModbusControlSpace
                             throw new ArgumentException("Invalid option value: " + arg + " " + val);
                         }
                     }
-                    else if (optlower == "samplerate")
+                    else if (optlow == "samplerate")
                     {
                         ArgSamplerate = GetOptInt(arg, ref i, 0, Int32.MaxValue);
                     }
-                    else if ((optlower == "?") || (optlower == "help"))
+                    else if ((optlow == "?") || (optlow == "h") || (optlow == "help"))
                     {
                         ArgHelp = GetOptBool(arg, ref i);
                     }
@@ -330,7 +330,7 @@ namespace ModbusControlSpace
                  + "-interframedelay ### ➝ Delay before sending next query (ms)" + Environment.NewLine
                  + "-writeregfc <fc> ➝ Write holding registers function code: 6, 16 or auto" + Environment.NewLine
                  + "-samplerate ### ➝ Registers polling speed (ms)" + Environment.NewLine
-                 + "-? or -help ➝ Shows this help screen";
+                 + "-? or -h or -help ➝ Shows this help screen";
         }
     }
 }

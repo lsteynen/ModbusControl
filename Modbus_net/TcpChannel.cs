@@ -314,6 +314,8 @@ namespace Modbus_net
         {
             Debug.Print(DateTime.Now.TimeOfDay + ": TcpChannel.ReadWait() enter");
 
+            string info = "TcpChannel.ReadWait(buffer.Lenght=" + buffer.Length.ToString() + ",count=" + count.ToString();
+
             long startTime = DateTime.UtcNow.Ticks;
 
             // wait till we received all bytes, or timeout
@@ -323,7 +325,8 @@ namespace Modbus_net
                 if (((DateTime.UtcNow.Ticks - startTime) / TimeSpan.TicksPerMillisecond) >= ResponseTimeout)
                 {
                     // timeout, return the bytes we received till now
-                    count = RxQueue.Count;
+                    // use Min, more bytes may have arrived
+                    count = Math.Min(count, RxQueue.Count);
 
                     Debug.Print(DateTime.Now.TimeOfDay + ": TcpChannel.ReadWait(): loop timeout, got " + count + " bytes");
                 }
@@ -336,12 +339,19 @@ namespace Modbus_net
 
             Debug.Print(DateTime.Now.TimeOfDay + ": TcpChannel.ReadWait(): exit, got " + count + " bytes");
 
-            // copy the bytes we received
-            RxQueue.Get(ref buffer, 0, count);
+            try
+            {
+                // copy the bytes we received
+                RxQueue.Get(ref buffer, 0, count);
+            }
+            catch (Exception e)
+            {
+                throw new Exception(info + "/" + e.Message);
+            }
 
             return count;
         }
-
+        
         private void TcpConnectWithTimeout(TcpClient tcp, IPEndPoint endpoint, uint timeout)
         {
             // do a connect with a custom timeout (not supported in .net < 4.5)

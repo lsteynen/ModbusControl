@@ -52,7 +52,7 @@ namespace LST.Helpers
         /* Add a single byte to the queue
          * Throws exception if queue is full
          */
-        public void Add( byte b)
+        public void Add(byte b)
         {
             lock (mLock)
             {
@@ -121,26 +121,37 @@ namespace LST.Helpers
         {
             int count;
 
-            lock (mLock)
-            {
-                // # bytes to return
-                count = Math.Min( mCount, maxcount);
+            //string info = "ByteQueue.Get(buffer.Length=" + buffer.Length.ToString() + ",start=" + start.ToString() + ",maxcount=" + maxcount.ToString();
 
-                if (count > 0)
+            //try
+            //{
+                lock (mLock)
                 {
-                    // copy part1 till end of circular buffer
-                    int count1 = Math.Min(count, mSize - mTail);
-                    Array.Copy(mBuffer, mTail, buffer, start, count1);
-                    // copy part2 from begin of circular buffer?
-                    if (count > count1)
+                    // # bytes to return
+                    count = Math.Min(mCount, maxcount);
+
+                    if (count > 0)
                     {
-                        int count2 = count - count1;
-                        Array.Copy(mBuffer, 0, buffer, start + count1, count2);
+                        // copy part1 till end of circular buffer
+                        int count1 = Math.Min(count, mSize - mTail);
+                        //info += "/Array.Copy1(mBuffer.Length=" + mBuffer.Length.ToString() + ",mTail=" + mTail.ToString() + ",buffer.Length=" + buffer.Length.ToString() + ",start=" + start.ToString() + ",count1=" + count1.ToString();
+                        Array.Copy(mBuffer, mTail, buffer, start, count1);
+                        // copy part2 from begin of circular buffer?
+                        if (count > count1)
+                        {
+                            int count2 = count - count1;
+                            //info += "/Array.Copy2(mBuffer.Length=" + mBuffer.Length.ToString() + ",0,buffer.Length=" + buffer.Length.ToString() + ",start=" + start.ToString() + ",count1=" + count1.ToString() + ",count2=" + count2.ToString();
+                            Array.Copy(mBuffer, 0, buffer, start + count1, count2);
+                        }
+                        mTail = (mTail + count) % mSize;
+                        mCount -= count;
                     }
-                    mTail = (mTail + count) % mSize;
-                    mCount -= count;
                 }
-            }
+            //}
+            //catch(Exception e)
+            //{
+            //    throw new Exception(info + "/" + e.Message);
+            //}
 
             return count;
         }
@@ -193,7 +204,7 @@ namespace LST.Helpers
                 Thread.Sleep(10);
             }
 
-            Debug.Print(DateTime.Now.TimeOfDay + ": ByteQueue: after while: mCount="+mCount+", count="+count+", time="+((DateTime.UtcNow.Ticks - starttime) / TimeSpan.TicksPerMillisecond));
+            Debug.Print(DateTime.Now.TimeOfDay + ": ByteQueue: after while: mCount=" + mCount + ", count=" + count + ", time=" + ((DateTime.UtcNow.Ticks - starttime) / TimeSpan.TicksPerMillisecond));
 
             // how many bytes to return?
             count = Math.Min(count, mCount);
@@ -220,6 +231,15 @@ namespace LST.Helpers
             Debug.Print(DateTime.Now.TimeOfDay + ": ByteQueue: return " + count);
 
             return count;
+        }
+
+        public string GetInfoStr()
+        {
+            string s = "mSize=" + mSize.ToString()
+                    + ",mHead=" + mHead.ToString()
+                    + ",mTail=" + mTail.ToString()
+                    + ",mCount=" + mCount.ToString();
+            return s;
         }
     }
 }

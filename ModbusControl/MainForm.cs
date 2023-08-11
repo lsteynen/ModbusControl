@@ -91,7 +91,7 @@ namespace ModbusControlSpace
             InitializeComponent();
 
             // This app is DPI-aware, get system DPI
-            // We support system DPI. We do not support per-monitor-DPI yet.    //TODO???
+            // We support system DPI. Or do we support per-monitor-DPI?   //TODO?
             AppDpiHelpers.GetCurrentSystemDpi(this);
 
             SaveStatusbarDefaultValues();
@@ -1683,7 +1683,6 @@ namespace ModbusControlSpace
             try
             {
                 Stopwatch Timer = new Stopwatch();
-
                 do
                 {
                     // make a threadsafe poll once flag, so it can't be set between reading and resetting
@@ -1691,7 +1690,7 @@ namespace ModbusControlSpace
 
                     // measure the time used by the reads
                     Timer.Restart();
-
+                    
                     // to abort polling the current tab if user changes tab
                     TabIsChanged = false;
 
@@ -1717,7 +1716,6 @@ namespace ModbusControlSpace
                         // update status bar counters
                         UpdateStatusBar();
                     }
-
                     // now wait for the sample time to pass
                     // abort quickly if cancel flag (CommsThread_StopFlag) is set
                     // abort quickly if user changed tab
@@ -1726,7 +1724,7 @@ namespace ModbusControlSpace
                     {
                         // do possible pending writes
                         DoPendingWrites();
-
+                    
                         int TimeToSleep = (int)Math.Min(Project.Options.Samplerate - TimePassed, 50);
                         Thread.Sleep(TimeToSleep);
                         TimePassed = (int)Timer.ElapsedMilliseconds;
@@ -1734,7 +1732,7 @@ namespace ModbusControlSpace
 
                     // do possible pending writes
                     DoPendingWrites();
-
+                    
                     // do a minimal sleep to avoid hogging the cpu
                     Thread.Sleep(10);
                 }
@@ -1743,10 +1741,13 @@ namespace ModbusControlSpace
             catch (Exception ex)
             {
                 // An unhandled exception was catched.
-                // The .NET framwork does not show it, so we catch it here to show some information.
+                // The .NET framwork does not show it because it is a non-GUI thread,
+                // so we catch it here to show some information.
                 // Can't rethrow because that still won't show.
                 // Trace.Fail() does show.
-                Trace.Fail("Unhandled exception has occurred in your application. If you click Continue, the application will ignore this error and attempt to continue. If you click Quit, the application will close immediately." + Environment.NewLine, ex.Message);
+                string s = "Unhandled exception has occurred in your application. If you click Continue, the application will ignore this error and attempt to continue. If you click Quit, the application will close immediately." + Environment.NewLine;
+                //Trace.Fail(s, ex.Message);
+                Trace.Fail(s, ex.ToString());   //shows much more info than ex.Message
             }
         }
 

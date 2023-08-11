@@ -4,7 +4,9 @@ VisualStudioVersion = 16.0.32929.386
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ModbusControl", "ModbusControl\ModbusControl.csproj", "{74E6ABE3-8798-4C63-9E5A-A7C0C2002E9B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ModbusImport", "ModbusImport\ModbusImport.csproj", "{99880BAE-CFEE-4181-922A-746E0F9C9CC5}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ModbusImport", "ModbusImport\ModbusImport.csproj", "{C8D9E9D7-E9ED-4A2D-B06C-237879BD6CA0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ModbusExport", "ModbusExport\ModbusExport.csproj", "{99880BAE-CFEE-4181-922A-746E0F9C9CC5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -26,6 +28,18 @@ Global
 		{74E6ABE3-8798-4C63-9E5A-A7C0C2002E9B}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{74E6ABE3-8798-4C63-9E5A-A7C0C2002E9B}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{74E6ABE3-8798-4C63-9E5A-A7C0C2002E9B}.Release|x86.ActiveCfg = Release|Any CPU
+		{C8D9E9D7-E9ED-4A2D-B06C-237879BD6CA0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C8D9E9D7-E9ED-4A2D-B06C-237879BD6CA0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C8D9E9D7-E9ED-4A2D-B06C-237879BD6CA0}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{C8D9E9D7-E9ED-4A2D-B06C-237879BD6CA0}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{C8D9E9D7-E9ED-4A2D-B06C-237879BD6CA0}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{C8D9E9D7-E9ED-4A2D-B06C-237879BD6CA0}.Debug|x86.Build.0 = Debug|Any CPU
+		{C8D9E9D7-E9ED-4A2D-B06C-237879BD6CA0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C8D9E9D7-E9ED-4A2D-B06C-237879BD6CA0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C8D9E9D7-E9ED-4A2D-B06C-237879BD6CA0}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{C8D9E9D7-E9ED-4A2D-B06C-237879BD6CA0}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{C8D9E9D7-E9ED-4A2D-B06C-237879BD6CA0}.Release|x86.ActiveCfg = Release|Any CPU
+		{C8D9E9D7-E9ED-4A2D-B06C-237879BD6CA0}.Release|x86.Build.0 = Release|Any CPU
 		{99880BAE-CFEE-4181-922A-746E0F9C9CC5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{99880BAE-CFEE-4181-922A-746E0F9C9CC5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{99880BAE-CFEE-4181-922A-746E0F9C9CC5}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
