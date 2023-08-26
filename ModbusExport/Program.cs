@@ -1,0 +1,547 @@
+﻿using System;
+using System.IO;
+using System.IO.Ports;
+
+using ModbusControlSpace;
+using LST.Helpers;
+
+namespace ModbusExport
+{
+    class Program
+    {
+        private static CommandlineProc CommandlineArgs;
+        private static string mbcFilename;
+        private static string csvFilename;
+        private static CProject Project;
+        public static ModbusInterface mb = new ModbusInterface();
+        private static Export export = new Export();
+        private static bool Verbose = false;
+        private static bool ContinueOnError = false;
+
+        private enum eExitcodes
+        {
+            NoError = 0,
+            CommandlineError = 1,
+            FileError = 2,
+            CommsError = 3
+        };
+
+        static int Main(string[] args)
+        {
+            // create project object, with defaults
+            // mainly for connection
+            Project = new CProject();
+
+            // parse commandline
+            CommandlineArgs = new CommandlineProc();
+            try
+            {
+                CommandlineArgs.Load();
+            }
+            catch (Exception e)
+            {
+                // Commandline error
+                string s = e.Message;
+                Write(s);
+
+                if (isnull(CommandlineArgs.ArgHelp, false) == true)
+                {
+                    s = "ModbusExport command line help:" + Environment.NewLine
+                        + CommandlineArgs.GetOptionsUsageString();
+                    Write(s);
+                }
+
+                // exit
+                return (int)eExitcodes.CommandlineError;
+            }
+
+            if (isnull(CommandlineArgs.ArgHelp, false) == true)
+            {
+                string s = "ModbusExport command line help:" + Environment.NewLine
+                    + CommandlineArgs.GetOptionsUsageString();
+                Write(s);
+
+                // exit
+                return (int)eExitcodes.NoError;
+            }
+
+            Verbose = isnull(CommandlineArgs.ArgVerbose, false);
+            ContinueOnError = isnull(CommandlineArgs.ArgContinueOnError, false);
+
+            // process files
+            // mbc file is required
+            // csv file is required
+            mbcFilename = "";
+            csvFilename = "";
+            foreach (string file in CommandlineArgs.FileList)
+            {
+                string ext = Path.GetExtension(file);
+                if (ext.StartsWith(".mbc", StringComparison.CurrentCultureIgnoreCase))
+                {
+                    // load mbc project file, only 1
+                    if (string.IsNullOrEmpty(mbcFilename))
+                    {
+                        mbcFilename = file.Trim();
+                    }
+                    else
+                    {
+                        string s = "Error: More than 1 mbc file specified!";
+                        Write(s);
+
+                        // exit
+                        return (int)eExitcodes.CommandlineError;
+                    }
+                }
+                else
+                {
+                    // not mbc, assume it is a csv
+                    if (string.IsNullOrEmpty(csvFilename))
+                    {
+                        csvFilename = file.Trim();
+                    }
+                    else
+                    {
+                        string s = "Error: More than 1 CSV file specified!";
+                        Write(s);
+
+                        // exit
+                        return (int)eExitcodes.CommandlineError;
+                    }
+                }
+            }
+            if (mbcFilename == "")
+            {
+                string s = "Error: .mbc filename is missing!";
+                Write(s);
+                // exit
+                return (int)eExitcodes.CommandlineError;
+            }
+            if (csvFilename == "")
+            {
+                string s = "Error: CSV filename is missing!";
+                Write(s);
+                // exit
+                return (int)eExitcodes.CommandlineError;
+            }
+
+            // load mbc file, required
+            Write("Load mbc file: " + mbcFilename);
+
+            try
+            {
+                Project.Load(mbcFilename);
+            }
+            catch (Exception ex)
+            {
+                string s = "Error: Error in loading .mbc project file: " + ex.Message;
+                Write(s);
+
+                // exit
+                return (int)eExitcodes.FileError;
+            }
+
+            // apply command line arguments to the Project (connections settings)
+            ApplyCommandlineToProjectConfig();
+
+            // pass configuration to Endians and CStringToValue
+            Endians.Int32BigEndian = Project.Connection.Int32Endian == Global.eEndian.Big;
+            Endians.Float32BigEndian = Project.Connection.Float32Endian == Global.eEndian.Big;
+            CValueToString.Ascii16BigEndian = Project.Connection.Ascii16Endian == Global.eEndian.Big;
+
+            // Connect
+            Write("Opening connection: " + GetConnectionInfoString());
+            try
+            {
+                OpenConnection();
+            }
+            catch (Exception e)
+            {
+                string s = "Error: Could not connect to " + GetConnectionInfoString() + ": " + e.Message;
+                Write(s);
+
+                // exit
+                return (int)eExitcodes.CommsError;
+            }
+
+            // Export
+            Write("Export to CSV file: " + csvFilename);
+            export.TabsList = Project.TabsList;
+            export.mModbus = mb;
+            export.mSlaveAddress = Project.Connection.SlaveID;
+            export.mFilename = csvFilename;
+            export.mMbcFilename = System.IO.Path.GetFileName(mbcFilename);
+            export.OnGetHoldingregisterModbusOffset += TryHoldingregisterGetOffset;
+            export.OnReportProgress += ReportProgressCallback;
+            export.Verbose = Verbose;
+            export.mModbus.WriteRegFC = ConvertGlobalWriteHoldingregFunctioncodeEnumToInt(Project.Connection.WriteHoldingregFunctioncode);
+            export.ExportFormat = isnull(CommandlineArgs.ArgExportFormat, "");
+            export.ExportAsciiFormat = isnull(CommandlineArgs.ArgStringExportFormat, "");
+            export.MaximumFrameSize = isnull(CommandlineArgs.ArgMaxFrameSize, 256);
+            export.ContinueOnError = ContinueOnError;
+
+            try
+            {
+                export.DoExport();
+            }
+            catch (Exception e)
+            {
+                string s = "Error: " + e.Message;
+                Write(s);
+
+                // close interface
+                CloseConnection();
+
+                // show counters
+                WriteVerbose("Export counts: " + export.mExportedCount + " registers exported, " + export.mErrorCount + " errors.");
+
+                // exit
+                if (e is CommsException)
+                {
+                    return (int)eExitcodes.CommsError;
+                }
+
+                return (int)eExitcodes.FileError;
+            }
+
+            // show counters
+            WriteVerbose("Export counts: " + export.mExportedCount + " registers exported, " + export.mErrorCount + " errors.");
+
+            // close interface
+            CloseConnection();
+
+            // exitcode
+            if (export.mErrorCount > 0)
+                return (int)eExitcodes.CommsError;
+            return (int)eExitcodes.NoError;
+        }
+
+        private static int ConvertGlobalWriteHoldingregFunctioncodeEnumToInt(Global.eWriteHoldingregFunctionCode e)
+        {
+            if (e == Global.eWriteHoldingregFunctionCode.FC6)
+                return 6;
+            if (e == Global.eWriteHoldingregFunctionCode.FC16)
+                return 16;
+            return 0;
+        }
+
+        private static void ApplyCommandlineToProjectConfig()
+        {
+            if (CommandlineArgs.ArgConnectionType != null)
+                Project.Connection.ConnectionType = (Global.eConnectionType)CommandlineArgs.ArgConnectionType;
+            if (CommandlineArgs.ArgPort != null)
+                Project.Connection.SerialPort = CommandlineArgs.ArgPort;
+            if (CommandlineArgs.ArgBaudrate != null)
+                Project.Connection.SerialBaudrate = (int)CommandlineArgs.ArgBaudrate;
+            if (CommandlineArgs.ArgParity != null)
+                Project.Connection.SerialParity = (Parity)CommandlineArgs.ArgParity;
+            if (CommandlineArgs.ArgEndofmessagetimeout != null)
+                Project.Connection.SerialEndOfMessageTimeout = (int)CommandlineArgs.ArgEndofmessagetimeout;
+            if (CommandlineArgs.ArgOnewireechosuppression != null)
+                Project.Connection.SerialOneWireEchoSuppression = (bool)CommandlineArgs.ArgOnewireechosuppression;
+            if (CommandlineArgs.ArgIPAddress != null)
+                Project.Connection.IPAddress = CommandlineArgs.ArgIPAddress;
+            if (CommandlineArgs.ArgIPPort != null)
+                Project.Connection.IPPort = (ushort)CommandlineArgs.ArgIPPort;
+            if (CommandlineArgs.ArgSlaveID != null)
+                Project.Connection.SlaveID = (byte)CommandlineArgs.ArgSlaveID;
+            if (CommandlineArgs.ArgMaxFrameSize != null)
+                Project.Connection.MaximumFrameSize = (int)CommandlineArgs.ArgMaxFrameSize;
+            if (CommandlineArgs.ArgResponsetimeout != null)
+                Project.Connection.ResponseTimeout = (int)CommandlineArgs.ArgResponsetimeout;
+            if (CommandlineArgs.ArgInterframedelay != null)
+                Project.Connection.InterFrameDelay = (int)CommandlineArgs.ArgInterframedelay;
+            if (CommandlineArgs.ArgWriteholdingregFC != null)
+                Project.Connection.WriteHoldingregFunctioncode = ConvertCommandlineWriteholdregFCToEnum((int)CommandlineArgs.ArgWriteholdingregFC);
+            if (CommandlineArgs.ArgInt32Endian != null)
+                Project.Connection.Int32Endian = ConvertCommandlineEndianToEnum((int)CommandlineArgs.ArgInt32Endian);
+            if (CommandlineArgs.ArgFloat32Endian != null)
+                Project.Connection.Float32Endian = ConvertCommandlineEndianToEnum((int)CommandlineArgs.ArgFloat32Endian);
+            if (CommandlineArgs.ArgStringEndian != null)
+                Project.Connection.Ascii16Endian = ConvertCommandlineEndianToEnum((int)CommandlineArgs.ArgStringEndian);
+        }
+
+        private static Global.eWriteHoldingregFunctionCode ConvertCommandlineWriteholdregFCToEnum(int cmdcode)
+        {
+            Global.eWriteHoldingregFunctionCode e = Global.eWriteHoldingregFunctionCode.Auto;
+
+            if (cmdcode == 6)
+                e = Global.eWriteHoldingregFunctionCode.FC6;
+            if (cmdcode == 16)
+                e = Global.eWriteHoldingregFunctionCode.FC16;
+            if (cmdcode == 0)
+                e = Global.eWriteHoldingregFunctionCode.Auto;
+
+            return e;
+        }
+
+        private static Global.eEndian ConvertCommandlineEndianToEnum(int end)
+        {
+            Global.eEndian e = Global.eEndian.Little;
+
+            if (end == 0)
+                e = Global.eEndian.Little;
+            if (end == 1)
+                e = Global.eEndian.Big;
+
+            return e;
+        }
+
+        /// <summary>
+        /// can throw
+        /// </summary>
+        private static void OpenConnection()
+        {
+            bool IsOpen = false;
+
+            // which interface/protocol to use?
+            switch (Project.Connection.ConnectionType)
+            {
+                case Global.eConnectionType.SerialRTU:
+                    IsOpen = OpenConnectionForSerialRtu();
+                    break;
+                case Global.eConnectionType.ModbusTcp:
+                    IsOpen = OpenConnectionForModbusTcp();
+                    break;
+                case Global.eConnectionType.RtuOverTcp:
+                    IsOpen = OpenConnectionForRtuOverTcp();
+                    break;
+                default:
+                    throw new InvalidOperationException("Connection.ConnectionType has an invalid value");
+            }
+        }
+
+        /// <summary>
+        /// Open serial connection
+        /// can throw
+        /// </summary>
+        private static bool OpenConnectionForSerialRtu()
+        {
+            // Open serial port, RTU protocol
+
+            string Portname = Project.Connection.SerialPort;
+            bool Opened = false;
+
+            // got serial port name?
+            if (string.IsNullOrEmpty(Portname))
+            {
+                throw new Exception("No serial port name.");
+            }
+            else
+            {
+                mb.OpenSerialRtu(Portname, (uint)Project.Connection.SerialBaudrate, Project.Connection.SerialParity, StopBits.One);
+                Opened = true;
+            }
+
+            if (Opened)
+            {
+                // set this port as the project's serial port
+                Project.Connection.SerialPort = Portname;
+
+                // set parameters
+                mb.OneWireEchoSuppression = Project.Connection.SerialOneWireEchoSuppression;
+                mb.ResponseTimeout = (uint)Project.Connection.ResponseTimeout;
+                mb.EndOfMessageTimeout = (uint)Project.Connection.SerialEndOfMessageTimeout;
+                mb.InterFrameDelay = (uint)Project.Connection.InterFrameDelay;
+
+                // success
+                return true;
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Open a Modbus/TCP connection
+        /// can throw
+        /// </summary>
+        private static bool OpenConnectionForModbusTcp()
+        {
+            // Open TCP connection, Modbus/TCP protocol
+
+            string ConnectionName = Project.Connection.IPAddress + ":" + Project.Connection.IPPort.ToString();
+
+            // valid IP address?
+            System.Net.IPAddress TargetIP;
+            if (System.Net.IPAddress.TryParse(Project.Connection.IPAddress, out TargetIP))
+            {
+                // ok
+            }
+            else
+            {
+                // error
+                throw new Exception("Invalid IP address!");
+            }
+
+            // open
+            mb.OpenModbusTcp(TargetIP, Project.Connection.IPPort);
+
+            // ok
+            mb.ResponseTimeout = (uint)Project.Connection.ResponseTimeout;
+            mb.InterFrameDelay = (uint)Project.Connection.InterFrameDelay;
+
+            // success
+            return true;
+        }
+
+        /// <summary>
+        /// Open connection for RTU over TCP
+        /// can throw
+        /// </summary>
+        private static bool OpenConnectionForRtuOverTcp()
+        {
+            // Open TCP connection, RTU protocol
+
+            string ConnectionName = Project.Connection.IPAddress + ":" + Project.Connection.IPPort.ToString();
+
+            // valid IP address?
+            System.Net.IPAddress TargetIP;
+            if (System.Net.IPAddress.TryParse(Project.Connection.IPAddress, out TargetIP))
+            {
+                // ok
+            }
+            else
+            {
+                throw new Exception("Invalid IP address!");
+            }
+
+            // open
+            mb.OpenRtuOverTcp(TargetIP, Project.Connection.IPPort);
+
+            // ok
+            mb.ResponseTimeout = (uint)Project.Connection.ResponseTimeout;
+            mb.InterFrameDelay = (uint)Project.Connection.InterFrameDelay;
+
+            // success
+            return true;
+        }
+
+        public static string GetConnectionInfoString()
+        {
+            string result = "";
+
+            switch (Project.Connection.ConnectionType)
+            {
+                case Global.eConnectionType.SerialRTU:
+                    result = "SerialRtu: " + isempty(Project.Connection.SerialPort, "''") + " " + Project.Connection.SerialBaudrate.ToString() + "baud";
+                    break;
+                case Global.eConnectionType.ModbusTcp:
+                    result = "ModbusTcp: " + isempty(Project.Connection.IPAddress, "''") + ":" + Project.Connection.IPPort.ToString();
+                    break;
+                case Global.eConnectionType.RtuOverTcp:
+                    result = "RtuOverTcp: " + isempty(Project.Connection.IPAddress, "''") + ":" + Project.Connection.IPPort.ToString();
+                    break;
+                default:
+                    result = "???";
+                    break;
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// return alternative string if source string is empty
+        /// </summary>
+        public static string isempty(string s, string alt)
+        {
+            if (string.IsNullOrWhiteSpace(s))
+                return alt;
+            return s;
+        }
+
+        /// <summary>
+        /// Convert holding register number to register offset 0-65536
+        /// </summary>
+        /// <returns>true if valid, false if not</returns>
+        public static bool TryHoldingregisterGetOffset(UInt32 Regnr, out UInt16 Offset)
+        {
+            // accepts:
+            // 40000/400000: 40000-49999 + 400000-465535
+            // 40001/400001: 40001-49999 + 400001-465536
+
+            bool ret = false;
+            Offset = 0;
+
+            if ((Project.Options.HoldingregistersStart == 40000) || (Project.Options.HoldingregistersStart == 400000))
+            {
+                if ((Regnr >= 40000) && (Regnr <= 49999))
+                {
+                    Offset = (UInt16)(Regnr - 40000);
+                    ret = true;
+                }
+                else if ((Regnr >= 400000) && (Regnr <= 465535))
+                {
+                    Offset = (UInt16)(Regnr - 400000);
+                    ret = true;
+                }
+            }
+            if ((Project.Options.HoldingregistersStart == 40001) || (Project.Options.HoldingregistersStart == 400001))
+            {
+                if ((Regnr >= 40001) && (Regnr <= 49999))
+                {
+                    Offset = (UInt16)(Regnr - 40001);
+                    ret = true;
+                }
+                else if ((Regnr >= 400001) && (Regnr <= 465536))
+                {
+                    Offset = (UInt16)(Regnr - 400001);
+                    ret = true;
+                }
+            }
+
+            return ret;
+        }
+
+        public static void CloseConnection()
+        {
+            // close interface
+            if (mb.IsOpen)
+            {
+                try
+                {
+                    mb.Close();
+                }
+                catch (Exception)
+                {
+                }
+            }
+        }
+
+        public static bool isnull(bool? v, bool repl)
+        {
+            if (v != null)
+                return (bool)v;
+            return repl;
+        }
+
+        public static string isnull(string v, string repl)
+        {
+            if (v != null)
+                return v;
+            return repl;
+        }
+
+        public static int isnull(int? v, int repl)
+        {
+            if (v != null)
+                return (int)v;
+            return repl;
+        }
+
+        public static void ReportProgressCallback(string s)
+        {
+            Write(s);
+        }
+
+        public static void Write(string s)
+        {
+            Console.WriteLine(s);
+        }
+        public static void WriteVerbose(string s)
+        {
+            if (Verbose)
+            {
+                Console.WriteLine(s);
+            }
+        }
+    }
+}

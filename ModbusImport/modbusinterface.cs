@@ -1,0 +1,443 @@
+using System;
+using System.Diagnostics;
+using System.IO.Ports;
+using System.Text;
+using System.Threading;
+using System.Net;
+using System.Net.Sockets;
+
+using Modbus_net;
+using LST.Helpers;
+
+namespace ModbusImport
+{
+    public class ModbusInterface
+    {
+        private UInt32 mResponseTimeout = 1000;
+        private UInt32 mEndOfMessageTimeout = 100;
+        private UInt32 mInterFrameDelay = 0;
+        private bool mOneWireEchoSuppression = false;
+        private UInt32 mTries = 1;
+
+        private ModbusProtocol mb;
+        private ModbusRtuProtocol mbRtuProtocol;
+        private ModbusTcpProtocol mbTcpProtocol;
+        private SerialChannel mbSerChannel;
+        private TcpChannel mbTcpChannel;
+        private bool mClosing;
+        private int mWriteRegFC = 0;    // 0=auto, 6=6, 16=16
+       
+        #region constructor
+
+        public ModbusInterface()
+        {
+        }
+
+        #endregion
+
+        #region properties
+
+        public bool IsOpen
+        {
+            get
+            {
+                return (mb != null) && mb.IsOpen;
+            }
+        }
+
+        public UInt32 ResponseTimeout
+        {
+            get
+            {
+                return mResponseTimeout;
+            }
+            set
+            {
+                mResponseTimeout = value;
+                if (mb != null) mb.ResponseTimeout = mResponseTimeout;
+            }
+        }
+
+        public UInt32 EndOfMessageTimeout
+        {
+            get
+            {
+                return mEndOfMessageTimeout;
+            }
+            set
+            {
+                mEndOfMessageTimeout = value;
+                if (mb != null) mb.EndOfMessageTimeout = mEndOfMessageTimeout;
+            }
+        }
+
+        public UInt32 InterFrameDelay
+        {
+            get
+            {
+                return mInterFrameDelay;
+            }
+            set
+            {
+                mInterFrameDelay = value;
+                if (mb != null) mb.InterFrameDelay = mInterFrameDelay;
+            }
+        }
+
+        public bool OneWireEchoSuppression
+        {
+            get
+            {
+                return mOneWireEchoSuppression;
+            }
+            set
+            {
+                mOneWireEchoSuppression = value;
+                if (mb != null) mb.OneWireEchoSuppression = mOneWireEchoSuppression;
+            }
+        }
+
+        public int WriteRegFC
+        {
+            get
+            {
+                return mWriteRegFC;
+            }
+            set
+            {
+                mWriteRegFC = value;
+            }
+        }
+
+        public uint SuccessCount
+        {
+            get
+            {
+                return (mb != null) ? mb.SuccessCount : 0;
+            }
+        }
+
+        public uint NoResponseCount
+        {
+            get
+            {
+                return (mb != null) ? mb.NoResponseCount : 0;
+            }
+        }
+
+        public uint ResponseCrcErrorCount
+        {
+            get
+            {
+                return (mb != null) ? mb.ResponseCrcErrorCount : 0;
+            }
+        }
+
+        public uint ResponseFormatErrorCount
+        {
+            get
+            {
+                return (mb != null) ? mb.ResponseFormatErrorCount : 0;
+            }
+        }
+
+        public uint ResponseMBAPheaderErrorCount
+        {
+            get
+            {
+                return (mb != null) ? mb.ResponseMBAPheaderErrorCount : 0;
+            }
+        }
+
+        public uint TcpConnectCount
+        {
+            get
+            {
+                return (mb != null) ? mb.TcpConnectCount : 0;
+            }
+        }
+
+        public uint TcpConnectFailCount
+        {
+            get
+            {
+                return (mb != null) ? mb.TcpConnectFailCount : 0;
+            }
+        }
+
+        public uint TcpConnectionLostCount
+        {
+            get
+            {
+                return (mb != null) ? mb.TcpConnectionLostCount : 0;
+            }
+        }
+
+        public uint TcpConnectionClosedBecauseOfResponseError
+        {
+            get
+            {
+                return (mb != null) ? mb.TcpConnectionClosedBecauseOfResponseError : 0;
+            }
+        }
+
+        public uint OneWireEchoErrorCount
+        {
+            get
+            {
+                return (mb != null) ? mb.OneWireEchoErrorCount : 0;
+            }
+        }
+
+        public uint IllegalFunctionExceptionCount
+        {
+            get
+            {
+                return (mb != null) ? mb.IllegalFunctionExceptionCount : 0;
+            }
+        }
+
+        public uint IllegalAddressExceptionCount
+        {
+            get
+            {
+                return (mb != null) ? mb.IllegalAddressExceptionCount : 0;
+            }
+        }
+
+        public uint IllegalDataExceptionCount
+        {
+            get
+            {
+                return (mb != null) ? mb.IllegalDataExceptionCount : 0;
+            }
+        }
+
+        public uint GatewayPathUnavailableExceptionCount
+        {
+            get
+            {
+                return (mb != null) ? mb.GatewayPathUnavailableExceptionCount : 0;
+            }
+        }
+
+        public uint GatewayTargetdeviceFailedToRespondExceptionCount
+        {
+            get
+            {
+                return (mb != null) ? mb.GatewayTargetdeviceFailedToRespondExceptionCount : 0;
+            }
+        }
+
+        public uint OtherExceptionCount
+        {
+            get
+            {
+                return (mb != null) ? mb.OtherExceptionCount : 0;
+            }
+        }
+
+        public uint TotalExceptionCount
+        {
+            get
+            {
+                return (mb != null) ? mb.TotalExceptionCount : 0;
+            }
+        }
+
+        public bool IsTcpChannel
+        {
+            get
+            {
+                return (mb != null) && mb.IsTcpChannel;
+            }
+        }
+
+        #endregion
+
+        public void OpenSerialRtu( string portName, uint baudRate, Parity parity, StopBits stopBits)
+        {
+            mClosing = false;
+            mbSerChannel = new SerialChannel(portName, baudRate, 8U, parity, stopBits);
+            mbRtuProtocol = new ModbusRtuProtocol();
+            mb = new ModbusProtocol(mbRtuProtocol, mbSerChannel);
+            mb.OneWireEchoSuppression = mOneWireEchoSuppression;
+            mb.ResponseTimeout = mResponseTimeout;
+            mb.EndOfMessageTimeout = mEndOfMessageTimeout;
+            mb.InterFrameDelay = mInterFrameDelay;
+            mb.Tries = mTries;
+            mb.RetryOnException11 = false;
+
+            // can throw exception!
+            mb.Open();
+        }
+
+        public void OpenModbusTcp(IPAddress IpAddress, UInt16 TcpPort)
+        {
+            mClosing = false;
+            mbTcpChannel = new TcpChannel(IpAddress, TcpPort);
+            mbTcpProtocol = new ModbusTcpProtocol();
+            mb = new ModbusProtocol(mbTcpProtocol, mbTcpChannel);
+            uint ConnectTimeout = Math.Max(3000, mResponseTimeout); // 3000ms or higher if ResponseTimeout is hoger
+            mb.ConnectTimeout = ConnectTimeout;
+            mb.ResponseTimeout = mResponseTimeout;
+            mb.InterFrameDelay = mInterFrameDelay;
+            mb.Tries = mTries;
+            mb.RetryOnException11 = false;
+
+            // can throw exception!
+            mb.Open();
+        }
+
+        public void OpenRtuOverTcp(IPAddress IpAddress, UInt16 TcpPort)
+        {
+            mClosing = false;
+            mbTcpChannel = new TcpChannel(IpAddress, TcpPort);
+            mbRtuProtocol = new ModbusRtuProtocol();
+            mb = new ModbusProtocol(mbRtuProtocol, mbTcpChannel);
+            uint ConnectTimeout = Math.Max(3000, mResponseTimeout); // 3000ms or higher if ResponseTimeout is hoger
+            mb.ConnectTimeout = ConnectTimeout;
+            mb.ResponseTimeout = mResponseTimeout;
+            mb.InterFrameDelay = mInterFrameDelay;
+            mb.Tries = mTries;
+            mb.RetryOnException11 = false;
+
+            // can throw exception!
+            mb.Open();
+        }
+
+        public void PrepareForClose()
+        {
+            Debug.Print(DateTime.Now.TimeOfDay + ": Modbusinterface: PrepareForClose()");
+
+            // Commands the connection will be closed. Threads waiting for mQueryLock will quickly be released.
+            // Must be followed by Close() lateron
+            mClosing = true;
+        }
+
+        public void Close()
+        {
+            Debug.Print(DateTime.Now.TimeOfDay + ": Modbusinterface: Close()");
+
+            if ((mb != null) && mb.IsOpen)
+            {
+                // can throw exception!
+                mb.Close();
+                // prevent that the autoreconnect for TCP channels reopens the connection, we are officially closed
+                mb = null;
+            }
+        }
+        
+        public ModbusProtocol.Result MifReadHoldingRegisters(byte address, ushort startreg, ushort regcount, out short[] values)
+        {
+            // must assign
+            values = null;
+
+            // modbus connection object created?
+            if (mb == null)
+            {
+                return ModbusProtocol.Result.CHANNELNOTOPEN;
+            }
+
+            // read holding registers
+            if (mClosing) return ModbusProtocol.Result.CHANNELNOTOPEN;
+
+            // send query, get response
+            ModbusProtocol.Result result = mb.ReadHoldingRegisters(address, startreg, regcount, out values);
+
+            return result;
+        }
+
+        public ModbusProtocol.Result MifWriteSingleHoldingRegister(byte address, ushort startreg, short value)
+        {
+            // modbus connection object created?
+            if (mb == null)
+            {
+                return ModbusProtocol.Result.CHANNELNOTOPEN;
+            }
+
+            // write a singe holding register
+            if (mClosing) return ModbusProtocol.Result.CHANNELNOTOPEN;
+
+            // send query, get response
+            ModbusProtocol.Result result = mb.WriteSingleHoldingRegister(address, startreg, value);
+
+            return result;
+        }
+
+        public ModbusProtocol.Result MifWriteMultipleHoldingRegisters(byte address, ushort startreg, ushort regcount, short[] values)
+        {
+            // modbus connection object created?
+            if (mb == null)
+            {
+                return ModbusProtocol.Result.CHANNELNOTOPEN;
+            }
+
+            // write multiple holding registers
+            if (mClosing) return ModbusProtocol.Result.CHANNELNOTOPEN;
+
+            // send query, get response
+            ModbusProtocol.Result result = mb.WriteMultipleHoldingRegisters(address, startreg, regcount, values);
+                
+            return result;
+        }
+
+        public void CloseTcpChannelConnection()
+        {
+            // If we use short-lived TCP connections: close the TCP connection
+            mb.CloseShortLivedTcpChannelConnection();
+        }
+
+        public void ClearCounters()
+        {
+            if (mb != null)
+            {
+                mb.ClearCounters();
+            }
+        }
+
+        // write a variable
+        // can be 1 or more holding registers
+        // use FC6 or FC16 as configured
+        public ModbusProtocol.Result MifWriteHoldingRegistersAuto(byte address, ushort startreg, ushort regcount, short[] values)
+        {
+            ModbusProtocol.Result result = ModbusProtocol.Result.SUCCESS;
+
+            // use FC6 or FC16?
+            //  WriteRegFC  writecount    use
+            //      0         1           FC6
+            //      0         >1          FC16
+            //      6         *           FC6
+            //      16        *           FC16
+            bool useFC16 = (mWriteRegFC == 16)
+                        || ((mWriteRegFC == 0) && (regcount > 1));
+
+            if (useFC16)
+            {
+                // write multiple registers
+                result = MifWriteMultipleHoldingRegisters(address, startreg, regcount, values);
+
+                if (result != ModbusProtocol.Result.SUCCESS)
+                {
+                    //SetStatusBarErrorMessage("Write failed: Slave=" + Project.Connection.SlaveID + ", FC16, addr=" + Reg + ", quant=" + RegCount + ", Error=" + ModbusProtocol.GetResultText(result));
+                }
+            }
+            else
+            {
+                // N times write single register
+                for (int i = 0; (i < regcount) && (result == ModbusProtocol.Result.SUCCESS); ++i)
+                {
+                    result = MifWriteSingleHoldingRegister(address, (UInt16)(startreg + i), values[i]);
+                }
+
+                if (result != ModbusProtocol.Result.SUCCESS)
+                {
+                    //SetStatusBarErrorMessage("Write failed: Slave=" + Project.Connection.SlaveID + ", FC6, reg=" + Reg + ", data=" + Values[0] + ", Error=" + ModbusProtocol.GetResultText(result));
+                }
+            }
+
+            return result;
+        }
+    }
+
+}
