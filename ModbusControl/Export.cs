@@ -390,7 +390,7 @@ namespace ModbusControlSpace
             if (radiobuttonAsInGrid.Checked)
             {
                 // As in grid
-                // ASCII can be exported as Int or Hex to avoid csv format problems
+                // ASCII can be exported as Int or Hex to avoid CSV format problems
                 if (Format == Global.eFormat.ASCII)
                 {
                     if (radExportAsciiAsInt.Checked) Format = Global.eFormat.Int;

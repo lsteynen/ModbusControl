@@ -91,7 +91,7 @@ namespace ModbusControlSpace
             InitializeComponent();
 
             // This app is DPI-aware, get system DPI
-            // We support system DPI. Or do we support per-monitor-DPI?   //TODO?
+            // We do per-monitor-DPI.
             AppDpiHelpers.GetCurrentSystemDpi(this);
 
             SaveStatusbarDefaultValues();
@@ -1170,7 +1170,7 @@ namespace ModbusControlSpace
             // apply command line parameters as overrides
             ApplyCommandlineToProjectConfig();
 
-            // pass configuration to CStringToValue
+            // pass configuration to Endians and CStringToValue
             Endians.Int32BigEndian = Project.Connection.Int32Endian == Global.eEndian.Big;
             Endians.Float32BigEndian = Project.Connection.Float32Endian == Global.eEndian.Big;
             CValueToString.Ascii16BigEndian = Project.Connection.Ascii16Endian == Global.eEndian.Big;

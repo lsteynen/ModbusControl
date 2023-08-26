@@ -367,8 +367,8 @@ namespace LST.ModbusGridView
             // 
             // ModbusGridView
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.Controls.Add(this.grid);
             this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "ModbusGridView";

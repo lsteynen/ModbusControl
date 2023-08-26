@@ -1,6 +1,5 @@
 using System;
 using System.IO;
-using System.Windows.Forms;
 
 // Windows special folders: https://blogs.msdn.microsoft.com/patricka/2010/03/18/where-should-i-store-my-data-and-configuration-files-if-i-target-multiple-os-versions
 
@@ -25,7 +24,8 @@ namespace LST.Helpers
             if (VersionNum.Revision > 0) VersionString += "." + VersionNum.Revision;
 
             // Get Special Folders paths
-            ApplicationStartupPath = Application.StartupPath;
+            //ApplicationStartupPath = Application.StartupPath; // requires System.Windows.Forms
+            ApplicationStartupPath = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
             MyDocumentsDir = Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments), "ModbusControl");
         }
 

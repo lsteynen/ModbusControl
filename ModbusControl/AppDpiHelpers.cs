@@ -18,7 +18,7 @@ namespace LST.Helpers
         public static void GetCurrentSystemDpi(Control control)
         {
             // This app is DPI-aware, get system DPI
-            // We support system DPI. Or do we support per-monitor-DPI?   //TODO?
+            // We do per-monitor-DPI.
             // Store it in the Global class
             Graphics g = control.CreateGraphics();
             SystemDpiX = g.DpiX;
