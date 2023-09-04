@@ -419,10 +419,10 @@ namespace ModbusExport
         {
             return "Example: ModbusExport Test1.mbc Data1.csv -connection modbustcp -ipaddress 192.168.1.100" + Environment.NewLine
                  + "Use - or / for options." + Environment.NewLine
-                 + "-connection <type> >> Connection type: serialrtu, modbustcp or rtutcp" + Environment.NewLine
-                 + "-port <comport> >> Serial port name: COM1, …" + Environment.NewLine
-                 + "-baudrate <19200> >> Serial baudrate" + Environment.NewLine
-                 + "-parity <mode> >> Serial parity: odd, even, none, mark or space" + Environment.NewLine
+                 + "-connection ### >> Connection type: serialrtu, modbustcp or rtutcp" + Environment.NewLine
+                 + "-port ### >> Serial port name: COM1,.." + Environment.NewLine
+                 + "-baudrate ### >> Serial baudrate" + Environment.NewLine
+                 + "-parity ### >> Serial parity: odd, even, none, mark or space" + Environment.NewLine
                  + "-endofmessagetimeout ### >> Serial end-of-message timeout (ms)" + Environment.NewLine
                  + "-onewireechosuppression >> Ignore query command being echoed back " + Environment.NewLine
                  + "-ipaddress ##.##.##.## >> Slave/server IP address: 192.168.1.100" + Environment.NewLine

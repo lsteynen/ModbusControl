@@ -24,9 +24,12 @@ namespace ModbusExport
         private ModbusTcpProtocol mbTcpProtocol;
         private SerialChannel mbSerChannel;
         private TcpChannel mbTcpChannel;
+        private Object mQueryLock = new Object();
+//        private Logger mLogger;
         private bool mClosing;
+//        private int HoldingregisterStart = 40001;
         private int mWriteRegFC = 0;    // 0=auto, 6=6, 16=16
-       
+
         #region constructor
 
         public ModbusInterface()
@@ -245,6 +248,18 @@ namespace ModbusExport
             }
         }
 
+//        public Logger Logger
+//        {
+//            get
+//            {
+//                return mLogger;
+//            }
+//            set
+//            {
+//                mLogger = value;
+//            }
+//        }
+
         public bool IsTcpChannel
         {
             get
@@ -259,7 +274,13 @@ namespace ModbusExport
         {
             mClosing = false;
             mbSerChannel = new SerialChannel(portName, baudRate, 8U, parity, stopBits);
+            mbSerChannel.OnDataSent += LogChannelSent;
+            mbSerChannel.OnDataReceived += LogChannelReceived;
+            mbSerChannel.OnWarning += LogWarning;
             mbRtuProtocol = new ModbusRtuProtocol();
+            mbRtuProtocol.OnInfo += LogInfo;
+            mbRtuProtocol.OnWarning += LogWarning;
+            mbRtuProtocol.OnError += LogError;
             mb = new ModbusProtocol(mbRtuProtocol, mbSerChannel);
             mb.OneWireEchoSuppression = mOneWireEchoSuppression;
             mb.ResponseTimeout = mResponseTimeout;
@@ -276,7 +297,13 @@ namespace ModbusExport
         {
             mClosing = false;
             mbTcpChannel = new TcpChannel(IpAddress, TcpPort);
+            mbTcpChannel.OnDataSent += LogChannelSent;
+            mbTcpChannel.OnDataReceived += LogChannelReceived;
+            mbTcpChannel.OnWarning += LogWarning;
             mbTcpProtocol = new ModbusTcpProtocol();
+            mbTcpProtocol.OnInfo += LogInfo;
+            mbTcpProtocol.OnWarning += LogWarning;
+            mbTcpProtocol.OnError += LogError;
             mb = new ModbusProtocol(mbTcpProtocol, mbTcpChannel);
             uint ConnectTimeout = Math.Max(3000, mResponseTimeout); // 3000ms or higher if ResponseTimeout is hoger
             mb.ConnectTimeout = ConnectTimeout;
@@ -293,7 +320,13 @@ namespace ModbusExport
         {
             mClosing = false;
             mbTcpChannel = new TcpChannel(IpAddress, TcpPort);
+            mbTcpChannel.OnDataSent += LogChannelSent;
+            mbTcpChannel.OnDataReceived += LogChannelReceived;
+            mbTcpChannel.OnWarning += LogWarning;
             mbRtuProtocol = new ModbusRtuProtocol();
+            mbRtuProtocol.OnInfo += LogInfo;
+            mbRtuProtocol.OnWarning += LogWarning;
+            mbRtuProtocol.OnError += LogError;
             mb = new ModbusProtocol(mbRtuProtocol, mbTcpChannel);
             uint ConnectTimeout = Math.Max(3000, mResponseTimeout); // 3000ms or higher if ResponseTimeout is hoger
             mb.ConnectTimeout = ConnectTimeout;
@@ -340,12 +373,42 @@ namespace ModbusExport
             }
 
             // read holding registers
-            if (mClosing) return ModbusProtocol.Result.CHANNELNOTOPEN;
+            // make it threadsafe here to keep logging synced with queries/responses
+            lock (mQueryLock)
+            {
+                if (mClosing) return ModbusProtocol.Result.CHANNELNOTOPEN;
 
-            // send query, get response
-            ModbusProtocol.Result result = mb.ReadHoldingRegisters(address, startreg, regcount, out values);
+//                if (mLogger.LogReads)
+//                {
+//                    mLogger.Log(Logger.LogType.Read, "Read holding reg: slave=" + address + ", addr=" + (HoldingregisterStart + startreg).ToString() + ", quant=" + regcount);
+//                }
 
-            return result;
+                // send query, get response
+                ModbusProtocol.Result result = mb.ReadHoldingRegisters(address, startreg, regcount, out values);
+                if (result == ModbusProtocol.Result.SUCCESS)
+                {
+//                    if (mLogger.LogReads)
+//                    {
+//                        mLogger.Log(Logger.LogType.Read, "Response: " + ValuesToString(values, regcount));
+//                    }
+                }
+                else
+                {
+//                    if (mLogger.LogErrors)
+//                    {
+//                        if (ModbusProtocol.IsExceptionResponse(result))
+//                        {
+//                            mLogger.Log(Logger.LogType.Error, "Read error: Response is exception: " + ModbusProtocol.GetResultText(result));
+//                        }
+//                        else
+//                        {
+//                            mLogger.Log(Logger.LogType.Error, "Read error: " + ModbusProtocol.GetResultText(result));
+//                        }
+//                    }
+                }
+
+                return result;
+            }
         }
 
         public ModbusProtocol.Result MifWriteSingleHoldingRegister(byte address, ushort startreg, short value)
@@ -357,12 +420,42 @@ namespace ModbusExport
             }
 
             // write a singe holding register
-            if (mClosing) return ModbusProtocol.Result.CHANNELNOTOPEN;
+            // make it threadsafe here to keep logging synced with queries/responses
+            lock (mQueryLock)
+            {
+                if (mClosing) return ModbusProtocol.Result.CHANNELNOTOPEN;
 
-            // send query, get response
-            ModbusProtocol.Result result = mb.WriteSingleHoldingRegister(address, startreg, value);
+//                if (mLogger.LogWrites)
+//                {
+//                    mLogger.Log(Logger.LogType.Write, "Write single holding reg: slave=" + address + ", addr=" + (HoldingregisterStart + startreg).ToString() + ", value=" + value);
+//                }
 
-            return result;
+                // send query, get response
+                ModbusProtocol.Result result = mb.WriteSingleHoldingRegister(address, startreg, value);
+                if (result == ModbusProtocol.Result.SUCCESS)
+                {
+//                    if (mLogger.LogWrites)
+//                    {
+//                        mLogger.Log(Logger.LogType.Write, "Write response: ack");
+//                    }
+                }
+                else
+                {
+//                    if (mLogger.LogErrors)
+//                    {
+//                        if (ModbusProtocol.IsExceptionResponse(result))
+//                        {
+//                            mLogger.Log(Logger.LogType.Error, "Write error: Response is exception: " + ModbusProtocol.GetResultText(result));
+//                        }
+//                        else
+//                        {
+//                            mLogger.Log(Logger.LogType.Error, "Write error: " + ModbusProtocol.GetResultText(result));
+//                        }
+//                    }
+                }
+
+                return result;
+            }
         }
 
         public ModbusProtocol.Result MifWriteMultipleHoldingRegisters(byte address, ushort startreg, ushort regcount, short[] values)
@@ -374,12 +467,68 @@ namespace ModbusExport
             }
 
             // write multiple holding registers
-            if (mClosing) return ModbusProtocol.Result.CHANNELNOTOPEN;
+            // make it threadsafe here to keep logging synced with queries/responses
+            lock (mQueryLock)
+            {
+                if (mClosing) return ModbusProtocol.Result.CHANNELNOTOPEN;
 
-            // send query, get response
-            ModbusProtocol.Result result = mb.WriteMultipleHoldingRegisters(address, startreg, regcount, values);
-                
-            return result;
+//                if (mLogger.LogWrites)
+//                {
+//                    mLogger.Log(Logger.LogType.Write, "Write multiple holding reg: slave=" + address + ", addr=" + (HoldingregisterStart + startreg).ToString() + ", quant=" + regcount + ", values=" + ValuesToString(values, regcount));
+//                }
+
+                // send query, get response
+                ModbusProtocol.Result result = mb.WriteMultipleHoldingRegisters(address, startreg, regcount, values);
+                if (result == ModbusProtocol.Result.SUCCESS)
+                {
+//                    if (mLogger.LogWrites)
+//                    {
+//                        mLogger.Log(Logger.LogType.Write, "Write response: ack");
+//                    }
+                }
+                else
+                {
+//                    if (mLogger.LogErrors)
+//                    {
+//                        if (ModbusProtocol.IsExceptionResponse(result))
+//                        {
+//                            mLogger.Log(Logger.LogType.Error, "Write error: Response is exception: " + ModbusProtocol.GetResultText(result));
+//                        }
+//                        else
+//                        {
+//                            mLogger.Log(Logger.LogType.Error, "Write error: " + ModbusProtocol.GetResultText(result));
+//                        }
+//                    }
+                }
+
+                return result;
+            }
+        }
+
+        public ModbusProtocol.Result MifSendQuery(byte[] QueryBuffer, ushort QueryLength, out byte[] ResponseBuffer)
+        {
+            // must assign
+            ResponseBuffer = null;
+
+            // modbus connection object created?
+            if (mb == null)
+            {
+                return ModbusProtocol.Result.CHANNELNOTOPEN;
+            }
+
+            // send a raw modbus query message
+            // make it threadsafe here to keep logging synced with queries/responses
+            lock (mQueryLock)
+            {
+                if (mClosing) return ModbusProtocol.Result.CHANNELNOTOPEN;
+
+                // send query, get response
+                ModbusProtocol.Result result = mb.SendQuery(QueryBuffer, QueryLength, out ResponseBuffer);
+
+                // no logging for MifSendQuery()
+
+                return result;
+            }
         }
 
         public void CloseTcpChannelConnection()
@@ -394,6 +543,60 @@ namespace ModbusExport
             {
                 mb.ClearCounters();
             }
+        }
+
+        public string ValuesToString(short[] aValues, int Count)
+        {
+            // provide room for 126 values of "-32767,"
+            StringBuilder sb = new StringBuilder(1000);
+
+            for( int i=0; i<Count; ++i)
+            {
+                if (i >= 1) sb.Append(',');
+                sb.Append(aValues[i]);
+            }
+
+            return sb.ToString();
+        }
+
+        private void LogChannelSent(byte[] data, int length)
+        {
+//            if (mLogger.LogTrace)
+//            {
+//                mLogger.Log(Logger.LogType.Trace, "Tx: " + BytesToString.Convert(data, length));
+//            }
+        }
+
+        private void LogChannelReceived(byte[] data, int length)
+        {
+//            if (mLogger.LogTrace)
+//            {
+//                mLogger.Log(Logger.LogType.Trace, "Rx: " + BytesToString.Convert(data, length));
+//            }
+        }
+
+        private void LogInfo(string s)
+        {
+//            if (mLogger.LogInfo)
+//            {
+//                mLogger.Log(Logger.LogType.Info, s);
+//            }
+        }
+
+        private void LogWarning(string s)
+        {
+//            if (mLogger.LogWarnings)
+//            {
+//                mLogger.Log(Logger.LogType.Warning, s);
+//            }
+        }
+
+        private void LogError(string s)
+        {
+ //           if (mLogger.LogErrors)
+ //           {
+ //               mLogger.Log(Logger.LogType.Error, s);
+ //           }
         }
 
         // write a variable

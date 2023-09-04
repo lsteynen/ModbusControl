@@ -363,10 +363,10 @@ namespace ModbusImport
         {
             return "Example: ModbusImport [Test1.mbc] Data1.csv -connection modbustcp -ipaddress 192.168.1.100" + Environment.NewLine
                  + "Use - or / for options." + Environment.NewLine
-                 + "-connection <type> >> Connection type: serialrtu, modbustcp or rtutcp" + Environment.NewLine
-                 + "-port <comport> >> Serial port name: COM1, …" + Environment.NewLine
-                 + "-baudrate <19200> >> Serial baudrate" + Environment.NewLine
-                 + "-parity <mode> >> Serial parity: odd, even, none, mark or space" + Environment.NewLine
+                 + "-connection ### >> Connection type: serialrtu, modbustcp or rtutcp" + Environment.NewLine
+                 + "-port ### >> Serial port name: COM1,.." + Environment.NewLine
+                 + "-baudrate ### >> Serial baudrate" + Environment.NewLine
+                 + "-parity ### >> Serial parity: odd, even, none, mark or space" + Environment.NewLine
                  + "-endofmessagetimeout ### >> Serial end-of-message timeout (ms)" + Environment.NewLine
                  + "-onewireechosuppression >> Ignore query command being echoed back " + Environment.NewLine
                  + "-ipaddress ##.##.##.## >> Slave/server IP address: 192.168.1.100" + Environment.NewLine
@@ -375,7 +375,7 @@ namespace ModbusImport
                  + "-maxframe ### >> Maximum frame size: 13..256" + Environment.NewLine
                  + "-responsetimeout ### >> Max wait time for first byte of response (ms)" + Environment.NewLine
                  + "-interframedelay ### >> Delay before sending next query (ms)" + Environment.NewLine
-                 + "-writeregfc <fc> >> Write holding registers function code: 6, 16 or auto" + Environment.NewLine
+                 + "-writeregfc ### >> Write holding registers function code: 6, 16 or auto" + Environment.NewLine
                  + "-int32endian ### >> 32-bit int word order: little, big" + Environment.NewLine
                  + "-float32endian ### >> 32-bit float word order: little, big" + Environment.NewLine
                  + "-stringendian ### >> String byte order: little, big" + Environment.NewLine
