@@ -65,6 +65,9 @@
     <Compile Include="..\ModbusControl\ProjectMan.cs">
       <Link>ProjectMan.cs</Link>
     </Compile>
+    <Compile Include="..\ModbusControl\Properties\AssemblyInfoShared.cs">
+      <Link>Properties\AssemblyInfoShared.cs</Link>
+    </Compile>
     <Compile Include="..\ModbusControl\ValueToString.cs">
       <Link>ValueToString.cs</Link>
     </Compile>

@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("LST")]
 [assembly: AssemblyProduct("ModbusControl")]
-[assembly: AssemblyCopyright("")]
+[assembly: AssemblyCopyright("Copyright © 2023")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -22,13 +22,3 @@ using System.Runtime.InteropServices;
 // The following GUID is for the ID of the typelib if this project is exposed to COM
 [assembly: Guid("2069d0bd-4b1f-4fa3-91f4-7f7d44e426ec")]
 
-// Version information for an assembly consists of the following four values:
-//
-//      Major Version
-//      Minor Version 
-//      Build Number
-//      Revision
-//
-[assembly: AssemblyVersion("2.0.15.1374")]
-//AssemblyFileVersion removed so VS studio sets AssemblyFileVersion = AssemblyVersion
-//[assembly: AssemblyFileVersion("2.0.7.0")]
