@@ -426,7 +426,7 @@ namespace ModbusExport
                  + "-endofmessagetimeout ### >> Serial end-of-message timeout (ms)" + Environment.NewLine
                  + "-onewireechosuppression >> Ignore query command being echoed back " + Environment.NewLine
                  + "-ipaddress ##.##.##.## >> Slave/server IP address: 192.168.1.100" + Environment.NewLine
-                 + "-ipport ### >> Slave/server IP port: 502" + Environment.NewLine
+                 + "-ipport ### >> Slave/server IP port: usually 502" + Environment.NewLine
                  + "-slaveid ### >> Slave ID number: 1..255" + Environment.NewLine
                  + "-maxframe ### >> Maximum frame size: 13..256" + Environment.NewLine
                  + "-responsetimeout ### >> Max wait time for first byte of response (ms)" + Environment.NewLine
