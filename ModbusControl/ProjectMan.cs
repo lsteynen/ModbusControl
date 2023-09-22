@@ -654,7 +654,7 @@ namespace ModbusControlSpace
                             Connection.WriteHoldingregFunctioncode = Global.eWriteHoldingregFunctionCode.FC6;
                         }
                     }
-                    // accept obsolete 'alternate" as 'auto'
+                    // accept obsolete 'alternate' as 'auto'
                     else if ((string.Compare(TmpString, "auto", StringComparison.OrdinalIgnoreCase) == 0)
                           || (string.Compare(TmpString, "alternate", StringComparison.OrdinalIgnoreCase) == 0))
                     {
@@ -663,7 +663,7 @@ namespace ModbusControlSpace
                     else
                     {
                         TFilePosition fp = GetFilePos(xe);
-                        throw new XmlException("XML element <" + xe.Name.LocalName + "> has an invalid value. Valid values are '6' (or '06'), '16', 'auto' or 'alternate'." + Environment.NewLine + LimitXmlTextLength(xe.ToString()) + Environment.NewLine, null, fp.Line, fp.Col);
+                        throw new XmlException("XML element <" + xe.Name.LocalName + "> has an invalid value. Valid values are '6' (or '06'), '16' or 'auto'." + Environment.NewLine + LimitXmlTextLength(xe.ToString()) + Environment.NewLine, null, fp.Line, fp.Col);
                     }
                 }
                 else
