@@ -123,6 +123,7 @@ namespace LST.ModbusGridView
             public int Row;
             public int Col;
         };
+
         public struct TReadGroup
         {
             public int lineIndex;
@@ -268,6 +269,8 @@ namespace LST.ModbusGridView
                 if (value != colValue.FillWeight) colValue.FillWeight = value;
             }
         }
+
+        public uint ExportOrder;
 
         #endregion
 

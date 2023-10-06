@@ -60,6 +60,12 @@ namespace ModbusControlSpace
             set { mMaximumFrameSize = value; }
         }
 
+        private class ExportOrderElem
+        {
+            public int tabIndex;
+            public uint order;
+        }
+
         // constructor
         public Export(MainForm parent)
         {
@@ -184,10 +190,18 @@ namespace ModbusControlSpace
             if (mExportMode == ExportMode.AllTabs)
             {
                 // export registers of all tabs
+
+                // make a list of the export orders and sort it
+                List<ExportOrderElem> exportList = GetTabsExportOrderList();
+
+                // export in requested order
                 // this loop and DoExportTab can be canceled
-                for (int TabIndex = 0; (mParent.GetTabPageByIndex(TabIndex) != null) && (mWorker.CancellationPending == false); ++TabIndex)
+                foreach (ExportOrderElem elem in exportList)
                 {
-                    DoExportTab(mParent.GetTabPageByIndex(TabIndex));
+                    DoExportTab(mParent.GetTabPageByIndex(elem.tabIndex));
+
+                    if (mWorker.CancellationPending)
+                        break;
                 }
             }
             else
@@ -204,6 +218,44 @@ namespace ModbusControlSpace
             {
                 e.Cancel = true;
             }
+        }
+
+        private List<ExportOrderElem> GetTabsExportOrderList()
+        {
+            List<ExportOrderElem> list = new List<ExportOrderElem>();
+
+            for (int tabI = 0; mParent.GetTabPageByIndex(tabI) != null; ++tabI)
+            {
+                // get tab ModbusGridView
+                ModbusGridView mrv = mParent.GetTabPageByIndex(tabI).Tag as ModbusGridView;
+                ExportOrderElem el = new ExportOrderElem();
+                el.tabIndex = tabI;
+                el.order = mrv.ExportOrder;
+                list.Add(el);
+            }
+
+            list.Sort(ExportOrderComparer);
+
+            return list;
+        }
+
+        private int ExportOrderComparer(ExportOrderElem el1, ExportOrderElem el2)
+        {
+            // return 1 if el1 > el2
+            // return 0 if el1 == el2
+            // return -1 if el1 < el2
+
+            if (el1.order > el2.order)
+                return 1;
+            if (el1.order < el2.order)
+                return -1;
+
+            if (el1.tabIndex > el2.tabIndex)
+                return 1;
+            if (el1.tabIndex < el2.tabIndex)
+                return -1;
+
+            return 0;
         }
 
         private void Worker_ProgressChanged(object sender, ProgressChangedEventArgs e)

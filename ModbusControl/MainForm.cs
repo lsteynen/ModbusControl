@@ -14,6 +14,7 @@ using Modbus_net;
 using LST.Helpers;
 using LST.ModbusGridView;
 
+
 namespace ModbusControlSpace
 {
     public partial class MainForm : Form
@@ -1271,6 +1272,7 @@ namespace ModbusControlSpace
                     newRegView.LongTooltipTime = true;
                 }
 
+                newRegView.ExportOrder = ptab.ExportOrder;
                 newRegView.FinalizeLoad();
 
                 newTab.ResumeLayout();

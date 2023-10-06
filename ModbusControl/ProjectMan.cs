@@ -75,7 +75,8 @@ namespace ModbusControlSpace
         public struct TTab
         {
             public string Name;
-            public List<TVar> VarList; // List with vars in this tab page
+            public uint ExportOrder;        // initialized with uint.max if not given
+            public List<TVar> VarList;      // List with vars in this tab page
         }
 
         public struct TVar
@@ -783,6 +784,7 @@ namespace ModbusControlSpace
             TTab newTab = new TTab();
             // init with default values
             newTab.Name = string.Empty;
+            newTab.ExportOrder = int.MaxValue;
             newTab.VarList = new List<TVar>();
 
             // Must have seen a <reg> in a tab for enabling auto-numbering
@@ -819,7 +821,22 @@ namespace ModbusControlSpace
                     nameSeen = true;
                 }
                 else
-                // <rw>, default for <var>, optional
+                // <exportorder>, optional
+                if (CheckElementNameMatch(elemName, "exportorder"))
+                {
+                    string tmpString = xe.Value.Trim();
+                    uint tmpOrder;
+                    if (uint.TryParse(tmpString, out tmpOrder))
+                    {
+                        newTab.ExportOrder = tmpOrder;
+                    }
+                    else
+                    {
+                        TFilePosition fp = GetFilePos(xe);
+                        throw new XmlException("XML element <exportorder> has an invalid value. Valid values are 0 .. 4294967295" + Environment.NewLine + LimitXmlTextLength(xe.ToString()) + Environment.NewLine, null, fp.Line, fp.Col);
+                    }
+                }
+                else// <rw>, default for <var>, optional
                 if (CheckElementNameMatch(elemName, "rw"))
                 {
                     if (GetReadWriteFlags(xe.Value.Trim(), out DefaultVar.isReadable, out DefaultVar.isWriteable) == false)
@@ -918,13 +935,6 @@ namespace ModbusControlSpace
                     newTab.VarList.Add(newVar);
                     // update next auto register numbering
                     NextAutoRegnr = (UInt32)(newVar.Regnr + newVar.Size);
-                }
-                else
-                // do not allow a <tab> in a <tab>
-                if (CheckElementNameMatch(elemName, "tab"))
-                {
-                    TFilePosition fp = GetFilePos(xe);
-                    throw new XmlException("XML element <tab> is nested in another <tab>. This is not allowed." + Environment.NewLine + LimitXmlTextLength(xe.ToString()) + Environment.NewLine, null, fp.Line, fp.Col);
                 }
                 else
                 {
@@ -1171,13 +1181,6 @@ namespace ModbusControlSpace
 
                 }
                 else
-                // do not allow a <var> in a <var>
-                if (CheckElementNameMatch(elemName, "var"))
-                {
-                    TFilePosition fp = GetFilePos(xe);
-                    throw new XmlException("XML element <var> is nested in another <var>. This is not allowed." + Environment.NewLine + LimitXmlTextLength(xe.ToString()) + Environment.NewLine, null, fp.Line, fp.Col);
-                }
-                else
                 {
                     // invalid/unsupported element found
                 }
@@ -1319,13 +1322,6 @@ namespace ModbusControlSpace
                 if (CheckElementNameMatch(elemName, "enum"))
                 {
                     newField.EnumDict = ProcessEnumElementIntoCEnum(xe);
-                }
-                else
-                // do not allow a <field> in a <field>
-                if (CheckElementNameMatch(elemName, "field"))
-                {
-                    TFilePosition fp = GetFilePos(xe);
-                    throw new XmlException("XML element <field> is nested in another <field>. This is not allowed." + Environment.NewLine + LimitXmlTextLength(xe.ToString()) + Environment.NewLine, null, fp.Line, fp.Col);
                 }
                 else
                 {
@@ -2375,9 +2371,6 @@ namespace ModbusControlSpace
             // convert elements with enum keywords to lower case
             XMLIterateAllNodesForHandler(XmlDoc, ConvertAllEnumValuesToLowercaseHandler);
 
-            // replace <expandfields> by <expand>
-            //XMLIterateAllNodesForHandler(XmlDoc, ReplaceExpandfieldsHandler);
-
             // remove or replace obsolete tags in <Modbus>
             XMLRemoveOrReplaceObsoleteModbusElements(XmlDoc);
         }
@@ -2425,18 +2418,6 @@ namespace ModbusControlSpace
             if (TagsToConvertValueToLowerList.Contains(xe.Name.ToString()))
             {
                 xe.Value = xe.Value.ToString().ToLower().Trim();
-            }
-        }
-
-        /// <summary>
-        /// Handler for XMLIterateAllNodesForHandler()
-        /// replace <expandfields> by <expand>
-        /// </summary>
-        private void ReplaceExpandfieldsHandler(XElement xe)
-        {
-            if (xe.Name.ToString().ToLower() == "expandfields")
-            {
-                xe.Name = "expand";
             }
         }
 

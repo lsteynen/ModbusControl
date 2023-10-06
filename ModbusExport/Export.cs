@@ -63,6 +63,12 @@ namespace ModbusExport
             public UInt16 regCount;
         };
 
+        private class ExportOrderElem
+        {
+            public int tabIndex;
+            public uint order;
+        }
+
         /// <summary>
         /// Do export
         /// Read registers from target and write to file 
@@ -100,12 +106,53 @@ namespace ModbusExport
                 mCsvWriter.WriteComment("Project file: " + mMbcFilename);
                 mCsvWriter.WriteComment("Fields: Register;Size;Description;Read/write;Format;Value");
 
-                // export each tab
-                foreach (CProject.TTab tab in TabsList)
+                // make a list of the export orders and sort it
+                List<ExportOrderElem> exportList = GetTabsExportOrderList();
+
+                // export registers of all tabs
+                // export in requested order
+                for( int i = 0; i < exportList.Count; ++i)
                 {
+                    CProject.TTab tab = TabsList[exportList[i].tabIndex];
                     DoExportTab(tab);
                 }
             }
+        }
+
+        private List<ExportOrderElem> GetTabsExportOrderList()
+        {
+            List<ExportOrderElem> list = new List<ExportOrderElem>();
+
+            for (int i = 0; i < TabsList.Count; ++i)
+            {
+                ExportOrderElem el = new ExportOrderElem();
+                el.tabIndex = i;
+                el.order = TabsList[i].ExportOrder;
+                list.Add(el);
+            }
+
+            list.Sort(ExportOrderComparer);
+
+            return list;
+        }
+
+        private int ExportOrderComparer(ExportOrderElem el1, ExportOrderElem el2)
+        {
+            // return 1 if el1 > el2
+            // return 0 if el1 == el2
+            // return -1 if el1 < el2
+
+            if (el1.order > el2.order)
+                return 1;
+            if (el1.order < el2.order)
+                return -1;
+
+            if (el1.tabIndex > el2.tabIndex)
+                return 1;
+            if (el1.tabIndex < el2.tabIndex)
+                return -1;
+
+            return 0;
         }
 
         public void DoExportTab(CProject.TTab tab)
