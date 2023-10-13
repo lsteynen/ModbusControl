@@ -129,8 +129,20 @@ namespace LST.ModbusGridView
             public int lineIndex;
             public int lineCount;
             public UInt32 readFirstReg;
-            public UInt16 readCount;
-            public List<RegItem> registersList;
+            public int readRegCount;
+        };
+
+        public struct TVarProperties
+        {
+            public UInt32 Reg;          // universal register number 
+            public string Descr;        // description
+            public int Size;            // var size in #registers, 1 or 2
+            public ModbusControlSpace.Global.eFormat Format;      // display as dec, unsigned, hex, binary
+            public int MinLen;          // minimum display length
+            public int Decimals;        // nr of decimals to show
+            public bool Readable;       // readable?
+            public bool Writeable;      // writable?
+            public Global.CEnum EnumDict;   // enum convert dictionary
         };
 
         #region Data
@@ -1435,7 +1447,7 @@ namespace LST.ModbusGridView
                                 cb.Items.Add(item.Key.ToString() + " (" + item.Value + ")");
                             }
                         }
-                     }
+                    }
                 }
 
                 if (cb != null)
@@ -1469,83 +1481,116 @@ namespace LST.ModbusGridView
         }
 
         /// <summary>
-        /// Get a group of successive registers to read
+        /// Get a list of group read commands
         /// </summary>
-        /// <param name="rg">struct TReadGroup, in/out</param>
         /// <param name="maxFrameSize">maximum size of the response frame (in bytes)</param>
         /// <returns></returns>
-        public bool GetRegistersGroupToRead(ref TReadGroup rg, int maxFrameSize)
+        public List<TReadGroup> GetReadGroupingList(int maxFrameSize)
         {
+            List<TReadGroup> glist = new List<TReadGroup>();
+
+            // no registers?
             if (RegList.Count == 0)
             {
-                return false;
+                return null;
             }
-
-            rg.registersList = new List<RegItem>();
 
             // bepaal max aantal 16-bit registers te lezen
             int max16BitRegs = (int)(maxFrameSize - 5) / 2;
 
             // voorlopig gaan we er van uit dat in RegList level 0 alleen registers zitten
 
-            // vind eerste readable register vanaf index
-            while (rg.lineIndex < RegList.Count)
+            bool grouping = false;
+            int lineIndex = 0;
+            int groupFirstLineIndex = 0;
+            int groupLineCount = 0;
+            UInt32 groupFirstReg = 0;
+            int groupRegCount = 0;
+            UInt32 groupNextRegister = 0;
+            foreach (ListItem Lit in RegList)
             {
-                if ((RegList[rg.lineIndex] as RegItem).Readable)
-                    break;
-                ++rg.lineIndex;
-            }
-            // found?
-            if (rg.lineIndex < RegList.Count)
-            {
-                // found
-            }
-            else
-            {
-                // not found
-                return false;
-            }
-
-            // get this register number
-            rg.readFirstReg = (RegList[rg.lineIndex] as RegItem).Reg;
-            int thislen = (RegList[rg.lineIndex] as RegItem).Size; // Size in number of 16-bit registers
-            rg.readCount = (UInt16)thislen;
-            UInt32 NextReg = rg.readFirstReg + (UInt32)thislen;
-            rg.lineCount = 1;
-            rg.registersList.Add(RegList[rg.lineIndex] as RegItem);
-
-            // get consecutive registers to read
-            int linei = rg.lineIndex + 1;
-            while (linei < RegList.Count)
-            {
-                // consecutive? readable?
-                if (((RegList[linei] as RegItem).Reg == NextReg)
-                  && ((RegList[linei] as RegItem).Readable == true))
+                RegItem Reg = Lit as RegItem;
+                if (grouping)
                 {
-                    thislen = (RegList[linei] as RegItem).Size;     // Size in number of 16-bit registers
-                    if ((rg.readCount + thislen) <= max16BitRegs)           // allowed to read so many registers?
+                    // find next readable register in group
+                    // is consecutive and readable?
+                    if ((Reg.Reg == groupNextRegister)
+                        && (Reg.Readable == true)
+                        && ((groupRegCount + Reg.Size) <= max16BitRegs))           // allowed to read so many registers?
                     {
-                        NextReg = NextReg + (UInt32)thislen;
-                        rg.readCount += (UInt16)thislen;
-                        rg.lineCount++;
-                        rg.registersList.Add(RegList[linei] as RegItem);
+                        ++groupLineCount;
+                        groupRegCount += Reg.Size;
+                        groupNextRegister += (UInt32)Reg.Size;
                     }
                     else
                     {
-                        break;
+                        TReadGroup g = new TReadGroup();
+                        g.lineIndex = groupFirstLineIndex;
+                        g.lineCount = groupLineCount;
+                        g.readFirstReg = groupFirstReg;
+                        g.readRegCount = groupRegCount;
+                        glist.Add(g);
+                        grouping = false;
                     }
                 }
-                else
+                if (grouping == false)
                 {
-                    break;
+                    // find next readable register to start new group
+                    if ((Reg as RegItem).Readable)
+                    {
+                        groupFirstLineIndex = lineIndex;    // grid line index of first Reg
+                        groupLineCount = 1;
+                        groupFirstReg = Reg.Reg;          // first register of group
+                        groupRegCount = Reg.Size;            // Size in number of 16-bit registers
+                        groupNextRegister = Reg.Reg + (UInt32)Reg.Size;
+                        grouping = true;
+                    }
                 }
-                ++linei;
+
+                ++lineIndex;
             }
 
-            return true;
+            if (grouping)
+            {
+                TReadGroup g = new TReadGroup();
+                g.lineIndex = groupFirstLineIndex;
+                g.lineCount = groupLineCount;
+                g.readFirstReg = groupFirstReg;
+                g.readRegCount = groupRegCount;
+                glist.Add(g);
+                grouping = false;
+            }
+
+            return glist;
         }
 
-        private delegate void SetRegistersReadDataDelegate(TReadGroup rg, short[] readData);
+        /// <summary>
+        /// Get a list of group read commands
+        /// </summary>
+        /// <param name="maxFrameSize">maximum size of the response frame (in bytes)</param>
+        /// <returns></returns>
+        public TVarProperties GetVarPropertiesByIndex(int lineIndex)
+        {
+            //ModbusGridView.TRegProperties prop = mrv.GetRegisterPropertiesByIndex(0);
+
+            TVarProperties p;
+
+            RegItem reg = RegList[lineIndex] as RegItem;
+
+            p.Reg = reg.Reg;
+            p.Descr = reg.Descr;
+            p.Size = reg.Size;
+            p.Format = reg.Format;
+            p.MinLen = reg.MinLen;
+            p.Decimals = reg.Decimals;
+            p.Readable = reg.Readable;
+            p.Writeable = reg.Writeable;
+            p.EnumDict = reg.EnumDict;
+
+            return p;
+        }
+
+        private delegate void SetRegistersReadDataDelegate(int lineIndex, int lineCount, short[] readData);
 
         /// <summary>
         /// Put the data we have read in the grid
@@ -1553,19 +1598,19 @@ namespace LST.ModbusGridView
         /// </summary>
         /// <param name="rg">Struct with readgroup parameters</param>
         /// <param name="readData">Array of raw read data</param>
-        public void SetRegistersReadData(TReadGroup rg, short[] readData)
+        public void SetRegistersReadData(int lineIndex, int lineCount, short[] readData)
         {
             // make this threadsafe, is called from polling thread
             if (this.InvokeRequired)
             {
                 SetRegistersReadDataDelegate del = new SetRegistersReadDataDelegate(this.SetRegistersReadData);
-                this.Invoke(del, rg, readData);
+                this.Invoke(del, lineIndex, lineCount, readData);
             }
             else
             {
                 int dataIndex = 0;
 
-                for (int linei = rg.lineIndex; linei < (rg.lineIndex + rg.lineCount); ++linei)
+                for (int linei = lineIndex; linei < (lineIndex + lineCount); ++linei)
                 {
                     RegItem r = RegList[linei] as RegItem;
 
@@ -1591,7 +1636,7 @@ namespace LST.ModbusGridView
             }
         }
 
-        private delegate void SetRegistersReadErrorDelegate(TReadGroup rg, string ErrorString);
+        private delegate void SetRegistersReadErrorDelegate(int lineIndex, int lineCount, string ErrorString);
 
         /// <summary>
         /// Put the read error message in the grid
@@ -1599,17 +1644,17 @@ namespace LST.ModbusGridView
         /// </summary>
         /// <param name="rg">Struct with readgroup parameters</param>
         /// <param name="ErrorString">The error message</param>
-        public void SetRegistersReadError(TReadGroup rg, string ErrorString)
+        public void SetRegistersReadError(int lineIndex, int lineCount, string ErrorString)
         {
             // make this threadsafe, is called from polling thread
             if (this.InvokeRequired)
             {
                 SetRegistersReadErrorDelegate del = new SetRegistersReadErrorDelegate(this.SetRegistersReadError);
-                this.Invoke(del, rg, ErrorString);
+                this.Invoke(del, lineIndex, lineCount, ErrorString);
             }
             else
             {
-                for (int linei = rg.lineIndex; linei < (rg.lineIndex + rg.lineCount); ++linei)
+                for (int linei = lineIndex; linei < (lineIndex + lineCount); ++linei)
                 {
                     RegItem r = RegList[linei] as RegItem;
 
@@ -2298,7 +2343,7 @@ namespace LST.ModbusGridView
         {
             // the icons in ModbusGridViewRes2 have images in multiple sizes
             // select one mathing the zoom factor
-            
+
             // default size at zoomfactor=1 = 9x9 pixels
             int size = (int)(9.0 * currentZoomFactor + 0.5);    // round
 

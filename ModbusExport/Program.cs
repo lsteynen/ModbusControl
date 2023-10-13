@@ -192,7 +192,7 @@ namespace ModbusExport
                 CloseConnection();
 
                 // show counters
-                WriteVerbose("Export counts: " + export.mExportedCount + " registers exported, " + export.mErrorCount + " errors.");
+                WriteVerbose("Export counts: " + export.mSuccessCount + " registers exported, " + export.mErrorCount + " errors.");
 
                 // exit
                 if (e is CommsException)
@@ -204,7 +204,7 @@ namespace ModbusExport
             }
 
             // show counters
-            WriteVerbose("Export counts: " + export.mExportedCount + " registers exported, " + export.mErrorCount + " errors.");
+            WriteVerbose("Export counts: " + export.mSuccessCount + " registers exported, " + export.mErrorCount + " errors.");
 
             // close interface
             CloseConnection();

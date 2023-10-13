@@ -1808,37 +1808,38 @@ namespace ModbusControlSpace
         {
             //Debug.Print(DateTime.Now.TimeOfDay + "PollTabPage(): " + page);
 
-            short[] tmpdata = new short[150];
+            short[] tmpdata;
             ModbusGridView mrv = page.Tag as ModbusGridView;
             ModbusProtocol.Result result;
 
-            // start with first line of this tab
-            ModbusGridView.TReadGroup rg = default;
-            rg.lineIndex = 0;
-
             // get groups of vars to read
-            while (mrv.GetRegistersGroupToRead(ref rg, Project.Connection.MaximumFrameSize)
-                  && ContinuePolling())
-            {
-                //Debug.Print(DateTime.Now.TimeOfDay + "PollTabPage(): GetGroupOfRegistersToRead: " + rg.lineIndex + "," + rg.lineCount + "," + rg.readFirstReg + "," + rg.readCount);
+            List<ModbusGridView.TReadGroup> groupList = mrv.GetReadGroupingList(Project.Connection.MaximumFrameSize);
 
-                // read 
-                UInt16 FirstRegOffset = GetRegOffset(rg.readFirstReg);
-                result = mb.MifReadHoldingRegisters(Project.Connection.SlaveID, FirstRegOffset, rg.readCount, out tmpdata);
+			// read each group, update grid
+            foreach (ModbusGridView.TReadGroup rg in groupList)
+            {
+                // stop polling on tab change or stop
+                if (ContinuePolling() == false)
+                {
+                    break;
+                }
+
+                Debug.Print(DateTime.Now.TimeOfDay + "PollTabPage(): TReadGroup: " + rg.lineIndex + "," + rg.lineCount + "," + rg.readFirstReg + "," + rg.readRegCount);
+
+                // read group 
+                UInt16 firstRegOffset = GetRegOffset(rg.readFirstReg);
+                result = mb.MifReadHoldingRegisters(Project.Connection.SlaveID, firstRegOffset, (UInt16)rg.readRegCount, out tmpdata);
                 if (result == ModbusProtocol.Result.SUCCESS)
                 {
-                    // ok
-
-                    // update data
-                    mrv.SetRegistersReadData(rg, tmpdata);
-
-                    // next group
-                    rg.lineIndex += rg.lineCount;
+					// success
+                    // update grid
+                    mrv.SetRegistersReadData(rg.lineIndex, rg.lineCount, tmpdata);					
                 }
-                else
+				else
                 {
                     // error
 
+                    //TODO: de stop-on-error staat hier niet juist, moet (ook) bij test per register!!!
                     // stop on error?
                     if (Options.StopOnError)
                     {
@@ -1847,46 +1848,52 @@ namespace ModbusControlSpace
                         PollOnceIsStarted = false;
                         // tell the user
                         string msg = "Polling stopped because of 'Stop polling on error' option!" + Environment.NewLine
-                                   + "Read failed: Slave=" + Project.Connection.SlaveID + ", reg=" + rg.readFirstReg + ", quant=" + rg.readCount + Environment.NewLine
+                                   + "Read failed: Slave=" + Project.Connection.SlaveID + ", reg=" + rg.readFirstReg + ", quant=" + rg.readRegCount + Environment.NewLine
                                    + "Error: " + ModbusProtocol.GetResultText(result);
                         StopOnError(msg);
                         Logger1.Log(Logger.LogType.Info, "Polling stopped because of 'Stop polling on error' option!");
                     }
 
-                    // if it is an address error? and we tried a group read? then read alls vars of this group with single reads to get per-register errors
+                    // if it is an address error? and we tried a group read of multiple vars? then try read all vars of this group with single reads to get per-var errors
                     // some slaves return ILLEGALDATAVALUE if address+regcount is invalid, some return ILLEGALADDRESSEXCEPTION
-                    if (((result == ModbusProtocol.Result.ILLEGALADDRESSEXCEPTION) || (result == ModbusProtocol.Result.ILLEGALDATAVALUEEXCEPTION)) && (rg.lineCount > 1) && ContinuePolling())
+                    if (((result == ModbusProtocol.Result.ILLEGALADDRESSEXCEPTION) || (result == ModbusProtocol.Result.ILLEGALDATAVALUEEXCEPTION)) 
+                        && (rg.lineCount > 1) 
+                        && ContinuePolling())
                     {
-                        // read the vars per line, to detect the error per line
-                        int endLineIndex2 = rg.lineIndex + rg.lineCount;
-                        // must use GetGroupOfRegistersToRead() to read lines with 32-bit registers, read 1 line max
-                        while (mrv.GetRegistersGroupToRead(ref rg, 1)
-                             && ((rg.lineIndex + rg.lineCount) < endLineIndex2)
-                             && ContinuePolling())
+                        // read per var (grid line) instead of group, detect error per var
+                        int lineCount = 0;
+                        for (int lineIndex = rg.lineIndex; lineCount < rg.lineCount; ++lineIndex, ++lineCount)
                         {
+                            // stop polling on tab change or exit
+                            if (ContinuePolling() == false)
+                            {
+                                break;
+                            }
+
+                            ModbusGridView.TVarProperties varp = mrv.GetVarPropertiesByIndex(lineIndex);
+
+                            Debug.Print(DateTime.Now.TimeOfDay + "PollTabPage(): Single read: " + lineIndex + "," + 1 + "," + varp.Reg + "," + varp.Size);
+
                             // read
-                            FirstRegOffset = GetRegOffset(rg.readFirstReg);
-                            result = mb.MifReadHoldingRegisters(Project.Connection.SlaveID, FirstRegOffset, rg.readCount, out tmpdata);
+                            UInt16 regOffset = GetRegOffset(varp.Reg);
+                            result = mb.MifReadHoldingRegisters(Project.Connection.SlaveID, regOffset, (UInt16)varp.Size, out tmpdata);
                             if (result == ModbusProtocol.Result.SUCCESS)
                             {
                                 // ok
 
-                                // update data for this var
-                                mrv.SetRegistersReadData(rg, tmpdata);
+                                // update grid
+                                mrv.SetRegistersReadData(lineIndex, 1, tmpdata);
                             }
                             else
                             {
                                 // error
 
-                                // show the error text for this var
-                                mrv.SetRegistersReadError(rg, ModbusProtocol.GetResultText(result));
+                                // update grid
+                                mrv.SetRegistersReadError(lineIndex, 1, ModbusProtocol.GetResultText(result));
 
-                                // show the error in the status bar
-                                SetStatusBarErrorMessage("Read failed: Slave=" + Project.Connection.SlaveID + ", reg=" + rg.readFirstReg + ", quant=" + rg.readCount + ", Error=" + ModbusProtocol.GetResultText(result));
+                                // show error in status bar
+                                SetStatusBarErrorMessage("Read failed: Slave=" + Project.Connection.SlaveID + ", reg=" + varp.Reg + ", quant=" + varp.Size + ", Error=" + ModbusProtocol.GetResultText(result));
                             }
-
-                            // for each line of this group
-                            rg.lineIndex += 1;
 
                             // do possible pending writes
                             DoPendingWrites();
@@ -1895,14 +1902,11 @@ namespace ModbusControlSpace
                     else
                     {
                         // other errors
-                        // show the error text
-                        mrv.SetRegistersReadError(rg, ModbusProtocol.GetResultText(result));
+                        // update grid
+                        mrv.SetRegistersReadError(rg.lineIndex, rg.lineCount, ModbusProtocol.GetResultText(result));
 
-                        // show the error in the status bar
-                        SetStatusBarErrorMessage("Read failed: Slave=" + Project.Connection.SlaveID + ", reg=" + rg.readFirstReg + ", quant=" + rg.readCount + ", Error=" + ModbusProtocol.GetResultText(result));
-
-                        // next group
-                        rg.lineIndex += rg.lineCount;
+                        // show error in status bar
+                        SetStatusBarErrorMessage("Read failed: Slave=" + Project.Connection.SlaveID + ", reg=" + rg.readFirstReg + ", quant=" + rg.readRegCount + ", Error=" + ModbusProtocol.GetResultText(result));
                     }
                 }
 

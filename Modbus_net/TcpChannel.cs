@@ -312,7 +312,7 @@ namespace Modbus_net
 
         public int ReadWait(ref byte[] buffer, int count)
         {
-            Debug.Print(DateTime.Now.TimeOfDay + ": TcpChannel.ReadWait() enter");
+            //Debug.Print(DateTime.Now.TimeOfDay + ": TcpChannel.ReadWait() enter");
 
             string info = "TcpChannel.ReadWait(buffer.Lenght=" + buffer.Length.ToString() + ",count=" + count.ToString();
 
@@ -328,7 +328,7 @@ namespace Modbus_net
                     // use Min, more bytes may have arrived
                     count = Math.Min(count, RxQueue.Count);
 
-                    Debug.Print(DateTime.Now.TimeOfDay + ": TcpChannel.ReadWait(): loop timeout, got " + count + " bytes");
+                    //Debug.Print(DateTime.Now.TimeOfDay + ": TcpChannel.ReadWait(): loop timeout, got " + count + " bytes");
                 }
                 else
                 {
@@ -337,7 +337,7 @@ namespace Modbus_net
                 }
             }
 
-            Debug.Print(DateTime.Now.TimeOfDay + ": TcpChannel.ReadWait(): exit, got " + count + " bytes");
+            //Debug.Print(DateTime.Now.TimeOfDay + ": TcpChannel.ReadWait(): exit, got " + count + " bytes");
 
             try
             {

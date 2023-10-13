@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Threading;
 
 using LST.Helpers;
 using Modbus_net;
 using ModbusControlSpace;
-
 
 namespace ModbusExport
 {
@@ -33,7 +31,7 @@ namespace ModbusExport
     {
         public byte mSlaveAddress;
         public ModbusInterface mModbus;
-        public int mExportedCount;
+        public int mSuccessCount;
         public int mErrorCount;
         private const int mSleeptime = 10;
         public string mFilename;
@@ -58,9 +56,21 @@ namespace ModbusExport
         {
             public int lineIndex;
             public int lineCount;
-            public List<int> lineIndexes;
-            public UInt32 firstReg;
-            public UInt16 regCount;
+            public UInt32 readFirstReg;
+            public int readRegCount;
+        };
+
+        public struct TVarProperties
+        {
+            public UInt32 Reg;          // universal register number 
+            public string Descr;        // description
+            public int Size;            // var size in #registers, 1 or 2
+            public ModbusControlSpace.Global.eFormat Format;      // display as dec, unsigned, hex, binary
+            public int MinLen;          // minimum display length
+            public int Decimals;        // nr of decimals to show
+            public bool Readable;       // readable?
+            public bool Writeable;      // writable?
+            public Global.CEnum EnumDict;   // enum convert dictionary
         };
 
         private class ExportOrderElem
@@ -76,6 +86,12 @@ namespace ModbusExport
         /// </summary>
         public void DoExport()
         {
+        	// read registers from target, write to file
+
+			// reset counters
+       		mSuccessCount = 0;
+        	mErrorCount = 0;
+  
             // check if port is opened
             if (mModbus.IsOpen == false)
             {
@@ -105,15 +121,16 @@ namespace ModbusExport
                 mCsvWriter.WriteComment("Export file created by ModbusExport " + AppHelpers.VersionString + " - " + DateTime.Now.ToString());
                 mCsvWriter.WriteComment("Project file: " + mMbcFilename);
                 mCsvWriter.WriteComment("Fields: Register;Size;Description;Read/write;Format;Value");
+				
+                // export registers of all tabs
 
-                // make a list of the export orders and sort it
+                // make list of tabs in export order
                 List<ExportOrderElem> exportList = GetTabsExportOrderList();
 
-                // export registers of all tabs
                 // export in requested order
-                for( int i = 0; i < exportList.Count; ++i)
+                foreach (ExportOrderElem tabElem in exportList)
                 {
-                    CProject.TTab tab = TabsList[exportList[i].tabIndex];
+                    CProject.TTab tab = TabsList[tabElem.tabIndex];
                     DoExportTab(tab);
                 }
             }
@@ -155,73 +172,68 @@ namespace ModbusExport
             return 0;
         }
 
-        public void DoExportTab(CProject.TTab tab)
+        public void DoExportTab(CProject.TTab tabPage)
         {
+            // read registers from target, write to file
+
+            short[] readData;
+
             // get tab name 
-            string tabName = tab.Name;
+            string tabName = tabPage.Name;
 
             // show tab name 
             mCsvWriter.WriteComment("Tab: " + tabName);
             ReportVerbose("Export tab: \"" + TrimText(tabName) + "\"");
 
-            // output vars
-            // read in groups for good speed
-            TReadGroup grp = default;
-            grp.lineIndex = 0;
-            while (GetRegistersGroupToRead(tab, ref grp, MaximumFrameSize))
+            // get groups of vars to read
+            List<TReadGroup> groupList = GetReadGroupingList(tabPage, MaximumFrameSize);
+
+            // read each group, output data
+            foreach (TReadGroup rg in groupList)
             {
                 //Debug:
-                //ReportVerbose("Read group: " + grp.firstReg.ToString() + " #" + grp.regCount.ToString());
-                //foreach (int i in grp.lineIndexes)
-                //{
-                //    //ReportVerbose("    " + i.ToString());
-                //    CProject.TVar var = tab.VarList[i];
-                //    string s = "Reg " + var.Regnr.ToString() + " size " + var.Size + " descr \"" + TrimText(var.Description) + "\"";
-                //    ReportVerbose("    " + s);
-                //}
+                //ReportVerbose("Read group: " + rg.readFirstReg.ToString() + " #" + rg.readRegCount.ToString());
 
-                UInt16 RegOffset = 0;
-                if (OnGetHoldingregisterModbusOffset(grp.firstReg, out RegOffset) == true)
+                // get register offset
+                UInt16 regOffset = 0;
+                if (OnGetHoldingregisterModbusOffset(rg.readFirstReg, out regOffset) == true)
                 {
-                    // OK
-                    //ReportVerbose("    RegOffset:" + RegOffset.ToString());
+                    //ReportVerbose("    firstRegOffset:" + regOffset.ToString());
 
                     // read 
-                    short[] aValues;
-                    ModbusProtocol.Result result = mModbus.MifReadHoldingRegisters(mSlaveAddress, RegOffset, grp.regCount, out aValues);
+                    ModbusProtocol.Result result = mModbus.MifReadHoldingRegisters(mSlaveAddress, regOffset, (UInt16)rg.readRegCount, out readData);
                     if (result == ModbusProtocol.Result.SUCCESS)
                     {
-                        // output each register of the group
-                        int ValueOffset = 0;
-                        foreach (int i in grp.lineIndexes)
+						// success
+
+                        // process value of each register
+                        int lineCount = 0;
+						int valueIndex = 0;
+                        for (int lineIndex = rg.lineIndex; lineCount < rg.lineCount; ++lineIndex, ++lineCount)
                         {
-                            CProject.TVar var = tab.VarList[i];
+							TVarProperties varp = GetVarPropertiesByIndex(tabPage, lineIndex);
 
                             //Debug:
                             //string s = "Reg " + var.Regnr.ToString() + " size " + var.Size + " descr \"" + TrimText(var.Description) + "\"";
                             //ReportVerbose("    " + s);
 
                             // convert format to type
-                            Global.eType Type = Global.ConvertFormatToType(var.Format);
+                            Global.eType Type = Global.ConvertFormatToType(varp.Format);
 
                             // get the value, 16 or 32-bit, watch size and endian
                             short[] aTmpRegs = new short[2];
-                            aTmpRegs[0] = aValues[ValueOffset++];
+                            aTmpRegs[0] = readData[valueIndex++];
                             aTmpRegs[1] = 0;
                             // is it 32-bit?
-                            if (var.Size == 2)
+                            if (varp.Size == 2)
                             {
-                                aTmpRegs[1] = aValues[ValueOffset++];
+                                aTmpRegs[1] = readData[valueIndex++];
                             }
-                            Int32 Value = Endians.ConvertShortsToValue(aTmpRegs, Type, var.Size * 16);
+                            Int32 Value = Endians.ConvertShortsToValue(aTmpRegs, Type, varp.Size * 16);
 
-                            OutputExportLine(var.Regnr, var.Size, var.Description, var.Format, var.isReadable, var.isWriteable, Value);
-
-                            ++mExportedCount;
+                            OutputExportLine(varp.Reg, varp.Size, varp.Descr, varp.Format, varp.Readable, varp.Writeable, Value);
+                            ++mSuccessCount;
                         }
-
-                        // next group
-                        grp.lineIndex += grp.lineCount;
                     }
                     else
                     {
@@ -229,79 +241,72 @@ namespace ModbusExport
 
                         // if it is an address error? and we tried a group read? then read alls vars of this group with single reads to get per-var errors
                         //  some slaves return eILLEGALDATAVALUE if address + regcount is invalid, some return ILLEGALADDRESSEXCEPTION
-                        if (((result == ModbusProtocol.Result.ILLEGALADDRESSEXCEPTION) || (result == ModbusProtocol.Result.ILLEGALDATAVALUEEXCEPTION)) && (grp.lineCount > 1))
+                        if (((result == ModbusProtocol.Result.ILLEGALADDRESSEXCEPTION) || (result == ModbusProtocol.Result.ILLEGALDATAVALUEEXCEPTION)) && (rg.lineCount > 1))
                         {
-                            // read each var separately
-                            foreach (int i in grp.lineIndexes)
+                            // read per var instead of group, detect error per var
+							int lineCount = 0;
+							for (int lineIndex = rg.lineIndex; lineCount < rg.lineCount; ++lineIndex, ++lineCount)
                             {
-                                CProject.TVar var = tab.VarList[i];
+								TVarProperties varp = GetVarPropertiesByIndex(tabPage, lineIndex);
 
                                 // get register offset
-                                OnGetHoldingregisterModbusOffset(var.Regnr, out RegOffset);
-                                // get number of 16-bit registers to read
-                                UInt16 ReadCount = (UInt16)var.Size;
+                                OnGetHoldingregisterModbusOffset(varp.Reg, out regOffset);
                                 //Debug.Print(DateTime.Now.TimeOfDay + ": MifReadHoldingRegisters(" + mSlaveAddress + "," + GetUserReg(ReadOffset) + "," + ReadCount + ")");
-                                result = mModbus.MifReadHoldingRegisters(mSlaveAddress, RegOffset, ReadCount, out aValues);
+                                result = mModbus.MifReadHoldingRegisters(mSlaveAddress, regOffset, (UInt16)varp.Size, out readData);
                                 //Debug.Print(DateTime.Now.TimeOfDay + ": MifReadHoldingRegisters returned " + result);
                                 if (result == ModbusProtocol.Result.SUCCESS)
                                 {
                                     // get the value, 16 or 32-bit
 
                                     // convert format to type
-                                    Global.eType Type = Global.ConvertFormatToType(var.Format);
+                                    Global.eType Type = Global.ConvertFormatToType(varp.Format);
 
                                     // get the value, 16 or 32-bit, watch size and endian
                                     short[] aTmpRegs = new short[2];
-                                    aTmpRegs[0] = aValues[0];
+                                    aTmpRegs[0] = readData[0];
                                     aTmpRegs[1] = 0;
                                     // is it 32-bit?
-                                    if (var.Size == 2)
+                                    if (varp.Size == 2)
                                     {
-                                        aTmpRegs[1] = aValues[1];
+                                        aTmpRegs[1] = readData[1];
                                     }
-                                    Int32 Value = Endians.ConvertShortsToValue(aTmpRegs, Type, var.Size * 16);
+                                    Int32 Value = Endians.ConvertShortsToValue(aTmpRegs, Type, varp.Size * 16);
 
-                                    OutputExportLine(var.Regnr, var.Size, var.Description, var.Format, var.isReadable, var.isWriteable, Value);
-
-                                    ++mExportedCount;
+                                    OutputExportLine(varp.Reg, varp.Size, varp.Descr, varp.Format, varp.Readable, varp.Writeable, Value);
+                                    ++mSuccessCount;
                                 }
                                 else
                                 {
                                     // error
                                     // OutputExportLineError() handles ContinueOnError
-                                    OutputExportLineError(var.Regnr, var.Size, var.Description, var.Format, var.isReadable, var.isWriteable, ModbusProtocol.GetResultText(result));
+                                    OutputExportLineError(varp.Reg, varp.Size, varp.Descr, varp.Format, varp.Readable, varp.Writeable, ModbusProtocol.GetResultText(result));
                                     ++mErrorCount;
                                 }
                             }
-
-                            // next group
-                            grp.lineIndex += grp.lineCount;
                         }
                         else
                         {
                             // other errors
-                            // show error for each register
-                            foreach (int i in grp.lineIndexes)
+                            // show error for each var
+                            int lineCount = 0;
+                            for (int lineIndex = rg.lineIndex; lineCount < rg.lineCount; ++lineIndex, ++lineCount)
                             {
-                                CProject.TVar var = tab.VarList[i];
-
+                                TVarProperties varp = GetVarPropertiesByIndex(tabPage, lineIndex);
+                            
                                 //Debug:
-                                //string s = "Reg " + var.Regnr.ToString() + " size " + var.Size + " descr \"" + TrimText(var.Description) + "\"";
+                                //string s = "Reg " + varp.Reg.ToString() + " size " + varp.Size + " descr \"" + TrimText(varp.Descr) + "\"";
                                 //ReportVerbose("    " + s);
 
                                 // OutputExportLineError() handles ContinueOnError
-                                OutputExportLineError(var.Regnr, var.Size, var.Description, var.Format, var.isReadable, var.isWriteable, ModbusProtocol.GetResultText(result));
+                                OutputExportLineError(varp.Reg, varp.Size, varp.Descr, varp.Format, varp.Readable, varp.Writeable, ModbusProtocol.GetResultText(result));
                                 ++mErrorCount;
                             }
-
-                            // next group
-                            grp.lineIndex += grp.lineCount;
                         }
                     }
                 }
                 else
                 {
-                    string s = "Register " + grp.firstReg.ToString() + ": Register number is invalid!";
+                    string s = "Register " + rg.readFirstReg.ToString() + ": Register number is invalid!";
                     if (ContinueOnError)
                         ReportError("Error: " + s);
                     else
@@ -311,78 +316,110 @@ namespace ModbusExport
         }
 
         /// <summary>
-        /// Get a group of successive registers to read
+        /// Get a list of group read commands
         /// </summary>
-        /// <param name="rg">struct TReadGroup, in/out</param>
         /// <param name="maxFrameSize">maximum size of the response frame (in bytes)</param>
         /// <returns></returns>
-        public bool GetRegistersGroupToRead(CProject.TTab tab, ref TReadGroup rg, int maxFrameSize)
+        public List<TReadGroup> GetReadGroupingList(CProject.TTab tab, int maxFrameSize)
         {
+            List<TReadGroup> glist = new List<TReadGroup>();
+
+            // no registers?
             if (tab.VarList.Count == 0)
             {
-                return false;
+                return null;
             }
-
-            rg.lineIndexes = new List<int>();
 
             // bepaal max aantal 16-bit registers te lezen
             int max16BitRegs = (int)(maxFrameSize - 5) / 2;
 
-            // vind eerste readable register vanaf index
-            while (rg.lineIndex < tab.VarList.Count)
+            bool grouping = false;
+            int lineIndex = 0;
+            int groupFirstLineIndex = 0;
+            int groupLineCount = 0;
+            UInt32 groupFirstReg = 0;
+            int groupRegCount = 0;
+            UInt32 groupNextRegister = 0;
+            foreach (CProject.TVar var in tab.VarList)
             {
-                if (tab.VarList[rg.lineIndex].isReadable)
-                    break;
-                ++rg.lineIndex;
-            }
-            // found?
-            if (rg.lineIndex < tab.VarList.Count)
-            {
-                // found
-            }
-            else
-            {
-                // not found
-                return false;
-            }
-
-            // get this register number
-            rg.firstReg = tab.VarList[rg.lineIndex].Regnr;
-            int thislen = tab.VarList[rg.lineIndex].Size;   // Size in number of 16-bit registers
-            rg.regCount = (UInt16)thislen;
-            UInt32 nextReg = rg.firstReg + (UInt32)thislen;
-            rg.lineCount = 1;
-            rg.lineIndexes.Add(rg.lineIndex);
-
-            // get consecutive registers to read
-            int linei = rg.lineIndex + 1;
-            while (linei < tab.VarList.Count)
-            {
-                // consecutive? readable?
-                if ((tab.VarList[linei].Regnr == nextReg)
-                  && (tab.VarList[linei].isReadable == true))
+                if (grouping)
                 {
-                    thislen = tab.VarList[linei].Size;     // Size in number of 16-bit registers
-                    if ((rg.regCount + thislen) <= max16BitRegs)           // allowed to read so many registers?
+                    // find next readable register in group
+                    // is consecutive and readable?
+                    if ((var.Regnr == groupNextRegister)
+                        && (var.isReadable == true)
+                        && ((groupRegCount + var.Size) <= max16BitRegs))           // allowed to read so many registers?
                     {
-                        nextReg = nextReg + (UInt32)thislen;
-                        rg.regCount += (UInt16)thislen;
-                        rg.lineCount++;
-                        rg.lineIndexes.Add(linei);
+                        ++groupLineCount;
+                        groupRegCount += var.Size;
+                        groupNextRegister += (UInt32)var.Size;
                     }
                     else
                     {
-                        break;
+                        TReadGroup g = new TReadGroup();
+                        g.lineIndex = groupFirstLineIndex;
+                        g.lineCount = groupLineCount;
+                        g.readFirstReg = groupFirstReg;
+                        g.readRegCount = groupRegCount;
+                        glist.Add(g);
+                        grouping = false;
                     }
                 }
-                else
+                if (grouping == false)
                 {
-                    break;
+                    // find next readable register to start new group
+                    if (var.isReadable)
+                    {
+                        groupFirstLineIndex = lineIndex;    // grid line index of first Reg
+                        groupLineCount = 1;
+                        groupFirstReg = var.Regnr;          // first register of group
+                        groupRegCount = var.Size;            // Size in number of 16-bit registers
+                        groupNextRegister = var.Regnr + (UInt32)var.Size;
+                        grouping = true;
+                    }
                 }
-                ++linei;
+
+                ++lineIndex;
             }
 
-            return true;
+            if (grouping)
+            {
+                TReadGroup g = new TReadGroup();
+                g.lineIndex = groupFirstLineIndex;
+                g.lineCount = groupLineCount;
+                g.readFirstReg = groupFirstReg;
+                g.readRegCount = groupRegCount;
+                glist.Add(g);
+                grouping = false;
+            }
+
+            return glist;
+        }
+
+        /// <summary>
+        /// Get a list of group read commands
+        /// </summary>
+        /// <param name="maxFrameSize">maximum size of the response frame (in bytes)</param>
+        /// <returns></returns>
+        public TVarProperties GetVarPropertiesByIndex(CProject.TTab tab, int lineIndex)
+        {
+            //ModbusGridView.TRegProperties prop = mrv.GetRegisterPropertiesByIndex(0);
+
+            TVarProperties p;
+
+            CProject.TVar reg = tab.VarList[lineIndex];
+
+            p.Reg = reg.Regnr;
+            p.Descr = reg.Description;
+            p.Size = reg.Size;
+            p.Format = reg.Format;
+            p.MinLen = reg.MinLen;
+            p.Decimals = reg.Decimals;
+            p.Readable = reg.isReadable;
+            p.Writeable = reg.isWriteable;
+            p.EnumDict = reg.EnumDict;
+
+            return p;
         }
 
         private bool OutputExportLine(UInt32 Reg, int Size, string Description, Global.eFormat Format, bool isReadable, bool isWriteable, int Value)
