@@ -1839,20 +1839,6 @@ namespace ModbusControlSpace
                 {
                     // error
 
-                    // stop on error?
-                    if (Options.StopOnError)
-                    {
-                        // stop polling immediately
-                        PollingIsStarted = false;
-                        PollOnceIsStarted = false;
-                        // tell the user
-                        string msg = "Polling stopped because of 'Stop polling on error' option!" + Environment.NewLine
-                                   + "Read failed: Slave=" + Project.Connection.SlaveID + ", reg=" + rg.readFirstReg + ", quant=" + rg.readRegCount + Environment.NewLine
-                                   + "Error: " + ModbusProtocol.GetResultText(result);
-                        StopOnError(msg);
-                        Logger1.Log(Logger.LogType.Info, "Polling stopped because of 'Stop polling on error' option!");
-                    }
-
                     // if it is an address error? and we tried a group read of multiple vars? then try read all vars of this group with single reads to get per-var errors
                     // some slaves return ILLEGALDATAVALUE if address+regcount is invalid, some return ILLEGALADDRESSEXCEPTION
                     if (((result == ModbusProtocol.Result.ILLEGALADDRESSEXCEPTION) || (result == ModbusProtocol.Result.ILLEGALDATAVALUEEXCEPTION)) 
@@ -1919,6 +1905,20 @@ namespace ModbusControlSpace
 
                         // show error in status bar
                         SetStatusBarErrorMessage("Read failed: Slave=" + Project.Connection.SlaveID + ", reg=" + rg.readFirstReg + ", quant=" + rg.readRegCount + ", Error=" + ModbusProtocol.GetResultText(result));
+
+                        // stop on error?
+                        if (Options.StopOnError)
+                        {
+                            // stop polling immediately
+                            PollingIsStarted = false;
+                            PollOnceIsStarted = false;
+                            // tell the user
+                            string msg = "Polling stopped because of 'Stop polling on error' option!" + Environment.NewLine
+                                       + "Read failed: Slave=" + Project.Connection.SlaveID + ", reg=" + rg.readFirstReg + ", quant=" + rg.readRegCount + Environment.NewLine
+                                       + "Error: " + ModbusProtocol.GetResultText(result);
+                            StopOnError(msg);
+                            Logger1.Log(Logger.LogType.Info, "Polling stopped because of 'Stop polling on error' option!");
+                        }
                     }
                 }
 
