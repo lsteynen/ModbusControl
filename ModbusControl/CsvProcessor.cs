@@ -20,9 +20,10 @@ namespace LST.Helpers
 {
     public class CsvReader : IDisposable
     {
-		// Private members
-		
-		private StreamReader mReader;
+        // Private members
+
+        private FileStream mFileStream;
+        private StreamReader mReader;
         private string mCurrentLine;
         private int mCurrentPos;
 
@@ -83,7 +84,9 @@ namespace LST.Helpers
             SkipEmptyLines = true;
             SkipCommentLines = true;
             Separator = ',';
-			mReader = new StreamReader(path, Encoding.Default);
+            // open for read in shared mode (can import while Excel has this file open)
+            mFileStream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+            mReader = new StreamReader(mFileStream, Encoding.Default);
         }
 
         // use specified encoding (Default, a certain codepage, ASCII, UTF-8, ...)
@@ -94,9 +97,10 @@ namespace LST.Helpers
             SkipEmptyLines = true;
             SkipCommentLines = true;
             Separator = ',';
-            mReader = new StreamReader(path, encoding);
+            // open for read in shared mode (can import while Excel has this file open)
+            mFileStream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+            mReader = new StreamReader(mFileStream, encoding);
         }
-
 
         /// <summary>
         /// Reads a row of data from a CSV file
