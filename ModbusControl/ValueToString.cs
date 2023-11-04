@@ -104,7 +104,7 @@ namespace LST.Helpers
         }
 
         /// <summary>
-        /// Convert a signed value with Width=1..32 to a 32-bit value
+        /// Convert a signed value with Width=1-32 to a 32-bit value
         /// </summary>
         /// <param name="Value"></param>
         /// <param name="Size"></param>
@@ -123,7 +123,7 @@ namespace LST.Helpers
         }
 
         /// <summary>
-        /// Convert an unsigned value with Width=1..32 to a 32-bit value
+        /// Convert an unsigned value with Width=1-32 to a 32-bit value
         /// </summary>
         /// <param name="Value"></param>
         /// <param name="Size"></param>
@@ -384,8 +384,8 @@ namespace LST.Helpers
         /// Convert a string to a binary value, returned as Int32
         /// Accepts Int, UInt, 0x hex, 0b binary, quoted ASCII string and float formats
         /// Accepts Int and UInt with decimals, is IsFloat==false and Decimals >= 1
-        /// Accept -32768 .. +65535 into a 16-bit field, because it fits
-        /// Accept -128 .. +255 into an 8-bit field, because it fits
+        /// Accept -32768 - +65535 into a 16-bit field, because it fits
+        /// Accept -128 - +255 into an 8-bit field, because it fits
         /// Accept 0 and 1 into an 1-bit field
         /// Do not accept 4294967293 in a 8-bit field (was accepted in Modbuscontrol v1 because it is also -3)
         /// Store temporary result in Int64 to distinguish between 4294967293 and -3 being parsed
@@ -712,11 +712,11 @@ namespace LST.Helpers
         }
 
         /// <summary>
-        /// Check if a value fits in Width bits, range is Signed.Min .. Unsigned.Max
+        /// Check if a value fits in Width bits, range is Signed.Min - Unsigned.Max
         /// If Width==1: must return 0 or 1
         /// </summary>
         /// <param name="Value">The value</param>
-        /// <param name="Width">Width in bits, 1 .. 32</param>
+        /// <param name="Width">Width in bits, 1-32</param>
         /// <returns></returns>
         private static bool FitsWidth(Int64 Value, int Width)
         {

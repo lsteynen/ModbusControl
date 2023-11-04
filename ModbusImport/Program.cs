@@ -34,6 +34,7 @@ namespace ModbusImport
 
             // parse commandline
             CommandlineArgs = new CommandlineProc();
+            CommandlineArgs.versionString = AppHelpers.VersionString;
             try
             {
                 CommandlineArgs.Load();
@@ -41,81 +42,34 @@ namespace ModbusImport
             catch (Exception e)
             {
                 // Commandline error
-                string s = e.Message;
+                string s = "Error: " + e.Message;
                 Write(s);
 
-                if (isnull(CommandlineArgs.ArgHelp, false) == true)
+                if (CommandlineArgs.ArgHelpSwitch == true)
                 {
-                    s = "ModbusImport command line help:" + Environment.NewLine
-                        + CommandlineArgs.GetOptionsUsageString();
-                    Write(s);
+                    Write(CommandlineArgs.GetUsageString());
                 }
 
                 // exit
                 return (int)eExitcodes.CommandlineError;
             }
 
-            if (isnull(CommandlineArgs.ArgHelp, false) == true)
+            if (CommandlineArgs.ArgHelpSwitch == true)
             {
-                string s = "ModbusImport command line help:" + Environment.NewLine
-                    + CommandlineArgs.GetOptionsUsageString();
-                Write(s);
+                Write(CommandlineArgs.GetUsageString());
 
                 // exit
                 return (int)eExitcodes.NoError;
             }
 
-            Verbose = isnull(CommandlineArgs.ArgVerbose, false);
-            ContinueOnError = isnull(CommandlineArgs.ArgContinueOnError, false);
+            Verbose = CommandlineArgs.ArgVerboseSwitch;
+            ContinueOnError = CommandlineArgs.ArgContinueOnErrorSwitch;
 
             // process files
             // mbc file is optional
             // csv file is required
-            mbcFilename = "";
-            csvFilename = "";
-            foreach (string file in CommandlineArgs.FileList)
-            {
-                string ext = Path.GetExtension(file);
-                if (ext.StartsWith(".mbc", StringComparison.CurrentCultureIgnoreCase))
-                {
-                    // load mbc project file, only 1
-                    if (string.IsNullOrEmpty(mbcFilename))
-                    {
-                        mbcFilename = file.Trim();
-                    }
-                    else
-                    {
-                        string s = "Error: More than 1 .mbc file specified!";
-                        Write(s);
-
-                        // exit
-                        return (int)eExitcodes.CommandlineError;
-                    }
-                }
-                else
-                {
-                    // not mbc, assume it is a csv
-                    if (string.IsNullOrEmpty(csvFilename))
-                    {
-                        csvFilename = file.Trim();
-                    }
-                    else
-                    {
-                        string s = "Error: More than 1 CSV file specified!";
-                        Write(s);
-
-                        // exit
-                        return (int)eExitcodes.CommandlineError;
-                    }
-                }
-            }
-            if (csvFilename == "")
-            {
-                string s = "Error: CSV filename is missing!";
-                Write(s);
-                // exit
-                return (int)eExitcodes.CommandlineError;
-            }
+            mbcFilename = CommandlineArgs.ArgMbcFile;
+            csvFilename = CommandlineArgs.ArgCsvFile;
 
             // load mbc file, optional
             if (string.IsNullOrEmpty(mbcFilename) == false)
@@ -177,7 +131,9 @@ namespace ModbusImport
             import.Verbose = Verbose;
             import.mModbus.WriteRegFC = ConvertGlobalWriteHoldingregFunctioncodeEnumToInt(Project.Connection.WriteHoldingregFunctioncode);
             import.ContinueOnError = ContinueOnError;
+			import.TabsSelectList = CommandlineArgs.ArgTabsList;
 
+            // do import
             try
             {
                 import.DoImport();
@@ -187,8 +143,10 @@ namespace ModbusImport
                 string s = "Error: " + e.Message;
                 Write(s);
 
-                // close interface
-                CloseConnection();
+                if (e is ArgumentException)
+                {
+                    return (int)eExitcodes.CommandlineError;
+                }
 
                 // show counters
                 WriteVerbose("Import counts: " + import.mWrittenCount + " registers written, " + import.mNotWriteableCount + " registers non-writeable, " + import.mErrorCount + " errors.");
@@ -201,12 +159,15 @@ namespace ModbusImport
 
                 return (int)eExitcodes.FileError;
             }
+            finally
+            {
+                // close interface
+                CloseConnection();
+            }
 
             // show counters
             WriteVerbose("Import counts: " + import.mWrittenCount + " registers written, " + import.mNotWriteableCount + " registers non-writeable, " + import.mErrorCount + " errors.");
 
-            // close interface
-            CloseConnection();
 
             // exitcode
             if (import.mErrorCount > 0)
@@ -235,8 +196,7 @@ namespace ModbusImport
                 Project.Connection.SerialParity = (Parity)CommandlineArgs.ArgParity;
             if (CommandlineArgs.ArgEndofmessagetimeout != null)
                 Project.Connection.SerialEndOfMessageTimeout = (int)CommandlineArgs.ArgEndofmessagetimeout;
-            if (CommandlineArgs.ArgOnewireechosuppression != null)
-                Project.Connection.SerialOneWireEchoSuppression = (bool)CommandlineArgs.ArgOnewireechosuppression;
+            Project.Connection.SerialOneWireEchoSuppression = CommandlineArgs.ArgOnewireechosuppressionSwitch;
             if (CommandlineArgs.ArgIPAddress != null)
                 Project.Connection.IPAddress = CommandlineArgs.ArgIPAddress;
             if (CommandlineArgs.ArgIPPort != null)

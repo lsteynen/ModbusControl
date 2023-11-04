@@ -281,28 +281,23 @@ namespace ModbusControlSpace
 
             // process command line parameters
             CommandlineArgs = new CommandlineProc();
+			CommandlineArgs.versionString = AppHelpers.VersionString;
             try
             {
                 CommandlineArgs.Load();
 
-                if (CommandlineArgs.ArgHelp == true)    // allows null as false
+                if (CommandlineArgs.ArgHelpSwitch == true)    
                 {
                     // show command line usage
-                    string s = "Command line help:" + Environment.NewLine + CommandlineArgs.GetOptionsUsageString();
+                    string s = CommandlineArgs.GetUsageString();
                     MessageBox.Show(s, "ModbusControl", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                }    
-
-                if (CommandlineArgs.FileList.Count > 1)
-                {
-                    string File2 = CommandlineArgs.FileList[1];
-                    throw new ArgumentException("More than 1 filename was passed! ('" + File2 + "')");
                 }
 
                 // filename passed?
-                if (CommandlineArgs.FileList.Count >= 1)
+                if (string.IsNullOrEmpty(CommandlineArgs.ArgMbcFile) == false)
                 {
                     // got filename
-                    ProjectPath = CommandlineArgs.FileList[0]; 
+                    ProjectPath = CommandlineArgs.ArgMbcFile.Trim(); 
 
                     // get the full path of the file
                     // in case a filename only or relative path was passed
@@ -329,7 +324,7 @@ namespace ModbusControlSpace
             }
             catch (Exception ex)
             {
-                string msg = "Command line argument error: " + Environment.NewLine
+                string msg = "Command line error: " + Environment.NewLine
                             + ex.Message;
                 MessageBox.Show(msg, "ModbusControl", MessageBoxButtons.OK, MessageBoxIcon.Error);
 
@@ -583,7 +578,7 @@ namespace ModbusControlSpace
                                                     || (CommandlineArgs.ArgBaudrate != null)
                                                     || (CommandlineArgs.ArgParity != null)
                                                     || (CommandlineArgs.ArgEndofmessagetimeout != null)
-                                                    || (CommandlineArgs.ArgOnewireechosuppression != null)
+                                                    || (CommandlineArgs.ArgOnewireechosuppressionSwitch == true)
                                                     || (CommandlineArgs.ArgIPAddress != null)
                                                     || (CommandlineArgs.ArgIPPort != null)
                                                     || (CommandlineArgs.ArgSlaveID != null)
@@ -788,7 +783,7 @@ namespace ModbusControlSpace
             configform.BaudrateIsOverride = (CommandlineArgs.ArgBaudrate != null);
             configform.ParityIsOverride = (CommandlineArgs.ArgParity != null);
             configform.EndofmessagetimeoutIsOverride = (CommandlineArgs.ArgEndofmessagetimeout != null);
-            configform.OnewireechosuppressionIsOverride = CommandlineArgs.ArgOnewireechosuppression != null;
+            configform.OnewireechosuppressionIsOverride = CommandlineArgs.ArgOnewireechosuppressionSwitch == true;
             configform.IPAddressIsOverride = (CommandlineArgs.ArgIPAddress != null);
             configform.IPPortIsOverride = (CommandlineArgs.ArgIPPort != null);
             configform.SlaveIDIsOverride = (CommandlineArgs.ArgSlaveID != null);
@@ -980,8 +975,7 @@ namespace ModbusControlSpace
                 Project.Connection.SerialParity = (Parity)CommandlineArgs.ArgParity;
             if (CommandlineArgs.ArgEndofmessagetimeout != null)
                 Project.Connection.SerialEndOfMessageTimeout = (int)CommandlineArgs.ArgEndofmessagetimeout;
-            if (CommandlineArgs.ArgOnewireechosuppression != null)
-                Project.Connection.SerialOneWireEchoSuppression = CommandlineArgs.ArgOnewireechosuppression == true;
+            Project.Connection.SerialOneWireEchoSuppression = CommandlineArgs.ArgOnewireechosuppressionSwitch;
             if (CommandlineArgs.ArgIPAddress != null)
                 Project.Connection.IPAddress = CommandlineArgs.ArgIPAddress;
             if (CommandlineArgs.ArgIPPort != null)
@@ -2808,7 +2802,7 @@ namespace ModbusControlSpace
                     // assuming the user has put quotes around %file if required
                     CmdLine = CmdLine.Replace("%file", file);
                     AppHelpers.SplitCommandlineString(CmdLine, out EdCommand, out EdArg);
-#if DEBUGXX
+#if DEBUG
                     MessageBox.Show(EdCommand + " " + EdArg, "Command line:", MessageBoxButtons.OK, MessageBoxIcon.Information);
 #endif
                     try

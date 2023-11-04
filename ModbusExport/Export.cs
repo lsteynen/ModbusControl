@@ -33,7 +33,6 @@ namespace ModbusExport
         public ModbusInterface mModbus;
         public int mSuccessCount;
         public int mErrorCount;
-        private const int mSleeptime = 10;
         public string mFilename;
         public string mMbcFilename;
         public bool Verbose;
@@ -42,7 +41,7 @@ namespace ModbusExport
         public string ExportAsciiFormat = "";   // ""=default/ASCII, I=Int, U=UInt, H=Hex 
         public int MaximumFrameSize = 256;
         public List<CProject.TTab> TabsList;    // List with all tab pages
-        private CsvWriter mCsvWriter;
+        public List<string> TabsSelectList;      // List of selected tab names to export, in this order
 
         // callback to convert app register numbering to protocol offset
         public event GetHoldingregisterModbusOffset OnGetHoldingregisterModbusOffset;
@@ -72,6 +71,9 @@ namespace ModbusExport
             public bool Writeable;      // writable?
             public Global.CEnum EnumDict;   // enum convert dictionary
         };
+
+        private const int mSleeptime = 10;
+        private CsvWriter mCsvWriter;
 
         private class ExportOrderElem
         {
@@ -121,11 +123,25 @@ namespace ModbusExport
                 mCsvWriter.WriteComment("Export file created by ModbusExport " + AppHelpers.VersionString + " - " + DateTime.Now.ToString());
                 mCsvWriter.WriteComment("Project file: " + mMbcFilename);
                 mCsvWriter.WriteComment("Fields: Register;Size;Description;Read/write;Format;Value");
-				
-                // export registers of all tabs
 
-                // make list of tabs in export order
-                List<ExportOrderElem> exportList = GetTabsExportOrderList();
+                // export tabs/registers
+                List<ExportOrderElem> exportList = null;
+
+                // all tabs or TabsSelectList?
+                if ((TabsSelectList != null) && (TabsSelectList.Count > 0))
+                {
+                    // tabs selected on command line
+
+                    // make list of tabs in export order
+                    exportList = GetTabsExportOrderListFromSelectList(TabsSelectList);
+                }
+                else
+                {
+                    // all tabs
+
+                    // make list of tabs in export order
+                    exportList = GetTabsExportOrderList();
+                }
 
                 // export in requested order
                 foreach (ExportOrderElem tabElem in exportList)
@@ -149,6 +165,36 @@ namespace ModbusExport
             }
 
             list.Sort(ExportOrderComparer);
+
+            return list;
+        }
+
+        private List<ExportOrderElem> GetTabsExportOrderListFromSelectList(List<string> selectList)
+        {
+            List<ExportOrderElem> list = new List<ExportOrderElem>();
+
+            foreach( string tn in selectList)
+            {
+                bool found = false;
+                for (int i = 0; i < TabsList.Count; ++i)
+                {
+                    if (TabsList[i].Name.ToLower() == tn.ToLower())
+                    {
+                        ExportOrderElem el = new ExportOrderElem();
+                        el.tabIndex = i;
+                        el.order = 0;
+                        list.Add(el);
+                        found = true;
+                        break;
+                    }
+                }
+
+                // error if tab name not found
+                if (found == false)
+                {
+                    throw new ArgumentException("Invalid tab name: '" + tn + "'");
+                }
+            }
 
             return list;
         }

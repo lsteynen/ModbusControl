@@ -1,7 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.IO;
 using System.IO.Ports;
+using System.Collections.Generic;
 using System.Net;
+using System.Diagnostics;
 
 // Handle command line arguments.
 // may have filenames
@@ -13,10 +15,13 @@ namespace ModbusExport
     class CommandlineProc
     {
         // properties
+        // set version string for usage
+        public string versionString = "";
 
         // processed arguments
         // List of filenames
-        public List<string> FileList = new List<string>();
+        public string ArgMbcFile;                   // required, empty if not given
+        public string ArgCsvFile;                   // required, empty if not given
 
         // processed options
         // switches (bool values) are null if not specified, true if present
@@ -26,7 +31,7 @@ namespace ModbusExport
         public int? ArgBaudrate;
         public Parity? ArgParity;
         public int? ArgEndofmessagetimeout;
-        public bool? ArgOnewireechosuppression;
+        public bool ArgOnewireechosuppressionSwitch;
         public string ArgIPAddress;             // string is already nullable
         public int? ArgIPPort;
         public int? ArgSlaveID;
@@ -39,21 +44,23 @@ namespace ModbusExport
         public int? ArgStringEndian;            // 0=little, 1=big
         public string ArgExportFormat;          // ""=default, I=int, U=UInt, H=Hex
         public string ArgStringExportFormat;    // ""=ASCII, I=Int, U=UInt, H=Hex
-        public bool? ArgContinueOnError;
-        public bool? ArgVerbose;
-        public bool? ArgHelp;
+        public List<string> ArgTabsList;        // List of tab names
+        public bool ArgContinueOnErrorSwitch;
+        public bool ArgVerboseSwitch;
+        public bool ArgHelpSwitch;
 
         public enum eConnectionType { SerialRTU = 0, ModbusTcp = 1, RtuOverTcp = 2 }
 
         public void Clear()
         {
-            FileList = new List<string>();
+            ArgMbcFile = null;
+            ArgCsvFile = null;
             ArgConnectionType = null;
             ArgPort = null;
             ArgBaudrate = null;
             ArgParity = null;
             ArgEndofmessagetimeout = null;
-            ArgOnewireechosuppression = null;
+            ArgOnewireechosuppressionSwitch = false;
             ArgIPAddress = null;
             ArgIPPort = null;
             ArgSlaveID = null;
@@ -66,18 +73,27 @@ namespace ModbusExport
             ArgStringEndian = null;
             ArgExportFormat = null;
             ArgStringExportFormat = null;
-            ArgContinueOnError = null;
-            ArgVerbose = null;
-            ArgHelp = null;
+            ArgContinueOnErrorSwitch = false;
+            ArgVerboseSwitch = false;
+            ArgHelpSwitch = false;
         }
 
         /// <summary>
         /// Parse command line arguments
         /// Throw exception on error
+        /// Usage:
+        /// ModbusExport Proj.mbc Data.Csv [options]
         /// </summary>
         public void Load()
         {
             int ArgCnt = Environment.GetCommandLineArgs().Length;
+
+            /*
+            for (int i = 1; i < ArgCnt; ++i)
+            {
+                Debug.Print("Arg " + i.ToString() + ": " + Environment.GetCommandLineArgs()[i]);
+            }
+            */
 
             for (int i = 1; i < ArgCnt; ++i)
             {
@@ -91,7 +107,8 @@ namespace ModbusExport
 
                     if (optlow == "connection")
                     {
-                        string val = GetOptString(arg, ref i);
+                        ++i;
+                        string val = GetOptString(arg, i);
                         string vallow = val.ToLower();
                         // use these string to avoid problems with / in command line
                         if (vallow == "serialrtu")
@@ -108,20 +125,23 @@ namespace ModbusExport
                         }
                         else
                         {
-                            throw new ArgumentException("Invalid option value: " + arg + " " + val);
+                            throw new ArgumentException("Option has invalid value: " + arg + " " + val);
                         }
                     }
                     else if (optlow == "port")
                     {
-                        ArgPort = GetOptString(arg, ref i);
+                        ++i;
+                        ArgPort = GetOptString(arg, i);
                     }
                     else if (optlow == "baudrate")
                     {
-                        ArgBaudrate = GetOptInt(arg, ref i, 50, Int32.MaxValue);
+                        ++i;
+                        ArgBaudrate = GetOptInt(arg, i, 50, Int32.MaxValue);
                     }
                     else if (optlow == "parity")
                     {
-                        string val = GetOptString(arg, ref i);
+                        ++i;
+                        string val = GetOptString(arg, i);
 
                         Parity TmpParity;
                         if (Enum.TryParse<Parity>(val, true, out TmpParity))
@@ -130,21 +150,23 @@ namespace ModbusExport
                         }
                         else
                         {
-                            throw new ArgumentException("Invalid option value: " + arg + " " + val);
+                            throw new ArgumentException("Option has invalid value: " + arg + " " + val);
                         }
                     }
                     else if (optlow == "endofmessagetimeout")
                     {
-                        ArgEndofmessagetimeout = GetOptInt(arg, ref i, 1, Int32.MaxValue);
+                        ++i;
+                        ArgEndofmessagetimeout = GetOptInt(arg, i, 1, Int32.MaxValue);
                     }
                     else if (optlow == "onewireechosuppression")
                     {
-                        ArgOnewireechosuppression = GetOptBool(arg, ref i);
+                        ArgOnewireechosuppressionSwitch = true;
                     }
                     else if (optlow == "ipaddress")
                     {
+                        ++i;
                         System.Net.IPAddress TmpIPaddress;
-                        string val = GetOptString(arg, ref i);
+                        string val = GetOptString(arg, i);
                         if (IPAddress.TryParse(val, out TmpIPaddress))
                         {
                             // valid IP addres
@@ -152,70 +174,80 @@ namespace ModbusExport
                         }
                         else
                         {
-                            throw new ArgumentException("Invalid option value: " + arg + " " + val);
+                            throw new ArgumentException("Option has invalid value: " + arg + " " + val);
                         }
                     }
                     else if (optlow == "ipport")
                     {
-                        ArgIPPort = GetOptInt(arg, ref i, 1, 65535);
+                        ++i;
+                        ArgIPPort = GetOptInt(arg, i, 1, 65535);
                     }
                     else if (optlow == "slaveid")
                     {
-                        ArgSlaveID = GetOptInt(arg, ref i, 1, 255);
+                        ++i;
+                        ArgSlaveID = GetOptInt(arg, i, 1, 255);
                     }
                     else if (optlow == "maxframe")
                     {
-                        ArgMaxFrameSize = GetOptInt(arg, ref i, 13, 256);
+                        ++i;
+                        ArgMaxFrameSize = GetOptInt(arg, i, 13, 256);
                     }
                     else if (optlow == "responsetimeout")
                     {
-                        ArgResponsetimeout = GetOptInt(arg, ref i, 1, Int32.MaxValue);
+                        ++i;
+                        ArgResponsetimeout = GetOptInt(arg, i, 1, Int32.MaxValue);
                     }
                     else if (optlow == "interframedelay")
                     {
-                        ArgInterframedelay = GetOptInt(arg, ref i, 1, Int32.MaxValue);
+                        ++i;
+                        ArgInterframedelay = GetOptInt(arg, i, 1, Int32.MaxValue);
                     }
                     /*
-                                        else if (optlow == "writeregfc")
-                                        {
-                                            string val = GetOptString(arg, ref i);
-                                            string vallow = val.ToLower();
-                                            if ((vallow == "6") || (vallow == "06"))
-                                            {
-                                                ArgWriteholdingregFC = 6;
-                                            }
-                                            else
-                                            if (vallow == "16")
-                                            {
-                                                ArgWriteholdingregFC = 16;
-                                            }
-                                            else
-                                            if (vallow == "auto")
-                                            {
-                                                ArgWriteholdingregFC = 0;
-                                            }
-                                            else
-                                            {
-                                                throw new ArgumentException("Invalid option value: " + arg + " " + val);
-                                            }
-                                        }
+                        else if (optlow == "writeregfc")
+                        {
+                            ++i;
+                            string val = GetOptString(arg, i);
+                            string vallow = val.ToLower();
+                            if ((vallow == "6") || (vallow == "06"))
+                            {
+                                ArgWriteholdingregFC = 6;
+                            }
+                            else
+                            if (vallow == "16")
+                            {
+                                ArgWriteholdingregFC = 16;
+                            }
+                            else
+                            if (vallow == "auto")
+                            {
+                                ArgWriteholdingregFC = 0;
+                            }
+                            else
+                            {
+                                throw new ArgumentException("Option has invalid value: " + arg + " " + val);
+                            }
+                        }
                     */
                     else if (optlow == "int32endian")
                     {
-                        ArgInt32Endian = GetOptEndian(arg, ref i);
+                        ++i;
+                        ArgInt32Endian = GetOptEndian(arg, i);
                     }
                     else if (optlow == "float32endian")
                     {
-                        ArgFloat32Endian = GetOptEndian(arg, ref i);
+                        ++i;
+                        ArgFloat32Endian = GetOptEndian(arg, i);
                     }
                     else if (optlow == "stringendian")
                     {
-                        ArgStringEndian = GetOptEndian(arg, ref i);
+                        ++i;
+                        ArgStringEndian = GetOptEndian(arg, i);
                     }
                     else if (optlow == "format")
                     {
                         // ""=default=asinmbc, I=int, U=UInt, H=Hex
-                        string val = GetOptString(arg, ref i);
+                        ++i;
+                        string val = GetOptString(arg, i);
                         if (val.ToLowerInvariant() == "default")
                         {
                             ArgExportFormat = "";
@@ -234,13 +266,14 @@ namespace ModbusExport
                         }
                         else
                         {
-                            throw new ArgumentException("Invalid option value: " + arg + " " + val);
+                            throw new ArgumentException("Option has invalid value: " + arg + " " + val);
                         }
                     }
                     else if (optlow == "stringformat")
                     {
                         // ""=default=ASCII, I=Int, U=UInt, H=Hex
-                        string val = GetOptString(arg, ref i);
+                        ++i;
+                        string val = GetOptString(arg, i);
                         if (val.ToLowerInvariant() == "ascii")
                         {
                             ArgStringExportFormat = "";
@@ -259,30 +292,77 @@ namespace ModbusExport
                         }
                         else
                         {
-                            throw new ArgumentException("Invalid option value: " + arg + " " + val);
+                            throw new ArgumentException("Option has invalid value: " + arg + " " + val);
                         }
+                    }
+                    else if (optlow == "tabs")
+                    {
+                        // pass ref i, variable number of values
+                        ++i;
+                        ArgTabsList = GetOptStringList(arg, ref i);
                     }
                     else if (optlow == "cont")
                     {
-                        ArgContinueOnError = GetOptBool(arg, ref i);
+                        ArgContinueOnErrorSwitch = true;
                     }
                     else if (optlow == "verbose")
                     {
-                        ArgVerbose = GetOptBool(arg, ref i);
+                        ArgVerboseSwitch = true;
                     }
                     else if ((optlow == "?") || (optlow == "h") || (optlow == "help"))
                     {
-                        ArgHelp = GetOptBool(arg, ref i);
+                        ArgHelpSwitch = true;
                     }
                     else
                     {
-                        throw new ArgumentException("Invalid option '" + arg + "'");
+                        throw new ArgumentException("Invalid option: " + arg);
                     }
                 }
                 else
                 {
-                    // is file parameter
-                    FileList.Add(arg.Trim());
+                    // assume file parameter
+                    string file = arg;
+                    string fext = Path.GetExtension(file);
+                    if (fext.StartsWith(".mbc", StringComparison.CurrentCultureIgnoreCase))
+                    {
+                        // mbc project file, 1
+                        if (string.IsNullOrEmpty(ArgMbcFile))
+                        {
+                            ArgMbcFile = file.Trim();
+                        }
+                        else
+                        {
+                            throw new ArgumentException("More than 1 mbc file was passed: '" + file + "'");
+                        }
+                    }
+                    else
+                    {
+                        // not mbc, assume csv, 1
+                        if (string.IsNullOrEmpty(ArgCsvFile))
+                        {
+                            ArgCsvFile = file.Trim();
+                        }
+                        else
+                        {
+                            throw new ArgumentException("More than 1 CSV file was passed: '" + file + "'");
+                        }
+                    }
+                }
+            }
+
+            // do not show these errors if -help is passed
+            if (ArgHelpSwitch == false)
+            {
+                // mbc required
+                if (string.IsNullOrEmpty(ArgMbcFile))
+                {
+                    throw new ArgumentException("mbc filename is missing");
+                }
+
+                // csv required
+                if (string.IsNullOrEmpty(ArgCsvFile))
+                {
+                    throw new ArgumentException("CSV filename is missing");
                 }
             }
         }
@@ -291,35 +371,59 @@ namespace ModbusExport
         /// Get an option value, type string
         /// </summary>
         /// <returns></returns>
-        private string GetOptString(string optName, ref int i)
+        private string GetOptString(string optName, int i)
         {
-            ++i;
-            string val = ArgValue(ref i);
+            string val = ArgValue(i);
             if (val == null)
             {
-                throw new ArgumentException("Option '" + optName + "' has no value!");
+                throw new ArgumentException("Option has no value: " + optName);
             }
 
             return val;
         }
 
         /// <summary>
+        /// Get an option value, type list of strings.
+        /// Pass ref i, variable number of values
+        /// </summary>
+        /// <returns>List of strings</returns>
+        private List<string> GetOptStringList(string optName, ref int i)
+        {
+            List<string> list = new List<string>();
+
+            string val = ArgValue(i);
+            if (val == null)
+            {
+                throw new ArgumentException("Option has no value: " + optName);
+            }
+
+            list.Add(val);
+
+            while ((val = ArgValue(i+1)) != null)
+            {
+                list.Add(val);
+                ++i;
+            }
+
+            return list;
+        }
+
+        /// <summary>
         /// Get an option value, type int
         /// </summary>
         /// <returns></returns>
-        private int GetOptInt(string optName, ref int i, int min, int max)
+        private int GetOptInt(string optName, int i, int min, int max)
         {
-            ++i;
-            string val = ArgValue(ref i);
+            string val = ArgValue(i);
             if (val == null)
             {
-                throw new ArgumentException("Option '" + optName + "' has no value!");
+                throw new ArgumentException("Option has no value: " + optName);
             }
 
             Int32 tmpValue;
             if (Int32.TryParse(val, out tmpValue) == false)
             {
-                throw new ArgumentException("Option '" + optName + " " + val + "' invalid value!");
+                throw new ArgumentException("Option has invalid value: " + optName + " " + val);
             }
 
             if ((tmpValue >= min) && (tmpValue <= max))
@@ -328,23 +432,10 @@ namespace ModbusExport
             }
             else
             {
-                throw new ArgumentException("Option '" + optName + " " + val + "' value out of range!");
+                throw new ArgumentException("Option has invalid value: " + optName + " " + val);
             }
 
             return tmpValue;
-        }
-
-        /// <summary>
-        /// Get an option value, type boolean
-        /// switch only, no true/false value is expected
-        /// </summary>
-        /// <returns></returns>
-        private bool GetOptBool(string optName, ref int i)
-        {
-            // does not expect a value
-            // switch presence means 'true'
-
-            return true;
         }
 
         /// <summary>
@@ -352,12 +443,11 @@ namespace ModbusExport
         /// expects little or big
         /// </summary>
         /// <returns>0 for little, 1 for big</returns>
-        private int GetOptEndian(string optName, ref int i)
+        private int GetOptEndian(string optName, int i)
         {
             int retval = 0;
 
-            ++i;
-            string val = ArgValue(ref i);
+            string val = ArgValue(i);
             string vallow = val.ToLower();
             if (vallow == "little")
             {
@@ -369,7 +459,7 @@ namespace ModbusExport
             }
             else
             {
-                throw new ArgumentException("Option '" + optName + " " + val + "' invalid value!");
+                throw new ArgumentException("Option has invalid value: " + optName + " " + val);
             }
 
             return retval;
@@ -380,7 +470,7 @@ namespace ModbusExport
         /// </summary>
         /// <param name="i"></param>
         /// <returns></returns>
-        private string ArgValue(ref int i)
+        private string ArgValue(int i)
         {
             // any left?
             if (i < Environment.GetCommandLineArgs().Length)
@@ -415,20 +505,22 @@ namespace ModbusExport
             return false;
         }
 
-        public string GetOptionsUsageString()
+        public string GetUsageString()
         {
-            return "Example: ModbusExport Test1.mbc Data1.csv -connection modbustcp -ipaddress 192.168.1.100" + Environment.NewLine
+            return "ModbusExport.exe " + versionString + Environment.NewLine
+                 + "Tool to export registers from a modbus device to a CSV file." + Environment.NewLine
+                 + "Usage: ModbusExport Project.mbc Data.csv [options]" + Environment.NewLine
                  + "Use - or / for options:" + Environment.NewLine
                  + "-connection ### >> Connection type: serialrtu, modbustcp or rtutcp" + Environment.NewLine
-                 + "-port ### >> Serial port name: COM1,.." + Environment.NewLine
+                 + "-port ### >> Serial port name: COM1,..." + Environment.NewLine
                  + "-baudrate ### >> Serial baudrate" + Environment.NewLine
                  + "-parity ### >> Serial parity: odd, even, none, mark or space" + Environment.NewLine
                  + "-endofmessagetimeout ### >> Serial end-of-message timeout (ms)" + Environment.NewLine
                  + "-onewireechosuppression >> Ignore query command being echoed back " + Environment.NewLine
                  + "-ipaddress ##.##.##.## >> Slave/server IP address: like 192.168.1.100" + Environment.NewLine
                  + "-ipport ### >> Slave/server IP port: usually 502" + Environment.NewLine
-                 + "-slaveid ### >> Slave ID number: 1..255" + Environment.NewLine
-                 + "-maxframe ### >> Maximum frame size: 13..256" + Environment.NewLine
+                 + "-slaveid ### >> Slave ID number: 1-255" + Environment.NewLine
+                 + "-maxframe ### >> Maximum frame size: 13-256" + Environment.NewLine
                  + "-responsetimeout ### >> Max wait time for first byte of response (ms)" + Environment.NewLine
                  + "-interframedelay ### >> Delay before sending next query (ms)" + Environment.NewLine
                  //+ "-writeregfc <fc> >> Write holding registers function code: 6, 16 or auto" + Environment.NewLine
@@ -437,6 +529,7 @@ namespace ModbusExport
                  + "-stringendian ### >> String byte order: little, big" + Environment.NewLine
                  + "-format ### >> Export format: default, int, uint, hex" + Environment.NewLine
                  + "-stringformat ### >> String export format: ascii, int, uint, hex" + Environment.NewLine
+                 + "-tabs ### [###]... >> Names of tab pages to export, in this order" + Environment.NewLine
                  + "-cont >> Continue on error" + Environment.NewLine
                  + "-verbose >> Displays verbose output" + Environment.NewLine
                  + "-? or -h or -help >> Shows this help screen" + Environment.NewLine

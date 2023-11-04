@@ -300,7 +300,7 @@ namespace ModbusControlSpace
                 {
                     Options.AutostartTabpage = null;
                     TFilePosition fp = GetFilePos(autostartPageXElement);
-                    throw new XmlException("XML element <page> is not a valid tabpage name, or a valid tabpage number 1 .. N." + Environment.NewLine + LimitXmlTextLength(autostartPageXElement.ToString()) + Environment.NewLine, null, fp.Line, fp.Col);
+                    throw new XmlException("XML element <page> is not a valid tabpage name, or a valid tabpage number 1-N." + Environment.NewLine + LimitXmlTextLength(autostartPageXElement.ToString()) + Environment.NewLine, null, fp.Line, fp.Col);
                 }
             }
         }
@@ -833,7 +833,7 @@ namespace ModbusControlSpace
                     else
                     {
                         TFilePosition fp = GetFilePos(xe);
-                        throw new XmlException("XML element <exportorder> has an invalid value. Valid values are 0 .. 4294967295" + Environment.NewLine + LimitXmlTextLength(xe.ToString()) + Environment.NewLine, null, fp.Line, fp.Col);
+                        throw new XmlException("XML element <exportorder> has an invalid value. Valid values are 0-4294967295" + Environment.NewLine + LimitXmlTextLength(xe.ToString()) + Environment.NewLine, null, fp.Line, fp.Col);
                     }
                 }
                 else// <rw>, default for <var>, optional
