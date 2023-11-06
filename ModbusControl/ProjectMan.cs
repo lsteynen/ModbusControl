@@ -40,6 +40,7 @@ namespace ModbusControlSpace
             public Global.eConnectionType ConnectionType;
             public string SerialPort;
             public int SerialBaudrate;
+            public int SerialNrOfBits;
             public Parity SerialParity;
             public int SerialEndOfMessageTimeout;
             public bool SerialOneWireEchoSuppression;
@@ -153,6 +154,7 @@ namespace ModbusControlSpace
             Connection.ConnectionType = Global.eConnectionType.SerialRTU;
             Connection.SerialPort = "COM1";
             Connection.SerialBaudrate = 9600;
+            Connection.SerialNrOfBits = 8;
             Connection.SerialParity = Parity.None;
             Connection.SerialEndOfMessageTimeout = 100;
             Connection.SerialOneWireEchoSuppression = false;

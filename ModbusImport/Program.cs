@@ -17,6 +17,7 @@ namespace ModbusImport
         private static Import import = new Import();
         private static bool Verbose = false;
         private static bool ContinueOnError = false;
+        private static bool isSerialOpenPortError;
 
         private enum eExitcodes
         {
@@ -108,6 +109,7 @@ namespace ModbusImport
 
             // Connect
             Write("Opening connection: " + GetConnectionInfoString());
+
             try
             {
                 OpenConnection();
@@ -116,6 +118,13 @@ namespace ModbusImport
             {
                 string s = "Error: Could not connect to " + GetConnectionInfoString() + ": " + e.Message;
                 Write(s);
+
+                // if serial port error: show which ports exist
+                if (isSerialOpenPortError)
+                {
+                    string infomessage = "Detected serial ports: " + GetDetectedSerialPortsString();
+                    Write(infomessage);
+                }
 
                 // exit
                 return (int)eExitcodes.CommsError;
@@ -251,11 +260,13 @@ namespace ModbusImport
         private static void OpenConnection()
         {
             bool IsOpen = false;
+            isSerialOpenPortError = false;
 
             // which interface/protocol to use?
             switch (Project.Connection.ConnectionType)
             {
                 case Global.eConnectionType.SerialRTU:
+                    isSerialOpenPortError = true;
                     IsOpen = OpenConnectionForSerialRtu();
                     break;
                 case Global.eConnectionType.ModbusTcp:
@@ -381,16 +392,24 @@ namespace ModbusImport
             switch (Project.Connection.ConnectionType)
             {
                 case Global.eConnectionType.SerialRTU:
-                    result = "SerialRtu: " + isempty(Project.Connection.SerialPort, "''") + " " + Project.Connection.SerialBaudrate.ToString() + "baud";
+                    result = "SerialRtu: " + isempty(Project.Connection.SerialPort, "''")
+                        + " " + Project.Connection.SerialBaudrate.ToString() + "baud"
+                        + " " + Project.Connection.SerialNrOfBits.ToString()
+                            + Project.Connection.SerialParity.ToString().Substring(0, 1)
+                        + " slaveid=" + Project.Connection.SlaveID.ToString();
                     break;
                 case Global.eConnectionType.ModbusTcp:
-                    result = "ModbusTcp: " + isempty(Project.Connection.IPAddress, "''") + ":" + Project.Connection.IPPort.ToString();
+                    result = "ModbusTcp: " + isempty(Project.Connection.IPAddress, "''") 
+                        + ":" + Project.Connection.IPPort.ToString()
+                        + " slaveid=" + Project.Connection.SlaveID.ToString();
                     break;
                 case Global.eConnectionType.RtuOverTcp:
-                    result = "RtuOverTcp: " + isempty(Project.Connection.IPAddress, "''") + ":" + Project.Connection.IPPort.ToString();
+                    result = "RtuOverTcp: " + isempty(Project.Connection.IPAddress, "''") 
+                        + ":" + Project.Connection.IPPort.ToString()
+                        + " slaveid=" + Project.Connection.SlaveID.ToString();
                     break;
                 default:
-                    result = "???";
+                    result = "(Internal error: invalid Project.Connection.ConnectionType)";
                     break;
             }
 
@@ -464,6 +483,29 @@ namespace ModbusImport
                 }
             }
         }
+
+        /// <summary>
+        /// Get a string that show which serial ports exists
+        /// </summary>
+        /// <returns></returns>
+        private static string GetDetectedSerialPortsString()
+        {
+            string result = "";
+
+            string[] array = SerialPort.GetPortNames();
+
+            if (array.Length > 0)
+            {
+                result = string.Join(", ", array);
+            }
+            else
+            {
+                result = "(none)";
+            }
+
+            return result;
+        }
+       
 
         public static bool isnull(bool? v, bool repl)
         {
