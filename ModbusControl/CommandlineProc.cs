@@ -18,7 +18,6 @@ namespace ModbusControlSpace
         public string versionString = "";
 
         // processed arguments
-        // List of filenames
         public string ArgMbcFile;                   // optional, empty if not given
 
         // processed options
@@ -142,7 +141,7 @@ namespace ModbusControlSpace
                         ++i;
                         ArgEndofmessagetimeout = GetOptInt(arg, i, 1, Int32.MaxValue);
                     }
-                    else if (optlow == "onewireechosuppression")
+                    else if (optlow == "onewire")
                     {
                         ArgOnewireechosuppressionSwitch = true;
                     }
@@ -359,21 +358,21 @@ namespace ModbusControlSpace
                  + "Application to read and write registers from/to a modbus device." + Environment.NewLine
                  + "Usage: Modbuscontrol [Project.mbc] [options]" + Environment.NewLine
                  + "Use - or / for options:" + Environment.NewLine
-                 + "-connection ### ➝ Connection type: serialrtu, modbustcp or rtutcp" + Environment.NewLine
-                 + "-port ### ➝ Serial port name: COM1,..." + Environment.NewLine
+                 + "-connection <type> ➝ Connection type: serialrtu, modbustcp or rtutcp" + Environment.NewLine
+                 + "-port <name> ➝ Serial port name: COM1,..." + Environment.NewLine
                  + "-baudrate ### ➝ Serial baudrate" + Environment.NewLine
-                 + "-parity ### ➝ Serial parity: odd, even, none, mark or space" + Environment.NewLine
+                 + "-parity <mode> ➝ Serial parity: odd, even, none, mark or space" + Environment.NewLine
                  + "-endofmessagetimeout ### ➝ Serial end-of-message timeout (ms)" + Environment.NewLine
-                 + "-onewireechosuppression ➝ Ignore query command being echoed back " + Environment.NewLine
-                 + "-ipaddress ##.##.##.## ➝ Slave/server IP address: like 192.168.1.100" + Environment.NewLine
+                 + "-onewire ➝ 1-wire operation, ignore query/command echo" + Environment.NewLine
+                 + "-ipaddress <address> ➝ Slave/server IP address: like 192.168.1.100" + Environment.NewLine
                  + "-ipport ### ➝ Slave/server IP port: usually 502" + Environment.NewLine
                  + "-slaveid ### ➝ Slave ID number: 1-255" + Environment.NewLine
-                 + "-maxframe ### ➝ Maximum frame size: 13-256" + Environment.NewLine
+                 + "-maxframe ### ➝ Maximum frame size: 13-256 bytes" + Environment.NewLine
                  + "-responsetimeout ### ➝ Max wait time for first byte of response (ms)" + Environment.NewLine
                  + "-interframedelay ### ➝ Delay before sending next query (ms)" + Environment.NewLine
-                 + "-writeregfc ### ➝ Write holding registers function code: 6, 16 or auto" + Environment.NewLine
-                 + "-samplerate ### ➝ Registers polling speed (ms)" + Environment.NewLine
-                 + "-? or -h or -help ➝ Shows this help screen";
+                 + "-writeregfc <mode> ➝ Write holding registers function code: 6, 16 or auto" + Environment.NewLine
+                 + "-samplerate ### ➝ Polling period (ms)" + Environment.NewLine
+                 + "-? or -h or -help ➝ Show this help screen";
         }
     }
 }

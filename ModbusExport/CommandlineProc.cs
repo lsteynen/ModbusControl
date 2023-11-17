@@ -19,7 +19,6 @@ namespace ModbusExport
         public string versionString = "";
 
         // processed arguments
-        // List of filenames
         public string ArgMbcFile;                   // required, empty if not given
         public string ArgCsvFile;                   // required, empty if not given
 
@@ -45,6 +44,8 @@ namespace ModbusExport
         public string ArgExportFormat;          // ""=default, I=int, U=UInt, H=Hex
         public string ArgStringExportFormat;    // ""=ASCII, I=Int, U=UInt, H=Hex
         public List<string> ArgTabsList;        // List of tab names
+        public string ArgLogFile;               // logfile
+        public bool ArgLogTimeSwitch;           // put timestamps in log    
         public bool ArgContinueOnErrorSwitch;
         public bool ArgVerboseSwitch;
         public bool ArgHelpSwitch;
@@ -73,6 +74,8 @@ namespace ModbusExport
             ArgStringEndian = null;
             ArgExportFormat = null;
             ArgStringExportFormat = null;
+            ArgLogFile = null;
+            ArgLogTimeSwitch = false;
             ArgContinueOnErrorSwitch = false;
             ArgVerboseSwitch = false;
             ArgHelpSwitch = false;
@@ -82,7 +85,7 @@ namespace ModbusExport
         /// Parse command line arguments
         /// Throw exception on error
         /// Usage:
-        /// ModbusExport Proj.mbc Data.Csv [options]
+        /// ModbusExport Project.mbc Data.csv [options]
         /// </summary>
         public void Load()
         {
@@ -158,7 +161,7 @@ namespace ModbusExport
                         ++i;
                         ArgEndofmessagetimeout = GetOptInt(arg, i, 1, Int32.MaxValue);
                     }
-                    else if (optlow == "onewireechosuppression")
+                    else if (optlow == "onewire")
                     {
                         ArgOnewireechosuppressionSwitch = true;
                     }
@@ -202,32 +205,32 @@ namespace ModbusExport
                         ++i;
                         ArgInterframedelay = GetOptInt(arg, i, 1, Int32.MaxValue);
                     }
-                    /*
-                        else if (optlow == "writeregfc")
+                /*
+                    else if (optlow == "writeregfc")
+                    {
+                        ++i;
+                        string val = GetOptString(arg, i);
+                        string vallow = val.ToLower();
+                        if ((vallow == "6") || (vallow == "06"))
                         {
-                            ++i;
-                            string val = GetOptString(arg, i);
-                            string vallow = val.ToLower();
-                            if ((vallow == "6") || (vallow == "06"))
-                            {
-                                ArgWriteholdingregFC = 6;
-                            }
-                            else
-                            if (vallow == "16")
-                            {
-                                ArgWriteholdingregFC = 16;
-                            }
-                            else
-                            if (vallow == "auto")
-                            {
-                                ArgWriteholdingregFC = 0;
-                            }
-                            else
-                            {
-                                throw new ArgumentException("Option has invalid value: " + arg + " " + val);
-                            }
+                            ArgWriteholdingregFC = 6;
                         }
-                    */
+                        else
+                        if (vallow == "16")
+                        {
+                            ArgWriteholdingregFC = 16;
+                        }
+                        else
+                        if (vallow == "auto")
+                        {
+                            ArgWriteholdingregFC = 0;
+                        }
+                        else
+                        {
+                            throw new ArgumentException("Option has invalid value: " + arg + " " + val);
+                        }
+                    }
+                */
                     else if (optlow == "int32endian")
                     {
                         ++i;
@@ -300,6 +303,19 @@ namespace ModbusExport
                         // pass ref i, variable number of values
                         ++i;
                         ArgTabsList = GetOptStringList(arg, ref i);
+                    }
+                    else if (optlow == "log")
+                    {
+                        ++i;
+                        string tmpFile = GetOptString(arg, i);
+                        if (tmpFile != "")
+                        {
+                            ArgLogFile = tmpFile;
+                        }
+                    }
+                    else if (optlow == "logtime")
+                    {
+                        ArgLogTimeSwitch = true;
                     }
                     else if (optlow == "cont")
                     {
@@ -511,28 +527,30 @@ namespace ModbusExport
                  + "Tool to export registers from a modbus device to a CSV file." + Environment.NewLine
                  + "Usage: ModbusExport Project.mbc Data.csv [options]" + Environment.NewLine
                  + "Use - or / for options:" + Environment.NewLine
-                 + "-connection ### >> Connection type: serialrtu, modbustcp or rtutcp" + Environment.NewLine
-                 + "-port ### >> Serial port name: COM1,..." + Environment.NewLine
-                 + "-baudrate ### >> Serial baudrate" + Environment.NewLine
-                 + "-parity ### >> Serial parity: odd, even, none, mark or space" + Environment.NewLine
-                 + "-endofmessagetimeout ### >> Serial end-of-message timeout (ms)" + Environment.NewLine
-                 + "-onewireechosuppression >> Ignore query command being echoed back " + Environment.NewLine
-                 + "-ipaddress ##.##.##.## >> Slave/server IP address: like 192.168.1.100" + Environment.NewLine
-                 + "-ipport ### >> Slave/server IP port: usually 502" + Environment.NewLine
-                 + "-slaveid ### >> Slave ID number: 1-255" + Environment.NewLine
-                 + "-maxframe ### >> Maximum frame size: 13-256" + Environment.NewLine
-                 + "-responsetimeout ### >> Max wait time for first byte of response (ms)" + Environment.NewLine
-                 + "-interframedelay ### >> Delay before sending next query (ms)" + Environment.NewLine
-                 //+ "-writeregfc <fc> >> Write holding registers function code: 6, 16 or auto" + Environment.NewLine
-                 + "-int32endian ### >> 32-bit int word order: little, big" + Environment.NewLine
-                 + "-float32endian ### >> 32-bit float word order: little, big" + Environment.NewLine
-                 + "-stringendian ### >> String byte order: little, big" + Environment.NewLine
-                 + "-format ### >> Export format: default, int, uint, hex" + Environment.NewLine
-                 + "-stringformat ### >> String export format: ascii, int, uint, hex" + Environment.NewLine
-                 + "-tabs ### [###]... >> Names of tab pages to export, in this order" + Environment.NewLine
-                 + "-cont >> Continue on error" + Environment.NewLine
-                 + "-verbose >> Displays verbose output" + Environment.NewLine
-                 + "-? or -h or -help >> Shows this help screen" + Environment.NewLine
+                 + "-connection <type>              Connection type: serialrtu, modbustcp or rtutcp" + Environment.NewLine
+                 + "-port <name>                    Serial port name: COM1,..." + Environment.NewLine
+                 + "-baudrate ###                   Serial baudrate" + Environment.NewLine
+                 + "-parity <mode>                  Serial parity: odd, even, none, mark or space" + Environment.NewLine
+                 + "-endofmessagetimeout ###        Serial end-of-message timeout (ms)" + Environment.NewLine
+                 + "-onewire                        1-wire operation, ignore query/command echo" + Environment.NewLine
+                 + "-ipaddress <address>            Slave/server IP address: like 192.168.1.100" + Environment.NewLine
+                 + "-ipport ###                     Slave/server IP port: usually 502" + Environment.NewLine
+                 + "-slaveid ###                    Slave ID number: 1-255" + Environment.NewLine
+                 + "-maxframe ###                   Maximum frame size: 13-256 bytes" + Environment.NewLine
+                 + "-responsetimeout ###            Max wait time for first byte of response (ms)" + Environment.NewLine
+                 + "-interframedelay ###            Delay before sending next query (ms)" + Environment.NewLine
+               //+ "-writeregfc <mode>              Write holding registers function code: 6, 16 or auto" + Environment.NewLine
+                 + "-int32endian <endian>           32-bit int word order: little, big" + Environment.NewLine
+                 + "-float32endian <endian>         32-bit float word order: little, big" + Environment.NewLine
+                 + "-stringendian <endian>          String byte order: little, big" + Environment.NewLine
+                 + "-format <format>                Export format: default, int, uint, hex" + Environment.NewLine
+                 + "-stringformat <format>          String export format: ascii, int, uint, hex" + Environment.NewLine
+                 + "-tabs <tabname> [tabname]...    Names of tab pages to export, in this order" + Environment.NewLine
+                 + "-log <file/path>                Append output to a log file" + Environment.NewLine
+                 + "-logtime                        Add timestamps to the log file" + Environment.NewLine
+                 + "-cont                           Continue on error" + Environment.NewLine
+                 + "-verbose                        Display verbose output" + Environment.NewLine
+                 + "-? or -h or -help               Show this help screen" + Environment.NewLine
                  + "Exit codes: 0 = No error, 1 = Commandline error, 2 = File error, 3 = Communication error";
         }
     }

@@ -18,6 +18,7 @@ namespace ModbusImport
         private static bool Verbose = false;
         private static bool ContinueOnError = false;
         private static bool isSerialOpenPortError;
+        private static Logger logger;
 
         private enum eExitcodes
         {
@@ -30,7 +31,7 @@ namespace ModbusImport
         static int Main(string[] args)
         {
             // create project object, with defaults
-            // mainly for connection
+            // is optional, used for connection parameters only
             Project = new CProject();
 
             // parse commandline
@@ -44,11 +45,11 @@ namespace ModbusImport
             {
                 // Commandline error
                 string s = "Error: " + e.Message;
-                Write(s);
+                Print(s);
 
                 if (CommandlineArgs.ArgHelpSwitch == true)
                 {
-                    Write(CommandlineArgs.GetUsageString());
+                    Print(CommandlineArgs.GetUsageString());
                 }
 
                 // exit
@@ -57,7 +58,7 @@ namespace ModbusImport
 
             if (CommandlineArgs.ArgHelpSwitch == true)
             {
-                Write(CommandlineArgs.GetUsageString());
+                Print(CommandlineArgs.GetUsageString());
 
                 // exit
                 return (int)eExitcodes.NoError;
@@ -65,6 +66,34 @@ namespace ModbusImport
 
             Verbose = CommandlineArgs.ArgVerboseSwitch;
             ContinueOnError = CommandlineArgs.ArgContinueOnErrorSwitch;
+
+            // setup logger if used
+            if (string.IsNullOrEmpty(CommandlineArgs.ArgLogFile) == false)
+            {
+                try
+                {
+                    logger = new Logger();
+                    logger.Append = true;                   // append to existing file
+                    if (CommandlineArgs.ArgLogTimeSwitch)
+                    {
+                        logger.AddTimestampsMode = 1;           // ISO8601 datetime
+                    }
+                    logger.AddHeaderLine = true;            // add separator line at start
+                    logger.HeaderLineText = "";             // add empty separator line
+                    logger.Open(CommandlineArgs.ArgLogFile);
+                }
+                catch (Exception ex)
+                {
+                    logger = null;
+                    string s = "Error: Could not open log file: " + ex.Message;
+                    Print(s);
+                    // exit
+                    return (int)eExitcodes.CommandlineError;
+                }
+            }
+
+            // writer starter line into logfile
+            PrintLog("ModbusImport.exe " + AppHelpers.VersionString);
 
             // process files
             // mbc file is optional
@@ -75,7 +104,7 @@ namespace ModbusImport
             // load mbc file, optional
             if (string.IsNullOrEmpty(mbcFilename) == false)
             {
-                Write("Load mbc file: " + mbcFilename);
+                Print("Load mbc file: " + mbcFilename);
 
                 try
                 {
@@ -85,7 +114,7 @@ namespace ModbusImport
                 catch (Exception ex)
                 {
                     string s = "Error: Error in loading .mbc project file: " + ex.Message;
-                    Write(s);
+                    Print(s);
                     // exit
                     return (int)eExitcodes.FileError;
                 }
@@ -94,7 +123,8 @@ namespace ModbusImport
             if (File.Exists(csvFilename) == false)
             {
                 string s = "Error: CSV file '" + csvFilename + "' does not exist!";
-                Write(s);
+                Print(s);
+
                 // exit
                 return (int)eExitcodes.FileError;
             }
@@ -108,7 +138,7 @@ namespace ModbusImport
             CValueToString.Ascii16BigEndian = Project.Connection.Ascii16Endian == Global.eEndian.Big;
 
             // Connect
-            Write("Opening connection: " + GetConnectionInfoString());
+            Print("Opening connection: " + GetConnectionInfoString());
 
             try
             {
@@ -117,13 +147,13 @@ namespace ModbusImport
             catch (Exception e)
             {
                 string s = "Error: Could not connect to " + GetConnectionInfoString() + ": " + e.Message;
-                Write(s);
+                Print(s);
 
                 // if serial port error: show which ports exist
                 if (isSerialOpenPortError)
                 {
                     string infomessage = "Detected serial ports: " + GetDetectedSerialPortsString();
-                    Write(infomessage);
+                    Print(infomessage);
                 }
 
                 // exit
@@ -131,7 +161,7 @@ namespace ModbusImport
             }
 
             // Import
-            Write("Import CSV file: " + csvFilename);
+            Print("Import CSV file: " + csvFilename);
             import.mModbus = mb;
             import.mSlaveAddress = Project.Connection.SlaveID;
             import.mFilename = csvFilename;
@@ -140,7 +170,7 @@ namespace ModbusImport
             import.Verbose = Verbose;
             import.mModbus.WriteRegFC = ConvertGlobalWriteHoldingregFunctioncodeEnumToInt(Project.Connection.WriteHoldingregFunctioncode);
             import.ContinueOnError = ContinueOnError;
-			import.TabsSelectList = CommandlineArgs.ArgTabsList;
+            import.TabsSelectList = CommandlineArgs.ArgTabsList;
 
             // do import
             try
@@ -150,7 +180,7 @@ namespace ModbusImport
             catch (Exception e)
             {
                 string s = "Error: " + e.Message;
-                Write(s);
+                Print(s);
 
                 if (e is ArgumentException)
                 {
@@ -158,7 +188,7 @@ namespace ModbusImport
                 }
 
                 // show counters
-                WriteVerbose("Import counts: " + import.mWrittenCount + " registers written, " + import.mNotWriteableCount + " registers non-writeable, " + import.mErrorCount + " errors.");
+                PrintVerbose("Import counts: " + import.mWrittenCount + " registers written, " + import.mNotWriteableCount + " registers non-writeable, " + import.mErrorCount + " errors.");
 
                 // exit
                 if (e is CommsException)
@@ -175,8 +205,7 @@ namespace ModbusImport
             }
 
             // show counters
-            WriteVerbose("Import counts: " + import.mWrittenCount + " registers written, " + import.mNotWriteableCount + " registers non-writeable, " + import.mErrorCount + " errors.");
-
+            PrintVerbose("Import counts: " + import.mWrittenCount + " registers written, " + import.mNotWriteableCount + " registers non-writeable, " + import.mErrorCount + " errors.");
 
             // exitcode
             if (import.mErrorCount > 0)
@@ -399,12 +428,12 @@ namespace ModbusImport
                         + " slaveid=" + Project.Connection.SlaveID.ToString();
                     break;
                 case Global.eConnectionType.ModbusTcp:
-                    result = "ModbusTcp: " + isempty(Project.Connection.IPAddress, "''") 
+                    result = "ModbusTcp: " + isempty(Project.Connection.IPAddress, "''")
                         + ":" + Project.Connection.IPPort.ToString()
                         + " slaveid=" + Project.Connection.SlaveID.ToString();
                     break;
                 case Global.eConnectionType.RtuOverTcp:
-                    result = "RtuOverTcp: " + isempty(Project.Connection.IPAddress, "''") 
+                    result = "RtuOverTcp: " + isempty(Project.Connection.IPAddress, "''")
                         + ":" + Project.Connection.IPPort.ToString()
                         + " slaveid=" + Project.Connection.SlaveID.ToString();
                     break;
@@ -505,7 +534,6 @@ namespace ModbusImport
 
             return result;
         }
-       
 
         public static bool isnull(bool? v, bool repl)
         {
@@ -530,18 +558,30 @@ namespace ModbusImport
 
         public static void ReportProgressCallback(string s)
         {
-            Write(s);
+            Print(s);
         }
 
-        public static void Write(string s)
+        public static void Print(string s)
         {
             Console.WriteLine(s);
+
+            if (logger != null)
+            {
+                logger.Log(s);
+            }
         }
-        public static void WriteVerbose(string s)
+        public static void PrintVerbose(string s)
         {
             if (Verbose)
             {
-                Console.WriteLine(s);
+                Print(s);
+            }
+        }
+        public static void PrintLog(string s)
+        {
+            if (logger != null)
+            {
+                logger.Log(s);
             }
         }
     }

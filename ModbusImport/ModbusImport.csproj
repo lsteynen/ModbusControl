@@ -113,6 +113,9 @@
     <Compile Include="..\Modbus_net\TcpChannel.cs">
       <Link>Modbus_net\TcpChannel.cs</Link>
     </Compile>
+    <Compile Include="..\Shared\Logger.cs">
+      <Link>Logger.cs</Link>
+    </Compile>
     <Compile Include="CommandlineProc.cs" />
     <Compile Include="Import.cs" />
     <Compile Include="modbusinterface.cs" />
