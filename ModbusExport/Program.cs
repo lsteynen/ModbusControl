@@ -160,7 +160,7 @@ namespace ModbusExport
             export.mModbus.WriteRegFC = ConvertGlobalWriteHoldingregFunctioncodeEnumToInt(Project.Connection.WriteHoldingregFunctioncode);
             export.ExportFormat = isnull(CommandlineArgs.ArgExportFormat, "");
             export.ExportAsciiFormat = isnull(CommandlineArgs.ArgStringExportFormat, "");
-            export.MaximumFrameSize = isnull(CommandlineArgs.ArgMaxFrameSize, 256);
+            export.MaximumFrameSize = Project.Connection.MaximumFrameSize;
             export.ContinueOnError = ContinueOnError;
             export.TabsSelectList = CommandlineArgs.ArgTabsList;
 
