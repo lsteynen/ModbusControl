@@ -57,7 +57,7 @@ namespace LST.Helpers
         {
             get { return mCurrentLine; }
         }
-        
+
         /// <summary>
         /// returns the actual line number in the file of the last ReadRow()
         /// </summary>
@@ -74,13 +74,13 @@ namespace LST.Helpers
             EOF,
         };
 
-		// constructor
+        // constructor
 
         // use encoding for the operating system's current ANSI code page
-        public CsvReader( string path)
+        public CsvReader(string path)
         {
             // set defaults
-            CommentHeaders = new string[] { "#"};
+            CommentHeaders = new string[] { "#" };
             SkipEmptyLines = true;
             SkipCommentLines = true;
             Separator = ',';
@@ -93,7 +93,7 @@ namespace LST.Helpers
         public CsvReader(string path, Encoding encoding)
         {
             // set defaults
-            CommentHeaders = new string[] { "#"};
+            CommentHeaders = new string[] { "#" };
             SkipEmptyLines = true;
             SkipCommentLines = true;
             Separator = ',';
@@ -112,9 +112,9 @@ namespace LST.Helpers
         /// <returns>Result.Data if data record</returns>
         public Result ReadRow(out List<string> fields)
         {
+        ReadNextLine:
             fields = new List<string>();
 
-        ReadNextLine:
             // Read next line from the file
             mCurrentLine = mReader.ReadLine();
             mCurrentPos = 0;
@@ -122,8 +122,8 @@ namespace LST.Helpers
             if (mCurrentLine == null)
                 return Result.EOF;
             ++LineNumber;
-            // Is it an empty line? (not even spaces)
-            if (mCurrentLine.Length == 0)
+            // Is it an empty line? (ignoring spaces)
+            if (mCurrentLine.Trim().Length == 0)
             {
                 if (SkipEmptyLines)
                     goto ReadNextLine;
@@ -133,18 +133,15 @@ namespace LST.Helpers
                     return Result.Data;
                 }
             }
-            // Is it a comment line?
-            foreach( string header in CommentHeaders)
+            // Handle comment line
+            if (IsCommentLine(mCurrentLine))
             {
-                if (mCurrentLine.StartsWith(header))
+                if (SkipCommentLines)
+                    goto ReadNextLine;
+                else
                 {
-                    if (SkipCommentLines)
-                        goto ReadNextLine;
-                    else
-                    {
-                        fields.Add(mCurrentLine.Substring(header.Length));
-                        return Result.Comment;
-                    }
+                    fields.Add(StripCommentHeader(mCurrentLine));
+                    return Result.Comment;
                 }
             }
 
@@ -158,18 +155,66 @@ namespace LST.Helpers
                     field = ReadQuotedField();
                 else
                     field = ReadUnquotedField();
+
                 // Add field to list
                 fields.Add(field);
                 numFields++;
-                // Break if we reached the end of the line
+
+                // End of the line?
                 if (mCurrentLine == null || mCurrentPos == mCurrentLine.Length)
                     break;
+
                 // Otherwise skip delimiter
                 Debug.Assert(mCurrentLine[mCurrentPos] == Separator);
                 mCurrentPos++;
             }
+
+            // is it an ampty line with separators?
+            if (IsAllFieldsEmpty(fields))
+            {
+                if (SkipEmptyLines)
+                {
+                    goto ReadNextLine;
+                }
+            }
+
             // Indicate success
             return Result.Data;
+        }
+
+        /// <summary>
+        /// Is it a comment line?
+        /// </summary>
+        /// <param name="line"></param>
+        private bool IsCommentLine(string line)
+        {
+            foreach (string h in CommentHeaders)
+            {
+                if (line.StartsWith(h))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Strip comment header from the comment line
+        /// </summary>
+        /// <param name="line"></param>
+        /// <returns>line without comment header</returns>
+        private string StripCommentHeader(string line)
+        {
+            foreach (string h in CommentHeaders)
+            {
+                if (line.StartsWith(h))
+                {
+                    return line.Substring(h.Length);
+                }
+            }
+
+            return line;
         }
 
         /// <summary>
@@ -244,6 +289,28 @@ namespace LST.Helpers
             return String.Empty;
         }
 
+        /// <summary>
+        /// Check if all fields are empty, ignore spaces
+        /// </summary>
+        /// <param name=""></param>
+        private bool IsAllFieldsEmpty(List<string> fields)
+        {
+            foreach (string f in fields)
+            {
+                if (string.IsNullOrWhiteSpace(f))
+                {
+                    // empty, continue check
+                }
+                else
+                {
+                    // not empty
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
         public void Close()
         {
             mReader.Close();
@@ -298,7 +365,7 @@ namespace LST.Helpers
         // constructor
 
         // use encoding for the operating system's current ANSI code page
-        public CsvWriter( string path)
+        public CsvWriter(string path)
         {
             // set defaults
             CommentHeader = "#";
