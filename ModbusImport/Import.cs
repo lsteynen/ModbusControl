@@ -43,8 +43,10 @@ namespace ModbusImport
 
         private class ImportLine
         {
-            public int LineNum;
+            public int lineNum;
+            public string tabName;
             public UInt32 Reg;
+            public UInt16 RegOffset;
             public int Width;
             public string Description;
             public bool isReadable;
@@ -52,12 +54,14 @@ namespace ModbusImport
             public Global.eFormat Format;
             public string ValueString;
             public Int32 Value;
-            public string tabName;
 
             // constructor
             public ImportLine()
             {
+                lineNum = 0;
+                tabName = null;
                 Reg = 0;
+                RegOffset = 0;
                 Width = 16;
                 Description = null;
                 isReadable = true;
@@ -163,22 +167,31 @@ namespace ModbusImport
                 bool bContinue = true;
                 string currentTabName = "";
 
+                //TODO: raar effect bij Test-import-checks.csv:
+                //  eerst worden alle error getoond, dan de valid registers geladen, volgorde is fout!!!!!
+                //TODO: IsError nog naar ModbusControl migreren
+                //TODO: betere foutmeldingen naar ModbusControl 
+                //TODO: GetReg naar ModbusControl 
+                //TODO: GetDescr naar ModbusControl
+
                 while (bContinue)
                 {
-                    CsvReader.Result linetype = csvreader.ReadRow(out fields);
+                    CsvReader.Result lineType = csvreader.ReadRow(out fields);
 
-                    if (linetype == CsvReader.Result.Comment)
+                    if (lineType == CsvReader.Result.Comment)
                     {
+                        // save the tab names, there is an option to import only certain tabs
                         string line = fields[0];
                         if (line.ToLower().StartsWith("tab:"))
                         {
                             currentTabName = line.Substring(4).Trim();
                         }
                     }
-                    else if (linetype == CsvReader.Result.Data)
+                    else if (lineType == CsvReader.Result.Data)
                     {
                         // got a data line
                         // we accept 2, 3, 4 ,5, or 6 fields
+                        bool IsError = false;
 
                         // init default value strings
                         // then process all fields
@@ -232,85 +245,92 @@ namespace ModbusImport
                         else
                         {
                             // incorrect number of fields
-                            string s = "Line " + csvreader.LineNumber.ToString() + ": Line format is not valid! (need 2, 3, 4, 5 or 6 fields)";
+                            string s = "Line " + csvreader.LineNumber.ToString() + ": Invalid number of fields: found " + fields.Count.ToString() + " fields, expecting 2, 3, 4, 5 or 6 fields!";
+                            IsError = true;
                             if (ContinueOnError)
                                 ReportError("Error: " + s);
                             else
                                 throw new FileException(s);
                         }
 
-                        // validate the new line and add to list
-                        ImportLine imp = new ImportLine();
-                        imp.LineNum = csvreader.LineNumber;
-                        imp.tabName = currentTabName;
-                        UInt16 RegOffset = 0;
-
-                        if (uint.TryParse(RegString, out imp.Reg))
+                        if (IsError == false)
                         {
-                            if (OnGetHoldingregisterModbusOffset(imp.Reg, out RegOffset) == false)
+                            // validate the line and add to list
+                            ImportLine imp = new ImportLine();
+                            imp.lineNum = csvreader.LineNumber;
+                            imp.tabName = currentTabName;
+
+                            if (GetReg(RegString, out imp.Reg, out imp.RegOffset) == false)
                             {
-                                string s = "Line " + csvreader.LineNumber.ToString() + ": Register number field is invalid!";
+
+                                string s = "Line " + csvreader.LineNumber.ToString() + ": Register number (" + RegString + ") is invalid!";
+                                IsError = true;
                                 if (ContinueOnError)
                                     ReportError("Error: " + s);
                                 else
                                     throw new FileException(s);
                             }
-                        }
-                        else
-                        {
-                            string s = "Line " + csvreader.LineNumber.ToString() + ": Register number field is invalid!";
-                            if (ContinueOnError)
-                                ReportError("Error: " + s);
-                            else
-                                throw new FileException(s);
-                        }
-                        if (GetSize(SizeString, out imp.Width) == false)
-                        {
-                            string s = "Line " + csvreader.LineNumber.ToString() + ": Register size field is invalid!";
-                            if (ContinueOnError)
-                                ReportError("Error: " + s);
-                            else
-                                throw new FileException(s);
-                        }
-                        imp.Description = DescriptionString;
-                        if (GetReadWriteFlags(RwString, out imp.isReadable, out imp.isWriteable) == false)
-                        {
-                            string s = "Line " + csvreader.LineNumber.ToString() + ": R/W flags field is invalid!";
-                            if (ContinueOnError)
-                                ReportError("Error: " + s);
-                            else
-                                throw new FileException(s);
-                        }
-                        if (GetFormat(FormatString, out imp.Format) == false)
-                        {
-                            string s = "Line " + csvreader.LineNumber.ToString() + ": Type field is invalid!";
-                            if (ContinueOnError)
-                                ReportError("Error: " + s);
-                            else
-                                throw new FileException(s);
-                        }
-                        bool bIsFloat = (imp.Format == Global.eFormat.Float);
-                        if (bIsFloat && (imp.Width != 32))
-                        {
-                            string s = "Line " + csvreader.LineNumber.ToString() + ": Float format size is not 32-bit!";
-                            if (ContinueOnError)
-                                ReportError("Error: " + s);
-                            else
-                                throw new FileException(s);
-                        }
-                        imp.ValueString = ValueString;
-                        Global.eType Type;
-                        if (CValueToString.StringToValue(ValueString, bIsFloat, imp.Width, 0, out imp.Value, out Type) == false)
-                        {
-                            string s = "Line " + csvreader.LineNumber.ToString() + ": Value field is invalid!";
-                            if (ContinueOnError)
-                                ReportError("Error: " + s);
-                            else
-                                throw new FileException(s);
-                        }
 
-                        // valid line
-                        ImportList.Add(imp);
+                            if (GetSize(SizeString, out imp.Width) == false)
+                            {
+                                string s = "Line " + csvreader.LineNumber.ToString() + ": Register " + RegString + ": size (" + SizeString + ") is invalid!";
+                                IsError = true;
+                                if (ContinueOnError)
+                                    ReportError("Error: " + s);
+                                else
+                                    throw new FileException(s);
+                            }
+
+                            GetDescr(DescriptionString, out imp.Description);
+
+                            if (GetReadWriteFlags(RwString, out imp.isReadable, out imp.isWriteable) == false)
+                            {
+                                string s = "Line " + csvreader.LineNumber.ToString() + ": Register " + RegString + ": r/w definition (" + RwString + ") is invalid!";
+                                IsError = true;
+                                if (ContinueOnError)
+                                    ReportError("Error: " + s);
+                                else
+                                    throw new FileException(s);
+                            }
+
+                            if (GetFormat(FormatString, out imp.Format) == false)
+                            {
+                                string s = "Line " + csvreader.LineNumber.ToString() + ": Register " + RegString + ": type (" + FormatString + ") is invalid!";
+                                IsError = true;
+                                if (ContinueOnError)
+                                    ReportError("Error: " + s);
+                                else
+                                    throw new FileException(s);
+                            }
+
+                            bool bIsFloat = (imp.Format == Global.eFormat.Float);
+                            if (bIsFloat && (imp.Width != 32))
+                            {
+                                string s = "Line " + csvreader.LineNumber.ToString() + ": Register " + RegString + ": float format size is not 32-bit!";
+                                IsError = true;
+                                if (ContinueOnError)
+                                    ReportError("Error: " + s);
+                                else
+                                    throw new FileException(s);
+                            }
+                            imp.ValueString = ValueString;
+                            Global.eType Type;
+                            if (CValueToString.StringToValue(ValueString, bIsFloat, imp.Width, 0, out imp.Value, out Type) == false)
+                            {
+                                string s = "Line " + csvreader.LineNumber.ToString() + ": Register " + RegString + ": value (" + ValueString + ") is invalid!";
+                                IsError = true;
+                                if (ContinueOnError)
+                                    ReportError("Error: " + s);
+                                else
+                                    throw new FileException(s);
+                            }
+
+                            // add line if valid
+                            if (IsError == false)
+                            {
+                                ImportList.Add(imp);
+                            }
+                        }
                     }
                     else
                     {
@@ -430,7 +450,7 @@ namespace ModbusImport
                 ++mErrorCount;
 
                 // this is a File error
-                string s = "Line " + line.LineNum.ToString() + ": Register number is invalid!";
+                string s = "Line " + line.lineNum.ToString() + ": Register number is invalid!";
                 if (ContinueOnError)
                     ReportError("Error: " + s);
                 else
@@ -453,7 +473,7 @@ namespace ModbusImport
                 // error
                 ++mErrorCount;
 
-                string s = "Line " + line.LineNum.ToString() + ": Write: " + BuildImportLineString(line) + " >> " + ModbusProtocol.GetResultText(result);
+                string s = "Line " + line.lineNum.ToString() + ": Write: " + BuildImportLineString(line) + " >> " + ModbusProtocol.GetResultText(result);
                 if (ContinueOnError)
                     ReportError("Error: " + s);
                 else
@@ -493,10 +513,33 @@ namespace ModbusImport
             return s;
         }
 
+        private bool GetReg(string text, out uint reg, out ushort regOffset)
+        {
+            reg = 0;
+            regOffset = 0;
+
+            if (uint.TryParse(text, out reg))
+            {
+                if (OnGetHoldingregisterModbusOffset(reg, out regOffset))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+
         private bool GetSize(string text, out int size)
         {
             // allow 16, 32
             return int.TryParse(text, out size) && ((size == 16) || (size == 32));
+        }
+
+        private bool GetDescr(string text, out string descr)
+        {
+            descr = text;
+            return true;
         }
 
         private bool GetReadWriteFlags(string text, out bool bRead, out bool bWrite)
