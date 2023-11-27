@@ -122,7 +122,7 @@ namespace ModbusImport
 
             if (File.Exists(csvFilename) == false)
             {
-                string s = "Error: CSV file '" + csvFilename + "' does not exist!";
+                string s = "Error: CSV file '" + csvFilename + "' does not exist.";
                 Print(s);
 
                 // exit
@@ -368,7 +368,7 @@ namespace ModbusImport
             else
             {
                 // error
-                throw new Exception("Invalid IP address!");
+                throw new Exception("Invalid IP address.");
             }
 
             // open
@@ -400,7 +400,7 @@ namespace ModbusImport
             }
             else
             {
-                throw new Exception("Invalid IP address!");
+                throw new Exception("Invalid IP address.");
             }
 
             // open
