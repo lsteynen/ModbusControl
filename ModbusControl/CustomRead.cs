@@ -107,7 +107,7 @@ namespace ModbusControlSpace
             {
                 if (radiobuttonSize32bit.Checked && ((RegQuantity & 1) == 1))
                 {
-                    textboxLog.AppendText("ERROR: Quantity must be multiple of 2 to read 32-bit values!" + Environment.NewLine);
+                    textboxLog.AppendText("ERROR: Quantity must be multiple of 2 to read 32-bit values." + Environment.NewLine);
                     return;
                 }
             }

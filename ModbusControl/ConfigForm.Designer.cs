@@ -531,7 +531,7 @@
             this.picConnectionTypeIsOverride.TabIndex = 12;
             this.picConnectionTypeIsOverride.TabStop = false;
             this.toolTip1.SetToolTip(this.picConnectionTypeIsOverride, "This parameter is overridden by the command line! It shows the value as set by th" +
-        "e command line, not the value configured in the mbc project file!");
+        "e command line, not the value configured in the mbc project file.");
             // 
             // picPortIsOverride
             // 
@@ -543,7 +543,7 @@
             this.picPortIsOverride.TabIndex = 13;
             this.picPortIsOverride.TabStop = false;
             this.toolTip1.SetToolTip(this.picPortIsOverride, "This parameter is overridden by the command line! It shows the value as set by th" +
-        "e command line, not the value configured in the mbc project file!");
+        "e command line, not the value configured in the mbc project file.");
             // 
             // picBaudrateIsOverride
             // 
@@ -555,7 +555,7 @@
             this.picBaudrateIsOverride.TabIndex = 14;
             this.picBaudrateIsOverride.TabStop = false;
             this.toolTip1.SetToolTip(this.picBaudrateIsOverride, "This parameter is overridden by the command line! It shows the value as set by th" +
-        "e command line, not the value configured in the mbc project file!");
+        "e command line, not the value configured in the mbc project file.");
             // 
             // picParityIsOverride
             // 
@@ -567,7 +567,7 @@
             this.picParityIsOverride.TabIndex = 15;
             this.picParityIsOverride.TabStop = false;
             this.toolTip1.SetToolTip(this.picParityIsOverride, "This parameter is overridden by the command line! It shows the value as set by th" +
-        "e command line, not the value configured in the mbc project file!");
+        "e command line, not the value configured in the mbc project file.");
             // 
             // picEndofmessagetimeoutIsOverride
             // 
@@ -579,7 +579,7 @@
             this.picEndofmessagetimeoutIsOverride.TabIndex = 16;
             this.picEndofmessagetimeoutIsOverride.TabStop = false;
             this.toolTip1.SetToolTip(this.picEndofmessagetimeoutIsOverride, "This parameter is overridden by the command line! It shows the value as set by th" +
-        "e command line, not the value configured in the mbc project file!");
+        "e command line, not the value configured in the mbc project file.");
             // 
             // picIPAddressIsOverride
             // 
@@ -591,7 +591,7 @@
             this.picIPAddressIsOverride.TabIndex = 17;
             this.picIPAddressIsOverride.TabStop = false;
             this.toolTip1.SetToolTip(this.picIPAddressIsOverride, "This parameter is overridden by the command line! It shows the value as set by th" +
-        "e command line, not the value configured in the mbc project file!");
+        "e command line, not the value configured in the mbc project file.");
             // 
             // picIPPortIsOverride
             // 
@@ -603,7 +603,7 @@
             this.picIPPortIsOverride.TabIndex = 18;
             this.picIPPortIsOverride.TabStop = false;
             this.toolTip1.SetToolTip(this.picIPPortIsOverride, "This parameter is overridden by the command line! It shows the value as set by th" +
-        "e command line, not the value configured in the mbc project file!");
+        "e command line, not the value configured in the mbc project file.");
             // 
             // picOnewireechosuppressionIsOverride
             // 
@@ -615,7 +615,7 @@
             this.picOnewireechosuppressionIsOverride.TabIndex = 19;
             this.picOnewireechosuppressionIsOverride.TabStop = false;
             this.toolTip1.SetToolTip(this.picOnewireechosuppressionIsOverride, "This parameter is overridden by the command line! It shows the value as set by th" +
-        "e command line, not the value configured in the mbc project file!");
+        "e command line, not the value configured in the mbc project file.");
             // 
             // picSlaveIDIsOverride
             // 
@@ -627,7 +627,7 @@
             this.picSlaveIDIsOverride.TabIndex = 20;
             this.picSlaveIDIsOverride.TabStop = false;
             this.toolTip1.SetToolTip(this.picSlaveIDIsOverride, "This parameter is overridden by the command line! It shows the value as set by th" +
-        "e command line, not the value configured in the mbc project file!");
+        "e command line, not the value configured in the mbc project file.");
             // 
             // picResponsetimeoutIsOverride
             // 
@@ -639,7 +639,7 @@
             this.picResponsetimeoutIsOverride.TabIndex = 21;
             this.picResponsetimeoutIsOverride.TabStop = false;
             this.toolTip1.SetToolTip(this.picResponsetimeoutIsOverride, "This parameter is overridden by the command line! It shows the value as set by th" +
-        "e command line, not the value configured in the mbc project file!");
+        "e command line, not the value configured in the mbc project file.");
             // 
             // picInterframedelayIsOverride
             // 
@@ -651,7 +651,7 @@
             this.picInterframedelayIsOverride.TabIndex = 22;
             this.picInterframedelayIsOverride.TabStop = false;
             this.toolTip1.SetToolTip(this.picInterframedelayIsOverride, "This parameter is overridden by the command line! It shows the value as set by th" +
-        "e command line, not the value configured in the mbc project file!");
+        "e command line, not the value configured in the mbc project file.");
             // 
             // picSamplerateIsOverride
             // 
@@ -663,7 +663,7 @@
             this.picSamplerateIsOverride.TabIndex = 23;
             this.picSamplerateIsOverride.TabStop = false;
             this.toolTip1.SetToolTip(this.picSamplerateIsOverride, "This parameter is overridden by the command line! It shows the value as set by th" +
-        "e command line, not the value configured in the mbc project file!");
+        "e command line, not the value configured in the mbc project file.");
             // 
             // label5
             // 
@@ -1016,7 +1016,7 @@
             this.label16.Size = new System.Drawing.Size(578, 30);
             this.label16.TabIndex = 1;
             this.label16.Text = "Some parameters are overridden by the command line! \r\nThey show the value as set " +
-    "by the command line, not the value configured in the mbc project file!";
+    "by the command line, not the value configured in the mbc project file.";
             // 
             // panelWarning
             // 
@@ -1040,7 +1040,7 @@
             this.picMaxFrameSizeIsOverride.TabIndex = 23;
             this.picMaxFrameSizeIsOverride.TabStop = false;
             this.toolTip1.SetToolTip(this.picMaxFrameSizeIsOverride, "This parameter is overridden by the command line! It shows the value as set by th" +
-        "e command line, not the value configured in the mbc project file!");
+        "e command line, not the value configured in the mbc project file.");
             // 
             // numericInterFrameDelay
             // 
@@ -1076,7 +1076,7 @@
             this.picwriteregFCIsOverride.TabIndex = 13;
             this.picwriteregFCIsOverride.TabStop = false;
             this.toolTip1.SetToolTip(this.picwriteregFCIsOverride, "This parameter is overridden by the command line! It shows the value as set by th" +
-        "e command line, not the value configured in the mbc project file!");
+        "e command line, not the value configured in the mbc project file.");
             // 
             // ConfigForm
             // 

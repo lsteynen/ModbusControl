@@ -14,7 +14,6 @@ using System.Diagnostics;
 // - spaces: quoted fields: spaces inside the quotes are part of the field
 // - spaces: quoted fields: spaces leading or trailing the quoted fields are forbidden and considered invalid format
 // - an empty line is returned as 1 empty field if SkipEmptyLines=false
-// - a line with only spaces is seen as 1 field containing spaces
 
 namespace LST.Helpers
 {

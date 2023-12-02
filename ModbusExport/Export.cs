@@ -97,7 +97,7 @@ namespace ModbusExport
             // check if port is opened
             if (mModbus.IsOpen == false)
             {
-                throw new CommsException("Connection is not open!");
+                throw new CommsException("Connection is not open.");
             }
 
             // Use Windows's current ANSI codepage encoding, this allows easy import in Excel.
@@ -352,7 +352,7 @@ namespace ModbusExport
                 }
                 else
                 {
-                    string s = "Register " + rg.readFirstReg.ToString() + ": Register number is invalid!";
+                    string s = "Register " + rg.readFirstReg.ToString() + ": Register number is invalid.";
                     if (ContinueOnError)
                         ReportError("Error: " + s);
                     else

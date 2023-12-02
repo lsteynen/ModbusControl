@@ -360,7 +360,7 @@ namespace ModbusExport
             else
             {
                 // error
-                throw new Exception("Invalid IP address!");
+                throw new Exception("Invalid IP address.");
             }
 
             // open
@@ -392,7 +392,7 @@ namespace ModbusExport
             }
             else
             {
-                throw new Exception("Invalid IP address!");
+                throw new Exception("Invalid IP address.");
             }
 
             // open

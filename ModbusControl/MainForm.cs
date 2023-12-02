@@ -1632,6 +1632,7 @@ namespace ModbusControlSpace
                 }
                 catch (Exception)
                 {
+                    // ignore
                 }
 
                 // which interface/protocol was used?

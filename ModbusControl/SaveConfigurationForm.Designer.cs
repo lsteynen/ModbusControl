@@ -72,7 +72,7 @@
             this.label2.TabIndex = 1;
             this.label2.Text = "Some connection parameters are overridden by the command line! If you save the cu" +
     "rrent configuration to the mbc project file\r\nyou may overwrite some parameters w" +
-    "ith the command line values!";
+    "ith the command line values.";
             // 
             // pictureBox1
             // 

@@ -56,11 +56,11 @@ namespace ModbusControlSpace
             {
                 if (convresult == 1)
                 {
-                    textboxResult.AppendText("ERROR: Command was empty!" + Environment.NewLine);
+                    textboxResult.AppendText("ERROR: Command was empty." + Environment.NewLine);
                 }
                 else
                 {
-                    textboxResult.AppendText("ERROR: Command has invalid characters or invalid byte values!" + Environment.NewLine);
+                    textboxResult.AppendText("ERROR: Command has invalid characters or invalid byte values." + Environment.NewLine);
                 }
                 return;
             }
@@ -68,7 +68,7 @@ namespace ModbusControlSpace
             // minimum length?
             if (query.Length < 2)
             {
-                textboxResult.AppendText("ERROR: Command must be at least 2 bytes!" + Environment.NewLine);
+                textboxResult.AppendText("ERROR: Command must be at least 2 bytes." + Environment.NewLine);
                 return;
             }
 

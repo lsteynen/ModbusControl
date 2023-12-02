@@ -86,7 +86,7 @@ namespace ModbusControlSpace
             // got filename?
             if (textboxFilename.Text.Length == 0)
             {
-                textboxLog.AppendText("ERROR: No file name!" + Environment.NewLine);
+                textboxLog.AppendText("ERROR: No file name." + Environment.NewLine);
                 return;
             }
 
@@ -122,14 +122,14 @@ namespace ModbusControlSpace
             // check if port is opened
             if (mModbus.IsOpen == false)
             {
-                textboxLog.AppendText("ERROR: Connection is not open!" + Environment.NewLine);
+                textboxLog.AppendText("ERROR: Connection is not open." + Environment.NewLine);
                 return;
             }
 
             // check if we have tab pages
             if( mParent.GetTabPageCount() < 1)
             {
-                textboxLog.AppendText("ERROR: No tab pages!" + Environment.NewLine);
+                textboxLog.AppendText("ERROR: No tab pages." + Environment.NewLine);
                 return;
             }
 
