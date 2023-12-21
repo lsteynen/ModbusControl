@@ -520,7 +520,7 @@ namespace ModbusControlSpace
 
         private bool GetReadWriteFlags(string text, out bool bRead, out bool bWrite)
         {
-            // allow "r", "w", "rw", "wr" and ""
+            // allow "r", "w", "rw", "wr"
             // allow upper and lower case
 
             bRead = false;
@@ -542,10 +542,6 @@ namespace ModbusControlSpace
             {
                 bRead = true;
                 bWrite = true;
-                return true;
-            }
-            else if (text == "")
-            {
                 return true;
             }
 
