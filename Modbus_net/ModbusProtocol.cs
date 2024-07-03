@@ -328,13 +328,13 @@ namespace Modbus_net
 
         #region Read/Write functions
 
-        public Result ReadCoils(byte address, ushort startcoil, ushort coilcount, out byte[] values)
+        public Result ReadCoils(byte address, ushort startcoil, ushort coilcount, out byte[] values, bool allowAll = true)
         {
             values = null;
 
             // we build the frame in RTU format, no CRC
             // Modbus specs state: read 2000 coils max
-            if (coilcount <= 2000)
+            if ((coilcount <= 2000) || allowAll)
             {
                 // build message
                 byte[] query = new byte[256];
@@ -382,14 +382,68 @@ namespace Modbus_net
             }
         }
 
-        public Result ReadInputRegisters(byte address, ushort startreg, ushort regcount, out short[] values)
+        public Result ReadDiscreteInputs(byte address, ushort startcoil, ushort coilcount, out byte[] values, bool allowAll = true)
+        {
+            values = null;
+
+            // we build the frame in RTU format, no CRC
+            // Modbus specs state: read 2000 coils max
+            if ((coilcount <= 2000) || allowAll)
+            {
+                // build message
+                byte[] query = new byte[256];
+                int Idx = 0;
+                query[Idx++] = address;                   // slave id
+                query[Idx++] = (byte)2;                   // function code
+                query[Idx++] = (byte)(startcoil >> 8);    // startreg addr high
+                query[Idx++] = (byte)(startcoil);         // startreg addr low
+                query[Idx++] = (byte)(coilcount >> 8);    // regcount high
+                query[Idx++] = (byte)(coilcount);         // regcount low
+
+                byte[] response;
+                int NrOfDatabytes = (coilcount + 7) / 8;
+                int expectedresponselength = 1 + 1 + 1 + NrOfDatabytes;   // addr, func, bytecnt, databytes
+                Result retVal = ProtocolSendReceive(query, Idx, out response, expectedresponselength);
+
+                // slave address and function code echo are already checked by ProtocolSendReceive()
+
+                // valid response?
+                if (retVal == Result.SUCCESS)
+                {
+                    // check response length
+                    // check bytecount field
+                    if ((response.Length == expectedresponselength)
+                        && (response[2] == NrOfDatabytes))
+                    {
+                        values = new byte[NrOfDatabytes];
+                        Array.Copy(response, 3, values, 0, NrOfDatabytes);
+                        // first coil is in bit0 of first byte
+                    }
+                    else
+                    {
+                        retVal = Result.RESPONSEFORMATERROR;
+                    }
+
+                    // update statistics counters
+                    AdjustResultCounters(retVal);
+                }
+
+                return retVal;
+            }
+            else
+            {
+                return Result.INVALIDARGUMENT;
+            }
+        }
+
+        public Result ReadInputRegisters(byte address, ushort startreg, ushort regcount, out short[] values, bool allowAll = true)
         {
             values = null;
 
             // we build the frame in RTU format, no CRC
             // RTU frame with CRC is max 256 bytes
             // check regcount for response frame <= 256 bytes (addr,func,bytecnt,databytes,crc)
-            if ((1 + 1 + 1 + (regcount * 2) + 2) <= 256)
+            if (((1 + 1 + 1 + (regcount * 2) + 2) <= 256) || allowAll)
             {
                 // build query
                 byte[] query = new byte[256];
@@ -441,14 +495,14 @@ namespace Modbus_net
             }
         }
 
-        public Result ReadHoldingRegisters(byte address, ushort startreg, ushort regcount, out short[] values)
+        public Result ReadHoldingRegisters(byte address, ushort startreg, ushort regcount, out short[] values, bool allowAll = true)
         {
             values = null;
 
             // we build the frame in RTU format, no CRC
             // RTU frame with CRC is max 256 bytes
             // check regcount for response frame <= 256 bytes (addr,func,bytecnt,databytes,crc)
-            if ((1 + 1 + 1 + (regcount * 2) + 2) <= 256)
+            if (((1 + 1 + 1 + (regcount * 2) + 2) <= 256) || allowAll)
             {
                 // build query
                 byte[] query = new byte[256];

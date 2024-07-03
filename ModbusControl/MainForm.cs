@@ -267,6 +267,7 @@ namespace ModbusControlSpace
                 ShowReleaseNotes();
             }
 
+#if !DEBUG
             // Start updater thread
             // if auto-update enabled
             // and only once per day, check if this is 1 day later
@@ -278,6 +279,7 @@ namespace ModbusControlSpace
                 UpdaterThread = new Thread(UpdaterThread_Work);
                 UpdaterThread.Start();
             }
+#endif
 
             // process command line parameters
             CommandlineArgs = new CommandlineProc();
@@ -414,7 +416,8 @@ namespace ModbusControlSpace
             if (CustommodbuscommandForm != null)
             {
                 // save settings if form exists
-                Settings1.Roaming.CustomCommand.Command = CustommodbuscommandForm.Command;
+                //TODO
+                //Settings1.Roaming.CustomCommand.Command = CustommodbuscommandForm.Command;
             }
             Settings1.Roaming.Logger.Capacity = Logger1.CapacityLines;
             Settings1.Roaming.Logger.LogErrors = Logger1.TheLogFilter.LogErrors;
@@ -1950,8 +1953,8 @@ namespace ModbusControlSpace
         public bool TryHoldingregisterGetOffset(UInt32 Regnr, out UInt16 Offset)
         {
             // accepts:
-            // 40000/400000: 40000-49999 + 400000-465535
-            // 40001/400001: 40001-49999 + 400001-465536
+            // if holdingreg base = 40000/400000: 40000-49999 + 400000-465535
+            // if holdingreg base = 40001/400001: 40001-49999 + 400001-465536
 
             bool ret = false;
             Offset = 0;
@@ -1979,6 +1982,128 @@ namespace ModbusControlSpace
                 else if ((Regnr >= 400001) && (Regnr <= 465536))
                 {
                     Offset = (UInt16)(Regnr - 400001);
+                    ret = true;
+                }
+            }
+
+            return ret;
+        }
+
+        /// <summary>
+        /// Convert input register number to register offset 0-65536
+        /// </summary>
+        /// <returns>true if valid, false if not</returns>
+        public bool TryInputregisterGetOffset(UInt32 Regnr, out UInt16 Offset)
+        {
+            // accepts:
+            // if holdingreg base = 40000/400000: 30000-39999 + 300000-365535
+            // if holdingreg base = 40001/400001: 30001-39999 + 300001-365536
+
+            bool ret = false;
+            Offset = 0;
+
+            //TODO: use HoldingregistersStart range to determine inputregisters range?
+            if ((Project.Options.HoldingregistersStart == 40000) || (Project.Options.HoldingregistersStart == 400000))
+            {
+                if ((Regnr >= 30000) && (Regnr <= 39999))
+                {
+                    Offset = (UInt16)(Regnr - 30000);
+                    ret = true;
+                }
+                else if ((Regnr >= 300000) && (Regnr <= 365535))
+                {
+                    Offset = (UInt16)(Regnr - 300000);
+                    ret = true;
+                }
+            }
+            if ((Project.Options.HoldingregistersStart == 40001) || (Project.Options.HoldingregistersStart == 400001))
+            {
+                if ((Regnr >= 30001) && (Regnr <= 39999))
+                {
+                    Offset = (UInt16)(Regnr - 30001);
+                    ret = true;
+                }
+                else if ((Regnr >= 300001) && (Regnr <= 365536))
+                {
+                    Offset = (UInt16)(Regnr - 300001);
+                    ret = true;
+                }
+            }
+
+            return ret;
+        }
+
+        /// <summary>
+        /// Convert coil number to offset 0-65536
+        /// </summary>
+        /// <returns>true if valid, false if not</returns>
+        public bool TryCoilsGetOffset(UInt32 Regnr, out UInt16 Offset)
+        {
+            // accepts:
+            // if holdingreg base = 40000/400000: 0-9999
+            // if holdingreg base = 40001/400001: 1-9999
+
+            bool ret = false;
+            Offset = 0;
+
+            //TODO: use HoldingregistersStart range to determine inputregisters range?
+            if ((Project.Options.HoldingregistersStart == 40000) || (Project.Options.HoldingregistersStart == 400000))
+            {
+                if ((Regnr >= 0) && (Regnr <= 9999))
+                {
+                    Offset = (UInt16)(Regnr - 0);
+                    ret = true;
+                }
+             }
+            if ((Project.Options.HoldingregistersStart == 40001) || (Project.Options.HoldingregistersStart == 400001))
+            {
+                if ((Regnr >= 1) && (Regnr <= 9999))
+                {
+                    Offset = (UInt16)(Regnr - 1);
+                    ret = true;
+                }
+            }
+
+            return ret;
+        }
+
+        /// <summary>
+        /// Convert discrete input number to offset 0-65536
+        /// </summary>
+        /// <returns>true if valid, false if not</returns>
+        public bool TryDiscreteInputsGetOffset(UInt32 Regnr, out UInt16 Offset)
+        {
+            // accepts:
+            // if holdingreg base = 40000/400000: 10000–19999 + 100000–165535
+            // if holdingreg base = 40001/400001: 10001–10001 + 100001–165536
+
+            bool ret = false;
+            Offset = 0;
+
+            //TODO: use HoldingregistersStart range to determine inputregisters range?
+            if ((Project.Options.HoldingregistersStart == 40000) || (Project.Options.HoldingregistersStart == 400000))
+            {
+                if ((Regnr >= 10000) && (Regnr <= 19999))
+                {
+                    Offset = (UInt16)(Regnr - 10000);
+                    ret = true;
+                }
+                else if ((Regnr >= 100000) && (Regnr <= 165535))
+                {
+                    Offset = (UInt16)(Regnr - 100000);
+                    ret = true;
+                }
+            }
+            if ((Project.Options.HoldingregistersStart == 40001) || (Project.Options.HoldingregistersStart == 400001))
+            {
+                if ((Regnr >= 10001) && (Regnr <= 10001))
+                {
+                    Offset = (UInt16)(Regnr - 10001);
+                    ret = true;
+                }
+                else if ((Regnr >= 100001) && (Regnr <= 165536))
+                {
+                    Offset = (UInt16)(Regnr - 100001);
                     ret = true;
                 }
             }
@@ -2656,7 +2781,8 @@ namespace ModbusControlSpace
             {
                 CustommodbuscommandForm = new CustomModbusCommand(this);
                 // load settings
-                CustommodbuscommandForm.Command = Settings1.Roaming.CustomCommand.Command;
+                //TODO
+                //CustommodbuscommandForm.Command = Settings1.Roaming.CustomCommand.Command;
             }
 
             // show modal
