@@ -267,6 +267,7 @@ namespace ModbusControlSpace
                 ShowReleaseNotes();
             }
 
+#if !DEBUG
             // Start updater thread
             // if auto-update enabled
             // and only once per day, check if this is 1 day later
@@ -278,6 +279,7 @@ namespace ModbusControlSpace
                 UpdaterThread = new Thread(UpdaterThread_Work);
                 UpdaterThread.Start();
             }
+#endif
 
             // process command line parameters
             CommandlineArgs = new CommandlineProc();

@@ -28,6 +28,7 @@ namespace ModbusControlSpace
         private Logger mLogger;
         private bool mClosing;
         private int HoldingregisterStart = 40001;
+        private int InputregisterStart = 30001;
 
         #region constructor
 
@@ -257,6 +258,9 @@ namespace ModbusControlSpace
 
         #endregion
 
+        /// <summary>
+        /// Open connection over serial port, using RTU protocol
+        /// </summary>
         public void OpenSerialRtu( string portName, uint baudRate, Parity parity, StopBits stopBits)
         {
             mClosing = false;
@@ -280,6 +284,9 @@ namespace ModbusControlSpace
             mb.Open();
         }
 
+        /// <summary>
+        /// Open network TCP connection, using Modbus/TCP protocol
+        /// </summary>
         public void OpenModbusTcp(IPAddress IpAddress, UInt16 TcpPort)
         {
             mClosing = false;
@@ -303,6 +310,9 @@ namespace ModbusControlSpace
             mb.Open();
         }
 
+        /// <summary>
+        /// Open network TCP connection, using RTU protocol
+        /// </summary>
         public void OpenRtuOverTcp(IPAddress IpAddress, UInt16 TcpPort)
         {
             mClosing = false;
@@ -348,6 +358,9 @@ namespace ModbusControlSpace
             }
         }
         
+        ///<summary>
+        ///Readholdingregisters
+        ///</summary>
         public ModbusProtocol.Result MifReadHoldingRegisters(byte address, ushort startreg, ushort regcount, out short[] values)
         {
             // must assign
@@ -359,7 +372,6 @@ namespace ModbusControlSpace
                 return ModbusProtocol.Result.CHANNELNOTOPEN;
             }
 
-            // read holding registers
             // make it threadsafe here to keep logging synced with queries/responses
             lock (mQueryLock)
             {
@@ -398,6 +410,9 @@ namespace ModbusControlSpace
             }
         }
 
+        /// <summary>
+        /// Write a single holding register
+        /// </summary>
         public ModbusProtocol.Result MifWriteSingleHoldingRegister(byte address, ushort startreg, short value)
         {
             // modbus connection object created?
@@ -406,7 +421,6 @@ namespace ModbusControlSpace
                 return ModbusProtocol.Result.CHANNELNOTOPEN;
             }
 
-            // write a singe holding register
             // make it threadsafe here to keep logging synced with queries/responses
             lock (mQueryLock)
             {
@@ -445,6 +459,9 @@ namespace ModbusControlSpace
             }
         }
 
+        /// <summary>
+        /// Write multiple holding registers
+        /// </summary>
         public ModbusProtocol.Result MifWriteMultipleHoldingRegisters(byte address, ushort startreg, ushort regcount, short[] values)
         {
             // modbus connection object created?
@@ -453,7 +470,6 @@ namespace ModbusControlSpace
                 return ModbusProtocol.Result.CHANNELNOTOPEN;
             }
 
-            // write multiple holding registers
             // make it threadsafe here to keep logging synced with queries/responses
             lock (mQueryLock)
             {
