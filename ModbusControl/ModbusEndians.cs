@@ -74,6 +74,27 @@ namespace LST.Helpers
             return ((((UInt32)Value1) << 16) | (UInt32)Value0);
         }
 
+        public static Int32 ToInt32Type(Int16 Value0, Int16 Value1, Global.eType Type)
+        {
+            bool BigEndian = false;
+
+            switch (Type)
+            {
+                case Global.eType.Int:
+                    BigEndian = Int32BigEndian;
+                    break;
+                case Global.eType.Float:
+                    BigEndian = Float32BigEndian;
+                    break;
+            }
+
+            if (BigEndian)
+                return ((((Int32)Value0) << 16) | (UInt16)Value1);
+            else
+                return ((((Int32)Value1) << 16) | (UInt16)Value0);
+
+        }
+
         /// <summary>
         /// Converteer binaire value (of float of ascii) naar 1 of 2 16-bit modbus registers
         /// </summary>

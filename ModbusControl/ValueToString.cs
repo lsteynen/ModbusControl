@@ -26,7 +26,7 @@ namespace LST.Helpers
         /// </summary>
         /// <param name="Value">Value to convert</param>
         /// <param name="Width">Width of value in bits</param>
-        /// <param name="Type">Int, Uint, Hex, ...</param>
+        /// <param name="Format">Int, Uint, Hex, ...</param>
         /// <param name="Decimals">Optional: number of decimals, for Int/UInt only</param>
         /// <param name="MinLen">Optional: minimum number of digits</param>
         /// <param name="EnumDict">Optional: enum dictionary</param>

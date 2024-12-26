@@ -131,18 +131,6 @@
     <Compile Include="CustomModbusCommand.Designer.cs">
       <DependentUpon>CustomModbusCommand.cs</DependentUpon>
     </Compile>
-    <Compile Include="CustomRead.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="CustomRead.Designer.cs">
-      <DependentUpon>CustomRead.cs</DependentUpon>
-    </Compile>
-    <Compile Include="CustomWrite.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="CustomWrite.Designer.cs">
-      <DependentUpon>CustomWrite.cs</DependentUpon>
-    </Compile>
     <Compile Include="DiagnosticsForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -263,12 +251,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="CustomModbusCommand.resx">
       <DependentUpon>CustomModbusCommand.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="CustomRead.resx">
-      <DependentUpon>CustomRead.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="CustomWrite.resx">
-      <DependentUpon>CustomWrite.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="DiagnosticsForm.resx">
       <DependentUpon>DiagnosticsForm.cs</DependentUpon>

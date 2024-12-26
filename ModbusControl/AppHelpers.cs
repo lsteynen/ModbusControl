@@ -19,7 +19,6 @@ namespace LST.Helpers
         {
             // Get version
             VersionNum = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
-            Version v = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
             VersionString = "v" + VersionNum.Major + "." + VersionNum.Minor + "." + VersionNum.Build;
             if (VersionNum.Revision > 0) VersionString += "." + VersionNum.Revision;
 

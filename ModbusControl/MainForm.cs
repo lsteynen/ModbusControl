@@ -80,9 +80,7 @@ namespace ModbusControlSpace
         // the Importcompare form, make it global and use show/hide to keep the settings
         Importcompare ImportcompareForm;
         // the custom-read form, make it global and use show/hide to keep the settings
-        CustomRead CustomreadForm;
-        // the custom-write form, make it global and use show/hide to keep the settings
-        CustomWrite CustomwriteForm;
+        //TODO: CustomRead CustomreadForm;
         // the custom-modbus-command form, make it global and use show/hide to keep the settings
         CustomModbusCommand CustommodbuscommandForm;
 
@@ -393,6 +391,7 @@ namespace ModbusControlSpace
                 // save settings if form exists
                 Settings1.Roaming.Compare.ShowEqual = ImportcompareForm.ShowEquals;
             }
+            /*TODO
             if (CustomreadForm != null)
             {
                 // save settings if form exists
@@ -402,17 +401,7 @@ namespace ModbusControlSpace
                 Settings1.Roaming.CustomRead.Datasize = CustomreadForm.Datasize;
                 Settings1.Roaming.CustomRead.ShowValuesAs = CustomreadForm.Showvaluesas;
             }
-            if (CustomwriteForm != null)
-            {
-                // save settings if form exists
-                Settings1.Roaming.CustomWrite.SlaveID = CustomwriteForm.SlaveID;
-                Settings1.Roaming.CustomWrite.Register = (int)CustomwriteForm.Register;
-                Settings1.Roaming.CustomWrite.Quantity = CustomwriteForm.Quantity;
-                Settings1.Roaming.CustomWrite.Datasize = CustomwriteForm.Datasize;
-                Settings1.Roaming.CustomWrite.Functioncode = CustomwriteForm.Functioncode;
-                Settings1.Roaming.CustomWrite.Datasize = CustomwriteForm.Datasize;
-                Settings1.Roaming.CustomWrite.Data = CustomwriteForm.Data;
-            }
+            */
             if (CustommodbuscommandForm != null)
             {
                 // save settings if form exists
@@ -2733,46 +2722,6 @@ namespace ModbusControlSpace
         #endregion
 
         #region Custom commands
-
-        private void customReadToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            // create if needed, else show and hide
-            if (CustomreadForm == null)
-            {
-                CustomreadForm = new CustomRead(this);
-                // load settings
-                CustomreadForm.SlaveID = (byte)Settings1.Roaming.CustomRead.SlaveID;
-                CustomreadForm.Register = (uint)Settings1.Roaming.CustomRead.Register;
-                CustomreadForm.Quantity = (ushort)Settings1.Roaming.CustomRead.Quantity;
-                CustomreadForm.Datasize = Settings1.Roaming.CustomRead.Datasize;
-                CustomreadForm.Showvaluesas = Settings1.Roaming.CustomRead.ShowValuesAs;
-            }
-
-            // update some parameters
-            CustomreadForm.ShortLivedTcpConnection = false;
-
-            // show
-            ShowForm(CustomreadForm);
-        }
-
-        private void customWriteToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            // create if needed, else show and hide
-            if (CustomwriteForm == null)
-            {
-                CustomwriteForm = new CustomWrite(this);
-                // load settings
-                CustomwriteForm.SlaveID = (byte)Settings1.Roaming.CustomWrite.SlaveID;
-                CustomwriteForm.Register = (uint)Settings1.Roaming.CustomWrite.Register;
-                CustomwriteForm.Quantity = (ushort)Settings1.Roaming.CustomWrite.Quantity;
-                CustomwriteForm.Functioncode = Settings1.Roaming.CustomWrite.Functioncode;
-                CustomwriteForm.Datasize = Settings1.Roaming.CustomWrite.Datasize;
-                CustomwriteForm.Data = Settings1.Roaming.CustomWrite.Data;
-            }
-
-            // show
-            ShowForm(CustomwriteForm);
-        }
 
         private void customCommandToolStripMenuItem_Click(object sender, EventArgs e)
         {
