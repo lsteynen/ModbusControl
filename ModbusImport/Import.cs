@@ -310,6 +310,9 @@ namespace ModbusImport
             }
             catch (Exception e)
             {
+                // error
+                ++mErrorCount;
+                // continue?
                 if (ContinueOnError)
                 {
                     // report error and continue

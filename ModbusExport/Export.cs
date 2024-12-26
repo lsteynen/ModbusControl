@@ -324,9 +324,9 @@ namespace ModbusExport
                                 else
                                 {
                                     // error
+                                    ++mErrorCount;
                                     // OutputExportLineError() handles ContinueOnError
                                     OutputExportLineError(varp.Reg, varp.Size, varp.Descr, varp.Format, varp.Readable, varp.Writeable, ModbusProtocol.GetResultText(result));
-                                    ++mErrorCount;
                                 }
                             }
                         }
@@ -338,14 +338,15 @@ namespace ModbusExport
                             for (int lineIndex = rg.lineIndex; lineCount < rg.lineCount; ++lineIndex, ++lineCount)
                             {
                                 TVarProperties varp = GetVarPropertiesByIndex(tabPage, lineIndex);
-                            
+
                                 //Debug:
                                 //string s = "Reg " + varp.Reg.ToString() + " size " + varp.Size + " descr \"" + TrimText(varp.Descr) + "\"";
                                 //ReportVerbose("    " + s);
 
+                                // error
+                                ++mErrorCount;
                                 // OutputExportLineError() handles ContinueOnError
                                 OutputExportLineError(varp.Reg, varp.Size, varp.Descr, varp.Format, varp.Readable, varp.Writeable, ModbusProtocol.GetResultText(result));
-                                ++mErrorCount;
                             }
                         }
                     }

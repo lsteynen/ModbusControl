@@ -179,12 +179,11 @@ namespace ModbusExport
                     return (int)eExitcodes.CommandlineError;
                 }
 
-                // show counters
-                PrintVerbose("Export counts: " + export.mSuccessCount + " registers exported, " + export.mErrorCount + " errors.");
-
                 // exit
                 if (e is CommsException)
                 {
+                    // show counters
+                    PrintVerbose("Export counts: " + export.mSuccessCount + " registers exported, " + export.mErrorCount + " errors.");
                     return (int)eExitcodes.CommsError;
                 }
 
