@@ -70,7 +70,10 @@ namespace ModbusControlSpace
             this.extraMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.configurationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.optionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.customCommandsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.customReadToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.customWriteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.customCommandToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.checkForUpdateMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -138,6 +141,7 @@ namespace ModbusControlSpace
             this.connectionToolStripMenuItem,
             this.viewToolStripMenuItem,
             this.extraMenuItem,
+            this.customCommandsToolStripMenuItem,
             this.helpMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
@@ -396,8 +400,7 @@ namespace ModbusControlSpace
             // 
             this.extraMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.configurationToolStripMenuItem,
-            this.optionsToolStripMenuItem,
-            this.toolStripMenuItem1});
+            this.optionsToolStripMenuItem});
             this.extraMenuItem.Name = "extraMenuItem";
             this.extraMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.X)));
             this.extraMenuItem.Size = new System.Drawing.Size(45, 20);
@@ -418,12 +421,36 @@ namespace ModbusControlSpace
             this.optionsToolStripMenuItem.Text = "&Options";
             this.optionsToolStripMenuItem.Click += new System.EventHandler(this.optionsToolStripMenuItem_Click);
             // 
-            // toolStripMenuItem1
+            // customCommandsToolStripMenuItem
             // 
-            this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-            this.toolStripMenuItem1.Size = new System.Drawing.Size(226, 22);
-            this.toolStripMenuItem1.Text = "Custom commands";
-            this.toolStripMenuItem1.Click += new System.EventHandler(this.customCommandToolStripMenuItem_Click);
+            this.customCommandsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.customReadToolStripMenuItem,
+            this.customWriteToolStripMenuItem,
+            this.customCommandToolStripMenuItem});
+            this.customCommandsToolStripMenuItem.Name = "customCommandsToolStripMenuItem";
+            this.customCommandsToolStripMenuItem.Size = new System.Drawing.Size(81, 20);
+            this.customCommandsToolStripMenuItem.Text = "Commands";
+            // 
+            // customReadToolStripMenuItem
+            // 
+            this.customReadToolStripMenuItem.Name = "customReadToolStripMenuItem";
+            this.customReadToolStripMenuItem.Size = new System.Drawing.Size(210, 22);
+            this.customReadToolStripMenuItem.Text = "Send read...";
+            this.customReadToolStripMenuItem.Click += new System.EventHandler(this.customReadToolStripMenuItem_Click);
+            // 
+            // customWriteToolStripMenuItem
+            // 
+            this.customWriteToolStripMenuItem.Name = "customWriteToolStripMenuItem";
+            this.customWriteToolStripMenuItem.Size = new System.Drawing.Size(210, 22);
+            this.customWriteToolStripMenuItem.Text = "Send write...";
+            this.customWriteToolStripMenuItem.Click += new System.EventHandler(this.customWriteToolStripMenuItem_Click);
+            // 
+            // customCommandToolStripMenuItem
+            // 
+            this.customCommandToolStripMenuItem.Name = "customCommandToolStripMenuItem";
+            this.customCommandToolStripMenuItem.Size = new System.Drawing.Size(210, 22);
+            this.customCommandToolStripMenuItem.Text = "Send custom command...";
+            this.customCommandToolStripMenuItem.Click += new System.EventHandler(this.customCommandToolStripMenuItem_Click);
             // 
             // helpMenuItem
             // 
@@ -733,9 +760,13 @@ namespace ModbusControlSpace
         private System.Windows.Forms.ToolStripMenuItem resetZoomToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem importExportToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator8;
+        private System.Windows.Forms.ToolStripMenuItem customCommandsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem importRegistersFromFileToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem exportRegistersToFileToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem compareRegistersWithValuesInFileToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem customReadToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem customWriteToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem customCommandToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem openFileLocationToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator9;
         private System.Windows.Forms.ToolStripMenuItem diagnosticsCountersToolStripMenuItem;
@@ -747,7 +778,6 @@ namespace ModbusControlSpace
         private System.Windows.Forms.CheckBox chkFilterCaseSensitive;
         private System.Windows.Forms.Button btnFilterClose;
         private System.Windows.Forms.ToolStripMenuItem findFilterToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem1;
     }
 }
 

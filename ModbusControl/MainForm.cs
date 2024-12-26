@@ -80,7 +80,9 @@ namespace ModbusControlSpace
         // the Importcompare form, make it global and use show/hide to keep the settings
         Importcompare ImportcompareForm;
         // the custom-read form, make it global and use show/hide to keep the settings
-        //TODO: CustomRead CustomreadForm;
+        CustomRead CustomreadForm;
+        // the custom-write form, make it global and use show/hide to keep the settings
+        CustomWrite CustomwriteForm;
         // the custom-modbus-command form, make it global and use show/hide to keep the settings
         CustomModbusCommand CustommodbuscommandForm;
 
@@ -265,7 +267,6 @@ namespace ModbusControlSpace
                 ShowReleaseNotes();
             }
 
-#if !DEBUG
             // Start updater thread
             // if auto-update enabled
             // and only once per day, check if this is 1 day later
@@ -277,7 +278,6 @@ namespace ModbusControlSpace
                 UpdaterThread = new Thread(UpdaterThread_Work);
                 UpdaterThread.Start();
             }
-#endif
 
             // process command line parameters
             CommandlineArgs = new CommandlineProc();
@@ -391,7 +391,6 @@ namespace ModbusControlSpace
                 // save settings if form exists
                 Settings1.Roaming.Compare.ShowEqual = ImportcompareForm.ShowEquals;
             }
-            /*TODO
             if (CustomreadForm != null)
             {
                 // save settings if form exists
@@ -401,12 +400,21 @@ namespace ModbusControlSpace
                 Settings1.Roaming.CustomRead.Datasize = CustomreadForm.Datasize;
                 Settings1.Roaming.CustomRead.ShowValuesAs = CustomreadForm.Showvaluesas;
             }
-            */
+            if (CustomwriteForm != null)
+            {
+                // save settings if form exists
+                Settings1.Roaming.CustomWrite.SlaveID = CustomwriteForm.SlaveID;
+                Settings1.Roaming.CustomWrite.Register = (int)CustomwriteForm.Register;
+                Settings1.Roaming.CustomWrite.Quantity = CustomwriteForm.Quantity;
+                Settings1.Roaming.CustomWrite.Datasize = CustomwriteForm.Datasize;
+                Settings1.Roaming.CustomWrite.Functioncode = CustomwriteForm.Functioncode;
+                Settings1.Roaming.CustomWrite.Datasize = CustomwriteForm.Datasize;
+                Settings1.Roaming.CustomWrite.Data = CustomwriteForm.Data;
+            }
             if (CustommodbuscommandForm != null)
             {
                 // save settings if form exists
-                //TODO
-                //Settings1.Roaming.CustomCommand.Command = CustommodbuscommandForm.Command;
+                Settings1.Roaming.CustomCommand.Command = CustommodbuscommandForm.Command;
             }
             Settings1.Roaming.Logger.Capacity = Logger1.CapacityLines;
             Settings1.Roaming.Logger.LogErrors = Logger1.TheLogFilter.LogErrors;
@@ -1942,8 +1950,8 @@ namespace ModbusControlSpace
         public bool TryHoldingregisterGetOffset(UInt32 Regnr, out UInt16 Offset)
         {
             // accepts:
-            // if holdingreg base = 40000/400000: 40000-49999 + 400000-465535
-            // if holdingreg base = 40001/400001: 40001-49999 + 400001-465536
+            // 40000/400000: 40000-49999 + 400000-465535
+            // 40001/400001: 40001-49999 + 400001-465536
 
             bool ret = false;
             Offset = 0;
@@ -1971,128 +1979,6 @@ namespace ModbusControlSpace
                 else if ((Regnr >= 400001) && (Regnr <= 465536))
                 {
                     Offset = (UInt16)(Regnr - 400001);
-                    ret = true;
-                }
-            }
-
-            return ret;
-        }
-
-        /// <summary>
-        /// Convert input register number to register offset 0-65536
-        /// </summary>
-        /// <returns>true if valid, false if not</returns>
-        public bool TryInputregisterGetOffset(UInt32 Regnr, out UInt16 Offset)
-        {
-            // accepts:
-            // if holdingreg base = 40000/400000: 30000-39999 + 300000-365535
-            // if holdingreg base = 40001/400001: 30001-39999 + 300001-365536
-
-            bool ret = false;
-            Offset = 0;
-
-            //TODO: use HoldingregistersStart range to determine inputregisters range?
-            if ((Project.Options.HoldingregistersStart == 40000) || (Project.Options.HoldingregistersStart == 400000))
-            {
-                if ((Regnr >= 30000) && (Regnr <= 39999))
-                {
-                    Offset = (UInt16)(Regnr - 30000);
-                    ret = true;
-                }
-                else if ((Regnr >= 300000) && (Regnr <= 365535))
-                {
-                    Offset = (UInt16)(Regnr - 300000);
-                    ret = true;
-                }
-            }
-            if ((Project.Options.HoldingregistersStart == 40001) || (Project.Options.HoldingregistersStart == 400001))
-            {
-                if ((Regnr >= 30001) && (Regnr <= 39999))
-                {
-                    Offset = (UInt16)(Regnr - 30001);
-                    ret = true;
-                }
-                else if ((Regnr >= 300001) && (Regnr <= 365536))
-                {
-                    Offset = (UInt16)(Regnr - 300001);
-                    ret = true;
-                }
-            }
-
-            return ret;
-        }
-
-        /// <summary>
-        /// Convert coil number to offset 0-65536
-        /// </summary>
-        /// <returns>true if valid, false if not</returns>
-        public bool TryCoilsGetOffset(UInt32 Regnr, out UInt16 Offset)
-        {
-            // accepts:
-            // if holdingreg base = 40000/400000: 0-9999
-            // if holdingreg base = 40001/400001: 1-9999
-
-            bool ret = false;
-            Offset = 0;
-
-            //TODO: use HoldingregistersStart range to determine inputregisters range?
-            if ((Project.Options.HoldingregistersStart == 40000) || (Project.Options.HoldingregistersStart == 400000))
-            {
-                if ((Regnr >= 0) && (Regnr <= 9999))
-                {
-                    Offset = (UInt16)(Regnr - 0);
-                    ret = true;
-                }
-             }
-            if ((Project.Options.HoldingregistersStart == 40001) || (Project.Options.HoldingregistersStart == 400001))
-            {
-                if ((Regnr >= 1) && (Regnr <= 9999))
-                {
-                    Offset = (UInt16)(Regnr - 1);
-                    ret = true;
-                }
-            }
-
-            return ret;
-        }
-
-        /// <summary>
-        /// Convert discrete input number to offset 0-65536
-        /// </summary>
-        /// <returns>true if valid, false if not</returns>
-        public bool TryDiscreteInputsGetOffset(UInt32 Regnr, out UInt16 Offset)
-        {
-            // accepts:
-            // if holdingreg base = 40000/400000: 10000–19999 + 100000–165535
-            // if holdingreg base = 40001/400001: 10001–10001 + 100001–165536
-
-            bool ret = false;
-            Offset = 0;
-
-            //TODO: use HoldingregistersStart range to determine inputregisters range?
-            if ((Project.Options.HoldingregistersStart == 40000) || (Project.Options.HoldingregistersStart == 400000))
-            {
-                if ((Regnr >= 10000) && (Regnr <= 19999))
-                {
-                    Offset = (UInt16)(Regnr - 10000);
-                    ret = true;
-                }
-                else if ((Regnr >= 100000) && (Regnr <= 165535))
-                {
-                    Offset = (UInt16)(Regnr - 100000);
-                    ret = true;
-                }
-            }
-            if ((Project.Options.HoldingregistersStart == 40001) || (Project.Options.HoldingregistersStart == 400001))
-            {
-                if ((Regnr >= 10001) && (Regnr <= 10001))
-                {
-                    Offset = (UInt16)(Regnr - 10001);
-                    ret = true;
-                }
-                else if ((Regnr >= 100001) && (Regnr <= 165536))
-                {
-                    Offset = (UInt16)(Regnr - 100001);
                     ret = true;
                 }
             }
@@ -2723,6 +2609,46 @@ namespace ModbusControlSpace
 
         #region Custom commands
 
+        private void customReadToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            // create if needed, else show and hide
+            if (CustomreadForm == null)
+            {
+                CustomreadForm = new CustomRead(this);
+                // load settings
+                CustomreadForm.SlaveID = (byte)Settings1.Roaming.CustomRead.SlaveID;
+                CustomreadForm.Register = (uint)Settings1.Roaming.CustomRead.Register;
+                CustomreadForm.Quantity = (ushort)Settings1.Roaming.CustomRead.Quantity;
+                CustomreadForm.Datasize = Settings1.Roaming.CustomRead.Datasize;
+                CustomreadForm.Showvaluesas = Settings1.Roaming.CustomRead.ShowValuesAs;
+            }
+
+            // update some parameters
+            CustomreadForm.ShortLivedTcpConnection = false;
+
+            // show
+            ShowForm(CustomreadForm);
+        }
+
+        private void customWriteToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            // create if needed, else show and hide
+            if (CustomwriteForm == null)
+            {
+                CustomwriteForm = new CustomWrite(this);
+                // load settings
+                CustomwriteForm.SlaveID = (byte)Settings1.Roaming.CustomWrite.SlaveID;
+                CustomwriteForm.Register = (uint)Settings1.Roaming.CustomWrite.Register;
+                CustomwriteForm.Quantity = (ushort)Settings1.Roaming.CustomWrite.Quantity;
+                CustomwriteForm.Functioncode = Settings1.Roaming.CustomWrite.Functioncode;
+                CustomwriteForm.Datasize = Settings1.Roaming.CustomWrite.Datasize;
+                CustomwriteForm.Data = Settings1.Roaming.CustomWrite.Data;
+            }
+
+            // show
+            ShowForm(CustomwriteForm);
+        }
+
         private void customCommandToolStripMenuItem_Click(object sender, EventArgs e)
         {
             // create if needed, else show and hide
@@ -2730,8 +2656,7 @@ namespace ModbusControlSpace
             {
                 CustommodbuscommandForm = new CustomModbusCommand(this);
                 // load settings
-                //TODO
-                //CustommodbuscommandForm.Command = Settings1.Roaming.CustomCommand.Command;
+                CustommodbuscommandForm.Command = Settings1.Roaming.CustomCommand.Command;
             }
 
             // show modal

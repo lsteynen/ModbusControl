@@ -14,7 +14,7 @@ namespace ModbusControlSpace
         public enum eEndian { Little, Big };
         public enum eFormat { Int = 0, UInt, Hex, Bin, Float, ASCII };
         public static string[] FormatText = { "int", "uint", "hex", "bin", "float", "ASCII" };
-        public enum eType { Int, Float, ASCII };       //TODO: String ipv ASCII
+        public enum eType { Int, Float, ASCII };
         public class CEnum
         {
             public Dictionary<int, string> Dict; // enum convert dictionary
