@@ -226,7 +226,7 @@
             this.numericTcpServerPort.Name = "numericTcpServerPort";
             this.numericTcpServerPort.Size = new System.Drawing.Size(63, 20);
             this.numericTcpServerPort.TabIndex = 2;
-            this.toolTip1.SetToolTip(this.numericTcpServerPort, "TCP port number where server listens on (usually 502)");
+            this.toolTip1.SetToolTip(this.numericTcpServerPort, "TCP port number where server listens on (default 502)");
             this.numericTcpServerPort.Value = new decimal(new int[] {
             502,
             0,
@@ -391,7 +391,7 @@
             this.numericIpPort.Name = "numericIpPort";
             this.numericIpPort.Size = new System.Drawing.Size(102, 20);
             this.numericIpPort.TabIndex = 3;
-            this.toolTip1.SetToolTip(this.numericIpPort, "TCP port number, usually 502");
+            this.toolTip1.SetToolTip(this.numericIpPort, "TCP port number, default 502");
             this.numericIpPort.Value = new decimal(new int[] {
             502,
             0,

@@ -569,7 +569,7 @@ namespace LST.Helpers
                 mCsvWriter.CommentHeader = "#";
                 mCsvWriter.Separator = ';';
                 // always put quotes around the text field
-                mCsvWriter.QuoteSomeFields = new bool[] { false, false, true }; // we choose to always quote the description field
+                mCsvWriter.QuoteSelectedFields = new bool[] { false, false, true }; // we choose to always quote the description field
             }
             catch (Exception ex)
             {

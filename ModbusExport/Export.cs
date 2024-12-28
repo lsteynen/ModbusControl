@@ -31,8 +31,6 @@ namespace ModbusExport
     {
         public byte mSlaveAddress;
         public ModbusInterface mModbus;
-        public int mSuccessCount;
-        public int mErrorCount;
         public string mFilename;
         public string mMbcFilename;
         public bool Verbose;
@@ -42,6 +40,9 @@ namespace ModbusExport
         public int MaximumFrameSize = 256;
         public List<CProject.TTab> TabsList;    // List with all tab pages
         public List<string> TabsSelectList;      // List of selected tab names to export, in this order
+        public int mFileErrorCount;
+        public int mCommErrorCount;
+        public int mExportedCount;
 
         // callback to convert app register numbering to protocol offset
         public event GetHoldingregisterModbusOffset OnGetHoldingregisterModbusOffset;
@@ -91,8 +92,9 @@ namespace ModbusExport
         	// read registers from target, write to file
 
 			// reset counters
-       		mSuccessCount = 0;
-        	mErrorCount = 0;
+            mFileErrorCount = 0;
+            mCommErrorCount = 0;
+            mExportedCount = 0;
   
             // check if port is opened
             if (mModbus.IsOpen == false)
@@ -114,7 +116,7 @@ namespace ModbusExport
                 mCsvWriter.CommentHeader = "#";
                 mCsvWriter.Separator = ';';
                 // always put quotes around the description field
-                mCsvWriter.QuoteSomeFields = new bool[] { false, false, true }; // we choose to always quote the description field
+                mCsvWriter.QuoteSelectedFields = new bool[] { false, false, true }; // we choose to always quote the description field
 
                 ReportVerbose("Opened file: " + mFilename);
                 //("(Encoding used: " + enc.WebName + ", Windows code page: " + enc.WindowsCodePage + ")" + Environment.NewLine);
@@ -278,7 +280,7 @@ namespace ModbusExport
                             Int32 Value = Endians.ConvertShortsToValue(aTmpRegs, Type, varp.Size * 16);
 
                             OutputExportLine(varp.Reg, varp.Size, varp.Descr, varp.Format, varp.Readable, varp.Writeable, Value);
-                            ++mSuccessCount;
+                            ++mExportedCount;
                         }
                     }
                     else
@@ -319,12 +321,12 @@ namespace ModbusExport
                                     Int32 Value = Endians.ConvertShortsToValue(aTmpRegs, Type, varp.Size * 16);
 
                                     OutputExportLine(varp.Reg, varp.Size, varp.Descr, varp.Format, varp.Readable, varp.Writeable, Value);
-                                    ++mSuccessCount;
+                                    ++mExportedCount;
                                 }
                                 else
                                 {
                                     // error
-                                    ++mErrorCount;
+                                    ++mCommErrorCount;
                                     // OutputExportLineError() handles ContinueOnError
                                     OutputExportLineError(varp.Reg, varp.Size, varp.Descr, varp.Format, varp.Readable, varp.Writeable, ModbusProtocol.GetResultText(result));
                                 }
@@ -344,7 +346,7 @@ namespace ModbusExport
                                 //ReportVerbose("    " + s);
 
                                 // error
-                                ++mErrorCount;
+                                ++mCommErrorCount;
                                 // OutputExportLineError() handles ContinueOnError
                                 OutputExportLineError(varp.Reg, varp.Size, varp.Descr, varp.Format, varp.Readable, varp.Writeable, ModbusProtocol.GetResultText(result));
                             }

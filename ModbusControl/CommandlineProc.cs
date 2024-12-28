@@ -365,7 +365,7 @@ namespace ModbusControlSpace
                  + "-endofmessagetimeout ### ➝ Serial end-of-message timeout (ms)" + Environment.NewLine
                  + "-onewire ➝ 1-wire operation, ignore query/command echo" + Environment.NewLine
                  + "-ipaddress <address> ➝ Slave/server IP address: like 192.168.1.100" + Environment.NewLine
-                 + "-ipport ### ➝ Slave/server IP port: usually 502" + Environment.NewLine
+                 + "-ipport ### ➝ Slave/server IP port: default 502" + Environment.NewLine
                  + "-slaveid ### ➝ Slave ID number: 1-255" + Environment.NewLine
                  + "-maxframe ### ➝ Maximum frame size: 13-256 bytes" + Environment.NewLine
                  + "-responsetimeout ### ➝ Max wait time for first byte of response (ms)" + Environment.NewLine

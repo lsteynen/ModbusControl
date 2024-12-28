@@ -182,21 +182,19 @@ namespace ModbusImport
                 string s = "Error: " + e.Message;
                 Print(s);
 
+                // show counters
+                Print("Import end: " + import.mWrittenCount + " registers written, " + import.mNotWriteableCount + " registers non-writeable, " + (import.mFileErrorCount + import.mCommErrorCount) + " errors.");
+
+                // exitcode
                 if (e is ArgumentException)
                 {
                     return (int)eExitcodes.CommandlineError;
                 }
-
-                // show counters
-                PrintVerbose("Import counts: " + import.mWrittenCount + " registers written, " + import.mNotWriteableCount + " registers non-writeable, " + import.mErrorCount + " errors.");
-
-                // exit
-                if (e is CommsException)
+                if (e is FileException)
                 {
-                    return (int)eExitcodes.CommsError;
+                    return (int)eExitcodes.FileError;
                 }
-
-                return (int)eExitcodes.FileError;
+                return (int)eExitcodes.CommsError;
             }
             finally
             {
@@ -205,11 +203,18 @@ namespace ModbusImport
             }
 
             // show counters
-            PrintVerbose("Import counts: " + import.mWrittenCount + " registers written, " + import.mNotWriteableCount + " registers non-writeable, " + import.mErrorCount + " errors.");
+            Print("Import end: " + import.mWrittenCount + " registers written, " + import.mNotWriteableCount + " registers non-writeable, " + (import.mFileErrorCount + import.mCommErrorCount) + " errors.");
 
             // exitcode
-            if (import.mErrorCount > 0)
+            if (import.mFileErrorCount > 0)
+            {
+                return (int)eExitcodes.FileError;
+            }
+            if (import.mCommErrorCount > 0)
+            {
                 return (int)eExitcodes.CommsError;
+            }
+
             return (int)eExitcodes.NoError;
         }
 

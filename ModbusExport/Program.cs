@@ -174,19 +174,24 @@ namespace ModbusExport
                 string s = "Error: " + e.Message;
                 Print(s);
 
+                // if no error indicated: assume file error, to show "1 errors" in the counts message.
+                if( (export.mFileErrorCount + export.mCommErrorCount) == 0)
+                {
+                    ++export.mFileErrorCount;
+                }
+
+                // show counters
+                Print("Export end: " + export.mExportedCount + " registers exported, " + (export.mFileErrorCount + export.mCommErrorCount) + " errors.");
+
+                // exitcode
                 if (e is ArgumentException)
                 {
                     return (int)eExitcodes.CommandlineError;
                 }
-
-                // exit
                 if (e is CommsException)
                 {
-                    // show counters
-                    PrintVerbose("Export counts: " + export.mSuccessCount + " registers exported, " + export.mErrorCount + " errors.");
                     return (int)eExitcodes.CommsError;
                 }
-
                 return (int)eExitcodes.FileError;
             }
             finally
@@ -196,11 +201,18 @@ namespace ModbusExport
             }
 
             // show counters
-            PrintVerbose("Export counts: " + export.mSuccessCount + " registers exported, " + export.mErrorCount + " errors.");
+            Print("Export end: " + export.mExportedCount + " registers exported, " + (export.mFileErrorCount + export.mCommErrorCount) + " errors.");
 
             // exitcode
-            if (export.mErrorCount > 0)
+            if (export.mCommErrorCount > 0)
+            {
                 return (int)eExitcodes.CommsError;
+            }
+            if (export.mFileErrorCount > 0)
+            {
+                return (int)eExitcodes.FileError;
+            }
+
             return (int)eExitcodes.NoError;
         }
 

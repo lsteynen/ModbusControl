@@ -32,14 +32,15 @@ namespace ModbusImport
     {
         public byte mSlaveAddress;
         public ModbusInterface mModbus;
-        public int mNotWriteableCount;
-        public int mWrittenCount;
-        public int mErrorCount;
         private const int mSleeptime = 10;
         public string mFilename;
         public bool Verbose;
         public bool ContinueOnError = false;
         public List<string> TabsSelectList;      // List of selected tab names to export, in this order
+        public int mFileErrorCount;
+        public int mCommErrorCount;
+        public int mNotWriteableCount;
+        public int mWrittenCount;
 
         private class ImportLine
         {
@@ -253,9 +254,10 @@ namespace ModbusImport
             // Write registers from list to target
 
             // reset counters
+            mFileErrorCount = 0;
+            mCommErrorCount = 0;
             mNotWriteableCount = 0;
             mWrittenCount = 0;
-            mErrorCount = 0;
 
             foreach (ImportLine line in ImportList)
             {
@@ -274,9 +276,10 @@ namespace ModbusImport
             // Write registers from list to target
 
             // reset counters
+            mFileErrorCount = 0;
+            mCommErrorCount = 0;
             mNotWriteableCount = 0;
             mWrittenCount = 0;
-            mErrorCount = 0;
 
             // import each selected tab
             // in order, may appear multiple times
@@ -310,8 +313,8 @@ namespace ModbusImport
             }
             catch (Exception e)
             {
-                // error
-                ++mErrorCount;
+                // file error
+                ++mFileErrorCount;
                 // continue?
                 if (ContinueOnError)
                 {
@@ -355,8 +358,8 @@ namespace ModbusImport
                 }
                 else
                 {
-                    // error
-                    ++mErrorCount;
+                    // comms error
+                    ++mCommErrorCount;
 
                     string s = "Line " + line.lineNum.ToString() + ": Write: " + BuildImportLineString(reg) + " >> " + ModbusProtocol.GetResultText(result);
                     if (ContinueOnError)

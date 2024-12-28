@@ -151,7 +151,7 @@ namespace ModbusControlSpace
                 mCsvWriter.CommentHeader = "#";
                 mCsvWriter.Separator = ';';
                 // always put quotes around the description field
-                mCsvWriter.QuoteSomeFields = new bool[] { false, false, true }; // we choose to always quote the description field
+                mCsvWriter.QuoteSelectedFields = new bool[] { false, false, true }; // we choose to always quote the description field
 
                 textboxLog.AppendText("Opened file: " + textboxFilename.Text + Environment.NewLine);
                 //textboxLog.AppendText("(Encoding used: " + enc.WebName + ", Windows code page: " + enc.WindowsCodePage + ")" + Environment.NewLine);

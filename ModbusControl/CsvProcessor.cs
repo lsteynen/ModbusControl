@@ -349,7 +349,7 @@ namespace LST.Helpers
             set;
         }
 
-        public bool[] QuoteSomeFields
+        public bool[] QuoteSelectedFields
         {
             get;
             set;
@@ -419,7 +419,7 @@ namespace LST.Helpers
                     builder.Append(Separator);
                 // Implement special handling for values that contain comma or quote
                 // Enclose in quotes and double up any double quotes
-                bool quoteThisField = (QuoteSomeFields != null) && (index < QuoteSomeFields.Length) && QuoteSomeFields[index];
+                bool quoteThisField = (QuoteSelectedFields != null) && (index < QuoteSelectedFields.Length) && QuoteSelectedFields[index];
                 if ((field.IndexOfAny(specialChars) != -1) || quoteThisField || QuoteAllFields)
                     builder.AppendFormat("\"{0}\"", field.Replace("\"", "\"\""));
                 else
