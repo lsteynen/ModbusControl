@@ -37,6 +37,7 @@ namespace ModbusImport
         public int? ArgMaxFrameSize;
         public int? ArgResponsetimeout;
         public int? ArgInterframedelay;
+        public int? ArgRetries;
         public int? ArgWriteholdingregFC;       // 6, 16, 0=auto 
         public int? ArgInt32Endian;             // 0=little, 1=big
         public int? ArgFloat32Endian;           // 0=little, 1=big
@@ -68,6 +69,7 @@ namespace ModbusImport
             ArgMaxFrameSize = null;
             ArgResponsetimeout = null;
             ArgInterframedelay = null;
+            ArgRetries = null;
             ArgWriteholdingregFC = null;
             ArgInt32Endian = null;
             ArgFloat32Endian = null;
@@ -204,6 +206,11 @@ namespace ModbusImport
                     {
                         ++i;
                         ArgInterframedelay = GetOptInt(arg, i, 1, Int32.MaxValue);
+                    }
+                    else if (optlow == "retries")
+                    {
+                        ++i;
+                        ArgRetries = GetOptInt(arg, i, 0, Int32.MaxValue);
                     }
                     else if (optlow == "writeregfc")
                     {
@@ -487,6 +494,7 @@ namespace ModbusImport
                  + "-maxframe ###                   Maximum frame size: 13-256 bytes" + Environment.NewLine
                  + "-responsetimeout ###            Max wait time for first byte of response (ms)" + Environment.NewLine
                  + "-interframedelay ###            Delay before sending next query (ms)" + Environment.NewLine
+                 + "-retries ###                    Retries after communication error" + Environment.NewLine
                  + "-writeregfc <mode>              Write holding registers function code: 6, 16 or auto" + Environment.NewLine
                  + "-int32endian <endian>           32-bit int word order: little, big" + Environment.NewLine
                  + "-float32endian <endian>         32-bit float word order: little, big" + Environment.NewLine

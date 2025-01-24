@@ -250,6 +250,8 @@ namespace ModbusExport
                 Project.Connection.ResponseTimeout = (int)CommandlineArgs.ArgResponsetimeout;
             if (CommandlineArgs.ArgInterframedelay != null)
                 Project.Connection.InterFrameDelay = (int)CommandlineArgs.ArgInterframedelay;
+            if (CommandlineArgs.ArgRetries != null)
+                Project.Connection.Retries = (int)CommandlineArgs.ArgRetries;
             if (CommandlineArgs.ArgWriteholdingregFC != null)
                 Project.Connection.WriteHoldingregFunctioncode = ConvertCommandlineWriteholdregFCToEnum((int)CommandlineArgs.ArgWriteholdingregFC);
             if (CommandlineArgs.ArgInt32Endian != null)
@@ -344,6 +346,7 @@ namespace ModbusExport
                 mb.ResponseTimeout = (uint)Project.Connection.ResponseTimeout;
                 mb.EndOfMessageTimeout = (uint)Project.Connection.SerialEndOfMessageTimeout;
                 mb.InterFrameDelay = (uint)Project.Connection.InterFrameDelay;
+                mb.Retries = (uint)Project.Connection.Retries;
 
                 // success
                 return true;
@@ -380,6 +383,7 @@ namespace ModbusExport
             // ok
             mb.ResponseTimeout = (uint)Project.Connection.ResponseTimeout;
             mb.InterFrameDelay = (uint)Project.Connection.InterFrameDelay;
+            mb.Retries = (uint)Project.Connection.Retries;
 
             // success
             return true;
@@ -412,6 +416,7 @@ namespace ModbusExport
             // ok
             mb.ResponseTimeout = (uint)Project.Connection.ResponseTimeout;
             mb.InterFrameDelay = (uint)Project.Connection.InterFrameDelay;
+            mb.Retries = (uint)Project.Connection.Retries;
 
             // success
             return true;

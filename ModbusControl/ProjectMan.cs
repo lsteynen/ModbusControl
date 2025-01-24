@@ -51,6 +51,7 @@ namespace ModbusControlSpace
             public int MaximumFrameSize;
             public int ResponseTimeout;
             public int InterFrameDelay;
+            public int Retries;
             public Global.eWriteHoldingregFunctionCode WriteHoldingregFunctioncode;
             public Global.eEndian Int32Endian;
             public Global.eEndian Float32Endian;
@@ -165,6 +166,7 @@ namespace ModbusControlSpace
             Connection.MaximumFrameSize = 256;
             Connection.ResponseTimeout = 1000;
             Connection.InterFrameDelay = 0;
+            Connection.Retries = 0;
             Connection.WriteHoldingregFunctioncode = Global.eWriteHoldingregFunctionCode.Auto;
             Connection.Int32Endian = Global.eEndian.Little;
             Connection.Float32Endian = Global.eEndian.Little;

@@ -100,6 +100,20 @@ namespace ModbusExport
             }
         }
 
+        public UInt32 Retries
+        {
+            get
+            {
+                return mTries - 1;
+            }
+            set
+            {
+                mTries = value + 1;
+                if (mb != null) mb.Tries = mTries;
+            }
+        }
+
+
         public int WriteRegFC
         {
             get
