@@ -35,6 +35,7 @@ namespace LST.Helpers
         {
             string Result = string.Empty;
             UInt32 UValue;
+            Int32 DictSearchValue;  // int32 value used for dictionary search, for example -1 for int16 0xFFFF or 65335 for uint16 0xFFFF
 
             // check
             if (!((Width >= 1) && (Width <= 32)))
@@ -49,21 +50,25 @@ namespace LST.Helpers
                     // signed decimal
                     Value = ConvertSignedValueTo32bit(Value, Width);
                     Result = CValueToString.AsInt(Value, Decimals, MinLen);
+                    DictSearchValue = Value;
                     break;
                 case ModbusControlSpace.Global.eFormat.UInt:
                     // unsigned decimal
                     UValue = ConvertUnsignedValueTo32bit((UInt32)Value, Width);
                     Result = CValueToString.AsUInt(UValue, Decimals, MinLen);
+                    DictSearchValue = (Int32)UValue;
                     break;
                 case ModbusControlSpace.Global.eFormat.Hex:
                     // hexadecimal
                     UValue = ConvertUnsignedValueTo32bit((UInt32)Value, Width);
                     Result = CValueToString.AsHex(UValue, MinLen);
+                    DictSearchValue = (Int32)UValue;
                     break;
                 case ModbusControlSpace.Global.eFormat.Bin:
                     // binary
                     UValue = ConvertUnsignedValueTo32bit((UInt32)Value, Width);
                     Result = CValueToString.AsBin(UValue, MinLen);
+                    DictSearchValue = (Int32)UValue;
                     break;
                 case ModbusControlSpace.Global.eFormat.Float:
                     // float32
@@ -72,10 +77,12 @@ namespace LST.Helpers
                         throw new ArgumentException("Invalid size!", "Size");
                     }
                     Result = CValueToString.AsFloat(Value);
+                    DictSearchValue = (Int32)Value;
                     break;
                 case ModbusControlSpace.Global.eFormat.ASCII:
                     Result = CValueToString.AsASCII((UInt32)Value, Width);
-	                break;
+                    DictSearchValue = (Int32)Value;
+                    break;
                 default:
                     // invalid
                     throw new ArgumentException("Invalid format enum!", "Type");
@@ -86,7 +93,7 @@ namespace LST.Helpers
             if (EnumDict != null)
             {
                 string Enumstr;
-                if ((EnumDict.Dict!= null) && EnumDict.Dict.TryGetValue(Value, out Enumstr))
+                if ((EnumDict.Dict!= null) && EnumDict.Dict.TryGetValue(DictSearchValue, out Enumstr))
                 {
                     // found
                     Result += " (" + Enumstr + ")";
