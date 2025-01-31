@@ -17,7 +17,7 @@ namespace ModbusControlSpace
         public enum eType { Int, Float, ASCII };
         public class CEnum
         {
-            public Dictionary<int, string> Dict; // enum convert dictionary
+            public Dictionary<Int64, string> Dict; // enum convert dictionary
             public string ElseText;              // can be null or empty, no ()
         }
 

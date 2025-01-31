@@ -1344,7 +1344,7 @@ namespace ModbusControlSpace
         private Global.CEnum ProcessEnumElementIntoCEnum(XElement pxe)
         {
             Global.CEnum myEnum = new Global.CEnum();
-            myEnum.Dict = new Dictionary<int, string>();
+            myEnum.Dict = new Dictionary<Int64, string>();
             string ElseText = null;
 
             bool elseSeen = false;
@@ -1358,7 +1358,7 @@ namespace ModbusControlSpace
                 if (CheckElementNameMatch(elemName, "item"))
                 {
                     bool valueSeen = false;
-                    int valueInt = 0;
+                    Int64 valueInt = 0;
                     bool textSeen = false;
                     string textStr = null;
 
@@ -1382,7 +1382,7 @@ namespace ModbusControlSpace
                             {
                                 // store value in valueInt
                                 string TmpString = xe.Value.Trim();
-                                if (int.TryParse(TmpString, out valueInt))
+                                if (Int64.TryParse(TmpString, out valueInt))
                                 {
                                     // OK
                                 }
@@ -1429,7 +1429,7 @@ namespace ModbusControlSpace
                         catch
                         {
                             TFilePosition fp = GetFilePos(xitem);
-                            throw new XmlException("XML element <" + xitem.Name + "> has an invalid value. Enum integers must be unique." + Environment.NewLine + LimitXmlTextLength(xitem.ToString()) + Environment.NewLine, null, fp.Line, fp.Col);
+                            throw new XmlException("XML element <" + xitem.Name + "> has an invalid value. Enum values must be unique." + Environment.NewLine + LimitXmlTextLength(xitem.ToString()) + Environment.NewLine, null, fp.Line, fp.Col);
                         }
 
                     }
