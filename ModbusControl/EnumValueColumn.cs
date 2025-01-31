@@ -4,6 +4,8 @@ using System.Windows.Forms;
 
 // Source: https://learn.microsoft.com/en-us/dotnet/desktop/winforms/controls/how-to-host-controls-in-windows-forms-datagridview-cells?view=netframeworkdesktop-4.8&redirectedfrom=MSDN
 
+//TODO: rariteit: als ik in deze file een wijziging doe moet ik een rebuild all doen, anders heeft de wijziging geen effect.
+
 public class EnumValueColumn : DataGridViewColumn
 {
     public EnumValueColumn() : base(new EnumValueCell())
@@ -52,12 +54,12 @@ public class EnumValueCell : DataGridViewTextBoxCell
 		{
 	        EnumValueEditingControl ctl = DataGridView.EditingControl as EnumValueEditingControl;
             // Use the default row value when Value property is null.
-            if (this.Value == null)
-	        {
-	            ctl.Text = (string)this.DefaultNewRowValue;
-	        }
-	        else
-	        {
+            if ((this.Value == null) || (this.Value == DBNull.Value))
+            {
+                ctl.Text = (string)this.DefaultNewRowValue;
+            }
+            else
+            {
                 ctl.Text = (string)this.Value;
 	        }
 
