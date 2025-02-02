@@ -12,7 +12,7 @@ using System.Resources;
 
 //#define DEBUG_VISIBILITY
 
-//TODO: proberen om de beep bij Edit-Escape te vermijden? Lukte nog niet, is by design :-(
+//TODO: proberen om de beep bij Edit-Escape te vermijden? Lukte nog niet, is blijkbaar by design :-(
 
 namespace LST.ModbusGridView
 {
@@ -173,17 +173,17 @@ namespace LST.ModbusGridView
         private int rightclickRowIndex;
 
         // properties values
-        private bool mReadOnly;
+        private bool mConnectionIsOpen;
         private bool mStartEditOnAnyCharacter;
 
         #endregion
 
         #region Properties
 
-        public bool ReadOnly
+        public bool ConnectionIsOpen
         {
-            get { return mReadOnly; }
-            set { mReadOnly = value; }
+            get { return mConnectionIsOpen; }
+            set { mConnectionIsOpen = value; }
         }
 
         public bool AutosizeColumns
@@ -1803,13 +1803,15 @@ namespace LST.ModbusGridView
 
         private bool TryBeginEdit(int gridRowIndex)
         {
+            /* 
             // in read-only mode?
-            if (mReadOnly)
+            if (mConnectionIsOpen)
             {
                 // Read only
                 OnBeepEvent();
                 return false;
             }
+            */
 
             // get datatable row from datagridview row
             // datagridrowindex != datatableindex if datagridview rows are invisible
@@ -1818,6 +1820,7 @@ namespace LST.ModbusGridView
             //find item in RegList
             FindListItemsByRow(dRow, out editingReg, out editingRegfield);
 
+            /*
             // is this var writeable?
             if (editingReg.Writeable == false)
             {
@@ -1825,6 +1828,7 @@ namespace LST.ModbusGridView
                 OnBeepEvent();
                 return false;
             }
+            */
 
             // make the value column the one to edit
             grid.CurrentCell = grid.Rows[gridRowIndex].Cells[(int)eGridColIndex.Value];
@@ -1850,15 +1854,54 @@ namespace LST.ModbusGridView
         {
             Debug.Print("grid_CellEndEdit");
 
-            // entered of canceled?
-            if (grid.EscapeDetected == false)
+            // get datatable row from datagridview row
+            // datagridrowindex != datatableindex if datagridview rows are invisible
+            DataRow dRow = (grid.Rows[e.RowIndex].DataBoundItem as DataRowView).Row;
+            // get new value string
+            string newValueStr = GetDbStr(dRow[(int)dtColIndex.ValueStr]);
+
+            // edit canceled?
+            if (grid.EscapeDetected)
             {
-                // get datatable row from datagridview row
-                // datagridrowindex != datatableindex if datagridview rows are invisible
-                DataRow dRow = (grid.Rows[e.RowIndex].DataBoundItem as DataRowView).Row;
+                // escape was pressed
+                // ignore edit
+            }
+            else if (mConnectionIsOpen == false)
+            {
+                // show that the value was not accepted
+                // only if message is not there yet
+                string dispStr = "<CONNECTION NOT OPEN>";
+                if (!GetDbStr(dRow[(int)dtColIndex.ValueStr]).StartsWith(dispStr))
+                {
+                    dRow[(int)dtColIndex.ValueStr] = dispStr;
+                }
+                // Show error in red
+                dRow[(int)dtColIndex.ValueMode] = ValueModeError;
 
-                string newValueStr = GetDbStr(dRow[(int)dtColIndex.ValueStr]);
+                // report error on status bar
+                OnReportErrorMessageEvent("Input error: connection is not open");
+                // beep
+                OnBeepEvent();
+            }
+            else if (editingReg.Writeable == false)
+            {
+                // show that the value was not accepted
+                // only if message is not there yet
+                string dispStr = "<REGISTER IS READ-ONLY>";
+                if ( ! GetDbStr(dRow[(int)dtColIndex.ValueStr]).StartsWith(dispStr))
+                {
+                    dRow[(int)dtColIndex.ValueStr] = dispStr;
+                }
+                // Show error in red
+                dRow[(int)dtColIndex.ValueMode] = ValueModeError;
 
+                // report error on status bar
+                OnReportErrorMessageEvent("Input error: register is read-only");
+                // beep
+                OnBeepEvent();
+            }
+            else
+            {
                 //editReg and editRegfield are already set in TryBeginEdit
 
                 ModbusControlSpace.Global.eFormat edFormat = ModbusControlSpace.Global.eFormat.Int;
@@ -1932,7 +1975,7 @@ namespace LST.ModbusGridView
                 else
                 {
                     // show that the value was not accepted, put "<INVALID VALUE>" in front
-                    // only if "<INVALID VALUE>" is not there yet
+                    // only if message is not there yet
                     string dispStr = "<INVALID VALUE> " + newValueStr;
                     if (dispStr != GetDbStr(dRow[(int)dtColIndex.ValueStr]))
                     {

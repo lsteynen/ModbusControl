@@ -1300,7 +1300,7 @@ namespace ModbusControlSpace
             ModbusGridView mgv = CurrentTabPage.Tag as ModbusGridView;
 
             // set properties for this gridview
-            mgv.ReadOnly = !ConnectionIsOpen;
+            mgv.ConnectionIsOpen = ConnectionIsOpen;
             mgv.StartEditOnAnyCharacter = Options.AutoStartEdit;
             mgv.NextRowOnEnter = Options.AutoNextRowOnEnter;
             mgv.ShowVarProperties = Options.ShowVarProperties;
