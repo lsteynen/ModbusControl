@@ -14,11 +14,13 @@ namespace ModbusControlSpace
         public delegate void ResetHandler(object sender);
 
         private uint mRwSuccessCount;
-        private uint mNoResponseCount;
-        private uint mResponseFormatErrorCount;
-        private uint mResponseCrcErrorCount;
         private uint mOneWireEchoErrorCount;
+        private uint mNoResponseCount;
+        private uint mResponseProtocolErrorCount;
+        private uint mResponseShortAndCrcErrorCount;
+        private uint mResponseCrcErrorCount;
         private uint mResponseMBAPheaderErrorCount;
+        private uint mResponseDataErrorCount;
         private uint mTcpConnectCount;
         private uint mTcpConnectFailCount;
         private uint mTcpConnectionLostCount;
@@ -48,6 +50,18 @@ namespace ModbusControlSpace
             }
         }
 
+        public uint OneWireEchoErrorCount
+        {
+            set
+            {
+                if (value != mOneWireEchoErrorCount)
+                {
+                    mOneWireEchoErrorCount = value;
+                    lOnewireEchoErrorCount.Text = mOneWireEchoErrorCount.ToString();
+                }
+            }
+        }
+
         public uint NoResponseCount
         {
             set
@@ -60,14 +74,26 @@ namespace ModbusControlSpace
             }
         }
 
-        public uint ResponseFormatErrorCount
+        public uint ResponseProtocolErrorCount
         {
             set
             {
-                if (value != mResponseFormatErrorCount)
+                if (value != mResponseProtocolErrorCount)
                 {
-                    mResponseFormatErrorCount = value;
-                    lResponseFormatErrorCount.Text = mResponseFormatErrorCount.ToString();
+                    mResponseProtocolErrorCount = value;
+                    lResponseProtocolErrorCount.Text = mResponseProtocolErrorCount.ToString();
+                }
+            }
+        }
+
+        public uint ResponseShortAndCrcErrorCount
+        {
+            set
+            {
+                if (value != mResponseShortAndCrcErrorCount)
+                {
+                    mResponseShortAndCrcErrorCount = value;
+                    lResponseShortAndCrcErrorCount.Text = mResponseShortAndCrcErrorCount.ToString();
                 }
             }
         }
@@ -84,18 +110,6 @@ namespace ModbusControlSpace
             }
         }
 
-        public uint OneWireEchoErrorCount
-        {
-            set
-            {
-                if (value != mOneWireEchoErrorCount)
-                {
-                    mOneWireEchoErrorCount = value;
-                    lOnewireEchoErrorCount.Text = mOneWireEchoErrorCount.ToString();
-                }
-            }
-        }
-
         public uint ResponseMBAPheaderErrorCount
         {
             set
@@ -104,6 +118,18 @@ namespace ModbusControlSpace
                 {
                     mResponseMBAPheaderErrorCount = value;
                     lRespMbapErrorCount.Text = mResponseMBAPheaderErrorCount.ToString();
+                }
+            }
+        }
+
+        public uint ResponseDataErrorCount
+        {
+            set
+            {
+                if (value != mResponseDataErrorCount)
+                {
+                    mResponseDataErrorCount = value;
+                    lResponseDataErrorCount.Text = mResponseDataErrorCount.ToString();
                 }
             }
         }

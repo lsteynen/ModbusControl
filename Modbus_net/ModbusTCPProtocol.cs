@@ -48,7 +48,8 @@ namespace Modbus_net
         public ModbusProtocol.Result ProtocolSendReceive(byte[] query, int querylength, out byte[] response, int expectedresponselength)
         {
             // query must be in RTU format, start with slaveID, no CRC. Minimum length 2 bytes.
-
+            // expectedresponselength is not used with TCP
+           
             // must assign
             response = null;
 
@@ -136,18 +137,22 @@ namespace Modbus_net
 
         private ModbusProtocol.Result GetResponse( out byte[] response, int expectedlength)
         {
-            // expectedlength is not used here, the MBAP header has the length
+            // expectedlength is not used with TCP, the MBAP header has the length
 
             byte[] header = new byte[6];    // buffer for MBAP header
             response = new byte[1000];       // buffer for response
             int readCnt = 0;                // nr of bytes received
 
-            // read MBAP header, always 6 bytes
+            // get MBAP header, always 6 bytes
             readCnt = ReceiveBytes(ref header, header.Length);
             if (readCnt < 6)
             {
                 // Timeout on read
-                return (readCnt > 0) ? ModbusProtocol.Result.RESPONSEMBAPHEADERERROR : ModbusProtocol.Result.NORESPONSE;
+                if (readCnt > 0)
+                {
+                    return ModbusProtocol.Result.RESPONSEMBAPHEADERERROR;
+                }
+                return ModbusProtocol.Result.NORESPONSE;
             }
 
             // check MBAP header (0/1 is transaction ID, 2/3 is protocol ID, 4/5 is length)
@@ -164,7 +169,11 @@ namespace Modbus_net
                     if( readCnt < messageLength)
                     {
                         // Timeout on read
-                        return (readCnt > 0) ? ModbusProtocol.Result.RESPONSEFORMATERROR : ModbusProtocol.Result.NORESPONSE;
+                        if (readCnt > 0)
+                        {
+                            return ModbusProtocol.Result.RESPONSEPROTOCOLERROR;
+                        } 
+                        return ModbusProtocol.Result.NORESPONSE;
                     }
 
                     // slave address match?
@@ -186,13 +195,13 @@ namespace Modbus_net
                         else
                         {
                             // Invalid answer
-                            return ModbusProtocol.Result.RESPONSEFORMATERROR;
+                            return ModbusProtocol.Result.RESPONSEPROTOCOLERROR;
                         }
                     }
                     else
                     {
                         // Invalid answer
-                        return ModbusProtocol.Result.RESPONSEFORMATERROR;
+                        return ModbusProtocol.Result.RESPONSEPROTOCOLERROR;
                     }
 
                 }
@@ -212,8 +221,9 @@ namespace Modbus_net
         bool ResultRequiresCloseConnection(ModbusProtocol.Result result)
         {
             bool bClose = (result == ModbusProtocol.Result.NORESPONSE)
-                        || (result == ModbusProtocol.Result.RESPONSEFORMATERROR)
+                        || (result == ModbusProtocol.Result.RESPONSEPROTOCOLERROR)
                         || (result == ModbusProtocol.Result.RESPONSEMBAPHEADERERROR)
+                        || (result == ModbusProtocol.Result.RESPONSEDATAERROR)
                         || (result == ModbusProtocol.Result.CHANNELNOTOPEN);
 
             return bClose;

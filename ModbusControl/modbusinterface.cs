@@ -108,11 +108,35 @@ namespace ModbusControlSpace
             }
         }
 
+        public uint OneWireEchoErrorCount
+        {
+            get
+            {
+                return (mb != null) ? mb.OneWireEchoErrorCount : 0;
+            }
+        }
+
         public uint NoResponseCount
         {
             get
             {
                 return (mb != null) ? mb.NoResponseCount : 0;
+            }
+        }
+
+        public uint ResponseProtocolErrorCount
+        {
+            get
+            {
+                return (mb != null) ? mb.ResponseProtocolErrorCount : 0;
+            }
+        }
+
+        public uint ResponseShortAndCrcErrorCount
+        {
+            get
+            {
+                return (mb != null) ? mb.ResponseShortAndCrcErrorCount : 0;
             }
         }
 
@@ -124,19 +148,19 @@ namespace ModbusControlSpace
             }
         }
 
-        public uint ResponseFormatErrorCount
-        {
-            get
-            {
-                return (mb != null) ? mb.ResponseFormatErrorCount : 0;
-            }
-        }
-
         public uint ResponseMBAPheaderErrorCount
         {
             get
             {
                 return (mb != null) ? mb.ResponseMBAPheaderErrorCount : 0;
+            }
+        }
+
+        public uint ResponseDataErrorCount
+        {
+            get
+            {
+                return (mb != null) ? mb.ResponseDataErrorCount : 0;
             }
         }
 
@@ -169,14 +193,6 @@ namespace ModbusControlSpace
             get
             {
                 return (mb != null) ? mb.TcpConnectionClosedBecauseOfResponseError : 0;
-            }
-        }
-
-        public uint OneWireEchoErrorCount
-        {
-            get
-            {
-                return (mb != null) ? mb.OneWireEchoErrorCount : 0;
             }
         }
 

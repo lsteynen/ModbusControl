@@ -2174,12 +2174,13 @@ namespace ModbusControlSpace
         private void UpdateDiagnosticsCounters()
         {
             DiagnosticscountersForm1.RwSuccessCount = mb.SuccessCount;
-            DiagnosticscountersForm1.NoResponseCount = mb.NoResponseCount;
-            DiagnosticscountersForm1.ResponseFormatErrorCount = mb.ResponseFormatErrorCount;
-            DiagnosticscountersForm1.ResponseCrcErrorCount = mb.ResponseCrcErrorCount;
-
             DiagnosticscountersForm1.OneWireEchoErrorCount = mb.OneWireEchoErrorCount;
+            DiagnosticscountersForm1.NoResponseCount = mb.NoResponseCount;
+            DiagnosticscountersForm1.ResponseProtocolErrorCount = mb.ResponseProtocolErrorCount;
+            DiagnosticscountersForm1.ResponseShortAndCrcErrorCount = mb.ResponseShortAndCrcErrorCount;
+            DiagnosticscountersForm1.ResponseCrcErrorCount = mb.ResponseCrcErrorCount;
             DiagnosticscountersForm1.ResponseMBAPheaderErrorCount = mb.ResponseMBAPheaderErrorCount;
+            DiagnosticscountersForm1.ResponseDataErrorCount = mb.ResponseDataErrorCount;
             DiagnosticscountersForm1.TcpConnectCount = mb.TcpConnectCount;
             DiagnosticscountersForm1.TcpConnectFailCount = mb.TcpConnectFailCount;
             DiagnosticscountersForm1.TcpConnectionLostCount = mb.TcpConnectionLostCount;
@@ -2763,10 +2764,12 @@ namespace ModbusControlSpace
                 // + mb.TcpConnectionLostCount
                 // + mb.TcpConnectionClosedBecauseOfResponseError 
 
-                uint ResponseErrorCount = mb.ResponseCrcErrorCount
-                                    + mb.ResponseFormatErrorCount
+                uint ResponseErrorCount = mb.OneWireEchoErrorCount
+                                    + mb.ResponseProtocolErrorCount
+                                    + mb.ResponseShortAndCrcErrorCount
+                                    + mb.ResponseCrcErrorCount
                                     + mb.ResponseMBAPheaderErrorCount
-                                    + mb.OneWireEchoErrorCount
+                                    + mb.ResponseDataErrorCount
                                     + mb.TcpConnectFailCount
                                     // + mb.TcpConnectionLostCount
                                     + mb.TotalExceptionCount;

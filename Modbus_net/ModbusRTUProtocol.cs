@@ -40,6 +40,9 @@ namespace Modbus_net
         {
             // excepts query in RTU format, start with slaveID, no CRC
             // excepts expectedresponselength in RTU format, no CRC
+            //
+            // expectedresponselength: normally 1-256
+            //  0 means unknown, we'll need to use end-of-frame timeout
 
             // must assign
             response = null;
@@ -100,8 +103,10 @@ namespace Modbus_net
             }
 
             // get the response
-            // slave address and function code echo are already checked by GetResponse()
-            ModbusProtocol.Result TmpResult = GetResponse( out response, expectedresponselength + 2);
+            // slave address and function code echo will be checked by GetResponse()
+            // add 2 bytes for CRC 
+            if (expectedresponselength > 0) expectedresponselength += 2;
+            ModbusProtocol.Result TmpResult = GetResponse( out response, expectedresponselength);
 
             if (TmpResult == ModbusProtocol.Result.SUCCESS)
             {
@@ -126,18 +131,29 @@ namespace Modbus_net
         public ModbusProtocol.Result GetResponse( out byte[] response, int expectedlength)
         {
             // expectedlength is used for serial channels to receive the expected number of bytes without waiting for and end-of-message timeout
+            //  normally 3-256
+            //  0 means unknown, get all bytes till end-of-frame timeout
+            if (expectedlength == 0)
+            {
+                expectedlength = 900;
+            }
 
-            response = new byte[1000];       // buffer for response
+            response = new byte[1000];          // buffer for response
             byte[] tmpresponse = new byte[1000];  // buffer for response part 2
-            int byteCnt = 0;                // nr of bytes received
+            int byteCnt = 0;                    // nr of bytes received
+            bool protocolError = false;         // is set in case of error
 
-            // get first 2 bytes (then we know if it is the expected response or an exception)
+            // get first 2 bytes, then we know if it is the expected response or an exception response
             // ReceiveBytes() can read less bytes than wanted
             byteCnt = ReceiveBytes(ref response, 2);
-            if (byteCnt < 2)
+            if (byteCnt == 0)
             {
-                // Timeout on read
-                return (byteCnt > 0) ? ModbusProtocol.Result.RESPONSEFORMATERROR : ModbusProtocol.Result.NORESPONSE;
+                return ModbusProtocol.Result.NORESPONSE;
+            }
+            else if (byteCnt < 2)
+            {
+                // 1 byte received?
+                return ModbusProtocol.Result.RESPONSEPROTOCOLERROR;
             }
 
             // we got the first 2 bytes
@@ -157,37 +173,35 @@ namespace Modbus_net
                 }
                 else // functioncode does not match
                 {
+                    protocolError = true;
                     // receive bytes till end-of-message timeout
-                    expectedlength = 300;
+                    expectedlength = 900;
                 }
             }
             else
             {
-                // receiving garbage?
+                // slave address does not match
+                protocolError = true;
                 // receive bytes till end-of-message timeout
-                expectedlength = 300;
+                expectedlength = 900;
             }
 
-            // Get the remaining bytes (we already have 2)
-            // We may get less bytes than we want but it can still be a good response
-            // because we don't have an expectedlength for unsupported function codes.
-            // The bridge client may use function codes we don't support.
-            // Use a temporary buffer and append it to response[]
+            // Get the remaining bytes, we already have 2.
+            // If expectedlength is unknown, as with unrecognized function codes, receive bytes till end-of-frame timeout.
+            // The bridge client may use function codes we don't recognize.
+            // Get remaining bytes in temp buffer and append them to response[]
             int tmpcount = ReceiveBytes(ref tmpresponse, expectedlength - 2);
             Array.Copy(tmpresponse, 0, response, 2, tmpcount);
             byteCnt += tmpcount;
 
-            if (byteCnt == expectedlength)
+            // had framing error?
+            if (protocolError)
             {
-                Debug.Print(DateTime.Now.TimeOfDay + ": RTUprotocol: Received " + byteCnt + " bytes as expected");
-            }
-            else
-            {
-                Debug.Print(DateTime.Now.TimeOfDay + ": RTUprotocol: Received " + byteCnt + " bytes, expected " + expectedlength);
+                return ModbusProtocol.Result.RESPONSEPROTOCOLERROR;
             }
 
             // minimum length of 4? (assume minimum is SlaveID+functioncode+CRC)
-            if( (response[0] == mCurrentSlaveAddress) && (byteCnt >= 4))
+            if ( (response[0] == mCurrentSlaveAddress) && (byteCnt >= 4))
             {
                 // check CRC
                 byte[] myCRC = GetCRC(response, byteCnt-2);
@@ -213,25 +227,33 @@ namespace Modbus_net
                         }
                         else // functioncode does not match
                         {
-                            return ModbusProtocol.Result.RESPONSEFORMATERROR;
+                            return ModbusProtocol.Result.RESPONSEPROTOCOLERROR;
                         }
                     }
                     else
                     {
                         /* Invalid response */
-                        return ModbusProtocol.Result.RESPONSEFORMATERROR;
+                        return ModbusProtocol.Result.RESPONSEPROTOCOLERROR;
                     }
                 }
                 else
                 {
                     // CRC error
+                    // if we expected a certain length and we received less: return RESPONSESHORTANDCRCERROR
+                    // if we expected a certain length and we received that: return RESPONSECRCERROR
+                    // if we did not expect a certain length: return RESPONSECRCERROR
+
+                    if ((expectedlength < 900) && (byteCnt < expectedlength))
+                    {
+                        return ModbusProtocol.Result.RESPONSESHORTANDCRCERROR;
+                    }
                     return ModbusProtocol.Result.RESPONSECRCERROR;
                 }
             }
             else
             {
                 // Invalid response
-                return ModbusProtocol.Result.RESPONSEFORMATERROR;
+                return ModbusProtocol.Result.RESPONSEPROTOCOLERROR;
             }
         }
 

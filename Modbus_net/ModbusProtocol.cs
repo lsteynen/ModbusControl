@@ -29,11 +29,13 @@ namespace Modbus_net
             GATEWAYTARGETDEVICEFAILEDTORESPONDEXCEPTION = 11,
             UNDEFINEDEXCEPTION = 12,
             // response fails
+            ONEWIREECHOERROR,
             NORESPONSE,
-            RESPONSEFORMATERROR,
+            RESPONSEPROTOCOLERROR,
+            RESPONSESHORTANDCRCERROR,
             RESPONSECRCERROR,
             RESPONSEMBAPHEADERERROR,
-            ONEWIREECHOERROR,
+            RESPONSEDATAERROR,
             // internal errors
             CHANNELNOTOPEN,
             UNSUPPORTED,
@@ -96,9 +98,11 @@ namespace Modbus_net
         public uint InterFrameDelay
         {
             get { return mInterFrameDelay; }
-            set { SetInterFrameDelay( value);
-                  mInterFrameDelay = value; 
-                }
+            set
+            {
+                SetInterFrameDelay(value);
+                mInterFrameDelay = value;
+            }
         }
 
         public uint Tries
@@ -134,21 +138,37 @@ namespace Modbus_net
             get;
             private set;
         }
+
+        public uint ResponseProtocolErrorCount
+        {
+            get;
+            private set;
+        }
+
+        public uint ResponseShortAndCrcErrorCount
+        {
+            get;
+            private set;
+        }
+
         public uint ResponseCrcErrorCount
         {
             get;
             private set;
         }
-        public uint ResponseFormatErrorCount
-        {
-            get;
-            private set;
-        }
+
         public uint ResponseMBAPheaderErrorCount
         {
             get;
             private set;
         }
+
+        public uint ResponseDataErrorCount
+        {
+            get;
+            private set;
+        }
+
         public uint TcpConnectCount
         {
             // TCP connect successful count
@@ -246,15 +266,17 @@ namespace Modbus_net
             SuccessCount = 0;
             RetryCount = 0;
             FatalCount = 0;
+            OneWireEchoErrorCount = 0;
             NoResponseCount = 0;
+            ResponseProtocolErrorCount = 0;
+            ResponseShortAndCrcErrorCount = 0;
             ResponseCrcErrorCount = 0;
-            ResponseFormatErrorCount = 0;
             ResponseMBAPheaderErrorCount = 0;
+            ResponseDataErrorCount = 0;
             mChannel.ConnectCount = 0;
             mChannel.ConnectFailCount = 0;
             mChannel.ConnectionLostCount = 0;
             TcpConnectionClosedBecauseOfResponseError = 0;
-            OneWireEchoErrorCount = 0;
             IllegalFunctionExceptionCount = 0;
             IllegalAddressExceptionCount = 0;
             IllegalDataExceptionCount = 0;
@@ -302,11 +324,17 @@ namespace Modbus_net
                     ++OtherExceptionCount;
                     ++TotalExceptionCount;
                     break;
+                case Result.ONEWIREECHOERROR:
+                    ++OneWireEchoErrorCount;
+                    break;
                 case Result.NORESPONSE:
                     ++NoResponseCount;
                     break;
-                case Result.RESPONSEFORMATERROR:
-                    ++ResponseFormatErrorCount;
+                case Result.RESPONSEPROTOCOLERROR:
+                    ++ResponseProtocolErrorCount;
+                    break;
+                case Result.RESPONSESHORTANDCRCERROR:
+                    ++ResponseShortAndCrcErrorCount;
                     break;
                 case Result.RESPONSECRCERROR:
                     ++ResponseCrcErrorCount;
@@ -314,8 +342,8 @@ namespace Modbus_net
                 case Result.RESPONSEMBAPHEADERERROR:
                     ++ResponseMBAPheaderErrorCount;
                     break;
-                case Result.ONEWIREECHOERROR:
-                    ++OneWireEchoErrorCount;
+                case Result.RESPONSEDATAERROR:
+                    ++ResponseDataErrorCount;
                     break;
                 case Result.CHANNELNOTOPEN:
                 case Result.UNSUPPORTED:
@@ -358,7 +386,7 @@ namespace Modbus_net
                 {
                     // check response length
                     // check bytecount field
-                    if(  (response.Length == expectedresponselength)
+                    if ((response.Length == expectedresponselength)
                         && (response[2] == NrOfDatabytes))
                     {
                         values = new byte[NrOfDatabytes];
@@ -367,7 +395,7 @@ namespace Modbus_net
                     }
                     else
                     {
-                        retVal = Result.RESPONSEFORMATERROR;
+                        retVal = Result.RESPONSEDATAERROR;
                     }
 
                     // update statistics counters
@@ -426,7 +454,7 @@ namespace Modbus_net
                     }
                     else
                     {
-                        retVal = Result.RESPONSEFORMATERROR;
+                        retVal = Result.RESPONSEDATAERROR;
                     }
 
                     // update statistics counters
@@ -472,20 +500,20 @@ namespace Modbus_net
                 {
                     // check response length
                     // check bytecount field
-                    if(  (response.Length == expectedresponselength)
+                    if ((response.Length == expectedresponselength)
                         && (response[2] == NrOfDatabytes))
                     {
                         values = new short[regcount];
                         for (uint index = 0; index < values.Length; ++index)
                         {
-                            values[index] = response[3 + (2*index)];
+                            values[index] = response[3 + (2 * index)];
                             values[index] <<= 8;
                             values[index] += response[3 + (2 * index) + 1];
                         }
                     }
                     else
                     {
-                        retVal = Result.RESPONSEFORMATERROR;
+                        retVal = Result.RESPONSEDATAERROR;
                     }
 
                     // update statistics counters
@@ -537,7 +565,7 @@ namespace Modbus_net
                 }
                 else
                 {
-                    retVal = Result.RESPONSEFORMATERROR;
+                    retVal = Result.RESPONSEDATAERROR;
                 }
 
                 // update statistics counters
@@ -553,7 +581,7 @@ namespace Modbus_net
             // RTU frame with CRC is max 256 bytes
             // check for query <= 256 bytes (addr,func,startreg,regcnt,bytecnt,databytes,crc)
 
-            if ( (values.Length >= regcount)
+            if ((values.Length >= regcount)
                 && (1 + 1 + 2 + 2 + 1 + (regcount * 2) + 2) <= 256)
             {
                 // build query
@@ -594,7 +622,7 @@ namespace Modbus_net
                     }
                     else
                     {
-                        retVal = Result.RESPONSEFORMATERROR;
+                        retVal = Result.RESPONSEDATAERROR;
                     }
 
                     // update statistics counters
@@ -609,7 +637,7 @@ namespace Modbus_net
             }
         }
 
-        public Result SendQuery( byte[] Query, ushort QueryLen, out byte[] Response)
+        public Result SendQuery(byte[] Query, ushort QueryLen, out byte[] Response)
         {
             // Query[] is RTU format, first byte is slave-address, no CRC
             // Response[] is RTU format, first byte is slave-address, no CRC
@@ -622,9 +650,8 @@ namespace Modbus_net
             if ((QueryLen + 2) <= 256)
             {
                 // get the expected response length
+                // 0 means unknown
                 int expectedresponselength = DetermineModbusResponseLengthFromQuery(Query, QueryLen);
-                // if we don't know it, expect 256 and let end-of-message-timeout decide
-                if( expectedresponselength == 0) expectedresponselength = 256;
                 // send query, get response
                 Result retVal = ProtocolSendReceive(Query, QueryLen, out Response, expectedresponselength);
 
@@ -659,9 +686,9 @@ namespace Modbus_net
 
         #endregion
 
-        public static bool IsExceptionResponse( Result resultCode)
+        public static bool IsExceptionResponse(Result resultCode)
         {
-            return ((resultCode >= Result.ILLEGALFUNCTIONEXCEPTION) && (resultCode <= Result.UNDEFINEDEXCEPTION)); 
+            return ((resultCode >= Result.ILLEGALFUNCTIONEXCEPTION) && (resultCode <= Result.UNDEFINEDEXCEPTION));
         }
 
         // convert resultcode to text
@@ -671,47 +698,74 @@ namespace Modbus_net
 
             switch (resultCode)
             {
-                case Result.SUCCESS: ReturnValue = "SUCCESS";
+                case Result.SUCCESS:
+                    ReturnValue = "SUCCESS";
                     break;
-                case Result.ILLEGALFUNCTIONEXCEPTION: ReturnValue = "ILLEGAL FUNCTION EXCEPTION (1)";
+                case Result.ILLEGALFUNCTIONEXCEPTION:
+                    ReturnValue = "ILLEGAL FUNCTION EXCEPTION (1)";
                     break;
-                case Result.ILLEGALADDRESSEXCEPTION: ReturnValue = "ILLEGAL ADDRESS EXCEPTION (2)";
+                case Result.ILLEGALADDRESSEXCEPTION:
+                    ReturnValue = "ILLEGAL ADDRESS EXCEPTION (2)";
                     break;
-                case Result.ILLEGALDATAVALUEEXCEPTION: ReturnValue = "ILLEGAL DATA VALUE EXCEPTION (3)";
+                case Result.ILLEGALDATAVALUEEXCEPTION:
+                    ReturnValue = "ILLEGAL DATA VALUE EXCEPTION (3)";
                     break;
-                case Result.SLAVEDEVICEFAILUREEXCEPTION: ReturnValue = "SLAVE DEVICE FAILURE EXCEPTION (4)";
+                case Result.SLAVEDEVICEFAILUREEXCEPTION:
+                    ReturnValue = "SLAVE DEVICE FAILURE EXCEPTION (4)";
                     break;
-                case Result.ACKFORLONGDURATIONEXCEPTION: ReturnValue = "ACKNOWLEDGE FOR LONG DURATION EXCEPTION (5)";
+                case Result.ACKFORLONGDURATIONEXCEPTION:
+                    ReturnValue = "ACKNOWLEDGE FOR LONG DURATION EXCEPTION (5)";
                     break;
-                case Result.SLAVEDEVICEBUSYEXCEPTION: ReturnValue = "SLAVE DEVICE BUSY EXCEPTION (6)";
+                case Result.SLAVEDEVICEBUSYEXCEPTION:
+                    ReturnValue = "SLAVE DEVICE BUSY EXCEPTION (6)";
                     break;
-                case Result.NEGATIVEACKEXCEPTION: ReturnValue = "NEGATIVE ACKNOWLEDGEMENT EXCEPTION (7)";
+                case Result.NEGATIVEACKEXCEPTION:
+                    ReturnValue = "NEGATIVE ACKNOWLEDGEMENT EXCEPTION (7)";
                     break;
-                case Result.MEMORYPARITYERROREXCEPTION: ReturnValue = "MEMORY PARITY ERROR EXCEPTION (8)";
+                case Result.MEMORYPARITYERROREXCEPTION:
+                    ReturnValue = "MEMORY PARITY ERROR EXCEPTION (8)";
                     break;
-                case Result.GATEWAYPATHUNAVAILABLEEXCEPTION: ReturnValue = "GATEWAY PATH UNAVAILABLE EXCEPTION (10)";
+                case Result.GATEWAYPATHUNAVAILABLEEXCEPTION:
+                    ReturnValue = "GATEWAY PATH UNAVAILABLE EXCEPTION (10)";
                     break;
-                case Result.GATEWAYTARGETDEVICEFAILEDTORESPONDEXCEPTION: ReturnValue = "GATEWAY TARGET DEVICE FAILED TO RESPOND EXCEPTION (11)";
+                case Result.GATEWAYTARGETDEVICEFAILEDTORESPONDEXCEPTION:
+                    ReturnValue = "GATEWAY TARGET DEVICE FAILED TO RESPOND EXCEPTION (11)";
                     break;
-                case Result.UNDEFINEDEXCEPTION: ReturnValue = "UNDEFINED EXCEPTION CODE";					
+                case Result.UNDEFINEDEXCEPTION:
+                    ReturnValue = "UNDEFINED EXCEPTION CODE";
                     break;
-                case Result.NORESPONSE: ReturnValue = "NO RESPONSE";
+                case Result.ONEWIREECHOERROR:
+                    ReturnValue = "ONEWIRE ECHO ERROR";
                     break;
-                case Result.RESPONSEFORMATERROR: ReturnValue = "RESPONSE FORMAT ERROR";
+                case Result.NORESPONSE:
+                    ReturnValue = "NO RESPONSE";
                     break;
-                case Result.RESPONSECRCERROR: ReturnValue = "RESPONSE CRC ERROR";
+                case Result.RESPONSEPROTOCOLERROR:
+                    ReturnValue = "RESPONSE PROTOCOL ERROR";
                     break;
-                case Result.RESPONSEMBAPHEADERERROR: ReturnValue = "RESPONSE MBAP HEADER ERROR";
+                case Result.RESPONSESHORTANDCRCERROR:
+                    ReturnValue = "RESPONSE TOO SHORT AND CRC ERROR";
                     break;
-                case Result.ONEWIREECHOERROR: ReturnValue = "ONEWIRE ECHO ERROR";
+                case Result.RESPONSECRCERROR:
+                    ReturnValue = "RESPONSE CRC ERROR";
                     break;
-                case Result.CHANNELNOTOPEN: ReturnValue = "CHANNEL NOT OPEN";
+                case Result.RESPONSEMBAPHEADERERROR:
+                    ReturnValue = "RESPONSE MBAP HEADER ERROR";
                     break;
-                case Result.UNSUPPORTED: ReturnValue = "UNSUPPORTED";
+                case Result.RESPONSEDATAERROR:
+                    ReturnValue = "RESPONSE DATA ERROR";
                     break;
-                case Result.INVALIDARGUMENT: ReturnValue = "INVALID ARGUMENT";
+                case Result.CHANNELNOTOPEN:
+                    ReturnValue = "CHANNEL NOT OPEN";
                     break;
-                default: ReturnValue = "Result code " + (int)resultCode;
+                case Result.UNSUPPORTED:
+                    ReturnValue = "UNSUPPORTED";
+                    break;
+                case Result.INVALIDARGUMENT:
+                    ReturnValue = "INVALID ARGUMENT";
+                    break;
+                default:
+                    ReturnValue = "Result code " + (int)resultCode;
                     break;
             }
 
@@ -789,7 +843,7 @@ namespace Modbus_net
             return 0;
         }
 
-        public static Result ExceptioncodeToResult( byte ExceptionCode)
+        public static Result ExceptioncodeToResult(byte ExceptionCode)
         {
             // convert modbus exception code to our Result code
 
@@ -815,6 +869,10 @@ namespace Modbus_net
         {
             Result result = Result.SUCCESS;
 
+            // expectedresponselength: expected response length
+            //  normally 1-256
+            //  0 means unknown, let transport layer work it out
+
             // do a number of tries
             uint mytries = 0;
             do
@@ -826,7 +884,7 @@ namespace Modbus_net
                 }
 
                 // try
-                result = mProtocol.ProtocolSendReceive( query, querylength, out response, expectedresponselength);
+                result = mProtocol.ProtocolSendReceive(query, querylength, out response, expectedresponselength);
                 ++mytries;
 
                 // adjust counters for transport errors and exceptions
@@ -851,12 +909,14 @@ namespace Modbus_net
 
         bool ResultNeedsRetry(Result result)
         {
-            bool bRetry = (RetryOnException11 && (result == Result.GATEWAYTARGETDEVICEFAILEDTORESPONDEXCEPTION))
-                        || (result == Result.NORESPONSE)
-                        || (result == Result.RESPONSEFORMATERROR)
-                        || (result == Result.RESPONSECRCERROR)
+            bool bRetry = ((result == Result.GATEWAYTARGETDEVICEFAILEDTORESPONDEXCEPTION) && RetryOnException11)
                         || (result == Result.ONEWIREECHOERROR)
+                        || (result == Result.NORESPONSE)
+                        || (result == Result.RESPONSEPROTOCOLERROR)
+                        || (result == Result.RESPONSESHORTANDCRCERROR)
+                        || (result == Result.RESPONSECRCERROR)
                         || (result == Result.RESPONSEMBAPHEADERERROR)
+                        || (result == Result.RESPONSEDATAERROR)
                         || (result == Result.CHANNELNOTOPEN);
 
             return bRetry;
@@ -878,7 +938,7 @@ namespace Modbus_net
         /// 0 means set default: is 4 charactertimes for serial channel, 0ms for TCP channel
         /// >0 means delay in ms
         /// </summary>
-        private void SetInterFrameDelay( uint Delay)
+        private void SetInterFrameDelay(uint Delay)
         {
             if ((Delay == 0) && (mChannel.IsSerialChannel))
             {
