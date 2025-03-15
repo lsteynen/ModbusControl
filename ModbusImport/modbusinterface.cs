@@ -134,11 +134,35 @@ namespace ModbusImport
             }
         }
 
+        public uint OneWireEchoErrorCount
+        {
+            get
+            {
+                return (mb != null) ? mb.OneWireEchoErrorCount : 0;
+            }
+        }
+
         public uint NoResponseCount
         {
             get
             {
                 return (mb != null) ? mb.NoResponseCount : 0;
+            }
+        }
+
+        public uint ResponseProtocolErrorCount
+        {
+            get
+            {
+                return (mb != null) ? mb.ResponseProtocolErrorCount : 0;
+            }
+        }
+
+        public uint ResponseShortAndCrcErrorCount
+        {
+            get
+            {
+                return (mb != null) ? mb.ResponseShortAndCrcErrorCount : 0;
             }
         }
 
@@ -150,19 +174,19 @@ namespace ModbusImport
             }
         }
 
-        public uint ResponseFormatErrorCount
-        {
-            get
-            {
-                return (mb != null) ? mb.ResponseFormatErrorCount : 0;
-            }
-        }
-
         public uint ResponseMBAPheaderErrorCount
         {
             get
             {
                 return (mb != null) ? mb.ResponseMBAPheaderErrorCount : 0;
+            }
+        }
+
+        public uint ResponseDataErrorCount
+        {
+            get
+            {
+                return (mb != null) ? mb.ResponseDataErrorCount : 0;
             }
         }
 
@@ -195,14 +219,6 @@ namespace ModbusImport
             get
             {
                 return (mb != null) ? mb.TcpConnectionClosedBecauseOfResponseError : 0;
-            }
-        }
-
-        public uint OneWireEchoErrorCount
-        {
-            get
-            {
-                return (mb != null) ? mb.OneWireEchoErrorCount : 0;
             }
         }
 
@@ -284,6 +300,9 @@ namespace ModbusImport
 
         #endregion
 
+        /// <summary>
+        /// Open connection over serial port, using RTU protocol
+        /// </summary>
         public void OpenSerialRtu( string portName, uint baudRate, Parity parity, StopBits stopBits)
         {
             mClosing = false;
@@ -307,6 +326,9 @@ namespace ModbusImport
             mb.Open();
         }
 
+        /// <summary>
+        /// Open network TCP connection, using Modbus/TCP protocol
+        /// </summary>
         public void OpenModbusTcp(IPAddress IpAddress, UInt16 TcpPort)
         {
             mClosing = false;
@@ -330,6 +352,9 @@ namespace ModbusImport
             mb.Open();
         }
 
+        /// <summary>
+        /// Open network TCP connection, using RTU protocol
+        /// </summary>
         public void OpenRtuOverTcp(IPAddress IpAddress, UInt16 TcpPort)
         {
             mClosing = false;
@@ -374,7 +399,10 @@ namespace ModbusImport
                 mb = null;
             }
         }
-        
+
+        ///<summary>
+        ///Readholdingregisters
+        ///</summary>
         public ModbusProtocol.Result MifReadHoldingRegisters(byte address, ushort startreg, ushort regcount, out short[] values)
         {
             // must assign
@@ -386,7 +414,6 @@ namespace ModbusImport
                 return ModbusProtocol.Result.CHANNELNOTOPEN;
             }
 
-            // read holding registers
             // make it threadsafe here to keep logging synced with queries/responses
             lock (mQueryLock)
             {
@@ -425,6 +452,9 @@ namespace ModbusImport
             }
         }
 
+        /// <summary>
+        /// Write a single holding register
+        /// </summary>
         public ModbusProtocol.Result MifWriteSingleHoldingRegister(byte address, ushort startreg, short value)
         {
             // modbus connection object created?
@@ -433,7 +463,6 @@ namespace ModbusImport
                 return ModbusProtocol.Result.CHANNELNOTOPEN;
             }
 
-            // write a singe holding register
             // make it threadsafe here to keep logging synced with queries/responses
             lock (mQueryLock)
             {
@@ -472,6 +501,9 @@ namespace ModbusImport
             }
         }
 
+        /// <summary>
+        /// Write multiple holding registers
+        /// </summary>
         public ModbusProtocol.Result MifWriteMultipleHoldingRegisters(byte address, ushort startreg, ushort regcount, short[] values)
         {
             // modbus connection object created?
@@ -480,7 +512,6 @@ namespace ModbusImport
                 return ModbusProtocol.Result.CHANNELNOTOPEN;
             }
 
-            // write multiple holding registers
             // make it threadsafe here to keep logging synced with queries/responses
             lock (mQueryLock)
             {
