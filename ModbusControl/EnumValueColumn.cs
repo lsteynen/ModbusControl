@@ -4,8 +4,6 @@ using System.Windows.Forms;
 
 // Source: https://learn.microsoft.com/en-us/dotnet/desktop/winforms/controls/how-to-host-controls-in-windows-forms-datagridview-cells?view=netframeworkdesktop-4.8&redirectedfrom=MSDN
 
-//TODO: rariteit: als ik in deze file een wijziging doe moet ik een rebuild all doen, anders heeft de wijziging geen effect.
-
 public class EnumValueColumn : DataGridViewColumn
 {
     public EnumValueColumn() : base(new EnumValueCell())
