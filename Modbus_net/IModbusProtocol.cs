@@ -22,7 +22,9 @@ namespace Modbus_net
         ModbusProtocol.Result ProtocolSendReceive( byte[] query, int querylength, out byte[] response, int expectedresponselength);
 
         // events
+#pragma warning disable 67
         event LogCallbackString OnInfo;
         event LogCallbackString OnError;
+#pragma warning restore 67
     }
 }

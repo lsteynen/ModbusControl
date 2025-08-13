@@ -12,6 +12,8 @@ using System.Windows.Forms;
 using LST.Helpers;
 using Modbus_net;
 
+//TODO: importcompare verwijderen?
+
 namespace ModbusControlSpace
 {
     public partial class Importcompare : Form
@@ -53,7 +55,7 @@ namespace ModbusControlSpace
             public bool isWriteable;
             public Global.eFormat Format;
             public string ValueString;
-            public Int32 Value;
+            public Int16[] aRegValue;
 
             // constructor
             public Register()
@@ -66,7 +68,7 @@ namespace ModbusControlSpace
                 isWriteable = true;
                 Format = Global.eFormat.Int;
                 ValueString = null;
-                Value = 0;
+                aRegValue = null;
             }
         };
 
@@ -221,38 +223,26 @@ namespace ModbusControlSpace
                     return;
                 }
 
-                // convert format to type
-                Global.eType Type = Global.ConvertFormatToType(reg.Format);
-
-                // convert value in file to modbus shorts[], watching endians
-                Int16[] aFileValue = Endians.ConvertValueToShorts(reg.Value, Type, (reg.Width / 16));
-
                 // read register(s)
-                ushort RegCount = (ushort)(reg.Width / 16);
+                ushort regCount = (ushort)(reg.Width / 16);
                 short[] aReadValues;
-                ModbusProtocol.Result result = mModbus.MifReadHoldingRegisters(mSlaveAddress, reg.RegOffset, RegCount, out aReadValues);
+                ModbusProtocol.Result result = mModbus.MifReadHoldingRegisters(mSlaveAddress, reg.RegOffset, regCount, out aReadValues);
 
                 if (result == ModbusProtocol.Result.SUCCESS)
                 {
                     // success
 
-                    // compare binary values to avoid 16/32bit signed/unsigned issues
-                    // compare 16 or 32-bit?
-                    Int32 TargetValue = 0; // store target value for logging
+                    // 2 or 2 16-bit registers
                     bool bEqual = false;
                     if (reg.Width == 32)
                     {
                         // compare 32-bit
-                        bEqual = (aReadValues[0] == aFileValue[0]) && (aReadValues[1] == aFileValue[1]);
-                        // get the actual value 
-                        TargetValue = Endians.ConvertShortsToValue(aReadValues, Type, 32);
+                        bEqual = (aReadValues[0] == reg.aRegValue[0]) && (aReadValues[1] == reg.aRegValue[1]);
                     }
                     else
                     {
                         // compare 16-bit
-                        bEqual = (aReadValues[0] == aFileValue[0]);
-                        // get the actual value 
-                        TargetValue = aReadValues[0];
+                        bEqual = (aReadValues[0] == reg.aRegValue[0]);
                     }
 
                     // count
@@ -262,7 +252,7 @@ namespace ModbusControlSpace
                         ++mDifferentCount;
 
                     // show result
-                    WriteCompareLine(reg.Reg, reg.Width, reg.Description, reg.Format, reg.isReadable, reg.isWriteable, reg.ValueString, bEqual, TargetValue);
+                    WriteCompareLine(reg.Reg, reg.Width, reg.Description, reg.Format, reg.isReadable, reg.isWriteable, reg.ValueString, bEqual, reg.aRegValue);
                 }
                 else
                 {
@@ -353,7 +343,7 @@ namespace ModbusControlSpace
                 return null;
             }
 
-            if (GetSize(SizeString, out reg.Width) == false)
+            if (GetWidth(SizeString, out reg.Width) == false)
             {
                 string s = "ERROR: file line " + line.lineNum.ToString() + ": Register " + RegString + ": size (" + SizeString + ") is invalid.";
                 mWorker.ReportProgress(0, s);
@@ -388,8 +378,12 @@ namespace ModbusControlSpace
                 return null;
             }
             reg.ValueString = ValueString;
-            Global.eType Type;
-            if (CValueToString.StringToValue(ValueString, bIsFloat, reg.Width, 0, out reg.Value, out Type) == false)
+            try
+            {
+                int regCount = reg.Width / 16;
+                reg.aRegValue = CValueToString.ValueStringToInt16Registers(ValueString, regCount, bIsFloat, 0);
+            }
+            catch
             {
                 string s = "ERROR: file line " + line.lineNum.ToString() + ": Register " + RegString + ": value (" + ValueString + ") is invalid.";
                 mWorker.ReportProgress(0, s);
@@ -420,7 +414,7 @@ namespace ModbusControlSpace
             mParent.MainPollingIsEnabled = true;
         }
 
-        private bool WriteCompareLine(UInt32 Reg, int Size, string Description, Global.eFormat Format, bool isReadable, bool isWriteable, string ValueString, bool bEqual, Int32 TargetValue)
+        private bool WriteCompareLine(UInt32 Reg, int Width, string Description, Global.eFormat Format, bool isReadable, bool isWriteable, string ValueString, bool bEqual, Int16[] aRegTargetValues)
         {
             // output 1 compare line, all register info, and value
 
@@ -429,11 +423,11 @@ namespace ModbusControlSpace
             // make RW string
             string RWstring = (isReadable ? "r" : "") + (isWriteable ? "w" : "");
             // make value string (various formats)
-            string TargetValueString = CValueToString.ValueToString(TargetValue, Size, Format);
+            string TargetValueString = CValueToString.Int16RegistersToValueString(aRegTargetValues, Format, Width);
             // make result string
             string ResultString = bEqual ? "EQUAL" : "DIFFERENT: target value is " + TargetValueString;
             // make output string
-            string s = Reg + ";" + Size + ";\"" + Description + "\";" + RWstring + ";" + Format + ";" + ValueString + "   >> " + ResultString;
+            string s = Reg + ";" + Width + ";\"" + Description + "\";" + RWstring + ";" + Format + ";" + ValueString + "   >> " + ResultString;
 
             if (bEqual && (checkboxShowEquals.Checked == false))
             {
@@ -554,10 +548,10 @@ namespace ModbusControlSpace
             return false;
         }
 
-        private bool GetSize(string text, out int size)
+        private bool GetWidth(string text, out int width)
         {
             // allow 16, 32
-            return int.TryParse(text, out size) && ((size == 16) || (size == 32));
+            return int.TryParse(text, out width) && ((width == 16) || (width == 32));
         }
 
         private bool GetDescr(string text, out string descr)

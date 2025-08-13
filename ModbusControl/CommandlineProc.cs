@@ -23,7 +23,7 @@ namespace ModbusControlSpace
         // processed options
         // switches (bool values) are null if not specified, true if present
         // other parameters are null if not specified 
-        public eConnectionType? ArgConnectionType;
+        public EConnectionType? ArgConnectionType;
         public string ArgPort;                  // string is already nullable
         public int? ArgBaudrate;
         public Parity? ArgParity;
@@ -39,7 +39,7 @@ namespace ModbusControlSpace
         public int? ArgSamplerate;
         public bool ArgHelpSwitch;
 
-        public enum eConnectionType { SerialRTU = 0, ModbusTcp = 1, RtuOverTcp = 2 }
+        public enum EConnectionType { SerialRTU = 0, ModbusTcp = 1, RtuOverTcp = 2 }
 
         public void Clear()
         {
@@ -96,15 +96,15 @@ namespace ModbusControlSpace
                         // use these string to avoid problems with / in command line
                         if (vallow == "serialrtu")
                         {
-                            ArgConnectionType = eConnectionType.SerialRTU;
+                            ArgConnectionType = EConnectionType.SerialRTU;
                         }
                         else if (vallow == "modbustcp")
                         {
-                            ArgConnectionType = eConnectionType.ModbusTcp;
+                            ArgConnectionType = EConnectionType.ModbusTcp;
                         }
                         else if (vallow == "rtutcp")
                         {
-                            ArgConnectionType = eConnectionType.RtuOverTcp;
+                            ArgConnectionType = EConnectionType.RtuOverTcp;
                         }
                         else
                         {

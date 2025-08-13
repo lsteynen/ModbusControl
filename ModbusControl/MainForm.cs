@@ -14,7 +14,6 @@ using Modbus_net;
 using LST.Helpers;
 using LST.ModbusGridView;
 
-
 namespace ModbusControlSpace
 {
     public partial class MainForm : Form
@@ -53,7 +52,6 @@ namespace ModbusControlSpace
         private Thread CommsThread;
         private volatile bool CommsThread_StopFlag;
         private TabPage CurrentTabPage; // null if none
-        private TabPage PreviousTabPage; // null if none
         public bool MainPollingIsEnabled = true;
         private bool TabIsChanged;
         private float ZoomFactor = 1.0F;
@@ -62,6 +60,10 @@ namespace ModbusControlSpace
         private Object UpdaterLock = new Object();  // lock for safely terminating the updater thread
         private bool Loading;
         private CommandlineProc CommandlineArgs;
+        private float SavedRegisterColumnWidthWeight;
+        private float SavedDescriptionColumnWidthWeight;
+        private float SavedPropertiesColumnWidthWeight;
+        private float SavedValueColumnWidthWeight;
 
         // a write entry
         private class WriteEntry
@@ -79,12 +81,8 @@ namespace ModbusControlSpace
         Export ExportForm;
         // the Importcompare form, make it global and use show/hide to keep the settings
         Importcompare ImportcompareForm;
-        // the custom-read form, make it global and use show/hide to keep the settings
-        CustomRead CustomreadForm;
-        // the custom-write form, make it global and use show/hide to keep the settings
-        CustomWrite CustomwriteForm;
         // the custom-modbus-command form, make it global and use show/hide to keep the settings
-        CustomModbusCommand CustommodbuscommandForm;
+        CustomQueries CustommodbuscommandForm;
 
         // constructor
         public MainForm()
@@ -381,43 +379,36 @@ namespace ModbusControlSpace
             Settings1.Roaming.CustomEditorEnable = Options.CustomEditorEnable;
             Settings1.Roaming.CustomEditorCommand = Options.CustomEditorCommand;
             Settings1.Shared.Updater.CheckForUpdates = Options.CheckForUpdates;
+
+            // save settings if form exists
             if (ExportForm != null)
             {
-                // save settings if form exists
                 Settings1.Roaming.Export.Tabs = ExportForm.TabSelect;
                 Settings1.Roaming.Export.ExportFormat = ExportForm.ExportFormatSelect;
                 Settings1.Roaming.Export.ExportAsciiAs = ExportForm.AsciiFormatSelect;
             }
+
+            // save settings if form exists
             if (ImportcompareForm != null)
             {
-                // save settings if form exists
                 Settings1.Roaming.Compare.ShowEqual = ImportcompareForm.ShowEquals;
             }
-            if (CustomreadForm != null)
-            {
-                // save settings if form exists
-                Settings1.Roaming.CustomRead.SlaveID = CustomreadForm.SlaveID;
-                Settings1.Roaming.CustomRead.Register = (int)CustomreadForm.Register;
-                Settings1.Roaming.CustomRead.Quantity = CustomreadForm.Quantity;
-                Settings1.Roaming.CustomRead.Datasize = CustomreadForm.Datasize;
-                Settings1.Roaming.CustomRead.ShowValuesAs = CustomreadForm.Showvaluesas;
-            }
-            if (CustomwriteForm != null)
-            {
-                // save settings if form exists
-                Settings1.Roaming.CustomWrite.SlaveID = CustomwriteForm.SlaveID;
-                Settings1.Roaming.CustomWrite.Register = (int)CustomwriteForm.Register;
-                Settings1.Roaming.CustomWrite.Quantity = CustomwriteForm.Quantity;
-                Settings1.Roaming.CustomWrite.Datasize = CustomwriteForm.Datasize;
-                Settings1.Roaming.CustomWrite.Functioncode = CustomwriteForm.Functioncode;
-                Settings1.Roaming.CustomWrite.Datasize = CustomwriteForm.Datasize;
-                Settings1.Roaming.CustomWrite.Data = CustomwriteForm.Data;
-            }
+
+            // save settings if form exists
             if (CustommodbuscommandForm != null)
             {
-                // save settings if form exists
-                Settings1.Roaming.CustomCommand.Command = CustommodbuscommandForm.Command;
+                Settings1.Roaming.CustomQueries.HoldingRegistersStartAddress = CustommodbuscommandForm.HoldingRegistersStartAddress;
+
+                Settings1.Roaming.CustomQueries.MultilineAutosizeRows = CustommodbuscommandForm.MultilineAutosizeRows;
+
+                CustomQueries.ColumnWidthsType widths = CustommodbuscommandForm.ColumnWidthsInWeights;
+                Settings1.Roaming.CustomQueries.ColumnWidths = widths;
+
+                List<CustomQueries.CustomQueryItem> cmdList = CustommodbuscommandForm.QueriesList;
+                Settings1.Roaming.CustomQueries.QueriesList = cmdList;
             }
+
+            // logger
             Settings1.Roaming.Logger.Capacity = Logger1.CapacityLines;
             Settings1.Roaming.Logger.LogErrors = Logger1.TheLogFilter.LogErrors;
             Settings1.Roaming.Logger.LogWarnings = Logger1.TheLogFilter.LogWarnings;
@@ -471,7 +462,7 @@ namespace ModbusControlSpace
         /// <summary>
         /// Menu: Open project file
         /// </summary>
-        private void openProjectFileMenuItem_Click(object sender, EventArgs e)
+        private void OpenProjectFileMenuItem_Click(object sender, EventArgs e)
         {
             OpenProjectFile();
         }
@@ -487,7 +478,7 @@ namespace ModbusControlSpace
         /// <summary>
         /// Menu: Reload the current project file (or try to)
         /// </summary>
-        private void reloadProjectFileMenuItem_Click(object sender, EventArgs e)
+        private void ReloadProjectFileMenuItem_Click(object sender, EventArgs e)
         {
             ReloadProjectFile();
         }
@@ -500,7 +491,7 @@ namespace ModbusControlSpace
             ReloadProjectFile();
         }
 
-        private void editProjectFileMenuItem_Click(object sender, EventArgs e)
+        private void EditProjectFileMenuItem_Click(object sender, EventArgs e)
         {
             EditProjectFile();
         }
@@ -535,7 +526,7 @@ namespace ModbusControlSpace
         /// <summary>
         /// Open recent file
         /// </summary>
-        private void recentFilesMenuItem_ItemClick(object sender, EventArgs e)
+        private void RecentFilesMenuItem_ItemClick(object sender, EventArgs e)
         {
             string path = sender.ToString();
 
@@ -564,7 +555,7 @@ namespace ModbusControlSpace
         /// Save configuration
         /// Keep previous form to keep the settings in the current session
         /// </summary>
-        private void saveConfigurationMenuItem_Click(object sender, EventArgs e)
+        private void SaveConfigurationMenuItem_Click(object sender, EventArgs e)
         {
             if (SaveConfigurationForm1 == null)
             {
@@ -595,34 +586,34 @@ namespace ModbusControlSpace
         /// <summary>
         /// File Exit 
         /// </summary>
-        private void exitMenuItem_Click(object sender, EventArgs e)
+        private void ExitMenuItem_Click(object sender, EventArgs e)
         {
             Form1_FormClosing(sender, null);
 
             Close();
         }
 
-        private void openConnectionMenuItem_Click(object sender, EventArgs e)
+        private void OpenConnectionMenuItem_Click(object sender, EventArgs e)
         {
             OpenConnection();
         }
 
-        private void closeConnectionMenuItem_Click(object sender, EventArgs e)
+        private void CloseConnectionMenuItem_Click(object sender, EventArgs e)
         {
             CloseConnection();
         }
 
-        private void startPollingMenuItem_Click(object sender, EventArgs e)
+        private void StartPollingMenuItem_Click(object sender, EventArgs e)
         {
             StartPolling();
         }
 
-        private void stopPollingMeuItem_Click(object sender, EventArgs e)
+        private void StopPollingMeuItem_Click(object sender, EventArgs e)
         {
             StopPolling();
         }
 
-        private void pollOnceMenuItem_Click(object sender, EventArgs e)
+        private void PollOnceMenuItem_Click(object sender, EventArgs e)
         {
             // poll tab page once
             // button and menu will be disabled 
@@ -633,17 +624,17 @@ namespace ModbusControlSpace
             // button and menu will be re-enabled after poll once
         }
 
-        private void zoomInToolStripMenuItem_Click(object sender, EventArgs e)
+        private void ZoomInToolStripMenuItem_Click(object sender, EventArgs e)
         {
             ChangeZoom(+1);
         }
 
-        private void zoomOutToolStripMenuItem_Click(object sender, EventArgs e)
+        private void ZoomOutToolStripMenuItem_Click(object sender, EventArgs e)
         {
             ChangeZoom(-1);
         }
 
-        private void resetZoomToolStripMenuItem_Click(object sender, EventArgs e)
+        private void ResetZoomToolStripMenuItem_Click(object sender, EventArgs e)
         {
             ChangeZoom(0);
         }
@@ -750,7 +741,7 @@ namespace ModbusControlSpace
         /// <summary>
         /// Open Configuration form
         /// </summary>
-        private void configurationToolStripMenuItem_Click(object sender, EventArgs e)
+        private void ConfigurationToolStripMenuItem_Click(object sender, EventArgs e)
         {
             ConfigForm configform = new ConfigForm();
 
@@ -860,10 +851,10 @@ namespace ModbusControlSpace
             Project.ModbusTcpBridge.Enable = configform.ModbusTcpBridgeEnable;
             Project.ModbusTcpBridge.IPPort = configform.ModbusTcpBridgeIPPort;
 
-            // pass new configuration to CStringToValue
-            Endians.Int32BigEndian = Project.Connection.Int32Endian == Global.eEndian.Big;
-            Endians.Float32BigEndian = Project.Connection.Float32Endian == Global.eEndian.Big;
-            CValueToString.Ascii16BigEndian = Project.Connection.Ascii16Endian == Global.eEndian.Big;
+            // pass new configuration to Converts
+            Converts.Int32Endian = Project.Connection.Int32Endian;
+            Converts.Float32Endian = Project.Connection.Float32Endian;
+            Converts.StringEndian = Project.Connection.Ascii16Endian;
 
             // restore connection
             if (ReopenConnection)
@@ -887,7 +878,7 @@ namespace ModbusControlSpace
         /// <summary>
         /// Open Options form
         /// </summary>
-        private void optionsToolStripMenuItem_Click(object sender, EventArgs e)
+        private void OptionsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             OptionsForm optionsForm = new OptionsForm();
 
@@ -930,7 +921,7 @@ namespace ModbusControlSpace
             }
         }
 
-        private void aboutMenuItem_Click(object sender, EventArgs e)
+        private void AboutMenuItem_Click(object sender, EventArgs e)
         {
             AboutBox1 about = new AboutBox1();
             about.VersionString = AppHelpers.VersionString;
@@ -942,27 +933,27 @@ namespace ModbusControlSpace
 
         private void OpenConnectionToolbutton_Click(object sender, EventArgs e)
         {
-            openConnectionMenuItem_Click(sender, null);
+            OpenConnectionMenuItem_Click(sender, null);
         }
 
         private void CloseConnectionToolbutton_Click(object sender, EventArgs e)
         {
-            closeConnectionMenuItem_Click(sender, null);
+            CloseConnectionMenuItem_Click(sender, null);
         }
 
         private void StartPollingToolbutton_Click(object sender, EventArgs e)
         {
-            startPollingMenuItem_Click(sender, null);
+            StartPollingMenuItem_Click(sender, null);
         }
 
         private void StopPollingToolbutton_Click(object sender, EventArgs e)
         {
-            stopPollingMeuItem_Click(sender, null);
+            StopPollingMeuItem_Click(sender, null);
         }
 
         private void PollOnceToolbutton_Click(object sender, EventArgs e)
         {
-            pollOnceMenuItem_Click(sender, null);
+            PollOnceMenuItem_Click(sender, null);
         }
 
         private void ApplyCommandlineToProjectConfig()
@@ -1167,11 +1158,11 @@ namespace ModbusControlSpace
             // apply command line parameters as overrides
             ApplyCommandlineToProjectConfig();
 
-            // pass configuration to Endians and CStringToValue
-            Endians.Int32BigEndian = Project.Connection.Int32Endian == Global.eEndian.Big;
-            Endians.Float32BigEndian = Project.Connection.Float32Endian == Global.eEndian.Big;
-            CValueToString.Ascii16BigEndian = Project.Connection.Ascii16Endian == Global.eEndian.Big;
-
+            // pass configuration to Converts
+            Converts.Int32Endian = Project.Connection.Int32Endian;
+            Converts.Float32Endian = Project.Connection.Float32Endian;
+            Converts.StringEndian = Project.Connection.Ascii16Endian;
+ 
             // Create the tab pages
             LoadProjectInTabs();
 
@@ -1203,7 +1194,6 @@ namespace ModbusControlSpace
         {
             tabControl1.TabPages.Clear();
             CurrentTabPage = null;
-            PreviousTabPage = null;
         }
 
         public void LoadProjectInTabs()
@@ -1236,6 +1226,7 @@ namespace ModbusControlSpace
                 newRegView.OnRegisterWrite += new ModbusGridView.RegisterWriteHandler(this.OnRegisterWrite);
                 newRegView.OnBeep += new ModbusGridView.BeepHandler(this.BeepHandler);
                 newRegView.OnReportErrorMessage += this.ReportInputError;
+                newRegView.OnColumnWidthChanged += this.ReportColumnWidthChanged;
 
                 // add info to Description?
                 // populate grid
@@ -1297,7 +1288,7 @@ namespace ModbusControlSpace
 
         private void PassOptionsToClientTab(TabPage tab)
         {
-            ModbusGridView mgv = CurrentTabPage.Tag as ModbusGridView;
+            ModbusGridView mgv = tab.Tag as ModbusGridView;
 
             // set properties for this gridview
             mgv.ConnectionIsOpen = ConnectionIsOpen;
@@ -1305,16 +1296,12 @@ namespace ModbusControlSpace
             mgv.NextRowOnEnter = Options.AutoNextRowOnEnter;
             mgv.ShowVarProperties = Options.ShowVarProperties;
 
-            // copy some properties from the previous page
-            if (PreviousTabPage != null)
-            {
-                ModbusGridView prevmgv = PreviousTabPage.Tag as ModbusGridView;
-                mgv.RegisterColumnWidthWeight = prevmgv.RegisterColumnWidthWeight;
-                mgv.DescriptionColumnWidthWeight = prevmgv.DescriptionColumnWidthWeight;
-                mgv.PropertiesColumnWidthWeight = prevmgv.PropertiesColumnWidthWeight;
-                mgv.ValueColumnWidthWeight = prevmgv.ValueColumnWidthWeight;
-            }
-
+            // pass column widths
+            mgv.RegisterColumnWidthWeight = SavedRegisterColumnWidthWeight;
+            mgv.DescriptionColumnWidthWeight = SavedDescriptionColumnWidthWeight;
+            mgv.PropertiesColumnWidthWeight = SavedPropertiesColumnWidthWeight;
+            mgv.ValueColumnWidthWeight = SavedValueColumnWidthWeight;
+            
             // set some more properties
             //mgv.AutosizeAndWrapRows = Options.AutoRowSize;
             mgv.WrapRows = Options.AutoRowSize;
@@ -1781,10 +1768,8 @@ namespace ModbusControlSpace
             }
         }
 
-        private void tabControl1_Selected(object sender, TabControlEventArgs e)
+        private void TabControl1_Selected(object sender, TabControlEventArgs e)
         {
-            // remember previous page
-            PreviousTabPage = CurrentTabPage;
             // set new current page
             CurrentTabPage = tabControl1.SelectedTab;
 
@@ -1952,8 +1937,8 @@ namespace ModbusControlSpace
         public bool TryHoldingregisterGetOffset(UInt32 Regnr, out UInt16 Offset)
         {
             // accepts:
-            // 40000/400000: 40000-49999 + 400000-465535
-            // 40001/400001: 40001-49999 + 400001-465536
+            // if holdingreg base = 40000/400000: 40000-49999 + 400000-465535
+            // if holdingreg base = 40001/400001: 40001-49999 + 400001-465536
 
             bool ret = false;
             Offset = 0;
@@ -1981,6 +1966,128 @@ namespace ModbusControlSpace
                 else if ((Regnr >= 400001) && (Regnr <= 465536))
                 {
                     Offset = (UInt16)(Regnr - 400001);
+                    ret = true;
+                }
+            }
+
+            return ret;
+        }
+
+        /// <summary>
+        /// Convert input register number to register offset 0-65536
+        /// </summary>
+        /// <returns>true if valid, false if not</returns>
+        public bool TryInputregisterGetOffset(UInt32 Regnr, out UInt16 Offset)
+        {
+            // accepts:
+            // if holdingreg base = 40000/400000: 30000-39999 + 300000-365535
+            // if holdingreg base = 40001/400001: 30001-39999 + 300001-365536
+
+            bool ret = false;
+            Offset = 0;
+
+            // use HoldingregistersStart range to determine this range
+            if ((Project.Options.HoldingregistersStart == 40000) || (Project.Options.HoldingregistersStart == 400000))
+            {
+                if ((Regnr >= 30000) && (Regnr <= 39999))
+                {
+                    Offset = (UInt16)(Regnr - 30000);
+                    ret = true;
+                }
+                else if ((Regnr >= 300000) && (Regnr <= 365535))
+                {
+                    Offset = (UInt16)(Regnr - 300000);
+                    ret = true;
+                }
+            }
+            if ((Project.Options.HoldingregistersStart == 40001) || (Project.Options.HoldingregistersStart == 400001))
+            {
+                if ((Regnr >= 30001) && (Regnr <= 39999))
+                {
+                    Offset = (UInt16)(Regnr - 30001);
+                    ret = true;
+                }
+                else if ((Regnr >= 300001) && (Regnr <= 365536))
+                {
+                    Offset = (UInt16)(Regnr - 300001);
+                    ret = true;
+                }
+            }
+
+            return ret;
+        }
+
+        /// <summary>
+        /// Convert coil number to offset 0-65536
+        /// </summary>
+        /// <returns>true if valid, false if not</returns>
+        public bool TryCoilGetOffset(UInt32 Regnr, out UInt16 Offset)
+        {
+            // accepts:
+            // if holdingreg base = 40000/400000: 0-9999
+            // if holdingreg base = 40001/400001: 1-9999
+
+            bool ret = false;
+            Offset = 0;
+
+            // use HoldingregistersStart range to determine this range
+            if ((Project.Options.HoldingregistersStart == 40000) || (Project.Options.HoldingregistersStart == 400000))
+            {
+                if ((Regnr >= 0) && (Regnr <= 9999))
+                {
+                    Offset = (UInt16)(Regnr - 0);
+                    ret = true;
+                }
+             }
+            if ((Project.Options.HoldingregistersStart == 40001) || (Project.Options.HoldingregistersStart == 400001))
+            {
+                if ((Regnr >= 1) && (Regnr <= 9999))
+                {
+                    Offset = (UInt16)(Regnr - 1);
+                    ret = true;
+                }
+            }
+
+            return ret;
+        }
+
+        /// <summary>
+        /// Convert discrete input number to offset 0-65536
+        /// </summary>
+        /// <returns>true if valid, false if not</returns>
+        public bool TryDiscreteInputGetOffset(UInt32 Regnr, out UInt16 Offset)
+        {
+            // accepts:
+            // if holdingreg base = 40000/400000: 10000–19999 + 100000–165535
+            // if holdingreg base = 40001/400001: 10001–19999 + 100001–165536
+
+            bool ret = false;
+            Offset = 0;
+
+            // use HoldingregistersStart range to determine this range
+            if ((Project.Options.HoldingregistersStart == 40000) || (Project.Options.HoldingregistersStart == 400000))
+            {
+                if ((Regnr >= 10000) && (Regnr <= 19999))
+                {
+                    Offset = (UInt16)(Regnr - 10000);
+                    ret = true;
+                }
+                else if ((Regnr >= 100000) && (Regnr <= 165535))
+                {
+                    Offset = (UInt16)(Regnr - 100000);
+                    ret = true;
+                }
+            }
+            if ((Project.Options.HoldingregistersStart == 40001) || (Project.Options.HoldingregistersStart == 400001))
+            {
+                if ((Regnr >= 10001) && (Regnr <= 19999))
+                {
+                    Offset = (UInt16)(Regnr - 10001);
+                    ret = true;
+                }
+                else if ((Regnr >= 100001) && (Regnr <= 165536))
+                {
+                    Offset = (UInt16)(Regnr - 100001);
                     ret = true;
                 }
             }
@@ -2069,7 +2176,7 @@ namespace ModbusControlSpace
             }
         }
 
-        private void diagnosticsCountersToolStripMenuItem_Click(object sender, EventArgs e)
+        private void DiagnosticsCountersToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if ((DiagnosticscountersForm1 == null) || (DiagnosticscountersForm1.IsDisposed))
             {
@@ -2081,7 +2188,7 @@ namespace ModbusControlSpace
             ShowForm(DiagnosticscountersForm1);
         }
 
-        private void loggingToolStripMenuItem_Click(object sender, EventArgs e)
+        private void LoggingToolStripMenuItem_Click(object sender, EventArgs e)
         {
             // show the logger
             ShowForm(Logger1);
@@ -2130,7 +2237,7 @@ namespace ModbusControlSpace
             }
         }
 
-        private void checkForUpdateMenuItem_Click(object sender, EventArgs e)
+        private void CheckForUpdateMenuItem_Click(object sender, EventArgs e)
         {
             // Start the updater, user-initiated
             StartUpdater(true);
@@ -2163,7 +2270,7 @@ namespace ModbusControlSpace
             }
         }
 
-        private void formtimer1_Tick(object sender, EventArgs e)
+        private void Formtimer1_Tick(object sender, EventArgs e)
         {
             if ((DiagnosticscountersForm1 != null) && DiagnosticscountersForm1.Visible)
             {
@@ -2327,6 +2434,19 @@ namespace ModbusControlSpace
             ApplyConfiguration((ConfigForm)sender);
         }
 
+        // call when columns widhts were changed
+        private void ReportColumnWidthChanged(object sender)
+        {
+            // store the changes column widths
+           
+            ModbusGridView mgv = sender as ModbusGridView;
+            SavedRegisterColumnWidthWeight = mgv.RegisterColumnWidthWeight;
+            SavedDescriptionColumnWidthWeight = mgv.DescriptionColumnWidthWeight;
+            SavedPropertiesColumnWidthWeight = mgv.PropertiesColumnWidthWeight;
+            SavedValueColumnWidthWeight = mgv.ValueColumnWidthWeight;
+        }
+
+
         #region Writes
 
         // Add a write to the writelist
@@ -2465,7 +2585,7 @@ namespace ModbusControlSpace
                 // zoom in
                 if (ZoomFactor < maxZoom)
                 {
-                    ZoomFactor = ZoomFactor * changeFactor;
+                    ZoomFactor *= changeFactor;
                 }
             }
             else if (action < 0)
@@ -2473,7 +2593,7 @@ namespace ModbusControlSpace
                 // zoom out
                 if (ZoomFactor > minZoom)
                 {
-                    ZoomFactor = ZoomFactor / changeFactor;
+                    ZoomFactor /= changeFactor;
                 }
             }
             else
@@ -2494,7 +2614,7 @@ namespace ModbusControlSpace
 
         #region Find
 
-        private void tbFilterText_TextChanged(object sender, EventArgs e)
+        private void TbFilterText_TextChanged(object sender, EventArgs e)
         {
             if (Loading)
             {
@@ -2508,12 +2628,12 @@ namespace ModbusControlSpace
             }
         }
 
-        private void btnFilterClear_Click(object sender, EventArgs e)
+        private void BtnFilterClear_Click(object sender, EventArgs e)
         {
             FilterClear();
         }
 
-        private void chkFilterCaseSensitive_CheckedChanged(object sender, EventArgs e)
+        private void ChkFilterCaseSensitive_CheckedChanged(object sender, EventArgs e)
         {
             if (CurrentTabPage != null)
             {
@@ -2521,13 +2641,13 @@ namespace ModbusControlSpace
                 mgv.SetFilter(tbFilterText.Text, chkFilterCaseSensitive.Checked);
             }
         }
-        private void btnFilterClose_Click(object sender, EventArgs e)
+        private void BtnFilterClose_Click(object sender, EventArgs e)
         {
             FilterClear();
             panFilter.Hide();
         }
 
-        private void findFilterToolStripMenuItem_Click(object sender, EventArgs e)
+        private void FindFilterToolStripMenuItem_Click(object sender, EventArgs e)
         {
             FilterStartFind();
         }
@@ -2555,7 +2675,7 @@ namespace ModbusControlSpace
 
         #region Import/export
 
-        private void importRegistersFromFileToolStripMenuItem_Click(object sender, EventArgs e)
+        private void ImportRegistersFromFileToolStripMenuItem_Click(object sender, EventArgs e)
         {
             // create once, then hide and show to keep settings
             if (ImportForm == null)
@@ -2570,7 +2690,7 @@ namespace ModbusControlSpace
             MainPollingIsEnabled = true;
         }
 
-        private void exportRegistersToFileToolStripMenuItem_Click(object sender, EventArgs e)
+        private void ExportRegistersToFileToolStripMenuItem_Click(object sender, EventArgs e)
         {
             // create once, then hide and show to keep settings
             if (ExportForm == null)
@@ -2591,7 +2711,7 @@ namespace ModbusControlSpace
             MainPollingIsEnabled = true;
         }
 
-        private void compareRegistersWithValuesInFileToolStripMenuItem_Click(object sender, EventArgs e)
+        private void CompareRegistersWithValuesInFileToolStripMenuItem_Click(object sender, EventArgs e)
         {
             // create once, then hide and show to keep settings
             if (ImportcompareForm == null)
@@ -2612,61 +2732,31 @@ namespace ModbusControlSpace
 
         #region Custom commands
 
-        private void customReadToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            // create if needed, else show and hide
-            if (CustomreadForm == null)
-            {
-                CustomreadForm = new CustomRead(this);
-                // load settings
-                CustomreadForm.SlaveID = (byte)Settings1.Roaming.CustomRead.SlaveID;
-                CustomreadForm.Register = (uint)Settings1.Roaming.CustomRead.Register;
-                CustomreadForm.Quantity = (ushort)Settings1.Roaming.CustomRead.Quantity;
-                CustomreadForm.Datasize = Settings1.Roaming.CustomRead.Datasize;
-                CustomreadForm.Showvaluesas = Settings1.Roaming.CustomRead.ShowValuesAs;
-            }
-
-            // update some parameters
-            CustomreadForm.ShortLivedTcpConnection = false;
-
-            // show
-            ShowForm(CustomreadForm);
-        }
-
-        private void customWriteToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            // create if needed, else show and hide
-            if (CustomwriteForm == null)
-            {
-                CustomwriteForm = new CustomWrite(this);
-                // load settings
-                CustomwriteForm.SlaveID = (byte)Settings1.Roaming.CustomWrite.SlaveID;
-                CustomwriteForm.Register = (uint)Settings1.Roaming.CustomWrite.Register;
-                CustomwriteForm.Quantity = (ushort)Settings1.Roaming.CustomWrite.Quantity;
-                CustomwriteForm.Functioncode = Settings1.Roaming.CustomWrite.Functioncode;
-                CustomwriteForm.Datasize = Settings1.Roaming.CustomWrite.Datasize;
-                CustomwriteForm.Data = Settings1.Roaming.CustomWrite.Data;
-            }
-
-            // show
-            ShowForm(CustomwriteForm);
-        }
-
-        private void customCommandToolStripMenuItem_Click(object sender, EventArgs e)
+        private void CustomQueriesToolStripMenuItem_Click(object sender, EventArgs e)
         {
             // create if needed, else show and hide
             if (CustommodbuscommandForm == null)
             {
-                CustommodbuscommandForm = new CustomModbusCommand(this);
+                CustommodbuscommandForm = new CustomQueries(this);
+
                 // load settings
-                CustommodbuscommandForm.Command = Settings1.Roaming.CustomCommand.Command;
+
+                CustommodbuscommandForm.HoldingRegistersStartAddress = Settings1.Roaming.CustomQueries.HoldingRegistersStartAddress;
+
+                CustommodbuscommandForm.MultilineAutosizeRows = Settings1.Roaming.CustomQueries.MultilineAutosizeRows;
+
+                CustomQueries.ColumnWidthsType widths = Settings1.Roaming.CustomQueries.ColumnWidths;
+                CustommodbuscommandForm.ColumnWidthsInWeights = widths;
+
+                List<CustomQueries.CustomQueryItem> clist = Settings1.Roaming.CustomQueries.QueriesList;
+                CustommodbuscommandForm.QueriesList = clist;
             }
 
             // show modal
             ShowForm(CustommodbuscommandForm);
         }
 
-        #endregion
+#endregion
 
         private void ShowForm(Form f)
         {
@@ -2678,7 +2768,7 @@ namespace ModbusControlSpace
             f.BringToFront();
         }
 
-        #region Status bar message system
+#region Status bar message system
 
         Color StatusbarDefaultBackColor;
         Color StatusbarNoPollingBackColor = Color.FromArgb(135, 206, 250); // kind of blue;
@@ -2791,7 +2881,7 @@ namespace ModbusControlSpace
             }
         }
 
-        #endregion
+#endregion
 
         private void StartEditor(string file)
         {
@@ -2808,9 +2898,7 @@ namespace ModbusControlSpace
                     // assuming the user has put quotes around %file if required
                     CmdLine = CmdLine.Replace("%file", file);
                     AppHelpers.SplitCommandlineString(CmdLine, out EdCommand, out EdArg);
-#if DEBUG
-                    MessageBox.Show(EdCommand + " " + EdArg, "Command line:", MessageBoxButtons.OK, MessageBoxIcon.Information);
-#endif
+                    Debug.Print(DateTime.Now.TimeOfDay + ": Editor command line: " + EdCommand + " " + EdArg);
                     try
                     {
                         Process p = Process.Start(EdCommand, EdArg);
@@ -2863,7 +2951,7 @@ namespace ModbusControlSpace
             }
         }
 
-        #region Drag & drop support
+#region Drag & drop support
 
         // Drag & drop a .mbc file on this app
         void Form1_DragEnter(object sender, DragEventArgs e)
@@ -2909,9 +2997,9 @@ namespace ModbusControlSpace
             }
         }
 
-        #endregion
+#endregion
 
-        #region auto-update
+#region auto-update
 
         // Thread that starts the updater tool after a delay
         private void UpdaterThread_Work()
@@ -2968,7 +3056,7 @@ namespace ModbusControlSpace
             Settings1.Shared.Updater.LastCheckForUpdate = DateTime.Now;
         }
 
-        #endregion
+#endregion
 
 
     }

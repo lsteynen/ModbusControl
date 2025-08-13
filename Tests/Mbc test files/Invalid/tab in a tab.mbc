@@ -1,0 +1,280 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Demo.mbc - ModbusControl demo project file -->
+<modbuscontrol>
+	<size>
+		<width>880</width>
+		<height>890</height>
+	</size>
+	<modbus>
+		<!-- Connection type and protocol -->
+		<connection>modbus/tcp</connection>
+		<!-- <connection>modbus/tcp</connection> -->
+		<!-- <connection>rtu/tcp</connection> -->
+		<!-- Serial parameters -->
+		<port>COM1</port>
+		<baudrate>9600</baudrate>
+		<parity>none</parity>
+		<endofmessagetimeout>100</endofmessagetimeout>
+		<onewireechosuppression>false</onewireechosuppression>
+		<!-- TCP/IP parameters -->
+		<ipaddress>127.0.0.1</ipaddress>
+		<ipport>502</ipport>
+		<!-- General parameters -->
+		<slaveid>1</slaveid>
+		<responsetimeout>1000</responsetimeout>
+		<maximumframesize>256</maximumframesize>
+		<writeholdingregisterfc>auto</writeholdingregisterfc>
+		<int32endian>little</int32endian>
+		<float32endian>little</float32endian>
+		<ascii16endian>little</ascii16endian>
+		<samplerate>1000</samplerate>
+		<holdingregisterstart>40001</holdingregisterstart>
+		<interframedelay>0</interframedelay>
+	</modbus>
+	<!--autostart>
+		<enable>true</enable>
+		<page>1</page>
+	</autostart-->
+	<tab>
+		<name>Inputs (read only)</name>
+		<expandfields>true</expandfields>
+		<var>
+			<reg>40001</reg>
+			<text>Software version - Major</text>
+			<type>int16</type>
+			<rw>r</rw>
+			<fcol>mediumblue</fcol>
+		</var>
+		<var>
+			<reg>40002</reg>
+			<text>Software version - Minor</text>
+			<type>int16</type>
+			<rw>r</rw>
+			<fcol>mediumblue</fcol>
+		</var>
+		<var>
+			<reg>40003</reg>
+			<text>Software version - Revision</text>
+			<type>int16</type>
+			<rw>r</rw>
+			<fcol>mediumblue</fcol>
+		</var>
+		<var>
+			<reg>40004</reg>
+			<text>Digital inputs (bitmap)</text>
+			<longdescr>This is a long description that shows as a tooltip.
+Digital inputs bitmap. Each bit corresponds with a digital input.</longdescr>
+			<type>bin16</type>
+			<minlen>8</minlen>
+			<rw>r</rw>
+			<field>
+				<pos>0</pos>
+				<text>RESET</text>
+				<bcol>255,230,230</bcol>
+			</field>
+			<field>
+				<pos>1</pos>
+				<text>IN1</text>
+			</field>
+			<field>
+				<pos>2</pos>
+				<text>IN2</text>
+			</field>
+			<field>
+				<pos>3</pos>
+				<text>IN3</text>
+			</field>
+			<field>
+				<pos>4</pos>
+				<text>IN4</text>
+			</field>
+		</var>
+		<var>
+			<reg>40021</reg>
+			<text>Analog in 1 (0..1023 = 0..10V)</text>
+			<type>uint16</type>
+			<rw>r</rw>
+			<bcol>255,255,200</bcol>
+		</var>
+		<var>
+			<reg>40022</reg>
+			<text>Analog in 2 (0..1023 = 0..10V)</text>
+			<type>uint16</type>
+			<rw>r</rw>
+			<bcol>255,255,200</bcol>
+		</var>
+		<var>
+			<reg>40023</reg>
+			<text>Analog in 3 (0..1023 = 0..10V)</text>
+			<type>uint16</type>
+			<rw>r</rw>
+			<bcol>255,255,200</bcol>
+		</var>
+		<var>
+			<reg>40024</reg>
+			<text>Counter 1 (32-bit)</text>
+			<type>uint32</type>
+			<rw>r</rw>
+		</var>
+		<var>
+			<reg>40026</reg>
+			<text>Counter 2 (32-bit)</text>
+			<type>uint32</type>
+			<rw>r</rw>
+		</var>
+		<var>
+			<reg>40028</reg>
+			<text>Temperature 1 (0,1°C unit, -999 .. 999 is -99,9 .. +99,9°C)</text>
+			<type>int16</type>
+			<decimals>1</decimals>
+			<rw>r</rw>
+		</var>
+		<var>
+			<reg>40029</reg>
+			<text>Temperature 2 (0,1°C unit</text>
+			<type>int16</type>
+			<decimals>1</decimals>
+			<rw>r</rw>
+		</var>
+		<var>
+			<reg>40041</reg>
+			<text>Alarm code (0 = none)</text>
+			<type>int16</type>
+			<rw>r</rw>
+			<fcol>Red</fcol>
+			<bcol>255,200,200</bcol>
+			<enum>
+				<item>
+					<value>0</value>
+					<text>no alarm</text>
+				</item>
+				<item>
+					<value>1</value>
+					<text>T1 FAIL</text>
+				</item>
+				<item>
+					<value>2</value>
+					<text>T1 TOO HOT</text>
+				</item>
+				<item>
+					<value>3</value>
+					<text>T2 FAIL</text>
+				</item>
+				<item>
+					<value>4</value>
+					<text>T2 TOO HOT</text>
+				</item>
+			</enum>
+		</var>
+	</tab>
+	<tab>
+		<name>Registers (read/write)</name>
+		<bcol>240,240,255</bcol>
+		<var>
+			<reg>40101</reg>
+			<text>Digital outputs (bitmap)</text>
+			<type>hex16</type>
+			<minlen>4</minlen>
+			<rw>rw</rw>
+			<field>
+				<pos>0</pos>
+				<text>OUT1</text>
+			</field>
+			<field>
+				<pos>1</pos>
+				<text>OUT2</text>
+			</field>
+			<field>
+				<pos>2</pos>
+				<text>OUT3</text>
+			</field>
+		</var>
+		<var>
+			<reg>40102</reg>
+			<text>Analog out 1 (0..1023 = 0..100%)</text>
+			<type>int16</type>
+			<rw>rw</rw>
+		</var>
+		<var>
+			<reg>40103</reg>
+			<text>Analog out 2 (0..1023 = 0..100%)</text>
+			<type>int16</type>
+			<rw>rw</rw>
+		</var>
+		<var>
+			<reg>40104</reg>
+			<text>PMW's</text>
+			<type>hex16</type>
+			<minlen>4</minlen>
+			<rw>rw</rw>
+			<field>
+				<pos>0</pos>
+				<width>8</width>
+				<text>PWM1 (0..255)</text>
+				<type>uint</type>
+			</field>
+			<field>
+				<pos>8</pos>
+				<width>8</width>
+				<text>PWM2 (0..255)</text>
+				<type>uint</type>
+			</field>
+			<expandfields>true</expandfields>
+		</var>
+		<var>
+			<reg>40201</reg>
+			<text>Channel 1 minimum</text>
+			<type>int16</type>
+			<rw>rw</rw>
+		</var>
+		<var>
+			<reg>40202</reg>
+			<text>Channel 1 maximum</text>
+			<type>int16</type>
+			<rw>rw</rw>
+		</var>
+		<var>
+			<reg>40203</reg>
+			<text>Channel 2 minimum</text>
+			<type>int16</type>
+			<rw>rw</rw>
+		</var>
+		<var>
+			<reg>40204</reg>
+			<text>Channel 2 maximum</text>
+			<type>int16</type>
+			<rw>rw</rw>
+		</var>
+		<var>
+			<reg>40205</reg>
+			<text>Fan mode</text>
+			<type>int16</type>
+			<rw>rw</rw>
+			<enum>
+				<item>
+					<value>0</value>
+					<text>OFF</text>
+				</item>
+				<item>
+					<value>1</value>
+					<text>MANUAL</text>
+				</item>
+				<item>
+					<value>2</value>
+					<text>AUTO</text>
+				</item>
+				<else>INVALID MODE</else>
+			</enum>
+		</var>
+		<tab>
+			<name>Registers (read/write)</name>
+			<bcol>240,240,255</bcol>
+			<var>
+				<reg>40102</reg>
+				<text>Analog out 1 (0..1023 = 0..100%)</text>
+				<type>int16</type>
+				<rw>rw</rw>
+			</var>
+		</tab>
+	</tab>
+</modbuscontrol>

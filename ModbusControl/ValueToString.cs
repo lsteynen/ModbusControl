@@ -4,88 +4,110 @@
  */
 
 using System;
-using System.ComponentModel;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Drawing;
 using System.Globalization;
-using System.Resources;
-using System.Text;
-
 using ModbusControlSpace;
 
 namespace LST.Helpers
 {
     public static class CValueToString
     {
-        public static bool Ascii16BigEndian;
-
-        /// <summary>
-        /// Convert value to string, with a given Type
-        /// Value can be less than 32 bits, given by Size. Use sign-extend if needed
-        /// </summary>
-        /// <param name="Value">Value to convert</param>
-        /// <param name="Width">Width of value in bits</param>
-        /// <param name="Format">Int, Uint, Hex, ...</param>
-        /// <param name="Decimals">Optional: number of decimals, for Int/UInt only</param>
-        /// <param name="MinLen">Optional: minimum number of digits</param>
-        /// <param name="EnumDict">Optional: enum dictionary</param>
-        /// <returns></returns>
-        public static string ValueToString(Int32 Value, int Width, ModbusControlSpace.Global.eFormat Format, int Decimals = 0, int MinLen = 0, ModbusControlSpace.Global.CEnum EnumDict = null)
+        public static string Int16RegistersToValueString(Int16[] Regs, ModbusControlSpace.Global.eFormat Format, int Width, int Decimals = 0, int MinLen = 0, ModbusControlSpace.Global.CEnum EnumDict = null)
         {
             string Result = string.Empty;
-            UInt32 UValue;
-            Int32 DictSearchValue;  // int32 value used for dictionary search, for example -1 for int16 0xFFFF or 65335 for uint16 0xFFFF
+            Int32 Int32Val = 0;
+            UInt32 UInt32Val = 0;
+            Int32 DictSearchValue = 0;  // int32 value used for dictionary search, for example -1 for int16 0xFFFF or 65335 for uint16 0xFFFF
 
-            // check
-            if (!((Width >= 1) && (Width <= 32)))
-            {
-                throw new ArgumentException("Invalid size!", "Size");
-            }
-
-            // convert
             switch (Format)
             {
                 case ModbusControlSpace.Global.eFormat.Int:
                     // signed decimal
-                    Value = ConvertSignedValueTo32bit(Value, Width);
-                    Result = CValueToString.AsInt(Value, Decimals, MinLen);
-                    DictSearchValue = Value;
+                    if (Width == 32)
+                    {
+                        Int32Val = Converts.ToInt32(Regs[0], Regs[1]);
+                    }
+                    else
+                    {
+                        Int32Val = Regs[0];
+                    }
+                    Result = IntValueToDecString(Int32Val, Decimals, MinLen);
+                    DictSearchValue = Int32Val;
                     break;
+
                 case ModbusControlSpace.Global.eFormat.UInt:
                     // unsigned decimal
-                    UValue = ConvertUnsignedValueTo32bit((UInt32)Value, Width);
-                    Result = CValueToString.AsUInt(UValue, Decimals, MinLen);
-                    DictSearchValue = (Int32)UValue;
+                    if (Width == 32)
+                    {
+                        UInt32Val = Converts.ToUInt32(Regs[0], Regs[1]);
+                    }
+                    else
+                    {
+                        UInt32Val = (UInt32)(UInt16)Regs[0];
+                    }
+                    Result = UIntValueToDecString(UInt32Val, Decimals, MinLen);
+                    DictSearchValue = (Int32)UInt32Val;
                     break;
+
                 case ModbusControlSpace.Global.eFormat.Hex:
-                    // hexadecimal
-                    UValue = ConvertUnsignedValueTo32bit((UInt32)Value, Width);
-                    Result = CValueToString.AsHex(UValue, MinLen);
-                    DictSearchValue = (Int32)UValue;
+                    // unsigned decimal
+                    if (Width == 32)
+                    {
+                        UInt32Val = Converts.ToUInt32(Regs[0], Regs[1]);
+                    }
+                    else
+                    {
+                        UInt32Val = (UInt32)(UInt16)Regs[0];
+                    }
+                    Result = UIntValueToStringAsHex(UInt32Val, MinLen);
+                    DictSearchValue = (Int32)UInt32Val;
                     break;
+
                 case ModbusControlSpace.Global.eFormat.Bin:
                     // binary
-                    UValue = ConvertUnsignedValueTo32bit((UInt32)Value, Width);
-                    Result = CValueToString.AsBin(UValue, MinLen);
-                    DictSearchValue = (Int32)UValue;
+                    if (Width == 32)
+                    {
+                        UInt32Val = Converts.ToUInt32(Regs[0], Regs[1]);
+                    }
+                    else
+                    {
+                        UInt32Val = (UInt32)(UInt16)Regs[0];
+                    }
+                    Result = UIntValueToStringAsBin(UInt32Val, MinLen);
+                    DictSearchValue = (Int32)UInt32Val;
                     break;
+
                 case ModbusControlSpace.Global.eFormat.Float:
                     // float32
                     if (!(Width == 32))
                     {
-                        throw new ArgumentException("Invalid size!", "Size");
+                        throw new ArgumentException("Invalid size!", "Width");
                     }
-                    Result = CValueToString.AsFloat(Value);
-                    DictSearchValue = (Int32)Value;
+                    // convert the bytes of the int into a float
+                    float TmpFloat = Converts.Int16ToFloat32(Regs[0], Regs[1]);
+                    Result = TmpFloat.ToString();
+                    //Dict not supported for float?
+                    EnumDict = null;
+                    //DictSearchValue = (Int32)Value;
                     break;
+
                 case ModbusControlSpace.Global.eFormat.ASCII:
-                    Result = CValueToString.AsASCII((UInt32)Value, Width);
-                    DictSearchValue = (Int32)Value;
+                    // ASCII
+                    if (Width == 32)
+                    {
+                        UInt32Val = Converts.ToUInt32(Regs[0], Regs[1]);
+                        Result = "\"" + Converts.Int16ToAscii(Regs[0]) + Converts.Int16ToAscii(Regs[1]) + "\"";
+                    }
+                    else
+                    {
+                        UInt32Val = (UInt32)(UInt16)Regs[0];
+                        Result = "\"" + Converts.Int16ToAscii(Regs[0]) + "\"";
+                    }
+                    DictSearchValue = (Int32)UInt32Val;
                     break;
+
                 default:
                     // invalid
-                    throw new ArgumentException("Invalid format enum!", "Type");
+                    throw new ArgumentException("Invalid value!", "Format");
                     //break;
             }
 
@@ -93,7 +115,7 @@ namespace LST.Helpers
             if (EnumDict != null)
             {
                 string Enumstr;
-                if ((EnumDict.Dict!= null) && EnumDict.Dict.TryGetValue(DictSearchValue, out Enumstr))
+                if ((EnumDict.Dict != null) && EnumDict.Dict.TryGetValue(DictSearchValue, out Enumstr))
                 {
                     // found
                     Result += " (" + Enumstr + ")";
@@ -111,12 +133,170 @@ namespace LST.Helpers
         }
 
         /// <summary>
+        /// Convert value to string, with a given Format
+        /// Value width can be less than 32 bits, given by Width. 
+        /// </summary>
+        /// <param name="Value">Value to convert</param>
+        /// <param name="Width">Width of value in bits</param>
+        /// <param name="Format">Int, Uint, Hex, Bin, ASCII...</param>
+        /// <param name="Decimals">Optional: number of decimals, for Int/UInt only</param>
+        /// <param name="MinLen">Optional: minimum number of digits</param>
+        /// <param name="EnumDict">Optional: enum dictionary</param>
+        /// <returns></returns>
+        public static string IntValueToValueString(Int32 Value, int Width, ModbusControlSpace.Global.eFormat Format, int Decimals = 0, int MinLen = 0, ModbusControlSpace.Global.CEnum EnumDict = null)
+        {
+            string Result = string.Empty;
+            UInt32 UValue;
+            Int32 DictSearchValue;  // int32 value used for dictionary search, for example -1 for int16 0xFFFF or 65335 for uint16 0xFFFF
+
+            // check
+            if (!((Width >= 1) && (Width <= 32)))
+            {
+                throw new ArgumentException("Invalid size!", "Size");
+            }
+
+            // convert
+            switch (Format)
+            {
+                case ModbusControlSpace.Global.eFormat.Int:
+                    // signed decimal
+                    Value = ConvertSignedValueToInt32(Value, Width);
+                    Result = IntValueToDecString(Value, Decimals, MinLen);
+                    DictSearchValue = Value;
+                    break;
+                case ModbusControlSpace.Global.eFormat.UInt:
+                    // unsigned decimal
+                    UValue = ConvertUnsignedValueTo32bit((UInt32)Value, Width);
+                    Result = UIntValueToDecString(UValue, Decimals, MinLen);
+                    DictSearchValue = (Int32)UValue;
+                    break;
+                case ModbusControlSpace.Global.eFormat.Hex:
+                    // hexadecimal
+                    UValue = ConvertUnsignedValueTo32bit((UInt32)Value, Width);
+                    Result = UIntValueToStringAsHex(UValue, MinLen);
+                    DictSearchValue = (Int32)UValue;
+                    break;
+                case ModbusControlSpace.Global.eFormat.Bin:
+                    // binary
+                    UValue = ConvertUnsignedValueTo32bit((UInt32)Value, Width);
+                    Result = UIntValueToStringAsBin(UValue, MinLen);
+                    DictSearchValue = (Int32)UValue;
+                    break;
+                case ModbusControlSpace.Global.eFormat.ASCII:
+                    Result = "\"" + Converts.UInt32ToAscii((UInt32)Value, Width) + "\"";
+                    DictSearchValue = (Int32)Value;
+                    break;
+                default:
+                    // invalid
+                    throw new ArgumentException("Invalid format enum!", "Type");
+                    //break;
+            }
+
+            // enum?
+            if (EnumDict != null)
+            {
+                string Enumstr;
+                if ((EnumDict.Dict != null) && EnumDict.Dict.TryGetValue(DictSearchValue, out Enumstr))
+                {
+                    // found
+                    Result += " (" + Enumstr + ")";
+                }
+                else
+                {
+                    // not found
+                    // show ElseText?
+                    if (string.IsNullOrEmpty(EnumDict.ElseText) == false)
+                        Result += " (" + EnumDict.ElseText + ")";
+                }
+            }
+
+            return Result;
+        }
+
+        /// <summary>
+        /// Convert 32-bit signed int to decimal string
+        /// Supports minimum number of digits, decimals
+        /// </summary>
+        private static string IntValueToDecString(Int32 Value, int Decimals, int MinLen)
+        {
+            // signed decimal
+
+            string Result = "";
+            string Formatter;
+
+            if (Decimals >= 1)
+            {
+                // show with decimals
+                double dValue = (double)Value / Math.Pow(10.0, Decimals);
+                Formatter = String.Format("F{0}", Decimals);
+                Result = dValue.ToString(Formatter);
+            }
+            else
+            {
+                // show normal, with minimum length
+                Formatter = String.Format("D{0}", MinLen);
+                Result = Value.ToString(Formatter);
+            }
+
+            return Result;
+        }
+
+        /// <summary>
+        /// Convert 32-bit unsigned int to decimal string
+        /// Options: minimum number of digits, decimals
+        /// </summary>
+        private static string UIntValueToDecString(UInt32 Value, int Decimals, int MinLen)
+        {
+            // unsigned decimal
+
+            string Result = "";
+
+            if (Decimals >= 1)
+            {
+                // show with decimals
+                double dValue = (double)Value / Math.Pow(10.0, Decimals);
+                string Formatter = String.Format("F{0}", Decimals);
+                Result = dValue.ToString(Formatter);
+            }
+            else
+            {
+                // show normal, with minimum length
+                string Formatter = String.Format("D{0}", MinLen);
+                Result = Value.ToString(Formatter);
+            }
+
+            return Result;
+        }
+
+        /// <summary>
+        /// Convert 32-bit unsigned int to binary string, like 0b1000110 
+        /// Options: minimum number of digits
+        /// </summary>
+        private static string UIntValueToStringAsBin(UInt32 Value, int MinLen)
+        {
+            // binary
+            return "0b" + IntToBinaryString(Value, 4, MinLen);
+        }
+
+        /// <summary>
+        /// Convert 32-bit unsigned int to hex string, like 0x12FA 
+        /// Options: minimum number of digits
+        /// </summary>
+        private static string UIntValueToStringAsHex(UInt32 Value, int MinLen)
+        {
+            // hexadecimal
+
+            string Formatter = Formatter = String.Format("X{0}", MinLen);
+            return "0x" + Value.ToString(Formatter);
+        }
+
+        /// <summary>
         /// Convert a signed value with Width=1-32 to a 32-bit value
         /// </summary>
         /// <param name="Value"></param>
         /// <param name="Size"></param>
         /// <returns></returns>
-        private static Int32 ConvertSignedValueTo32bit(Int32 Value, int Width)
+        private static Int32 ConvertSignedValueToInt32(Int32 Value, int Width)
         {
             // if 2 bits or more: convert any n-bit value to a signed 32-bit value
             if (Width >= 2)
@@ -144,221 +324,6 @@ namespace LST.Helpers
         }
 
         /// <summary>
-        /// Convert 32-bit binary value unsigned int representation string
-        /// Supports minimum number of decimals
-        /// </summary>
-        public static string AsInt(Int32 Value, int Decimals, int MinLen)
-        {
-            // signed decimal
-
-            string Result = "";
-            string Formatter;
-
-            if (Decimals >= 1)
-            {
-                // show with decimals
-                double dValue = (double)Value / Math.Pow(10.0, Decimals);
-                Formatter = String.Format("F{0}", Decimals);
-                Result = dValue.ToString(Formatter);
-            }
-            else
-            {
-                // show normal, with minimum length
-                Formatter = String.Format("D{0}", MinLen);
-                Result = Value.ToString(Formatter);
-            }
-
-            return Result;
-        }
-
-        /// <summary>
-        /// Convert 32-bit binary value unsigned int representation string
-        /// Supports minimum number of decimals
-        /// </summary>
-        public static string AsUInt(UInt32 Value, int Decimals, int MinLen)
-        {
-            // unsigned decimal
-
-            string Result = "";
-
-            if (Decimals >= 1)
-            {
-                // show with decimals
-                double dValue = (double)Value / Math.Pow(10.0, Decimals);
-                string Formatter = String.Format("F{0}", Decimals);
-                Result = dValue.ToString(Formatter);
-            }
-            else
-            {
-                // show normal, with minimum length
-                string Formatter = String.Format("D{0}", MinLen);
-                Result = Value.ToString(Formatter);
-            }
-
-            return Result;
-        }
-
-        /// <summary>
-        /// Convert 32-bit binary value hex representation string
-        /// </summary>
-        public static string AsHex(UInt32 Value, int MinLen)
-        {
-            // hexadecimal
-
-            string Formatter = Formatter = String.Format("X{0}", MinLen);
-            return "0x" + Value.ToString(Formatter);
-        }
-
-        /// <summary>
-        /// Convert 32-bit binary value binary representation string
-        /// </summary>
-        public static string AsBin(UInt32 Value, int MinLen)
-        {
-            // binary
-            return "0b" + IntToBinaryString(Value, 4, MinLen);
-        }
-
-        /// <summary>
-        /// Convert 32-bit float value to string
-        /// </summary>
-        public static string AsFloat(Int32 Value)
-        {
-            // float32
-            // convert the bytes of the int into a float
-            byte[] aTmpBytes = BitConverter.GetBytes((UInt32)Value);
-            float TmpFloat = BitConverter.ToSingle(aTmpBytes, 0);
-            return TmpFloat.ToString();
-        }
-            
-        /// <summary>
-        /// Convert binary value to ASCII characters
-        /// Low byte is first character if Ascii16BigEndian==false, or second character if Ascii16BigEndian==true
-        /// </summary>
-        public static string AsASCII(UInt32 Value, int Size)
-        {
-            // ASCII
-
-            // Show as ASCII characters, show 1 character for each 8 bits.
-            // The OPEN MODBUS/TCP SPECIFICATION by Andy Swales states: The first character displayed was the UPPER byte and the second character displayed was the LOWER byte. 
-
-			//              			        lowfirst	highfirst
-	        //  1-8 bits	1 byte	0x0041		A			A
-	        //  9-16 bits	2 bytes	0x4241		AB			BA
-	        //  17-24 bits	3 bytes	0x434241	ABC			BAC
-	        //  25-32 bits	4 bytes	0x44434241	ABCD		BADC
-
-            string Result;
-
-            // split value into bytes
-            byte[] aBytes = SplitValueIntoBytes(Value, Size);
-
-            // swap bytes if needed
-            if (Ascii16BigEndian)
-            {
-                if (aBytes.Length >= 2)
-                {
-                    byte b = aBytes[0];
-                    aBytes[0] = aBytes[1];
-                    aBytes[1] = b;
-                }
-                if (aBytes.Length >= 4)
-                {
-                    byte b = aBytes[2];
-                    aBytes[2] = aBytes[3];
-                    aBytes[3] = b;
-                }
-            }
-
-            // convert to characters
-            Result = "\"";
-            for (int i = 0; i < aBytes.Length; ++i)
-            {
-                // if printable ASCII 32-33, 35-126
-                if (   ((aBytes[i] >= 32) && (aBytes[i] <= 33))
-                    || ((aBytes[i] >= 35) && (aBytes[i] <= 126)))
-                {
-                    Result += System.Text.Encoding.ASCII.GetString(aBytes, i, 1);
-                }
-                else 
-                {
-                    // print as escape sequence
-                    //Result += "\\" + aBytes[i].ToString("D3");  // in decimal, 3 digits, is not standard
-                    Result += "\\x" + aBytes[i].ToString("X2");  // in hexadecimal, 2 digits, this is standard
-                }
-            }
-            Result += "\"";
-
-            return Result;
-        }
-
-        /// <summary>
-        /// Split value into bytes, from lower bits to upper bits  
-        /// </summary>
-        /// <param name="Size">Size in bits</param>
-        private static byte[] SplitValueIntoBytes(UInt32 Value, int Size)
-        {
-            //          bHighByteFirst=false         
-            // xxxxxxx1         1---            
-            // xxxxxx41         A---            
-            // xxxxx241         A2--            
-            // xxxx4241         AB--            
-            // xxx34241         AB3-            
-            // xx434241         ABC-            
-            // x5434241         ABC5            
-            // 45434241         ABCE            
-
-            // 1 byte:  41          
-            // 2 bytes: 41 42       
-            // 3 bytes: 41 42 43    
-            // 4 bytes: 41 42 43 44 
-
-            int NrOfBytes = (Size + 7) / 8;
-            byte[] aBytes = new byte[NrOfBytes];
-
-            // split into bytes
-            UInt32 UValue = (UInt32)Value;
-            int index = 0;
-            while (Size > 0)
-            {
-                aBytes[index++] = (byte)UValue;
-                UValue >>= 8;
-                Size -= 8;
-            }
-
-            return aBytes;
-        }
-
-        /// <summary>
-        /// Get value of a part of a binary value
-        /// </summary>
-        private static UInt32 GetUnsignedIntValue(Int32 Value, int Size)
-        {
-            UInt32 ret;
-
-            // out = (in << (32 - n)) >> (32 - n);
-
-            ret = ((UInt32)Value) << (32 - Size);
-            ret = ((UInt32)ret) >> (32 - Size);
-
-            return ret;
-        }
-
-        /// <summary>
-        /// Convert binary value to double, with decimals
-        /// </summary>
-        private static double GetDoubleValue(UInt32 Value, int Size, int Decimals)
-        {
-            Value = ((UInt32)Value) << (32 - Size);
-            Value = ((UInt32)Value) >> (32 - Size);
-
-            double dValue = Value;
-
-            dValue = dValue / Math.Pow(10.0, Decimals);
-
-            return (dValue);
-        }
-
-        /// <summary>
         /// Convert binary value to binary representation in string
         /// Supports grouping digits with Grouplen, insert '.'
         /// Supports Minlen to output minimal number of digits
@@ -377,7 +342,7 @@ namespace LST.Helpers
                     grouplencount = 0;
                 }
                 result = ((n % 2 == 0) ? "0" : "1") + result;
-                n = n / 2;
+                n /= 2;
                 ++grouplencount;
                 ++totallen;
             } while ((n != 0) || (totallen < Minlen));
@@ -385,98 +350,96 @@ namespace LST.Helpers
             return result;
         }
 
-        // convert string to Int32
 
         /// <summary>
-        /// Convert a string to a binary value, returned as Int32
-        /// Accepts Int, UInt, 0x hex, 0b binary, quoted ASCII string and float formats
-        /// Accepts Int and UInt with decimals, is IsFloat==false and Decimals >= 1
-        /// Accept -32768 - +65535 into a 16-bit field, because it fits
-        /// Accept -128 - +255 into an 8-bit field, because it fits
+        /// Convert a value string to modbus int16[size] registers
+        /// Accepts Int, UInt, 0x... hex, 0b... binary, quoted ASCII string and float formats
+        /// Accepts Int and UInt with decimals, if allowFloat==false and Decimals >= 1
+        /// Accept -32768 .. +65535 into a 16-bit field
+        /// Accept -128 .. +255 into an 8-bit field
         /// Accept 0 and 1 into an 1-bit field
-        /// Do not accept 4294967293 in a 8-bit field (was accepted in Modbuscontrol v1 because it is also -3)
+        /// Do not accept 4294967293 in a 8-bit field (was accepted in earlier version it is also -3)
         /// Store temporary result in Int64 to distinguish between 4294967293 and -3 being parsed
-        /// Stores ASCII formats with first character in low byte
         /// Checks if value fits in Width bits
-        /// Returns Endians.eType Type to show what type/format whas input
+        /// Throws exception on error
         /// </summary>
-        public static bool StringToValue(string str, bool IsFloat, int Width, int Decimals, out Int32 Result, out Global.eType Type)
+        public static Int16[] ValueStringToInt16Registers(string str, int size, bool IsFloat, int Decimals)
         {
+            Int16[] Result = new Int16[size];
             bool IsValid = false;
             Int64 numInt64 = 0;
             UInt32 numUInt32;
 
-            // never return something undefined
-            Result = 0;
-            Type = Global.eType.Int;
-
-            // is it a hex number?
+            // is it a hex value?
             if (str.StartsWith("0x", StringComparison.OrdinalIgnoreCase))
             {
                 // remove the 0x
                 str = str.Substring(2);
                 // parse as hex, should fit unsigned 32-bit
-                IsValid = UInt32.TryParse(str, NumberStyles.HexNumber, null, out numUInt32);
-                // check width
-                if (IsValid)
+                try
                 {
-                    IsValid = FitsWidth(numUInt32, Width);
-                    Result = (Int32)numUInt32;
-                    Type = Global.eType.Int;
+                    numUInt32 = UInt32.Parse(str, NumberStyles.HexNumber, null);
+                }
+                catch
+                {
+                    throw new ArgumentException("Invalid value", "str");
+                }
+                // to Int16[]
+                if (size == 2)
+                {
+                    Result = Converts.UInt32ToInt16Array(numUInt32);
+                }
+                else if (size == 1)
+                {
+                    // check width
+                    if (!IntFitsWidth(numUInt32, 16))
+                    {
+                        throw new ArgumentException("Invalid value", "str");
+                    }
+                    Result[0] = (Int16)numUInt32;
+                }
+                else
+                {
+                    // invalid
+                    throw new ArgumentException("Invalid value", "size");
                 }
             }
-            // is it a binary number?
+            // is it a binary value?
             else if (str.StartsWith("0b", StringComparison.OrdinalIgnoreCase))
             {
                 // remove the 0b
                 str = str.Substring(2);
                 // parse as binary, should fit unsigned 32-bit
                 IsValid = BinaryStringToUInt32(str, out numUInt32);
-                // check width
-                if (IsValid)
+                if (!IsValid)
                 {
-                    IsValid = FitsWidth(numUInt32, Width);
-                    Result = (Int32)numUInt32;
-                    Type = Global.eType.Int;
+                    throw new ArgumentException("Invalid value", "str");
+                }
+                // to Int16[]
+                if (size == 2)
+                {
+                    Result = Converts.UInt32ToInt16Array(numUInt32);
+                }
+                else if (size == 1)
+                {
+                    // check width
+                    if (!IntFitsWidth(numUInt32, 16))
+                    {
+                        throw new ArgumentException("Invalid value", "str");
+                    }
+                    Result[0] = (Int16)numUInt32;
+                }
+                else
+                {
+                    // invalid
+                    throw new ArgumentException("Invalid value", "size");
                 }
             }
             // is it an ASCII string? 
             else if (str.StartsWith("\"", StringComparison.OrdinalIgnoreCase) && (IsFloat == false))
             {
                 // parse as quoted ASCII string, with escape sequences
-
-                byte[] aBytes;
-                IsValid = TryEscapedStringToByteArray(str, out aBytes);
-                // check if max 4 bytes, and fits in Width
-                if (IsValid)
-                {
-                    IsValid = (aBytes.Length <= 4) && ((aBytes.Length * 8) <= Width);
-                }
-                if (IsValid)
-                {
-                    // make the array 4 bytes
-                    Array.Resize(ref aBytes, 4);
-                    // swap bytes if needed
-                    if (Ascii16BigEndian)
-                    {
-                        if (aBytes.Length >= 2)
-                        {
-                            byte b = aBytes[0];
-                            aBytes[0] = aBytes[1];
-                            aBytes[1] = b;
-                        }
-                        if (aBytes.Length >= 4)
-                        {
-                            byte b = aBytes[2];
-                            aBytes[2] = aBytes[3];
-                            aBytes[3] = b;
-                        }
-                    }
-                    // convert bytes to UInt32
-                    numUInt32 = BitConverter.ToUInt32(aBytes, 0);
-                    Result = (Int32)numUInt32;
-                    Type = Global.eType.ASCII;
-                }
+                Result = Converts.AsciiStringToInt16Array(str, size);
             }
             // is it a float? 
             else if (IsFloat)
@@ -484,44 +447,182 @@ namespace LST.Helpers
                 float fValue;
                 IsValid = TryParseFloat(str, out fValue);
                 // convert the bytes of the float into an Int32
-                if (IsValid)
+                if (!IsValid)
                 {
-                    byte[] aTmpBytes = BitConverter.GetBytes(fValue);
-                    Result = BitConverter.ToInt32(aTmpBytes, 0);
-                    Type = Global.eType.Float;
+                    // invalid
+                    throw new ArgumentException("Invalid value", "str");
+                }
+                // to Int16[]
+                if (size == 2)
+                {
+                    Result = Converts.Float32ToInt16Array(fValue);
+                }
+                else
+                {
+                    // invalid
+                    throw new ArgumentException("Invalid value", "size");
                 }
             }
-            // it is an int or uint 
+            // assume decimal int or uint 
             else
             {
                 // with decimals? then parse as float
                 if (Decimals >= 1)
                 {
                     // get the value as double and scale it up
-                    double dValue;
-                    IsValid = TryParseDouble(str, out dValue);
-                    if (IsValid)
-                    {
-                        // scale up
-                        dValue = dValue * Math.Pow(10.0, Decimals);
-                        IsValid = TryDoubleToInt64(dValue, out numInt64);
-                    }
+                    double dValue = ParseDouble(str);
+                    // scale up
+                    dValue *= Math.Pow(10.0, Decimals);
+                    // to int
+                    numInt64 = System.Convert.ToInt64(dValue);
                 }
                 else
                 {
-                    // parse as decimal int
-                    IsValid = Int64.TryParse(str, NumberStyles.Integer, null, out numInt64);
+                    // parse as int
+                    try
+                    {
+                        numInt64 = Int64.Parse(str, NumberStyles.Integer, null);
+                    }
+                    catch
+                    {
+                        throw new ArgumentException("Invalid value", "str");
+                    }
                 }
-                // check width
-                if (IsValid)
+                // check width <= 32
+                if (!IntFitsWidth(numInt64, 32))
                 {
-                    IsValid = FitsWidth(numInt64, Width);
-                    Result = (Int32)numInt64;
+                    throw new ArgumentException("Invalid value", "str");
                 }
-                Type = Global.eType.Int;
+                // to Int16[]
+                if (size == 2)
+                {
+                    Result = Converts.Int32ToInt16Array((Int32)numInt64);
+                }
+                else if (size == 1)
+                {
+                    // check width
+                    if (!IntFitsWidth(numInt64, 16))
+                    {
+                        throw new ArgumentException("Invalid value", "str");
+                    }
+                    Result[0] = (Int16)numInt64;
+                }
+                else
+                {
+                    // invalid
+                    throw new ArgumentException("Invalid value", "size");
+                }
             }
 
-            return IsValid;
+            return Result;
+        }
+
+        /// <summary>
+        /// Convert a string to a value, returned as Int32
+        /// Accepts Int, UInt, 0x... hex, 0b... binary, quoted ASCII string and float formats
+        /// Accepts Int and UInt with decimals, is IsFloat==false and Decimals >= 1
+        /// Accept -32768 - +65535 into a 16-bit field
+        /// Accept -128 - +255 into an 8-bit field
+        /// Accept 0 and 1 into an 1-bit field
+        /// Do not accept 4294967293 in a 8-bit field (was accepted in earlier version it is also -3)
+        /// Store temporary result in Int64 to distinguish between 4294967293 and -3 being parsed
+        /// does not support ASCII format
+        /// Checks if value fits in Width bits
+        /// Throws exception on error
+        /// </summary>
+        public static Int32 ValueStringToIntValue(string str, int Width, int Decimals)
+        {
+            Int32 Result = 0;
+            bool IsValid = false;
+            Int64 numInt64 = 0;
+            UInt32 numUInt32;
+
+            // is it a hex value?
+            if (str.StartsWith("0x", StringComparison.OrdinalIgnoreCase))
+            {
+                // remove the 0x
+                str = str.Substring(2);
+                // parse as hex, should fit unsigned 32-bit
+                try
+                {
+                    numUInt32 = UInt32.Parse(str, NumberStyles.HexNumber, null);
+                }
+                catch
+                {
+                    throw new ArgumentException("Invalid value", "str");
+                }
+                // check width
+                if (!IntFitsWidth(numUInt32, Width))
+                {
+                    throw new ArgumentException("Invalid value", "str");
+                }
+                Result = (Int32)numUInt32;
+            }
+            // is it a binary value?
+            else if (str.StartsWith("0b", StringComparison.OrdinalIgnoreCase))
+            {
+                // remove the 0b
+                str = str.Substring(2);
+                // parse as binary, should fit unsigned 32-bit
+                IsValid = BinaryStringToUInt32(str, out numUInt32);
+                if (!IsValid)
+                {
+                    throw new ArgumentException("Invalid value", "str");
+                }
+                // check width
+                if (!IntFitsWidth(numUInt32, Width))
+                {
+                    throw new ArgumentException("Invalid value", "str");
+                }
+                Result = (Int32)numUInt32;
+               
+            }
+            // is it an ASCII string? 
+            else if (str.StartsWith("\"", StringComparison.OrdinalIgnoreCase))
+            {
+                // parse as quoted ASCII string, with escape sequences
+                numUInt32 = Converts.AsciiStringToUInt32(str);
+                // check width
+                if (!IntFitsWidth(numUInt32, Width))
+                {
+                    throw new ArgumentException("Invalid value", "str");
+                }
+                Result = (Int32)numUInt32;
+            }
+            // assume decimal int or uint 
+            else
+            {
+                // with decimals? then parse as float
+                if (Decimals >= 1)
+                {
+                    // get the value as double and scale it up
+                    double dValue = ParseDouble(str);
+                    // scale up
+                    dValue *= Math.Pow(10.0, Decimals);
+                    // to int
+                    numInt64 = System.Convert.ToInt64(dValue);
+                }
+                else
+                {
+                    // parse as int
+                    try
+                    {
+                        numInt64 = Int64.Parse(str, NumberStyles.Integer, null);
+                    }
+                    catch
+                    {
+                        throw new ArgumentException("Invalid value", "str");
+                    }
+                }
+                // check width
+                if (!IntFitsWidth(numInt64, Width))
+                {
+                    throw new ArgumentException("Invalid value", "str");
+                }
+                Result = (Int32)numInt64;
+            }
+
+            return Result;
         }
 
         /// <summary>
@@ -579,165 +680,73 @@ namespace LST.Helpers
 
         /// <summary>
         /// String to double
+        /// Throws on error
         /// </summary>
-        private static bool TryParseDouble(string s, out double result)
+        private static double ParseDouble(string s)
         {
+            double result;
+
             // try to parse the float with the current culture settings
             // it makes a difference for the numeric keypad decimal separator, might be dot or comma
             bool bIsValid = double.TryParse(s, NumberStyles.Float, null, out result);
-            // if that failed, try parsing is culture-independent (dot for decimal separator)
+            // if that failed, try parsing it culture-independent (dot for decimal separator)
             if (bIsValid == false)
             {
                 bIsValid = double.TryParse(s, NumberStyles.Float, CultureInfo.InvariantCulture, out result);
             }
 
-            return bIsValid;
-        }
-
-        /// <summary>
-        /// ASCII String to byte array
-        /// Accepts quoted string
-        /// Accepts escape sequence \xHH where H is hex digit
-        /// </summary>
-        private static bool TryEscapedStringToByteArray(string s, out byte[] aResult)
-        {
-            int Index = 0;
-            byte[] aData = new byte[s.Length];
-            int aDataindex = 0;
-
-            // expects a quoted string
-            if (s[Index++] != '\"')
+            if (bIsValid == false)
             {
-                aResult = new byte[0];
-                return false;
+                throw new ArgumentException("Invalid value", "s");
             }
 
-            while ((Index < s.Length) && (s[Index] != '\"'))
-            {
-                char Code = s[Index++];
-
-                // end of quoted string?
-                if (Code == '\"')
-                {
-                    break;
-                }
-                // only codes 0-255 are valid
-                else if ((Code >= 0) && (Code <= 255))
-                {
-                    // escape sequence?
-                    if (Code == '\\')
-                    {
-                        // xNN should follow
-                        if (((Index + 3) < s.Length) && (s[Index] == 'x') && Uri.IsHexDigit(s[Index + 1]) && Uri.IsHexDigit(s[Index + 2]))
-                        {
-                            aData[aDataindex++] = (byte)((GetValueOfHexDigit(s[Index + 1]) * 16) + GetValueOfHexDigit(s[Index + 2]));
-                            Index += 3;
-                        }
-                        else
-                        {
-                            // error
-                            aResult = new byte[0];
-                            return false;
-                        }
-                    }
-                    else
-                    {
-                        aData[aDataindex++] = (byte)Code;
-                    }
-                }
-                else
-                {
-                    // error
-                    aResult = new byte[0];
-                    return false;
-                }
-            }
-
-            // expect end quote?
-            if (!((Index < s.Length) && (s[Index++] == '\"')))
-            {
-                // error
-                aResult = new byte[0];
-                return false;
-            }
-
-            // garbage after the end quote?
-            if (Index < s.Length)
-            {
-                // error
-                aResult = new byte[0];
-                return false;
-            }
-
-            Array.Resize(ref aData, aDataindex);
-            aResult = aData;
-
-            return true;
-        }
-
-        /// <summary>
-        /// Get ASCII value of a hex digit
-        /// Returns 0 for invalid digits
-        /// </summary>
-        private static int GetValueOfHexDigit(char c)
-        {
-            if ((c >= '0') && (c <= '9'))
-            {
-                return (c - '0');
-            }
-            else if ((c >= 'A') && (c <= 'F'))
-            {
-                return (10 + c - 'A');
-            }
-            else if ((c >= 'a') && (c <= 'f'))
-            {
-                return (10 + c - 'a');
-            }
-
-            return 0;
-        }
-
-        /// <summary>
-        /// Convert double to 64-bit int
-        /// </summary>
-        private static bool TryDoubleToInt64(double Value, out Int64 Result)
-        {
-            bool IsValid = false;
-            Result = 0;
-
-            // try convert to signed int
-            try
-            {
-                Result = System.Convert.ToInt64(Value);
-                IsValid = true;
-            }
-            catch
-            {
-            }
-
-            return IsValid;
+            return result;
         }
 
         /// <summary>
         /// Check if a value fits in Width bits, range is Signed.Min - Unsigned.Max
-        /// If Width==1: must return 0 or 1
+        /// If Width==1: Value must be 0 or 1
         /// </summary>
         /// <param name="Value">The value</param>
         /// <param name="Width">Width in bits, 1-32</param>
         /// <returns></returns>
-        private static bool FitsWidth(Int64 Value, int Width)
+        public static bool IntFitsWidth(Int64 Value, int width)
         {
-            if (Width == 1)
+            // width 1 .. 32
+            if ((width < 1) || (width > 32))
+            {
+                throw new ArgumentException("Invalid value", "width");
+            }
+
+            // width = 1: accept 0 and 1
+            if (width == 1)
             {
                 return ((Value == 0) || (Value == 1));
             }
-            else
-            {
-                Int64 Max = (0xFFFFFFFF >> (32 - Width));
-                Int64 Min = -(Max / 2) - 1;
-                return ((Value >= Min) && (Value <= Max));
-            }
+
+            UInt32 UMax = (UInt32)((1L << width) - 1);
+            Int32 Min = -(Int32)(UMax / 2) - 1;
+            return ((Value >= Min) && (Value <= UMax));
         }
+
+        /// <summary>
+        /// Clean enum part of value string
+        /// expected input: "123", " 123 (text)", " 123 (...", ...
+        /// </summary>
+        /// <param name="str"></param>
+        /// <returns></returns>
+        public static string CleanValuestrEnumText(string str)
+        {
+            int i = str.IndexOf('(');
+            if (i >= 0)
+            {
+                str = str.Substring(0, i);
+            }
+
+            return str.TrimEnd();
+        }
+
+
 
     }
 }

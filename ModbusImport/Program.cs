@@ -133,9 +133,9 @@ namespace ModbusImport
             ApplyCommandlineToProjectConfig();
 
             // pass configuration to Endians and CStringToValue
-            Endians.Int32BigEndian = Project.Connection.Int32Endian == Global.eEndian.Big;
-            Endians.Float32BigEndian = Project.Connection.Float32Endian == Global.eEndian.Big;
-            CValueToString.Ascii16BigEndian = Project.Connection.Ascii16Endian == Global.eEndian.Big;
+            Converts.Int32Endian = Project.Connection.Int32Endian;
+            Converts.Float32Endian = Project.Connection.Float32Endian;
+            Converts.StringEndian = Project.Connection.Ascii16Endian;
 
             // Connect
             Print("Opening connection: " + GetConnectionInfoString());

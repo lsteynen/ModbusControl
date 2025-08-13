@@ -23,7 +23,7 @@ namespace ModbusControlSpace
     {
         // Types
 
-        private enum eReq { Optional, Required }
+        private enum EReq { Optional, Required }
         private string[] ConnectionTypes = new string[] { "serial/rtu", "modbus/tcp", "rtu/tcp" }; // Must be order of Global.eConnectionType.SerialRTU
         private string[] WriteHoldingregisterFCs = new string[] { "6", "16", "auto" };
 
@@ -230,7 +230,7 @@ namespace ModbusControlSpace
             foreach (XElement xe in XmlRootNode.Elements())
             {
                 string elemName = xe.Name.LocalName;
-                Debug.Print("ROOT: " + elemName);
+                //Debug.Print("ROOT: " + elemName);
 
                 // <size> element, optional
                 if (CheckElementNameMatch(elemName, "Size"))
@@ -353,7 +353,7 @@ namespace ModbusControlSpace
             foreach (XElement xe in pxe.Elements())
             {
                 string elemName = xe.Name.LocalName;
-                Debug.Print("<Size> " + elemName);
+                //Debug.Print("<Size> " + elemName);
 
                 // Width, optional
                 if (CheckElementNameMatch(elemName, "Width"))
@@ -418,7 +418,7 @@ namespace ModbusControlSpace
             foreach (XElement xe in pxe.Elements())
             {
                 string elemName = xe.Name.LocalName;
-                Debug.Print("<Modbus> " + elemName);
+                //Debug.Print("<Modbus> " + elemName);
 
                 // Connection, optional
                 if (CheckElementNameMatch(elemName, "Connection"))
@@ -731,7 +731,7 @@ namespace ModbusControlSpace
                     Seen = true;
                     string TmpString = xe.Value.Trim();
                     UInt32 TmpNum;
-                    // allow 40.000, 40.001, 400.000 and 400.001 (dots only here for clearness)
+                    // allow 40_000, 40_001, 400_000 and 400_001 
                     // use 4xxxx for holding registers 
                     // use 40001 for traditional numbering 
                     // use 400001 for 6-digit numbering when using > 9999 holding registers
@@ -816,7 +816,7 @@ namespace ModbusControlSpace
             foreach (XElement xe in pxe.Elements())
             {
                 string elemName = xe.Name.LocalName;
-                Debug.Print("<Tab> " + elemName);
+                //Debug.Print("<Tab> " + elemName);
 
                 // <name>, required
                 if (CheckElementNameMatch(elemName, "name"))
@@ -976,7 +976,7 @@ namespace ModbusControlSpace
             foreach (XElement xe in pxe.Elements())
             {
                 string elemName = xe.Name.LocalName;
-                Debug.Print("<Var> " + elemName);
+                //Debug.Print("<Var> " + elemName);
 
                 // <reg>, required
                 if (CheckElementNameMatch(elemName, "reg"))
@@ -1220,7 +1220,7 @@ namespace ModbusControlSpace
             foreach (XElement xe in pxe.Elements())
             {
                 string elemName = xe.Name.LocalName;
-                Debug.Print("<Field> " + elemName);
+                //Debug.Print("<Field> " + elemName);
 
                 // <pos> bitfield position, optional
                 if (CheckElementNameMatch(elemName, "pos"))
@@ -1352,7 +1352,7 @@ namespace ModbusControlSpace
             foreach (XElement xitem in pxe.Elements())
             {
                 string elemName = xitem.Name.LocalName;
-                Debug.Print("<enum> " + elemName);
+                //Debug.Print("<enum> " + elemName);
 
                 // <item>, optional, multiple
                 if (CheckElementNameMatch(elemName, "item"))
@@ -1366,7 +1366,7 @@ namespace ModbusControlSpace
                     foreach (XElement xe in xitem.Elements())
                     {
                         string elem2Name = xe.Name.LocalName;
-                        Debug.Print("<item> " + elem2Name);
+                        //Debug.Print("<item> " + elem2Name);
 
                         // item <value>
                         if (CheckElementNameMatch(elem2Name, "value"))
@@ -1505,7 +1505,7 @@ namespace ModbusControlSpace
             foreach (XElement xe in pxe.Elements())
             {
                 string elemName = xe.Name.LocalName;
-                Debug.Print("<Autostart> " + elemName);
+                //Debug.Print("<Autostart> " + elemName);
 
                 // Enable, optional
                 if (CheckElementNameMatch(elemName, "enable"))
@@ -1586,7 +1586,7 @@ namespace ModbusControlSpace
             foreach (XElement xe in pxe.Elements())
             {
                 string elemName = xe.Name.LocalName;
-                Debug.Print("<Modbustcpserver> " + elemName);
+                //Debug.Print("<Modbustcpserver> " + elemName);
 
                 // Enable
                 if (CheckElementNameMatch(elemName, "enable"))
@@ -1647,7 +1647,7 @@ namespace ModbusControlSpace
             foreach (XElement xe in pxe.Elements())
             {
                 string elemName = xe.Name.LocalName;
-                Debug.Print("<Include> " + elemName);
+                //Debug.Print("<Include> " + elemName);
 
                 // <file>, required
                 if (CheckElementNameMatch(elemName, "file"))
@@ -1766,7 +1766,7 @@ namespace ModbusControlSpace
             foreach (XElement xe in incXmlRootNode.Elements())
             {
                 string elemName = xe.Name.LocalName;
-                Debug.Print("Include: root: " + elemName);
+                //Debug.Print("Include: root: " + elemName);
 
                 // <tab> elements, optional, multiple
                 if (CheckElementNameMatch(elemName, "tab"))
@@ -2171,7 +2171,7 @@ namespace ModbusControlSpace
             }
             xe.Value = Connection.IPPort.ToString();
 
-            //TODO:  Global.eTcpConnectMode TcpConnectMode  static/dynamic
+            //TODO: Add Global.eTcpConnectMode TcpConnectMode  static/dynamic?
 
             // Find SlaveID node, or create it
             xe = FindElement(xeModbus, "SlaveID");

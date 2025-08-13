@@ -333,23 +333,14 @@ namespace ModbusControlSpace
                     {
                         ModbusGridView.TVarProperties varp = mrv.GetVarPropertiesByIndex(lineIndex);
 
-                        // convert format to type
-                        Global.eType Type = Global.ConvertFormatToType(varp.Format);
-
-                        // get the value, 16 or 32-bit, watch size and endian
-                        short[] aTmpRegs = new short[2];
-                        aTmpRegs[0] = readData[valueIndex++];
-                        aTmpRegs[1] = 0;
-                        // is it 32-bit?
-                        if (varp.Size == 2)
-                        {
-                            aTmpRegs[1] = readData[valueIndex++];
-                        }
-                        Int32 Value = Endians.ConvertShortsToValue(aTmpRegs, Type, varp.Size * 16);
-
-                        WriteExportLine(varp.Reg, varp.Size, varp.Descr, varp.Format, varp.Readable, varp.Writeable, Value);
+                        // get the register value as 1 or 2 16-bit registers
+                        Int16[] aTmpRegs = new Int16[varp.Size];
+                        Array.Copy(readData, valueIndex, aTmpRegs, 0, varp.Size);
+                        valueIndex += varp.Size;
+                        
+                        WriteExportLine(varp.Reg, varp.Size, varp.Descr, varp.Format, varp.Readable, varp.Writeable, aTmpRegs);
                         ++mSuccessCount;
-
+                        
                         Thread.Sleep(mSleeptime);
                     }
                 }
@@ -382,21 +373,9 @@ namespace ModbusControlSpace
                             {
                                 // get the value, 16 or 32-bit
 
-                                // convert format to type
-                                Global.eType Type = Global.ConvertFormatToType(varp.Format);
-
-                                // get the value, 16 or 32-bit, watch size and endian
-                                short[] aTmpRegs = new short[2];
-                                aTmpRegs[0] = readData[0];
-                                aTmpRegs[1] = 0;
-                                // is it 32-bit?
-                                if (varp.Size == 2)
-                                {
-                                    aTmpRegs[1] = readData[1];
-                                }
-                                Int32 Value = Endians.ConvertShortsToValue(aTmpRegs, Type, varp.Size * 16);
-
-                                WriteExportLine(varp.Reg, varp.Size, varp.Descr, varp.Format, varp.Readable, varp.Writeable, Value);
+                                // the register value is in readData as 1 or 2 16-bit registers
+                                
+                                WriteExportLine(varp.Reg, varp.Size, varp.Descr, varp.Format, varp.Readable, varp.Writeable, readData);
                                 ++mSuccessCount;
                             }
                             else
@@ -424,7 +403,7 @@ namespace ModbusControlSpace
             }
         }
 
-        private bool WriteExportLine(UInt32 Reg, int Size, string Description, Global.eFormat Format, bool isReadable, bool isWriteable, int Value)
+        private bool WriteExportLine(UInt32 Reg, int Size, string Description, Global.eFormat Format, bool isReadable, bool isWriteable, Int16[] aRegValues)
         {
             // output 1 export line, all register info, and value
 
@@ -464,7 +443,7 @@ namespace ModbusControlSpace
             // make value string
             // decimals are not used in export
             // minlen is not used in export
-            string ValueString = CValueToString.ValueToString(Value, Width, Format);
+            string ValueString = CValueToString.Int16RegistersToValueString(aRegValues, Format, Width);
 
             // output to file
             string[] fields = new string[] { Reg.ToString(), Width.ToString(), Description, RWstring, Format.ToString(), ValueString};

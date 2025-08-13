@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using LST.Helpers;
 
 namespace Modbus_net
 {
@@ -356,127 +357,14 @@ namespace Modbus_net
 
         #region Read/Write functions
 
-        public Result ReadCoils(byte address, ushort startcoil, ushort coilcount, out byte[] values)
-        {
-            values = null;
-
-            // we build the frame in RTU format, no CRC
-            // Modbus specs state: read 2000 coils max
-            if (coilcount <= 2000)
-            {
-                // build message
-                byte[] query = new byte[256];
-                int Idx = 0;
-                query[Idx++] = address;                   // slave id
-                query[Idx++] = (byte)1;                   // function code
-                query[Idx++] = (byte)(startcoil >> 8);    // startreg addr high
-                query[Idx++] = (byte)(startcoil);         // startreg addr low
-                query[Idx++] = (byte)(coilcount >> 8);    // regcount high
-                query[Idx++] = (byte)(coilcount);         // regcount low
-
-                byte[] response;
-                int NrOfDatabytes = (coilcount + 7) / 8;
-                int expectedresponselength = 1 + 1 + 1 + NrOfDatabytes;   // addr, func, bytecnt, databytes
-                Result retVal = ProtocolSendReceive(query, Idx, out response, expectedresponselength);
-
-                // slave address and function code echo are already checked by ProtocolSendReceive()
-
-                // valid response?
-                if (retVal == Result.SUCCESS)
-                {
-                    // check response length
-                    // check bytecount field
-                    if ((response.Length == expectedresponselength)
-                        && (response[2] == NrOfDatabytes))
-                    {
-                        values = new byte[NrOfDatabytes];
-                        Array.Copy(response, 3, values, 0, NrOfDatabytes);
-                        // first coil is in bit0 of first byte
-                    }
-                    else
-                    {
-                        retVal = Result.RESPONSEDATAERROR;
-                    }
-
-                    // update statistics counters
-                    AdjustResultCounters(retVal);
-                }
-
-                return retVal;
-            }
-            else
-            {
-                return Result.INVALIDARGUMENT;
-            }
-        }
-
-        public Result ReadInputRegisters(byte address, ushort startreg, ushort regcount, out short[] values)
+        public Result ReadHoldingRegisters(byte address, UInt16 startreg, UInt16 regcount, out Int16[] values, bool allowAll = true)
         {
             values = null;
 
             // we build the frame in RTU format, no CRC
             // RTU frame with CRC is max 256 bytes
             // check regcount for response frame <= 256 bytes (addr,func,bytecnt,databytes,crc)
-            if ((1 + 1 + 1 + (regcount * 2) + 2) <= 256)
-            {
-                // build query
-                byte[] query = new byte[256];
-                int Idx = 0;
-                query[Idx++] = address;                   // slave id
-                query[Idx++] = (byte)4;                   // function code
-                query[Idx++] = (byte)(startreg >> 8);     // startreg addr high
-                query[Idx++] = (byte)(startreg);          // startreg addr low
-                query[Idx++] = (byte)(regcount >> 8);     // reg regcount high
-                query[Idx++] = (byte)(regcount);          // reg regcount low
-
-                byte[] response;
-                int NrOfDatabytes = 2 * regcount;
-                int expectedresponselength = 1 + 1 + 1 + NrOfDatabytes;   // addr, func, bytecnt, 2*regcnt
-                Result retVal = ProtocolSendReceive(query, Idx, out response, expectedresponselength);
-
-                // slave address and function code echo are already checked by ProtocolSendReceive()
-
-                // valid response?
-                if (retVal == Result.SUCCESS)
-                {
-                    // check response length
-                    // check bytecount field
-                    if ((response.Length == expectedresponselength)
-                        && (response[2] == NrOfDatabytes))
-                    {
-                        values = new short[regcount];
-                        for (uint index = 0; index < values.Length; ++index)
-                        {
-                            values[index] = response[3 + (2 * index)];
-                            values[index] <<= 8;
-                            values[index] += response[3 + (2 * index) + 1];
-                        }
-                    }
-                    else
-                    {
-                        retVal = Result.RESPONSEDATAERROR;
-                    }
-
-                    // update statistics counters
-                    AdjustResultCounters(retVal);
-                }
-
-                return retVal;
-            }
-            else
-            {
-                return Result.INVALIDARGUMENT;
-            }
-        }
-
-        public Result ReadHoldingRegisters(byte address, ushort startreg, ushort regcount, out short[] values)
-        {
-            values = null;
-
-            // we build the frame in RTU format, no CRC
-            // RTU frame with CRC is max 256 bytes
-            // check regcount for response frame <= 256 bytes (addr,func,bytecnt,databytes,crc)
-            if ((1 + 1 + 1 + (regcount * 2) + 2) <= 256)
+            if (((1 + 1 + 1 + (regcount * 2) + 2) <= 256) || allowAll)
             {
                 // build query
                 byte[] query = new byte[256];
@@ -503,7 +391,7 @@ namespace Modbus_net
                     if ((response.Length == expectedresponselength)
                         && (response[2] == NrOfDatabytes))
                     {
-                        values = new short[regcount];
+                        values = new Int16[regcount];
                         for (uint index = 0; index < values.Length; ++index)
                         {
                             values[index] = response[3 + (2 * index)];
@@ -528,7 +416,7 @@ namespace Modbus_net
             }
         }
 
-        public Result WriteSingleHoldingRegister(byte address, ushort startreg, short value)
+        public Result WriteSingleHoldingRegister(byte address, UInt16 startreg, Int16 value)
         {
             // we build the frame in RTU format, no CRC
             // RTU frame with CRC is max 256 bytes
@@ -575,7 +463,7 @@ namespace Modbus_net
             return retVal;
         }
 
-        public Result WriteMultipleHoldingRegisters(byte address, ushort startreg, ushort regcount, short[] values)
+        public Result WriteMultipleHoldingRegisters(byte address, UInt16 startreg, UInt16 regcount, Int16[] values)
         {
             // we build the frame in RTU format, no CRC
             // RTU frame with CRC is max 256 bytes
@@ -637,7 +525,331 @@ namespace Modbus_net
             }
         }
 
-        public Result SendQuery(byte[] Query, ushort QueryLen, out byte[] Response)
+        public Result ReadInputRegisters(byte address, UInt16 startreg, UInt16 regcount, out Int16[] values, bool allowAll = true)
+        {
+            values = null;
+
+            // we build the frame in RTU format, no CRC
+            // RTU frame with CRC is max 256 bytes
+            // check regcount for response frame <= 256 bytes (addr,func,bytecnt,databytes,crc)
+            if (((1 + 1 + 1 + (regcount * 2) + 2) <= 256) || allowAll)
+            {
+                // build query
+                byte[] query = new byte[256];
+                int Idx = 0;
+                query[Idx++] = address;                   // slave id
+                query[Idx++] = (byte)4;                   // function code
+                query[Idx++] = (byte)(startreg >> 8);     // startreg addr high
+                query[Idx++] = (byte)(startreg);          // startreg addr low
+                query[Idx++] = (byte)(regcount >> 8);     // reg regcount high
+                query[Idx++] = (byte)(regcount);          // reg regcount low
+
+                byte[] response;
+                int NrOfDatabytes = 2 * regcount;
+                int expectedresponselength = 1 + 1 + 1 + NrOfDatabytes;   // addr, func, bytecnt, 2*regcnt
+                Result retVal = ProtocolSendReceive(query, Idx, out response, expectedresponselength);
+
+                // slave address and function code echo are already checked by ProtocolSendReceive()
+
+                // valid response?
+                if (retVal == Result.SUCCESS)
+                {
+                    // check response length
+                    // check bytecount field
+                    if ((response.Length == expectedresponselength)
+                        && (response[2] == NrOfDatabytes))
+                    {
+                        values = new Int16[regcount];
+                        for (uint index = 0; index < values.Length; ++index)
+                        {
+                            values[index] = response[3 + (2 * index)];
+                            values[index] <<= 8;
+                            values[index] += response[3 + (2 * index) + 1];
+                        }
+                    }
+                    else
+                    {
+                        retVal = Result.RESPONSEDATAERROR;
+                    }
+
+                    // update statistics counters
+                    AdjustResultCounters(retVal);
+                }
+
+                return retVal;
+            }
+            else
+            {
+                return Result.INVALIDARGUMENT;
+            }
+        }
+
+        public Result ReadCoils(byte address, UInt16 startreg, UInt16 regcount, out byte[] values, bool allowAll = true)
+        {
+            values = null;
+
+            // we build the frame in RTU format, no CRC
+            // Modbus specs state: read 2000 coils max
+            if ((regcount <= 2000) || allowAll)
+            {
+                // build message
+                byte[] query = new byte[256];
+                int Idx = 0;
+                query[Idx++] = address;                   // slave id
+                query[Idx++] = (byte)1;                   // function code
+                query[Idx++] = (byte)(startreg >> 8);    // startreg addr high
+                query[Idx++] = (byte)(startreg);         // startreg addr low
+                query[Idx++] = (byte)(regcount >> 8);    // regcount high
+                query[Idx++] = (byte)(regcount);         // regcount low
+
+                byte[] response;
+                int NrOfDatabytes = (regcount + 7) / 8;
+                int expectedresponselength = 1 + 1 + 1 + NrOfDatabytes;   // addr, func, bytecnt, databytes
+                Result retVal = ProtocolSendReceive(query, Idx, out response, expectedresponselength);
+
+                // slave address and function code echo are already checked by ProtocolSendReceive()
+
+                // valid response?
+                if (retVal == Result.SUCCESS)
+                {
+                    // check response length
+                    // check bytecount field
+                    if ((response.Length == expectedresponselength)
+                        && (response[2] == NrOfDatabytes))
+                    {
+                        values = new byte[NrOfDatabytes];
+                        Array.Copy(response, 3, values, 0, NrOfDatabytes);
+                        // first coil is in bit0 of first byte
+                    }
+                    else
+                    {
+                        retVal = Result.RESPONSEDATAERROR;
+                    }
+
+                    // update statistics counters
+                    AdjustResultCounters(retVal);
+                }
+
+                return retVal;
+            }
+            else
+            {
+                return Result.INVALIDARGUMENT;
+            }
+        }
+
+        public Result WriteSingleCoil(byte address, UInt16 startreg, int value, bool allowAll = true)
+        {
+            // we build the frame in RTU format, no CRC
+            // RTU frame with CRC is max 256 bytes
+            // check for query <= 256 bytes (addr,func,startreg,regcnt,bytecnt,databytes,crc)
+            // value must be 0 or 1
+            
+            if ((value >= 0) && (value <= 1))
+            {
+                // build query
+                byte[] query = new byte[256];
+                int Idx = 0;
+                query[Idx++] = address;               // slave id
+                query[Idx++] = (byte)5;               // function code
+                query[Idx++] = (byte)(startreg >> 8); // reg addr high
+                query[Idx++] = (byte)(startreg);      // reg addr low
+                if (value == 1)
+                {
+                    query[Idx++] = (byte)0xFF;          // send 0xFF00 or 0x0000
+                    query[Idx++] = (byte)0x00;      
+                }
+                else
+                {
+                    query[Idx++] = (byte)0x00; 
+                    query[Idx++] = (byte)0x00;      
+                }
+                
+                byte[] response;
+                int expectedresponselength = 1 + 1 + 2 + 2;   // addr, func, regaddr, value
+                Result retVal = ProtocolSendReceive(query, Idx, out response, expectedresponselength);
+
+                // slave address and function code echo are already checked by ProtocolSendReceive()
+
+                // valid response?
+                if (retVal == Result.SUCCESS)
+                {
+                    // check response length
+                    // check all fields (echo of query)
+                    if ((response.Length == expectedresponselength)
+                        && (response[2] == query[2])
+                        && (response[3] == query[3])
+                        && (response[4] == query[4])
+                        && (response[5] == query[5]))
+                    {
+                        // okay
+                    }
+                    else
+                    {
+                        retVal = Result.RESPONSEDATAERROR;
+                    }
+
+                    // update statistics counters
+                    AdjustResultCounters(retVal);
+                }
+
+                return retVal;
+            }
+            else
+            {
+                return Result.INVALIDARGUMENT;
+            }
+        }
+
+        public Result WriteMultipleCoils(byte address, UInt16 startreg, UInt16 regcount, byte[] values, bool allowAll = true)
+        {
+            // we build the frame in RTU format, no CRC
+            // RTU frame with CRC is max 256 bytes
+            // check for query <= 256 bytes (addr,func,startreg,regcnt,bytecnt,databytes,crc)
+            // write 1976 coils max
+            int nrOfDatabytes = ((regcount + 7) / 8);
+
+            if ((values.Length >= nrOfDatabytes)
+                && (1 + 1 + 2 + 2 + 1 + nrOfDatabytes + 2) <= 256)
+            {
+                // build query
+                byte[] query = new byte[256];
+                int Idx = 0;
+                query[Idx++] = address;               // slave id
+                query[Idx++] = (byte)15;              // function code
+                query[Idx++] = (byte)(startreg >> 8); // reg addr high
+                query[Idx++] = (byte)(startreg);      // reg addr low
+                query[Idx++] = (byte)(regcount >> 8); // reg regcount high
+                query[Idx++] = (byte)(regcount);      // reg regcount low
+                // add databytes
+                query[Idx++] = (byte)nrOfDatabytes;            // number of databytes
+                Array.Copy(values, 0, query, Idx, nrOfDatabytes);
+                Idx += nrOfDatabytes;
+
+                byte[] response;
+                int expectedresponselength = 1 + 1 + 2 + 2;   // addr, func, regaddr, regcnt
+                Result retVal = ProtocolSendReceive(query, Idx, out response, expectedresponselength);
+
+                // slave address and function code echo are already checked by ProtocolSendReceive()
+
+                // valid response?
+                if (retVal == Result.SUCCESS)
+                {
+                    // check response length
+                    // check all fields (echo of query)
+                    if ((response.Length == expectedresponselength)
+                        && (response[2] == query[2])
+                        && (response[3] == query[3])
+                        && (response[4] == query[4])
+                        && (response[5] == query[5]))
+                    {
+                        // okay
+                    }
+                    else
+                    {
+                        retVal = Result.RESPONSEDATAERROR;
+                    }
+
+                    // update statistics counters
+                    AdjustResultCounters(retVal);
+                }
+
+                return retVal;
+            }
+            else
+            {
+                return Result.INVALIDARGUMENT;
+            }
+        }
+
+        public Result ReadDiscreteInputs(byte address, UInt16 startreg, UInt16 regcount, out byte[] values, bool allowAll = true)
+        {
+            values = null;
+
+            // we build the frame in RTU format, no CRC
+            // Modbus specs state: read 2000 coils max
+            if ((regcount <= 2000) || allowAll)
+            {
+                // build message
+                byte[] query = new byte[256];
+                int Idx = 0;
+                query[Idx++] = address;                   // slave id
+                query[Idx++] = (byte)2;                   // function code
+                query[Idx++] = (byte)(startreg >> 8);    // startreg addr high
+                query[Idx++] = (byte)(startreg);         // startreg addr low
+                query[Idx++] = (byte)(regcount >> 8);    // regcount high
+                query[Idx++] = (byte)(regcount);         // regcount low
+
+                byte[] response;
+                int nrOfDatabytes = (regcount + 7) / 8;
+                int expectedresponselength = 1 + 1 + 1 + nrOfDatabytes;   // addr, func, bytecnt, databytes
+                Result retVal = ProtocolSendReceive(query, Idx, out response, expectedresponselength);
+
+                // slave address and function code echo are already checked by ProtocolSendReceive()
+
+                // valid response?
+                if (retVal == Result.SUCCESS)
+                {
+                    // check response length
+                    // check bytecount field
+                    if ((response.Length == expectedresponselength)
+                        && (response[2] == nrOfDatabytes))
+                    {
+                        values = new byte[nrOfDatabytes];
+                        Array.Copy(response, 3, values, 0, nrOfDatabytes);
+                        // first coil is in bit0 of first byte
+                    }
+                    else
+                    {
+                        retVal = Result.RESPONSEDATAERROR;
+                    }
+
+                    // update statistics counters
+                    AdjustResultCounters(retVal);
+                }
+
+                return retVal;
+            }
+            else
+            {
+                return Result.INVALIDARGUMENT;
+            }
+        }
+
+        public Result SendCustomQuery(byte address, byte[] query, UInt16 queryLen, out byte[] responseBuf)
+        {
+            responseBuf = null;
+
+            // queryLen <= query buffer size?
+            if (queryLen <= query.Length)
+            { 
+                // we build the frame in RTU format, no CRC
+                // build message
+                byte[] query2 = new byte[1 + queryLen];
+                int Idx = 0;
+                query2[Idx++] = address;                        // slave id
+                Array.Copy(query, 0, query2, 1, queryLen);      // custom query
+                Idx += queryLen;
+
+                // expected response length is unknown
+                Result retVal = ProtocolSendReceive(query2, query2.Length, out responseBuf, 0);
+
+                // slave address and function code echo are already checked by ProtocolSendReceive()
+                
+                // reponse is already in responseBuf[]
+
+                // update statistics counters
+                AdjustResultCounters(retVal);
+
+                return  retVal;
+            }
+            else
+            {
+                return Result.INVALIDARGUMENT;
+            }
+        }
+
+        public Result SendQuery(byte[] Query, UInt16 QueryLen, out byte[] Response)
         {
             // Query[] is RTU format, first byte is slave-address, no CRC
             // Response[] is RTU format, first byte is slave-address, no CRC

@@ -5,6 +5,8 @@ using System.Xml;
 using System.Xml.Serialization;
 using System.IO;
 using System.Windows.Forms;
+using System.Diagnostics;
+
 
 using LST.Helpers;
 
@@ -111,15 +113,12 @@ namespace ModbusControlSpace
             public List<string> MbcMruList;
             public CExport Export;
             public CCompare Compare;
-            public CCustomRead CustomRead;
-            public CCustomWrite CustomWrite;
-            public CCustomCommand CustomCommand;
+            public CCustomQueries CustomQueries;
             public CLogger Logger;
 
             private XmlDocument xdoc;
             private XmlNode xroot;
-            private string DummyStr;
-
+            
             // constructor
             public CRoaming()
             {
@@ -140,9 +139,7 @@ namespace ModbusControlSpace
                 MbcMruList = new List<string>();
                 Export = new CExport();
                 Compare = new CCompare();
-                CustomRead = new CCustomRead();
-                CustomWrite = new CCustomWrite();
-                CustomCommand = new CCustomCommand();
+                CustomQueries = new CCustomQueries();
                 Logger = new CLogger();
 
                 // setup ValidationXSDFile, if we find it
@@ -171,15 +168,14 @@ namespace ModbusControlSpace
                 // then try to load load old settings file at old location
                 try
                 {
+                    Debug.Print(DateTime.Now.TimeOfDay + ": CSettings.CRoaming.Load: " + FilePath);
+
                     xdoc = new XmlDocument();
                     xdoc.Load(FilePath);
                 }
                 catch (Exception ex)
                 {
-                    DummyStr = ex.Message;
-#if DEBUG
-                    MessageBox.Show(ex.Message, "Debug: CSettings.CRoaming.Load() error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-#endif
+                    Debug.Print(DateTime.Now.TimeOfDay + ": CSettings.CRoaming.Load() error: " + ex.Message);
 
                     xdoc = null;
                     xroot = null;
@@ -212,9 +208,7 @@ namespace ModbusControlSpace
                 ReadElementStringList(xroot, "mbcmrulist", "file", ref MbcMruList);
                 Export.Read(xroot);
                 Compare.Read(xroot);
-                CustomRead.Read(xroot);
-                CustomWrite.Read(xroot);
-                CustomCommand.Read(xroot);
+                CustomQueries.Read(xroot);
                 Logger.Read(xroot);
             }
 
@@ -226,6 +220,8 @@ namespace ModbusControlSpace
             {
                 // Create the directory tree if it doesn't exists yet
                 Directory.CreateDirectory(Path.GetDirectoryName(FilePath));
+
+                Debug.Print(DateTime.Now.TimeOfDay + ": CSettings.CRoaming.Save: " + FilePath);
 
                 // file or root element did not exist?  
                 if (xdoc == null)
@@ -260,9 +256,7 @@ namespace ModbusControlSpace
                 WriteElementStringList(xroot, "mbcmrulist", "file", MbcMruList);
                 Export.Write(xroot);
                 Compare.Write(xroot);
-                CustomRead.Write(xroot);
-                CustomWrite.Write(xroot);
-                CustomCommand.Write(xroot);
+                CustomQueries.Write(xroot);
 
                 // Write file
                 // no UTF8 BOM, indented
@@ -295,8 +289,7 @@ namespace ModbusControlSpace
 
             private XmlDocument xdoc;
             private XmlNode xroot;
-            private string DummyStr;
-
+            
             // constructor
             public CShared()
             {
@@ -317,15 +310,15 @@ namespace ModbusControlSpace
                 // if it does not exist, no worries, is probably the first time this user runs this app
                 try
                 {
+                    Debug.Print(DateTime.Now.TimeOfDay + ": CSettings.CShared.Load(): " + FilePath);
+
                     xdoc = new XmlDocument();
                     xdoc.Load(FilePath);
                 }
                 catch (Exception ex)
                 {
-                    DummyStr = ex.Message;
-#if DEBUG
-                    MessageBox.Show(ex.Message, "Debug: CSettings.CShared.Load() error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-#endif
+                    Debug.Print(DateTime.Now.TimeOfDay + ": CSettings.CShared.Load() error: " + ex.Message);
+
                     xdoc = null;
                     xroot = null;
                     return;
@@ -351,6 +344,8 @@ namespace ModbusControlSpace
             /// </summary>
             public void Save()
             {
+                Debug.Print(DateTime.Now.TimeOfDay + ": CSettings.CShared.Save: " + FilePath);
+
                 // got no document yet?
                 if (xdoc == null)
                 {
@@ -443,120 +438,114 @@ namespace ModbusControlSpace
             }
         }
 
-        public class CCustomRead
+        
+        public class CCustomQueries
         {
-            public int SlaveID;
-            public int Register;
-            public int Quantity;
-            public string Datasize; // Datasize is string because that's how we save radiobuttons
-            public string ShowValuesAs;
+            public int HoldingRegistersStartAddress;    // 40_000, 40_001, 400_000, 400_001
+            public bool MultilineAutosizeRows;
+            public List<CustomQueries.CustomQueryItem> QueriesList;
+            public CustomQueries.ColumnWidthsType ColumnWidths;
 
             // constructor
-            public CCustomRead()
+            public CCustomQueries()
             {
-                // sets defaults
-                SlaveID = 1;
-                Register = 40001;
-                Quantity = 10;
-                Datasize = "16";
-                ShowValuesAs = "int";
+                // set defaults
+
+                HoldingRegistersStartAddress = 40001;
+                MultilineAutosizeRows = false;
+
+                // columns widths
+                ColumnWidths = new CustomQueries.ColumnWidthsType
+                {
+                    sendWidth = 50,
+                    slaveIDWidth = 28,
+                    commandWidth = 99,
+                    registerWidth = 43,
+                    qtyWidth = 34,
+                    formatWidth = 51,
+                    dataWidth = 123,
+                    resultWidth = 277,
+                    commentWidth = 112
+                };
+
+                // 2 demo queries
+
+                QueriesList = new List<CustomQueries.CustomQueryItem>();
+
+                CustomQueries.CustomQueryItem c1 = new CustomQueries.CustomQueryItem();
+                c1.slaveID = "1";
+                c1.command = "RHR";
+                c1.register = "40001";
+                c1.qty = "10";
+                c1.format = "INT16";
+                c1.data = "";
+                c1.comment = "demo";
+                QueriesList.Add(c1);
+
+                CustomQueries.CustomQueryItem c2 = new CustomQueries.CustomQueryItem();
+                c2.slaveID = "1";
+                c2.command = "WMHR";
+                c2.register = "40001";
+                c2.qty = "4";
+                c2.format = "INT16";
+                c2.data = "1001, 1002, 1003, 1004";
+                c2.comment = "demo";
+                QueriesList.Add(c2);
             }
 
             public void Read(XmlNode xparent)
-            {
-                XmlNode xn = xparent.SelectSingleNode("customread");
+            {  
+                XmlNode xn = xparent.SelectSingleNode("customqueries");
                 if (xn != null)
                 {
-                    ReadElementInt(xn, "slaveid", ref SlaveID);
-                    ReadElementInt(xn, "register", ref Register);
-                    ReadElementInt(xn, "quantity", ref Quantity);
-                    ReadElementString(xn, "datasize", ref Datasize);
-                    ReadElementString(xn, "showvaluesas", ref ShowValuesAs);
+                    ReadElementInt(xn, "holdingregistersstart", ref HoldingRegistersStartAddress);
+                    ReadElementBool(xn, "multilineautosizerows", ref MultilineAutosizeRows);
+
+                    QueriesList.Clear();
+                    XmlNode xc = xn.SelectSingleNode("queries");
+                    if (xc != null)
+                    {
+                        XmlNodeList xcl = xc.SelectNodes("query");
+                        if (xcl != null)
+                        {
+                            foreach (XmlNode c in xcl)
+                            {
+                                CustomQueries.CustomQueryItem nc = new CustomQueries.CustomQueryItem();
+                                ReadElementString(c, "slaveid", ref nc.slaveID);
+                                ReadElementString(c, "command", ref nc.command);
+                                ReadElementString(c, "register", ref nc.register);
+                                ReadElementString(c, "qty", ref nc.qty);
+                                ReadElementString(c, "format", ref nc.format);
+                                ReadElementString(c, "data", ref nc.data);
+                                ReadElementString(c, "comment", ref nc.comment);
+                                QueriesList.Add(nc);
+                            }
+                        }
+                    }
+                    
+                    XmlNode cwn = xn.SelectSingleNode("columnwidths");
+                    if (cwn != null)
+                    {
+                        ReadElementFloat(cwn, "send", ref ColumnWidths.sendWidth);
+                        ReadElementFloat(cwn, "slaveid", ref ColumnWidths.slaveIDWidth);
+                        ReadElementFloat(cwn, "command", ref ColumnWidths.commandWidth);
+                        ReadElementFloat(cwn, "register", ref ColumnWidths.registerWidth);
+                        ReadElementFloat(cwn, "qty", ref ColumnWidths.qtyWidth);
+                        ReadElementFloat(cwn, "format", ref ColumnWidths.formatWidth);
+                        ReadElementFloat(cwn, "data", ref ColumnWidths.dataWidth);
+                        ReadElementFloat(cwn, "result", ref ColumnWidths.resultWidth);
+                        ReadElementFloat(cwn, "comment", ref ColumnWidths.commentWidth);
+                    }
                 }
             }
 
             public void Write(XmlNode xparent)
             {
-                XmlNode xn = WriteParentElement(xparent, "customread");
-                WriteElementInt(xn, "slaveid", SlaveID);
-                WriteElementInt(xn, "register", Register);
-                WriteElementInt(xn, "quantity", Quantity);
-                WriteElementString(xn, "datasize", Datasize);
-                WriteElementString(xn, "showvaluesas", ShowValuesAs);
-            }
-        }
-
-        public class CCustomWrite
-        {
-            public int SlaveID;
-            public int Register;
-            public int Quantity;
-            public string Functioncode;
-            public string Datasize;
-            public string Data;
-
-            // constructor
-            public CCustomWrite()
-            {
-                // sets defaults
-                SlaveID = 1;
-                Register = 40001;
-                Quantity = 1;
-                Functioncode = "16";
-                Datasize = "16";
-                Data = String.Empty;
-            }
-
-            public void Read(XmlNode xparent)
-            {
-                XmlNode xn = xparent.SelectSingleNode("customwrite");
-                if (xn != null)
-                {
-                    ReadElementInt(xn, "slaveid", ref SlaveID);
-                    ReadElementInt(xn, "register", ref Register);
-                    ReadElementInt(xn, "quantity", ref Quantity);
-                    ReadElementString(xn, "functioncode", ref Functioncode);
-                    ReadElementString(xn, "datasize", ref Datasize);
-                    ReadElementString(xn, "data", ref Data);
-                }
-            }
-
-            public void Write(XmlNode xparent)
-            {
-                XmlNode xn = WriteParentElement(xparent, "customwrite");
-                WriteElementInt(xn, "slaveid", SlaveID);
-                WriteElementInt(xn, "register", Register);
-                WriteElementInt(xn, "quantity", Quantity);
-                WriteElementString(xn, "functioncode", Functioncode);
-                WriteElementString(xn, "datasize", Datasize);
-                WriteElementString(xn, "data", Data);
-            }
-        }
-
-        public class CCustomCommand
-        {
-            public string Command;
-
-            // constructor
-            public CCustomCommand()
-            {
-                // sets defaults
-                Command = "01 03 00 00 00 0A";
-            }
-
-            public void Read(XmlNode xparent)
-            {
-                XmlNode xn = xparent.SelectSingleNode("customcommand");
-                if (xn != null)
-                {
-                    ReadElementString(xn, "command", ref Command);
-                }
-            }
-
-            public void Write(XmlNode xparent)
-            {
-                XmlNode xn = WriteParentElement(xparent, "customcommand");
-                WriteElementString(xn, "command", Command);
+                XmlNode xn = WriteParentElement(xparent, "customqueries");
+                WriteElementInt(xn, "holdingregistersstart", HoldingRegistersStartAddress);
+                WriteElementBool(xn, "multilineautosizerows", MultilineAutosizeRows);
+                WriteElementCustomQueriesQueriesList(xn, "queries", QueriesList);
+                WriteElementCustomQueriesColumnWidths(xn, "columnwidths", ColumnWidths);
             }
         }
 
@@ -682,6 +671,19 @@ namespace ModbusControlSpace
             }
         }
 
+        private static void ReadElementFloat(XmlNode xparent, string name, ref float o)
+        {
+            XmlNode xn = xparent.SelectSingleNode(name);
+            if (xn != null)
+            {
+                float tmpfloat;
+                if (float.TryParse(xn.InnerText, out tmpfloat))
+                {
+                    o = tmpfloat;
+                }
+            }
+        }
+
         private static void ReadElementString(XmlNode xparent, string name, ref string o)
         {
             XmlNode xn = xparent.SelectSingleNode(name);
@@ -711,6 +713,7 @@ namespace ModbusControlSpace
             {
                 strlist.Clear();
                 XmlNodeList xl = xn.SelectNodes(name);
+                if (xl != null)
                 foreach (XmlNode ln in xl)
                 {
                     strlist.Add(ln.InnerText);
@@ -738,6 +741,11 @@ namespace ModbusControlSpace
             return WriteElementString(parent, name, value.ToString());
         }
 
+        private static XmlNode WriteElementFloat(XmlNode parent, string name, float value)
+        {
+            return WriteElementString(parent, name, value.ToString());
+        }
+        
         private static XmlNode WriteElementString(XmlNode parent, string name, string value)
         {
             XmlDocument xdoc = parent.OwnerDocument;
@@ -785,6 +793,47 @@ namespace ModbusControlSpace
         {
             return WriteElementString(parent, name, v.ToString());
         }
+
+        private static void WriteElementCustomQueriesQueriesList(XmlNode parent, string parentName, List<CustomQueries.CustomQueryItem> queriesList)
+        {
+            // do not save if queriesList is null
+            if (queriesList != null)
+            {
+                XmlDocument xdoc = parent.OwnerDocument;
+                XmlNode xpar = WriteParentElement(parent, parentName);
+                xpar.RemoveAll();
+                foreach (CustomQueries.CustomQueryItem q in queriesList)
+                {
+                    XmlNode xcmd = xdoc.CreateElement("query");
+                    WriteElementString(xcmd, "slaveid", q.slaveID);
+                    WriteElementString(xcmd, "command", q.command);
+                    WriteElementString(xcmd, "register", q.register);
+                    WriteElementString(xcmd, "qty", q.qty);
+                    WriteElementString(xcmd, "format", q.format);
+                    WriteElementString(xcmd, "data", q.data);
+                    WriteElementString(xcmd, "comment", q.comment);
+                    xpar.AppendChild(xcmd);
+                }
+            }
+        }
+
+
+        private static void WriteElementCustomQueriesColumnWidths(XmlNode parent, string parentName, CustomQueries.ColumnWidthsType columnWidths)
+        {
+            XmlDocument xdoc = parent.OwnerDocument;
+            XmlNode xcw = WriteParentElement(parent, parentName);
+            xcw.RemoveAll();
+            WriteElementFloat(xcw, "send", columnWidths.sendWidth);
+            WriteElementFloat(xcw, "slaveid", columnWidths.slaveIDWidth);
+            WriteElementFloat(xcw, "command", columnWidths.commandWidth);
+            WriteElementFloat(xcw, "register", columnWidths.registerWidth);
+            WriteElementFloat(xcw, "qty", columnWidths.qtyWidth);
+            WriteElementFloat(xcw, "format", columnWidths.formatWidth);
+            WriteElementFloat(xcw, "data", columnWidths.dataWidth);
+            WriteElementFloat(xcw, "result", columnWidths.resultWidth);
+            WriteElementFloat(xcw, "comment", columnWidths.commentWidth);
+        }
+        
 
         /// <summary>
         /// Get the first XML element

@@ -509,7 +509,7 @@
             this.comboConnection.Size = new System.Drawing.Size(112, 21);
             this.comboConnection.TabIndex = 1;
             this.toolTip1.SetToolTip(this.comboConnection, "Select connection and protocol");
-            this.comboConnection.SelectedIndexChanged += new System.EventHandler(this.comboConnection_SelectedIndexChanged);
+            this.comboConnection.SelectedIndexChanged += new System.EventHandler(this.ComboConnection_SelectedIndexChanged);
             // 
             // textboxHoldingRegistersStart
             // 
@@ -707,7 +707,7 @@
             this.buttonApply.TabIndex = 32;
             this.buttonApply.Text = "Apply";
             this.buttonApply.UseVisualStyleBackColor = true;
-            this.buttonApply.Click += new System.EventHandler(this.buttonApply_Click);
+            this.buttonApply.Click += new System.EventHandler(this.ButtonApply_Click);
             // 
             // groupBox5
             // 

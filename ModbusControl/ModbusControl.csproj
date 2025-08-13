@@ -46,7 +46,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;TESTBUILDX</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
@@ -106,6 +106,9 @@
     <Compile Include="..\Modbus_net\TcpChannel.cs">
       <Link>Modbus_net\TcpChannel.cs</Link>
     </Compile>
+    <Compile Include="..\Shared\Converts.cs">
+      <Link>Shared\Converts.cs</Link>
+    </Compile>
     <Compile Include="AboutBox1.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -125,23 +128,11 @@
       <DependentUpon>ConfigForm.cs</DependentUpon>
     </Compile>
     <Compile Include="CsvProcessor.cs" />
-    <Compile Include="CustomModbusCommand.cs">
+    <Compile Include="CustomQueries.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="CustomModbusCommand.Designer.cs">
-      <DependentUpon>CustomModbusCommand.cs</DependentUpon>
-    </Compile>
-    <Compile Include="CustomRead.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="CustomRead.Designer.cs">
-      <DependentUpon>CustomRead.cs</DependentUpon>
-    </Compile>
-    <Compile Include="CustomWrite.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="CustomWrite.Designer.cs">
-      <DependentUpon>CustomWrite.cs</DependentUpon>
+    <Compile Include="CustomQueries.Designer.cs">
+      <DependentUpon>CustomQueries.cs</DependentUpon>
     </Compile>
     <Compile Include="DiagnosticsForm.cs">
       <SubType>Form</SubType>
@@ -195,7 +186,6 @@
       <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Modbusdecode.cs" />
-    <Compile Include="ModbusEndians.cs" />
     <Compile Include="ModbusGridViewRes2.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -261,14 +251,8 @@
     <EmbeddedResource Include="ConfigForm.resx">
       <DependentUpon>ConfigForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="CustomModbusCommand.resx">
-      <DependentUpon>CustomModbusCommand.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="CustomRead.resx">
-      <DependentUpon>CustomRead.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="CustomWrite.resx">
-      <DependentUpon>CustomWrite.cs</DependentUpon>
+    <EmbeddedResource Include="CustomQueries.resx">
+      <DependentUpon>CustomQueries.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="DiagnosticsForm.resx">
       <DependentUpon>DiagnosticsForm.cs</DependentUpon>
@@ -325,6 +309,9 @@
     <EmbeddedResource Include="ValidationFailedForm.resx">
       <DependentUpon>ValidationFailedForm.cs</DependentUpon>
     </EmbeddedResource>
+    <None Include="..\.editorconfig">
+      <Link>.editorconfig</Link>
+    </None>
     <None Include="app.config" />
     <None Include="Properties\app.manifest">
       <SubType>Designer</SubType>

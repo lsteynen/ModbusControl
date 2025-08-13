@@ -9,6 +9,9 @@ using System.Text;
 using System.Threading;
 using System.Windows.Forms;
 
+//TODO: "ERROR: Line 3" tekst, coms met hoofdletter, soms met kleine beginletter
+//TODO: : value () is invalid.  met quotes ipv ()?
+
 using LST.Helpers;
 using Modbus_net;
 
@@ -18,6 +21,7 @@ namespace ModbusControlSpace
     {
         private MainForm mParent;
         private byte mSlaveAddress;
+
         private ModbusInterface mModbus;
         private BackgroundWorker mWorker;
         private int mNotWriteableCount;
@@ -30,7 +34,6 @@ namespace ModbusControlSpace
             public int lineNum;
             public string tabName;
             public List<string> fields;
-            //public string origLine;
 
             // constructor
             public ImportLine()
@@ -38,7 +41,6 @@ namespace ModbusControlSpace
                 lineNum = 0;
                 tabName = null;
                 fields = null;
-                //origLine = null;
             }
         };
 
@@ -52,7 +54,7 @@ namespace ModbusControlSpace
             public bool isWriteable;
             public Global.eFormat Format;
             public string ValueString;
-            public Int32 Value;
+            public Int16[] aRegValue;
 
             // constructor
             public Register()
@@ -65,7 +67,7 @@ namespace ModbusControlSpace
                 isWriteable = true;
                 Format = Global.eFormat.Int;
                 ValueString = null;
-                Value = 0;
+                aRegValue =  null;
             }
         };
 
@@ -163,8 +165,6 @@ namespace ModbusControlSpace
         /// <param name="e"></param>
         private void Worker_Import(object sender, DoWorkEventArgs e)
         {
-            // TODO: try to write multiple registers at once, will be much faster?
-
             foreach (ImportLine line in ImportList)
             {
                 // cancel?
@@ -213,14 +213,9 @@ namespace ModbusControlSpace
                     return;
                 }
 
-                // convert format to type
-                Global.eType Type = Global.ConvertFormatToType(reg.Format);
-
-                // create the modbus values to write
-                Int16[] Data = Endians.ConvertValueToShorts(reg.Value, Type, (reg.Width / 16));
-
                 // write
-                ModbusProtocol.Result result = mParent.DoWriteHoldingRegs(reg.Reg, (ushort)(reg.Width / 16), Data);
+                int regSize = reg.Width / 16;
+                ModbusProtocol.Result result = mParent.DoWriteHoldingRegs(reg.Reg, (UInt16)regSize, reg.aRegValue);
 
                 if (result == ModbusProtocol.Result.SUCCESS)
                 {
@@ -250,7 +245,7 @@ namespace ModbusControlSpace
             // init default value strings
             // then process all fields
             string RegString = "";
-            string SizeString = "16";
+            string WidthString = "16";
             string DescriptionString = "";
             string RwString = "rw";
             string FormatString = "int";
@@ -266,14 +261,14 @@ namespace ModbusControlSpace
             {
                 // Assume: Reg;Size;Value
                 RegString = line.fields[0];
-                SizeString = line.fields[1];
+                WidthString = line.fields[1];
                 ValueString = line.fields[2];
             }
             else if (line.fields.Count == 4)
             {
                 // Assume: Reg;Size;Description;Value
                 RegString = line.fields[0];
-                SizeString = line.fields[1];
+                WidthString = line.fields[1];
                 DescriptionString = line.fields[2];
                 ValueString = line.fields[3];
             }
@@ -281,7 +276,7 @@ namespace ModbusControlSpace
             {
                 // Assume: Reg;Size;Description;Rw;Value
                 RegString = line.fields[0];
-                SizeString = line.fields[1];
+                WidthString = line.fields[1];
                 DescriptionString = line.fields[2];
                 RwString = line.fields[3];
                 ValueString = line.fields[4];
@@ -290,7 +285,7 @@ namespace ModbusControlSpace
             {
                 // Assume: Reg;Size;Description;Rw;Type;Value
                 RegString = line.fields[0];
-                SizeString = line.fields[1];
+                WidthString = line.fields[1];
                 DescriptionString = line.fields[2];
                 RwString = line.fields[3];
                 FormatString = line.fields[4];
@@ -301,7 +296,7 @@ namespace ModbusControlSpace
                 // incorrect number of fields
                 string s = "ERROR: Line " + line.lineNum.ToString() + ": Invalid number of fields: found " + line.fields.Count.ToString() + " fields, expecting 2, 3, 4, 5 or 6 fields.";
                 mWorker.ReportProgress(0, s);
-                //textboxLog.AppendText(line.origLine + Environment.NewLine);
+                ++mErrorCount; 
                 return null;
             }
 
@@ -312,15 +307,15 @@ namespace ModbusControlSpace
             {
                 string s = "ERROR: line " + line.lineNum.ToString() + ": Register number (" + RegString + ") is invalid.";
                 mWorker.ReportProgress(0, s);
-                //textboxLog.AppendText(line.origLine + Environment.NewLine);
+                ++mErrorCount;
                 return null;
             }
 
-            if (GetSize(SizeString, out reg.Width) == false)
+            if (GetWidth(WidthString, out reg.Width) == false)
             {
-                string s = "ERROR: line " + line.lineNum.ToString() + ": Register " + RegString + ": size (" + SizeString + ") is invalid.";
+                string s = "ERROR: line " + line.lineNum.ToString() + ": Register " + RegString + ": width (" + WidthString + ") is invalid.";
                 mWorker.ReportProgress(0, s);
-                //textboxLog.AppendText(line.origLine + Environment.NewLine);
+                ++mErrorCount;
                 return null;
             }
 
@@ -330,7 +325,7 @@ namespace ModbusControlSpace
             {
                 string s = "ERROR: line " + line.lineNum.ToString() + ": Register " + RegString + ": r/w definition (" + RwString + ") is invalid.";
                 mWorker.ReportProgress(0, s);
-                //textboxLog.AppendText(line.origLine + Environment.NewLine);
+                ++mErrorCount;
                 return null;
             }
 
@@ -338,25 +333,29 @@ namespace ModbusControlSpace
             {
                 string s = "ERROR: line " + line.lineNum.ToString() + ": Register " + RegString + ": type (" + FormatString + ") is invalid.";
                 mWorker.ReportProgress(0, s);
-                //textboxLog.AppendText(line.origLine + Environment.NewLine);
+                ++mErrorCount;
                 return null;
             }
 
             bool bIsFloat = (reg.Format == Global.eFormat.Float);
             if (bIsFloat && (reg.Width != 32))
             {
-                string s = "ERROR: line " + line.lineNum.ToString() + ": Register " + RegString + ": float register size (" + reg.Width.ToString() + ") is not 32-bit.";
+                string s = "ERROR: line " + line.lineNum.ToString() + ": Register " + RegString + ": float register width (" + reg.Width.ToString() + ") is not 32-bit.";
                 mWorker.ReportProgress(0, s);
-                //textboxLog.AppendText(line.origLine + Environment.NewLine);
+                ++mErrorCount;
                 return null;
             }
             reg.ValueString = ValueString;
-            Global.eType Type;
-            if (CValueToString.StringToValue(ValueString, bIsFloat, reg.Width, 0, out reg.Value, out Type) == false)
+            try
+            {
+                int regCount = reg.Width / 16;
+                reg.aRegValue = CValueToString.ValueStringToInt16Registers(ValueString, regCount, bIsFloat, 0);
+            }
+            catch
             {
                 string s = "ERROR: line " + line.lineNum.ToString() + ": Register " + RegString + ": value (" + ValueString + ") is invalid.";
                 mWorker.ReportProgress(0, s);
-                //textboxLog.AppendText(line.origLine + Environment.NewLine);
+                ++mErrorCount;
                 return null;
             }
 
@@ -383,7 +382,7 @@ namespace ModbusControlSpace
             mParent.MainPollingIsEnabled = true;
         }
 
-        private bool WriteImportLine(UInt32 Reg, int Size, string Description, Global.eFormat Format, bool isReadable, bool isWriteable, string ValueString)
+        private bool WriteImportLine(UInt32 Reg, int Width, string Description, Global.eFormat Format, bool isReadable, bool isWriteable, string ValueString)
         {
             // output 1 import line, all register info, and value
 
@@ -392,14 +391,14 @@ namespace ModbusControlSpace
             // make RW string
             string RWstring = (isReadable ? "r" : "") + (isWriteable ? "w" : "");
             // make output string
-            string s = Reg + ";" + Size + ";\"" + Description + "\";" + RWstring + ";" + Format + ";" + ValueString;
+            string s = Reg + ";" + Width + ";\"" + Description + "\";" + RWstring + ";" + Format + ";" + ValueString;
 
             mWorker.ReportProgress(0, "Write: " + s);
 
             return true;
         }
 
-        private bool WriteImportLineError(UInt32 Reg, int Size, string Description, Global.eFormat Format, bool isReadable, bool isWriteable, string ValueString, string Error)
+        private bool WriteImportLineError(UInt32 Reg, int Width, string Description, Global.eFormat Format, bool isReadable, bool isWriteable, string ValueString, string Error)
         {
             // output 1 import line, all register info, and error message
 
@@ -408,7 +407,7 @@ namespace ModbusControlSpace
             // make RW string
             string RWstring = (isReadable ? "r" : "") + (isWriteable ? "w" : "");
             // make output string
-            string s = Reg + ";" + Size + ";\"" + Description + "\";" + RWstring + ";" + Format + ";" + ValueString + "   >> ERROR: " + Error;
+            string s = Reg + ";" + Width + ";\"" + Description + "\";" + RWstring + ";" + Format + ";" + ValueString + "   >> ERROR: " + Error;
 
             mWorker.ReportProgress(0, "Write: " + s);
 
@@ -482,7 +481,6 @@ namespace ModbusControlSpace
                 imp.lineNum = csvreader.LineNumber;
                 //imp.tabName = currentTabName;
                 imp.fields = fields;
-                //imp.origLine = csvreader.CurrentLine;
                 ImportList.Add(imp);                // got a data line
             }
 
@@ -506,10 +504,10 @@ namespace ModbusControlSpace
             return false;
         }
 
-        private bool GetSize(string text, out int size)
+        private bool GetWidth(string text, out int width)
         {
             // allow 16, 32
-            return int.TryParse(text, out size) && ((size == 16) || (size == 32));
+            return int.TryParse(text, out width) && ((width == 16) || (width == 32));
         }
 
         private bool GetDescr(string text, out string descr)

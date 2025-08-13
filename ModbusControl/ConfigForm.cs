@@ -347,7 +347,7 @@ namespace ModbusControlSpace
             comboSerialPort.LoadWithFirstSerialPort();
         }
 
-        private void comboConnection_SelectedIndexChanged(object sender, EventArgs e)
+        private void ComboConnection_SelectedIndexChanged(object sender, EventArgs e)
         {
             groupBoxSerialInterface.Enabled = (comboConnection.SelectedIndex == (int)Global.eConnectionType.SerialRTU);
             groupBoxTcpInterface.Enabled = ((comboConnection.SelectedIndex == (int)Global.eConnectionType.ModbusTcp) || (comboConnection.SelectedIndex == (int)Global.eConnectionType.RtuOverTcp));
@@ -366,7 +366,7 @@ namespace ModbusControlSpace
             return result;
         }
 
-        private void buttonApply_Click(object sender, EventArgs e)
+        private void ButtonApply_Click(object sender, EventArgs e)
         {
             if (this.OnApply != null)
             {
@@ -374,21 +374,6 @@ namespace ModbusControlSpace
             }
         }
 
-        private bool IsAnyOverride()
-        {
-            return (picConnectionTypeIsOverride.Visible
-                || picPortIsOverride.Visible
-                || picBaudrateIsOverride.Visible
-                || picParityIsOverride.Visible
-                || picEndofmessagetimeoutIsOverride.Visible
-                || picOnewireechosuppressionIsOverride.Visible
-                || picIPAddressIsOverride.Visible
-                || picIPPortIsOverride.Visible
-                || picSlaveIDIsOverride.Visible
-                || picMaxFrameSizeIsOverride.Visible
-                || picResponsetimeoutIsOverride.Visible
-                || picInterframedelayIsOverride.Visible
-                || picSamplerateIsOverride.Visible);
-        }
+  
     }
 }

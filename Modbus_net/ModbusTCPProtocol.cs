@@ -28,12 +28,11 @@ namespace Modbus_net
         public uint ConnectionClosedBecauseOfResponseErrorCount { get; set; }
 
         // events
-
-#pragma warning disable 0067
+#pragma warning disable 67
         public event LogCallbackString OnInfo;
         public event LogCallbackString OnWarning;
         public event LogCallbackString OnError;
-#pragma warning restore 0067
+#pragma warning restore 67
 
         // implementation
 
@@ -140,7 +139,7 @@ namespace Modbus_net
             // expectedlength is not used with TCP, the MBAP header has the length
 
             byte[] header = new byte[6];    // buffer for MBAP header
-            response = new byte[1000];       // buffer for response
+            response = new byte[3000];       // buffer for response
             int readCnt = 0;                // nr of bytes received
 
             // get MBAP header, always 6 bytes

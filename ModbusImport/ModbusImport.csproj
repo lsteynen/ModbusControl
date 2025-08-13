@@ -79,9 +79,6 @@
     <Compile Include="..\ModbusControl\Global.cs">
       <Link>Global.cs</Link>
     </Compile>
-    <Compile Include="..\ModbusControl\ModbusEndians.cs">
-      <Link>ModbusEndians.cs</Link>
-    </Compile>
     <Compile Include="..\ModbusControl\ProjectMan.cs">
       <Link>ProjectMan.cs</Link>
     </Compile>
@@ -115,8 +112,11 @@
     <Compile Include="..\Modbus_net\TcpChannel.cs">
       <Link>Modbus_net\TcpChannel.cs</Link>
     </Compile>
+    <Compile Include="..\shared\Converts.cs">
+      <Link>Shared\Converts.cs</Link>
+    </Compile>
     <Compile Include="..\Shared\Logger.cs">
-      <Link>Logger.cs</Link>
+      <Link>Shared\Logger.cs</Link>
     </Compile>
     <Compile Include="CommandlineProc.cs" />
     <Compile Include="Import.cs" />

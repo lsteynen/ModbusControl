@@ -67,7 +67,7 @@ namespace ModbusImport
             public bool isWriteable;
             public Global.eFormat Format;
             public string ValueString;
-            public Int32 Value;
+            public Int16[] aRegValue;
 
             // constructor
             public Register()
@@ -80,7 +80,7 @@ namespace ModbusImport
                 isWriteable = true;
                 Format = Global.eFormat.Int;
                 ValueString = null;
-                Value = 0;
+                aRegValue =  null;
             }
         };
 
@@ -338,15 +338,9 @@ namespace ModbusImport
                     return;
                 }
 
-                // convert format to type
-                Global.eType Type = Global.ConvertFormatToType(reg.Format);
-
-                // create the modbus values to write
-                Int16[] Data = Endians.ConvertValueToShorts(reg.Value, Type, (reg.Width / 16));
-
                 // write
-                // width from bits to registers
-                ModbusProtocol.Result result = mModbus.MifWriteHoldingRegistersAuto(mSlaveAddress, reg.RegOffset, (ushort)(reg.Width / 16), Data);
+                int regSize = reg.Width / 16;
+                ModbusProtocol.Result result = mModbus.MifWriteHoldingRegistersAuto(mSlaveAddress, reg.RegOffset, (UInt16)regSize, reg.aRegValue);
 
                 if (result == ModbusProtocol.Result.SUCCESS)
                 {
@@ -372,10 +366,12 @@ namespace ModbusImport
 
         private Register ConvertLineToRegister(ImportLine line)
         {
+			// we accept 2, 3, 4 ,5, or 6 fields
+			
             // init default value strings
             // then process all fields
             string RegString = "";
-            string SizeString = "16";
+            string WidthString = "16";
             string DescriptionString = "";
             string RwString = "rw";
             string FormatString = "int";
@@ -391,14 +387,14 @@ namespace ModbusImport
             {
                 // Assume: Reg;Size;Value
                 RegString = line.fields[0];
-                SizeString = line.fields[1];
+                WidthString = line.fields[1];
                 ValueString = line.fields[2];
             }
             else if (line.fields.Count == 4)
             {
                 // Assume: Reg;Size;Description;Value
                 RegString = line.fields[0];
-                SizeString = line.fields[1];
+                WidthString = line.fields[1];
                 DescriptionString = line.fields[2];
                 ValueString = line.fields[3];
             }
@@ -406,7 +402,7 @@ namespace ModbusImport
             {
                 // Assume: Reg;Size;Description;Rw;Value
                 RegString = line.fields[0];
-                SizeString = line.fields[1];
+                WidthString = line.fields[1];
                 DescriptionString = line.fields[2];
                 RwString = line.fields[3];
                 ValueString = line.fields[4];
@@ -415,7 +411,7 @@ namespace ModbusImport
             {
                 // Assume: Reg;Size;Description;Rw;Type;Value
                 RegString = line.fields[0];
-                SizeString = line.fields[1];
+                WidthString = line.fields[1];
                 DescriptionString = line.fields[2];
                 RwString = line.fields[3];
                 FormatString = line.fields[4];
@@ -436,9 +432,9 @@ namespace ModbusImport
                 throw new FileException(s);
             }
 
-            if (GetSize(SizeString, out reg.Width) == false)
+            if (GetWidth(WidthString, out reg.Width) == false)
             {
-                string s = "Line " + line.lineNum.ToString() + ": Register " + RegString + ": size (" + SizeString + ") is invalid.";
+                string s = "Line " + line.lineNum.ToString() + ": Register " + RegString + ": size (" + WidthString + ") is invalid.";
                 throw new FileException(s);
             }
 
@@ -463,8 +459,12 @@ namespace ModbusImport
                 throw new FileException(s);
             }
             reg.ValueString = ValueString;
-            Global.eType Type;
-            if (CValueToString.StringToValue(ValueString, bIsFloat, reg.Width, 0, out reg.Value, out Type) == false)
+            try
+            {
+                int regCount = reg.Width / 16;
+                reg.aRegValue = CValueToString.ValueStringToInt16Registers(ValueString, regCount, bIsFloat, 0);
+            }
+            catch
             {
                 string s = "Line " + line.lineNum.ToString() + ": Register " + RegString + ": value (" + ValueString + ") is invalid.";
                 throw new FileException(s);
@@ -521,10 +521,10 @@ namespace ModbusImport
             return false;
         }
 
-        private bool GetSize(string text, out int size)
+        private bool GetWidth(string text, out int width)
         {
             // allow 16, 32
-            return int.TryParse(text, out size) && ((size == 16) || (size == 32));
+            return int.TryParse(text, out width) && ((width == 16) || (width == 32));
         }
 
         private bool GetDescr(string text, out string descr)

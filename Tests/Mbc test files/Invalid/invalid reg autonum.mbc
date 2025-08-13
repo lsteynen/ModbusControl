@@ -1,0 +1,185 @@
+<modbuscontrol>
+	<size>
+		<width>600</width>
+		<height>400</height>
+	</size>
+	<modbus>
+		<port>com1</port>
+		<baudrate>9600</baudrate>
+		<parity>none</parity>
+		<slaveid>1</slaveid>
+		<samplerate>500</samplerate>
+		<holdingregisterstart>40001</holdingregisterstart>
+		<writeholdingregisterfc>alternate</writeholdingregisterfc>
+	</modbus>
+	<tab>
+		<name>Map Customer</name>
+		<var>
+			<reg>40001</reg>
+			<text>Data level</text>
+			<type>uint16</type>
+			<rw>r</rw>
+		</var>
+		<var>
+			<reg>*</reg>
+			<text>Software version</text>
+			<type>uint16</type>
+			<rw>r</rw>
+		</var>
+	</tab>
+	<tab>
+		<name>Map RnD</name>
+		<var>
+			<reg>*</reg>
+			<text>Digital inputs</text>
+			<type>uint16</type>
+			<rw>r</rw>
+			<field>
+				<pos>0</pos>
+				<text>CTS</text>
+			</field>
+			<field>
+				<pos>1</pos>
+				<text>CD</text>
+			</field>
+			<field>
+				<pos>2</pos>
+				<text>DSR</text>
+			</field>
+			<field>
+				<pos>3</pos>
+				<text>RING</text>
+			</field>
+			<field>
+				<pos>4</pos>
+				<text>Input 0</text>
+			</field>
+			<field>
+				<pos>5</pos>
+				<text>Input 1</text>
+			</field>
+			<field>
+				<pos>6</pos>
+				<text>Input 2</text>
+			</field>
+			<field>
+				<pos>7</pos>
+				<text>Input 3</text>
+			</field>
+			<field>
+				<pos>8</pos>
+				<text>Input 4</text>
+			</field>
+			<field>
+				<pos>9</pos>
+				<text>Input 5</text>
+			</field>
+			<field>
+				<pos>10</pos>
+				<text>Input 6</text>
+			</field>
+			<field>
+				<pos>11</pos>
+				<text>IO Board ID</text>
+			</field>
+			<field>
+				<pos>12</pos>
+				<text>Encoder switch</text>
+			</field>
+			<field>
+				<pos>13</pos>
+				<text>+5V Detect</text>
+			</field>
+		</var>
+		<var>
+			<reg>*</reg>
+			<text>VBat</text>
+			<type>uint16</type>
+			<rw>r</rw>
+		</var>
+		<var>
+			<reg>*</reg>
+			<text>Encoder Direction</text>
+			<type>int16</type>
+			<rw>r</rw>
+		</var>
+		<var>
+			<reg>*</reg>
+			<text>RTC Seconds</text>
+			<type>uint16</type>
+			<rw>r</rw>
+		</var>
+		<var>
+			<reg>*</reg>
+			<text>RTC Minutes</text>
+			<type>uint16</type>
+			<rw>r</rw>
+		</var>
+		<var>
+			<reg>*</reg>
+			<text>RTC Hours</text>
+			<type>uint16</type>
+			<rw>r</rw>
+		</var>
+		<var>
+			<reg>*</reg>
+			<text>RTC WeekDay</text>
+			<type>uint16</type>
+			<rw>r</rw>
+		</var>
+		<var>
+			<reg>*</reg>
+			<text>RTC Day</text>
+			<type>uint16</type>
+			<rw>r</rw>
+		</var>
+		<var>
+			<reg>*</reg>
+			<text>RTC Month</text>
+			<type>uint16</type>
+			<rw>r</rw>
+		</var>
+		<var>
+			<reg>*</reg>
+			<text>RTC Year</text>
+			<type>uint16</type>
+			<rw>r</rw>
+		</var>
+		<var>
+			<reg>40023</reg>
+			<text>General Error</text>
+			<type>uint16</type>
+			<rw>r</rw>
+		</var>
+		<var>
+			<reg>*</reg>
+			<text>GSM Error</text>
+			<type>uint16</type>
+			<rw>r</rw>
+		</var>
+		<var>
+			<reg>*</reg>
+			<text>GSM SIM State</text>
+			<type>uint16</type>
+			<rw>r</rw>
+		</var>
+		<var>
+			<reg>*</reg>
+			<text>GSM RSSI Value</text>
+			<type>uint16</type>
+			<rw>r</rw>
+		</var>
+		<var>
+			<reg>40151</reg>
+			<text>Start test 0=Disp 1=GSM 2=SMS 3=Data</text>
+			<type>uint16</type>
+			<rw>w</rw>
+		</var>
+		<var>
+			<reg>40152</reg>
+			<text>Allow sleep</text>
+			<type>uint16</type>
+			<rw>w</rw>
+		</var>
+	</tab>
+</modbuscontrol>
