@@ -1,6 +1,6 @@
 ﻿namespace ModbusControlSpace
 {
-    partial class CustomModbusCommand
+    partial class CustomQueries
     {
         /// <summary>
         /// Required designer variable.
@@ -29,113 +29,285 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CustomModbusCommand));
-            this.label4 = new System.Windows.Forms.Label();
-            this.textboxCommand = new System.Windows.Forms.TextBox();
-            this.buttonSend = new System.Windows.Forms.Button();
-            this.label1 = new System.Windows.Forms.Label();
-            this.textboxResult = new System.Windows.Forms.TextBox();
-            this.buttonClear = new System.Windows.Forms.Button();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CustomQueries));
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            this.panel1 = new System.Windows.Forms.Panel();
+            this.butDeleteRows = new System.Windows.Forms.Button();
+            this.butAddRow = new System.Windows.Forms.Button();
+            this.butClearResults = new System.Windows.Forms.Button();
+            this.butSendAll = new System.Windows.Forms.Button();
+            this.butRunTests = new System.Windows.Forms.Button();
+            this.butMoveDown = new System.Windows.Forms.Button();
+            this.butMoveUp = new System.Windows.Forms.Button();
+            this.chkMultilineRows = new System.Windows.Forms.CheckBox();
+            this.grid = new LST.Helpers.MyDataGridView();
+            this.SendColumn = new System.Windows.Forms.DataGridViewButtonColumn();
+            this.SlaveidColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.CommandColumn = new System.Windows.Forms.DataGridViewComboBoxColumn();
+            this.RegisterColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.QtyColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.FormatColumn = new System.Windows.Forms.DataGridViewComboBoxColumn();
+            this.DataColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ResultColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.CommentColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.CountColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.panel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.grid)).BeginInit();
             this.SuspendLayout();
             // 
-            // label4
+            // panel1
             // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(14, 10);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(323, 26);
-            this.label4.TabIndex = 0;
-            this.label4.Text = "Enter modbus command in RTU form, hex bytes, space separated:\r\n(First byte is sla" +
-    "ve ID. MBAP header or CRC is added automatically)";
+            this.panel1.Controls.Add(this.butDeleteRows);
+            this.panel1.Controls.Add(this.butAddRow);
+            this.panel1.Controls.Add(this.butClearResults);
+            this.panel1.Controls.Add(this.butSendAll);
+            this.panel1.Controls.Add(this.butRunTests);
+            this.panel1.Controls.Add(this.butMoveDown);
+            this.panel1.Controls.Add(this.butMoveUp);
+            this.panel1.Controls.Add(this.chkMultilineRows);
+            this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panel1.Location = new System.Drawing.Point(0, 0);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(1003, 29);
+            this.panel1.TabIndex = 8;
             // 
-            // textboxCommand
+            // butDeleteRows
             // 
-            this.textboxCommand.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.textboxCommand.Location = new System.Drawing.Point(16, 39);
-            this.textboxCommand.Multiline = true;
-            this.textboxCommand.Name = "textboxCommand";
-            this.textboxCommand.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.textboxCommand.Size = new System.Drawing.Size(516, 60);
-            this.textboxCommand.TabIndex = 2;
-            this.textboxCommand.Text = "01 03 00 00 00 0A";
-            this.toolTip1.SetToolTip(this.textboxCommand, "Enter the raw modbus command in RTU format, hex bytes, space separated. \r\nThe MBA" +
-        "P header or CRC are added automatically by the transport layers as needed.\r\nFor " +
-        "example: 01 03 00 00 00 0A");
+            this.butDeleteRows.Location = new System.Drawing.Point(246, 4);
+            this.butDeleteRows.Name = "butDeleteRows";
+            this.butDeleteRows.Size = new System.Drawing.Size(72, 21);
+            this.butDeleteRows.TabIndex = 7;
+            this.butDeleteRows.Text = "Delete row";
+            this.butDeleteRows.UseVisualStyleBackColor = true;
+            this.butDeleteRows.Click += new System.EventHandler(this.ButDeleteRows_Click);
             // 
-            // buttonSend
+            // butAddRow
             // 
-            this.buttonSend.Location = new System.Drawing.Point(16, 105);
-            this.buttonSend.Name = "buttonSend";
-            this.buttonSend.Size = new System.Drawing.Size(150, 23);
-            this.buttonSend.TabIndex = 3;
-            this.buttonSend.Text = "Send";
-            this.toolTip1.SetToolTip(this.buttonSend, "Send the command entered above");
-            this.buttonSend.UseVisualStyleBackColor = true;
-            this.buttonSend.Click += new System.EventHandler(this.buttonSend_Click);
+            this.butAddRow.Location = new System.Drawing.Point(168, 4);
+            this.butAddRow.Name = "butAddRow";
+            this.butAddRow.Size = new System.Drawing.Size(72, 21);
+            this.butAddRow.TabIndex = 6;
+            this.butAddRow.Text = "Add row";
+            this.butAddRow.UseVisualStyleBackColor = true;
+            this.butAddRow.Click += new System.EventHandler(this.ButAddRow_Click);
             // 
-            // label1
+            // butClearResults
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(14, 140);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(279, 26);
-            this.label1.TabIndex = 5;
-            this.label1.Text = "Result log:\r\n(Response first byte is slave ID, no MBAP header or CRC)";
+            this.butClearResults.Location = new System.Drawing.Point(601, 3);
+            this.butClearResults.Name = "butClearResults";
+            this.butClearResults.Size = new System.Drawing.Size(89, 23);
+            this.butClearResults.TabIndex = 5;
+            this.butClearResults.Text = "Clear all results";
+            this.butClearResults.UseVisualStyleBackColor = true;
+            this.butClearResults.Click += new System.EventHandler(this.ButClearResults_Click);
             // 
-            // textboxResult
+            // butSendAll
             // 
-            this.textboxResult.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.textboxResult.Location = new System.Drawing.Point(17, 169);
-            this.textboxResult.Multiline = true;
-            this.textboxResult.Name = "textboxResult";
-            this.textboxResult.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.textboxResult.Size = new System.Drawing.Size(516, 181);
-            this.textboxResult.TabIndex = 6;
+            this.butSendAll.Location = new System.Drawing.Point(511, 3);
+            this.butSendAll.Name = "butSendAll";
+            this.butSendAll.Size = new System.Drawing.Size(75, 23);
+            this.butSendAll.TabIndex = 4;
+            this.butSendAll.Text = "Send all";
+            this.butSendAll.UseVisualStyleBackColor = true;
+            this.butSendAll.Click += new System.EventHandler(this.ButSendAll_Click);
             // 
-            // buttonClear
+            // butRunTests
             // 
-            this.buttonClear.Location = new System.Drawing.Point(172, 105);
-            this.buttonClear.Name = "buttonClear";
-            this.buttonClear.Size = new System.Drawing.Size(75, 23);
-            this.buttonClear.TabIndex = 4;
-            this.buttonClear.Text = "Clear log";
-            this.toolTip1.SetToolTip(this.buttonClear, "Clear the result log window");
-            this.buttonClear.UseVisualStyleBackColor = true;
-            this.buttonClear.Click += new System.EventHandler(this.buttonClear_Click);
+            this.butRunTests.Location = new System.Drawing.Point(708, 3);
+            this.butRunTests.Name = "butRunTests";
+            this.butRunTests.Size = new System.Drawing.Size(75, 23);
+            this.butRunTests.TabIndex = 3;
+            this.butRunTests.Text = "Run tests";
+            this.butRunTests.UseVisualStyleBackColor = true;
+            this.butRunTests.Visible = false;
+            this.butRunTests.Click += new System.EventHandler(this.ButRunTests_Click);
             // 
-            // CustomModbusCommand
+            // butMoveDown
+            // 
+            this.butMoveDown.Location = new System.Drawing.Point(90, 3);
+            this.butMoveDown.Name = "butMoveDown";
+            this.butMoveDown.Size = new System.Drawing.Size(72, 21);
+            this.butMoveDown.TabIndex = 2;
+            this.butMoveDown.Text = "Move down";
+            this.butMoveDown.UseVisualStyleBackColor = true;
+            this.butMoveDown.Click += new System.EventHandler(this.ButMoveDown_Click);
+            // 
+            // butMoveUp
+            // 
+            this.butMoveUp.Location = new System.Drawing.Point(12, 4);
+            this.butMoveUp.Name = "butMoveUp";
+            this.butMoveUp.Size = new System.Drawing.Size(72, 21);
+            this.butMoveUp.TabIndex = 1;
+            this.butMoveUp.Text = "Move up";
+            this.butMoveUp.UseVisualStyleBackColor = true;
+            this.butMoveUp.Click += new System.EventHandler(this.ButMoveUp_Click);
+            // 
+            // chkMultilineRows
+            // 
+            this.chkMultilineRows.AutoSize = true;
+            this.chkMultilineRows.Location = new System.Drawing.Point(324, 7);
+            this.chkMultilineRows.Name = "chkMultilineRows";
+            this.chkMultilineRows.Size = new System.Drawing.Size(176, 17);
+            this.chkMultilineRows.TabIndex = 0;
+            this.chkMultilineRows.Text = "Multiline rows with auto row size";
+            this.chkMultilineRows.UseVisualStyleBackColor = true;
+            this.chkMultilineRows.CheckedChanged += new System.EventHandler(this.ChkMultilineRows_CheckedChanged);
+            // 
+            // grid
+            // 
+            this.grid.AllowUserToAddRows = false;
+            this.grid.AllowUserToDeleteRows = false;
+            this.grid.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+            this.grid.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.DisplayedCellsExceptHeaders;
+            this.grid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.grid.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.SendColumn,
+            this.SlaveidColumn,
+            this.CommandColumn,
+            this.RegisterColumn,
+            this.QtyColumn,
+            this.FormatColumn,
+            this.DataColumn,
+            this.ResultColumn,
+            this.CommentColumn,
+            this.CountColumn});
+            this.grid.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.grid.Location = new System.Drawing.Point(0, 29);
+            this.grid.Margin = new System.Windows.Forms.Padding(2);
+            this.grid.Name = "grid";
+            this.grid.RowHeadersVisible = false;
+            this.grid.RowTemplate.Height = 23;
+            this.grid.Size = new System.Drawing.Size(1003, 563);
+            this.grid.TabIndex = 7;
+            this.grid.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.MyDataGridView1_CellContentClick);
+            // 
+            // SendColumn
+            // 
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            this.SendColumn.DefaultCellStyle = dataGridViewCellStyle1;
+            this.SendColumn.FillWeight = 50F;
+            this.SendColumn.HeaderText = "Send";
+            this.SendColumn.Name = "SendColumn";
+            this.SendColumn.Text = "Send";
+            this.SendColumn.UseColumnTextForButtonValue = true;
+            // 
+            // SlaveidColumn
+            // 
+            this.SlaveidColumn.FillWeight = 20F;
+            this.SlaveidColumn.HeaderText = "SlaveID";
+            this.SlaveidColumn.Name = "SlaveidColumn";
+            // 
+            // CommandColumn
+            // 
+            this.CommandColumn.DropDownWidth = 220;
+            this.CommandColumn.HeaderText = "Command";
+            this.CommandColumn.Items.AddRange(new object[] {
+            "R input registers (FC 04)",
+            "R holding registers (FC 03)",
+            "W single holding register (FC 06)",
+            "W multiple holding registers (FC 10)",
+            "R discrete inputs (FC 02)",
+            "R coils (FC 01)",
+            "W single coil (FC 05)",
+            "W multiple coils (FC 0F)",
+            "Custom hex query"});
+            this.CommandColumn.Name = "CommandColumn";
+            this.CommandColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+            // 
+            // RegisterColumn
+            // 
+            this.RegisterColumn.FillWeight = 50F;
+            this.RegisterColumn.HeaderText = "Register";
+            this.RegisterColumn.Name = "RegisterColumn";
+            // 
+            // QtyColumn
+            // 
+            this.QtyColumn.FillWeight = 50F;
+            this.QtyColumn.HeaderText = "Qty";
+            this.QtyColumn.Name = "QtyColumn";
+            // 
+            // FormatColumn
+            // 
+            this.FormatColumn.FillWeight = 50F;
+            this.FormatColumn.HeaderText = "Format";
+            this.FormatColumn.Items.AddRange(new object[] {
+            "Int16",
+            "UInt16",
+            "Hex16",
+            "Int32",
+            "UInt32",
+            "Hex32",
+            "HexBytes",
+            "Bits"});
+            this.FormatColumn.Name = "FormatColumn";
+            this.FormatColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+            // 
+            // DataColumn
+            // 
+            this.DataColumn.HeaderText = "Data";
+            this.DataColumn.Name = "DataColumn";
+            // 
+            // ResultColumn
+            // 
+            this.ResultColumn.FillWeight = 300F;
+            this.ResultColumn.HeaderText = "Result";
+            this.ResultColumn.Name = "ResultColumn";
+            this.ResultColumn.ReadOnly = true;
+            // 
+            // CommentColumn
+            // 
+            this.CommentColumn.HeaderText = "Comment";
+            this.CommentColumn.Name = "CommentColumn";
+            // 
+            // CountColumn
+            // 
+            this.CountColumn.FillWeight = 40F;
+            this.CountColumn.HeaderText = "Count";
+            this.CountColumn.Name = "CountColumn";
+            this.CountColumn.ReadOnly = true;
+            this.CountColumn.Visible = false;
+            // 
+            // CustomQueries
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(544, 362);
-            this.Controls.Add(this.buttonClear);
-            this.Controls.Add(this.textboxResult);
-            this.Controls.Add(this.label1);
-            this.Controls.Add(this.label4);
-            this.Controls.Add(this.textboxCommand);
-            this.Controls.Add(this.buttonSend);
+            this.ClientSize = new System.Drawing.Size(1003, 592);
+            this.Controls.Add(this.grid);
+            this.Controls.Add(this.panel1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.Name = "CustomModbusCommand";
-            this.Text = "Custom modbus command";
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.CustomModbusCommand_FormClosing);
-            this.Shown += new System.EventHandler(this.CustomModbusCommand_Shown);
+            this.Name = "CustomQueries";
+            this.Text = "Custom modbus queries";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.CustomQueries_FormClosing);
+            this.Shown += new System.EventHandler(this.CustomQueries_Shown);
+            this.panel1.ResumeLayout(false);
+            this.panel1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.grid)).EndInit();
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
         #endregion
-
-        private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.TextBox textboxCommand;
-        private System.Windows.Forms.Button buttonSend;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.TextBox textboxResult;
-        private System.Windows.Forms.Button buttonClear;
         private System.Windows.Forms.ToolTip toolTip1;
+        private LST.Helpers.MyDataGridView grid;
+        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.CheckBox chkMultilineRows;
+        private System.Windows.Forms.Button butMoveUp;
+        private System.Windows.Forms.Button butMoveDown;
+        private System.Windows.Forms.Button butRunTests;
+        private System.Windows.Forms.Button butSendAll;
+        private System.Windows.Forms.Button butClearResults;
+        private System.Windows.Forms.Button butAddRow;
+        private System.Windows.Forms.Button butDeleteRows;
+        private System.Windows.Forms.DataGridViewButtonColumn SendColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn SlaveidColumn;
+        private System.Windows.Forms.DataGridViewComboBoxColumn CommandColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn RegisterColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn QtyColumn;
+        private System.Windows.Forms.DataGridViewComboBoxColumn FormatColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn DataColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn ResultColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn CommentColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn CountColumn;
     }
 }
