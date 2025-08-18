@@ -30,18 +30,18 @@ namespace ModbusImport
 
     public class Import
     {
-        public byte mSlaveAddress;
         public ModbusInterface mModbus;
+        public byte mSlaveAddress;
         private const int mSleeptime = 10;
         public string mFilename;
         public bool Verbose;
         public bool ContinueOnError = false;
         public List<string> TabsSelectList;      // List of selected tab names to export, in this order
+        public int mWrittenCount;
+        public int mNotWriteableCount;
         public int mFileErrorCount;
         public int mCommErrorCount;
-        public int mNotWriteableCount;
-        public int mWrittenCount;
-
+        
         private class ImportLine
         {
             public int lineNum;
@@ -428,13 +428,13 @@ namespace ModbusImport
 
             if (GetReg(RegString, out reg.Reg, out reg.RegOffset) == false)
             {
-                string s = "Line " + line.lineNum.ToString() + ": Register number (" + RegString + ") is invalid.";
+                string s = "Line " + line.lineNum.ToString() + ": Register number '" + RegString + "' is invalid.";
                 throw new FileException(s);
             }
 
             if (GetWidth(WidthString, out reg.Width) == false)
             {
-                string s = "Line " + line.lineNum.ToString() + ": Register " + RegString + ": size (" + WidthString + ") is invalid.";
+                string s = "Line " + line.lineNum.ToString() + ": Register " + RegString + ": width '" + WidthString + "' is invalid.";
                 throw new FileException(s);
             }
 
@@ -442,20 +442,20 @@ namespace ModbusImport
 
             if (GetReadWriteFlags(RwString, out reg.isReadable, out reg.isWriteable) == false)
             {
-                string s = "Line " + line.lineNum.ToString() + ": Register " + RegString + ": r/w definition (" + RwString + ") is invalid.";
+                string s = "Line " + line.lineNum.ToString() + ": Register " + RegString + ": r/w definition '" + RwString + "' is invalid.";
                 throw new FileException(s);
             }
 
             if (GetFormat(FormatString, out reg.Format) == false)
             {
-                string s = "Line " + line.lineNum.ToString() + ": Register " + RegString + ": type (" + FormatString + ") is invalid.";
+                string s = "Line " + line.lineNum.ToString() + ": Register " + RegString + ": type '" + FormatString + "' is invalid.";
                 throw new FileException(s);
             }
 
             bool bIsFloat = (reg.Format == Global.eFormat.Float);
             if (bIsFloat && (reg.Width != 32))
             {
-                string s = "Line " + line.lineNum.ToString() + ": Register " + RegString + ": float register size (" + reg.Width.ToString() + ") is not 32-bit.";
+                string s = "Line " + line.lineNum.ToString() + ": Register " + RegString + ": float register width '" + reg.Width.ToString() + "' is not 32-bit.";
                 throw new FileException(s);
             }
             reg.ValueString = ValueString;
@@ -466,7 +466,7 @@ namespace ModbusImport
             }
             catch
             {
-                string s = "Line " + line.lineNum.ToString() + ": Register " + RegString + ": value (" + ValueString + ") is invalid.";
+                string s = "Line " + line.lineNum.ToString() + ": Register " + RegString + ": value '" + ValueString + "' is invalid.";
                 throw new FileException(s);
             }
 
