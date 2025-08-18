@@ -1446,8 +1446,10 @@ namespace LST.ModbusGridView
         /// </summary>
         private void grid_EditingControlShowing(object sender, DataGridViewEditingControlShowingEventArgs e)
         {
+            // edit in the value column?
             if (grid.CurrentCell.ColumnIndex == (int)eGridColIndex.Value)
             {
+                // is it a EnumValueEditingControl?
                 EnumValueEditingControl cb = e.Control as EnumValueEditingControl;
                 if (cb != null)
                 {
@@ -1477,15 +1479,26 @@ namespace LST.ModbusGridView
                             }
                         }
                     }
-                }
 
-                if (cb != null)
-                {
                     // got a buffered key?
                     // then send it to the editing control
                     if (editingBufferedChar > 0)
                     {
                         PostMessage(cb.Handle, WM_CHAR, (int)editingBufferedChar, 0);
+                        editingBufferedChar = (char)0;
+                    }
+                }
+
+                // is it a TextBoxEditingControl?
+                DataGridViewTextBoxEditingControl ed = e.Control as DataGridViewTextBoxEditingControl;
+                if (ed != null)
+                {
+                    // got a buffered key?
+                    // then send it to the editing control
+                    if (editingBufferedChar > 0)
+                    {
+                        // then send it to the editing control
+                        PostMessage(ed.Handle, WM_CHAR, (int)editingBufferedChar, 0);
                         editingBufferedChar = (char)0;
                     }
                 }
