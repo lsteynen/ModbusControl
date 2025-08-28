@@ -339,6 +339,8 @@ namespace LST.ModbusGridView
         /// </summary>
         public ModbusGridView()
         {
+            isLoading = true;
+
             InitializeComponent();
 
             // create items list
@@ -636,6 +638,8 @@ namespace LST.ModbusGridView
             // after loading, all rows are visible
             // must hide children of collapsed parents 
             UpdateDataExpandedCollapsed();
+
+            isLoading = false;
         }
 
         private string getRowDebuginfoStr(int dataRowIndex)
@@ -1116,7 +1120,7 @@ namespace LST.ModbusGridView
         /// </summary>
         private void UpdateDataExpandedCollapsed()
         {
-            Debug.Print("UpdateExpandedCollapsed()");
+            //Debug.Print("UpdateExpandedCollapsed()");
 
             // Check all parents, if collapsed: hide its children and grandchildren
 
@@ -1215,7 +1219,7 @@ namespace LST.ModbusGridView
 
         private void HandleRegCellClick(DataGridViewCellMouseEventArgs e)
         {
-            Debug.Print("HandleRegCellClick() on Reg column, e.RowIndex=" + e.RowIndex.ToString());
+            //Debug.Print("HandleRegCellClick() on Reg column, e.RowIndex=" + e.RowIndex.ToString());
 
             // get datatable row from datagridview row
             DataRowView drv = grid.Rows[e.RowIndex].DataBoundItem as DataRowView;
@@ -1224,7 +1228,7 @@ namespace LST.ModbusGridView
             int Flags = (int)dRow[(int)dtColIndex.Flags];
             if ((Flags & FlagHasChildren) == FlagHasChildren)
             {
-                Debug.Print(" isExpandable");
+                //Debug.Print(" isExpandable");
                 int level = (int)dRow[(int)dtColIndex.RowLevel];
 
                 /* 
@@ -1457,7 +1461,7 @@ namespace LST.ModbusGridView
                     EnumValueCell c = this.grid.CurrentCell as EnumValueCell;
                     if (c.IsEnum)
                     {
-                        //editingReg and editingRegfield are already set when edit started
+                        // editingReg and editingRegfield are already set when edit started
                         // get the enum dictionary of that register/field
                         Global.CEnum EnumDict = null;
                         if (editingRegfield != null)
@@ -1488,7 +1492,7 @@ namespace LST.ModbusGridView
                         editingBufferedChar = (char)0;
                     }
                 }
-
+                
                 // is it a TextBoxEditingControl?
                 DataGridViewTextBoxEditingControl ed = e.Control as DataGridViewTextBoxEditingControl;
                 if (ed != null)
@@ -1846,9 +1850,9 @@ namespace LST.ModbusGridView
             }
             */
 
-            // get datatable row from datagridview row
-            // datagridrowindex != datatableindex if datagridview rows are invisible
-            DataRow dRow = (grid.Rows[gridRowIndex].DataBoundItem as DataRowView).Row;
+                // get datatable row from datagridview row
+                // datagridrowindex != datatableindex if datagridview rows are invisible
+                DataRow dRow = (grid.Rows[gridRowIndex].DataBoundItem as DataRowView).Row;
 
             //find item in RegList
             FindListItemsByRow(dRow, out editingReg, out editingRegfield);
@@ -1870,22 +1874,22 @@ namespace LST.ModbusGridView
             dRow[(int)dtColIndex.ValueMode] = ValueModeNormal;
 
             // start edit cell
-            Debug.Print("before editingDatarow = dRow");
+            //Debug.Print("before editingDatarow = dRow");
             editingDatarow = dRow;
-            Debug.Print("after editingDatarow = dRow");
+            //Debug.Print("after editingDatarow = dRow");
             return grid.BeginEdit(true);
         }
 
         private void grid_CellBeginEdit(object sender, DataGridViewCellCancelEventArgs e)
         {
-            Debug.Print("grid_CellBeginEdit: e.rowindex=" + e.RowIndex.ToString() + ", grid.rowcount=" + grid.RowCount.ToString() + "/" + grid.Rows.Count.ToString());
+            //Debug.Print("grid_CellBeginEdit: e.rowindex=" + e.RowIndex.ToString() + ", grid.rowcount=" + grid.RowCount.ToString() + "/" + grid.Rows.Count.ToString());
 
             grid.EscapeDetected = false;
         }
 
         private void grid_CellEndEdit(object sender, DataGridViewCellEventArgs e)
         {
-            Debug.Print("grid_CellEndEdit");
+            //Debug.Print("grid_CellEndEdit");
 
             // get datatable row from datagridview row
             // datagridrowindex != datatableindex if datagridview rows are invisible
@@ -2065,9 +2069,9 @@ namespace LST.ModbusGridView
                 }
             }
 
-            Debug.Print("before editingDatarow = null");
+            //Debug.Print("before editingDatarow = null");
             editingDatarow = null;
-            Debug.Print("after editingDatarow = null");
+            //Debug.Print("after editingDatarow = null");
         }
 
         private Int32 InsertBitfieldInValue(UInt32 Value, Int32 BitfieldValue, int Position, int BitWidth)
@@ -2472,7 +2476,7 @@ namespace LST.ModbusGridView
             expandIconWidth = expandIcon.Width;
             expandIconHeight = expandIcon.Height;
 
-            Debug.Print("SetIconSizes(): currentZoomFactor=" + currentZoomFactor.ToString() + ", size=" + size.ToString() + ", iconWidth=" + expandIcon.Width.ToString());
+            //Debug.Print("SetIconSizes(): currentZoomFactor=" + currentZoomFactor.ToString() + ", size=" + size.ToString() + ", iconWidth=" + expandIcon.Width.ToString());
 
         }
 

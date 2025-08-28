@@ -10,6 +10,8 @@ using System.Diagnostics;
 
 using LST.Helpers;
 
+//TODO: customqueries: bij createi 1 lijn van elke type creeren
+
 // Note: Installer maakt geen default settings file, app doet dat bij eerste close.
 // We laden en schrijven de XML files manueel. Als we de class naar een XML file zouden schrijven
 // ontstaat het probleem dat een aantal XML elementen verdwijnen als je even een oudere versie
@@ -25,10 +27,10 @@ namespace ModbusControlSpace
 
         // paths
         public string StoreRoamingDir;
-        //public string StoreLocalDir;
-        public string StoreSharedDir;
         public string StoreRoamingPath;
+        //public string StoreLocalDir;
         //public string StoreLocalPath;
+        public string StoreSharedDir;
         public string StoreSharedPath;
 
         public CRoaming Roaming;    // user roaming settings
@@ -61,7 +63,9 @@ namespace ModbusControlSpace
         public void Load()
         {
             Roaming.Load();
+
             //Local.Load();
+
             Shared.Load();
         }
 
@@ -111,6 +115,7 @@ namespace ModbusControlSpace
             public bool CustomEditorEnable;
             public string CustomEditorCommand;
             public List<string> MbcMruList;
+            public ColumnWidthsType ColumnWidths;
             public CExport Export;
             public CCompare Compare;
             public CCustomQueries CustomQueries;
@@ -137,6 +142,7 @@ namespace ModbusControlSpace
                 CustomEditorEnable = false;
                 CustomEditorCommand = "";
                 MbcMruList = new List<string>();
+                ColumnWidths = new ColumnWidthsType();
                 Export = new CExport();
                 Compare = new CCompare();
                 CustomQueries = new CCustomQueries();
@@ -206,6 +212,7 @@ namespace ModbusControlSpace
                 ReadElementBool(xroot, "customeditoreenable", ref CustomEditorEnable);
                 ReadElementString(xroot, "customeditorcommand", ref CustomEditorCommand);
                 ReadElementStringList(xroot, "mbcmrulist", "file", ref MbcMruList);
+                ReadElementMainColumnWidths(xroot, "columnwidths", ref ColumnWidths);
                 Export.Read(xroot);
                 Compare.Read(xroot);
                 CustomQueries.Read(xroot);
@@ -254,9 +261,10 @@ namespace ModbusControlSpace
                 WriteElementBool(xroot, "customeditoreenable", CustomEditorEnable);
                 WriteElementString(xroot, "customeditorcommand", CustomEditorCommand);
                 WriteElementStringList(xroot, "mbcmrulist", "file", MbcMruList);
+                WriteElementMainColumnWidths(xroot, "columnwidths", ColumnWidths);
                 Export.Write(xroot);
                 Compare.Write(xroot);
-                CustomQueries.Write(xroot);
+                CustomQueries.Write(xroot);                
 
                 // Write file
                 // no UTF8 BOM, indented
@@ -646,6 +654,15 @@ namespace ModbusControlSpace
             }
         }
 
+        // class used to save/restore column widths
+        public class ColumnWidthsType
+        {
+            public float registerWidthWeight;
+            public float descriptionWidthWeight;
+            public float propertiesWidthWeight;
+            public float valueWidthWeight;
+        }
+
         private static void ReadElementBool(XmlNode xparent, string name, ref bool o)
         {
             XmlNode xn = xparent.SelectSingleNode(name);
@@ -720,6 +737,19 @@ namespace ModbusControlSpace
                 }
             }
         }
+
+        private static void ReadElementMainColumnWidths(XmlNode xparent, string parentname, ref ColumnWidthsType colw)
+        {
+            XmlNode xn = xparent.SelectSingleNode(parentname);
+            if (xn != null)
+            {
+                ReadElementFloat(xn, "register", ref colw.registerWidthWeight);
+                ReadElementFloat(xn, "descripton", ref colw.descriptionWidthWeight);
+                ReadElementFloat(xn, "properties", ref colw.propertiesWidthWeight);
+                ReadElementFloat(xn, "value", ref colw.valueWidthWeight);
+            }
+        }
+
 
         private static void ReadElementVersion(XmlNode xparent, string name, ref Version v)
         {
@@ -833,7 +863,21 @@ namespace ModbusControlSpace
             WriteElementFloat(xcw, "result", columnWidths.resultWidth);
             WriteElementFloat(xcw, "comment", columnWidths.commentWidth);
         }
-        
+
+        private static void WriteElementMainColumnWidths(XmlNode parent, string parentName, ColumnWidthsType columnWidths)
+        {
+            if (columnWidths != null)
+            {
+                XmlDocument xdoc = parent.OwnerDocument;
+                XmlNode xcw = WriteParentElement(parent, parentName);
+                xcw.RemoveAll();
+                WriteElementFloat(xcw, "register", columnWidths.registerWidthWeight);
+                WriteElementFloat(xcw, "descripton", columnWidths.descriptionWidthWeight);
+                WriteElementFloat(xcw, "properties", columnWidths.propertiesWidthWeight);
+                WriteElementFloat(xcw, "value", columnWidths.valueWidthWeight);
+            }
+        }
+
 
         /// <summary>
         /// Get the first XML element

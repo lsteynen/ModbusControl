@@ -60,10 +60,11 @@ namespace ModbusControlSpace
         private Object UpdaterLock = new Object();  // lock for safely terminating the updater thread
         private bool Loading;
         private CommandlineProc CommandlineArgs;
-        private float SavedRegisterColumnWidthWeight;
-        private float SavedDescriptionColumnWidthWeight;
-        private float SavedPropertiesColumnWidthWeight;
-        private float SavedValueColumnWidthWeight;
+        private float CurrentRegisterColumnWidthWeight;
+        private float CurrentDescriptionColumnWidthWeight;
+        private float CurrentPropertiesColumnWidthWeight;
+        private float CurrentValueColumnWidthWeight;
+        private bool isLoading;
 
         // a write entry
         private class WriteEntry
@@ -82,7 +83,7 @@ namespace ModbusControlSpace
         // the Importcompare form, make it global and use show/hide to keep the settings
         Importcompare ImportcompareForm;
         // the custom-modbus-command form, make it global and use show/hide to keep the settings
-        CustomQueries CustommodbuscommandForm;
+        CustomQueries CustomQueriesForm;
 
         // constructor
         public MainForm()
@@ -172,9 +173,19 @@ namespace ModbusControlSpace
             Options.ShowFindBox = Settings1.Roaming.ShowFindFilterBox;
             Options.CustomEditorEnable = Settings1.Roaming.CustomEditorEnable;
             Options.CustomEditorCommand = Settings1.Roaming.CustomEditorCommand;
-            Options.CheckForUpdates = Settings1.Shared.Updater.CheckForUpdates;
+            // get columns widths
+            Debug.Print(DateTime.Now.TimeOfDay + ": 1) Load Settings1 settings into CurrentRegisterColumnWidthWeight");
+            CSettings.ColumnWidthsType ColumnWidths = Settings1.Roaming.ColumnWidths;
+            CurrentRegisterColumnWidthWeight = ColumnWidths.registerWidthWeight;
+            CurrentDescriptionColumnWidthWeight = ColumnWidths.descriptionWidthWeight;
+            CurrentPropertiesColumnWidthWeight = ColumnWidths.propertiesWidthWeight;
+            CurrentValueColumnWidthWeight = ColumnWidths.valueWidthWeight;       
+
             // pass options to clients
             PassOptionsToCurrentClientTab();
+
+            // shared
+            Options.CheckForUpdates = Settings1.Shared.Updater.CheckForUpdates;
 
             // Findbox
             panFilter.Visible = Options.ShowFindBox;
@@ -222,6 +233,7 @@ namespace ModbusControlSpace
             }
             catch (Exception)
             {
+                //TODO?
             }
 
             // Add demo mbc file(s) to the help menu, if any
@@ -247,6 +259,7 @@ namespace ModbusControlSpace
             }
             catch (Exception)
             {
+                //TODO?
             }
         }
 
@@ -361,9 +374,10 @@ namespace ModbusControlSpace
             // stop all comms stuff
             StopAllComms();
 
-            Debug.Print(DateTime.Now.TimeOfDay + ": Form1_FormClosing()-5");
+            //Debug.Print(DateTime.Now.TimeOfDay + ": Form1_FormClosing()-5");
 
-            // Update the current settings
+            // Save the current settings
+
             Settings1.Roaming.MbcMruList = recentFilesMenuItem.GetList();
             Settings1.Roaming.StopOnError = Options.StopOnError;
             Settings1.Roaming.BeepOnInputError = Options.BeepOnInputError;
@@ -378,8 +392,9 @@ namespace ModbusControlSpace
             Settings1.Roaming.ShowFindFilterBox = panFilter.Visible;
             Settings1.Roaming.CustomEditorEnable = Options.CustomEditorEnable;
             Settings1.Roaming.CustomEditorCommand = Options.CustomEditorCommand;
-            Settings1.Shared.Updater.CheckForUpdates = Options.CheckForUpdates;
-
+            Debug.Print(DateTime.Now.TimeOfDay + ": 9) Save settings into Settings1");
+            Settings1.Roaming.ColumnWidths = GetColumnWidthsInWeights();
+            
             // save settings if form exists
             if (ExportForm != null)
             {
@@ -388,6 +403,11 @@ namespace ModbusControlSpace
                 Settings1.Roaming.Export.ExportAsciiAs = ExportForm.AsciiFormatSelect;
             }
 
+            //TODO: waar zijn importForm settings? Die ontbreken precies al heel lang..
+            //TODO: import openen: geeft exception op icon
+            //TODO: werken de export settings save/restore?
+
+            //TODO: verwijderen?
             // save settings if form exists
             if (ImportcompareForm != null)
             {
@@ -395,16 +415,16 @@ namespace ModbusControlSpace
             }
 
             // save settings if form exists
-            if (CustommodbuscommandForm != null)
+            if (CustomQueriesForm != null)
             {
-                Settings1.Roaming.CustomQueries.HoldingRegistersStartAddress = CustommodbuscommandForm.HoldingRegistersStartAddress;
+                Settings1.Roaming.CustomQueries.HoldingRegistersStartAddress = CustomQueriesForm.HoldingRegistersStartAddress;
 
-                Settings1.Roaming.CustomQueries.MultilineAutosizeRows = CustommodbuscommandForm.MultilineAutosizeRows;
+                Settings1.Roaming.CustomQueries.MultilineAutosizeRows = CustomQueriesForm.MultilineAutosizeRows;
 
-                CustomQueries.ColumnWidthsType widths = CustommodbuscommandForm.ColumnWidthsInWeights;
+                CustomQueries.ColumnWidthsType widths = CustomQueriesForm.ColumnWidthsInWeights;
                 Settings1.Roaming.CustomQueries.ColumnWidths = widths;
 
-                List<CustomQueries.CustomQueryItem> cmdList = CustommodbuscommandForm.QueriesList;
+                List<CustomQueries.CustomQueryItem> cmdList = CustomQueriesForm.QueriesList;
                 Settings1.Roaming.CustomQueries.QueriesList = cmdList;
             }
 
@@ -421,6 +441,7 @@ namespace ModbusControlSpace
             Settings1.Roaming.Logger.LogBridgeDecode = Logger1.TheLogFilter.LogBridgeDecode;
 
             Settings1.Shared.LastRunVersion = AppHelpers.VersionNum;
+            Settings1.Shared.Updater.CheckForUpdates = Options.CheckForUpdates;
 
             // And save
             // Exception opvangen en deftige melding geven
@@ -456,6 +477,19 @@ namespace ModbusControlSpace
             }
         }
 
+        /// <summary>
+        /// Get main form column widths in CSettings.ColumnWidthsType class
+        /// </summary>
+        /// <returns></returns>
+        private CSettings.ColumnWidthsType GetColumnWidthsInWeights()
+        {
+            CSettings.ColumnWidthsType cw = new CSettings.ColumnWidthsType();
+            cw.registerWidthWeight = CurrentRegisterColumnWidthWeight;
+            cw.descriptionWidthWeight = CurrentDescriptionColumnWidthWeight;
+            cw.propertiesWidthWeight = CurrentPropertiesColumnWidthWeight;
+            cw.valueWidthWeight = CurrentValueColumnWidthWeight;
+            return cw;
+        }
 
         #region Menu and toolbar handlers
 
@@ -1198,6 +1232,9 @@ namespace ModbusControlSpace
 
         public void LoadProjectInTabs()
         {
+            // now loading grids
+            isLoading = true;
+
             tabControl1.TabPages.Clear();
 
             // Add new tabs and populate
@@ -1275,6 +1312,9 @@ namespace ModbusControlSpace
             {
                 CurrentTabPage = null;
             }
+
+            // done
+            isLoading = false;
         }
 
 
@@ -1290,6 +1330,8 @@ namespace ModbusControlSpace
         {
             ModbusGridView mgv = tab.Tag as ModbusGridView;
 
+            isLoading = true;
+
             // set properties for this gridview
             mgv.ConnectionIsOpen = ConnectionIsOpen;
             mgv.StartEditOnAnyCharacter = Options.AutoStartEdit;
@@ -1297,16 +1339,26 @@ namespace ModbusControlSpace
             mgv.ShowVarProperties = Options.ShowVarProperties;
 
             // pass column widths
-            mgv.RegisterColumnWidthWeight = SavedRegisterColumnWidthWeight;
-            mgv.DescriptionColumnWidthWeight = SavedDescriptionColumnWidthWeight;
-            mgv.PropertiesColumnWidthWeight = SavedPropertiesColumnWidthWeight;
-            mgv.ValueColumnWidthWeight = SavedValueColumnWidthWeight;
+            // check if > 0, grid throws exception on 0
+            if ( (CurrentRegisterColumnWidthWeight > 0)
+                && (CurrentDescriptionColumnWidthWeight > 0)
+                && (CurrentPropertiesColumnWidthWeight > 0)
+                && (CurrentValueColumnWidthWeight > 0))
+            {
+                Debug.Print(DateTime.Now.TimeOfDay + ": 3) PassOptionsToClientTab");
+                mgv.RegisterColumnWidthWeight = CurrentRegisterColumnWidthWeight;
+                mgv.DescriptionColumnWidthWeight = CurrentDescriptionColumnWidthWeight;
+                mgv.PropertiesColumnWidthWeight = CurrentPropertiesColumnWidthWeight;
+                mgv.ValueColumnWidthWeight = CurrentValueColumnWidthWeight;
+            }
             
             // set some more properties
             //mgv.AutosizeAndWrapRows = Options.AutoRowSize;
             mgv.WrapRows = Options.AutoRowSize;
             mgv.SetFilter(tbFilterText.Text, chkFilterCaseSensitive.Checked);
             mgv.SetZoom(ZoomFactor);
+
+            isLoading = false;
         }
 
         private bool OpenConnection()
@@ -1573,12 +1625,12 @@ namespace ModbusControlSpace
         // stop all communications
         private void StopAllComms()
         {
-            Debug.Print(DateTime.Now.TimeOfDay + ": StopAllComms()-1");
+            //Debug.Print(DateTime.Now.TimeOfDay + ": StopAllComms()-1");
 
             // Do this first. This will make blocked threads of TcpBridge release quickly.
             mb.PrepareForClose();
 
-            Debug.Print(DateTime.Now.TimeOfDay + ": StopAllComms()-2");
+            //Debug.Print(DateTime.Now.TimeOfDay + ": StopAllComms()-2");
 
             // stop bridge threads
             if (TcpBridge.IsRunning)
@@ -1586,17 +1638,17 @@ namespace ModbusControlSpace
                 TcpBridge.Stop();
             }
 
-            Debug.Print(DateTime.Now.TimeOfDay + ": StopAllComms()-3");
+            //Debug.Print(DateTime.Now.TimeOfDay + ": StopAllComms()-3");
 
             // Stop comms thread
             StopCommsThread();
 
-            Debug.Print(DateTime.Now.TimeOfDay + ": StopAllComms()-4");
+            //Debug.Print(DateTime.Now.TimeOfDay + ": StopAllComms()-4");
 
             // close interface
             CloseConnection();
 
-            Debug.Print(DateTime.Now.TimeOfDay + ": StopAllComms()-5");
+            //Debug.Print(DateTime.Now.TimeOfDay + ": StopAllComms()-5");
         }
 
 
@@ -1806,7 +1858,7 @@ namespace ModbusControlSpace
                     break;
                 }
 
-                Debug.Print(DateTime.Now.TimeOfDay + "PollTabPage(): TReadGroup: " + rg.lineIndex + "," + rg.lineCount + "," + rg.readFirstReg + "," + rg.readRegCount);
+                //Debug.Print(DateTime.Now.TimeOfDay + "PollTabPage(): TReadGroup: " + rg.lineIndex + "," + rg.lineCount + "," + rg.readFirstReg + "," + rg.readRegCount);
 
                 // read group 
                 UInt16 firstRegOffset = GetRegOffset(rg.readFirstReg);
@@ -1838,7 +1890,7 @@ namespace ModbusControlSpace
 
                             ModbusGridView.TVarProperties varp = mrv.GetVarPropertiesByIndex(lineIndex);
 
-                            Debug.Print(DateTime.Now.TimeOfDay + "PollTabPage(): Single read: " + lineIndex + "," + 1 + "," + varp.Reg + "," + varp.Size);
+                            //Debug.Print(DateTime.Now.TimeOfDay + "PollTabPage(): Single read: " + lineIndex + "," + 1 + "," + varp.Reg + "," + varp.Size);
 
                             // read
                             UInt16 regOffset = GetRegOffset(varp.Reg);
@@ -2437,13 +2489,17 @@ namespace ModbusControlSpace
         // call when columns widhts were changed
         private void ReportColumnWidthChanged(object sender)
         {
-            // store the changes column widths
-           
-            ModbusGridView mgv = sender as ModbusGridView;
-            SavedRegisterColumnWidthWeight = mgv.RegisterColumnWidthWeight;
-            SavedDescriptionColumnWidthWeight = mgv.DescriptionColumnWidthWeight;
-            SavedPropertiesColumnWidthWeight = mgv.PropertiesColumnWidthWeight;
-            SavedValueColumnWidthWeight = mgv.ValueColumnWidthWeight;
+            if (isLoading == false)
+            {
+                // store the changes column widths
+
+                Debug.Print(DateTime.Now.TimeOfDay + ": 4) ReportColumnWidthChanged");
+                ModbusGridView mgv = sender as ModbusGridView;
+                CurrentRegisterColumnWidthWeight = mgv.RegisterColumnWidthWeight;
+                CurrentDescriptionColumnWidthWeight = mgv.DescriptionColumnWidthWeight;
+                CurrentPropertiesColumnWidthWeight = mgv.PropertiesColumnWidthWeight;
+                CurrentValueColumnWidthWeight = mgv.ValueColumnWidthWeight;
+            }
         }
 
 
@@ -2735,25 +2791,25 @@ namespace ModbusControlSpace
         private void CustomQueriesToolStripMenuItem_Click(object sender, EventArgs e)
         {
             // create if needed, else show and hide
-            if (CustommodbuscommandForm == null)
+            if (CustomQueriesForm == null)
             {
-                CustommodbuscommandForm = new CustomQueries(this);
+                CustomQueriesForm = new CustomQueries(this);
 
                 // load settings
 
-                CustommodbuscommandForm.HoldingRegistersStartAddress = Settings1.Roaming.CustomQueries.HoldingRegistersStartAddress;
+                CustomQueriesForm.HoldingRegistersStartAddress = Settings1.Roaming.CustomQueries.HoldingRegistersStartAddress;
 
-                CustommodbuscommandForm.MultilineAutosizeRows = Settings1.Roaming.CustomQueries.MultilineAutosizeRows;
+                CustomQueriesForm.MultilineAutosizeRows = Settings1.Roaming.CustomQueries.MultilineAutosizeRows;
 
                 CustomQueries.ColumnWidthsType widths = Settings1.Roaming.CustomQueries.ColumnWidths;
-                CustommodbuscommandForm.ColumnWidthsInWeights = widths;
+                CustomQueriesForm.ColumnWidthsInWeights = widths;
 
                 List<CustomQueries.CustomQueryItem> clist = Settings1.Roaming.CustomQueries.QueriesList;
-                CustommodbuscommandForm.QueriesList = clist;
+                CustomQueriesForm.QueriesList = clist;
             }
 
             // show modal
-            ShowForm(CustommodbuscommandForm);
+            ShowForm(CustomQueriesForm);
         }
 
 #endregion
@@ -2898,7 +2954,7 @@ namespace ModbusControlSpace
                     // assuming the user has put quotes around %file if required
                     CmdLine = CmdLine.Replace("%file", file);
                     AppHelpers.SplitCommandlineString(CmdLine, out EdCommand, out EdArg);
-                    Debug.Print(DateTime.Now.TimeOfDay + ": Editor command line: " + EdCommand + " " + EdArg);
+                    //Debug.Print(DateTime.Now.TimeOfDay + ": Editor command line: " + EdCommand + " " + EdArg);
                     try
                     {
                         Process p = Process.Start(EdCommand, EdArg);
@@ -2968,7 +3024,7 @@ namespace ModbusControlSpace
             string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
             // we accept only 1 file
             string file = files[0];
-            Debug.Print(DateTime.Now.TimeOfDay + ": Form1_DragDrop(): file=" + file);
+            //Debug.Print(DateTime.Now.TimeOfDay + ": Form1_DragDrop(): file=" + file);
             if (Path.GetExtension(file).ToLower() == ".mbc")
             {
                 // Stop comms
