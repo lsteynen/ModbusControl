@@ -42,7 +42,6 @@ namespace ModbusControlSpace
             this.editProjectFileMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openFileLocationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
-            this.recentFilesMenuItem = new RecentsToolStripMenuItem();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.saveConfigurationMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator6 = new System.Windows.Forms.ToolStripSeparator();
@@ -65,8 +64,6 @@ namespace ModbusControlSpace
             this.resetZoomToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator9 = new System.Windows.Forms.ToolStripSeparator();
             this.findFilterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.diagnosticsCountersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.loggingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.extraMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.configurationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.optionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -92,6 +89,10 @@ namespace ModbusControlSpace
             this.btnFilterClose = new System.Windows.Forms.Button();
             this.btnFilterClear = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
+            this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
+            this.diagnosticsCountersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.loggingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.recentFilesMenuItem = new RecentsToolStripMenuItem();
             this.statusStrip.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
@@ -170,7 +171,7 @@ namespace ModbusControlSpace
             // 
             this.openProjectFileMenuItem.Name = "openProjectFileMenuItem";
             this.openProjectFileMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.O)));
-            this.openProjectFileMenuItem.Size = new System.Drawing.Size(267, 22);
+            this.openProjectFileMenuItem.Size = new System.Drawing.Size(266, 22);
             this.openProjectFileMenuItem.Text = "&Open project file...";
             this.openProjectFileMenuItem.Click += new System.EventHandler(this.OpenProjectFileMenuItem_Click);
             // 
@@ -178,7 +179,7 @@ namespace ModbusControlSpace
             // 
             this.reloadProjectFileMenuItem.Name = "reloadProjectFileMenuItem";
             this.reloadProjectFileMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.R)));
-            this.reloadProjectFileMenuItem.Size = new System.Drawing.Size(267, 22);
+            this.reloadProjectFileMenuItem.Size = new System.Drawing.Size(266, 22);
             this.reloadProjectFileMenuItem.Text = "&Reload project file";
             this.reloadProjectFileMenuItem.Click += new System.EventHandler(this.ReloadProjectFileMenuItem_Click);
             // 
@@ -186,47 +187,38 @@ namespace ModbusControlSpace
             // 
             this.editProjectFileMenuItem.Name = "editProjectFileMenuItem";
             this.editProjectFileMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.E)));
-            this.editProjectFileMenuItem.Size = new System.Drawing.Size(267, 22);
+            this.editProjectFileMenuItem.Size = new System.Drawing.Size(266, 22);
             this.editProjectFileMenuItem.Text = "&Edit project file";
             this.editProjectFileMenuItem.Click += new System.EventHandler(this.EditProjectFileMenuItem_Click);
             // 
             // openFileLocationToolStripMenuItem
             // 
             this.openFileLocationToolStripMenuItem.Name = "openFileLocationToolStripMenuItem";
-            this.openFileLocationToolStripMenuItem.Size = new System.Drawing.Size(267, 22);
+            this.openFileLocationToolStripMenuItem.Size = new System.Drawing.Size(266, 22);
             this.openFileLocationToolStripMenuItem.Text = "Open project file location in Explorer";
             this.openFileLocationToolStripMenuItem.Click += new System.EventHandler(this.OpenFileLocationToolStripMenuItem_Click);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(264, 6);
-            // 
-            // recentFilesMenuItem
-            // 
-            this.recentFilesMenuItem.Enabled = false;
-            this.recentFilesMenuItem.Name = "recentFilesMenuItem";
-            this.recentFilesMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.F)));
-            this.recentFilesMenuItem.Size = new System.Drawing.Size(267, 22);
-            this.recentFilesMenuItem.Text = "Recent project &files";
-            this.recentFilesMenuItem.ItemClick += new System.EventHandler(this.RecentFilesMenuItem_ItemClick);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(263, 6);
             // 
             // toolStripSeparator2
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(264, 6);
+            this.toolStripSeparator2.Size = new System.Drawing.Size(263, 6);
             // 
             // saveConfigurationMenuItem
             // 
             this.saveConfigurationMenuItem.Name = "saveConfigurationMenuItem";
-            this.saveConfigurationMenuItem.Size = new System.Drawing.Size(267, 22);
+            this.saveConfigurationMenuItem.Size = new System.Drawing.Size(266, 22);
             this.saveConfigurationMenuItem.Text = "Save project file...";
             this.saveConfigurationMenuItem.Click += new System.EventHandler(this.SaveConfigurationMenuItem_Click);
             // 
             // toolStripSeparator6
             // 
             this.toolStripSeparator6.Name = "toolStripSeparator6";
-            this.toolStripSeparator6.Size = new System.Drawing.Size(264, 6);
+            this.toolStripSeparator6.Size = new System.Drawing.Size(263, 6);
             // 
             // importExportToolStripMenuItem
             // 
@@ -235,7 +227,7 @@ namespace ModbusControlSpace
             this.exportRegistersToFileToolStripMenuItem,
             this.compareRegistersWithValuesInFileToolStripMenuItem});
             this.importExportToolStripMenuItem.Name = "importExportToolStripMenuItem";
-            this.importExportToolStripMenuItem.Size = new System.Drawing.Size(267, 22);
+            this.importExportToolStripMenuItem.Size = new System.Drawing.Size(266, 22);
             this.importExportToolStripMenuItem.Text = "Import && Export CSV files...";
             // 
             // importRegistersFromFileToolStripMenuItem
@@ -262,13 +254,13 @@ namespace ModbusControlSpace
             // toolStripSeparator8
             // 
             this.toolStripSeparator8.Name = "toolStripSeparator8";
-            this.toolStripSeparator8.Size = new System.Drawing.Size(264, 6);
+            this.toolStripSeparator8.Size = new System.Drawing.Size(263, 6);
             // 
             // exitMenuItem
             // 
             this.exitMenuItem.Name = "exitMenuItem";
             this.exitMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.X)));
-            this.exitMenuItem.Size = new System.Drawing.Size(267, 22);
+            this.exitMenuItem.Size = new System.Drawing.Size(266, 22);
             this.exitMenuItem.Text = "E&xit";
             this.exitMenuItem.Click += new System.EventHandler(this.ExitMenuItem_Click);
             // 
@@ -332,9 +324,7 @@ namespace ModbusControlSpace
             this.zoomOutToolStripMenuItem,
             this.resetZoomToolStripMenuItem,
             this.toolStripSeparator9,
-            this.findFilterToolStripMenuItem,
-            this.diagnosticsCountersToolStripMenuItem,
-            this.loggingToolStripMenuItem});
+            this.findFilterToolStripMenuItem});
             this.viewToolStripMenuItem.Name = "viewToolStripMenuItem";
             this.viewToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
             this.viewToolStripMenuItem.Text = "&View";
@@ -343,7 +333,7 @@ namespace ModbusControlSpace
             // 
             this.zoomInToolStripMenuItem.Name = "zoomInToolStripMenuItem";
             this.zoomInToolStripMenuItem.ShortcutKeyDisplayString = "Ctrl+ +";
-            this.zoomInToolStripMenuItem.Size = new System.Drawing.Size(222, 22);
+            this.zoomInToolStripMenuItem.Size = new System.Drawing.Size(178, 22);
             this.zoomInToolStripMenuItem.Text = "Zoom &in";
             this.zoomInToolStripMenuItem.Click += new System.EventHandler(this.ZoomInToolStripMenuItem_Click);
             // 
@@ -351,7 +341,7 @@ namespace ModbusControlSpace
             // 
             this.zoomOutToolStripMenuItem.Name = "zoomOutToolStripMenuItem";
             this.zoomOutToolStripMenuItem.ShortcutKeyDisplayString = "Ctrl+ -";
-            this.zoomOutToolStripMenuItem.Size = new System.Drawing.Size(222, 22);
+            this.zoomOutToolStripMenuItem.Size = new System.Drawing.Size(178, 22);
             this.zoomOutToolStripMenuItem.Text = "Zoom &out";
             this.zoomOutToolStripMenuItem.Click += new System.EventHandler(this.ZoomOutToolStripMenuItem_Click);
             // 
@@ -359,56 +349,43 @@ namespace ModbusControlSpace
             // 
             this.resetZoomToolStripMenuItem.Name = "resetZoomToolStripMenuItem";
             this.resetZoomToolStripMenuItem.ShortcutKeyDisplayString = "Ctrl+ 0";
-            this.resetZoomToolStripMenuItem.Size = new System.Drawing.Size(222, 22);
+            this.resetZoomToolStripMenuItem.Size = new System.Drawing.Size(178, 22);
             this.resetZoomToolStripMenuItem.Text = "&Reset zoom";
             this.resetZoomToolStripMenuItem.Click += new System.EventHandler(this.ResetZoomToolStripMenuItem_Click);
             // 
             // toolStripSeparator9
             // 
             this.toolStripSeparator9.Name = "toolStripSeparator9";
-            this.toolStripSeparator9.Size = new System.Drawing.Size(219, 6);
+            this.toolStripSeparator9.Size = new System.Drawing.Size(175, 6);
             // 
             // findFilterToolStripMenuItem
             // 
             this.findFilterToolStripMenuItem.Name = "findFilterToolStripMenuItem";
             this.findFilterToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.F)));
-            this.findFilterToolStripMenuItem.Size = new System.Drawing.Size(222, 22);
+            this.findFilterToolStripMenuItem.Size = new System.Drawing.Size(178, 22);
             this.findFilterToolStripMenuItem.Text = "Find/Filter";
             this.findFilterToolStripMenuItem.Click += new System.EventHandler(this.FindFilterToolStripMenuItem_Click);
-            // 
-            // diagnosticsCountersToolStripMenuItem
-            // 
-            this.diagnosticsCountersToolStripMenuItem.Name = "diagnosticsCountersToolStripMenuItem";
-            this.diagnosticsCountersToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.D)));
-            this.diagnosticsCountersToolStripMenuItem.Size = new System.Drawing.Size(222, 22);
-            this.diagnosticsCountersToolStripMenuItem.Text = "&Diagnostics counters";
-            this.diagnosticsCountersToolStripMenuItem.Click += new System.EventHandler(this.DiagnosticsCountersToolStripMenuItem_Click);
-            // 
-            // loggingToolStripMenuItem
-            // 
-            this.loggingToolStripMenuItem.Name = "loggingToolStripMenuItem";
-            this.loggingToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.L)));
-            this.loggingToolStripMenuItem.Size = new System.Drawing.Size(222, 22);
-            this.loggingToolStripMenuItem.Text = "&Logging";
-            this.loggingToolStripMenuItem.Click += new System.EventHandler(this.LoggingToolStripMenuItem_Click);
             // 
             // extraMenuItem
             // 
             this.extraMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.configurationToolStripMenuItem,
             this.optionsToolStripMenuItem,
-            this.customQueriesMenuItem});
+            this.toolStripSeparator5,
+            this.customQueriesMenuItem,
+            this.diagnosticsCountersToolStripMenuItem,
+            this.loggingToolStripMenuItem});
             this.extraMenuItem.Name = "extraMenuItem";
             this.extraMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.X)));
-            this.extraMenuItem.Size = new System.Drawing.Size(45, 20);
+            this.extraMenuItem.Size = new System.Drawing.Size(44, 20);
             this.extraMenuItem.Text = "E&xtra";
             // 
             // configurationToolStripMenuItem
             // 
             this.configurationToolStripMenuItem.Name = "configurationToolStripMenuItem";
             this.configurationToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.C)));
-            this.configurationToolStripMenuItem.Size = new System.Drawing.Size(226, 22);
-            this.configurationToolStripMenuItem.Text = "Project &Configuration";
+            this.configurationToolStripMenuItem.Size = new System.Drawing.Size(224, 22);
+            this.configurationToolStripMenuItem.Text = "Project &configuration";
             this.configurationToolStripMenuItem.Click += new System.EventHandler(this.ConfigurationToolStripMenuItem_Click);
             // 
             // optionsToolStripMenuItem
@@ -418,7 +395,7 @@ namespace ModbusControlSpace
             this.optionsToolStripMenuItem.Text = "&Options";
             this.optionsToolStripMenuItem.Click += new System.EventHandler(this.OptionsToolStripMenuItem_Click);
             // 
-            // customModbusCommandsMenuItem
+            // customQueriesMenuItem
             // 
             this.customQueriesMenuItem.Name = "customQueriesMenuItem";
             this.customQueriesMenuItem.Size = new System.Drawing.Size(226, 22);
@@ -651,6 +628,36 @@ namespace ModbusControlSpace
             this.label1.TabIndex = 0;
             this.label1.Text = "Find/Filter:";
             // 
+            // toolStripSeparator5
+            // 
+            this.toolStripSeparator5.Name = "toolStripSeparator5";
+            this.toolStripSeparator5.Size = new System.Drawing.Size(223, 6);
+            // 
+            // diagnosticsCountersToolStripMenuItem
+            // 
+            this.diagnosticsCountersToolStripMenuItem.Name = "diagnosticsCountersToolStripMenuItem";
+            this.diagnosticsCountersToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.D)));
+            this.diagnosticsCountersToolStripMenuItem.Size = new System.Drawing.Size(226, 22);
+            this.diagnosticsCountersToolStripMenuItem.Text = "&Diagnostics counters";
+            this.diagnosticsCountersToolStripMenuItem.Click += new System.EventHandler(this.DiagnosticsCountersToolStripMenuItem_Click);
+            // 
+            // loggingToolStripMenuItem
+            // 
+            this.loggingToolStripMenuItem.Name = "loggingToolStripMenuItem";
+            this.loggingToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.L)));
+            this.loggingToolStripMenuItem.Size = new System.Drawing.Size(226, 22);
+            this.loggingToolStripMenuItem.Text = "&Logging";
+            this.loggingToolStripMenuItem.Click += new System.EventHandler(this.LoggingToolStripMenuItem_Click);
+            // 
+            // recentFilesMenuItem
+            // 
+            this.recentFilesMenuItem.Enabled = false;
+            this.recentFilesMenuItem.Name = "recentFilesMenuItem";
+            this.recentFilesMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.F)));
+            this.recentFilesMenuItem.Size = new System.Drawing.Size(266, 22);
+            this.recentFilesMenuItem.Text = "Recent project &files";
+            this.recentFilesMenuItem.ItemClick += new System.EventHandler(this.RecentFilesMenuItem_ItemClick);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
@@ -738,8 +745,6 @@ namespace ModbusControlSpace
         private System.Windows.Forms.ToolStripMenuItem compareRegistersWithValuesInFileToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem openFileLocationToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator9;
-        private System.Windows.Forms.ToolStripMenuItem diagnosticsCountersToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem loggingToolStripMenuItem;
         private System.Windows.Forms.TextBox tbFilterText;
         private System.Windows.Forms.Panel panFilter;
         private System.Windows.Forms.Button btnFilterClear;
@@ -748,6 +753,9 @@ namespace ModbusControlSpace
         private System.Windows.Forms.Button btnFilterClose;
         private System.Windows.Forms.ToolStripMenuItem findFilterToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem customQueriesMenuItem;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator5;
+        private System.Windows.Forms.ToolStripMenuItem diagnosticsCountersToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem loggingToolStripMenuItem;
     }
 }
 

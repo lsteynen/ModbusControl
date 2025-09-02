@@ -10,8 +10,6 @@ using System.Diagnostics;
 
 using LST.Helpers;
 
-//TODO: customqueries: bij createi 1 lijn van elke type creeren
-
 // Note: Installer maakt geen default settings file, app doet dat bij eerste close.
 // We laden en schrijven de XML files manueel. Als we de class naar een XML file zouden schrijven
 // ontstaat het probleem dat een aantal XML elementen verdwijnen als je even een oudere versie
@@ -476,29 +474,99 @@ namespace ModbusControlSpace
                     commentWidth = 112
                 };
 
-                // 2 demo queries
+                // demo queries
 
                 QueriesList = new List<CustomQueries.CustomQueryItem>();
 
-                CustomQueries.CustomQueryItem c1 = new CustomQueries.CustomQueryItem();
-                c1.slaveID = "1";
-                c1.command = "RHR";
-                c1.register = "40001";
-                c1.qty = "10";
-                c1.format = "INT16";
-                c1.data = "";
-                c1.comment = "demo";
-                QueriesList.Add(c1);
+                CustomQueries.CustomQueryItem q = new CustomQueries.CustomQueryItem();
+                q.slaveID = "1";
+                q.command = "RIR";
+                q.register = "30001";
+                q.qty = "10";
+                q.format = "INT16";
+                q.data = "";
+                q.comment = "demo";
+                QueriesList.Add(q);
 
-                CustomQueries.CustomQueryItem c2 = new CustomQueries.CustomQueryItem();
-                c2.slaveID = "1";
-                c2.command = "WMHR";
-                c2.register = "40001";
-                c2.qty = "4";
-                c2.format = "INT16";
-                c2.data = "1001, 1002, 1003, 1004";
-                c2.comment = "demo";
-                QueriesList.Add(c2);
+                q = new CustomQueries.CustomQueryItem();
+                q.slaveID = "1";
+                q.command = "RHR";
+                q.register = "40001";
+                q.qty = "10";
+                q.format = "INT16";
+                q.data = "";
+                q.comment = "";
+                QueriesList.Add(q);
+
+                q = new CustomQueries.CustomQueryItem();
+                q.slaveID = "1";
+                q.command = "WSHR";
+                q.register = "40001";
+                q.qty = "1";
+                q.format = "INT16";
+                q.data = "1001";
+                q.comment = "";
+                QueriesList.Add(q);
+
+                q = new CustomQueries.CustomQueryItem();
+                q.slaveID = "1";
+                q.command = "WMHR";
+                q.register = "40001";
+                q.qty = "4";
+                q.format = "INT16";
+                q.data = "2001, 2002, 2003, 2004";
+                q.comment = "";
+                QueriesList.Add(q);
+
+                q = new CustomQueries.CustomQueryItem();
+                q.slaveID = "1";
+                q.command = "RDI";
+                q.register = "10001";
+                q.qty = "32";
+                q.format = "BITS";
+                q.data = "";
+                q.comment = "";
+                QueriesList.Add(q);
+
+                q = new CustomQueries.CustomQueryItem();
+                q.slaveID = "1";
+                q.command = "RC";
+                q.register = "1";
+                q.qty = "32";
+                q.format = "HEXBYTES";
+                q.data = "";
+                q.comment = "";
+                QueriesList.Add(q);
+
+                q = new CustomQueries.CustomQueryItem();
+                q.slaveID = "1";
+                q.command = "WSC";
+                q.register = "1";
+                q.qty = "32";
+                q.format = "BITS";
+                q.data = "1";
+                q.comment = "";
+                QueriesList.Add(q);
+
+                q = new CustomQueries.CustomQueryItem();
+                q.slaveID = "1";
+                q.command = "WMC";
+                q.register = "1";
+                q.qty = "16";
+                q.format = "BITS";
+                q.data = "1,1,1,1,0,0,0,0,1,1,0,1,0,0,1,0";
+                q.comment = "";
+                QueriesList.Add(q);
+
+                q = new CustomQueries.CustomQueryItem();
+                q.slaveID = "1";
+                q.command = "CUSTQ";
+                q.register = "";
+                q.qty = "";
+                q.format = "HEXBYTES";
+                q.data = "0x01,0x03,0x00,0x20,0x00,0x10";
+                q.comment = "";
+                QueriesList.Add(q);
             }
 
             public void Read(XmlNode xparent)

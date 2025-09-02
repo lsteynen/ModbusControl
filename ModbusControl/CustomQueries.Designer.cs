@@ -211,7 +211,7 @@
             "R coils (FC 01)",
             "W single coil (FC 05)",
             "W multiple coils (FC 0F)",
-            "Custom hex query"});
+            "Custom query"});
             this.CommandColumn.Name = "CommandColumn";
             this.CommandColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
             // 

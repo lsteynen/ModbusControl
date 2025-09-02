@@ -837,7 +837,7 @@ namespace ModbusControlSpace
                 }
                 catch (Exception e)
                 {
-                    ResultStr = e.Message;
+                    ResultStr = "Error: " + e.Message;
                     Continue = false;
                 }
             }
@@ -1025,15 +1025,15 @@ namespace ModbusControlSpace
                 ModbusProtocol.Result result = mModbus.MifReadDiscreteInputs(slaveID, regOffset, regQuantity, out aBytes, true);
                 if (result == ModbusProtocol.Result.SUCCESS)
                 {
-                    if (format == EFormat.HEXBYTES)
-                    {
-                        // bytes as 0x01, 0xFA, ...
-                        ResultStr = Converts.ByteArrayToStringOfValues(aBytes);
-                    }
-                    else if (format == EFormat.BITS)
+                    if (format == EFormat.BITS)
                     {
                         // bits as 0, 0, 1, 0
                         ResultStr = ConvertPackedBitsToResultString(aBytes, (int)regQuantity);
+                    } 
+                    else if (format == EFormat.HEXBYTES)
+                    {
+                        // bytes as 0x01, 0xFA, ...
+                        ResultStr = Converts.ByteArrayToStringOfValues(aBytes);
                     }
                     else
                     {
@@ -1073,7 +1073,7 @@ namespace ModbusControlSpace
 
             if (Continue)
             {
-                if (format == EFormat.HEXBYTES || format == EFormat.BITS)
+                if (format == EFormat.BITS || format == EFormat.HEXBYTES)
                 {
                     // OK
                 }
@@ -1118,24 +1118,24 @@ namespace ModbusControlSpace
                 ModbusProtocol.Result result = mModbus.MifReadCoils(slaveID, regOffset, regQuantity, out aBytes, true);
                 if (result == ModbusProtocol.Result.SUCCESS)
                 {
-                    if (format == EFormat.HEXBYTES)
+                    if (format == EFormat.BITS)
                     {
                         if (aBytes.Length > 0)
                         {
-                            // bytes as 0x01, 0xFA, ...
-                            ResultStr = Converts.ByteArrayToStringOfValues(aBytes);
+                            // bits as 0,1,1,0,0,1,1,0, ...
+                            ResultStr = ConvertPackedBitsToResultString(aBytes, (int)regQuantity);
                         }
                         else
                         {
                             ResultStr = "(no data)";
                         }
                     }
-                    else if (format == EFormat.BITS)
+                    else if (format == EFormat.HEXBYTES)
                     {
                         if (aBytes.Length > 0)
                         {
-                            // bits as 0,1,1,0,0,1,1,0, ...
-                            ResultStr = ConvertPackedBitsToResultString(aBytes, (int)regQuantity);
+                            // bytes as 0x01, 0xFA, ...
+                            ResultStr = Converts.ByteArrayToStringOfValues(aBytes);
                         }
                         else
                         {
@@ -1222,12 +1222,26 @@ namespace ModbusControlSpace
 
             if (Continue)
             {
-                if (format == EFormat.HEXBYTES)
+                if (format == EFormat.BITS)
+                {
+                    // value 0,1,1,0,1,0...
+                    try
+                    {
+                        aBytes = ParseValuesStringIntoPackedBits(dataStr, 1);
+                    }
+                    catch (Exception e)
+                    {
+                        ResultStr = "Error: " + e.Message;
+                        Continue = false;
+                    }
+                }
+                else if (format == EFormat.HEXBYTES)
                 {
                     // value 00 or 01
                     try
                     {
                         aBytes = ParseValuesStringIntoByteValues(dataStr, 1);
+
                         if ((aBytes[0] >= 0) && (aBytes[0] <= 1))
                         {
                             // OK
@@ -1242,20 +1256,7 @@ namespace ModbusControlSpace
                         ResultStr = "Error: " + e.Message;
                         Continue = false;
                     }
-                }
-                else if (format == EFormat.BITS)
-                {
-                    // value 0,1,1,0,1,0...
-                    try
-                    {
-                        aBytes = ParseValuesStringIntoPackedBits(dataStr, 1);
-                    }
-                    catch (Exception e)
-                    {
-                        ResultStr = "Error: " + e.Message;
-                        Continue = false;
-                    }
-                }
+                }                
                 else
                 {
                     ResultStr = "Error: Invalid format";
@@ -1345,13 +1346,12 @@ namespace ModbusControlSpace
 
             if (Continue)
             {
-                if (format == EFormat.HEXBYTES)
+                if (format == EFormat.BITS)
                 {
-                    // value 0x00 - 0xFF, passed like this to query 
+                    // value 0,1,1,0,1,0...
                     try
                     {
-                        int nrOfBytes = (regQuantity + 7) / 8;
-                        aBytes = ParseValuesStringIntoByteValues(dataStr, nrOfBytes);
+                        aBytes = ParseValuesStringIntoPackedBits(dataStr, regQuantity);
                     }
                     catch (Exception e)
                     {
@@ -1359,12 +1359,13 @@ namespace ModbusControlSpace
                         Continue = false;
                     }
                 }
-                else if (format == EFormat.BITS)
+                else if (format == EFormat.HEXBYTES)
                 {
-                    // expect 1,0,0,1 ,1 ,0,...
+                    // value 0x00 - 0xFF, passed like this to query 
                     try
                     {
-                        aBytes = ParseValuesStringIntoPackedBits(dataStr, regQuantity);
+                        int nrOfBytes = (regQuantity + 7) / 8;
+                        aBytes = ParseValuesStringIntoByteValues(dataStr, nrOfBytes);
                     }
                     catch (Exception e)
                     {
@@ -1433,14 +1434,33 @@ namespace ModbusControlSpace
 
             if (Continue)
             {
-                try
+                if (format == EFormat.INT16 || format == EFormat.UINT16 || format == EFormat.HEX16
+                    || format == EFormat.INT32 || format == EFormat.UINT32 || format == EFormat.HEX32
+                    || format == EFormat.HEXBYTES)
                 {
-                    //query must be hexbytes
-                    aQueryBytes = ParseValuesStringIntoByteValues(dataStr);
+                    // OK
                 }
-                catch (Exception e)
+                
+            }
+
+            if (Continue)
+            {
+                // query must be hexbytes
+                if (format == EFormat.HEXBYTES)
+                { 
+                    try
+                    {
+                        aQueryBytes = ParseValuesStringIntoByteValues(dataStr);
+                    }
+                    catch (Exception e)
+                    {
+                        ResultStr = "Error: " + e.Message;
+                        Continue = false;
+                    }
+                }
+                else
                 {
-                    ResultStr = "Error: " + e.Message;
+                    ResultStr = "Error: Invalid format";
                     Continue = false;
                 }
             }
@@ -1450,13 +1470,13 @@ namespace ModbusControlSpace
                 ModbusProtocol.Result result = mModbus.MifSendCustomQuery(slaveID, aQueryBytes, (UInt16)aQueryBytes.Length, out aResponseBuf);
                 if (result == ModbusProtocol.Result.SUCCESS)
                 {
-                    //reponse is always hexbytes
+                    // reponse is always hexbytes
                     if (format == EFormat.HEXBYTES)
                     {
                         // bytes as 0x01, 0xFA, ...
                         ResultStr = Converts.ByteArrayToStringOfValues(aResponseBuf);
                     }
-                    // supporting other formats is difficult because we don't know where the databytes start in the response
+                    // supporting other formats is difficult because we don't know the data format
                     else
                     {
                         ResultStr = "Error: Invalid format";
@@ -1539,6 +1559,7 @@ namespace ModbusControlSpace
             {
                 try
                 {
+                    // can throw
                     Int32 res = CValueToString.ValueStringToIntValue(aFields[i].Trim(), 16, 0);
                     aValues[i] = (Int16)res;
                 }
@@ -1601,7 +1622,7 @@ namespace ModbusControlSpace
         /// Accept values 0-255, 0x00-0xFF
         /// Throws exception on error
         /// </summary>
-        byte[] ParseValuesStringIntoByteValues(string str, int expectedCount = int.MinValue)
+        private byte[] ParseValuesStringIntoByteValues(string str, int expectedCount = int.MinValue)
         {
             // get data
             string[] aFields = MySplit(str, ',');
@@ -1612,17 +1633,26 @@ namespace ModbusControlSpace
             // get values
             for (int i = 0; i < aFields.Length; ++i)
             {
-                // Int32 StringToIntValue(string str, int Width, int Decimals)
-                Int32 tmpVal = CValueToString.ValueStringToIntValue(aFields[i].Trim(), 8, 0);
-                if (tmpVal >= 0 && tmpVal <= 255)
+                try
                 {
-                    // okay
-                    aValues[i] = (byte)tmpVal;
+                    // can throw
+                    // Int32 StringToIntValue(string str, int Width, int Decimals)
+                    Int32 tmpVal = CValueToString.ValueStringToIntValue(aFields[i].Trim(), 8, 0);
+                    if (tmpVal >= 0 && tmpVal <= 255)
+                    {
+                        // okay
+                        aValues[i] = (byte)tmpVal;
+                    }
+                    else
+                    {
+                        // error
+                        throw new Exception("Invalid value \"" + aFields[i].Trim() + "\"");
+                    }
                 }
-                else
+                catch (Exception)
                 {
                     // error
-                    throw new Exception("Invalid value \"" + aFields[i].Trim() + "\"");
+                    throw new Exception("Invalid value: " + "\"" + aFields[i].Trim() + "\"");
                 }
             }
 
@@ -1643,7 +1673,7 @@ namespace ModbusControlSpace
         /// Accept values 0/1 only
         /// Throws exception on error
         /// </summary>
-        byte[] ParseValuesStringIntoPackedBits(string str, int expectedCount)
+        private byte[] ParseValuesStringIntoPackedBits(string str, int expectedCount)
         {
             // get data
             string[] aFields = MySplit(str, ',');
@@ -1655,20 +1685,28 @@ namespace ModbusControlSpace
             // get values
             for (int i = 0; i < aFields.Length; ++i)
             {
-                // can throw
-                Int32 tmpVal = CValueToString.ValueStringToIntValue(aFields[i].Trim(), 1, 0);
-                if (tmpVal == 1)
+                try
                 {
-                    aBytes[i / 8] |= (byte)(1 << (i % 8));
+                    // can throw
+                    Int32 tmpVal = CValueToString.ValueStringToIntValue(aFields[i].Trim(), 1, 0);
+                    if (tmpVal == 1)
+                    {
+                        aBytes[i / 8] |= (byte)(1 << (i % 8));
+                    }
+                    else if (tmpVal == 0)
+                    {
+                        aBytes[i / 8] &= (byte)~(1 << (i % 8));
+                    }
+                    else
+                    {
+                        // error
+                        throw new Exception("Invalid value \"" + aFields[i].Trim() + "\"");
+                    }
                 }
-                else if (tmpVal == 0)
-                {
-                    aBytes[i / 8] &= (byte)~(1 << (i % 8));
-                }
-                else
+                catch (Exception)
                 {
                     // error
-                    throw new Exception("Invalid value \"" + aFields[i].Trim() + "\"");
+                    throw new Exception("Invalid value: " + "\"" + aFields[i].Trim() + "\"");
                 }
             }
 
@@ -2408,7 +2446,9 @@ namespace ModbusControlSpace
                     }
                     catch
                     {
-                        // ignore the error
+                        // show error
+                        MessageBox.Show("Error: Invalid entry in Settings: " + q.command + ", " + q.slaveID + ", " + q.register + ", " + q.qty + ", " + q.format + Environment.NewLine, this.Text,
+                        MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                 }
             }

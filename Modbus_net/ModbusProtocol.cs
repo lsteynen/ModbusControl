@@ -832,11 +832,23 @@ namespace Modbus_net
                 Idx += queryLen;
 
                 // expected response length is unknown
-                Result retVal = ProtocolSendReceive(query2, query2.Length, out responseBuf, 0);
+                byte[] response;
+                Result retVal = ProtocolSendReceive(query2, query2.Length, out response, 0);
 
                 // slave address and function code echo are already checked by ProtocolSendReceive()
-                
-                // reponse is already in responseBuf[]
+
+                // copy response to responseBuf[]
+                // without slaveid
+                if (response.Length >= 1)
+                {
+                    responseBuf = new byte[response.Length - 1];
+                    Array.Copy(response, 1, responseBuf, 0, response.Length - 1);
+                }
+                else
+                {
+                    // return empty array
+                    responseBuf = new byte[0];
+                }
 
                 // update statistics counters
                 AdjustResultCounters(retVal);
