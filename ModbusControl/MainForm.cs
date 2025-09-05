@@ -233,7 +233,7 @@ namespace ModbusControlSpace
             }
             catch (Exception)
             {
-                //TODO?
+                // ignore
             }
 
             // Add demo mbc file(s) to the help menu, if any
@@ -259,7 +259,7 @@ namespace ModbusControlSpace
             }
             catch (Exception)
             {
-                //TODO?
+                // ignore
             }
         }
 

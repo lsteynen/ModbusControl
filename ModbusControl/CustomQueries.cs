@@ -140,87 +140,87 @@ namespace ModbusControlSpace
 
             AddQueryRow("RIR", "", "30001", "10", "INT16", "", "invalid slaveid");
             AddQueryRow("RIR", "a", "30001", "10", "INT16", "", "invalid slaveid");
-            AddQueryRow("RIR", "1", "30001", "10", "INT16", "", "pass");
+            AddQueryRow("RIR", "1", "30001", "10", "INT16", "", "data");
             AddQueryRow("RIR", "255", "30001", "10", "INT16", "", "no response");
             AddQueryRow("RIR", "256", "30001", "10", "INT16", "", "invalid slaveid");
             AddQueryRow("RIR", "1", "", "10", "INT16", "", "invalid register");
             AddQueryRow("RIR", "1", "a", "10", "INT16", "", "invalid register");
-            AddQueryRow("RIR", "1", "30001", "10", "INT16", "", "pass");
-            AddQueryRow("RIR", "1", "39999", "1", "INT16", "", "pass");
-            AddQueryRow("RIR", "1", "300001", "20", "INT16", "", "pass");
-            AddQueryRow("RIR", "1", "365536", "1", "INT16", "", "pass");
-            AddQueryRow("RIR", "1", "30001", "10", "INT16", "123", "pass");
+            AddQueryRow("RIR", "1", "30001", "10", "INT16", "", "data");
+            AddQueryRow("RIR", "1", "39999", "1", "INT16", "", "data");
+            AddQueryRow("RIR", "1", "300001", "20", "INT16", "", "data");
+            AddQueryRow("RIR", "1", "365536", "1", "INT16", "", "data");
+            AddQueryRow("RIR", "1", "30001", "10", "INT16", "123", "data");
             AddQueryRow("RIR", "1", "30001", "", "INT16", "", "invalid qty");
             AddQueryRow("RIR", "1", "30001", "a", "INT16", "", "invalid qty");
             AddQueryRow("RIR", "1", "30001", "0", "INT16", "", "no data");
-            AddQueryRow("RIR", "1", "30001", "1", "INT16", "", "pass");
-            AddQueryRow("RIR", "1", "30001", "10", "INT16", "", "pass");
-            AddQueryRow("RIR", "1", "30001", "125", "INT16", "", "pass");
+            AddQueryRow("RIR", "1", "30001", "1", "INT16", "", "data");
+            AddQueryRow("RIR", "1", "30001", "10", "INT16", "", "data");
+            AddQueryRow("RIR", "1", "30001", "125", "INT16", "", "data");
             AddQueryRow("RIR", "1", "30001", "200", "INT16", "", "error");
-            AddQueryRow("RIR", "1", "30001", "10", "UINT16", "", "pass");
-            AddQueryRow("RIR", "1", "30001", "10", "HEX16", "", "pass");
-            AddQueryRow("RIR", "1", "30001", "10", "INT32", "", "pass");
-            AddQueryRow("RIR", "1", "30001", "10", "UINT32", "", "pass");
-            AddQueryRow("RIR", "1", "30001", "10", "HEX32", "", "pass");
+            AddQueryRow("RIR", "1", "30001", "10", "UINT16", "", "data");
+            AddQueryRow("RIR", "1", "30001", "10", "HEX16", "", "data");
+            AddQueryRow("RIR", "1", "30001", "10", "INT32", "", "data");
+            AddQueryRow("RIR", "1", "30001", "10", "UINT32", "", "data");
+            AddQueryRow("RIR", "1", "30001", "10", "HEX32", "", "data");
             AddQueryRow("RIR", "1", "30001", "9", "HEX32", "", "invalid qty");
-            AddQueryRow("RIR", "1", "30001", "4", "HEXBYTES", "", "pass");  
+            AddQueryRow("RIR", "1", "30001", "4", "HEXBYTES", "", "data");  
             AddQueryRow("RIR", "1", "30001", "1", "BITS", "", "invalid format");
 
             AddQueryRow("RHR", "", "----------", "----------", "INT16", "------------------------------", "----------");
 
             AddQueryRow("RHR", "", "40001", "1", "INT16", "", "invalid slaveid");
             AddQueryRow("RHR", "a", "40001", "1", "INT16", "", "invalid slaveid");
-            AddQueryRow("RHR", "1", "40001", "1", "INT16", "", "pass");
+            AddQueryRow("RHR", "1", "40001", "1", "INT16", "", "data");
             AddQueryRow("RHR", "255", "40001", "1", "INT16", "", "no response");
             AddQueryRow("RHR", "256", "40001", "1", "INT16", "", "invalid slaveid");
             AddQueryRow("RHR", "1", "", "10", "INT16", "", "invalid register");
             AddQueryRow("RHR", "1", "a", "10", "INT16", "", "invalid register");
-            AddQueryRow("RHR", "1", "40001", "10", "INT16", "", "pass");
-            AddQueryRow("RHR", "1", "49999", "1", "INT16", "", "pass");
-            AddQueryRow("RHR", "1", "400001", "20", "INT16", "", "pass");
-            AddQueryRow("RHR", "1", "465536", "1", "INT16", "", "pass");
-            AddQueryRow("RHR", "1", "40001", "10", "INT16", "123", "pass");
+            AddQueryRow("RHR", "1", "40001", "10", "INT16", "", "data");
+            AddQueryRow("RHR", "1", "49999", "1", "INT16", "", "data");
+            AddQueryRow("RHR", "1", "400001", "20", "INT16", "", "data");
+            AddQueryRow("RHR", "1", "465536", "1", "INT16", "", "data");
+            AddQueryRow("RHR", "1", "40001", "10", "INT16", "123", "data");
             AddQueryRow("RHR", "1", "40001", "", "INT16", "", "invalid qty");
             AddQueryRow("RHR", "1", "40001", "a", "INT16", "", "invalid qty");
             AddQueryRow("RHR", "1", "40001", "0", "INT16", "", "no data");
-            AddQueryRow("RHR", "1", "40001", "1", "INT16", "", "pass");
-            AddQueryRow("RHR", "1", "40001", "10", "INT16", "", "pass");
-            AddQueryRow("RHR", "1", "40001", "125", "INT16", "", "pass");
+            AddQueryRow("RHR", "1", "40001", "1", "INT16", "", "data");
+            AddQueryRow("RHR", "1", "40001", "10", "INT16", "", "data");
+            AddQueryRow("RHR", "1", "40001", "125", "INT16", "", "data");
             AddQueryRow("RHR", "1", "40001", "200", "INT16", "", "error");
-            AddQueryRow("RHR", "1", "40001", "10", "UINT16", "", "pass");
-            AddQueryRow("RHR", "1", "40001", "10", "HEX16", "", "pass");
-            AddQueryRow("RHR", "1", "40001", "10", "INT32", "", "pass");
-            AddQueryRow("RHR", "1", "40001", "10", "UINT32", "", "pass");
-            AddQueryRow("RHR", "1", "40001", "10", "HEX32", "", "pass");
+            AddQueryRow("RHR", "1", "40001", "10", "UINT16", "", "data");
+            AddQueryRow("RHR", "1", "40001", "10", "HEX16", "", "data");
+            AddQueryRow("RHR", "1", "40001", "10", "INT32", "", "data");
+            AddQueryRow("RHR", "1", "40001", "10", "UINT32", "", "data");
+            AddQueryRow("RHR", "1", "40001", "10", "HEX32", "", "data");
             AddQueryRow("RHR", "1", "40001", "9", "HEX32", "", "invalid qty");
-            AddQueryRow("RHR", "1", "40001", "8", "HEXBYTES", "", "pass");
+            AddQueryRow("RHR", "1", "40001", "8", "HEXBYTES", "", "data");
             AddQueryRow("RHR", "1", "40001", "1", "BITS", "", "invalid format");
 
             AddQueryRow("WSHR", "", "----------", "----------", "INT16", "------------------------------", "----------");
 
             AddQueryRow("WSHR", "", "40001", "1", "INT16", "101", "invalid slaveid");
             AddQueryRow("WSHR", "a", "40001", "1", "INT16", "101", "invalid slaveid");
-            AddQueryRow("WSHR", "1", "40001", "1", "INT16", "101", "pass");
+            AddQueryRow("WSHR", "1", "40001", "1", "INT16", "101", "success");
             AddQueryRow("WSHR", "255", "40001", "1", "INT16", "101", "no response");
             AddQueryRow("WSHR", "256", "40001", "1", "INT16", "101", "invalid slaveid");
             AddQueryRow("WSHR", "1", "", "10", "INT16", "", "invalid register");
             AddQueryRow("WSHR", "1", "a", "10", "INT16", "", "invalid register");
-            AddQueryRow("WSHR", "1", "40001", "1", "INT16", "108", "pass");
-            AddQueryRow("WSHR", "1", "49999", "1", "INT16", "102", "pass");
-            AddQueryRow("WSHR", "1", "400001", "1", "INT16", "106", "pass");
-            AddQueryRow("WSHR", "1", "465536", "1", "INT16", "107", "pass");
-            AddQueryRow("WSHR", "1", "40001", "", "INT16", "108", "pass");
-            AddQueryRow("WSHR", "1", "40001", "0", "INT16", "109", "pass");
-            AddQueryRow("WSHR", "1", "40001", "1", "INT16", "", "invalid data");
+            AddQueryRow("WSHR", "1", "40001", "1", "INT16", "108", "success");
+            AddQueryRow("WSHR", "1", "49999", "1", "INT16", "102", "success");
+            AddQueryRow("WSHR", "1", "400001", "1", "INT16", "106", "success");
+            AddQueryRow("WSHR", "1", "465536", "1", "INT16", "107", "success");
+            AddQueryRow("WSHR", "1", "40001", "", "INT16", "108", "success");
+            AddQueryRow("WSHR", "1", "40001", "0", "INT16", "109", "success");
+            AddQueryRow("WSHR", "1", "40001", "1", "INT16", "", "no data");
             AddQueryRow("WSHR", "1", "40001", "0", "INT16", "1.98", "invalid data");
             AddQueryRow("WSHR", "1", "40001", "0", "INT16", "101,102", "invalid data");
-            AddQueryRow("WSHR", "1", "40001", "1", "INT16", "0", "pass");
-            AddQueryRow("WSHR", "1", "40001", "1", "INT16", "1", "pass");
-            AddQueryRow("WSHR", "1", "40001", "1", "INT16", "32000", "pass");
-            AddQueryRow("WSHR", "1", "40001", "1", "INT16", "-1", "pass");
-            AddQueryRow("WSHR", "1", "40001", "1", "INT16", "3001", "pass");
-            AddQueryRow("WSHR", "1", "40001", "1", "UINT16", "3002", "pass");
-            AddQueryRow("WSHR", "1", "40001", "1", "HEX16", "3003", "pass");
+            AddQueryRow("WSHR", "1", "40001", "1", "INT16", "0", "success");
+            AddQueryRow("WSHR", "1", "40001", "1", "INT16", "1", "success");
+            AddQueryRow("WSHR", "1", "40001", "1", "INT16", "32000", "success");
+            AddQueryRow("WSHR", "1", "40001", "1", "INT16", "-1", "success");
+            AddQueryRow("WSHR", "1", "40001", "1", "INT16", "3001", "success");
+            AddQueryRow("WSHR", "1", "40001", "1", "UINT16", "3002", "success");
+            AddQueryRow("WSHR", "1", "40001", "1", "HEX16", "3003", "success");
             AddQueryRow("WSHR", "1", "40001", "1", "INT32", "3004", "invalid format");
             AddQueryRow("WSHR", "1", "40001", "1", "HEXBYTES", "3005", "invalid format");
             AddQueryRow("WSHR", "1", "40001", "1", "BITS", "3006", "invalid format");
@@ -229,32 +229,32 @@ namespace ModbusControlSpace
 
             AddQueryRow("WMHR", "", "40001", "1", "INT16", "101", "invalid slaveid");
             AddQueryRow("WMHR", "a", "40001", "1", "INT16", "101", "invalid slaveid");
-            AddQueryRow("WMHR", "1", "40001", "1", "INT16", "101", "pass");
+            AddQueryRow("WMHR", "1", "40001", "1", "INT16", "101", "success");
             AddQueryRow("WMHR", "255", "40001", "1", "INT16", "101", "no response");
             AddQueryRow("WMHR", "256", "40001", "1", "INT16", "101", "invalid slaveid");
             AddQueryRow("WMHR", "1", "", "10", "INT16", "", "invalid register");
             AddQueryRow("WMHR", "1", "a", "10", "INT16", "", "invalid register");
-            AddQueryRow("WMHR", "1", "40001", "1", "INT16", "401", "pass");
-            AddQueryRow("WMHR", "1", "49999", "1", "INT16", "402", "pass");
-            AddQueryRow("WMHR", "1", "400001", "1", "INT16", "403", "pass");
-            AddQueryRow("WMHR", "1", "465536", "1", "INT16", "404", "pass");
-            AddQueryRow("WMHR", "1", "40001", "0", "INT16", "", "pass");
-            AddQueryRow("WMHR", "1", "40001", "1", "INT16", "", "invalid data");
-            AddQueryRow("WMHR", "1", "40001", "1", "INT16", "0", "pass");
-            AddQueryRow("WMHR", "1", "40001", "1", "INT16", "32000", "pass");
-            AddQueryRow("WMHR", "1", "40001", "1", "INT16", "-1", "pass");
+            AddQueryRow("WMHR", "1", "40001", "1", "INT16", "401", "success");
+            AddQueryRow("WMHR", "1", "49999", "1", "INT16", "402", "success");
+            AddQueryRow("WMHR", "1", "400001", "1", "INT16", "403", "success");
+            AddQueryRow("WMHR", "1", "465536", "1", "INT16", "404", "success");
+            AddQueryRow("WMHR", "1", "40001", "0", "INT16", "", "success");
+            AddQueryRow("WMHR", "1", "40001", "1", "INT16", "", "no data");
+            AddQueryRow("WMHR", "1", "40001", "1", "INT16", "0", "success");
+            AddQueryRow("WMHR", "1", "40001", "1", "INT16", "32000", "success");
+            AddQueryRow("WMHR", "1", "40001", "1", "INT16", "-1", "success");
             AddQueryRow("WMHR", "1", "40001", "1", "INT16", "-1, 46", "invalid data");
-            AddQueryRow("WMHR", "1", "40001", "2", "INT16", "-1, 46", "pass");
-            AddQueryRow("WMHR", "1", "40001", "7", "INT16", "1001, 1002, 1003, -1004, -1005, 0x1006, 0x89AB", "pass");
-            AddQueryRow("WMHR", "1", "40001", "7", "UINT16", "2001, 2002, 2003, -2004, -2005, 0x2006, 0x99AB", "pass");
-            AddQueryRow("WMHR", "1", "40001", "7", "HEX16", "3001, 3002, 3003, -3004, -3005, 0x3006, 0xA9AB", "pass");
-            AddQueryRow("WMHR", "1", "40003", "110", "INT16", "21001, 21002, 0x457A, 21004, -21005, 21006, 21007, 21008, 21009, 21010, 21011, 21012, 21013, 21014, 21015, 21016, 21017, 21018, 21019, 21020, 21021, 21022, 21023, 21024, 21025, 21026, 21027, 21028, 21029, 21030, 21031, 21032, 21033, 21034, 21035, 21036, 21037, 21038, 21039, 21040, 21041, 21042, 21043, 21044, 21045, 21046, 21047, 21048, 21049, 21050, 21051, 21052, 21053, 21054, 21055, 21056, 21057, 21058, 21059, 21060, 21061, 21062, 21063, 21064, 21065, 21066, 21067, 21068, 21069, 21070, 21071, 21072, 21073, 21074, 21075, 21076, 21077, 21078, 21079, 21080, 21081, 21082, 21083, 21084, 21085, 21086, 21087, 21088, 21089, 21090, 21091, 21092, 21093, 21094, 21095, 21096, 21097, 21098, 21099, 21100, 21101, 21102, 21103, 21104, 21105, 21106, 21107, 21108, 21109, 21110", "pass");
+            AddQueryRow("WMHR", "1", "40001", "2", "INT16", "-1, 46", "success");
+            AddQueryRow("WMHR", "1", "40001", "7", "INT16", "1001, 1002, 1003, -1004, -1005, 0x1006, 0x89AB", "success");
+            AddQueryRow("WMHR", "1", "40001", "7", "UINT16", "2001, 2002, 2003, -2004, -2005, 0x2006, 0x99AB", "success");
+            AddQueryRow("WMHR", "1", "40001", "7", "HEX16", "3001, 3002, 3003, -3004, -3005, 0x3006, 0xA9AB", "success");
+            AddQueryRow("WMHR", "1", "40003", "110", "INT16", "21001, 21002, 0x457A, 21004, -21005, 21006, 21007, 21008, 21009, 21010, 21011, 21012, 21013, 21014, 21015, 21016, 21017, 21018, 21019, 21020, 21021, 21022, 21023, 21024, 21025, 21026, 21027, 21028, 21029, 21030, 21031, 21032, 21033, 21034, 21035, 21036, 21037, 21038, 21039, 21040, 21041, 21042, 21043, 21044, 21045, 21046, 21047, 21048, 21049, 21050, 21051, 21052, 21053, 21054, 21055, 21056, 21057, 21058, 21059, 21060, 21061, 21062, 21063, 21064, 21065, 21066, 21067, 21068, 21069, 21070, 21071, 21072, 21073, 21074, 21075, 21076, 21077, 21078, 21079, 21080, 21081, 21082, 21083, 21084, 21085, 21086, 21087, 21088, 21089, 21090, 21091, 21092, 21093, 21094, 21095, 21096, 21097, 21098, 21099, 21100, 21101, 21102, 21103, 21104, 21105, 21106, 21107, 21108, 21109, 21110", "success");
             AddQueryRow("WMHR", "1", "40001", "1", "INT32", "1000000", "invalid qty");
-            AddQueryRow("WMHR", "1", "40001", "2", "INT32", "1000000", "pass");
+            AddQueryRow("WMHR", "1", "40001", "2", "INT32", "1000000", "success");
             AddQueryRow("WMHR", "1", "40001", "6", "INT32", "1000000000, 1000000001", "invalid data");
-            AddQueryRow("WMHR", "1", "40001", "8", "INT32", "1000000, -1000001, 4000000000, 0x49A9C916", "pass");
-            AddQueryRow("WMHR", "1", "40001", "2", "UINT32", "1000000", "pass");
-            AddQueryRow("WMHR", "1", "40001", "4", "HEX32", "1000001000, 2000001000", "pass");
+            AddQueryRow("WMHR", "1", "40001", "8", "INT32", "1000000, -1000001, 4000000000, 0x49A9C916", "success");
+            AddQueryRow("WMHR", "1", "40001", "2", "UINT32", "1000000", "success");
+            AddQueryRow("WMHR", "1", "40001", "4", "HEX32", "1000001000, 2000001000", "success");
             AddQueryRow("WMHR", "1", "40001", "1", "HEXBYTES", "31", "invalid format"); 
             AddQueryRow("WMHR", "1", "40001", "1", "BITS", "32", "invalid format");
 
@@ -262,24 +262,24 @@ namespace ModbusControlSpace
 
             AddQueryRow("RDI", "", "10001", "1", "BITS", "", "invalid slaveid");
             AddQueryRow("RDI", "a", "10001", "1", "BITS", "", "invalid slaveid");
-            AddQueryRow("RDI", "1", "10001", "1", "BITS", "", "pass");
+            AddQueryRow("RDI", "1", "10001", "1", "BITS", "", "data");
             AddQueryRow("RDI", "255", "10001", "1", "BITS", "", "no response");
             AddQueryRow("RDI", "256", "10001", "1", "BITS", "", "invalid slaveid");
             AddQueryRow("RDI", "1", "", "10", "BITS", "", "invalid address");
             AddQueryRow("RDI", "1", "a", "10", "BITS", "", "invalid address");
-            AddQueryRow("RDI", "1", "10001", "1", "BITS", "", "pass");
-            AddQueryRow("RDI", "1", "19999", "1", "BITS", "", "pass");
-            AddQueryRow("RDI", "1", "100001", "1", "BITS", "", "pass");
-            AddQueryRow("RDI", "1", "165536", "1", "BITS", "", "pass");
-            AddQueryRow("RDI", "1", "10001", "10", "BITS", "123", "pass");
+            AddQueryRow("RDI", "1", "10001", "1", "BITS", "", "data");
+            AddQueryRow("RDI", "1", "19999", "1", "BITS", "", "data");
+            AddQueryRow("RDI", "1", "100001", "1", "BITS", "", "data");
+            AddQueryRow("RDI", "1", "165536", "1", "BITS", "", "data");
+            AddQueryRow("RDI", "1", "10001", "10", "BITS", "123", "data");
             AddQueryRow("RDI", "1", "10001", "0", "BITS", "", "no data");
-            AddQueryRow("RDI", "1", "10001", "1", "BITS", "", "pass");
-            AddQueryRow("RDI", "1", "10001", "10", "BITS", "", "pass");
-            AddQueryRow("RDI", "1", "10001", "100", "BITS", "", "pass");
-            AddQueryRow("RDI", "1", "10001", "2000", "BITS", "", "pass");
+            AddQueryRow("RDI", "1", "10001", "1", "BITS", "", "data");
+            AddQueryRow("RDI", "1", "10001", "10", "BITS", "", "data");
+            AddQueryRow("RDI", "1", "10001", "100", "BITS", "", "data");
+            AddQueryRow("RDI", "1", "10001", "2000", "BITS", "", "data");
             AddQueryRow("RDI", "1", "10001", "3000", "BITS", "", "error");
-            AddQueryRow("RDI", "1", "10001", "1", "HEXBYTES", "", "pass");
-            AddQueryRow("RDI", "1", "10001", "100", "HEXBYTES", "", "pass");
+            AddQueryRow("RDI", "1", "10001", "1", "HEXBYTES", "", "data");
+            AddQueryRow("RDI", "1", "10001", "100", "HEXBYTES", "", "data");
             AddQueryRow("RDI", "1", "10001", "100", "INT16", "", "invalid format");
             AddQueryRow("RDI", "1", "10001", "100", "UINT16", "", "invalid format");
             AddQueryRow("RDI", "1", "10001", "100", "HEX16", "", "invalid format");
@@ -293,20 +293,20 @@ namespace ModbusControlSpace
             AddQueryRow("RC", "1", "", "1", "BITS", "", "invalid address");
             AddQueryRow("RC", "1", "a", "1", "BITS", "", "invalid address");
             AddQueryRow("RC", "1", "0", "10", "BITS", "", "invalid address");
-            AddQueryRow("RC", "1", "1", "10", "BITS", "", "pass");
-            AddQueryRow("RC", "1", "9999", "10", "BITS", "", "pass");
+            AddQueryRow("RC", "1", "1", "10", "BITS", "", "data");
+            AddQueryRow("RC", "1", "9999", "10", "BITS", "", "data");
             AddQueryRow("RC", "1", "10000", "10", "BITS", "", "invalid address");
             AddQueryRow("RC", "1", "40001", "10", "BITS", "", "invalid address");
             AddQueryRow("RC", "1", "1", "", "BITS", "", "invalid qty");
-            AddQueryRow("RC", "1", "1", "10", "BITS", "123", "pass");
+            AddQueryRow("RC", "1", "1", "10", "BITS", "123", "data");
             AddQueryRow("RC", "1", "1", "0", "BITS", "", "no data");
-            AddQueryRow("RC", "1", "1", "1", "BITS", "", "pass");
-            AddQueryRow("RC", "1", "1", "10", "BITS", "", "pass");
-            AddQueryRow("RC", "1", "1", "100", "BITS", "", "pass");
-            AddQueryRow("RC", "1", "1", "2000", "BITS", "", "pass");
+            AddQueryRow("RC", "1", "1", "1", "BITS", "", "data");
+            AddQueryRow("RC", "1", "1", "10", "BITS", "", "data");
+            AddQueryRow("RC", "1", "1", "100", "BITS", "", "data");
+            AddQueryRow("RC", "1", "1", "2000", "BITS", "", "data");
             AddQueryRow("RC", "1", "1", "3000", "BITS", "", "error");
-            AddQueryRow("RC", "1", "1", "100", "HEXBYTES", "", "pass");
-            AddQueryRow("RC", "1", "1", "100", "BITS", "", "pass");
+            AddQueryRow("RC", "1", "1", "100", "HEXBYTES", "", "data");
+            AddQueryRow("RC", "1", "1", "100", "BITS", "", "data");
             AddQueryRow("RC", "1", "1", "100", "INT16", "", "invalid format");
             AddQueryRow("RC", "1", "1", "100", "UINT16", "", "invalid format");
             AddQueryRow("RC", "1", "1", "100", "HEX16", "", "invalid format");
@@ -318,18 +318,18 @@ namespace ModbusControlSpace
 
             AddQueryRow("WSC", "", "1", "1", "BITS", "0", "invalid slaveid");
             AddQueryRow("WSC", "a", "1", "1", "BITS", "0", "invalid slaveid");
-            AddQueryRow("WSC", "1", "1", "1", "BITS", "", "invalid data");
+            AddQueryRow("WSC", "1", "1", "1", "BITS", "", "no data");
             AddQueryRow("WSC", "255", "1", "1", "BITS", "0", "no response");
             AddQueryRow("WSC", "256", "1", "1", "BITS", "0", "invalid slaveid");
             AddQueryRow("WSC", "1", "", "1", "BITS", "1", "invalid address");
             AddQueryRow("WSC", "1", "a", "1", "BITS", "1", "invalid address");
             AddQueryRow("WSC", "1", "0", "10", "BITS", "", "invalid address");
-            AddQueryRow("WSC", "1", "1", "10", "BITS", "", "invalid data");
-            AddQueryRow("WSC", "1", "9999", "10", "BITS", "", "invalid data");
+            AddQueryRow("WSC", "1", "1", "10", "BITS", "", "no data");
+            AddQueryRow("WSC", "1", "9999", "10", "BITS", "", "no data");
             AddQueryRow("WSC", "1", "10000", "10", "BITS", "", "invalid address");
             AddQueryRow("WSC", "1", "40001", "10", "BITS", "", "invalid address");
-            AddQueryRow("WSC", "1", "1", "2", "BITS", "1", "pass");
-            AddQueryRow("WSC", "1", "1", "1", "BITS", "", "invalid data");
+            AddQueryRow("WSC", "1", "1", "2", "BITS", "1", "success");
+            AddQueryRow("WSC", "1", "1", "1", "BITS", "", "no data");
             AddQueryRow("WSC", "1", "1", "1", "BITS", "1,0", "invalid data");
             AddQueryRow("WSC", "1", "1", "1", "INT16", "1", "invalid format");
             AddQueryRow("WSC", "1", "1", "1", "UINT16", "1", "invalid format");
@@ -342,19 +342,19 @@ namespace ModbusControlSpace
 
             AddQueryRow("WMC", "", "1", "1", "BITS", "1", "invalid slaveid");
             AddQueryRow("WMC", "a", "1", "1", "BITS", "1", "invalid slaveid");
-            AddQueryRow("WMC", "1", "1", "1", "BITS", "1", "pass");
+            AddQueryRow("WMC", "1", "1", "1", "BITS", "1", "success");
             AddQueryRow("WMC", "255", "1", "1", "BITS", "1", "no response");
             AddQueryRow("WMC", "256", "1", "1", "BITS", "1", "invalid slaveid");
             AddQueryRow("WMC", "1", "", "10", "BITS", "1,0,0,0,1,0,0,1,1,0", "invalid address");
             AddQueryRow("WMC", "1", "a", "10", "BITS", "1,0,0,0,1,0,0,1,1,0", "invalid address");
             AddQueryRow("WMC", "1", "0", "10", "BITS", "", "invalid address");
-            AddQueryRow("WMC", "1", "1", "10", "BITS", "", "invalid data");
-            AddQueryRow("WMC", "1", "9999", "10", "BITS", "", "invalid data");
+            AddQueryRow("WMC", "1", "1", "10", "BITS", "", "no data");
+            AddQueryRow("WMC", "1", "9999", "10", "BITS", "", "no data");
             AddQueryRow("WMC", "1", "10000", "10", "BITS", "", "invalid address");
             AddQueryRow("WMC", "1", "40001", "10", "BITS", "", "invalid address");
             AddQueryRow("WMC", "1", "2", "", "BITS", "1,0,0,0,1,0,0,1,1,0", "invalid qty");
             AddQueryRow("WMC", "1", "2", "10", "BITS", "1,0,0,0,1,0,0,1,1", "invalid data");
-            AddQueryRow("WMC", "1", "2", "10", "BITS", "1,0,0,0,1,0,0,1,1 , 0,", "pass");
+            AddQueryRow("WMC", "1", "2", "10", "BITS", "1,0,0,0,1,0,0,1,1 , 0,", "success");
             AddQueryRow("WMC", "1", "2", "10", "BITS", "1,0,0,0,1,0,0,1,1,0,1", "invalid data");
             AddQueryRow("WMC", "1", "1", "1", "INT16", "0", "invalid format");
             AddQueryRow("WMC", "1", "1", "1", "UINT16", "0", "invalid format");
@@ -367,11 +367,14 @@ namespace ModbusControlSpace
 
             AddQueryRow("CUSTQ", "", "", "", "HEXBYTES", "0x03,0x00,0x10,0x00,0x11", "invalid slaveid");
             AddQueryRow("CUSTQ", "a", "", "", "HEXBYTES", "0x03,0x00,0x10,0x00,0x11", "invalid slaveid");
-            AddQueryRow("CUSTQ", "1", "a", "", "HEXBYTES", "0x03,0x00,0x10,0x00,0x11", "pass");
+            AddQueryRow("CUSTQ", "1", "a", "", "HEXBYTES", "0x03,0x00,0x10,0x00,0x11", "data");
             AddQueryRow("CUSTQ", "255", "a", "", "HEXBYTES", "0x03,0x00,0x10,0x00,0x11", "no response");
-            AddQueryRow("CUSTQ", "1", "", "1", "HEXBYTES", "0x03,0x00,0x10,0x00,0x11", "pass");
-            AddQueryRow("CUSTQ", "1", "", "", "HEXBYTES", "0x03,0x00,0x10,0x00,0x11", "pass");
-            AddQueryRow("CUSTQ", "1", "", "", "HEXBYTES", "0x03,0x00, 0x10,  0x00  ,0x11 ", "pass");
+            AddQueryRow("CUSTQ", "1", "", "1", "HEXBYTES", "0x03,0x00,0x10,0x00,0x11", "data");
+            AddQueryRow("CUSTQ", "1", "", "", "HEXBYTES", "0x03,0x00,0x10,0x00,0x11", "data");
+            AddQueryRow("CUSTQ", "1", "", "", "HEXBYTES", "0x03,0x00, 0x10,  0x00  ,0x11 ", "data");
+            AddQueryRow("CUSTQ", "1", "", "", "HEXBYTES", "3, 0x00, 16,  0x00  ,17 ", "data");
+            AddQueryRow("CUSTQ", "1", "", "", "HEXBYTES", "3, 0x00x, 16,  0x00  ,17 ", "invalid data");
+            AddQueryRow("CUSTQ", "1", "", "", "HEXBYTES", "", "no data");
             AddQueryRow("CUSTQ", "1", "", "", "INT16", "0x03,0x00,0x10,0x00,0x11", "invalid format");
             AddQueryRow("CUSTQ", "1", "", "", "UINT16", "0x03,0x00,0x10,0x00,0x11", "invalid format");
             AddQueryRow("CUSTQ", "1", "", "", "HEX16", "0x03,0x00,0x10,0x00,0x11", "invalid format");
@@ -815,6 +818,19 @@ namespace ModbusControlSpace
 
             if (Continue)
             {
+                if ((regQuantity > 0) && (dataStr.Trim() == string.Empty))
+                {
+                    ResultStr = "Error: No data";
+                    Continue = false;
+                }
+                else
+                {
+                    // okay
+                }
+            }
+
+            if (Continue)
+            {
                 // force valid format
                 if (format == EFormat.INT16 || format == EFormat.UINT16 || format == EFormat.HEX16)
                 {
@@ -906,6 +922,19 @@ namespace ModbusControlSpace
                 {
                     ResultStr = "Error: Invalid qty";
                     Continue = false;
+                }
+            }
+
+            if (Continue)
+            {
+                if ((regQuantity > 0) && (dataStr.Trim() == string.Empty))
+                {
+                    ResultStr = "Error: No data";
+                    Continue = false;
+                }
+                else
+                {
+                    // okay
                 }
             }
 
@@ -1209,9 +1238,9 @@ namespace ModbusControlSpace
 
             if (Continue)
             {
-                if (dataStr.Trim() == string.Empty)
+                if ((regQuantity > 0) && (dataStr.Trim() == string.Empty))
                 {
-                    ResultStr = "Error: Data is empty";
+                    ResultStr = "Error: No data";
                     Continue = false;
                 }
                 else
@@ -1333,9 +1362,9 @@ namespace ModbusControlSpace
 
             if (Continue)
             {
-                if (dataStr.Trim() == string.Empty)
+                if ((regQuantity > 0) && (dataStr.Trim() == string.Empty))
                 {
-                    ResultStr = "Error: Data is empty";
+                    ResultStr = "Error: No data";
                     Continue = false;
                 }
                 else
@@ -1420,7 +1449,7 @@ namespace ModbusControlSpace
             {
                 if (dataStr.Trim() == string.Empty)
                 {
-                    ResultStr = "Error: Data/query is empty";
+                    ResultStr = "Error: No data/query";
                     Continue = false;
                 }
                 else
@@ -3019,13 +3048,13 @@ namespace ModbusControlSpace
             Test_TestResultStrContains("invalid qty", rs);
 
             rs = SendWriteSingleHoldingreg("1", "40301", "1", EFormat.INT16, "");
-            Test_TestResultStrContains("Expected 1 values, found 0 val", rs);
+            Test_TestResultStrContains("no data", rs);
 
             rs = SendWriteSingleHoldingreg("1", "40301", "1", EFormat.INT16, "aa");
             Test_TestResultStrContains("invalid value", rs);
 
             rs = SendWriteSingleHoldingreg("1", "40301", "1", EFormat.INT16, "");
-            Test_TestResultStrContains("Expected 1 values, found 0 val", rs);
+            Test_TestResultStrContains("no data", rs);
 
             rs = SendWriteSingleHoldingreg("1", "40301", "1", EFormat.INT16, "1.98");
             Test_TestResultStrContains("invalid value", rs);
@@ -3140,7 +3169,7 @@ namespace ModbusControlSpace
             Test_TestResultStrContains("invalid qty", rs);
 
             rs = SendWriteMultipleHoldingreg("1", "40301", "1", EFormat.INT16, "");
-            Test_TestResultStrContains("Expected 1 values, found 0 val", rs);
+            Test_TestResultStrContains("no data", rs);
 
             rs = SendWriteMultipleHoldingreg("1", "40301", "1", EFormat.INT16, "aa");
             Test_TestResultStrContains("Invalid value", rs);
@@ -3503,7 +3532,7 @@ namespace ModbusControlSpace
             Test_TestResultStrContains("invalid address", rs);
 
             rs = SendWriteSingleCoil("1", "1", "1", EFormat.BITS, "");
-            Test_TestResultStrContains("Error: Data is empty", rs);
+            Test_TestResultStrContains("Error: No data", rs);
 
             rs = SendWriteSingleCoil("1", "1", "1", EFormat.BITS, "0");
             Test_TestResultStrContains("success", rs);
@@ -3703,13 +3732,13 @@ namespace ModbusControlSpace
             Test_TestResultStrContains("invalid slaveid", rs);
 
             rs = SendCustomQuery("1", "", "", EFormat.HEXBYTES, "0x03, 0x00, 0x0A, 0x00, 0x06");
-            Test_TestResultStrContains("0x01, 0x03, 0x0C, 0x2A, 0xF9, 0x2E, 0xE2, 0x32, 0xCB, 0x36, 0xB4, 0x3A, 0x9D, 0x3E, 0x86", rs);
+            Test_TestResultStrEquals("0x03, 0x0C, 0x2A, 0xF9, 0x2E, 0xE2, 0x32, 0xCB, 0x36, 0xB4, 0x3A, 0x9D, 0x3E, 0x86", rs);
 
             rs = SendCustomQuery("1", "", "", EFormat.HEXBYTES, " 0x03 , 0  , 0x00A, 0x0000, 0x06,");
-            Test_TestResultStrContains("0x01, 0x03, 0x0C, 0x2A, 0xF9, 0x2E, 0xE2, 0x32, 0xCB, 0x36, 0xB4, 0x3A, 0x9D, 0x3E, 0x86", rs);
+            Test_TestResultStrEquals("0x03, 0x0C, 0x2A, 0xF9, 0x2E, 0xE2, 0x32, 0xCB, 0x36, 0xB4, 0x3A, 0x9D, 0x3E, 0x86", rs);
 
             rs = SendCustomQuery("1", "", "", EFormat.HEXBYTES, " 0x03 , 0  , 0x00A, 0x0000, 0x06,");
-            Test_TestResultStrContains("0x01, 0x03, 0x0C, 0x2A, 0xF9, 0x2E, 0xE2, 0x32, 0xCB, 0x36, 0xB4, 0x3A, 0x9D, 0x3E, 0x86", rs);
+            Test_TestResultStrEquals("0x03, 0x0C, 0x2A, 0xF9, 0x2E, 0xE2, 0x32, 0xCB, 0x36, 0xB4, 0x3A, 0x9D, 0x3E, 0x86", rs);
 
             rs = SendCustomQuery("1", "", "", EFormat.INT16, "0x03, 0x00, 0x0A, 0x00, 0x06");
             Test_TestResultStrContains("invalid format", rs);
