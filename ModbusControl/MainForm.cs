@@ -14,10 +14,6 @@ using Modbus_net;
 using LST.Helpers;
 using LST.ModbusGridView;
 
-//TODO: hoofdmenu: highlight letters
-//TODO: waar zijn importForm settings? Die ontbreken precies al heel lang..
-//TODO: werken de export settings save/restore?
-
 namespace ModbusControlSpace
 {
     public partial class MainForm : Form
@@ -195,8 +191,8 @@ namespace ModbusControlSpace
             // MRU list
             recentFilesMenuItem.LoadList(Settings1.Roaming.MbcMruList);
 
-            // the export window settings will be used later, when form is created
-            // the compare window settings will be used later, when form is created
+            // there are no import form settings
+            // the export form settings will be used later, when form is created
 
             // logger settings
             Logger1.CapacityLines = Settings1.Roaming.Logger.Capacity;
@@ -378,8 +374,7 @@ namespace ModbusControlSpace
 
             //Debug.Print(DateTime.Now.TimeOfDay + ": Form1_FormClosing()-5");
 
-            // Save the current settings
-
+            // save the current settings
             Settings1.Roaming.MbcMruList = recentFilesMenuItem.GetList();
             Settings1.Roaming.StopOnError = Options.StopOnError;
             Settings1.Roaming.BeepOnInputError = Options.BeepOnInputError;
@@ -396,8 +391,10 @@ namespace ModbusControlSpace
             Settings1.Roaming.CustomEditorCommand = Options.CustomEditorCommand;
             Debug.Print(DateTime.Now.TimeOfDay + ": 9) Save settings into Settings1");
             Settings1.Roaming.ColumnWidths = GetColumnWidthsInWeights();
-            
-            // save settings if form exists
+
+            // there are no import form settings
+
+            // save export form settings if form exists
             if (ExportForm != null)
             {
                 Settings1.Roaming.Export.Tabs = ExportForm.TabSelect;
@@ -405,7 +402,7 @@ namespace ModbusControlSpace
                 Settings1.Roaming.Export.ExportAsciiAs = ExportForm.AsciiFormatSelect;
             }
 
-            // save settings if form exists
+            // save Custom queries form settings if form exists
             if (CustomQueriesForm != null)
             {
                 Settings1.Roaming.CustomQueries.HoldingRegistersStartAddress = CustomQueriesForm.HoldingRegistersStartAddress;
@@ -419,7 +416,7 @@ namespace ModbusControlSpace
                 Settings1.Roaming.CustomQueries.QueriesList = cmdList;
             }
 
-            // logger
+            // save logger settings
             Settings1.Roaming.Logger.Capacity = Logger1.CapacityLines;
             Settings1.Roaming.Logger.LogErrors = Logger1.TheLogFilter.LogErrors;
             Settings1.Roaming.Logger.LogWarnings = Logger1.TheLogFilter.LogWarnings;
@@ -431,6 +428,7 @@ namespace ModbusControlSpace
             Settings1.Roaming.Logger.LogBridgeData = Logger1.TheLogFilter.LogBridgeData;
             Settings1.Roaming.Logger.LogBridgeDecode = Logger1.TheLogFilter.LogBridgeDecode;
 
+            // some global settings
             Settings1.Shared.LastRunVersion = AppHelpers.VersionNum;
             Settings1.Shared.Updater.CheckForUpdates = Options.CheckForUpdates;
 

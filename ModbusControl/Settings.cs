@@ -402,9 +402,9 @@ namespace ModbusControlSpace
                 XmlNode xn = xparent.SelectSingleNode("export");
                 if (xn != null)
                 {
-                    ReadElementString(xparent, "tabs", ref Tabs);
-                    ReadElementString(xparent, "exportformat", ref ExportFormat);
-                    ReadElementString(xparent, "exportasciias", ref ExportAsciiAs);
+                    ReadElementString(xn, "tabs", ref Tabs);
+                    ReadElementString(xn, "exportformat", ref ExportFormat);
+                    ReadElementString(xn, "exportasciias", ref ExportAsciiAs);
                 }
             }
 
