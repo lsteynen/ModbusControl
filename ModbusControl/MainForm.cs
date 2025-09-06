@@ -14,6 +14,13 @@ using Modbus_net;
 using LST.Helpers;
 using LST.ModbusGridView;
 
+//TODO: hoofdmenu: highlight letters
+//TODO: waar zijn importForm settings? Die ontbreken precies al heel lang..
+//TODO: import openen: geeft exception op icon
+//TODO: werken de export settings save/restore?
+
+
+
 namespace ModbusControlSpace
 {
     public partial class MainForm : Form
@@ -80,8 +87,6 @@ namespace ModbusControlSpace
         Import ImportForm;
         // the export form, make it global and use show/hide to keep the settings
         Export ExportForm;
-        // the Importcompare form, make it global and use show/hide to keep the settings
-        Importcompare ImportcompareForm;
         // the custom-modbus-command form, make it global and use show/hide to keep the settings
         CustomQueries CustomQueriesForm;
 
@@ -401,17 +406,6 @@ namespace ModbusControlSpace
                 Settings1.Roaming.Export.Tabs = ExportForm.TabSelect;
                 Settings1.Roaming.Export.ExportFormat = ExportForm.ExportFormatSelect;
                 Settings1.Roaming.Export.ExportAsciiAs = ExportForm.AsciiFormatSelect;
-            }
-
-            //TODO: waar zijn importForm settings? Die ontbreken precies al heel lang..
-            //TODO: import openen: geeft exception op icon
-            //TODO: werken de export settings save/restore?
-
-            //TODO: verwijderen?
-            // save settings if form exists
-            if (ImportcompareForm != null)
-            {
-                Settings1.Roaming.Compare.ShowEqual = ImportcompareForm.ShowEquals;
             }
 
             // save settings if form exists
@@ -1090,7 +1084,7 @@ namespace ModbusControlSpace
                 PollOnceToolbutton.Enabled = pollOnceMenuItem.Enabled;
 
                 // Action items
-                importExportToolStripMenuItem.Enabled = ConnectionIsOpen;
+                importRegistersFromFileToolStripMenuItem.Enabled = ConnectionIsOpen;
                 exportRegistersToFileToolStripMenuItem.Enabled = ConnectionIsOpen && ProjectIsOpen && (tabControl1.TabPages.Count > 0);
             }
         }
@@ -2762,23 +2756,6 @@ namespace ModbusControlSpace
 
             // show modal
             ExportForm.ShowDialog();
-
-            // make sure main tabs polling is restored
-            MainPollingIsEnabled = true;
-        }
-
-        private void CompareRegistersWithValuesInFileToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            // create once, then hide and show to keep settings
-            if (ImportcompareForm == null)
-            {
-                ImportcompareForm = new Importcompare(this);
-                // load settings
-                ImportcompareForm.ShowEquals = Settings1.Roaming.Compare.ShowEqual;
-            }
-
-            // show modal
-            ImportcompareForm.ShowDialog();
 
             // make sure main tabs polling is restored
             MainPollingIsEnabled = true;
