@@ -2220,17 +2220,30 @@ namespace LST.ModbusGridView
 
                         // get current format
                         DataRow dRow = (grid.Rows[rightclickRowIndex].DataBoundItem as DataRowView).Row;
-
-                        // show current format with checked flags
                         ModbusControlSpace.Global.eFormat curFormat = GetLineValueFormat(dRow);
+
+                        // show possible formats
+                        // show grey if not allowed
+                        // show current format with check mark
+                        bool isBitfield = GetLineIsBitfield(dRow);
                         int curWidth = GetLineValueWidth(dRow);
+                        // Int
+                        ((ToolStripMenuItem)ContextMenuForValueColumn.Items[0]).Enabled = true;
                         ((ToolStripMenuItem)ContextMenuForValueColumn.Items[0]).Checked = (curFormat == ModbusControlSpace.Global.eFormat.Int);
+                        // UInt
+                        ((ToolStripMenuItem)ContextMenuForValueColumn.Items[1]).Enabled = true; 
                         ((ToolStripMenuItem)ContextMenuForValueColumn.Items[1]).Checked = (curFormat == ModbusControlSpace.Global.eFormat.UInt);
+                        // Hex
+                        ((ToolStripMenuItem)ContextMenuForValueColumn.Items[2]).Enabled = true;
                         ((ToolStripMenuItem)ContextMenuForValueColumn.Items[2]).Checked = (curFormat == ModbusControlSpace.Global.eFormat.Hex);
+                        // Binary
+                        ((ToolStripMenuItem)ContextMenuForValueColumn.Items[3]).Enabled = true;
                         ((ToolStripMenuItem)ContextMenuForValueColumn.Items[3]).Checked = (curFormat == ModbusControlSpace.Global.eFormat.Bin);
-                        // allow float for registers only, not bitfields
-                        ((ToolStripMenuItem)ContextMenuForValueColumn.Items[4]).Enabled = (curWidth >= 32);
+                        // Float
+                        ((ToolStripMenuItem)ContextMenuForValueColumn.Items[4]).Enabled = (isBitfield == false) && (curWidth >= 32);
                         ((ToolStripMenuItem)ContextMenuForValueColumn.Items[4]).Checked = (curFormat == ModbusControlSpace.Global.eFormat.Float);
+                        // ASCII
+                        ((ToolStripMenuItem)ContextMenuForValueColumn.Items[5]).Enabled = isBitfield == false;
                         ((ToolStripMenuItem)ContextMenuForValueColumn.Items[5]).Checked = (curFormat == ModbusControlSpace.Global.eFormat.ASCII);
 
                         // show menu
@@ -2355,6 +2368,21 @@ namespace LST.ModbusGridView
             grid.InvalidateRow(rightclickRowIndex);
         }
 
+        private bool GetLineIsBitfield(DataRow dRow)
+        {
+            RegItem selReg;
+            RegfieldItem selRegfield;
+            bool isBitfield = false;
+
+            FindListItemsByRow(dRow, out selReg, out selRegfield);
+            if (selRegfield != null)
+            {
+                isBitfield = true;
+            }
+            
+            return isBitfield;
+        }
+
         private ModbusControlSpace.Global.eFormat GetLineValueFormat(DataRow dRow)
         {
             ModbusControlSpace.Global.eFormat result = ModbusControlSpace.Global.eFormat.Int;
@@ -2377,6 +2405,7 @@ namespace LST.ModbusGridView
             
             return result;
         }
+
         private int GetLineValueWidth(DataRow dRow)
         {
             int result = 0;
@@ -2399,6 +2428,7 @@ namespace LST.ModbusGridView
 
             return result;
         }
+
         private void ChangeLineStringValueFormat(DataRow dRow, ModbusControlSpace.Global.eFormat format)
         {
             RegItem selReg;

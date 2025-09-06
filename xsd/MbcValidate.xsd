@@ -260,7 +260,6 @@
 			<xs:enumeration value="uint"/>
 			<xs:enumeration value="hex"/>
 			<xs:enumeration value="bin"/>
-			<xs:enumeration value="ascii"/>
 		</xs:restriction>
 	</xs:simpleType>
 	<xs:complexType name="EnumType">

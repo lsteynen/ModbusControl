@@ -1268,7 +1268,7 @@ namespace ModbusControlSpace
                     else
                     {
                         TFilePosition fp = GetFilePos(xe);
-                        throw new XmlException("XML element <type> has an invalid value. Valid values are int, uint, hex, bin or ascii." + Environment.NewLine + LimitXmlTextLength(xe.ToString()) + Environment.NewLine, null, fp.Line, fp.Col);
+                        throw new XmlException("XML element <type> has an invalid value. Valid values are int, uint, hex or bin." + Environment.NewLine + LimitXmlTextLength(xe.ToString()) + Environment.NewLine, null, fp.Line, fp.Col);
                     }
                 }
                 else
@@ -2059,12 +2059,7 @@ namespace ModbusControlSpace
                 Format = Global.eFormat.Bin;
                 return true;
             }
-            else if (text == "ascii")
-            {
-                Format = Global.eFormat.ASCII;
-                return true;
-            }
-
+            
             Format = Global.eFormat.Int;
             return false;
         }
