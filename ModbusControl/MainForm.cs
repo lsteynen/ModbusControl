@@ -16,10 +16,7 @@ using LST.ModbusGridView;
 
 //TODO: hoofdmenu: highlight letters
 //TODO: waar zijn importForm settings? Die ontbreken precies al heel lang..
-//TODO: import openen: geeft exception op icon
 //TODO: werken de export settings save/restore?
-
-
 
 namespace ModbusControlSpace
 {
@@ -527,7 +524,7 @@ namespace ModbusControlSpace
         /// <summary>
         /// Open windows explorer at the project file's directory
         /// </summary>
-        private void OpenFileLocationToolStripMenuItem_Click(object sender, EventArgs e)
+        private void OpenContainingFolderToolStripMenuItem_Click(object sender, EventArgs e)
         {
             string DirName = System.IO.Path.GetDirectoryName(ProjectPath);
             if (!String.IsNullOrEmpty(DirName))

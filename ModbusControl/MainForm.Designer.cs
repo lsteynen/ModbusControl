@@ -170,7 +170,7 @@ namespace ModbusControlSpace
             // 
             this.openProjectFileMenuItem.Name = "openProjectFileMenuItem";
             this.openProjectFileMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.O)));
-            this.openProjectFileMenuItem.Size = new System.Drawing.Size(266, 22);
+            this.openProjectFileMenuItem.Size = new System.Drawing.Size(255, 22);
             this.openProjectFileMenuItem.Text = "&Open project file...";
             this.openProjectFileMenuItem.Click += new System.EventHandler(this.OpenProjectFileMenuItem_Click);
             // 
@@ -178,7 +178,7 @@ namespace ModbusControlSpace
             // 
             this.reloadProjectFileMenuItem.Name = "reloadProjectFileMenuItem";
             this.reloadProjectFileMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.R)));
-            this.reloadProjectFileMenuItem.Size = new System.Drawing.Size(266, 22);
+            this.reloadProjectFileMenuItem.Size = new System.Drawing.Size(255, 22);
             this.reloadProjectFileMenuItem.Text = "&Reload project file";
             this.reloadProjectFileMenuItem.Click += new System.EventHandler(this.ReloadProjectFileMenuItem_Click);
             // 
@@ -186,72 +186,72 @@ namespace ModbusControlSpace
             // 
             this.editProjectFileMenuItem.Name = "editProjectFileMenuItem";
             this.editProjectFileMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.E)));
-            this.editProjectFileMenuItem.Size = new System.Drawing.Size(266, 22);
+            this.editProjectFileMenuItem.Size = new System.Drawing.Size(255, 22);
             this.editProjectFileMenuItem.Text = "&Edit project file";
             this.editProjectFileMenuItem.Click += new System.EventHandler(this.EditProjectFileMenuItem_Click);
             // 
             // openFileLocationToolStripMenuItem
             // 
             this.openFileLocationToolStripMenuItem.Name = "openFileLocationToolStripMenuItem";
-            this.openFileLocationToolStripMenuItem.Size = new System.Drawing.Size(266, 22);
-            this.openFileLocationToolStripMenuItem.Text = "Open project file location in Explorer";
-            this.openFileLocationToolStripMenuItem.Click += new System.EventHandler(this.OpenFileLocationToolStripMenuItem_Click);
+            this.openFileLocationToolStripMenuItem.Size = new System.Drawing.Size(255, 22);
+            this.openFileLocationToolStripMenuItem.Text = "Open containing &folder in explorer";
+            this.openFileLocationToolStripMenuItem.Click += new System.EventHandler(this.OpenContainingFolderToolStripMenuItem_Click);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(263, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(252, 6);
             // 
             // recentFilesMenuItem
             // 
             this.recentFilesMenuItem.Enabled = false;
             this.recentFilesMenuItem.Name = "recentFilesMenuItem";
             this.recentFilesMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.F)));
-            this.recentFilesMenuItem.Size = new System.Drawing.Size(266, 22);
-            this.recentFilesMenuItem.Text = "Recent project &files";
+            this.recentFilesMenuItem.Size = new System.Drawing.Size(255, 22);
+            this.recentFilesMenuItem.Text = "Re&cent project files";
             this.recentFilesMenuItem.ItemClick += new System.EventHandler(this.RecentFilesMenuItem_ItemClick);
             // 
             // toolStripSeparator2
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(263, 6);
+            this.toolStripSeparator2.Size = new System.Drawing.Size(252, 6);
             // 
             // saveConfigurationMenuItem
             // 
             this.saveConfigurationMenuItem.Name = "saveConfigurationMenuItem";
-            this.saveConfigurationMenuItem.Size = new System.Drawing.Size(266, 22);
-            this.saveConfigurationMenuItem.Text = "Save project file...";
+            this.saveConfigurationMenuItem.Size = new System.Drawing.Size(255, 22);
+            this.saveConfigurationMenuItem.Text = "&Save project file...";
             this.saveConfigurationMenuItem.Click += new System.EventHandler(this.SaveConfigurationMenuItem_Click);
             // 
             // toolStripSeparator6
             // 
             this.toolStripSeparator6.Name = "toolStripSeparator6";
-            this.toolStripSeparator6.Size = new System.Drawing.Size(263, 6);
+            this.toolStripSeparator6.Size = new System.Drawing.Size(252, 6);
             // 
             // importRegistersFromFileToolStripMenuItem
             // 
             this.importRegistersFromFileToolStripMenuItem.Name = "importRegistersFromFileToolStripMenuItem";
-            this.importRegistersFromFileToolStripMenuItem.Size = new System.Drawing.Size(266, 22);
-            this.importRegistersFromFileToolStripMenuItem.Text = "Import registers from file...";
+            this.importRegistersFromFileToolStripMenuItem.Size = new System.Drawing.Size(255, 22);
+            this.importRegistersFromFileToolStripMenuItem.Text = "I&mport registers from file...";
             this.importRegistersFromFileToolStripMenuItem.Click += new System.EventHandler(this.ImportRegistersFromFileToolStripMenuItem_Click);
             // 
             // exportRegistersToFileToolStripMenuItem
             // 
             this.exportRegistersToFileToolStripMenuItem.Name = "exportRegistersToFileToolStripMenuItem";
-            this.exportRegistersToFileToolStripMenuItem.Size = new System.Drawing.Size(266, 22);
-            this.exportRegistersToFileToolStripMenuItem.Text = "Export registers to file...";
+            this.exportRegistersToFileToolStripMenuItem.Size = new System.Drawing.Size(255, 22);
+            this.exportRegistersToFileToolStripMenuItem.Text = "Ex&port registers to file...";
             this.exportRegistersToFileToolStripMenuItem.Click += new System.EventHandler(this.ExportRegistersToFileToolStripMenuItem_Click);
             // 
             // toolStripSeparator8
             // 
             this.toolStripSeparator8.Name = "toolStripSeparator8";
-            this.toolStripSeparator8.Size = new System.Drawing.Size(263, 6);
+            this.toolStripSeparator8.Size = new System.Drawing.Size(252, 6);
             // 
             // exitMenuItem
             // 
             this.exitMenuItem.Name = "exitMenuItem";
             this.exitMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.X)));
-            this.exitMenuItem.Size = new System.Drawing.Size(266, 22);
+            this.exitMenuItem.Size = new System.Drawing.Size(255, 22);
             this.exitMenuItem.Text = "E&xit";
             this.exitMenuItem.Click += new System.EventHandler(this.ExitMenuItem_Click);
             // 
@@ -271,41 +271,41 @@ namespace ModbusControlSpace
             // openConnectionMenuItem
             // 
             this.openConnectionMenuItem.Name = "openConnectionMenuItem";
-            this.openConnectionMenuItem.Size = new System.Drawing.Size(166, 22);
-            this.openConnectionMenuItem.Text = "Open connection";
+            this.openConnectionMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.openConnectionMenuItem.Text = "&Open connection";
             this.openConnectionMenuItem.Click += new System.EventHandler(this.OpenConnectionMenuItem_Click);
             // 
             // closeConnectionMenuItem
             // 
             this.closeConnectionMenuItem.Name = "closeConnectionMenuItem";
-            this.closeConnectionMenuItem.Size = new System.Drawing.Size(166, 22);
-            this.closeConnectionMenuItem.Text = "Close connection";
+            this.closeConnectionMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.closeConnectionMenuItem.Text = "&Close connection";
             this.closeConnectionMenuItem.Click += new System.EventHandler(this.CloseConnectionMenuItem_Click);
             // 
             // toolStripSeparator7
             // 
             this.toolStripSeparator7.Name = "toolStripSeparator7";
-            this.toolStripSeparator7.Size = new System.Drawing.Size(163, 6);
+            this.toolStripSeparator7.Size = new System.Drawing.Size(177, 6);
             // 
             // startPollingMenuItem
             // 
             this.startPollingMenuItem.Name = "startPollingMenuItem";
-            this.startPollingMenuItem.Size = new System.Drawing.Size(166, 22);
-            this.startPollingMenuItem.Text = "Start polling";
+            this.startPollingMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.startPollingMenuItem.Text = "&Start polling";
             this.startPollingMenuItem.Click += new System.EventHandler(this.StartPollingMenuItem_Click);
             // 
             // stopPollingMenuItem
             // 
             this.stopPollingMenuItem.Name = "stopPollingMenuItem";
-            this.stopPollingMenuItem.Size = new System.Drawing.Size(166, 22);
-            this.stopPollingMenuItem.Text = "Stop polling";
+            this.stopPollingMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.stopPollingMenuItem.Text = "Sto&p polling";
             this.stopPollingMenuItem.Click += new System.EventHandler(this.StopPollingMeuItem_Click);
             // 
             // pollOnceMenuItem
             // 
             this.pollOnceMenuItem.Name = "pollOnceMenuItem";
-            this.pollOnceMenuItem.Size = new System.Drawing.Size(166, 22);
-            this.pollOnceMenuItem.Text = "Poll once";
+            this.pollOnceMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.pollOnceMenuItem.Text = "Poll on&ce";
             this.pollOnceMenuItem.Click += new System.EventHandler(this.PollOnceMenuItem_Click);
             // 
             // viewToolStripMenuItem
@@ -324,7 +324,7 @@ namespace ModbusControlSpace
             // 
             this.zoomInToolStripMenuItem.Name = "zoomInToolStripMenuItem";
             this.zoomInToolStripMenuItem.ShortcutKeyDisplayString = "Ctrl+ +";
-            this.zoomInToolStripMenuItem.Size = new System.Drawing.Size(178, 22);
+            this.zoomInToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.zoomInToolStripMenuItem.Text = "Zoom &in";
             this.zoomInToolStripMenuItem.Click += new System.EventHandler(this.ZoomInToolStripMenuItem_Click);
             // 
@@ -332,7 +332,7 @@ namespace ModbusControlSpace
             // 
             this.zoomOutToolStripMenuItem.Name = "zoomOutToolStripMenuItem";
             this.zoomOutToolStripMenuItem.ShortcutKeyDisplayString = "Ctrl+ -";
-            this.zoomOutToolStripMenuItem.Size = new System.Drawing.Size(178, 22);
+            this.zoomOutToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.zoomOutToolStripMenuItem.Text = "Zoom &out";
             this.zoomOutToolStripMenuItem.Click += new System.EventHandler(this.ZoomOutToolStripMenuItem_Click);
             // 
@@ -340,21 +340,21 @@ namespace ModbusControlSpace
             // 
             this.resetZoomToolStripMenuItem.Name = "resetZoomToolStripMenuItem";
             this.resetZoomToolStripMenuItem.ShortcutKeyDisplayString = "Ctrl+ 0";
-            this.resetZoomToolStripMenuItem.Size = new System.Drawing.Size(178, 22);
+            this.resetZoomToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.resetZoomToolStripMenuItem.Text = "&Reset zoom";
             this.resetZoomToolStripMenuItem.Click += new System.EventHandler(this.ResetZoomToolStripMenuItem_Click);
             // 
             // toolStripSeparator9
             // 
             this.toolStripSeparator9.Name = "toolStripSeparator9";
-            this.toolStripSeparator9.Size = new System.Drawing.Size(175, 6);
+            this.toolStripSeparator9.Size = new System.Drawing.Size(177, 6);
             // 
             // findFilterToolStripMenuItem
             // 
             this.findFilterToolStripMenuItem.Name = "findFilterToolStripMenuItem";
             this.findFilterToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.F)));
-            this.findFilterToolStripMenuItem.Size = new System.Drawing.Size(178, 22);
-            this.findFilterToolStripMenuItem.Text = "Find/Filter";
+            this.findFilterToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.findFilterToolStripMenuItem.Text = "&Find/Filter";
             this.findFilterToolStripMenuItem.Click += new System.EventHandler(this.FindFilterToolStripMenuItem_Click);
             // 
             // extraMenuItem
@@ -395,7 +395,7 @@ namespace ModbusControlSpace
             // 
             this.customQueriesMenuItem.Name = "customQueriesMenuItem";
             this.customQueriesMenuItem.Size = new System.Drawing.Size(224, 22);
-            this.customQueriesMenuItem.Text = "Custom modbus queries";
+            this.customQueriesMenuItem.Text = "Custom modbus &queries";
             this.customQueriesMenuItem.Click += new System.EventHandler(this.CustomQueriesToolStripMenuItem_Click);
             // 
             // diagnosticsCountersToolStripMenuItem

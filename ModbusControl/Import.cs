@@ -14,27 +14,7 @@ using Modbus_net;
 
 namespace ModbusControlSpace
 {
-	class FileException : ApplicationException
-    {
-        // thrown in error related to file
-        public FileException() { }
-
-        public FileException(string name) : base(String.Format(name))
-        {
-        }
-    }
-
-    class CommsException : ApplicationException
-    {
-        // thrown in error related to communications
-        public CommsException() { }
-
-        public CommsException(string name) : base(String.Format(name))
-        {
-        }
-    }
-    
-    public partial class Import : Form
+	public partial class Import : Form
     {
         private MainForm mParent;
         private byte mSlaveAddress;
@@ -622,4 +602,25 @@ namespace ModbusControlSpace
             return descr;
         }
     }
+
+    class FileException : ApplicationException
+    {
+        // thrown in error related to file
+        public FileException() { }
+
+        public FileException(string name) : base(String.Format(name))
+        {
+        }
+    }
+
+    class CommsException : ApplicationException
+    {
+        // thrown in error related to communications
+        public CommsException() { }
+
+        public CommsException(string name) : base(String.Format(name))
+        {
+        }
+    }
+
 }
