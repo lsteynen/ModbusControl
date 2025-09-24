@@ -2014,6 +2014,13 @@ namespace LST.ModbusGridView
                     edDecimals = editingReg.Decimals;
                     edIsEnum = editingReg.EnumDict != null;
 
+                    // is it an enum?
+                    // then remove the enum text part
+                    if (edIsEnum)
+                    {
+                        newValueStr = CValueToString.CleanValuestrEnumText(newValueStr);
+                    }
+
                     // convert value string to int16[] values
                     try
                     {
