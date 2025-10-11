@@ -1889,6 +1889,8 @@ namespace LST.ModbusGridView
 
         private void grid_CellEndEdit(object sender, DataGridViewCellEventArgs e)
         {
+            Int16[] writingDataBuffer = null;   // temp data buffer for writing, avoid data being overwritten by polling process
+
             //Debug.Print("grid_CellEndEdit");
 
             // get datatable row from datagridview row
@@ -1982,15 +1984,16 @@ namespace LST.ModbusGridView
                         // convert to int, within given Width
                         try
                         {
-                            Int32 newValue = CValueToString.ValueStringToIntValue(newValueStr, edWidth, edDecimals);
+                            Int32 newFieldValue = CValueToString.ValueStringToIntValue(newValueStr, edWidth, edDecimals);
 
                             // insert bitfield value in register value
-                            int Position = editingRegfield.Pos;
-                            newValue = InsertBitfieldInValue(editingReg.ValueUInt32, newValue, Position, edWidth);
+                            Int32 newRegValue = InsertBitfieldInValue(editingReg.ValueUInt32, newFieldValue, editingRegfield.Pos, edWidth);
 
                             // convert to Int16[] for write
-                            editingReg.DataInt16Array = Converts.Int32ToInt16Array(newValue, editingReg.Size);
+                            writingDataBuffer = Converts.Int32ToInt16Array(newRegValue, editingReg.Size);
 
+                            // update grid
+                            editingReg.DataInt16Array = (Int16[])writingDataBuffer.Clone();
                             UpdateRegisterValue(editingReg);
                         }
                         catch
@@ -2024,9 +2027,12 @@ namespace LST.ModbusGridView
                     // convert value string to int16[] values
                     try
                     {
+                        // convert to Int16[] for write
                         bool IsFloat = (edFormat == ModbusControlSpace.Global.eFormat.Float);
-                        editingReg.DataInt16Array = CValueToString.ValueStringToInt16Registers(newValueStr, editingReg.Size, IsFloat, edDecimals);
+                        writingDataBuffer = CValueToString.ValueStringToInt16Registers(newValueStr, editingReg.Size, IsFloat, edDecimals);
                     
+                        // update grid
+                        editingReg.DataInt16Array = (Int16[])writingDataBuffer.Clone();                       
                         UpdateRegisterValue(editingReg);
                     }
                     catch
@@ -2051,7 +2057,7 @@ namespace LST.ModbusGridView
                     {
                         RegisterWriteEventArgs rwe = new RegisterWriteEventArgs();
                         rwe.Reg = editingReg.Reg;
-                        rwe.Values = editingReg.DataInt16Array;
+                        rwe.Values = writingDataBuffer; 
                         OnRegisterWrite(this, rwe);
                     }
                 }
