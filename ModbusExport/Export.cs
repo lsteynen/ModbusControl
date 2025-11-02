@@ -490,7 +490,7 @@ namespace ModbusExport
             // make value string
             // decimals are not used in export
             // minlen is not used in export
-            string ValueString = CValueToString.Int16RegistersToValueString(aRegValues, Format, Width);
+            string ValueString = CValueToString.Int16RegistersToValueString(aRegValues, Format, Format, Width);
             
             // output to file
             string[] fields = new string[] { Reg.ToString(), Width.ToString(), Description, RWstring, Format.ToString(), ValueString };

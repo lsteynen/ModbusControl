@@ -1766,7 +1766,7 @@ namespace LST.ModbusGridView
         private void UpdateRegisterValueString(RegItem r)
         {
             // update value string
-            r.ValueStr = CValueToString.Int16RegistersToValueString(r.DataInt16Array, r.DisplayFormat, r.Size * 16, r.Decimals, r.MinLen, r.EnumDict);
+            r.ValueStr = CValueToString.Int16RegistersToValueString(r.DataInt16Array, r.Format, r.DisplayFormat, r.Size * 16, r.Decimals, r.MinLen, r.EnumDict);
 
             // update the grid
             // but only if is is not beging edited
@@ -2298,9 +2298,7 @@ namespace LST.ModbusGridView
                         ((ToolStripMenuItem)ContextMenuForValueColumn.Items[1]).Enabled = IsFormatInList(varFormat, Global.eFormat.Int, Global.eFormat.UInt, Global.eFormat.Bin, Global.eFormat.Hex, Global.eFormat.ASCII, Global.eFormat.Float);
                         ((ToolStripMenuItem)ContextMenuForValueColumn.Items[1]).Checked = (varDisplayFormat == Global.eFormat.UInt);
                         // Hex
-                        //TODO: string erbij of niet? Dan Int16RegistersToValueString() ook aanpassen.
-                        ((ToolStripMenuItem)ContextMenuForValueColumn.Items[2]).Enabled = IsFormatInList(varFormat, Global.eFormat.Int, Global.eFormat.UInt, Global.eFormat.Bin, Global.eFormat.Hex, Global.eFormat.ASCII, Global.eFormat.Float);
-                        //((ToolStripMenuItem)ContextMenuForValueColumn.Items[2]).Enabled = IsFormatInList(varFormat, Global.eFormat.Int, Global.eFormat.UInt, Global.eFormat.Bin, Global.eFormat.Hex, Global.eFormat.ASCII, Global.eFormat.Float, Global.eFormat.String);
+                        ((ToolStripMenuItem)ContextMenuForValueColumn.Items[2]).Enabled = IsFormatInList(varFormat, Global.eFormat.Int, Global.eFormat.UInt, Global.eFormat.Bin, Global.eFormat.Hex, Global.eFormat.ASCII, Global.eFormat.Float, Global.eFormat.String);
                         ((ToolStripMenuItem)ContextMenuForValueColumn.Items[2]).Checked = (varDisplayFormat == Global.eFormat.Hex);
                         // Binary
                         ((ToolStripMenuItem)ContextMenuForValueColumn.Items[3]).Enabled = IsFormatInList(varFormat, Global.eFormat.Int, Global.eFormat.UInt, Global.eFormat.Bin, Global.eFormat.Hex, Global.eFormat.ASCII, Global.eFormat.Float);

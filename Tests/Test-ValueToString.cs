@@ -10,117 +10,127 @@ namespace UnitTests
     {
         // public static string Int16RegistersToValueString(Int16[] Regs, Global.eFormat Format, int Width, int Decimals = 0, int MinLen = 0, Global.CEnum EnumDict = null)
 
-        Int16[] Regs = new short[2];
-
         [TestMethod]
         public void Test_Int16_1()
         {
+            Int16[] Regs = new short[2];
             Regs[0] = 0;
             Converts.Int32Endian = Global.eEndian.Little;
-            string res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.Int, 16);
+            string res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.Int, Global.eFormat.Int, 16);
             Assert.AreEqual<string>("0", res);
         }
 
         [TestMethod]
         public void Test_Int16_2()
         {
+            Int16[] Regs = new short[2];
             Regs[0] = 1;
             Converts.Int32Endian = Global.eEndian.Little;
-            string res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.Int, 16);
+            string res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.Int, Global.eFormat.Int, 16);
             Assert.AreEqual<string>("1", res);
         }
 
         [TestMethod]
         public void Test_Int16_3()
         {
+            Int16[] Regs = new short[2];
             Regs[0] = 254;
             Converts.Int32Endian = Global.eEndian.Little;
-            string res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.Int, 16);
+            string res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.Int, Global.eFormat.Int, 16);
             Assert.AreEqual<string>("254", res);
         }
 
         [TestMethod]
         public void Test_Int16_3b()
         {
+            Int16[] Regs = new short[2];
             Regs[0] = 255;
             Converts.Int32Endian = Global.eEndian.Little;
-            string res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.Int, 16);
+            string res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.Int, Global.eFormat.Int, 16);
             Assert.AreEqual<string>("255", res);
         }
 
         [TestMethod]
         public void Test_Int16_3c()
         {
+            Int16[] Regs = new short[2];
             Regs[0] = 256;
             Converts.Int32Endian = Global.eEndian.Little;
-            string res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.Int, 16);
+            string res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.Int, Global.eFormat.Int, 16);
             Assert.AreEqual<string>("256", res);
         }
 
         [TestMethod]
         public void Test_Int16_4()
         {
+            Int16[] Regs = new short[2];
             Regs[0] = 32000;
             Converts.Int32Endian = Global.eEndian.Little;
-            string res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.Int, 16);
+            string res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.Int, Global.eFormat.Int, 16);
             Assert.AreEqual<string>("32000", res);
 
             Converts.Int32Endian = Global.eEndian.Big;
-            res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.Int, 16);
+            res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.Int, Global.eFormat.Int, 16);
             Assert.AreEqual<string>("32000", res);
         }
 
         [TestMethod]
         public void Test_Int16_5()
         {
+            Int16[] Regs = new short[2];
             Regs[0] = -31000;
             Converts.Int32Endian = Global.eEndian.Little;
-            string res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.Int, 16);
+            string res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.Int, Global.eFormat.Int, 16);
             Assert.AreEqual<string>("-31000", res);
         }
 
         [TestMethod]
         public void Test_Int16_d_1()
         {
+            Int16[] Regs = new short[2];
             Regs[0] = 32000;
             Converts.Int32Endian = Global.eEndian.Little;
-            string res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.Int, 16, 0);
+            string res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.Int, Global.eFormat.Int, 16, 0);
             Assert.AreEqual<string>("32000", res);
         }
 
         [TestMethod]
         public void Test_Int16_d_2()
         {
+            Int16[] Regs = new short[2];
             Regs[0] = 12345;
             Converts.Int32Endian = Global.eEndian.Little;
-            string res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.Int, 16, 1);
+            string res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.Int, Global.eFormat.Int, 16, 1);
             Assert.AreEqual<string>("1234,5", res);
         }
 
         [TestMethod]
         public void Test_Int16_m_1()
         {
+            Int16[] Regs = new short[2];
             Regs[0] = 0;
             Converts.Int32Endian = Global.eEndian.Little;
-            string res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.Int, 16, 0, 3);
+            string res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.Int, Global.eFormat.Int, 16, 0, 3);
             Assert.AreEqual<string>("000", res);
         }
 
         [TestMethod]
         public void Test_Int16_m_2()
         {
+            Int16[] Regs = new short[2];
             Regs[0] = 18;
             Converts.Int32Endian = Global.eEndian.Little;
-            string res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.Int, 16, 0, 8);
+            string res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.Int, Global.eFormat.Int, 16, 0, 8);
             Assert.AreEqual<string>("00000018", res);
         }
 
         [TestMethod]
         public void Test_Int16_m_3()
         {
+            Int16[] Regs = new short[2];
             Regs[0] = -18;
             Converts.Int32Endian = Global.eEndian.Little;
-            string res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.Int, 16, 0, 8);
+            string res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.Int, Global.eFormat.Int, 16, 0, 8);
             Assert.AreEqual<string>("-00000018", res);
         }
 
@@ -133,221 +143,242 @@ namespace UnitTests
         [TestMethod]
         public void Test_UInt16_1()
         {
+            Int16[] Regs = new short[2];
             Regs[0] = 38;
             Converts.Int32Endian = Global.eEndian.Little;
-            string res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.UInt, 16);
+            string res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.UInt, Global.eFormat.UInt, 16);
             Assert.AreEqual<string>("38", res);
         }
 
         [TestMethod]
         public void Test_UInt16_2()
         {
+            Int16[] Regs = new short[2];
             Regs[0] = Helpers.ConvToInt16(50000);
             Converts.Int32Endian = Global.eEndian.Little;
-            string res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.UInt, 16);
+            string res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.UInt, Global.eFormat.UInt, 16);
             Assert.AreEqual<string>("50000", res);
         }
 
         [TestMethod]
         public void Test_UInt16_d_1()
         {
+            Int16[] Regs = new short[2];
             Regs[0] = Helpers.ConvToInt16(44123);
             Converts.Int32Endian = Global.eEndian.Little;
-            string res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.UInt, 16, 3);
+            string res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.UInt, Global.eFormat.UInt, 16, 3);
             Assert.AreEqual<string>("44,123", res);
         }
 
         [TestMethod]
         public void Test_UInt16_m_1()
         {
+            Int16[] Regs = new short[2];
             Regs[0] = Helpers.ConvToInt16(35119);
             Converts.Int32Endian = Global.eEndian.Little;
-            string res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.UInt, 16, 0, 12);
+            string res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.UInt, Global.eFormat.UInt, 16, 0, 12);
             Assert.AreEqual<string>("000000035119", res);
         }
 
         [TestMethod]
         public void Test_Bin16_1()
         {
+            Int16[] Regs = new short[2];
             Regs[0] = 0;
             Converts.Int32Endian = Global.eEndian.Little;
-            string res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.Bin, 16);
+            string res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.UInt, Global.eFormat.Bin, 16);
             Assert.AreEqual<string>("0b0", res);
         }
 
         [TestMethod]
         public void Test_Bin16_2()
         {
+            Int16[] Regs = new short[2];
             Regs[0] = 13158;
             Converts.Int32Endian = Global.eEndian.Little;
-            string res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.Bin, 16);
+            string res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.UInt, Global.eFormat.Bin, 16);
             Assert.AreEqual<string>("0b11.0011.0110.0110", res);
         }
 
         [TestMethod]
         public void Test_Bin16_m_1()
         {
+            Int16[] Regs = new short[2];
             Regs[0] = 1000;
             Converts.Int32Endian = Global.eEndian.Little;
-            string res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.Bin, 16, 0, 32);
+            string res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.Int, Global.eFormat.Bin, 16, 0, 32);
             Assert.AreEqual<string>("0b0000.0000.0000.0000.0000.0011.1110.1000", res);
         }
 
         [TestMethod]
         public void Test_Bin16_m_2()
         {
+            Int16[] Regs = new short[2];
             Regs[0] = -1000;
             Converts.Int32Endian = Global.eEndian.Little;
-            string res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.Bin, 16, 0, 32);
+            string res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.Int, Global.eFormat.Bin, 16, 0, 32);
             Assert.AreEqual<string>("0b0000.0000.0000.0000.1111.1100.0001.1000", res);
         }
 
         [TestMethod]
         public void Test_Hex16_1()
         {
+            Int16[] Regs = new short[2];
             Regs[0] = 0;
             Converts.Int32Endian = Global.eEndian.Little;
-            string res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.Hex, 16);
+            string res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.Int, Global.eFormat.Hex, 16);
             Assert.AreEqual<string>("0x0", res);
         }
 
         [TestMethod]
         public void Test_Hex16_2()
         {
+            Int16[] Regs = new short[2];
             Regs[0] = 15;
             Converts.Int32Endian = Global.eEndian.Little;
-            string res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.Hex, 16);
+            string res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.Int, Global.eFormat.Hex, 16);
             Assert.AreEqual<string>("0xF", res);
         }
 
         [TestMethod]
         public void Test_Hex16_3()
         {
+            Int16[] Regs = new short[2];
             Regs[0] = Helpers.ConvToInt16(50000);
             Converts.Int32Endian = Global.eEndian.Little;
-            string res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.Hex, 16);
+            string res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.Int, Global.eFormat.Hex, 16);
             Assert.AreEqual<string>("0xC350", res);
         }
 
         [TestMethod]
         public void Test_Hex16_m_3()
         {
+            Int16[] Regs = new short[2];
             Regs[0] = Helpers.ConvToInt16(10000);
             Converts.Int32Endian = Global.eEndian.Little;
-            string res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.Hex, 16, 0, 8);
+            string res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.Hex, Global.eFormat.Hex, 16, 0, 8);
             Assert.AreEqual<string>("0x00002710", res);
         }
 
         [TestMethod]
         public void Test_Int32_1()
         {
+            Int16[] Regs = new short[2];
             Regs[0] = 0; Regs[1] = 0;
             Converts.Int32Endian = Global.eEndian.Little;
-            string res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.Int, 32);
+            string res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.Int, Global.eFormat.Int, 32);
             Assert.AreEqual<string>("0", res);
 
             Converts.Int32Endian = Global.eEndian.Big;
-            res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.Int, 32);
+            res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.Int, Global.eFormat.Int, 32);
             Assert.AreEqual<string>("0", res);
         }
 
         [TestMethod]
         public void Test_Int32_2()
         {
+            Int16[] Regs = new short[2];
             Regs[0] = 1; Regs[1] = 0;
             Converts.Int32Endian = Global.eEndian.Little;
-            string res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.Int, 32);
+            string res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.Int, Global.eFormat.Int, 32);
             Assert.AreEqual<string>("1", res);
 
             Converts.Int32Endian = Global.eEndian.Big;
-            res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.Int, 32);
+            res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.Int, Global.eFormat.Int, 32);
             Assert.AreEqual<string>("65536", res);
         }
 
         [TestMethod]
         public void Test_Int32_3()
         {
+            Int16[] Regs = new short[2];
             Regs[0] = 0; Regs[1] = 1;
             Converts.Int32Endian = Global.eEndian.Little;
-            string res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.Int, 32);
+            string res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.Int, Global.eFormat.Int, 32);
             Assert.AreEqual<string>("65536", res);
 
             Converts.Int32Endian = Global.eEndian.Big;
-            res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.Int, 32);
+            res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.Int, Global.eFormat.Int, 32);
             Assert.AreEqual<string>("1", res);
         }
 
         [TestMethod]
         public void Test_Int32_4()
         {
+            Int16[] Regs = new short[2];
             Regs[0] = 100; Regs[1] = 200;
             Converts.Int32Endian = Global.eEndian.Little;
-            string res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.Int, 32);
+            string res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.Int, Global.eFormat.Int, 32);
             Assert.AreEqual<string>("13107300", res);
 
             Converts.Int32Endian = Global.eEndian.Big;
-            res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.Int, 32);
+            res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.Int, Global.eFormat.Int, 32);
             Assert.AreEqual<string>("6553800", res);
         }
 
         [TestMethod]
         public void Test_Int32_5()
         {
+            Int16[] Regs = new short[2];
             Regs[0] = 20000; Regs[1] = 21000;
             Converts.Int32Endian = Global.eEndian.Little;
-            string res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.Int, 32);
+            string res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.Int, Global.eFormat.Int, 32);
             Assert.AreEqual<string>("1376276000", res);
 
             Converts.Int32Endian = Global.eEndian.Big;
-            res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.Int, 32);
+            res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.Int, Global.eFormat.Int, 32);
             Assert.AreEqual<string>("1310741000", res);
         }
 
         [TestMethod]
         public void Test_Int32_6()
         {
+            Int16[] Regs = new short[2];
             Regs[0] = Helpers.ConvToInt16(50000); Regs[1] = 21000;
             Converts.Int32Endian = Global.eEndian.Little;
-            string res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.Int, 32);
+            string res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.Int, Global.eFormat.Int, 32);
             Assert.AreEqual<string>("1376306000", res);
 
             Converts.Int32Endian = Global.eEndian.Big;
-            res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.Int, 32);
+            res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.Int, Global.eFormat.Int, 32);
             Assert.AreEqual<string>("-1018146296", res);
         }
 
         [TestMethod]
         public void Test_Int32_7()
         {
+            Int16[] Regs = new short[2];
             Regs[0] = 20000; Regs[1] = Helpers.ConvToInt16(51000);
             Converts.Int32Endian = Global.eEndian.Little;
-            string res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.Int, 32);
+            string res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.Int, Global.eFormat.Int, 32);
             Assert.AreEqual<string>("-952611296", res);
 
             Converts.Int32Endian = Global.eEndian.Big;
-            res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.Int, 32);
+            res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.Int, Global.eFormat.Int, 32);
             Assert.AreEqual<string>("1310771000", res);
         }
 
         [TestMethod]
         public void Test_Int32_8()
         {
+            Int16[] Regs = new short[2];
             Regs[0] = Helpers.ConvToInt16(50000); Regs[1] = Helpers.ConvToInt16(51000);
             Converts.Int32Endian = Global.eEndian.Little;
-            string res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.Int, 32);
+            string res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.Int, Global.eFormat.Int, 32);
             Assert.AreEqual<string>("-952581296", res);
 
             Converts.Int32Endian = Global.eEndian.Big;
-            res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.Int, 32);
+            res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.Int, Global.eFormat.Int, 32);
             Assert.AreEqual<string>("-1018116296", res);
         }
 
         [TestMethod]
         public void Test_Int32_d_1()
         {
+            Int16[] Regs = new short[2];
             Regs[0] = 12345; Regs[1] = 21000;
             Converts.Int32Endian = Global.eEndian.Little;
-            string res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.Int, 32, 3);
+            string res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.Int, Global.eFormat.Int, 32, 3);
             Assert.AreEqual<string>("1376268,345", res);
         }
 
@@ -355,149 +386,162 @@ namespace UnitTests
         [TestMethod]
         public void Test_Int32_d_2()
         {
+            Int16[] Regs = new short[2];
             Regs[0] = Helpers.ConvToInt16(50000); Regs[1] = Helpers.ConvToInt16(51000);
             Converts.Int32Endian = Global.eEndian.Little;
-            string res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.Int, 32, 3);
+            string res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.Int, Global.eFormat.Int, 32, 3);
             Assert.AreEqual<string>("-952581,296", res);
         }
 
         [TestMethod]
         public void Test_Int32_m_1()
         {
+            Int16[] Regs = new short[2];
             Regs[0] = 20000; Regs[1] = 0;
             Converts.Int32Endian = Global.eEndian.Little;
-            string res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.Int, 32, 0, 3);
+            string res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.Int, Global.eFormat.Int, 32, 0, 3);
             Assert.AreEqual<string>("20000", res);
         }
 
         [TestMethod]
         public void Test_Int32_m_2()
         {
+            Int16[] Regs = new short[2];
             Regs[0] = 20000; Regs[1] = 0;
             Converts.Int32Endian = Global.eEndian.Little;
-            string res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.Int, 32, 0, 8);
+            string res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.Int, Global.eFormat.Int, 32, 0, 8);
             Assert.AreEqual<string>("00020000", res);
         }
 
         [TestMethod]
         public void Test_Int32_m_3()
         {
+            Int16[] Regs = new short[2];
             Regs[0] = Helpers.ConvToInt16(50000); Regs[1] = Helpers.ConvToInt16(51000);
             Converts.Int32Endian = Global.eEndian.Little;
-            string res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.Int, 32, 0, 15);
+            string res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.Int, Global.eFormat.Int, 32, 0, 15);
             Assert.AreEqual<string>("-000000952581296", res);
         }
 
         [TestMethod]
         public void Test_UInt32_1()
         {
+            Int16[] Regs = new short[2];
             Regs[0] = 0; Regs[1] = 0;
             Converts.Int32Endian = Global.eEndian.Little;
-            string res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.UInt, 32);
+            string res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.Int, Global.eFormat.UInt, 32);
             Assert.AreEqual<string>("0", res);
 
             Converts.Int32Endian = Global.eEndian.Big;
-            res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.UInt, 32);
+            res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.Int, Global.eFormat.UInt, 32);
             Assert.AreEqual<string>("0", res);
         }
 
         [TestMethod]
         public void Test_UInt32_2()
         {
+            Int16[] Regs = new short[2];
             Regs[0] = 1; Regs[1] = 0;
             Converts.Int32Endian = Global.eEndian.Little;
-            string res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.UInt, 32);
+            string res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.Int, Global.eFormat.UInt, 32);
             Assert.AreEqual<string>("1", res);
 
             Converts.Int32Endian = Global.eEndian.Big;
-            res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.UInt, 32);
+            res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.Int, Global.eFormat.UInt, 32);
             Assert.AreEqual<string>("65536", res);
         }
 
         [TestMethod]
         public void Test_UInt32_3()
         {
+            Int16[] Regs = new short[2];
             Regs[0] = 0; Regs[1] = 1;
             Converts.Int32Endian = Global.eEndian.Little;
-            string res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.UInt, 32);
+            string res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.UInt, Global.eFormat.UInt, 32);
             Assert.AreEqual<string>("65536", res);
 
             Converts.Int32Endian = Global.eEndian.Big;
-            res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.UInt, 32);
+            res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.UInt, Global.eFormat.UInt, 32);
             Assert.AreEqual<string>("1", res);
         }
 
         [TestMethod]
         public void Test_UInt32_4()
         {
+            Int16[] Regs = new short[2];
             Regs[0] = 100; Regs[1] = 200;
             Converts.Int32Endian = Global.eEndian.Little;
-            string res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.UInt, 32);
+            string res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.UInt, Global.eFormat.UInt, 32);
             Assert.AreEqual<string>("13107300", res);
 
             Converts.Int32Endian = Global.eEndian.Big;
-            res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.UInt, 32);
+            res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.UInt, Global.eFormat.UInt, 32);
             Assert.AreEqual<string>("6553800", res);
         }
 
         [TestMethod]
         public void Test_UInt32_5()
         {
+            Int16[] Regs = new short[2];
             Regs[0] = 20000; Regs[1] = 21000;
             Converts.Int32Endian = Global.eEndian.Little;
-            string res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.UInt, 32);
+            string res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.UInt, Global.eFormat.UInt, 32);
             Assert.AreEqual<string>("1376276000", res);
 
             Converts.Int32Endian = Global.eEndian.Big;
-            res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.UInt, 32);
+            res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.UInt, Global.eFormat.UInt, 32);
             Assert.AreEqual<string>("1310741000", res);
         }
 
         [TestMethod]
         public void Test_UInt32_6()
         {
+            Int16[] Regs = new short[2];
             Regs[0] = Helpers.ConvToInt16(50000); Regs[1] = 21000;
             Converts.Int32Endian = Global.eEndian.Little;
-            string res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.UInt, 32);
+            string res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.UInt, Global.eFormat.UInt, 32);
             Assert.AreEqual<string>("1376306000", res);
 
             Converts.Int32Endian = Global.eEndian.Big;
-            res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.UInt, 32);
+            res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.UInt, Global.eFormat.UInt, 32);
             Assert.AreEqual<string>("3276821000", res);
         }
 
         [TestMethod]
         public void Test_UInt32_7()
         {
+            Int16[] Regs = new short[2];
             Regs[0] = 20000; Regs[1] = Helpers.ConvToInt16(51000);
             Converts.Int32Endian = Global.eEndian.Little;
-            string res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.UInt, 32);
+            string res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.UInt, Global.eFormat.UInt, 32);
             Assert.AreEqual<string>("3342356000", res);
 
             Converts.Int32Endian = Global.eEndian.Big;
-            res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.UInt, 32);
+            res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.UInt, Global.eFormat.UInt, 32);
             Assert.AreEqual<string>("1310771000", res);
         }
 
         [TestMethod]
         public void Test_UInt32_8()
         {
+            Int16[] Regs = new short[2];
             Regs[0] = Helpers.ConvToInt16(50000); Regs[1] = Helpers.ConvToInt16(51000);
             Converts.Int32Endian = Global.eEndian.Little;
-            string res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.UInt, 32);
+            string res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.UInt, Global.eFormat.UInt, 32);
             Assert.AreEqual<string>("3342386000", res);
 
             Converts.Int32Endian = Global.eEndian.Big;
-            res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.UInt, 32);
+            res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.UInt, Global.eFormat.UInt, 32);
             Assert.AreEqual<string>("3276851000", res);
         }
 
         [TestMethod]
         public void Test_UInt32_d_1()
         {
+            Int16[] Regs = new short[2];
             Regs[0] = 12345; Regs[1] = 21000;
             Converts.Int32Endian = Global.eEndian.Little;
-            string res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.UInt, 32, 3);
+            string res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.UInt, Global.eFormat.UInt, 32, 3);
             Assert.AreEqual<string>("1376268,345", res);
         }
 
@@ -505,335 +549,432 @@ namespace UnitTests
         [TestMethod]
         public void Test_UInt32_d_2()
         {
+            Int16[] Regs = new short[2];
             Regs[0] = Helpers.ConvToInt16(50000); Regs[1] = Helpers.ConvToInt16(51000);
             Converts.Int32Endian = Global.eEndian.Little;
-            string res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.UInt, 32, 3);
+            string res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.UInt, Global.eFormat.UInt, 32, 3);
             Assert.AreEqual<string>("3342386,000", res);
         }
 
         [TestMethod]
         public void Test_UInt32_m_1()
         {
+            Int16[] Regs = new short[2];
             Regs[0] = 20000; Regs[1] = 0;
             Converts.Int32Endian = Global.eEndian.Little;
-            string res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.UInt, 32, 0, 3);
+            string res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.UInt, Global.eFormat.UInt, 32, 0, 3);
             Assert.AreEqual<string>("20000", res);
         }
 
         [TestMethod]
         public void Test_UInt32_m_2()
         {
+            Int16[] Regs = new short[2];
             Regs[0] = 20000; Regs[1] = 0;
             Converts.Int32Endian = Global.eEndian.Little;
-            string res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.UInt, 32, 0, 8);
+            string res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.UInt, Global.eFormat.UInt, 32, 0, 8);
             Assert.AreEqual<string>("00020000", res);
         }
 
         [TestMethod]
         public void Test_UInt32_m_3()
         {
+            Int16[] Regs = new short[2];
             Regs[0] = Helpers.ConvToInt16(50000); Regs[1] = Helpers.ConvToInt16(51000);
             Converts.Int32Endian = Global.eEndian.Little;
-            string res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.UInt, 32, 0, 15);
+            string res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.UInt, Global.eFormat.UInt, 32, 0, 15);
             Assert.AreEqual<string>("000003342386000", res);
         }
 
         [TestMethod]
         public void Test_Bin32_1()
         {
+            Int16[] Regs = new short[2];
             Regs[0] = 0; Regs[1] = 0;
             Converts.Int32Endian = Global.eEndian.Little;
-            string res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.Bin, 32);
+            string res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.UInt, Global.eFormat.Bin, 32);
             Assert.AreEqual<string>("0b0", res);
 
             Converts.Int32Endian = Global.eEndian.Big;
-            res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.Bin, 32);
+            res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.UInt, Global.eFormat.Bin, 32);
             Assert.AreEqual<string>("0b0", res);
         }
 
         [TestMethod]
         public void Test_Bin32_2()
         {
+            Int16[] Regs = new short[2];
             Regs[0] = 100; Regs[1] = 200;
             Converts.Int32Endian = Global.eEndian.Little;
-            string res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.Bin, 32);
+            string res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.UInt, Global.eFormat.Bin, 32);
             Assert.AreEqual<string>("0b1100.1000.0000.0000.0110.0100", res);
 
             Converts.Int32Endian = Global.eEndian.Big;
-            res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.Bin, 32);
+            res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.UInt, Global.eFormat.Bin, 32);
             Assert.AreEqual<string>("0b110.0100.0000.0000.1100.1000", res);
         }
 
         [TestMethod]
         public void Test_Bin32_3()
         {
+            Int16[] Regs = new short[2];
             Regs[0] = Helpers.ConvToInt16(34345); Regs[1] = Helpers.ConvToInt16(51000);
             Converts.Int32Endian = Global.eEndian.Little;
-            string res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.Bin, 32);
+            string res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.UInt, Global.eFormat.Bin, 32);
             Assert.AreEqual<string>("0b1100.0111.0011.1000.1000.0110.0010.1001", res);
 
             Converts.Int32Endian = Global.eEndian.Big;
-            res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.Bin, 32);
+            res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.UInt, Global.eFormat.Bin, 32);
             Assert.AreEqual<string>("0b1000.0110.0010.1001.1100.0111.0011.1000", res);
         }
 
         [TestMethod]
         public void Test_Bin32_m_1()
         {
+            Int16[] Regs = new short[2];
             Regs[0] = 100; Regs[1] = 200;
             Converts.Int32Endian = Global.eEndian.Little;
-            string res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.Bin, 32, 0, 10);
+            string res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.UInt, Global.eFormat.Bin, 32, 0, 10);
             Assert.AreEqual<string>("0b1100.1000.0000.0000.0110.0100", res);
         }
 
         [TestMethod]
         public void Test_Bin32_m_2()
         {
+            Int16[] Regs = new short[2];
             Regs[0] = 100; Regs[1] = 200;
             Converts.Int32Endian = Global.eEndian.Little;
-            string res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.Bin, 32, 0, 32);
+            string res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.UInt, Global.eFormat.Bin, 32, 0, 32);
             Assert.AreEqual<string>("0b0000.0000.1100.1000.0000.0000.0110.0100", res);
         }
 
         [TestMethod]
         public void Test_Hex32_1()
         {
+            Int16[] Regs = new short[2];
             Regs[0] = 0; Regs[1] = 0;
             Converts.Int32Endian = Global.eEndian.Little;
-            string res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.Hex, 32);
+            string res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.Int, Global.eFormat.Hex, 32);
             Assert.AreEqual<string>("0x0", res);
 
             Converts.Int32Endian = Global.eEndian.Big;
-            res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.Hex, 32);
+            res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.Int, Global.eFormat.Hex, 32);
             Assert.AreEqual<string>("0x0", res);
         }
 
         [TestMethod]
         public void Test_Hex32_2()
         {
+            Int16[] Regs = new short[2];
             Regs[0] = 100; Regs[1] = 200;
             Converts.Int32Endian = Global.eEndian.Little;
-            string res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.Hex, 32);
+            string res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.Int, Global.eFormat.Hex, 32);
             Assert.AreEqual<string>("0xC80064", res);
 
             Converts.Int32Endian = Global.eEndian.Big;
-            res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.Hex, 32);
+            res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.Int, Global.eFormat.Hex, 32);
             Assert.AreEqual<string>("0x6400C8", res);
         }
 
         [TestMethod]
         public void Test_Hex32_3()
         {
+            Int16[] Regs = new short[2];
             Regs[0] = Helpers.ConvToInt16(50000); Regs[1] = Helpers.ConvToInt16(21000);
             Converts.Int32Endian = Global.eEndian.Little;
-            string res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.Hex, 32);
+            string res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.Int, Global.eFormat.Hex, 32);
             Assert.AreEqual<string>("0x5208C350", res);
 
             Converts.Int32Endian = Global.eEndian.Big;
-            res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.Hex, 32);
+            res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.Int, Global.eFormat.Hex, 32);
             Assert.AreEqual<string>("0xC3505208", res);
         }
 
         [TestMethod]
         public void Test_Hex32_4()
         {
+            Int16[] Regs = new short[2];
             Regs[0] = Helpers.ConvToInt16(21000); Regs[1] = Helpers.ConvToInt16(50000);
             Converts.Int32Endian = Global.eEndian.Little;
-            string res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.Hex, 32, 0, 8);
+            string res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.Hex, Global.eFormat.Hex, 32, 0, 8);
             Assert.AreEqual<string>("0xC3505208", res);
 
             Converts.Int32Endian = Global.eEndian.Big;
-            res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.Hex, 32);
+            res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.Hex, Global.eFormat.Hex, 32);
             Assert.AreEqual<string>("0x5208C350", res);
         }
 
         [TestMethod]
         public void Test_Hex32_m_1()
         {
+            Int16[] Regs = new short[2];
             Regs[0] = 100; Regs[1] = 200;
             Converts.Int32Endian = Global.eEndian.Little;
-            string res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.Hex, 32, 0, 4);
+            string res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.Hex, Global.eFormat.Hex, 32, 0, 4);
             Assert.AreEqual<string>("0xC80064", res);
         }
 
         [TestMethod]
         public void Test_Hex32_m_2()
         {
+            Int16[] Regs = new short[2];
             Regs[0] = 100; Regs[1] = 200;
             Converts.Int32Endian = Global.eEndian.Little;
-            string res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.Hex, 32, 0, 8);
+            string res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.Hex, Global.eFormat.Hex, 32, 0, 8);
             Assert.AreEqual<string>("0x00C80064", res);
         }
 
         [TestMethod]
         public void Test_Float32_1()
         {
+            Int16[] Regs = new short[2];
             Regs[0] = 0; Regs[1] = 0;
             Converts.Float32Endian = Global.eEndian.Little;
-            string res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.Float, 32);
+            string res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.Hex, Global.eFormat.Float, 32);
             Assert.AreEqual<string>("0", res);
 
             Converts.Float32Endian = Global.eEndian.Big;
-            res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.Float, 32);
+            res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.Hex, Global.eFormat.Float, 32);
             Assert.AreEqual<string>("0", res);
         }
 
         [TestMethod]
         public void Test_Float32_2()
         {
+            Int16[] Regs = new short[2];
             Regs[0] = 0; Regs[1] = 0x42f6;
             Converts.Float32Endian = Global.eEndian.Little;
-            string res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.Float, 32);
+            string res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.Float, Global.eFormat.Float, 32);
             Assert.AreEqual<string>("123", res);
 
             Regs[0] = 0x42f6; Regs[1] = 0;
             Converts.Float32Endian = Global.eEndian.Big;
-            res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.Float, 32);
+            res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.Float, Global.eFormat.Float, 32);
             Assert.AreEqual<string>("123", res);
         }
 
         [TestMethod]
         public void Test_Float32_3()
         {
+            Int16[] Regs = new short[2];
             Regs[0] = 0x0e56; Regs[1] = 0x4049;
             Converts.Float32Endian = Global.eEndian.Little;
-            string res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.Float, 32);
+            string res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.Float, Global.eFormat.Float, 32);
             Assert.AreEqual<string>("3,1415", res);
 
             Regs[0] = 0x4049; Regs[1] = 0x0e56;
             Converts.Float32Endian = Global.eEndian.Big;
-            res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.Float, 32);
+            res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.Float, Global.eFormat.Float, 32);
             Assert.AreEqual<string>("3,1415", res);
         }
 
         [TestMethod]
         public void Test_Float32_4()
         {
+            Int16[] Regs = new short[2];
             Regs[0] = Helpers.ConvToInt16(0xda66); Regs[1] = 0x466c;
             Converts.Float32Endian = Global.eEndian.Little;
-            string res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.Float, 32);
+            string res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.Float, Global.eFormat.Float, 32);
             Assert.AreEqual<string>("15158,6", res);
 
             Regs[0] = 0x466c; Regs[1] = Helpers.ConvToInt16(0xda66);
             Converts.Float32Endian = Global.eEndian.Big;
-            res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.Float, 32);
+            res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.Float, Global.eFormat.Float, 32);
             Assert.AreEqual<string>("15158,6", res);
         }
 
         [TestMethod]
         public void Test_Float32_5()
         {
+            Int16[] Regs = new short[2];
             Regs[0] = Helpers.ConvToInt16(0xe4cd); Regs[1] = Helpers.ConvToInt16(0xc497);
             Converts.Float32Endian = Global.eEndian.Little;
-            string res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.Float, 32);
+            string res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.Float, Global.eFormat.Float, 32);
             Assert.AreEqual<string>("-1215,15", res);
 
             Regs[0] = Helpers.ConvToInt16(0xc497); ; Regs[1] = Helpers.ConvToInt16(0xe4cd);
             Converts.Float32Endian = Global.eEndian.Big;
-            res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.Float, 32);
+            res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.Float, Global.eFormat.Float, 32);
             Assert.AreEqual<string>("-1215,15", res);
         }
 
         [TestMethod]
         public void Test_Float32_6()
         {
+            Int16[] Regs = new short[2];
             Regs[0] = Helpers.ConvToInt16(0xe4cd); Regs[1] = Helpers.ConvToInt16(0xc497);
             Converts.Float32Endian = Global.eEndian.Little;
             string res;
             Assert.ThrowsException<ArgumentException>(() =>
-                res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.Float, 16)
+                res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.Float, Global.eFormat.Float, 16)
                 );
         }
 
         [TestMethod]
         public void Test_Ascii16_1()
         {
+            Int16[] Regs = new short[2];
             Regs[0] = 0;
             Converts.StringEndian = Global.eEndian.Big;
-            string res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.ASCII, 16);
+            string res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.Int, Global.eFormat.ASCII, 16);
             Assert.AreEqual<string>(@"""\x00\x00""", res);
 
             Converts.StringEndian = Global.eEndian.Little;
-            res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.ASCII, 16);
+            res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.Int, Global.eFormat.ASCII, 16);
             Assert.AreEqual<string>(@"""\x00\x00""", res);
         }
 
         [TestMethod]
         public void Test_Ascii16_2()
         {
+            Int16[] Regs = new short[2];
             Regs[0] = 0x4101;
             Converts.StringEndian = Global.eEndian.Big;
-            string res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.ASCII, 16);
+            string res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.Int, Global.eFormat.ASCII, 16);
             Assert.AreEqual<string>(@"""A\x01""", res);
 
             Converts.StringEndian = Global.eEndian.Little;
-            res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.ASCII, 16);
+            res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.Int, Global.eFormat.ASCII, 16);
             Assert.AreEqual<string>(@"""\x01A""", res);
         }
 
         [TestMethod]
         public void Test_Ascii16_3()
         {
+            Int16[] Regs = new short[2];
             Regs[0] = Helpers.ConvToInt16(0x8120);
             Converts.StringEndian = Global.eEndian.Big;
-            string res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.ASCII, 16);
+            string res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.Int, Global.eFormat.ASCII, 16);
             Assert.AreEqual<string>(@"""\x81 """, res);
 
             Converts.StringEndian = Global.eEndian.Little;
-            res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.ASCII, 16);
+            res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.Int, Global.eFormat.ASCII, 16);
             Assert.AreEqual<string>(@""" \x81""", res);
         }
 
         [TestMethod]
         public void Test_Ascii16_4()
         {
+            Int16[] Regs = new short[2];
             Regs[0] = 0x7DFF;
             Converts.StringEndian = Global.eEndian.Big;
-            string res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.ASCII, 16);
+            string res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.Int, Global.eFormat.ASCII, 16);
             Assert.AreEqual<string>(@"""}\xFF""", res);
 
             Converts.StringEndian = Global.eEndian.Little;
-            res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.ASCII, 16);
+            res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.Int, Global.eFormat.ASCII, 16);
             Assert.AreEqual<string>(@"""\xFF}""", res);
         }
 
         [TestMethod]
         public void Test_Ascii32_1()
         {
+            Int16[] Regs = new short[2];
             Regs[0] = 0; Regs[1] = 0;
             Converts.StringEndian = Global.eEndian.Big;
-            string res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.ASCII, 32);
+            string res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.Int, Global.eFormat.ASCII, 32);
             Assert.AreEqual<string>(@"""\x00\x00\x00\x00""", res);
 
             Converts.StringEndian = Global.eEndian.Little;
-            res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.ASCII, 32);
+            res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.Int, Global.eFormat.ASCII, 32);
             Assert.AreEqual<string>(@"""\x00\x00\x00\x00""", res);
         }
 
         [TestMethod]
         public void Test_Ascii32_2()
         {
+            Int16[] Regs = new short[2];
             Regs[0] = 0x4142; Regs[1] = 0x4344;
             Converts.StringEndian = Global.eEndian.Big;
-            string res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.ASCII, 32);
+            string res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.Int, Global.eFormat.ASCII, 32);
             Assert.AreEqual<string>(@"""ABCD""", res);
 
             Converts.StringEndian = Global.eEndian.Little;
-            res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.ASCII, 32);
+            res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.Int, Global.eFormat.ASCII, 32);
             Assert.AreEqual<string>(@"""BADC""", res);
         }
 
         [TestMethod]
         public void Test_Ascii32_3()
         {
+            Int16[] Regs = new short[2];
             Regs[0] = 0x3a7f; Regs[1] = Helpers.ConvToInt16(0xb26d);
             Converts.StringEndian = Global.eEndian.Big;
-            string res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.ASCII, 32);
+            string res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.Int, Global.eFormat.ASCII, 32);
             Assert.AreEqual<string>(@""":\x7F\xB2m""", res);
 
             Converts.StringEndian = Global.eEndian.Little;
-            res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.ASCII, 32);
+            res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.Int, Global.eFormat.ASCII, 32);
             Assert.AreEqual<string>(@"""\x7F:m\xB2""", res);
+        }
+
+        [TestMethod]
+        public void Test_String_1()
+        {
+            Converts.StringEncodingName = "us-ascii";
+            Int16[] Regs = new short[3];
+            Regs[0] = 0x4142; Regs[1] = 0x4344; ; Regs[2] = 0x4500;
+
+            string res;
+            Converts.StringEndian = Global.eEndian.Big;
+            res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.String, Global.eFormat.String, 0);
+            Assert.AreEqual<string>(@"""ABCDE""", res);
+
+            Converts.StringEndian = Global.eEndian.Little;
+            res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.String, Global.eFormat.String, 0);
+            Assert.AreEqual<string>(@"""BADC""", res);
+        }
+
+        [TestMethod]
+        public void Test_String_2()
+        {
+            Converts.StringEncodingName = "us-ascii";
+            Int16[] Regs = new short[3];
+            Regs[0] = 0x4142; Regs[1] = 0x4344; ; Regs[2] = 0x4500;
+
+            string res;
+            Converts.StringEndian = Global.eEndian.Big;
+            res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.String, Global.eFormat.Hex, 0);
+            Assert.AreEqual<string>("0x4142, 0x4344, 0x4500", res);
+
+            Converts.StringEndian = Global.eEndian.Little;
+            res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.String, Global.eFormat.Hex, 0);
+            Assert.AreEqual<string>("0x4142, 0x4344, 0x4500", res);
+        }
+
+        [TestMethod]
+        public void Test_String_3()
+        {
+            Converts.StringEncodingName = "utf-8";
+            Int16[] Regs = new short[10];
+
+            string res;
+            Converts.StringEndian = Global.eEndian.Big;
+            Regs[0] = 0x4162; Regs[1] = 0x63E4; Regs[2] = Helpers.ConvToInt16(0xBDA0); Regs[3] = Helpers.ConvToInt16(0xE5A5); Regs[4] = Helpers.ConvToInt16(0xBD00);
+            res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.String, Global.eFormat.String, 0);
+            Assert.AreEqual<string>(@"""Abc你好""", res);
+
+            Regs[0] = 0x6241; Regs[1] = Helpers.ConvToInt16(0xE463); Regs[2] = Helpers.ConvToInt16(0xA0BD); Regs[3] = Helpers.ConvToInt16(0xA5E5); Regs[4] = Helpers.ConvToInt16(0x00BD);
+            Converts.StringEndian = Global.eEndian.Little;
+            res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.String, Global.eFormat.String, 0);
+            Assert.AreEqual<string>(@"""Abc你好""", res);
+        }
+
+        [TestMethod]
+        public void Test_String_4()
+        {
+            Converts.StringEncodingName = "utf-8";
+            Int16[] Regs = new short[10];
+
+            string res;
+            Converts.StringEndian = Global.eEndian.Big;
+            Regs[0] = 0x4162; Regs[1] = 0x63E4; Regs[2] = Helpers.ConvToInt16(0xBDA0); Regs[3] = Helpers.ConvToInt16(0xE5A5); Regs[4] = Helpers.ConvToInt16(0xBD00);
+            res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.String, Global.eFormat.Hex, 0);
+            Assert.AreEqual<string>(@"0x4162, 0x63E4, 0xBDA0, 0xE5A5, 0xBD00, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000", res);
+
+            Converts.StringEndian = Global.eEndian.Little;
+            res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.String, Global.eFormat.Hex, 0);
+            Assert.AreEqual<string>(@"0x4162, 0x63E4, 0xBDA0, 0xE5A5, 0xBD00, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000", res);
         }
     }
 

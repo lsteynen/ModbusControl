@@ -5,20 +5,21 @@
 
 using System;
 using System.Globalization;
+using System.Text;
 using ModbusControlSpace;
 
 namespace LST.Helpers
 {
     public static class CValueToString
     {
-        public static string Int16RegistersToValueString(Int16[] Regs, Global.eFormat Format, int Width, int Decimals = 0, int MinLen = 0, ModbusControlSpace.Global.CEnum EnumDict = null)
+        public static string Int16RegistersToValueString(Int16[] Regs, Global.eFormat Format, Global.eFormat DisplayFormat, int Width, int Decimals = 0, int MinLen = 0, ModbusControlSpace.Global.CEnum EnumDict = null)
         {
             string Result = string.Empty;
             Int32 Int32Val = 0;
             UInt32 UInt32Val = 0;
             Int32 DictSearchValue = 0;  // int32 value used for dictionary search, for example -1 for int16 0xFFFF or 65335 for uint16 0xFFFF
 
-            switch (Format)
+            switch (DisplayFormat)
             {
                 case Global.eFormat.Int:
                     // signed decimal
@@ -49,17 +50,38 @@ namespace LST.Helpers
                     break;
 
                 case Global.eFormat.Hex:
-                    // unsigned decimal
-                    if (Width == 32)
+                    // is it a string originally?
+                    if (Format == Global.eFormat.String)
                     {
-                        UInt32Val = Converts.ToUInt32(Regs[0], Regs[1]);
+                        // display as list of hex values
+                        StringBuilder sb = new StringBuilder(2000);     // 150 * "0x1234, "
+                        for (int i = 0; i < Regs.Length; i++)
+                        {
+                            // insert separator
+                            if (i > 0)
+                            {
+                                sb.Append(", ");
+                            }
+
+                            // conv to string, no decimals, no minlen
+                            sb.Append(Converts.IntToStringHex((UInt16)Regs[i], 4));
+                        }
+                        Result = sb.ToString();
                     }
                     else
                     {
-                        UInt32Val = (UInt32)(UInt16)Regs[0];
+                        // unsigned decimal
+                        if (Width == 32)
+                        {
+                            UInt32Val = Converts.ToUInt32(Regs[0], Regs[1]);
+                        }
+                        else
+                        {
+                            UInt32Val = (UInt32)(UInt16)Regs[0];
+                        }
+                        Result = UIntValueToStringAsHex(UInt32Val, MinLen);
+                        DictSearchValue = (Int32)UInt32Val;
                     }
-                    Result = UIntValueToStringAsHex(UInt32Val, MinLen);
-                    DictSearchValue = (Int32)UInt32Val;
                     break;
 
                 case Global.eFormat.Bin:
