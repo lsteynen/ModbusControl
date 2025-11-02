@@ -12,9 +12,64 @@ namespace ModbusControlSpace
     public static class Converts
     {
         // configure endians, with defaults
-        public static Global.eEndian Int32Endian = Global.eEndian.Little;      // word order in 32-bit integer
-        public static Global.eEndian Float32Endian = Global.eEndian.Little;    // word order in 32-bit float
-        public static Global.eEndian StringEndian = Global.eEndian.Big;        // big endian means first character is in high byte of Int16 register
+        private static Global.eEndian _int32Endian = Global.eEndian.Little;       // word order in 32-bit integer
+        private static Global.eEndian _float32Endian = Global.eEndian.Little;     // word order in 32-bit float
+        private static Global.eEndian _stringEndian = Global.eEndian.Big;         // big endian means first character is in high byte of Int16 register
+        private static string _stringEncodingName; 
+
+        #region Properties
+
+        public static Global.eEndian Int32Endian
+        {
+            get { return _int32Endian; }
+            set
+            {
+                _int32Endian = value;
+            }
+        }
+
+        public static Global.eEndian Float32Endian
+        {
+            get { return _float32Endian; }
+            set
+            {
+                _float32Endian = value;
+            }
+        }
+
+        public static Global.eEndian StringEndian
+        {
+            get { return _stringEndian; }
+            set
+            {
+                _stringEndian = value;
+            }
+        }
+
+        public static string StringEncodingName
+        {
+            get { return _stringEncodingName; }
+            set
+            {
+                // allow empty or valid encoding name
+                if (value != "")
+                {
+                    Encoding enc = Encoding.GetEncoding(value);
+                }
+                _stringEncodingName = value;
+            }
+        }
+
+        public static string StringEncodingNameNoValidation
+        {
+            get { return _stringEncodingName; }
+            set
+            {
+                _stringEncodingName = value;
+            }
+        }
+
+        #endregion Properties
 
         public static Int16 ToInt16(byte byte0, byte byte1)
         {
@@ -47,7 +102,7 @@ namespace ModbusControlSpace
             // use default word order?
             if (endian == null)
             {
-                endian = Int32Endian;
+                endian = _int32Endian;
             }
 
             if (endian == Global.eEndian.Big)
@@ -69,7 +124,7 @@ namespace ModbusControlSpace
             // use default word order?
             if (endian == null)
             {
-                endian = Int32Endian;
+                endian = _int32Endian;
             }
 
             if (endian == Global.eEndian.Big)
@@ -91,7 +146,7 @@ namespace ModbusControlSpace
             // use default word order?
             if (endian == null)
             {
-                endian = Int32Endian;
+                endian = _int32Endian;
             }
 
             if (endian == Global.eEndian.Big)
@@ -144,6 +199,57 @@ namespace ModbusControlSpace
             return result;
         }
 
+        public static Int16[] ByteArrayToInt16Array( byte[] aBytes, Global.eEndian endian = Global.eEndian.Little)
+        {
+            int int16Count = (aBytes.Length + 1) / 2;
+            Int16[] result = new Int16[int16Count];
+
+            if (endian == Global.eEndian.Little)
+            {
+                // little endian
+                int pairCount = aBytes.Length / 2;
+                for (int i = 0; i < pairCount; i++)
+                {
+                    int index = i * 2;
+
+                    byte b1 = aBytes[index];
+                    byte b2 = aBytes[index + 1];
+
+                    result[i] = (Int16)((b2 << 8) | b1);
+                }
+
+                // handle final odd byte, if present
+                if ((aBytes.Length % 2) != 0)
+                {
+                    byte lastByte = aBytes[aBytes.Length - 1];
+                    result[int16Count - 1] = (Int16)(lastByte);
+                }
+            }
+            else
+            {
+                // big endian
+                int pairCount = aBytes.Length / 2;
+                for (int i = 0; i < pairCount; i++)
+                {
+                    int index = i * 2;
+
+                    byte b1 = aBytes[index];
+                    byte b2 = aBytes[index + 1];
+
+                    result[i] = (Int16)((b1 << 8) | b2);
+                }
+
+                // handle final odd byte, if present
+                if ((aBytes.Length % 2) != 0)
+                {
+                    byte lastByte = aBytes[aBytes.Length - 1];
+                    result[int16Count - 1] = (Int16)(lastByte << 8);
+                }
+            }
+
+            return result;
+        }
+
         /// <summary>
         /// Convert 1 byte to ASCII representation
         /// Returns escape sequences for non-printable characters, like "\xFF"
@@ -173,10 +279,10 @@ namespace ModbusControlSpace
         }
 
         /// <summary>
-        /// parse a quoted ASCII string like "A", "AB", "Xy\x01\xFF"
-        /// supports escape sequences
-        /// return array of bytes, 1 character per byte
-        /// Throws exception on error
+        /// Parse an unquoted ASCII string like "A", "AB", "Xy\x01\xFF"
+        /// Supports escape sequences
+        /// Return array of bytes, 1 character per byte
+        /// Throws ArgumentException on error
         ///  Examples:	            	
         ///  "A"   		    0x41		
         ///  "AB"   		0x41, 0x42 		
@@ -187,39 +293,25 @@ namespace ModbusControlSpace
             List<byte> byteList = new List<byte>();
             int i = 0;
 
-            if ((str.Length >= 1) && str[i++] == '\"')
-            {
-                // OK
-            }
-            else
-            {
-                throw new ArgumentException("Invalid value", "str");
-            }
-
-            while ((i < str.Length) && (str[i] != '\"'))
+            while ((i < str.Length))
             {
                 char code = str[i++];
 
-                // end of quoted string?
-                if (code == '\"')
-                {
-                    break;
-                }
                 // only codes 0-255 are valid
-                else if ((code >= 0) && (code <= 255))
+                if ((code >= 0) && (code <= 255))
                 {
                     // escape sequence?
                     if (code == '\\')
                     {
                         // xNN should follow
-                        if (((i + 3) < str.Length) && (str[i] == 'x') && Uri.IsHexDigit(str[i + 1]) && Uri.IsHexDigit(str[i + 2]))
+                        if (((i + 3) <= str.Length) && (str[i] == 'x') && Uri.IsHexDigit(str[i + 1]) && Uri.IsHexDigit(str[i + 2]))
                         {
                             byteList.Add((byte)((GetValueOfHexDigit(str[i + 1]) * 16) + GetValueOfHexDigit(str[i + 2])));
                             i += 3;
                         }
                         else
                         {
-                            throw new ArgumentException("Invalid value", "str");
+                            throw new ArgumentException("Invalid value");
                         }
                     }
                     else
@@ -229,20 +321,8 @@ namespace ModbusControlSpace
                 }
                 else
                 {
-                    throw new ArgumentException("Invalid value", "str");
+                    throw new ArgumentException("Invalid character");
                 }
-            }
-
-            // got end quote?
-            if (!((i < str.Length) && (str[i++] == '\"')))
-            {
-                throw new ArgumentException("Invalid value", "str");
-            }
-
-            // garbage after end quote?
-            if (i < str.Length)
-            {
-                throw new ArgumentException("Invalid value", "str");
             }
 
             return byteList;
@@ -250,7 +330,7 @@ namespace ModbusControlSpace
 
         /// <summary>
         /// Convert binary value to ASCII characters, not yet quoted
-        /// Does not use StringEndian, always low-to-high 
+        /// Does not use _stringEndian, always low-to-high 
         /// Needs width to know if we should return 1, 2, 3 or 4 characters
         /// 
         /// Examples:
@@ -294,7 +374,7 @@ namespace ModbusControlSpace
         /// <summary>
         /// parse a quoted ASCII string like "Ab", "AB\xFA\xFF", with escape sequences
         /// return UInt32 with 0 to 4 characters, max 4 characters/bytes
-        /// Does not use StringEndian, always low-to-high
+        /// Does not use _stringEndian, always low-to-high
         /// Throws exception on error
         /// 
         ///  "A"   		    0x00000041   		
@@ -306,12 +386,17 @@ namespace ModbusControlSpace
         /// <returns></returns>
         public static UInt32 AsciiStringToUInt32(string str)
         {
+            if (string.IsNullOrEmpty(str))
+            {
+                throw new ArgumentException("Invalid value");
+            }
+
             UInt32 result = 0;
             List<byte> byteList = AsciiStringToByteList(str);
 
             if (byteList.Count > 4)
             {
-                throw new ArgumentException("Invalid value", "str");
+                throw new ArgumentException("Value too large");
             }
 
             if (byteList.Count >= 1)
@@ -336,14 +421,14 @@ namespace ModbusControlSpace
 
         /// <summary>
         /// Convert binary value to ASCII characters, not yet quoted
-        /// Uses StringEndian: high byte is first character if StringEndian==Big, low byte is first character if StringEndian==little
+        /// Uses _stringEndian: high byte is first character if _stringEndian==Big, low byte is first character if _stringEndian==little
         /// </summary>
         public static string Int16ToAscii(Int16 valInt16)
         {
             // Show as ASCII characters, show 1 character for each 8 bits.
             // 
             // The OPEN MODBUS/TCP SPECIFICATION by Andy Swales states: The first character displayed was the UPPER byte and the second character displayed was the LOWER byte. 
-            // So, StringEndian=Big is default
+            // So, _stringEndian=Big is default
             //
             //  	        highbytefirst   lowbytefirst    
             //  0x4241		"BA"            "AB"            
@@ -353,7 +438,7 @@ namespace ModbusControlSpace
             byte byte1 = 0;
             byte byte2 = 0;
 
-            if (StringEndian == Global.eEndian.Big)
+            if (_stringEndian == Global.eEndian.Big)
             {
                 byte1 = (byte)(valInt16 >> 8);
                 byte2 = (byte)(valInt16 & 0xFF);
@@ -368,9 +453,9 @@ namespace ModbusControlSpace
         }
 
         /// <summary>
-        /// Convert ASCII string to Int16[] len 1 or 2
+        /// Convert ASCII string to Int16[], must fit Int16[size], no terminating zero
         /// Assumes quoted string
-        /// Uses StringEndian: high byte is first character if StringEndian==Big, low byte is first character if StringEndian==little
+        /// Uses _stringEndian: high byte is first character if _stringEndian==Big, low byte is first character if _stringEndian==little
         /// Throws exception on error
         /// </summary>
         /// <param name="str"></param>
@@ -380,20 +465,16 @@ namespace ModbusControlSpace
         {
             Int16[] result = new Int16[size];
 
-            List<byte> byteList = AsciiStringToByteList(str);
+            if (string.IsNullOrEmpty(str))
+            {
+                return result;
+            }
 
-            if ((size == 1) || (size == 2))
-            {
-                // OK
-            }
-            else
-            {
-                throw new ArgumentException("Invalid value", "size");
-            }
+            List<byte> byteList = AsciiStringToByteList(str);
 
             if (byteList.Count > (size * 2))
             {
-                throw new ArgumentException("Invalid value", "str");
+                throw new ArgumentException("Value too large");
             }
 
             while (byteList.Count < 4)
@@ -401,10 +482,10 @@ namespace ModbusControlSpace
                 byteList.Add(0);
             }
 
-            result[0] = (Int16)ToUInt16(byteList[0], byteList[1], StringEndian);
+            result[0] = (Int16)ToUInt16(byteList[0], byteList[1], _stringEndian);
             if (size >= 2)
             {
-                result[1] = (Int16)ToUInt16(byteList[2], byteList[3], StringEndian);
+                result[1] = (Int16)ToUInt16(byteList[2], byteList[3], _stringEndian);
             }
 
             return result;
@@ -447,14 +528,14 @@ namespace ModbusControlSpace
             }
             else
             {
-                throw new ArgumentException("Invalid value", "size");
+                throw new ArgumentException("Invalid size");
             }
 
             Int16[] aValues16 = new Int16[size];
 
             if (size == 2)
             {
-                if (Int32Endian == Global.eEndian.Big)
+                if (_int32Endian == Global.eEndian.Big)
                 {
                     aValues16[0] = (Int16)(value32 >> 16);
                     aValues16[1] = (Int16)(value32);
@@ -474,7 +555,7 @@ namespace ModbusControlSpace
                 }
                 else
                 {
-                    throw new ArgumentException("Invalid value", "value32");
+                    throw new ArgumentException("Value too large");
                 }
 
                 aValues16[0] = (Int16)(value32);
@@ -490,7 +571,7 @@ namespace ModbusControlSpace
             // use default word order?
             if (endian == null)
             {
-                endian = Int32Endian;
+                endian = _int32Endian;
             }
 
             if (endian == Global.eEndian.Big)
@@ -561,7 +642,7 @@ namespace ModbusControlSpace
         {
             byte[] aBytes = new byte[4];
 
-            if (Float32Endian == Global.eEndian.Big)
+            if (_float32Endian == Global.eEndian.Big)
             {
                 aBytes[0] = (byte)((UInt16)word1 & 0xFF);
                 aBytes[1] = (byte)((UInt16)word1 >> 8);
@@ -584,7 +665,7 @@ namespace ModbusControlSpace
             Int16[] result = new Int16[2];
             byte[] aBytes = BitConverter.GetBytes(fValue);
 
-            if (Float32Endian == Global.eEndian.Big)
+            if (_float32Endian == Global.eEndian.Big)
             {
                 result[0] = ToInt16(aBytes[2], aBytes[3]);
                 result[1] = ToInt16(aBytes[0], aBytes[1]);
@@ -603,13 +684,13 @@ namespace ModbusControlSpace
             // len >= 2?
             if (aInt16.Length < 2)
             {
-                throw new ArgumentException("Int16[].Length < 2", "aInt16");
+                throw new ArgumentException("Value too large");
             }
 
             // use default word order?
             if (endian == null)
             {
-                endian = Int32Endian;
+                endian = _int32Endian;
             }
 
             if (endian == Global.eEndian.Big)
@@ -641,7 +722,7 @@ namespace ModbusControlSpace
             // maxCount <= aBytes.len?
             if (maxCount > aBytes.Length)
             {
-                throw new ArgumentException("maxCount > aBytes.Length", "maxCount");
+                throw new ArgumentException("Value too large");
             }
 
             int convlen = aBytes.Length;
@@ -670,7 +751,7 @@ namespace ModbusControlSpace
             }
             else
             {
-                throw new ArgumentException("Invalid value", "size");
+                throw new ArgumentException("Invalid size");
             }
             
             switch (type)
@@ -701,22 +782,112 @@ namespace ModbusControlSpace
 
                 case ModbusControlSpace.Global.eType.Float:
                     // convert with Float2 endian
-                    Value = Int16ArrayToUInt32(Regs, Float32Endian);
+                    Value = Int16ArrayToUInt32(Regs, _float32Endian);
                     break;
 
                 default:
                     // invalid
-                    throw new ArgumentException("Invalid Type enum!", "Type");
+                    throw new ArgumentException("Internal error", "Type");
                     //break;
             }
 
             return Value;
-            
         }
 
-        /* future feature: string support:        
-        public static string BytesToString(byte[] aBytes, Encoding enc)     "Test van ASCII of UTF8 encoded string"
-        public static string BytesToString(byte[] aBytes, Encoding enc)     "Test van ASCII of UTF8 encoded string"  
-        */
+        /// <summary>
+        /// Encode string to bytes, use encoding in _stringEncodingName,
+        /// Throw exception on conversion error
+        /// </summary>
+        public static byte[] StringEncodeToByteArray(string str)
+        {
+            Encoding enc;
+
+            // check that encoding is set
+            try
+            {
+                enc = Encoding.GetEncoding(_stringEncodingName,
+                        new EncoderExceptionFallback(),
+                        new DecoderExceptionFallback());
+            }
+            catch
+            {
+                throw new Exception("String encoder/decoder is not set");
+            }
+
+            // convert
+            return enc.GetBytes(str);
+        }
+
+        public static string ByteArrayDecodeToString(byte[] aBytes)
+        {
+            Encoding enc;
+
+            // the character to be used to replace unknown byte sequences
+            string fallbackChar = "\uFFFD";
+
+            // check that encoding is set
+            try
+            {
+                enc = Encoding.GetEncoding(_stringEncodingName,
+                        new EncoderReplacementFallback(fallbackChar),
+                        new DecoderReplacementFallback(fallbackChar));
+
+                // get length before first \00, or total length
+                int zeroIndex = Array.IndexOf(aBytes, (byte)0);
+                int length = zeroIndex >= 0 ? zeroIndex : aBytes.Length;
+
+                // convert
+                return enc.GetString(aBytes, 0, length);
+            }
+            catch
+            {
+                throw new Exception("String encoder/decoder is not set");
+            }            
+        }
+
+        /// <summary>
+        /// Encode string to Int16[]
+        /// use encoding in _stringEncodingName,
+        /// add terminating zero 00 
+        /// returns Int16[] size as needed
+        /// Throw exception on conversion error (character not available in selected encoding)
+        /// Throw exception if not all bytes fit in size
+        /// </summary>
+        public static Int16[] StringEncodeToInt16Array(string str, int maxsize)
+        {
+            // convert
+            byte[] ab0 = StringEncodeToByteArray(str);
+            // append terminating zero
+            byte[] ab = new byte[ab0.Length + 1];
+            Array.Copy(ab0, ab, ab0.Length);
+
+            // fits?
+            if ((ab.Length + 1) / 2 > maxsize)
+            {
+                throw new ArgumentException("String too large");
+            }
+
+            // Copy to Int16[]
+            return Converts.ByteArrayToInt16Array(ab, _stringEndian);
+        }
+
+        public static string Int16ArrayDecodeToString(Int16[] aValues)
+        {
+            byte[] ab = Int16ArrayToByteArray(aValues, _stringEndian);
+
+            return ByteArrayDecodeToString(ab);
+        }
+
+        /// <summary>
+        /// Validate string encoding name
+        /// Returns if OK. 
+        /// Throws exception on error
+        /// </summary>
+        public static void ValidateStringEncodingName(string encName)
+        {
+            // validate encoding name
+            Encoding enc = Encoding.GetEncoding(encName);
+        }
     }
+
 }

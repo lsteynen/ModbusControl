@@ -122,7 +122,7 @@ namespace ModbusExport
             // pass configuration to Endians and CStringToValue
             Converts.Int32Endian = Project.Connection.Int32Endian;
             Converts.Float32Endian = Project.Connection.Float32Endian;
-            Converts.StringEndian = Project.Connection.Ascii16Endian;
+            Converts.StringEndian = Project.Connection.StringEndian;
 
             // Connect
             Print("Opening connection: " + GetConnectionInfoString());
@@ -259,7 +259,7 @@ namespace ModbusExport
             if (CommandlineArgs.ArgFloat32Endian != null)
                 Project.Connection.Float32Endian = ConvertCommandlineEndianToEnum((int)CommandlineArgs.ArgFloat32Endian);
             if (CommandlineArgs.ArgStringEndian != null)
-                Project.Connection.Ascii16Endian = ConvertCommandlineEndianToEnum((int)CommandlineArgs.ArgStringEndian);
+                Project.Connection.StringEndian = ConvertCommandlineEndianToEnum((int)CommandlineArgs.ArgStringEndian);
         }
 
         private static Global.eWriteHoldingregFunctionCode ConvertCommandlineWriteholdregFCToEnum(int cmdcode)

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using ModbusControlSpace;
 
@@ -228,7 +229,7 @@ namespace UnitTests
         [TestMethod]
         public void Int16ArrayToByteArray_2()
         {
-            Int16[] aInt16 = { 1234};
+            Int16[] aInt16 = { 1234 };
             // default little endian
             byte[] res = Converts.Int16ArrayToByteArray(aInt16);
             Assert.AreEqual<int>(2, res.Length);
@@ -266,7 +267,93 @@ namespace UnitTests
             Assert.AreEqual<byte>(0xFF, res[4]);
             Assert.AreEqual<byte>(0x62, res[5]);
         }
-   }
+    }
+
+    [TestClass]
+    public class Test_ByteArrayToInt16Array
+    {
+        //public static Int16[] ByteArrayToInt16Array(byte[] aBytes, Global.eEndian endian = Global.eEndian.Little)
+
+        [TestMethod]
+        public void Test_ByteArrayToInt16Array_1()
+        {
+            byte[] ab = { };
+            Int16[] res = Converts.ByteArrayToInt16Array(ab);
+            Assert.AreEqual<int>(0, res.Length);
+        }
+
+        [TestMethod]
+        public void Test_ByteArrayToInt16Array_2()
+        {
+            byte[] ab = { 0 };
+            Int16[] res = Converts.ByteArrayToInt16Array(ab);
+            Assert.AreEqual<int>(1, res.Length);
+            Assert.AreEqual<Int16>(0, res[0]);
+        }
+
+        [TestMethod]
+        public void Test_ByteArrayToInt16Array_3()
+        {
+            byte[] ab = { 0x7F };
+            Int16[] res = Converts.ByteArrayToInt16Array(ab, Global.eEndian.Little);
+            Assert.AreEqual<int>(1, res.Length);
+            Assert.AreEqual<Int16>(0x007F, res[0]);
+
+            res = Converts.ByteArrayToInt16Array(ab, Global.eEndian.Big);
+            Assert.AreEqual<int>(1, res.Length);
+            Assert.AreEqual<Int16>(0x7F00, res[0]);
+        }
+
+        [TestMethod]
+        public void Test_ByteArrayToInt16Array_4()
+        {
+            byte[] ab = { 1, 2 };
+            Int16[] res = Converts.ByteArrayToInt16Array(ab, Global.eEndian.Little);
+            Assert.AreEqual<int>(1, res.Length);
+            Assert.AreEqual<Int16>(0x0201, res[0]);
+
+            res = Converts.ByteArrayToInt16Array(ab, Global.eEndian.Big);
+            Assert.AreEqual<int>(1, res.Length);
+            Assert.AreEqual<Int16>(0x0102, res[0]);
+        }
+
+        [TestMethod]
+        public void Test_ByteArrayToInt16Array_5()
+        {
+            byte[] ab = { 0x81, 0x82, 0x83 };
+            Int16[] res = Converts.ByteArrayToInt16Array(ab, Global.eEndian.Little);
+            Assert.AreEqual<int>(2, res.Length);
+            Assert.AreEqual<Int16>(Helpers.ConvToInt16(0x8281), res[0]);
+            Assert.AreEqual<Int16>(Helpers.ConvToInt16(0x0083), res[1]);
+
+            res = Converts.ByteArrayToInt16Array(ab, Global.eEndian.Big);
+            Assert.AreEqual<int>(2, res.Length);
+            Assert.AreEqual<Int16>(Helpers.ConvToInt16(0x8182), res[0]);
+            Assert.AreEqual<Int16>(Helpers.ConvToInt16(0x8300), res[1]);
+        }
+
+        [TestMethod]
+        public void Test_ByteArrayToInt16Array_6()
+        {
+            byte[] ab = { 0x71, 0x81, 0x72, 0x82, 0x83, 0x73, 0x84, 0x74, 0x85, 0x95 };
+            Int16[] res = Converts.ByteArrayToInt16Array(ab, Global.eEndian.Little);
+            Assert.AreEqual<int>(5, res.Length);
+            Assert.AreEqual<Int16>(Helpers.ConvToInt16(0x8171), res[0]);
+            Assert.AreEqual<Int16>(Helpers.ConvToInt16(0x8272), res[1]);
+            Assert.AreEqual<Int16>(Helpers.ConvToInt16(0x7383), res[2]);
+            Assert.AreEqual<Int16>(Helpers.ConvToInt16(0x7484), res[3]);
+            Assert.AreEqual<Int16>(Helpers.ConvToInt16(0x9585), res[4]);
+
+            res = Converts.ByteArrayToInt16Array(ab, Global.eEndian.Big);
+            Assert.AreEqual<int>(5, res.Length);
+            Assert.AreEqual<Int16>(Helpers.ConvToInt16(0x7181), res[0]);
+            Assert.AreEqual<Int16>(Helpers.ConvToInt16(0x7282), res[1]);
+            Assert.AreEqual<Int16>(Helpers.ConvToInt16(0x8373), res[2]);
+            Assert.AreEqual<Int16>(Helpers.ConvToInt16(0x8474), res[3]);
+            Assert.AreEqual<Int16>(Helpers.ConvToInt16(0x8595), res[4]);
+        }
+
+    }
 
     [TestClass]
     public class Test_IntToString
@@ -953,6 +1040,7 @@ namespace UnitTests
         [TestMethod]
         public void Test_AsciiStringToUInt32_1()
         {
+            Converts.StringEndian = Global.eEndian.Big; // no effect
             Assert.ThrowsException<ArgumentException>(() =>
                 Converts.AsciiStringToUInt32("")
                 );
@@ -961,38 +1049,35 @@ namespace UnitTests
         [TestMethod]
         public void Test_AsciiStringToUInt32_2()
         {
-            Converts.StringEndian = Global.eEndian.Big; // no effect
-            UInt32 result = Converts.AsciiStringToUInt32("\"\"");
-            Assert.AreEqual<UInt32>(0x0000, result);
-
             Converts.StringEndian = Global.eEndian.Little; // no effect
-            result = Converts.AsciiStringToUInt32("\"\"");
-            Assert.AreEqual<UInt32>(0x0000, result);
+            Assert.ThrowsException<ArgumentException>(() =>
+                Converts.AsciiStringToUInt32("")
+                );
         }
 
         [TestMethod]
         public void Test_AsciiStringToUInt32_3()
         {
             Converts.StringEndian = Global.eEndian.Big; // no effect
-            UInt32 result = Converts.AsciiStringToUInt32("\"A\x01\"");
+            UInt32 result = Converts.AsciiStringToUInt32("A\x01");
             Assert.AreEqual<UInt32>(0x0141, result);
 
             Converts.StringEndian = Global.eEndian.Little; // no effect
-            result = Converts.AsciiStringToUInt32("\"A\x01\"");
+            result = Converts.AsciiStringToUInt32("A\x01");
             Assert.AreEqual<UInt32>(0x0141, result);
         }
 
         [TestMethod]
         public void Test_AsciiStringToUInt32_4()
         {
-            UInt32 result = Converts.AsciiStringToUInt32("\"AB\"");
+            UInt32 result = Converts.AsciiStringToUInt32("AB");
             Assert.AreEqual<UInt32>(0x4241, result);
         }
 
         [TestMethod]
         public void Test_AsciiStringToUInt32_5()
         {
-            UInt32 result = Converts.AsciiStringToUInt32("\"ABC\"");
+            UInt32 result = Converts.AsciiStringToUInt32("ABC");
             Assert.AreEqual<UInt32>(0x00434241, result);
         }
 
@@ -1000,11 +1085,11 @@ namespace UnitTests
         public void Test_AsciiStringToUInt32_6()
         {
             Converts.StringEndian = Global.eEndian.Big; // no effect
-            UInt32 result = Converts.AsciiStringToUInt32("\"ABCD\"");
+            UInt32 result = Converts.AsciiStringToUInt32("ABCD");
             Assert.AreEqual<UInt32>(0x44434241, result);
 
             Converts.StringEndian = Global.eEndian.Little; // no effect
-            result = Converts.AsciiStringToUInt32("\"ABCD\"");
+            result = Converts.AsciiStringToUInt32("ABCD");
             Assert.AreEqual<UInt32>(0x44434241, result);
         }
 
@@ -1012,7 +1097,7 @@ namespace UnitTests
         public void Test_AsciiStringToUInt32_7()
         {
             Assert.ThrowsException<ArgumentException>(() =>
-                Converts.AsciiStringToUInt32("\"ABCDE\"")
+                Converts.AsciiStringToUInt32("ABCDE")
                 );
         }
     }
@@ -1116,30 +1201,40 @@ namespace UnitTests
         public void Test_AsciiStringToInt16Array_1()
         {
             Converts.StringEndian = Global.eEndian.Big;
-            Assert.ThrowsException<ArgumentException>(() =>
-                Converts.AsciiStringToInt16Array("", 1)
-                );
+            Int16[] res = Converts.AsciiStringToInt16Array(null, 1);
+            Assert.AreEqual<int>(1, res.Length);
+            Assert.AreEqual<Int16>(0x0000, res[0]);
+
+            Converts.StringEndian = Global.eEndian.Little;
+            res = Converts.AsciiStringToInt16Array(null, 1);
+            Assert.AreEqual<int>(1, res.Length);
+            Assert.AreEqual<Int16>(0x0000, res[0]);
         }
 
         [TestMethod]
         public void Test_AsciiStringToInt16Array_1b()
         {
             Converts.StringEndian = Global.eEndian.Big;
-            Assert.ThrowsException<ArgumentException>(() =>
-                Converts.AsciiStringToInt16Array("A", 1)
-                );
+            Int16[] res = Converts.AsciiStringToInt16Array("", 1);
+            Assert.AreEqual<int>(1, res.Length);
+            Assert.AreEqual<Int16>(0x0000, res[0]);
+
+            Converts.StringEndian = Global.eEndian.Little;
+            res = Converts.AsciiStringToInt16Array("", 1);
+            Assert.AreEqual<int>(1, res.Length);
+            Assert.AreEqual<Int16>(0x0000, res[0]);
         }
 
         [TestMethod]
         public void Test_AsciiStringToInt16Array_2()
         {
             Converts.StringEndian = Global.eEndian.Big;
-            Int16[] res = Converts.AsciiStringToInt16Array(@"""A""", 1);
+            Int16[] res = Converts.AsciiStringToInt16Array(@"A", 1);
             Assert.AreEqual<int>(1, res.Length);
             Assert.AreEqual<Int16>(0x4100, res[0]);
 
             Converts.StringEndian = Global.eEndian.Little;
-            res = res = Converts.AsciiStringToInt16Array(@"""A""", 1);
+            res = res = Converts.AsciiStringToInt16Array(@"A", 1);
             Assert.AreEqual<int>(1, res.Length);
             Assert.AreEqual<Int16>(0x0041, res[0]);
         }
@@ -1148,12 +1243,12 @@ namespace UnitTests
         public void Test_AsciiStringToInt16Array_3()
         {
             Converts.StringEndian = Global.eEndian.Big;
-            Int16[] res = Converts.AsciiStringToInt16Array(@"""AB""", 1);
+            Int16[] res = Converts.AsciiStringToInt16Array(@"AB", 1);
             Assert.AreEqual<int>(1, res.Length);
             Assert.AreEqual<Int16>(0x4142, res[0]);
 
             Converts.StringEndian = Global.eEndian.Little;
-            res = res = Converts.AsciiStringToInt16Array(@"""AB""", 1);
+            res = res = Converts.AsciiStringToInt16Array(@"AB", 1);
             Assert.AreEqual<int>(1, res.Length);
             Assert.AreEqual<Int16>(0x4241, res[0]);
         }
@@ -1163,7 +1258,7 @@ namespace UnitTests
         {
             Converts.StringEndian = Global.eEndian.Big;
             Assert.ThrowsException<ArgumentException>(() =>
-                Converts.AsciiStringToInt16Array(@"""ABC""", 1)
+                Converts.AsciiStringToInt16Array(@"ABC", 1)
                 );
         }
 
@@ -1171,13 +1266,13 @@ namespace UnitTests
         public void Test_AsciiStringToInt16Array_10()
         {
             Converts.StringEndian = Global.eEndian.Big;
-            Int16[] res = Converts.AsciiStringToInt16Array(@"""A""", 2);
+            Int16[] res = Converts.AsciiStringToInt16Array(@"A", 2);
             Assert.AreEqual<int>(2, res.Length);
             Assert.AreEqual<Int16>(0x4100, res[0]);
             Assert.AreEqual<Int16>(0x0000, res[1]);
 
             Converts.StringEndian = Global.eEndian.Little;
-            res = res = Converts.AsciiStringToInt16Array(@"""A""", 2);
+            res = res = Converts.AsciiStringToInt16Array(@"A", 2);
             Assert.AreEqual<int>(2, res.Length);
             Assert.AreEqual<Int16>(0x0041, res[0]);
             Assert.AreEqual<Int16>(0x0000, res[1]);
@@ -1355,6 +1450,8 @@ namespace UnitTests
     [TestClass]
     public class Test_Float32ToInt16Array
     {
+        public TestContext TestContext { get; set; }
+
         // public static Int16[] Float32ToInt16Array(float fValue)
 
         [TestMethod]
@@ -1371,6 +1468,8 @@ namespace UnitTests
             Assert.AreEqual<int>(2, res.Length);
             Assert.AreEqual<Int16>(Helpers.ConvToInt16(0), res[0]);
             Assert.AreEqual<Int16>(Helpers.ConvToInt16(0), res[1]);
+
+            //maak en gebruik IntArraysAreAqual
         }
 
         [TestMethod]
@@ -1404,6 +1503,609 @@ namespace UnitTests
             Assert.AreEqual<Int16>(Helpers.ConvToInt16(0xc5fa), res[0]);
             Assert.AreEqual<Int16>(Helpers.ConvToInt16(0x0733), res[1]);
         }
+
     }
 
+    [TestClass]
+    public class Test_property_StringEncodingName
+    {
+        public TestContext TestContext { get; set; }
+
+        [TestMethod]
+        public void Test_GetAllSupportedStringEncodings_1()
+        {
+            // print all supported encodings
+
+            foreach (var info in Encoding.GetEncodings())
+            {
+                string s = string.Format("{0,-10}{1,-30}{2}", info.CodePage, info.Name, info.DisplayName);
+                TestContext.WriteLine(s);
+            }
+        }
+
+        // property string StringEncodingName
+
+        [TestMethod]
+        public void Test_prop_StringEncodingName_1()
+        {
+            // test acceptance of some encoding names
+
+            Converts.StringEncodingName = "us-ascii";
+            Converts.StringEncodingName = "Windows-1250";
+            Converts.StringEncodingName = "Windows-1252";
+            Converts.StringEncodingName = "iso-8859-1";
+            Converts.StringEncodingName = "iso-8859-2";
+            Converts.StringEncodingName = "utf-8";
+        }
+
+        [TestMethod]
+        public void Test_prop_StringEncodingName_2()
+        {
+            // test a few variant (case)
+            // Note: C# string encoding names are not case sensitive
+
+            Converts.StringEncodingName = "US-ASCII";
+            Converts.StringEncodingName = "ascii";
+            Converts.StringEncodingName = "ASCII";
+            Converts.StringEncodingName = "windows-1252";
+            Converts.StringEncodingName = "ISO-8859-1";
+            Converts.StringEncodingName = "UTF-8";
+            Converts.StringEncodingName = "UtF-8";
+        }
+
+        [TestMethod]
+        public void Test_prop_StringEncodingName_10()
+        {
+            // test invalid encoding name
+
+            Assert.ThrowsException<ArgumentException>(() =>
+                Converts.StringEncodingName = "us-asci");
+        }
+
+        [TestMethod]
+        public void Test_prop_StringEncodingName_11()
+        {
+            // test invalid encoding name
+
+            Assert.ThrowsException<ArgumentException>(() =>
+                Converts.StringEncodingName = "aaa");
+        }
+
+    }
+
+    [TestClass]
+    public class Test_StringEncodeToByteArray
+    {
+        // byte[] StringEncodeToByteArray(string str, string encodingName)
+
+        [TestMethod]
+        public void Test_StringEncodeToByteArray_1()
+        {
+            // test Converts.StringEncodingName is not set
+            Converts.StringEncodingNameNoValidation = null;
+            byte[] ab;
+            Assert.ThrowsException<Exception>(() =>
+                ab = Converts.StringEncodeToByteArray("Test")
+                );
+        }
+
+        [TestMethod]
+        public void Test_StringEncodeToByteArray_2()
+        {
+            // test Converts.StringEncodingName is not set
+            Converts.StringEncodingNameNoValidation = "";
+            byte[] ab;
+            Assert.ThrowsException<Exception>(() =>
+                ab = Converts.StringEncodeToByteArray("Test")
+                );
+        }
+
+        [TestMethod]
+        public void Test_StringEncodeToByteArray_10()
+        {
+            Converts.StringEncodingName = "us-ascii";
+            byte[] ab = Converts.StringEncodeToByteArray("This is a test");
+        }
+
+        [TestMethod]
+        public void Test_StringEncodeToByteArray_11()
+        {
+            Converts.StringEncodingName = "us-ascii";
+            byte[] ab = Converts.StringEncodeToByteArray("");
+        }
+
+        [TestMethod]
+        public void Test_StringEncodeToByteArray_12()
+        {
+            Converts.StringEncodingName = "us-ascii";
+            byte[] ab = Converts.StringEncodeToByteArray("A");
+        }
+
+        [TestMethod]
+        public void Test_StringEncodeToByteArray_13()
+        {
+            // test long conversion
+            Converts.StringEncodingName = "us-ascii";
+            byte[] ab = Converts.StringEncodeToByteArray("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras consectetur sem id tincidunt lacinia. Phasellus laoreet convallis augue eget feugiat. Nullam venenatis lobortis placerat. Mauris vel neque non massa feugiat porttitor vel in dui. Donec in feugiat libero. Nulla eget rhoncus sapien blandit.");
+        }
+
+        [TestMethod]
+        public void Test_StringEncodeToByteArray_20()
+        {
+            Converts.StringEncodingName = "us-ascii";
+            byte[] ab;
+            Assert.ThrowsException<EncoderFallbackException>(() =>
+                ab = Converts.StringEncodeToByteArray("Non-ascii characters é ")
+                );
+        }
+
+        [TestMethod]
+        public void Test_StringEncodeToByteArray_21()
+        {
+            Converts.StringEncodingName = "ascii";
+            byte[] ab;
+            Assert.ThrowsException<EncoderFallbackException>(() =>
+                ab = Converts.StringEncodeToByteArray("Non-ascii characters °  ")
+                );
+        }
+
+        [TestMethod]
+        public void Test_StringEncodeToByteArray_30()
+        {
+            Converts.StringEncodingName = "Windows-1252";
+            byte[] ab = Converts.StringEncodeToByteArray("");
+            byte[] exp = { };
+            Helpers.TestByteArraysAreEqual(exp, ab);
+        }
+
+        [TestMethod]
+        public void Test_StringEncodeToByteArray_31()
+        {
+            Converts.StringEncodingName = "Windows-1252";
+            byte[] ab = Converts.StringEncodeToByteArray(" ");
+            byte[] exp = { 0x20 };
+            Helpers.TestByteArraysAreEqual(exp, ab);
+        }
+
+        [TestMethod]
+        public void Test_StringEncodeToByteArray_32()
+        {
+            Converts.StringEncodingName = "Windows-1252";
+            byte[] ab = Converts.StringEncodeToByteArray("Non-ascii characters é ° ç ø ");
+            //string abAsString = Converts.ByteArrayToStringOfValues(ab);
+            byte[] exp = { 0x4E, 0x6F, 0x6E, 0x2D, 0x61, 0x73, 0x63, 0x69, 0x69, 0x20, 0x63, 0x68, 0x61, 0x72, 0x61, 0x63, 0x74, 0x65, 0x72, 0x73, 0x20, 0xE9, 0x20, 0xB0, 0x20, 0xE7, 0x20, 0xF8, 0x20 };
+            Helpers.TestByteArraysAreEqual(exp, ab);
+        }
+
+        [TestMethod]
+        public void Test_StringEncodeToByteArray_40()
+        {
+            Converts.StringEncodingName = "Windows-1252";
+            byte[] ab;
+            Assert.ThrowsException<EncoderFallbackException>(() =>
+                ab = Converts.StringEncodeToByteArray("Non-Windows-1252 character é ° ç ø 💡")
+                );
+        }
+
+        [TestMethod]
+        public void Test_StringEncodeToByteArray_50()
+        {
+            Converts.StringEncodingName = "UTF-8";
+            byte[] ab = Converts.StringEncodeToByteArray("UTF8 encoded string 💡 Ж ह 字 😊");
+            //string abAsString = Converts.ByteArrayToStringOfValues(ab);
+            byte[] exp = { 0x55, 0x54, 0x46, 0x38, 0x20, 0x65, 0x6E, 0x63, 0x6F, 0x64, 0x65, 0x64, 0x20, 0x73, 0x74, 0x72, 0x69, 0x6E, 0x67, 0x20, 0xF0, 0x9F, 0x92, 0xA1, 0x20, 0xD0, 0x96, 0x20, 0xE0, 0xA4, 0xB9, 0x20, 0xE5, 0xAD, 0x97, 0x20, 0xF0, 0x9F, 0x98, 0x8A };
+            Helpers.TestByteArraysAreEqual(exp, ab);
+        }
+    }
+
+    [TestClass]
+    public class Test_ByteArrayDecodeToString
+    {
+        // string ByteArrayDecodeToString(byte[] aBytes)
+
+        [TestMethod]
+        public void Test_ByteArrayDecodeToString_1()
+        {
+            // test Converts.StringEncodingName is not set
+            Converts.StringEncodingNameNoValidation = null;
+            byte[] ab = { 0x41, 0x42, 0x43 };
+            string s;
+            Assert.ThrowsException<Exception>(() =>
+                s = Converts.ByteArrayDecodeToString(ab)
+                );
+        }
+
+        [TestMethod]
+        public void Test_ByteArrayDecodeToString_10()
+        {
+            Converts.StringEncodingName = "us-ascii";
+            byte[] ab = { 0x4C, 0x6F, 0x72, 0x65, 0x6D, 0x20, 0x69, 0x70, 0x73, 0x75, 0x6D, 0x20, 0x64, 0x6F, 0x6C, 0x6F, 0x72, 0x20, 0x73, 0x69, 0x74, 0x20, 0x61, 0x6D, 0x65, 0x74 };
+            string s;
+            s = Converts.ByteArrayDecodeToString(ab);
+            Assert.AreEqual<string>("Lorem ipsum dolor sit amet", s);
+        }
+
+        [TestMethod]
+        public void Test_ByteArrayDecodeToString_11()
+        {
+            // test bytes sequence invalid, used replacement character
+            Converts.StringEncodingName = "us-ascii";
+            byte[] ab = { 0x54, 0x65, 0x73, 0x74, 0x20, 0xA2 };
+            string s;
+            s = Converts.ByteArrayDecodeToString(ab);
+            Assert.AreEqual<string>("Test �", s);
+        }
+
+        [TestMethod]
+        public void Test_ByteArrayDecodeToString_12()
+        {
+            // test bytes sequence invalid, used replacement character
+            Converts.StringEncodingName = "Windows-1252";
+            byte[] ab = { 0x54, 0x65, 0x73, 0x74, 0x20, 0xA2 };
+            string s;
+            s = Converts.ByteArrayDecodeToString(ab);
+            Assert.AreEqual<string>("Test ¢", s);
+        }
+
+        [TestMethod]
+        public void Test_ByteArrayDecodeToString_13()
+        {
+            // test UTF-8 characters
+            Converts.StringEncodingName = "utf-8";
+            byte[] ab = { 0x54, 0x65, 0x73, 0x74, 0x20, 0xE5, 0xAD, 0x97, 0x20, 0xF0, 0x9F, 0x98, 0x8A };
+            string s;
+            s = Converts.ByteArrayDecodeToString(ab);
+            Assert.AreEqual<string>("Test 字 😊", s);
+        }
+
+    }
+
+    [TestClass]
+    public class Test_Int16ArrayDecodeToString
+    {
+        // string ByteArrayDecodeToString(byte[] aBytes)
+
+        [TestMethod]
+        public void Test_Int16ArrayDecodeToString_1()
+        {
+
+            // test Converts.StringEncodingName is not set
+            Converts.StringEncodingNameNoValidation = null;
+            Int16[] ar = { 0x4142, 0x4344, 0x0000 };
+            string s;
+            Assert.ThrowsException<Exception>(() =>
+                s = Converts.Int16ArrayDecodeToString(ar)
+                );
+        }
+
+        [TestMethod]
+        public void Test_Int16ArrayDecodeToString_2()
+        {
+            Converts.StringEncodingName = "us-ascii";
+            Converts.StringEndian = Global.eEndian.Big;
+            Int16[] ar = { 0x4142, 0x4344, 0x0000 };
+            string s = Converts.Int16ArrayDecodeToString(ar);
+            Assert.AreEqual<string>("ABCD", s);
+        }
+
+        [TestMethod]
+        public void Test_Int16ArrayDecodeToString_3()
+        {
+            Converts.StringEncodingName = "us-ascii";
+            Converts.StringEndian = Global.eEndian.Big;
+            Int16[] ar = { 0x4142, 0x4344, 0x0045, 0x4647 };
+            string s = Converts.Int16ArrayDecodeToString(ar);
+            Assert.AreEqual<string>("ABCD", s);
+        }
+
+        [TestMethod]
+        public void Test_Int16ArrayDecodeToString_4()
+        {
+            Converts.StringEncodingName = "us-ascii";
+            Converts.StringEndian = Global.eEndian.Big;
+            Int16[] ar = { 0x4142, 0x4344, 0x4500, 0x4647 };
+            string s = Converts.Int16ArrayDecodeToString(ar);
+            Assert.AreEqual<string>("ABCDE", s);
+        }
+
+        [TestMethod]
+        public void Test_Int16ArrayDecodeToString_5()
+        {
+            Converts.StringEncodingName = "us-ascii";
+            Converts.StringEndian = Global.eEndian.Little;
+            Int16[] ar = { 0x4142, 0x4344, 0x0045, 0x4647 };
+            string s = Converts.Int16ArrayDecodeToString(ar);
+            Assert.AreEqual<string>("BADCE", s);
+        }
+
+        [TestMethod]
+        public void Test_Int16ArrayDecodeToString_6()
+        {
+            Converts.StringEncodingName = "us-ascii";
+            Converts.StringEndian = Global.eEndian.Little;
+            Int16[] ar = { 0x4142, 0x4344, 0x4500, 0x4647 };
+            string s = Converts.Int16ArrayDecodeToString(ar);
+            Assert.AreEqual<string>("BADC", s);
+        }
+
+        [TestMethod]
+        public void Test_Int16ArrayDecodeToString_10()
+        {
+            // Test "Hello 世界 🌍";
+            Converts.StringEncodingName = "utf-8";
+            Converts.StringEndian = Global.eEndian.Big;
+            Int16[] ar = { 0x4865, 0x6C6C, 0x6F20, Helpers.ConvToInt16(0xE4B8), Helpers.ConvToInt16(0x96E7), Helpers.ConvToInt16(0x958C), 0x20F0, Helpers.ConvToInt16(0x9F8C), Helpers.ConvToInt16(0x8D00) };
+            string s = Converts.Int16ArrayDecodeToString(ar);
+            Assert.AreEqual<string>("Hello 世界 🌍", s);
+        }
+
+        [TestMethod]
+        public void Test_Int16ArrayDecodeToString_11()
+        {
+            // Test "Hello 世界 🌍";
+            Converts.StringEncodingName = "utf-8";
+            Converts.StringEndian = Global.eEndian.Little;
+            Int16[] ar = { 0x6548, 0x6C6C, 0x206F, Helpers.ConvToInt16(0xB8E4), Helpers.ConvToInt16(0xE796), Helpers.ConvToInt16(0x8C95), Helpers.ConvToInt16(0xF020), Helpers.ConvToInt16(0x8C9F), 0x008D };
+            string s = Converts.Int16ArrayDecodeToString(ar);
+            Assert.AreEqual<string>("Hello 世界 🌍", s);
+        }
+
+        [TestMethod]
+        public void Test_Int16ArrayDecodeToString_12()
+        {
+            // Test with characters after \x00
+            Converts.StringEncodingName = "utf-8";
+            Converts.StringEndian = Global.eEndian.Big;
+            Int16[] ar = { 0x4865, 0x6C6C, 0x6F20, Helpers.ConvToInt16(0xE4B8), Helpers.ConvToInt16(0x96E7), Helpers.ConvToInt16(0x958C), 0x20F0, Helpers.ConvToInt16(0x9F8C), Helpers.ConvToInt16(0x8D00), 0x4142 };
+            string s = Converts.Int16ArrayDecodeToString(ar);
+            Assert.AreEqual<string>("Hello 世界 🌍", s);
+        }
+
+        [TestMethod]
+        public void Test_Int16ArrayDecodeToString_13()
+        {
+            // Test with characters after \x00
+            Converts.StringEncodingName = "utf-8";
+            Converts.StringEndian = Global.eEndian.Little;
+            Int16[] ar = { 0x6548, 0x6C6C, 0x206F, Helpers.ConvToInt16(0xB8E4), Helpers.ConvToInt16(0xE796), Helpers.ConvToInt16(0x8C95), Helpers.ConvToInt16(0xF020), Helpers.ConvToInt16(0x8C9F), 0x008D, 0x4142 };
+            string s = Converts.Int16ArrayDecodeToString(ar);
+            Assert.AreEqual<string>("Hello 世界 🌍", s);
+        }
+
+    }
+
+    [TestClass]
+    public class Test_StringEncodeToInt16Array
+    {
+        // public static Int16[] StringEncodeToInt16Array(string str)
+        // returns as many Int16 as needed
+
+        [TestMethod]
+        public void Test_StringEncodeToInt16Array_1()
+        {
+            // test Converts.StringEncodingName is not set
+            Converts.StringEncodingNameNoValidation = null;
+            Int16[] ar;
+            Assert.ThrowsException<Exception>(() =>
+                ar = Converts.StringEncodeToInt16Array("a", 2)
+                );
+        }
+
+        [TestMethod]
+        public void Test_StringEncodeToInt16Array_2()
+        {
+            // test empty string
+            Converts.StringEncodingName = "us-ascii";
+            Int16[] ar;
+            ar = Converts.StringEncodeToInt16Array("", 2);
+            Assert.AreEqual<int>(1, ar.Length);
+            Assert.AreEqual<Int16>(0x0000, ar[0]);
+        }
+
+        [TestMethod]
+        public void Test_StringEncodeToInt16Array_3()
+        {
+            Converts.StringEncodingName = "us-ascii";
+            Converts.StringEndian = Global.eEndian.Little;
+            Int16[] ar;
+            ar = Converts.StringEncodeToInt16Array("A", 1);
+            Assert.AreEqual<int>(1, ar.Length);
+            Assert.AreEqual<Int16>(0x0041, ar[0]);
+
+            Converts.StringEndian = Global.eEndian.Big;
+            ar = Converts.StringEncodeToInt16Array("A", 1);
+            Assert.AreEqual<int>(1, ar.Length);
+            Assert.AreEqual<Int16>(0x4100, ar[0]);
+        }
+
+        [TestMethod]
+        public void Test_StringEncodeToInt16Array_3b()
+        {
+            Converts.StringEncodingName = "us-ascii";
+            Converts.StringEndian = Global.eEndian.Little;
+            Int16[] ar;
+            Assert.ThrowsException<ArgumentException>(() =>
+                    ar = Converts.StringEncodeToInt16Array("AB", 1)
+                    );
+        }
+
+        [TestMethod]
+        public void Test_StringEncodeToInt16Array_4()
+        {
+            Converts.StringEncodingName = "us-ascii";
+            Converts.StringEndian = Global.eEndian.Little;
+            Int16[] ar;
+            ar = Converts.StringEncodeToInt16Array("AB", 2);
+            Assert.AreEqual<int>(2, ar.Length);
+            Assert.AreEqual<Int16>(0x4241, ar[0]);
+            Assert.AreEqual<Int16>(0x0000, ar[1]);
+
+            Converts.StringEndian = Global.eEndian.Big;
+            ar = Converts.StringEncodeToInt16Array("AB", 2);
+            Assert.AreEqual<int>(2, ar.Length);
+            Assert.AreEqual<Int16>(0x4142, ar[0]);
+            Assert.AreEqual<Int16>(0x0000, ar[1]);
+        }
+
+        [TestMethod]
+        public void Test_StringEncodeToInt16Array_5a()
+        {
+            Converts.StringEncodingName = "us-ascii";
+            Converts.StringEndian = Global.eEndian.Little;
+            Int16[] ar;
+            Assert.ThrowsException<ArgumentException>(() =>
+                    ar = Converts.StringEncodeToInt16Array("ABC", 1)
+                    );
+        }
+                
+
+        [TestMethod]
+        public void Test_StringEncodeToInt16Array_5b()
+        {
+            Converts.StringEncodingName = "us-ascii";
+            Converts.StringEndian = Global.eEndian.Little;
+            Int16[] ar;
+            ar = Converts.StringEncodeToInt16Array("ABC", 3);
+            Assert.AreEqual<int>(2, ar.Length);
+            Assert.AreEqual<Int16>(0x4241, ar[0]);
+            Assert.AreEqual<Int16>(0x0043, ar[1]);
+
+            Converts.StringEndian = Global.eEndian.Big;
+            ar = Converts.StringEncodeToInt16Array("ABC", 3);
+            Assert.AreEqual<int>(2, ar.Length);
+            Assert.AreEqual<Int16>(0x4142, ar[0]);
+            Assert.AreEqual<Int16>(0x4300, ar[1]);
+        }
+
+        [TestMethod]
+        public void Test_StringEncodeToInt16Array_6()
+        {
+            Converts.StringEncodingName = "us-ascii";
+            Converts.StringEndian = Global.eEndian.Little;
+            Int16[] ar;
+            ar = Converts.StringEncodeToInt16Array("ABC D E F ", 10);
+            Assert.AreEqual<int>(6, ar.Length);
+            Assert.AreEqual<Int16>(0x4241, ar[0]);
+            Assert.AreEqual<Int16>(0x2043, ar[1]);
+            Assert.AreEqual<Int16>(0x2044, ar[2]);
+            Assert.AreEqual<Int16>(0x2045, ar[3]);
+            Assert.AreEqual<Int16>(0x2046, ar[4]);
+            Assert.AreEqual<Int16>(0x0000, ar[5]);
+
+            Converts.StringEndian = Global.eEndian.Big;
+            ar = Converts.StringEncodeToInt16Array("ABC D E F ", 10);
+            Assert.AreEqual<int>(6, ar.Length);
+            Assert.AreEqual<Int16>(0x4142, ar[0]);
+            Assert.AreEqual<Int16>(0x4320, ar[1]);
+            Assert.AreEqual<Int16>(0x4420, ar[2]);
+            Assert.AreEqual<Int16>(0x4520, ar[3]);
+            Assert.AreEqual<Int16>(0x4620, ar[4]);
+            Assert.AreEqual<Int16>(0x0000, ar[5]);
+        }
+
+        [TestMethod]
+        public void Test_StringEncodeToInt16Array_6b()
+        {
+            Converts.StringEncodingName = "us-ascii";
+            Converts.StringEndian = Global.eEndian.Little;
+            Int16[] ar;
+            ar = Converts.StringEncodeToInt16Array("ABC D E F G", 10);
+            Assert.AreEqual<int>(6, ar.Length);
+            Assert.AreEqual<Int16>(0x4241, ar[0]);
+            Assert.AreEqual<Int16>(0x2043, ar[1]);
+            Assert.AreEqual<Int16>(0x2044, ar[2]);
+            Assert.AreEqual<Int16>(0x2045, ar[3]);
+            Assert.AreEqual<Int16>(0x2046, ar[4]);
+            Assert.AreEqual<Int16>(0x0047, ar[5]);
+
+            Converts.StringEndian = Global.eEndian.Big;
+            ar = Converts.StringEncodeToInt16Array("ABC D E F G", 10);
+            Assert.AreEqual<int>(6, ar.Length);
+            Assert.AreEqual<Int16>(0x4142, ar[0]);
+            Assert.AreEqual<Int16>(0x4320, ar[1]);
+            Assert.AreEqual<Int16>(0x4420, ar[2]);
+            Assert.AreEqual<Int16>(0x4520, ar[3]);
+            Assert.AreEqual<Int16>(0x4620, ar[4]);
+            Assert.AreEqual<Int16>(0x4700, ar[5]);
+        }
+
+        [TestMethod]
+        public void Test_StringEncodeToInt16Array_7()
+        {
+            Converts.StringEncodingName = "UTF-8";
+            Converts.StringEndian = Global.eEndian.Little;
+            Int16[] ar;
+            ar = Converts.StringEncodeToInt16Array("Hello 世界 🌍", 9);
+            Assert.AreEqual<int>(9, ar.Length);
+            Assert.AreEqual<Int16>(Helpers.ConvToInt16(0x6548), ar[0]);
+            Assert.AreEqual<Int16>(Helpers.ConvToInt16(0x6C6C), ar[1]);
+            Assert.AreEqual<Int16>(Helpers.ConvToInt16(0x206F), ar[2]);
+            Assert.AreEqual<Int16>(Helpers.ConvToInt16(0xB8E4), ar[3]);
+            Assert.AreEqual<Int16>(Helpers.ConvToInt16(0xE796), ar[4]);
+            Assert.AreEqual<Int16>(Helpers.ConvToInt16(0x8C95), ar[5]);
+            Assert.AreEqual<Int16>(Helpers.ConvToInt16(0xF020), ar[6]);
+            Assert.AreEqual<Int16>(Helpers.ConvToInt16(0x8C9F), ar[7]);
+            Assert.AreEqual<Int16>(Helpers.ConvToInt16(0x008D), ar[8]);
+
+            Converts.StringEndian = Global.eEndian.Big;
+            ar = Converts.StringEncodeToInt16Array("Hello 世界 🌍", 20);
+            Assert.AreEqual<int>(9, ar.Length);
+            Assert.AreEqual<Int16>(Helpers.ConvToInt16(0x4865), ar[0]);
+            Assert.AreEqual<Int16>(Helpers.ConvToInt16(0x6C6C), ar[1]);
+            Assert.AreEqual<Int16>(Helpers.ConvToInt16(0x6F20), ar[2]);
+            Assert.AreEqual<Int16>(Helpers.ConvToInt16(0xE4B8), ar[3]);
+            Assert.AreEqual<Int16>(Helpers.ConvToInt16(0x96E7), ar[4]);
+            Assert.AreEqual<Int16>(Helpers.ConvToInt16(0x958C), ar[5]);
+            Assert.AreEqual<Int16>(Helpers.ConvToInt16(0x20F0), ar[6]);
+            Assert.AreEqual<Int16>(Helpers.ConvToInt16(0x9F8C), ar[7]);
+            Assert.AreEqual<Int16>(Helpers.ConvToInt16(0x8D00), ar[8]);
+        }
+
+        [TestMethod]
+        public void Test_StringEncodeToInt16Array_8()
+        {
+            Converts.StringEncodingName = "UTF-8";
+            Converts.StringEndian = Global.eEndian.Little;
+            Int16[] ar;
+            ar = Converts.StringEncodeToInt16Array("Hello 世界 🌍A", 10);
+            Assert.AreEqual<int>(10, ar.Length);
+            Assert.AreEqual<Int16>(Helpers.ConvToInt16(0x6548), ar[0]);
+            Assert.AreEqual<Int16>(Helpers.ConvToInt16(0x6C6C), ar[1]);
+            Assert.AreEqual<Int16>(Helpers.ConvToInt16(0x206F), ar[2]);
+            Assert.AreEqual<Int16>(Helpers.ConvToInt16(0xB8E4), ar[3]);
+            Assert.AreEqual<Int16>(Helpers.ConvToInt16(0xE796), ar[4]);
+            Assert.AreEqual<Int16>(Helpers.ConvToInt16(0x8C95), ar[5]);
+            Assert.AreEqual<Int16>(Helpers.ConvToInt16(0xF020), ar[6]);
+            Assert.AreEqual<Int16>(Helpers.ConvToInt16(0x8C9F), ar[7]);
+            Assert.AreEqual<Int16>(Helpers.ConvToInt16(0x418D), ar[8]);
+            Assert.AreEqual<Int16>(Helpers.ConvToInt16(0x0000), ar[9]);
+
+            Converts.StringEndian = Global.eEndian.Big;
+            ar = Converts.StringEncodeToInt16Array("Hello 世界 🌍", 9);
+            Assert.AreEqual<int>(9, ar.Length);
+            Assert.AreEqual<Int16>(Helpers.ConvToInt16(0x4865), ar[0]);
+            Assert.AreEqual<Int16>(Helpers.ConvToInt16(0x6C6C), ar[1]);
+            Assert.AreEqual<Int16>(Helpers.ConvToInt16(0x6F20), ar[2]);
+            Assert.AreEqual<Int16>(Helpers.ConvToInt16(0xE4B8), ar[3]);
+            Assert.AreEqual<Int16>(Helpers.ConvToInt16(0x96E7), ar[4]);
+            Assert.AreEqual<Int16>(Helpers.ConvToInt16(0x958C), ar[5]);
+            Assert.AreEqual<Int16>(Helpers.ConvToInt16(0x20F0), ar[6]);
+            Assert.AreEqual<Int16>(Helpers.ConvToInt16(0x9F8C), ar[7]);
+            Assert.AreEqual<Int16>(Helpers.ConvToInt16(0x8D00), ar[8]);
+        }
+
+        [TestMethod]
+        public void Test_StringEncodeToInt16Array_9()
+        {
+            Converts.StringEncodingName = "UTF-8";
+            Converts.StringEndian = Global.eEndian.Little;
+            Int16[] ar;
+            Assert.ThrowsException<ArgumentException>(() =>
+                    ar = Converts.StringEncodeToInt16Array("Hello 世界 🌍", 8)
+                    );
+        }
+
+    }
 }
+
+

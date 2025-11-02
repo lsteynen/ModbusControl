@@ -306,6 +306,8 @@ namespace ModbusControlSpace
             // get tab ModbusGridView
             ModbusGridView mrv = tabPage.Tag as ModbusGridView;
 
+            /* TODO????
+
             // get groups of vars to read
             List<ModbusGridView.TReadGroup> groupList = mrv.GetReadGroupingList(mMaximumFrameSize);
 
@@ -338,7 +340,7 @@ namespace ModbusControlSpace
                         Array.Copy(readData, valueIndex, aTmpRegs, 0, varp.Size);
                         valueIndex += varp.Size;
                         
-                        WriteExportLine(varp.Reg, varp.Size, varp.Descr, varp.Format, varp.Readable, varp.Writeable, aTmpRegs);
+                        WriteExportLine(varp.Reg, varp.Size, varp.Descr, varp.DisplayFormat, varp.Readable, varp.Writeable, aTmpRegs);
                         ++mSuccessCount;
                         
                         Thread.Sleep(mSleeptime);
@@ -375,13 +377,13 @@ namespace ModbusControlSpace
 
                                 // the register value is in readData as 1 or 2 16-bit registers
                                 
-                                WriteExportLine(varp.Reg, varp.Size, varp.Descr, varp.Format, varp.Readable, varp.Writeable, readData);
+                                WriteExportLine(varp.Reg, varp.Size, varp.Descr, varp.DisplayFormat, varp.Readable, varp.Writeable, readData);
                                 ++mSuccessCount;
                             }
                             else
                             {
                                 // error
-                                WriteExportLineError(varp.Reg, varp.Size, varp.Descr, varp.Format, varp.Readable, varp.Writeable, ModbusProtocol.GetResultText(result));
+                                WriteExportLineError(varp.Reg, varp.Size, varp.Descr, varp.DisplayFormat, varp.Readable, varp.Writeable, ModbusProtocol.GetResultText(result));
                                 ++mErrorCount;
                             }
                         }
@@ -395,12 +397,13 @@ namespace ModbusControlSpace
                         {
                             ModbusGridView.TVarProperties varp = mrv.GetVarPropertiesByIndex(lineIndex);
 
-                            WriteExportLineError(varp.Reg, varp.Size, varp.Descr, varp.Format, varp.Readable, varp.Writeable, ModbusProtocol.GetResultText(result));
+                            WriteExportLineError(varp.Reg, varp.Size, varp.Descr, varp.DisplayFormat, varp.Readable, varp.Writeable, ModbusProtocol.GetResultText(result));
                             ++mErrorCount;
                         }
                     }
                 }
             }
+            */
         }
 
         private bool WriteExportLine(UInt32 Reg, int Size, string Description, Global.eFormat Format, bool isReadable, bool isWriteable, Int16[] aRegValues)

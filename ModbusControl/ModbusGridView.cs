@@ -21,10 +21,10 @@ namespace LST.ModbusGridView
         private const int ValueModeNormal = 0;
         private const int ValueModeEdited = 1;
         private const int ValueModeError = 2;
-        private const int FlagHasChildren = 1;
-        private const int FlagIsExpanded = 2;
-        private const int FlagIsEnum = 4;
-       
+        private const int FlagHasChildren = 1;  // bitfield flag
+        private const int FlagIsExpanded = 2;   // bitfield flag
+        private const int FlagIsEnum = 4;       // bitfield flag
+
         // needed for PostMessage
         [DllImport("user32.dll")]
         static extern bool PostMessage(IntPtr hWnd, uint Msg, int wParam, int lParam);
@@ -48,11 +48,12 @@ namespace LST.ModbusGridView
             public UInt32 Reg;          // universal register number 
             public string Descr;        // description
             public int Size;            // var size in number of Int16 registers, 1-125
-            public ModbusControlSpace.Global.eFormat Format;      // display as dec, unsigned, hex, binary
+            public Global.eFormat Format;           // format (int, uint, hex, string,...)
+            public Global.eFormat DisplayFormat;    // display format
             public int MinLen;          // minimum display length
             public int Decimals;        // nr of decimals to show
-            public bool Readable;       // readable?
-            public bool Writeable;      // writable?
+            public bool Readable;       // readable
+            public bool Writeable;      // writable
             public string InfoStr;      // info string, like 'uint16, rw, dec=2'
             public Color? ForeColor;    // the foreground/font color, nullable
             public Color? BackColor;    // the background color, nullable
@@ -68,7 +69,8 @@ namespace LST.ModbusGridView
                 Reg = 0;
                 Descr = String.Empty;
                 Size = 0;
-                Format = ModbusControlSpace.Global.eFormat.Int;
+                Format = Global.eFormat.Int;
+                DisplayFormat = Global.eFormat.Int;
                 MinLen = 1;
                 Decimals = 0;
                 Readable = false;
@@ -90,7 +92,8 @@ namespace LST.ModbusGridView
             public int Width;           // bitfield width in bits (1-32)
             public string RegStr;       // as string
             public string Descr;        // description
-            public ModbusControlSpace.Global.eFormat Format;      // display as dec, unsigned, hex, binary
+            public Global.eFormat Format;           // format (int, uint, hex, string,...)
+            public Global.eFormat DisplayFormat;    // display format
             public int MinLen;          // minimum display length
             public int Decimals;        // nr of decimals to show
             public string InfoStr;      // info string
@@ -108,7 +111,8 @@ namespace LST.ModbusGridView
                 Width = 1;
                 RegStr = String.Empty;
                 Descr = String.Empty;
-                Format = ModbusControlSpace.Global.eFormat.Int;
+                Format = Global.eFormat.Int;
+                DisplayFormat = Global.eFormat.Int;
                 MinLen = 1;
                 Decimals = 0;
                 InfoStr = String.Empty;
@@ -127,7 +131,7 @@ namespace LST.ModbusGridView
             public int Col;
         };
 
-        public struct TReadGroup
+        public class CReadGroup
         {
             public int lineIndex;
             public int lineCount;
@@ -140,7 +144,8 @@ namespace LST.ModbusGridView
             public UInt32 Reg;          // universal register number 
             public string Descr;        // description
             public int Size;            // var size in Int16 registers, 1 or 2
-            public ModbusControlSpace.Global.eFormat Format;      // display as dec, unsigned, hex, binary
+            public Global.eFormat Format;           // format (int, uint, hex, string,...)
+            public Global.eFormat DisplayFormat;    // display format
             public int MinLen;          // minimum display length
             public int Decimals;        // nr of decimals to show
             public bool Readable;       // readable?
@@ -171,11 +176,10 @@ namespace LST.ModbusGridView
         private RegItem editingReg;
         private RegfieldItem editingRegfield;
         private char editingBufferedChar = (char)0;
-        private volatile DataRow editingDatarow;    // volatile, to block update while editing
+        private volatile DataRow editingDatarow;        // volatile, to block update while editing
         private bool mAutosizeRows;
         private int rightclickRowIndex;
         private bool isLoading;
-
         // properties values
         private bool mConnectionIsOpen;
         private bool mStartEditOnAnyCharacter;
@@ -372,7 +376,7 @@ namespace LST.ModbusGridView
         /// </summary>
         /// <param>The required parameters</param>
         /// <returns>Just added ListItem object</returns>
-        public ListItem AddReg(ListItem Parent, UInt32 Reg, string Descr, int Size, ModbusControlSpace.Global.eFormat Format, bool Readable, bool Writeable)
+        public ListItem AddReg(ListItem Parent, UInt32 Reg, string Descr, int Size, Global.eFormat Format, bool Readable, bool Writeable)
         {
             RegItem newReg = new RegItem();
 
@@ -380,6 +384,7 @@ namespace LST.ModbusGridView
             newReg.Descr = Descr;
             newReg.Size = Size;
             newReg.Format = Format;
+            newReg.DisplayFormat = Format;
             newReg.Decimals = 0;
             newReg.Readable = Readable;
             newReg.Writeable = Writeable;
@@ -411,7 +416,7 @@ namespace LST.ModbusGridView
         /// </summary>
         /// <param>The required parameters</param>
         /// <returns>Just added ListItem object</returns>
-        public ListItem RegAddField(ListItem Parent, int Pos, int Width, string Descr, ModbusControlSpace.Global.eFormat Format)
+        public ListItem RegAddField(ListItem Parent, int Pos, int Width, string Descr, Global.eFormat Format)
         {
             RegfieldItem newField = new RegfieldItem();
 
@@ -420,6 +425,7 @@ namespace LST.ModbusGridView
             newField.RegStr = FieldPosAndWidthToString(Pos, Width);
             newField.Descr = Descr;
             newField.Format = Format;
+            newField.DisplayFormat = Format;
             newField.Decimals = 0;
 
             if (Parent.childrenList == null)
@@ -496,9 +502,18 @@ namespace LST.ModbusGridView
                 RegItem ri = Item as RegItem;
 
                 // format and size
-                // size is in #registers, show in bits
+                // size is in #registers
                 string infoStr = ri.Format.ToString().ToLower();
-                infoStr += (ri.Size * 16).ToString();
+                if (ri.Format == Global.eFormat.String)
+                {
+                    // show size as nr-of-bytes for string
+                    infoStr += (ri.Size * 2).ToString();
+                }
+                else
+                {
+                    // show size as bits for others
+                    infoStr += (ri.Size * 16).ToString();
+                }
 
                 // add decimals
                 if (ri.Decimals != 0)
@@ -527,7 +542,7 @@ namespace LST.ModbusGridView
                 RegfieldItem fi = Item as RegfieldItem;
 
                 // format and size
-                string infoStr = ModbusControlSpace.Global.FormatText[(int)fi.Format].ToLower();
+                string infoStr = Global.FormatText[(int)fi.Format].ToLower();
                 infoStr += fi.Width.ToString();
 
                 // add decimals
@@ -565,7 +580,7 @@ namespace LST.ModbusGridView
             // Add columns
             data.Columns.Add("RowType", System.Type.GetType("System.Int32"));
             data.Columns.Add("RowLevel", System.Type.GetType("System.Int32"));
-            data.Columns.Add("RowVisible", System.Type.GetType("System.Int32"));    // 3=visible, b1 voor filtering, b0 voor collapse/expand
+            data.Columns.Add("RowVisible", System.Type.GetType("System.Int32"));    // 3=visible, b0 voor collapse/expand, b1 voor filtering
             data.Columns.Add("RegStr", System.Type.GetType("System.String"));
             data.Columns.Add("Descr", System.Type.GetType("System.String"));
             data.Columns.Add("InfoStr", System.Type.GetType("System.String"));
@@ -574,7 +589,7 @@ namespace LST.ModbusGridView
             data.Columns.Add("ValueMode", System.Type.GetType("System.Int32"));     // mode of value column, 0=normal, 1=edit, 2=error
             data.Columns.Add("ValueStr", System.Type.GetType("System.String"));
             data.Columns.Add("Flags", System.Type.GetType("System.Int32"));
-            data.Columns.Add("Longdescr", System.Type.GetType("System.String"));      // longdescription tooltip text
+            data.Columns.Add("Longdescr", System.Type.GetType("System.String"));    // longdescription tooltip text
 
             // provide filtering
 #if !DEBUG_VISIBILITY
@@ -1202,6 +1217,21 @@ namespace LST.ModbusGridView
             }
         }
 
+
+        /// <summary>
+        /// Check if formatToCheck is in list of formats
+        /// </summary>
+        static bool IsFormatInList(Global.eFormat formatToCheck, params Global.eFormat[] validFormats)
+        {
+            foreach (var format in validFormats)
+            {
+                if (formatToCheck == format)
+                    return true;
+            }
+            return false;
+        }
+
+
         #endregion
 
         private void grid_CellMouseDown(object sender, DataGridViewCellMouseEventArgs e)
@@ -1527,87 +1557,93 @@ namespace LST.ModbusGridView
         }
 
         /// <summary>
-        /// Get a list of group read commands
+        /// Get the next group read block.
+        /// Group read: read as many consecutive vars as fit in maxFrameSize.
+        /// Or read a single var if it exceeds maxFrameSize. The caller with execute that read in chunks.
         /// </summary>
-        /// <param name="maxFrameSize">maximum size of the response frame (in bytes)</param>
-        /// <returns></returns>
-        public List<TReadGroup> GetReadGroupingList(int maxFrameSize)
+        /// <param name="maxReadRegisters">maximum registers to read</param>
+        /// <returns>group or null at the end</returns>
+        public CReadGroup GetNextReadGroup(CReadGroup group, int maxReadRegisters)
         {
-            List<TReadGroup> glist = new List<TReadGroup>();
-
-            // no registers?
+            // no registers in grid?
             if (RegList.Count == 0)
             {
                 return null;
             }
 
-            // bepaal max aantal bytes te lezen
-            int maxReadBytes = maxFrameSize - 5;
+            // start new group?
+            if (group == null)
+            {
+                group = new CReadGroup();
+            }
 
             // voorlopig gaan we er van uit dat in RegList level 0 alleen registers zitten
 
-            bool isGrouping = false;
-            int lineIndex = 0;
-            int groupFirstLineIndex = 0;
-            int groupLineCount = 0;
-            UInt32 groupFirstReg = 0;
-            int groupRegCount = 0;
-            UInt32 groupNextRegister = 0;
-            foreach (ListItem Lit in RegList)
+            int iLineIndex = group.lineIndex + group.lineCount;
+            bool iIsGrouping = false;
+            UInt32 iNextRegister = 0;
+
+            while (iLineIndex < RegList.Count)
             {
+                ListItem Lit = RegList[iLineIndex];
                 RegItem Reg = Lit as RegItem;
-                if (isGrouping)
+
+                if (iIsGrouping)
                 {
                     // find next readable register in group
                     // is consecutive and readable?
-                    if ((Reg.Reg == groupNextRegister)
-                        && (Reg.Readable == true)
-                        && ((groupRegCount + (Reg.Size * 2)) <= maxReadBytes))           // allowed to read so many registers?
+                    // fits in readgroup?
+                    if ( (Reg.Readable == true)
+                        && (Reg.Reg == iNextRegister)
+                        && ((group.readRegCount + Reg.Size) <= maxReadRegisters))    
                     {
-                        ++groupLineCount;
-                        groupRegCount += Reg.Size;
-                        groupNextRegister += (UInt32)Reg.Size;
+                        group.lineCount += 1;
+                        group.readRegCount += Reg.Size;
+                        iNextRegister = Reg.Reg + (UInt32)Reg.Size;
+                        // try to get more
                     }
                     else
                     {
-                        TReadGroup g = new TReadGroup();
-                        g.lineIndex = groupFirstLineIndex;
-                        g.lineCount = groupLineCount;
-                        g.readFirstReg = groupFirstReg;
-                        g.readRegCount = groupRegCount;
-                        glist.Add(g);
-                        isGrouping = false;
+                        // end group
+                        break;
                     }
                 }
-                if (isGrouping == false)
+                else 
                 {
                     // find next readable register to start new group
                     if ((Reg as RegItem).Readable)
                     {
-                        groupFirstLineIndex = lineIndex;    // grid line index of first Reg
-                        groupLineCount = 1;
-                        groupFirstReg = Reg.Reg;          // first register of group
-                        groupRegCount = Reg.Size;            // Size in number of 16-bit registers
-                        groupNextRegister = Reg.Reg + (UInt32)Reg.Size;
-                        isGrouping = true;
+                        // start group read
+                        group.lineIndex = iLineIndex;
+                        group.lineCount = 1;
+                        group.readFirstReg = Reg.Reg;       
+                        group.readRegCount = Reg.Size;
+                        iNextRegister = Reg.Reg + (UInt32)Reg.Size;
+                        iIsGrouping = true;
+                        // got room for more?
+                        if (group.readRegCount < maxReadRegisters)
+                        {
+                            // loop for more                            
+                        }
+                        else
+                        {
+                            // end group
+                            break;
+                        }
                     }
                 }
 
-                ++lineIndex;
+                ++iLineIndex;
             }
 
-            if (isGrouping)
+            // got more?
+            if (iIsGrouping)
             {
-                TReadGroup g = new TReadGroup();
-                g.lineIndex = groupFirstLineIndex;
-                g.lineCount = groupLineCount;
-                g.readFirstReg = groupFirstReg;
-                g.readRegCount = groupRegCount;
-                glist.Add(g);
-                isGrouping = false;
+                return group;
             }
 
-            return glist;
+            // no more
+            return null;
         }
 
         /// <summary>
@@ -1627,6 +1663,7 @@ namespace LST.ModbusGridView
             p.Descr = reg.Descr;
             p.Size = reg.Size;
             p.Format = reg.Format;
+            p.DisplayFormat = reg.DisplayFormat;
             p.MinLen = reg.MinLen;
             p.Decimals = reg.Decimals;
             p.Readable = reg.Readable;
@@ -1707,13 +1744,13 @@ namespace LST.ModbusGridView
             // has bitfields? then update the bitfield values too
             if (r.childrenList != null)
             {
-                Global.eType Type = Global.ConvertFormatToType(r.Format);
-                r.ValueUInt32 = Converts.Int16ArrayToUInt32Value(r.DataInt16Array, r.Size, Type);
+                // bitfields can only exists in a integer-type var
+                r.ValueUInt32 = Converts.Int16ArrayToUInt32Value(r.DataInt16Array, r.Size, Global.eType.Int);
         
                 for (int ci = 0; ci < r.childrenList.Count; ++ci)
                 {
                     RegfieldItem bf = r.childrenList[ci] as RegfieldItem;
-                    Int32 NewFieldValue = GetBitfieldValue(r.ValueUInt32, bf.Pos, bf.Width, bf.Format == ModbusControlSpace.Global.eFormat.Int);
+                    Int32 NewFieldValue = GetBitfieldValue(r.ValueUInt32, bf.Pos, bf.Width, bf.DisplayFormat == Global.eFormat.Int);
                     // store new value
                     bf.Value32 = NewFieldValue;
                     // update the value string and grid
@@ -1729,14 +1766,14 @@ namespace LST.ModbusGridView
         private void UpdateRegisterValueString(RegItem r)
         {
             // update value string
-            r.ValueStr = CValueToString.Int16RegistersToValueString(r.DataInt16Array, r.Format, r.Size * 16, r.Decimals, r.MinLen, r.EnumDict);
+            r.ValueStr = CValueToString.Int16RegistersToValueString(r.DataInt16Array, r.DisplayFormat, r.Size * 16, r.Decimals, r.MinLen, r.EnumDict);
 
             // update the grid
             // but only if is is not beging edited
             DataRow dRow = r.dataRow;
             if (dRow != editingDatarow)
             {
-                // update value in grid, only if it changes, to minimize flicker
+                // update value in grid, only if it changes to minimize flicker
                 if ((r.ValueStr != GetDbStr(dRow[(int)dtColIndex.ValueStr]))
                     || ((int)dRow[(int)dtColIndex.ValueMode] != ValueModeNormal))
                 {
@@ -1754,14 +1791,14 @@ namespace LST.ModbusGridView
         private void UpdateRegisterFieldValue(RegfieldItem f)
         {
             // update field value string
-            f.ValueStr = CValueToString.IntValueToValueString(f.Value32, f.Width, f.Format, 0, f.MinLen, f.EnumDict);
+            f.ValueStr = CValueToString.IntValueToValueString(f.Value32, f.Width, f.DisplayFormat, 0, f.MinLen, f.EnumDict);
 
             // update the grid
             // but only if is is not beging edited
             DataRow dRow = f.dataRow;
             if (dRow != editingDatarow)
             {
-                // update value in grid, only if it changes, to minimize flicker
+                // update value in grid, only if it changes to minimize flicker
                 if ((f.ValueStr != GetDbStr(dRow[(int)dtColIndex.ValueStr]))
                     || ((int)dRow[(int)dtColIndex.ValueMode] != ValueModeNormal))
                 {
@@ -1784,7 +1821,7 @@ namespace LST.ModbusGridView
             DataRow dRow = r.dataRow;
             if (dRow != editingDatarow)
             {
-                // update value in grid, only if it changes, to minimize flicker
+                // update value in grid, only if it changes to minimize flicker
                 string dispStr = r.ValueStr + "  ?  <" + ErrorString + ">";
                 if ((dispStr != GetDbStr(dRow[(int)dtColIndex.ValueStr]))
                     || ((int)dRow[(int)dtColIndex.ValueMode] != ValueModeError))
@@ -1808,7 +1845,7 @@ namespace LST.ModbusGridView
                     dRow = bf.dataRow;
                     if (dRow != editingDatarow)
                     {
-                        // update value in grid, only if it changes, to minimize flicker
+                        // update value in grid, only if it changes to minimize flicker
                         if ((dispStr != GetDbStr(dRow[(int)dtColIndex.ValueStr]))
                             || ((int)dRow[(int)dtColIndex.ValueMode] != ValueModeError))
                         {
@@ -1850,11 +1887,11 @@ namespace LST.ModbusGridView
             }
             */
 
-                // get datatable row from datagridview row
-                // datagridrowindex != datatableindex if datagridview rows are invisible
-                DataRow dRow = (grid.Rows[gridRowIndex].DataBoundItem as DataRowView).Row;
+            // get datatable row from datagridview row
+            // datagridrowindex != datatableindex if datagridview rows are invisible
+            DataRow dRow = (grid.Rows[gridRowIndex].DataBoundItem as DataRowView).Row;
 
-            //find item in RegList
+            // find item in RegList
             FindListItemsByRow(dRow, out editingReg, out editingRegfield);
 
             /*
@@ -1867,6 +1904,13 @@ namespace LST.ModbusGridView
             }
             */
 
+            // if the value string already has an error message, then clean that
+            string cleanedValueString;
+            if (valueStrCleanErrorMessage(GetDbStr(dRow[(int)dtColIndex.ValueStr]), out cleanedValueString))
+            {
+                dRow[(int)dtColIndex.ValueStr] = cleanedValueString;
+            }
+
             // make the value column the one to edit
             grid.CurrentCell = grid.Rows[gridRowIndex].Cells[(int)eGridColIndex.Value];
 
@@ -1874,15 +1918,33 @@ namespace LST.ModbusGridView
             dRow[(int)dtColIndex.ValueMode] = ValueModeNormal;
 
             // start edit cell
-            //Debug.Print("before editingDatarow = dRow");
+            //Debug.Print("set editingDatarow = dRow");
             editingDatarow = dRow;
-            //Debug.Print("after editingDatarow = dRow");
+            //Debug.Print("after set editingDatarow = dRow");
             return grid.BeginEdit(true);
+        }
+
+        private bool valueStrCleanErrorMessage(string input, out string cleanedStr)
+        {
+            cleanedStr = "";
+
+            if (input.StartsWith("<"))
+            {
+                int closingIndex = input.IndexOf('>');
+                if (closingIndex > 0)
+                {
+                    // Remove the tag and any leading space after it
+                    cleanedStr = input.Substring(closingIndex + 1).TrimStart();
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         private void grid_CellBeginEdit(object sender, DataGridViewCellCancelEventArgs e)
         {
-            //Debug.Print("grid_CellBeginEdit: e.rowindex=" + e.RowIndex.ToString() + ", grid.rowcount=" + grid.RowCount.ToString() + "/" + grid.Rows.Count.ToString());
+            //Debug.Print("--grid_CellBeginEdit: e.rowindex=" + e.RowIndex.ToString() + ", grid.rowcount=" + grid.RowCount.ToString() + "/" + grid.Rows.Count.ToString());
 
             grid.EscapeDetected = false;
         }
@@ -1908,34 +1970,28 @@ namespace LST.ModbusGridView
             else if (mConnectionIsOpen == false)
             {
                 // show that the value was not accepted
-                // only if message is not there yet
-                string dispStr = "<CONNECTION NOT OPEN>";
-                if (!GetDbStr(dRow[(int)dtColIndex.ValueStr]).StartsWith(dispStr))
-                {
-                    dRow[(int)dtColIndex.ValueStr] = dispStr;
-                }
+                string errorStr = "CONNECTION NOT OPEN";
+                string dispStr = "<" + errorStr + ">";
+                dRow[(int)dtColIndex.ValueStr] = dispStr;
                 // Show error in red
                 dRow[(int)dtColIndex.ValueMode] = ValueModeError;
 
                 // report error on status bar
-                OnReportErrorMessageEvent("Input error: connection is not open");
+                OnReportErrorMessageEvent("Error: " + errorStr);
                 // beep
                 OnBeepEvent();
             }
             else if (editingReg.Writeable == false)
             {
                 // show that the value was not accepted
-                // only if message is not there yet
-                string dispStr = "<REGISTER IS READ-ONLY>";
-                if (!GetDbStr(dRow[(int)dtColIndex.ValueStr]).StartsWith(dispStr))
-                {
-                    dRow[(int)dtColIndex.ValueStr] = dispStr;
-                }
+                string errorStr = "REGISTER IS READ-ONLY";
+                string dispStr = "<" + errorStr + ">";
+                dRow[(int)dtColIndex.ValueStr] = dispStr;
                 // Show error in red
                 dRow[(int)dtColIndex.ValueMode] = ValueModeError;
 
                 // report error on status bar
-                OnReportErrorMessageEvent("Input error: register is read-only");
+                OnReportErrorMessageEvent("Error: " + errorStr);
                 // beep
                 OnBeepEvent();
             }
@@ -1943,12 +1999,12 @@ namespace LST.ModbusGridView
             {
                 //editReg and editRegfield were set in TryBeginEdit
 
-                ModbusControlSpace.Global.eFormat edFormat = 0;
+                Global.eFormat edFormat = 0;
                 int edWidth = 0;
                 int edDecimals = 0;
                 bool edIsEnum = false;
-                Global.eType varType = 0;
                 bool bIsValid = true;
+                string errorString = "error";
 
                 // if it is a bitfield:
                 //      the parent register must be a 16/32 bit integer type, no float, not string, ...
@@ -1964,48 +2020,39 @@ namespace LST.ModbusGridView
                 {
                     // editing a field
 
-                    edFormat = editingRegfield.Format;
+                    edFormat = editingRegfield.DisplayFormat;
                     edWidth = editingRegfield.Width;
                     edDecimals = editingRegfield.Decimals;
                     edIsEnum = editingRegfield.EnumDict != null;
 
-                    // we only support int registers with fields; not float, string,...
-                    // convert format to type
-                    varType = Global.ConvertFormatToType(edFormat);
-                    if (varType == Global.eType.Int)
+                    // bitfields can only exists in a integer-type var
+                    // is it an enum?
+                    // then remove the enum text part
+                    if (edIsEnum)
                     {
-                        // is it an enum?
-                        // then remove the enum text part
-                        if (edIsEnum)
-                        {
-                            newValueStr = CValueToString.CleanValuestrEnumText(newValueStr);
-                        }
-
-                        // convert to int, within given Width
-                        try
-                        {
-                            Int32 newFieldValue = CValueToString.ValueStringToIntValue(newValueStr, edWidth, edDecimals);
-
-                            // insert bitfield value in register value
-                            Int32 newRegValue = InsertBitfieldInValue(editingReg.ValueUInt32, newFieldValue, editingRegfield.Pos, edWidth);
-
-                            // convert to Int16[] for write
-                            writingDataBuffer = Converts.Int32ToInt16Array(newRegValue, editingReg.Size);
-
-                            // update grid
-                            editingReg.DataInt16Array = (Int16[])writingDataBuffer.Clone();
-                            UpdateRegisterValue(editingReg);
-                        }
-                        catch
-                        {
-                            // invalid
-                            bIsValid = false;
-                        }
+                        newValueStr = CValueToString.CleanValuestrEnumText(newValueStr);
                     }
-                    else
+
+                    // convert to int, within given Width
+                    try
+                    {
+                        Int32 newFieldValue = CValueToString.ValueStringToIntValue(newValueStr, edWidth, edDecimals);
+
+                        // insert bitfield value in register value
+                        Int32 newRegValue = InsertBitfieldInValue(editingReg.ValueUInt32, newFieldValue, editingRegfield.Pos, edWidth);
+
+                        // convert to Int16[] for write
+                        writingDataBuffer = Converts.Int32ToInt16Array(newRegValue, editingReg.Size);
+
+                        // update grid
+                        editingReg.DataInt16Array = (Int16[])writingDataBuffer.Clone();
+                        UpdateRegisterValue(editingReg);
+                    }
+                    catch(Exception exc)
                     {
                         // invalid
                         bIsValid = false;
+                        errorString = exc.Message;
                     }
                 }
                 else
@@ -2028,17 +2075,21 @@ namespace LST.ModbusGridView
                     try
                     {
                         // convert to Int16[] for write
-                        bool IsFloat = (edFormat == ModbusControlSpace.Global.eFormat.Float);
-                        writingDataBuffer = CValueToString.ValueStringToInt16Registers(newValueStr, editingReg.Size, IsFloat, edDecimals);
-                    
+                        bool allowIntegers = (edFormat == Global.eFormat.Int) || (edFormat == Global.eFormat.UInt) || (edFormat == Global.eFormat.Bin) || (edFormat == Global.eFormat.Hex) || (edFormat == Global.eFormat.ASCII) || ((edFormat == Global.eFormat.Float) && (editingReg.Size == 2));
+                        bool allowFloat = (edFormat == Global.eFormat.Float);
+                        bool allowString = (edFormat == Global.eFormat.String);
+                        writingDataBuffer = CValueToString.ValueStringToInt16Registers(newValueStr, editingReg.Size, edDecimals, allowIntegers, allowFloat, allowString);
+
                         // update grid
-                        editingReg.DataInt16Array = (Int16[])writingDataBuffer.Clone();                       
+                        // in case of string: the writingDataBuffer is just as large as needed, so it can be smaller than editingReg.DataInt16Array
+                        Array.Copy(writingDataBuffer, editingReg.DataInt16Array, writingDataBuffer.Length);
                         UpdateRegisterValue(editingReg);
                     }
-                    catch
+                    catch (Exception exc)
                     {
                         // invalid
                         bIsValid = false;
+                        errorString = exc.Message;
                     }
                 }
 
@@ -2065,26 +2116,23 @@ namespace LST.ModbusGridView
                 {
                     // error
 
-                    // show that the new value was not accepted, put "<INVALID VALUE>" in front
-                    // only if message is not there yet
-                    string dispStr = "<INVALID VALUE> " + newValueStr;
-                    if (dispStr != GetDbStr(dRow[(int)dtColIndex.ValueStr]))
-                    {
-                        dRow[(int)dtColIndex.ValueStr] = dispStr;
-                    }
+                    // show that the new value was not accepted
+                    // error message and entered value
+                    string dispStr = "<" + errorString.ToUpper() + "> " + newValueStr;
+                    dRow[(int)dtColIndex.ValueStr] = dispStr;
                     // Show error in red
                     dRow[(int)dtColIndex.ValueMode] = ValueModeError;
 
                     // report error on status bar
-                    OnReportErrorMessageEvent("Input error: invalid value entered for register " + editingReg.Reg.ToString() + ": value: " + newValueStr);
+                    OnReportErrorMessageEvent("Input error: " + errorString.ToUpper() + "  for register " + editingReg.Reg.ToString() + ": value: " + newValueStr);
                     // beep
                     OnBeepEvent();
                 }
             }
 
-            //Debug.Print("before editingDatarow = null");
+            //Debug.Print("set editingDatarow = null");
             editingDatarow = null;
-            //Debug.Print("after editingDatarow = null");
+            //Debug.Print("after set editingDatarow = null");
         }
 
         private Int32 InsertBitfieldInValue(UInt32 Value, Int32 BitfieldValue, int Position, int BitWidth)
@@ -2233,31 +2281,39 @@ namespace LST.ModbusGridView
 
                         // get current format
                         DataRow dRow = (grid.Rows[rightclickRowIndex].DataBoundItem as DataRowView).Row;
-                        ModbusControlSpace.Global.eFormat curFormat = GetLineValueFormat(dRow);
+                        Global.eFormat varFormat = GetLineValueFormat(dRow);
+                        Global.eFormat varDisplayFormat = GetLineValueDisplayFormat(dRow);
 
                         // show possible formats
                         // show grey if not allowed
                         // show current format with check mark
                         bool isBitfield = GetLineIsBitfield(dRow);
                         int curWidth = GetLineValueWidth(dRow);
+                        // use Format to determine which DisplayFormats are possible
+                        // use DisplayFormat to check actual display format
                         // Int
-                        ((ToolStripMenuItem)ContextMenuForValueColumn.Items[0]).Enabled = true;
-                        ((ToolStripMenuItem)ContextMenuForValueColumn.Items[0]).Checked = (curFormat == ModbusControlSpace.Global.eFormat.Int);
+                        ((ToolStripMenuItem)ContextMenuForValueColumn.Items[0]).Enabled = IsFormatInList(varFormat, Global.eFormat.Int, Global.eFormat.UInt, Global.eFormat.Bin, Global.eFormat.Hex, Global.eFormat.ASCII, Global.eFormat.Float);
+                        ((ToolStripMenuItem)ContextMenuForValueColumn.Items[0]).Checked = (varDisplayFormat == Global.eFormat.Int);
                         // UInt
-                        ((ToolStripMenuItem)ContextMenuForValueColumn.Items[1]).Enabled = true; 
-                        ((ToolStripMenuItem)ContextMenuForValueColumn.Items[1]).Checked = (curFormat == ModbusControlSpace.Global.eFormat.UInt);
+                        ((ToolStripMenuItem)ContextMenuForValueColumn.Items[1]).Enabled = IsFormatInList(varFormat, Global.eFormat.Int, Global.eFormat.UInt, Global.eFormat.Bin, Global.eFormat.Hex, Global.eFormat.ASCII, Global.eFormat.Float);
+                        ((ToolStripMenuItem)ContextMenuForValueColumn.Items[1]).Checked = (varDisplayFormat == Global.eFormat.UInt);
                         // Hex
-                        ((ToolStripMenuItem)ContextMenuForValueColumn.Items[2]).Enabled = true;
-                        ((ToolStripMenuItem)ContextMenuForValueColumn.Items[2]).Checked = (curFormat == ModbusControlSpace.Global.eFormat.Hex);
+                        //TODO: string erbij of niet? Dan Int16RegistersToValueString() ook aanpassen.
+                        ((ToolStripMenuItem)ContextMenuForValueColumn.Items[2]).Enabled = IsFormatInList(varFormat, Global.eFormat.Int, Global.eFormat.UInt, Global.eFormat.Bin, Global.eFormat.Hex, Global.eFormat.ASCII, Global.eFormat.Float);
+                        //((ToolStripMenuItem)ContextMenuForValueColumn.Items[2]).Enabled = IsFormatInList(varFormat, Global.eFormat.Int, Global.eFormat.UInt, Global.eFormat.Bin, Global.eFormat.Hex, Global.eFormat.ASCII, Global.eFormat.Float, Global.eFormat.String);
+                        ((ToolStripMenuItem)ContextMenuForValueColumn.Items[2]).Checked = (varDisplayFormat == Global.eFormat.Hex);
                         // Binary
-                        ((ToolStripMenuItem)ContextMenuForValueColumn.Items[3]).Enabled = true;
-                        ((ToolStripMenuItem)ContextMenuForValueColumn.Items[3]).Checked = (curFormat == ModbusControlSpace.Global.eFormat.Bin);
+                        ((ToolStripMenuItem)ContextMenuForValueColumn.Items[3]).Enabled = IsFormatInList(varFormat, Global.eFormat.Int, Global.eFormat.UInt, Global.eFormat.Bin, Global.eFormat.Hex, Global.eFormat.ASCII, Global.eFormat.Float);
+                        ((ToolStripMenuItem)ContextMenuForValueColumn.Items[3]).Checked = (varDisplayFormat == Global.eFormat.Bin);
                         // Float
-                        ((ToolStripMenuItem)ContextMenuForValueColumn.Items[4]).Enabled = (isBitfield == false) && (curWidth >= 32);
-                        ((ToolStripMenuItem)ContextMenuForValueColumn.Items[4]).Checked = (curFormat == ModbusControlSpace.Global.eFormat.Float);
+                        ((ToolStripMenuItem)ContextMenuForValueColumn.Items[4]).Enabled = IsFormatInList(varFormat, Global.eFormat.Int, Global.eFormat.UInt, Global.eFormat.Bin, Global.eFormat.Hex, Global.eFormat.ASCII, Global.eFormat.Float) && (curWidth >= 32) && (isBitfield == false);
+                        ((ToolStripMenuItem)ContextMenuForValueColumn.Items[4]).Checked = (varDisplayFormat == Global.eFormat.Float);
                         // ASCII
-                        ((ToolStripMenuItem)ContextMenuForValueColumn.Items[5]).Enabled = isBitfield == false;
-                        ((ToolStripMenuItem)ContextMenuForValueColumn.Items[5]).Checked = (curFormat == ModbusControlSpace.Global.eFormat.ASCII);
+                        ((ToolStripMenuItem)ContextMenuForValueColumn.Items[5]).Enabled = IsFormatInList(varFormat, Global.eFormat.Int, Global.eFormat.UInt, Global.eFormat.Bin, Global.eFormat.Hex, Global.eFormat.ASCII, Global.eFormat.Float) && (isBitfield == false);
+                        ((ToolStripMenuItem)ContextMenuForValueColumn.Items[5]).Checked = (varDisplayFormat == Global.eFormat.ASCII);
+                        // String
+                        ((ToolStripMenuItem)ContextMenuForValueColumn.Items[6]).Enabled = IsFormatInList(varFormat, Global.eFormat.String) && (isBitfield == false);
+                        ((ToolStripMenuItem)ContextMenuForValueColumn.Items[6]).Checked = (varDisplayFormat == Global.eFormat.String);
 
                         // show menu
                         ContextMenuForValueColumn.Show(this, e.X, e.Y);
@@ -2342,42 +2398,49 @@ namespace LST.ModbusGridView
         private void ShowValueAsIntToolStripMenuItem_Click(object sender, EventArgs e)
         {
             DataRow dRow = (grid.Rows[rightclickRowIndex].DataBoundItem as DataRowView).Row;
-            ChangeLineStringValueFormat(dRow, ModbusControlSpace.Global.eFormat.Int);
+            ChangeLineValueDisplayFormat(dRow, Global.eFormat.Int);
             grid.InvalidateRow(rightclickRowIndex);
         }
 
         private void ShowValueAsUIntToolStripMenuItem_Click(object sender, EventArgs e)
         {
             DataRow dRow = (grid.Rows[rightclickRowIndex].DataBoundItem as DataRowView).Row;
-            ChangeLineStringValueFormat(dRow, ModbusControlSpace.Global.eFormat.UInt);
+            ChangeLineValueDisplayFormat(dRow, Global.eFormat.UInt);
             grid.InvalidateRow(rightclickRowIndex);
         }
 
         private void ShowValueAsHexToolStripMenuItem_Click(object sender, EventArgs e)
         {
             DataRow dRow = (grid.Rows[rightclickRowIndex].DataBoundItem as DataRowView).Row;
-            ChangeLineStringValueFormat(dRow, ModbusControlSpace.Global.eFormat.Hex);
+            ChangeLineValueDisplayFormat(dRow, Global.eFormat.Hex);
             grid.InvalidateRow(rightclickRowIndex);
         }
 
         private void ShowValueAsBinaryToolStripMenuItem_Click(object sender, EventArgs e)
         {
             DataRow dRow = (grid.Rows[rightclickRowIndex].DataBoundItem as DataRowView).Row;
-            ChangeLineStringValueFormat(dRow, ModbusControlSpace.Global.eFormat.Bin);
+            ChangeLineValueDisplayFormat(dRow, Global.eFormat.Bin);
             grid.InvalidateRow(rightclickRowIndex);
         }
 
         private void ShowValueAsFloatToolStripMenuItem_Click(object sender, EventArgs e)
         {
             DataRow dRow = (grid.Rows[rightclickRowIndex].DataBoundItem as DataRowView).Row;
-            ChangeLineStringValueFormat(dRow, ModbusControlSpace.Global.eFormat.Float);
+            ChangeLineValueDisplayFormat(dRow, Global.eFormat.Float);
             grid.InvalidateRow(rightclickRowIndex);
         }
 
         private void ShowValueAsASCIIToolStripMenuItem_Click(object sender, EventArgs e)
         {
             DataRow dRow = (grid.Rows[rightclickRowIndex].DataBoundItem as DataRowView).Row;
-            ChangeLineStringValueFormat(dRow, ModbusControlSpace.Global.eFormat.ASCII);
+            ChangeLineValueDisplayFormat(dRow, Global.eFormat.ASCII);
+            grid.InvalidateRow(rightclickRowIndex);
+        }
+
+        private void ShowValueAsStringToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            DataRow dRow = (grid.Rows[rightclickRowIndex].DataBoundItem as DataRowView).Row;
+            ChangeLineValueDisplayFormat(dRow, Global.eFormat.String);
             grid.InvalidateRow(rightclickRowIndex);
         }
 
@@ -2396,9 +2459,9 @@ namespace LST.ModbusGridView
             return isBitfield;
         }
 
-        private ModbusControlSpace.Global.eFormat GetLineValueFormat(DataRow dRow)
+        private Global.eFormat GetLineValueFormat(DataRow dRow)
         {
-            ModbusControlSpace.Global.eFormat result = ModbusControlSpace.Global.eFormat.Int;
+            Global.eFormat result = Global.eFormat.Int;
             RegItem selReg;
             RegfieldItem selRegfield;
 
@@ -2413,9 +2476,32 @@ namespace LST.ModbusGridView
             }
             else
             {
-                result = ModbusControlSpace.Global.eFormat.Int;
+                result = Global.eFormat.Int;
             }
             
+            return result;
+        }
+
+        private Global.eFormat GetLineValueDisplayFormat(DataRow dRow)
+        {
+            Global.eFormat result = Global.eFormat.Int;
+            RegItem selReg;
+            RegfieldItem selRegfield;
+
+            FindListItemsByRow(dRow, out selReg, out selRegfield);
+            if (selRegfield != null)
+            {
+                result = selRegfield.DisplayFormat;
+            }
+            else if (selReg != null)
+            {
+                result = selReg.DisplayFormat;
+            }
+            else
+            {
+                result = Global.eFormat.Int;
+            }
+
             return result;
         }
 
@@ -2442,7 +2528,7 @@ namespace LST.ModbusGridView
             return result;
         }
 
-        private void ChangeLineStringValueFormat(DataRow dRow, ModbusControlSpace.Global.eFormat format)
+        private void ChangeLineValueDisplayFormat(DataRow dRow, Global.eFormat format)
         {
             RegItem selReg;
             RegfieldItem selRegfield;
@@ -2450,12 +2536,12 @@ namespace LST.ModbusGridView
             FindListItemsByRow(dRow, out selReg, out selRegfield);
             if (selRegfield != null)
             {
-                selRegfield.Format = format;
+                selRegfield.DisplayFormat = format;
                 UpdateRegisterFieldValue(selRegfield);
             }
             else if (selReg != null)
             {
-                selReg.Format = format;
+                selReg.DisplayFormat = format;
                 UpdateRegisterValueString(selReg);
             }
         }

@@ -239,7 +239,7 @@
 			<xs:enumeration value="wr"/>
 		</xs:restriction>
 	</xs:simpleType>
-	<xs:simpleType name="VartypeType">
+	<xs:simpleType name="Vartype1Type">
 		<xs:restriction base="xs:string">
 			<xs:enumeration value="int16"/>
 			<xs:enumeration value="uint16"/>
@@ -254,6 +254,14 @@
 			<xs:enumeration value="ascii32"/>
 		</xs:restriction>
 	</xs:simpleType>
+	<xs:simpleType name="Vartype2Type">
+		<xs:restriction base="xs:string">
+			<xs:pattern value="string([2468]|[1-9][02468]|[1-2][0-9][02468]|300)"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="VartypeType">
+		<xs:union memberTypes="Vartype1Type Vartype2Type"/>
+	</xs:simpleType>
 	<xs:simpleType name="FieldtypeType">
 		<xs:restriction base="xs:string">
 			<xs:enumeration value="int"/>
@@ -262,12 +270,18 @@
 			<xs:enumeration value="bin"/>
 		</xs:restriction>
 	</xs:simpleType>
+	<xs:simpleType name="EnumValueType">
+		<xs:restriction base="xs:integer">
+			<xs:minInclusive value="-2147483648"/>
+			<xs:maxInclusive value="4294967295"/>
+		</xs:restriction>
+	</xs:simpleType>
 	<xs:complexType name="EnumType">
 	  <xs:sequence>  
 		<xs:element name="item" maxOccurs="unbounded">
 			<xs:complexType>
 				<xs:sequence>  
-					<xs:element name="value" type="xs:int"/>
+					<xs:element name="value" type="EnumValueType"/>
 					<xs:element name="text" type="xs:string"/>
 				</xs:sequence>  
 			</xs:complexType>

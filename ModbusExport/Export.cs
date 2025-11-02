@@ -65,7 +65,7 @@ namespace ModbusExport
             public UInt32 Reg;          // universal register number 
             public string Descr;        // description
             public int Size;            // var size in #registers, 1 or 2
-            public ModbusControlSpace.Global.eFormat Format;      // display as dec, unsigned, hex, binary
+            public Global.eFormat Format;      // display as dec, unsigned, hex, binary
             public int MinLen;          // minimum display length
             public int Decimals;        // nr of decimals to show
             public bool Readable;       // readable?

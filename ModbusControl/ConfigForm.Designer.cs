@@ -34,8 +34,8 @@
             this.numericSamplerate = new System.Windows.Forms.NumericUpDown();
             this.radiobuttonFloat32LittleEndian = new System.Windows.Forms.RadioButton();
             this.radiobuttonFloat32BigEndian = new System.Windows.Forms.RadioButton();
-            this.radiobuttonAsciiLittleEndian = new System.Windows.Forms.RadioButton();
-            this.radiobuttonAsciiBigEndian = new System.Windows.Forms.RadioButton();
+            this.radiobuttonStringLittleEndian = new System.Windows.Forms.RadioButton();
+            this.radiobuttonStringBigEndian = new System.Windows.Forms.RadioButton();
             this.numericTcpServerPort = new System.Windows.Forms.NumericUpDown();
             this.checkboxTcpServerEnable = new System.Windows.Forms.CheckBox();
             this.radiobuttonInt32LittleEndian = new System.Windows.Forms.RadioButton();
@@ -67,6 +67,8 @@
             this.picResponsetimeoutIsOverride = new System.Windows.Forms.PictureBox();
             this.picInterframedelayIsOverride = new System.Windows.Forms.PictureBox();
             this.picSamplerateIsOverride = new System.Windows.Forms.PictureBox();
+            this.picMaxFrameSizeIsOverride = new System.Windows.Forms.PictureBox();
+            this.picwriteregFCIsOverride = new System.Windows.Forms.PictureBox();
             this.label5 = new System.Windows.Forms.Label();
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
             this.panel2 = new System.Windows.Forms.Panel();
@@ -100,10 +102,10 @@
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.label16 = new System.Windows.Forms.Label();
             this.panelWarning = new System.Windows.Forms.Panel();
-            this.picMaxFrameSizeIsOverride = new System.Windows.Forms.PictureBox();
+            this.comboStringEncoding = new System.Windows.Forms.ComboBox();
+            this.label17 = new System.Windows.Forms.Label();
             this.numericInterFrameDelay = new LST.Controls.NumericUpDown2();
             this.comboSerialPort = new ModbusControlSpace.SerialPortCombobox();
-            this.picwriteregFCIsOverride = new System.Windows.Forms.PictureBox();
             ((System.ComponentModel.ISupportInitialize)(this.numericSamplerate)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericTcpServerPort)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericMaximumFrameSize)).BeginInit();
@@ -123,6 +125,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.picResponsetimeoutIsOverride)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.picInterframedelayIsOverride)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.picSamplerateIsOverride)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.picMaxFrameSizeIsOverride)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.picwriteregFCIsOverride)).BeginInit();
             this.panel2.SuspendLayout();
             this.groupBox3.SuspendLayout();
             this.groupBox4.SuspendLayout();
@@ -134,9 +138,7 @@
             this.groupBoxSerialInterface.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.panelWarning.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.picMaxFrameSizeIsOverride)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericInterFrameDelay)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.picwriteregFCIsOverride)).BeginInit();
             this.SuspendLayout();
             // 
             // numericSamplerate
@@ -186,29 +188,29 @@
             this.toolTip1.SetToolTip(this.radiobuttonFloat32BigEndian, "First register is higher 16 bits of 32-bit float");
             this.radiobuttonFloat32BigEndian.UseVisualStyleBackColor = true;
             // 
-            // radiobuttonAsciiLittleEndian
+            // radiobuttonStringLittleEndian
             // 
-            this.radiobuttonAsciiLittleEndian.AutoSize = true;
-            this.radiobuttonAsciiLittleEndian.Location = new System.Drawing.Point(6, 32);
-            this.radiobuttonAsciiLittleEndian.Name = "radiobuttonAsciiLittleEndian";
-            this.radiobuttonAsciiLittleEndian.Size = new System.Drawing.Size(68, 17);
-            this.radiobuttonAsciiLittleEndian.TabIndex = 1;
-            this.radiobuttonAsciiLittleEndian.Text = "Low byte";
-            this.toolTip1.SetToolTip(this.radiobuttonAsciiLittleEndian, "Register with value 0x4241 is shown as \'AB\'");
-            this.radiobuttonAsciiLittleEndian.UseVisualStyleBackColor = true;
+            this.radiobuttonStringLittleEndian.AutoSize = true;
+            this.radiobuttonStringLittleEndian.Location = new System.Drawing.Point(6, 32);
+            this.radiobuttonStringLittleEndian.Name = "radiobuttonStringLittleEndian";
+            this.radiobuttonStringLittleEndian.Size = new System.Drawing.Size(68, 17);
+            this.radiobuttonStringLittleEndian.TabIndex = 1;
+            this.radiobuttonStringLittleEndian.Text = "Low byte";
+            this.toolTip1.SetToolTip(this.radiobuttonStringLittleEndian, "Register with value 0x4241 is shown as \'AB\'");
+            this.radiobuttonStringLittleEndian.UseVisualStyleBackColor = true;
             // 
-            // radiobuttonAsciiBigEndian
+            // radiobuttonStringBigEndian
             // 
-            this.radiobuttonAsciiBigEndian.AutoSize = true;
-            this.radiobuttonAsciiBigEndian.Checked = true;
-            this.radiobuttonAsciiBigEndian.Location = new System.Drawing.Point(82, 32);
-            this.radiobuttonAsciiBigEndian.Name = "radiobuttonAsciiBigEndian";
-            this.radiobuttonAsciiBigEndian.Size = new System.Drawing.Size(70, 17);
-            this.radiobuttonAsciiBigEndian.TabIndex = 2;
-            this.radiobuttonAsciiBigEndian.TabStop = true;
-            this.radiobuttonAsciiBigEndian.Text = "High byte";
-            this.toolTip1.SetToolTip(this.radiobuttonAsciiBigEndian, "Register with value 0x4241 is shown as \'BA\'");
-            this.radiobuttonAsciiBigEndian.UseVisualStyleBackColor = true;
+            this.radiobuttonStringBigEndian.AutoSize = true;
+            this.radiobuttonStringBigEndian.Checked = true;
+            this.radiobuttonStringBigEndian.Location = new System.Drawing.Point(82, 32);
+            this.radiobuttonStringBigEndian.Name = "radiobuttonStringBigEndian";
+            this.radiobuttonStringBigEndian.Size = new System.Drawing.Size(70, 17);
+            this.radiobuttonStringBigEndian.TabIndex = 2;
+            this.radiobuttonStringBigEndian.TabStop = true;
+            this.radiobuttonStringBigEndian.Text = "High byte";
+            this.toolTip1.SetToolTip(this.radiobuttonStringBigEndian, "Register with value 0x4241 is shown as \'BA\'");
+            this.radiobuttonStringBigEndian.UseVisualStyleBackColor = true;
             // 
             // numericTcpServerPort
             // 
@@ -665,6 +667,30 @@
             this.toolTip1.SetToolTip(this.picSamplerateIsOverride, "This parameter is overridden by the command line! It shows the value as set by th" +
         "e command line, not the value configured in the mbc project file.");
             // 
+            // picMaxFrameSizeIsOverride
+            // 
+            this.picMaxFrameSizeIsOverride.Image = ((System.Drawing.Image)(resources.GetObject("picMaxFrameSizeIsOverride.Image")));
+            this.picMaxFrameSizeIsOverride.Location = new System.Drawing.Point(188, 320);
+            this.picMaxFrameSizeIsOverride.Name = "picMaxFrameSizeIsOverride";
+            this.picMaxFrameSizeIsOverride.Size = new System.Drawing.Size(20, 20);
+            this.picMaxFrameSizeIsOverride.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.picMaxFrameSizeIsOverride.TabIndex = 23;
+            this.picMaxFrameSizeIsOverride.TabStop = false;
+            this.toolTip1.SetToolTip(this.picMaxFrameSizeIsOverride, "This parameter is overridden by the command line! It shows the value as set by th" +
+        "e command line, not the value configured in the mbc project file.");
+            // 
+            // picwriteregFCIsOverride
+            // 
+            this.picwriteregFCIsOverride.Image = ((System.Drawing.Image)(resources.GetObject("picwriteregFCIsOverride.Image")));
+            this.picwriteregFCIsOverride.Location = new System.Drawing.Point(188, 13);
+            this.picwriteregFCIsOverride.Name = "picwriteregFCIsOverride";
+            this.picwriteregFCIsOverride.Size = new System.Drawing.Size(20, 20);
+            this.picwriteregFCIsOverride.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.picwriteregFCIsOverride.TabIndex = 13;
+            this.picwriteregFCIsOverride.TabStop = false;
+            this.toolTip1.SetToolTip(this.picwriteregFCIsOverride, "This parameter is overridden by the command line! It shows the value as set by th" +
+        "e command line, not the value configured in the mbc project file.");
+            // 
             // label5
             // 
             this.label5.AutoSize = true;
@@ -677,6 +703,8 @@
             // panel2
             // 
             this.panel2.AutoSize = true;
+            this.panel2.Controls.Add(this.label17);
+            this.panel2.Controls.Add(this.comboStringEncoding);
             this.panel2.Controls.Add(this.picSamplerateIsOverride);
             this.panel2.Controls.Add(this.buttonApply);
             this.panel2.Controls.Add(this.groupBox5);
@@ -759,15 +787,15 @@
             // 
             // groupBox4
             // 
-            this.groupBox4.Controls.Add(this.radiobuttonAsciiLittleEndian);
-            this.groupBox4.Controls.Add(this.radiobuttonAsciiBigEndian);
+            this.groupBox4.Controls.Add(this.radiobuttonStringLittleEndian);
+            this.groupBox4.Controls.Add(this.radiobuttonStringBigEndian);
             this.groupBox4.Controls.Add(this.label14);
             this.groupBox4.Location = new System.Drawing.Point(227, 180);
             this.groupBox4.Name = "groupBox4";
             this.groupBox4.Size = new System.Drawing.Size(210, 63);
             this.groupBox4.TabIndex = 22;
             this.groupBox4.TabStop = false;
-            this.groupBox4.Text = "ASCII/string byte order";
+            this.groupBox4.Text = "String/ASCII byte order";
             // 
             // label14
             // 
@@ -1030,17 +1058,23 @@
             this.panelWarning.TabIndex = 22;
             this.panelWarning.Visible = false;
             // 
-            // picMaxFrameSizeIsOverride
+            // comboStringEncoding
             // 
-            this.picMaxFrameSizeIsOverride.Image = ((System.Drawing.Image)(resources.GetObject("picMaxFrameSizeIsOverride.Image")));
-            this.picMaxFrameSizeIsOverride.Location = new System.Drawing.Point(188, 320);
-            this.picMaxFrameSizeIsOverride.Name = "picMaxFrameSizeIsOverride";
-            this.picMaxFrameSizeIsOverride.Size = new System.Drawing.Size(20, 20);
-            this.picMaxFrameSizeIsOverride.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.picMaxFrameSizeIsOverride.TabIndex = 23;
-            this.picMaxFrameSizeIsOverride.TabStop = false;
-            this.toolTip1.SetToolTip(this.picMaxFrameSizeIsOverride, "This parameter is overridden by the command line! It shows the value as set by th" +
-        "e command line, not the value configured in the mbc project file.");
+            this.comboStringEncoding.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboStringEncoding.FormattingEnabled = true;
+            this.comboStringEncoding.Location = new System.Drawing.Point(227, 262);
+            this.comboStringEncoding.Name = "comboStringEncoding";
+            this.comboStringEncoding.Size = new System.Drawing.Size(208, 21);
+            this.comboStringEncoding.TabIndex = 33;
+            // 
+            // label17
+            // 
+            this.label17.AutoSize = true;
+            this.label17.Location = new System.Drawing.Point(225, 246);
+            this.label17.Name = "label17";
+            this.label17.Size = new System.Drawing.Size(133, 13);
+            this.label17.TabIndex = 34;
+            this.label17.Text = "String encoding/decoding:";
             // 
             // numericInterFrameDelay
             // 
@@ -1065,18 +1099,6 @@
             this.comboSerialPort.Size = new System.Drawing.Size(91, 21);
             this.comboSerialPort.TabIndex = 9;
             this.toolTip1.SetToolTip(this.comboSerialPort, "Serial port name. Dropdown shows existing ports");
-            // 
-            // picwriteregFCIsOverride
-            // 
-            this.picwriteregFCIsOverride.Image = ((System.Drawing.Image)(resources.GetObject("picwriteregFCIsOverride.Image")));
-            this.picwriteregFCIsOverride.Location = new System.Drawing.Point(188, 13);
-            this.picwriteregFCIsOverride.Name = "picwriteregFCIsOverride";
-            this.picwriteregFCIsOverride.Size = new System.Drawing.Size(20, 20);
-            this.picwriteregFCIsOverride.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.picwriteregFCIsOverride.TabIndex = 13;
-            this.picwriteregFCIsOverride.TabStop = false;
-            this.toolTip1.SetToolTip(this.picwriteregFCIsOverride, "This parameter is overridden by the command line! It shows the value as set by th" +
-        "e command line, not the value configured in the mbc project file.");
             // 
             // ConfigForm
             // 
@@ -1118,6 +1140,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.picResponsetimeoutIsOverride)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.picInterframedelayIsOverride)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.picSamplerateIsOverride)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.picMaxFrameSizeIsOverride)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.picwriteregFCIsOverride)).EndInit();
             this.panel2.ResumeLayout(false);
             this.panel2.PerformLayout();
             this.groupBox3.ResumeLayout(false);
@@ -1139,9 +1163,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.panelWarning.ResumeLayout(false);
             this.panelWarning.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.picMaxFrameSizeIsOverride)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericInterFrameDelay)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.picwriteregFCIsOverride)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1163,8 +1185,8 @@
         private System.Windows.Forms.RadioButton radiobuttonFloat32LittleEndian;
         private System.Windows.Forms.RadioButton radiobuttonFloat32BigEndian;
         private System.Windows.Forms.GroupBox groupBox4;
-        private System.Windows.Forms.RadioButton radiobuttonAsciiLittleEndian;
-        private System.Windows.Forms.RadioButton radiobuttonAsciiBigEndian;
+        private System.Windows.Forms.RadioButton radiobuttonStringLittleEndian;
+        private System.Windows.Forms.RadioButton radiobuttonStringBigEndian;
         private System.Windows.Forms.Label label14;
         private System.Windows.Forms.GroupBox groupboxModbusTcpServer;
         private System.Windows.Forms.NumericUpDown numericTcpServerPort;
@@ -1222,5 +1244,7 @@
         private System.Windows.Forms.PictureBox picSamplerateIsOverride;
         private System.Windows.Forms.PictureBox picMaxFrameSizeIsOverride;
         private System.Windows.Forms.PictureBox picwriteregFCIsOverride;
+        private System.Windows.Forms.Label label17;
+        private System.Windows.Forms.ComboBox comboStringEncoding;
     }
 }

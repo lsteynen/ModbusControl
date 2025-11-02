@@ -1602,7 +1602,7 @@ namespace ModbusControlSpace
             // match expectedCount?
             if (aFields.Length != expectedCount)
             {
-                throw new Exception(String.Format("Expected {0} values, found {1} values", expectedCount, aFields.Length));
+                throw new Exception(String.Format("Expected {0} values, found {1}", expectedCount, aFields.Length));
             }
 
             return aValues;
@@ -1640,7 +1640,7 @@ namespace ModbusControlSpace
             // match expectedCount?
             if (aFields.Length != expectedCount)
             {
-                throw new Exception(String.Format("Expected {0} values, found {1} values", expectedCount, aFields.Length));
+                throw new Exception(String.Format("Expected {0} values, found {1}", expectedCount, aFields.Length));
             }
 
             return aValues;
@@ -1690,7 +1690,7 @@ namespace ModbusControlSpace
             {
                 if (aFields.Length != expectedCount)
                 {
-                    throw new Exception(String.Format("Expected {0} values, found {1} values", expectedCount, aFields.Length));
+                    throw new Exception(String.Format("Expected {0} values, found {1}", expectedCount, aFields.Length));
                 }
             }
 
@@ -1742,7 +1742,7 @@ namespace ModbusControlSpace
             // match expectedCount?
             if (aFields.Length != expectedCount)
             {
-                throw new Exception(String.Format("Expected {0} values, found {1} values", expectedCount, aFields.Length));
+                throw new Exception(String.Format("Expected {0} values, found {1}", expectedCount, aFields.Length));
             }
 
             return aBytes;
@@ -3060,7 +3060,7 @@ namespace ModbusControlSpace
             Test_TestResultStrContains("invalid value", rs);
 
             rs = SendWriteSingleHoldingreg("1", "40301", "1", EFormat.INT16, "101, 102");
-            Test_TestResultStrContains("Expected 1 values, found 2 val", rs);
+            Test_TestResultStrContains("Expected 1 values, found 2", rs);
 
             rs = SendWriteSingleHoldingreg("1", "40301", "1", EFormat.INT16, "0");
             Test_TestResultStrContains("success", rs);
@@ -3210,10 +3210,10 @@ namespace ModbusControlSpace
             Test_HoldingRegisterValueEqualUInt16(40301, 0x1234);
 
             rs = SendWriteMultipleHoldingreg("1", "40301", "1", EFormat.INT16, "101, 102");
-            Test_TestResultStrContains("Expected 1 values, found 2 val", rs);
+            Test_TestResultStrContains("Expected 1 values, found 2", rs);
 
             rs = SendWriteMultipleHoldingreg("1", "40301", "1", EFormat.INT16, "-1, 46");
-            Test_TestResultStrContains("Expected 1 values, found 2 val", rs);
+            Test_TestResultStrContains("Expected 1 values, found 2", rs);
 
             rs = SendWriteMultipleHoldingreg("1", "40301", "4", EFormat.INT16, "1001, 1002, 1003, 1004");
             Test_TestResultStrContains("success", rs);
@@ -3233,10 +3233,10 @@ namespace ModbusControlSpace
             Test_TestResultStrContains("invalid value", rs);
 
             rs = SendWriteMultipleHoldingreg("1", "40301", "4", EFormat.INT16, "1001, 1002, 1003");
-            Test_TestResultStrContains("Expected 4 values, found 3 val", rs);
+            Test_TestResultStrContains("Expected 4 values, found 3", rs);
 
             rs = SendWriteMultipleHoldingreg("1", "40301", "4", EFormat.INT16, "1001, 1002, 1003, 1004,1005");
-            Test_TestResultStrContains("Expected 4 values, found 5 val", rs);
+            Test_TestResultStrContains("Expected 4 values, found 5", rs);
 
             rs = SendWriteMultipleHoldingreg("1", "40303", "110", EFormat.INT16, "21001, 21002, 21003, 21004, 21005, 21006, 21007, 21008, 21009, 21010, 21011, 21012, 21013, 21014, 21015, 21016, 21017, 21018, 21019, 21020, 21021, 21022, 21023, 21024, 21025, 21026, 21027, 21028, 21029, 21030, 21031, 21032, 21033, 21034, 21035, 21036, 21037, 21038, 21039, 21040, 21041, 21042, 21043, 21044, 21045, 21046, 21047, 21048, 21049, 21050, 21051, 21052, 21053, 21054, 21055, 21056, 21057, 21058, 21059, 21060, 21061, 21062, 21063, 21064, 21065, 21066, 21067, 21068, 21069, 21070, 21071, 21072, 21073, 21074, 21075, 21076, 21077, 21078, 21079, 21080, 21081, 21082, 21083, 21084, 21085, 21086, 21087, 21088, 21089, 21090, 21091, 21092, 21093, 21094, 21095, 21096, 21097, 21098, 21099, 21100, 21101, 21102, 21103, 21104, 21105, 21106, 21107, 21108, 21109, 21110");
             Test_TestResultStrContains("success", rs);
@@ -3557,7 +3557,7 @@ namespace ModbusControlSpace
             Test_CoilValuesEqual(3, "0,1");
 
             rs = SendWriteSingleCoil("1", "1", "1", EFormat.BITS, "0, 1 ");
-            Test_TestResultStrContains("Expected 1 values, found 2 val", rs);
+            Test_TestResultStrContains("Expected 1 values, found 2", rs);
 
             rs = SendWriteSingleCoil("1", "1", "1", EFormat.INT16, "001 ");
             Test_TestResultStrContains("invalid format", rs);
@@ -3619,7 +3619,7 @@ namespace ModbusControlSpace
             Test_TestResultStrContains("success", rs);
 
             rs = SendWriteSingleCoil("1", "1", "1", EFormat.HEXBYTES, "0x01, 0x02 ");
-            Test_TestResultStrContains("Expected 1 values, found 2 val", rs);
+            Test_TestResultStrContains("Expected 1 values, found 2", rs);
 
         }
 
@@ -3673,7 +3673,7 @@ namespace ModbusControlSpace
             Test_CoilValuesEqual(1, "0,1,0,1,1,1,0,0,1,1,0,1,0,0,1,0,1,1,0,0");
 
             rs = SendWriteMultipleCoils("1", "1", "9", EFormat.HEXBYTES, "0x3A");
-            Test_TestResultStrContains("Expected 2 values, found 1 val", rs);
+            Test_TestResultStrContains("Expected 2 values, found 1", rs);
 
             rs = SendWriteMultipleCoils("1", "1", "9", EFormat.HEXBYTES, "0x3A, 0x55");
             Test_TestResultStrContains("success", rs);
@@ -3692,14 +3692,14 @@ namespace ModbusControlSpace
             Test_RegisterValuesEqual(40001, "0x93bc,0x4606,0x0411,0xe5a8,0xb696,0x0994,0x2d69,0x80c3,0xcf70,0x21e3,0x1d5f,0xe584,0x9d13,0xb456,0x7147,0xe0e5,0x1e0b,0xcfd9,0x23a9,0xc0ed,0x6b1d,0xe37c,0xa1b6,0xc973,0x4cb7,0x9c34,0x1726,0x75db,0x9c53,0x2ecc,0x20e1,0xf143,0x701a,0x5575,0x0a3c,0xa6d8,0xaf01,0x83c8,0x645d,0xe5b7,0x02e9,0xda7e,0xcc3d,0x5729,0xb70b,0x14a1,0x76ee,0x818d,0xe771,0xa758,0xc7d2,0x1327,0xcd17,0x5a4a,0xa176,0x5d62,0x4aef,0xd387,0xfc73,0x5785,0x16ee,0x6c83,0x0e94,0x35cf,0x0f75,0xbb73,0x3e16,0xa14b,0x65f0,0x9ba5,0x9490,0x6de2,0x4ae9,0x3898,0x6100,0xa2b5,0x7f6c,0x710b,0xae45,0x91ba,0xd3b3,0x67c6,0x37cd,0xd41e,0x08a4,0x297e,0x7802,0xd5ce,0x6fb5,0x20c7,0x88f2,0x5840,0x6eaa,0xe09d,0xf220,0x1fbe,0xaa26,0xfe75,0xfe55,0x14a7,0xb02e,0x7a80,0x1e90,0xf969,0x71b6,0x2e49,0x0c3a,0x273a,0x59d3,0xcf36,0xaca6,0xb0d9,0x6614,0xb885,0x580a,0x08a4,0x270d,0xfaa8,0x1899,0x3894,0x7484,0xe424,0x6fd3");
 
             rs = SendWriteMultipleCoils("1", "1", "1968", EFormat.BITS, "0,0,1,1,1,1,0,1,1,1,0,0,1,0,0,1,0,1,1,0,0,0,0,0,0,1,1,0,0,0,1,0,1,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1,0,1,0,1,1,0,1,0,0,1,1,1,0,1,1,0,1,0,0,1,0,1,1,0,1,1,0,1,0,0,1,0,1,0,0,1,1,0,0,1,0,0,0,0,1,0,0,1,0,1,1,0,1,0,1,1,0,1,0,0,1,1,0,0,0,0,1,1,0,0,0,0,0,0,0,1,0,0,0,0,1,1,1,0,1,1,1,1,0,0,1,1,1,1,0,0,0,1,1,1,1,0,0,0,0,1,0,0,1,1,1,1,1,0,1,0,1,0,1,1,1,0,0,0,0,0,1,0,0,0,0,1,1,0,1,0,0,1,1,1,1,1,0,0,1,0,0,0,1,0,1,1,1,0,0,1,0,1,1,0,1,0,1,0,0,0,1,0,1,1,0,1,1,1,1,0,0,0,1,0,1,0,0,0,1,1,1,0,1,0,1,0,0,1,1,1,0,0,0,0,0,1,1,1,1,1,0,1,0,0,0,0,0,1,1,1,1,0,0,0,1,0,0,1,1,0,1,1,1,1,1,1,0,0,1,1,1,0,0,1,0,1,0,1,1,1,0,0,0,1,0,0,1,0,1,1,0,1,1,1,0,0,0,0,0,0,1,1,1,0,1,1,1,0,0,0,1,1,0,1,0,1,1,0,0,0,1,1,1,1,1,0,1,1,0,0,0,1,1,1,0,1,1,0,1,1,0,1,1,0,0,0,0,1,0,1,1,1,0,0,1,1,1,0,1,0,0,1,0,0,1,1,1,1,1,0,1,1,0,1,0,0,1,1,0,0,1,0,0,0,1,0,1,1,0,0,0,0,1,1,1,0,0,1,0,1,1,0,0,1,0,0,1,1,1,0,1,0,0,0,1,1,0,1,1,0,1,1,1,0,1,0,1,1,1,0,1,1,0,0,1,0,1,0,0,0,1,1,1,0,0,1,0,0,1,1,0,0,1,1,0,1,1,1,0,1,0,0,1,0,0,0,0,1,1,1,0,0,0,0,0,1,0,0,1,1,0,0,0,0,1,0,1,0,0,0,1,1,1,1,0,1,0,1,1,0,0,0,0,0,0,0,1,1,1,0,1,0,1,0,1,1,1,0,1,0,1,0,1,0,1,0,0,0,1,1,1,1,0,0,0,1,0,1,0,0,0,0,0,0,0,1,1,0,1,1,0,1,1,0,0,1,0,1,1,0,0,0,0,0,0,0,1,1,1,1,0,1,0,1,0,0,0,1,0,0,1,1,1,1,0,0,0,0,0,1,1,0,1,1,1,0,1,0,0,0,1,0,0,1,1,0,1,1,1,0,1,1,0,1,1,0,1,0,0,1,1,1,1,0,0,1,0,1,1,1,0,1,0,0,0,0,0,0,0,1,1,1,1,1,1,0,0,1,0,1,1,0,1,1,1,0,1,1,1,1,0,0,0,0,1,1,0,0,1,1,1,0,0,1,0,1,0,0,1,1,1,0,1,0,1,0,1,1,0,1,0,0,0,0,1,1,1,0,1,1,0,1,1,0,0,0,0,1,0,1,0,0,1,0,1,0,0,0,0,1,1,1,0,1,1,1,0,1,1,0,1,1,1,0,1,0,1,1,0,0,0,1,1,0,0,0,0,0,0,1,1,0,0,0,1,1,1,0,1,1,1,0,0,1,1,1,0,0,0,1,1,0,1,0,1,1,1,0,0,1,0,1,0,1,0,0,1,0,1,1,1,1,1,0,0,0,1,1,1,1,1,0,0,1,0,0,1,1,0,0,1,0,0,0,1,1,1,0,1,0,0,0,1,0,1,1,0,0,1,1,0,1,0,1,0,0,1,0,0,1,0,1,1,0,1,0,0,1,1,0,1,1,1,0,1,0,0,0,0,1,0,1,0,1,0,0,0,1,1,0,1,0,1,1,1,0,1,0,1,1,1,1,0,1,1,1,0,1,0,1,0,0,1,0,1,1,1,0,0,0,0,1,1,1,0,0,1,0,1,1,1,1,0,0,1,1,1,0,0,0,1,1,1,1,1,1,1,0,1,0,0,0,0,1,1,1,1,0,1,0,1,0,0,1,1,1,0,1,1,1,0,1,1,0,1,0,0,0,1,1,0,0,0,0,0,1,0,0,1,1,0,1,1,0,0,0,1,0,1,0,0,1,0,1,1,1,0,0,0,0,1,1,1,1,0,0,1,1,1,0,1,0,1,1,0,0,1,0,1,0,1,1,1,0,1,1,1,1,0,0,0,0,1,1,0,0,1,1,1,0,1,1,0,1,1,1,0,1,0,1,1,0,1,0,0,0,0,1,1,1,1,1,0,0,1,1,0,1,0,0,1,0,1,0,0,0,0,1,0,1,0,0,0,0,1,1,1,1,1,0,1,0,0,1,1,0,1,0,1,0,0,1,0,1,1,1,0,1,1,0,0,1,0,0,0,0,1,0,0,1,0,0,1,0,1,0,0,1,0,1,0,0,0,1,1,1,1,0,1,1,0,1,1,0,1,0,0,1,0,1,1,1,0,1,0,1,0,0,1,0,0,0,0,1,1,0,0,1,0,0,0,1,1,1,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,1,1,0,1,0,1,0,1,1,0,1,0,1,0,0,0,1,0,1,0,0,1,1,0,1,1,0,1,1,1,1,1,1,1,0,1,1,0,1,0,0,0,0,1,0,0,0,1,1,1,0,1,0,1,0,0,0,1,0,0,1,1,1,0,1,0,1,0,1,0,1,1,1,0,1,1,0,0,0,1,0,0,1,1,1,0,0,1,1,0,1,1,1,0,0,1,0,1,1,0,1,1,0,0,0,1,1,1,1,1,0,0,1,1,0,1,0,1,1,0,0,1,1,1,1,1,0,1,1,0,0,0,1,1,1,1,0,0,0,0,0,1,0,1,0,1,1,0,0,1,0,0,1,0,1,0,0,0,1,0,0,0,0,0,1,1,1,1,1,1,0,1,0,0,1,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,1,1,1,1,0,0,1,1,1,0,0,1,1,1,0,1,0,1,0,1,1,1,0,1,0,1,1,0,1,1,1,1,1,0,1,1,0,1,1,1,0,0,0,1,1,0,0,0,0,0,1,0,0,0,1,0,0,1,1,1,1,0,0,0,1,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,1,1,0,1,0,0,1,0,1,0,1,0,1,0,1,1,1,0,1,1,0,1,0,1,1,1,0,0,1,0,0,0,0,0,1,1,1,0,0,0,0,0,1,0,0,0,1,0,0,1,1,1,1,0,1,1,1,1,1,0,1,1,1,1,1,1,0,0,0,0,1,1,0,0,1,0,0,0,1,0,1,0,1,0,1,1,0,1,0,1,1,1,0,0,1,1,1,1,1,1,1,1,0,1,0,1,0,1,0,0,1,1,1,1,1,1,1,1,1,1,0,0,1,0,1,0,0,1,0,1,0,0,0,0,1,1,1,0,1,0,0,0,0,0,0,1,1,0,1,0,0,0,0,0,0,0,1,0,1,0,1,1,1,1,0,0,0,0,0,1,0,0,1,0,1,1,1,1,0,0,0,1,0,0,1,0,1,1,0,1,0,0,1,1,1,1,1,0,1,1,0,1,1,0,1,1,0,0,0,1,1,1,0,1,0,0,1,0,0,1,0,0,1,1,1,0,1,0,0,0,1,0,1,1,1,0,0,0,0,1,1,0,0,0,0,0,1,0,1,1,1,0,0,1,1,1,0,0,1,0,0,1,1,0,0,1,0,1,1,1,0,0,1,1,0,1,0,0,1,1,0,1,1,0,0,1,1,1,1,0,0,1,1,0,1,1,0,0,1,0,1,0,0,1,1,0,1,0,1,1,0,0,1,1,0,1,1,0,0,0,0,1,1,0,1,0,0,1,0,1,0,0,0,0,1,1,0,0,1,1,0,1,0,1,0,0,0,0,1,0,0,0,1,1,1,0,1,0,1,0,1,0,0,0,0,0,0,0,1,1,0,1,0,0,0,1,0,0,1,0,1,0,0,0,1,0,0,0,0,1,0,1,1,0,0,0,0,1,1,1,0,0,1,0,0,0,0,0,1,0,1,0,1,0,1,0,1,1,1,1,1,1,0,0,1,1,0,0,1,0,0,0,1,1,0,0,0,0,0,1,0,1,0,0,1,0,0,0,1,1,1,0,0,0,0,1,0,0,0,0,1,0,0,1,0,1,1,1,0,0,0,1,0,0,1,0,0,0,0,1,0,0,1,1,1,1,1,0,0,1,0,1,1,1,1,1,1,0,1,1");
-            Test_TestResultStrContains("Expected 1968 values, found 1967 values", rs);
+            Test_TestResultStrContains("Expected 1968 values, found 1967", rs);
 
             rs = SendWriteMultipleCoils("1", "1", "1968", EFormat.HEXBYTES, "0x91,0x93,0x4f,0xfb,0x5c,0x65,0x67,0x31,0x93,0x97,0x4c,0x02,0xae,0xcf,0x34,0x40,0xf4,0x50,0x09,0xdc,0xc3,0x02,0xb8,0x0e,0x92,0x40,0xa6,0x43,0x40,0x66,0x45,0x36,0xf2,0x5b,0x71,0x1e,0x2c,0xf6,0x3a,0xab,0x4b,0x60,0x5b,0x14,0x3b,0x95,0xfd,0x35,0x20,0x7f,0xf7,0x78,0x40,0x38,0xb1,0x22,0xcb,0x39,0x96,0x46,0xc9,0x5d,0x29,0xc4,0xb3,0xaa,0x39,0x0d,0xc7,0x81,0xeb,0x15,0xab,0x94,0x68,0xcc,0x30,0x23,0x7e,0x49,0x6d,0x34,0xad,0xe5,0xb4,0x3d,0xcc,0x57,0x46,0x89,0x74,0x0f,0x8a,0x95,0xd0,0x9b,0x84,0x47,0x22,0x3d,0xe0,0x99,0x33,0xa1,0xd6,0x25,0x3c,0x32,0x1c,0xd2,0xe6,0x1a,0x8f,0x63,0x04,0x86,0x44,0x1d,0xe9,0x60,0x9d,0x72,0xd0,0x91,0xe2,0x21,0x9d,0x20,0x0e,0x27,0xc1,0x72,0x9c,0x0c,0x9e,0xea,0x2a,0xb6,0xe4,0x48,0x23,0x09,0xdc,0x59,0xd6,0x11,0xfb,0x99,0x0b,0x88,0xb9,0x39,0xcb,0xeb,0x5e,0x1d,0x79,0xb2,0xc9,0x37,0x2a,0x6b,0xe4,0xd3,0x3b,0x0c,0x9b,0x85,0x0f,0x49,0x25,0x60,0x9c,0xf4,0x90,0xa9,0x91,0x67,0x0a,0x01,0xdc,0x9d,0x55,0x93,0x1b,0xb5,0x1a,0x67,0xc5,0xf1,0xa5,0xe5,0xe4,0x1f,0xb4,0xdf,0x0f,0xc6,0xd2,0x18,0x4f,0xec,0x94,0xfa,0xcd,0x66,0xf2,0x83,0x98,0xac,0x56,0xb0,0x59,0x45,0x2c,0xba,0x17,0x50,0x3b,0x66,0xe2,0x58,0xd7,0x33,0x58,0x9c,0x9d,0xd4,0x7e,0x78,0xcb,0x86,0xc2,0x6c,0x8a,0xd7,0x25,0x8d,0xbc,0x23,0xb0,0xb2,0xf6,0x14,0xe0,0xA0");
             Test_TestResultStrContains("success", rs);
             Test_RegisterValuesEqual(40001, "0x9391,0xfb4f,0x655c,0x3167,0x9793,0x024c,0xcfae,0x4034,0x50f4,0xdc09,0x02c3,0x0eb8,0x4092,0x43a6,0x6640,0x3645,0x5bf2,0x1e71,0xf62c,0xab3a,0x604b,0x145b,0x953b,0x35fd,0x7f20,0x78f7,0x3840,0x22b1,0x39cb,0x4696,0x5dc9,0xc429,0xaab3,0x0d39,0x81c7,0x15eb,0x94ab,0xcc68,0x2330,0x497e,0x346d,0xe5ad,0x3db4,0x57cc,0x8946,0x0f74,0x958a,0x9bd0,0x4784,0x3d22,0x99e0,0xa133,0x25d6,0x323c,0xd21c,0x1ae6,0x638f,0x8604,0x1d44,0x60e9,0x729d,0x91d0,0x21e2,0x209d,0x270e,0x72c1,0x0c9c,0xea9e,0xb62a,0x48e4,0x0923,0x59dc,0x11d6,0x99fb,0x880b,0x39b9,0xebcb,0x1d5e,0xb279,0x37c9,0x6b2a,0xd3e4,0x0c3b,0x859b,0x490f,0x6025,0xf49c,0xa990,0x6791,0x010a,0x9ddc,0x9355,0xb51b,0x671a,0xf1c5,0xe5a5,0x1fe4,0xdfb4,0xc60f,0x18d2,0xec4f,0xfa94,0x66cd,0x83f2,0xac98,0xb056,0x4559,0xba2c,0x5017,0x663b,0x58e2,0x33d7,0x9c58,0xd49d,0x787e,0x86cb,0x6cc2,0xd78a,0x8d25,0x23bc,0xb2b0,0x14f6,0xa0e0");
 
             rs = SendWriteMultipleCoils("1", "1", "1968", EFormat.HEXBYTES, "0x91,0x93,0x4f,0xfb,0x5c,0x65,0x67,0x31,0x93,0x97,0x4c,0x02,0xae,0xcf,0x34,0x40,0xf4,0x50,0x09,0xdc,0xc3,0x02,0xb8,0x0e,0x92,0x40,0xa6,0x43,0x40,0x66,0x45,0x36,0xf2,0x5b,0x71,0x1e,0x2c,0xf6,0x3a,0xab,0x4b,0x60,0x5b,0x14,0x3b,0x95,0xfd,0x35,0x20,0x7f,0xf7,0x78,0x40,0x38,0xb1,0x22,0xcb,0x39,0x96,0x46,0xc9,0x5d,0x29,0xc4,0xb3,0xaa,0x39,0x0d,0xc7,0x81,0xeb,0x15,0xab,0x94,0x68,0xcc,0x30,0x23,0x7e,0x49,0x6d,0x34,0xad,0xe5,0xb4,0x3d,0xcc,0x57,0x46,0x89,0x74,0x0f,0x8a,0x95,0xd0,0x9b,0x84,0x47,0x22,0x3d,0xe0,0x99,0x33,0xa1,0xd6,0x25,0x3c,0x32,0x1c,0xd2,0xe6,0x1a,0x8f,0x63,0x04,0x86,0x44,0x1d,0xe9,0x60,0x9d,0x72,0xd0,0x91,0xe2,0x21,0x9d,0x20,0x0e,0x27,0xc1,0x72,0x9c,0x0c,0x9e,0xea,0x2a,0xb6,0xe4,0x48,0x23,0x09,0xdc,0x59,0xd6,0x11,0xfb,0x99,0x0b,0x88,0xb9,0x39,0xcb,0xeb,0x5e,0x1d,0x79,0xb2,0xc9,0x37,0x2a,0x6b,0xe4,0xd3,0x3b,0x0c,0x9b,0x85,0x0f,0x49,0x25,0x60,0x9c,0xf4,0x90,0xa9,0x91,0x67,0x0a,0x01,0xdc,0x9d,0x55,0x93,0x1b,0xb5,0x1a,0x67,0xc5,0xf1,0xa5,0xe5,0xe4,0x1f,0xb4,0xdf,0x0f,0xc6,0xd2,0x18,0x4f,0xec,0x94,0xfa,0xcd,0x66,0xf2,0x83,0x98,0xac,0x56,0xb0,0x59,0x45,0x2c,0xba,0x17,0x50,0x3b,0x66,0xe2,0x58,0xd7,0x33,0x58,0x9c,0x9d,0xd4,0x7e,0x78,0xcb,0x86,0xc2,0x6c,0x8a,0xd7,0x25,0x8d,0xbc,0x23,0xb0,0xb2,0xf6,0x14,0xe0");
-            Test_TestResultStrContains("Expected 246 values, found 245 values", rs);
+            Test_TestResultStrContains("Expected 246 values, found 245", rs);
 
             rs = SendWriteMultipleCoils("1", "9999", "1", EFormat.INT16, "0");
             Test_TestResultStrContains("invalid format", rs);

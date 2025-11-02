@@ -194,17 +194,37 @@ namespace ModbusControlSpace
             }
         }
 
-        public Global.eEndian ConnectionAscii16Endian
+        public Global.eEndian ConnectionStringEndian
         {
             get
             {
-                if (radiobuttonAsciiLittleEndian.Checked) return Global.eEndian.Little;
+                if (radiobuttonStringLittleEndian.Checked) return Global.eEndian.Little;
                 return Global.eEndian.Big;
             }
             set
             {
-                radiobuttonAsciiLittleEndian.Checked = (value == Global.eEndian.Little);
-                radiobuttonAsciiBigEndian.Checked = (value == Global.eEndian.Big);
+                radiobuttonStringLittleEndian.Checked = (value == Global.eEndian.Little);
+                radiobuttonStringBigEndian.Checked = (value == Global.eEndian.Big);
+            }
+        }
+
+        public string ConnectionStringEncoding
+        {
+            get
+            {
+                // the encoding name is the part before the space
+                return comboStringEncoding.SelectedValue as string;
+            }
+            set
+            {
+                comboStringEncoding.Text = value;
+                // SelectedValue does not accept null
+                // empty or non-existing results in no item selected
+                if (string.IsNullOrWhiteSpace(value) )
+                {
+                    value = "";
+                }
+                comboStringEncoding.SelectedValue = value; 
             }
         }
 
@@ -334,7 +354,7 @@ namespace ModbusControlSpace
         {
             InitializeComponent();
 
-            // limit number of digits that can be typed in numericupdown
+            // limit number of digits that can be typed in numericupdowns
             ((TextBox)numericMaximumFrameSize.Controls[1]).MaxLength = numericMaximumFrameSize.Maximum.ToString().Length;
             ((TextBox)numericResponseTimeout.Controls[1]).MaxLength = numericResponseTimeout.Maximum.ToString().Length;
             ((TextBox)numericSlaveAddress.Controls[1]).MaxLength = numericSlaveAddress.Maximum.ToString().Length;
@@ -343,8 +363,26 @@ namespace ModbusControlSpace
             ((TextBox)numericTcpServerPort.Controls[1]).MaxLength = numericTcpServerPort.Maximum.ToString().Length;
             ((TextBox)numericSamplerate.Controls[1]).MaxLength = numericSamplerate.Maximum.ToString().Length;
 
-            // fill listbox with available serial ports
+            // fill combobox with available serial ports
             comboSerialPort.LoadWithFirstSerialPort();
+
+            // load a dictionary with the supported string encodings
+            // use dictionary to have 2 values per item: key and displaytext
+            // load it in a list first, to sort
+            List<EncodingInfo> encodingInfos = new List<EncodingInfo>(Encoding.GetEncodings());
+            // sort by encoding name
+            encodingInfos.Sort((a, b) => string.Compare(a.Name, b.Name, StringComparison.OrdinalIgnoreCase));
+            // build dictionary with sorted encodings
+            Dictionary<string, string> sortedEncodingDict = new Dictionary<string, string>();
+            foreach (var enc in encodingInfos)
+            {
+                sortedEncodingDict[enc.Name] = enc.Name + "   (" + enc.DisplayName + ")";
+            }
+            // bind dictionary to ComboBox
+            comboStringEncoding.DataSource = new BindingSource(sortedEncodingDict, null);
+            comboStringEncoding.DisplayMember = "Value"; // Display name
+            comboStringEncoding.ValueMember = "Key";     // Encoding name
+
         }
 
         private void ComboConnection_SelectedIndexChanged(object sender, EventArgs e)

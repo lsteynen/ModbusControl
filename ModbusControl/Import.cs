@@ -334,8 +334,7 @@ namespace ModbusControlSpace
                 return null;
             }
 
-            bool bIsFloat = (reg.Format == Global.eFormat.Float);
-            if (bIsFloat && (reg.Width != 32))
+            if ((reg.Format == Global.eFormat.Float) && (reg.Width != 32))
             {
                 string s = "ERROR: Line " + line.lineNum.ToString() + ": Register " + RegString + ": float register width '" + reg.Width.ToString() + "' is not 32-bit.";
                 mWorker.ReportProgress(0, s);
@@ -346,7 +345,11 @@ namespace ModbusControlSpace
             try
             {
                 int regCount = reg.Width / 16;
-                reg.aRegValue = CValueToString.ValueStringToInt16Registers(ValueString, regCount, bIsFloat, 0);
+                //TODO: testen
+                bool allowIntegers = (reg.Format == Global.eFormat.Int) || (reg.Format == Global.eFormat.UInt) || (reg.Format == Global.eFormat.Bin) || (reg.Format == Global.eFormat.Hex) || (reg.Format == Global.eFormat.ASCII) || ((reg.Format == Global.eFormat.Float) && (regCount == 2));
+                bool allowFloat = (reg.Format == Global.eFormat.Float);
+                bool allowString = (reg.Format == Global.eFormat.String);
+                reg.aRegValue = CValueToString.ValueStringToInt16Registers(ValueString, regCount, 0, allowIntegers, allowFloat, allowString); 
             }
             catch
             {

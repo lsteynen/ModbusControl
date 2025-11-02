@@ -55,7 +55,8 @@ namespace ModbusControlSpace
             public Global.eWriteHoldingregFunctionCode WriteHoldingregFunctioncode;
             public Global.eEndian Int32Endian;
             public Global.eEndian Float32Endian;
-            public Global.eEndian Ascii16Endian;
+            public Global.eEndian StringEndian;
+            public string StringEncoding;
         }
 
         public struct TOptions
@@ -122,7 +123,7 @@ namespace ModbusControlSpace
 
         // list of XML tags to convert to lower case
         List<string> TagsToConvertValueToLowerList = new List<string> { "connection", "parity", "writeholdingregisterfc",
-                                        "int32endian", "float32endian", "ascii16endian", "onewireechosuppression",
+                                        "int32endian", "float32endian", "onewireechosuppression",
                                         "showinfo", "enable", "rw", "expandfields", "type"};
 
         // Properties
@@ -170,7 +171,8 @@ namespace ModbusControlSpace
             Connection.WriteHoldingregFunctioncode = Global.eWriteHoldingregFunctionCode.Auto;
             Connection.Int32Endian = Global.eEndian.Little;
             Connection.Float32Endian = Global.eEndian.Little;
-            Connection.Ascii16Endian = Global.eEndian.Big;
+            Connection.StringEndian = Global.eEndian.Big;
+            Connection.StringEncoding = "us-ascii";
             Options.HoldingregistersStart = 40001;
             Options.Samplerate = 1000;
             //Options.ShowInfo = true;
@@ -673,7 +675,7 @@ namespace ModbusControlSpace
                 }
                 else
                 // int32endian
-                // if not found, try the old Value32BitEndian for compatibility
+                // also support the old Value32BitEndian for compatibility
                 if (CheckElementNameMatch(elemName, "int32endian")
                     || CheckElementNameMatch(elemName, "Value32BitEndian"))
                 {
@@ -708,20 +710,39 @@ namespace ModbusControlSpace
                     }
                 }
                 else
-                // ascii16endian
-                if (CheckElementNameMatch(elemName, "ascii16endian"))
+                // stringendian
+                // also support the old ascii16endian for compatibility
+                if (CheckElementNameMatch(elemName, "stringendian")
+                    || CheckElementNameMatch(elemName, "ascii16endian"))
                 {
                     Seen = true;
                     string TmpString = xe.Value.Trim();
                     Global.eEndian TmpEndian;
                     if (TryParseEndian(TmpString, out TmpEndian))
                     {
-                        Connection.Ascii16Endian = TmpEndian;
+                        Connection.StringEndian = TmpEndian;
                     }
                     else
                     {
                         TFilePosition fp = GetFilePos(xe);
                         throw new XmlException("XML element <" + xe.Name.LocalName + "> has an invalid value. Valid values are 'little' or 'big'." + Environment.NewLine + LimitXmlTextLength(xe.ToString()) + Environment.NewLine, null, fp.Line, fp.Col);
+                    }
+                }
+                else
+                // stringencoding
+                if (CheckElementNameMatch(elemName, "stringencoding"))
+                {
+                    Seen = true;
+                    string encName = xe.Value.Trim();
+                    try
+                    {
+                        Converts.ValidateStringEncodingName(encName);
+                        Connection.StringEncoding = encName;
+                    }
+                    catch(Exception)
+                    {
+                        TFilePosition fp = GetFilePos(xe);
+                        throw new XmlException("XML element <" + xe.Name.LocalName + "> has an invalid value." + Environment.NewLine + LimitXmlTextLength(xe.ToString()) + " is not a valid encoding." + Environment.NewLine, null, fp.Line, fp.Col);
                     }
                 }
                 else
@@ -1045,7 +1066,7 @@ namespace ModbusControlSpace
                     else
                     {
                         TFilePosition fp = GetFilePos(xe);
-                        throw new XmlException("XML element <type> has an invalid value. Valid values are int16, uint16, int32, uint32, hex16, hex32, bin16, bin32, float32, ascii16 or ascii32." + Environment.NewLine + LimitXmlTextLength(xe.ToString()) + Environment.NewLine, null, fp.Line, fp.Col);
+                        throw new XmlException("XML element <type> has an invalid value. Valid values are int16, uint16, int32, uint32, hex16, hex32, bin16, bin32, float32, ascii16, ascii32 or string2/4/6-300." + Environment.NewLine + LimitXmlTextLength(xe.ToString()) + Environment.NewLine, null, fp.Line, fp.Col);
                     }
                 }
                 else
@@ -2029,6 +2050,17 @@ namespace ModbusControlSpace
                 Size = 2;
                 return true;
             }
+            else if (text.StartsWith("string"))
+            {
+                // allow string2 .. string300
+                Format = Global.eFormat.String;
+                int num = GetNumberFromElementValue(text, "string");
+                if ((num >= 2) && (num <= 300) && ((num % 2) == 0))
+                {
+                    Size = num / 2;
+                    return true;
+                }
+            }
 
             Format = Global.eFormat.Int;
             Size = 0;
@@ -2062,6 +2094,34 @@ namespace ModbusControlSpace
             
             Format = Global.eFormat.Int;
             return false;
+        }
+
+        /// <summary>
+        /// Get the number from a string like "string200"
+        /// Return 0 on error
+        /// </summary>
+        private int GetNumberFromElementValue(string text, string prefix)
+        {
+            int number = 0;
+
+            if (text.StartsWith(prefix))
+            {
+                for (int i = prefix.Length; i < text.Length; i++)
+                {
+                    char c = text[i];
+                    if (char.IsDigit(c))
+                    {
+                        number = number * 10 + (c - '0');
+                    }
+                    else
+                    {
+                        number = 0;
+                        break;
+                    }
+                }
+            }
+
+            return number;
         }
 
         private TFilePosition GetFilePos(XElement xe)
@@ -2238,14 +2298,30 @@ namespace ModbusControlSpace
             }
             xe.Value = Connection.Float32Endian.ToString().ToLower();
 
-            // Find ascii16endian node, or create it
+            // Remove ascii16endian, obsolete
             xe = FindElement(xeModbus, "ascii16endian");
+            if (xe != null)
+            {
+                xe.Remove();
+            }
+
+            // Find stringendian node, or create it
+            xe = FindElement(xeModbus, "stringendian");
             if (xe == null)
             {
-                xe = new XElement("ascii16endian");
+                xe = new XElement("stringendian");
                 xeModbus.Add(xe);
             }
-            xe.Value = Connection.Ascii16Endian.ToString().ToLower();
+            xe.Value = Connection.StringEndian.ToString().ToLower();
+
+            // Find stringencoding node, or create it
+            xe = FindElement(xeModbus, "stringencoding");
+            if (xe == null)
+            {
+                xe = new XElement("stringencoding");
+                xeModbus.Add(xe);
+            }
+            xe.Value = Connection.StringEncoding.ToString();
 
             // Remove ShowType, obsolete
             xe = FindElement(xeModbus, "ShowType");
@@ -2456,10 +2532,6 @@ namespace ModbusControlSpace
                 }
                 while (xe != null);
 
-                // replace /modbus/value32bitendian
-                // with int32endian, float32endian, ascii16endian
-                // if they don't exist yet
-
                 // Remove /modbus/value32bitendian
                 do
                 {
@@ -2489,14 +2561,31 @@ namespace ModbusControlSpace
                     xm.Add(xe);
                 }
 
-                // insert ascii16endian if it doesn't exist yet
-                xe = XmlFindElement(xm, "ascii16endian");
+                // Remove ascii16endian, obsolete
+                xe = FindElement(xm, "ascii16endian");
+                if (xe != null)
+                {
+                    xe.Remove();
+                }
+
+                // insert stringendian if it doesn't exist yet
+                xe = FindElement(xm, "stringendian");
                 if (xe == null)
                 {
-                    xe = new XElement("ascii16endian");
-                    xe.Value = Connection.Ascii16Endian.ToString().ToLower();
+                    xe = new XElement("stringendian");
+                    xe.Value = Connection.StringEndian.ToString().ToLower();
                     xm.Add(xe);
                 }
+
+                // insert stringencoding if it doesn't exist yet
+                xe = FindElement(xm, "stringencoding");
+                if (xe == null)
+                {
+                    xe = new XElement("stringencoding");
+                    xe.Value = Connection.StringEncoding.ToString();
+                    xm.Add(xe);
+                }
+                
             }
         }
 

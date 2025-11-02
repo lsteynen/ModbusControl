@@ -28,5 +28,18 @@ namespace UnitTests
             }
             return res;
         }
+
+        public static void TestByteArraysAreEqual(byte[] ba1, byte[] ba2)
+        {
+            Assert.AreEqual<int>(ba1.Length, ba2.Length);
+
+            if (ba1.Length > 1)
+            {
+                for (int i = 0; i < ba1.Length; ++i)
+                {
+                    Assert.AreEqual<byte>(ba1[i], ba2[i]);
+                }
+            }
+        }
     }
 }

@@ -46,6 +46,7 @@ namespace LST.ModbusGridView
             this.showValueAsBinaryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.showValueAsFloatToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.showValueAsASCIIToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.showValueAsStringToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.copyValueToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ContextMenuForRegColumn = new System.Windows.Forms.ContextMenuStrip(this.components);
@@ -146,10 +147,11 @@ namespace LST.ModbusGridView
             this.showValueAsBinaryToolStripMenuItem,
             this.showValueAsFloatToolStripMenuItem,
             this.showValueAsASCIIToolStripMenuItem,
+            this.showValueAsStringToolStripMenuItem,
             this.toolStripSeparator2,
             this.copyValueToolStripMenuItem});
             this.ContextMenuForValueColumn.Name = "ContextMenuForValueColumn";
-            this.ContextMenuForValueColumn.Size = new System.Drawing.Size(185, 164);
+            this.ContextMenuForValueColumn.Size = new System.Drawing.Size(185, 208);
             // 
             // showValueAsIntToolStripMenuItem
             // 
@@ -192,6 +194,13 @@ namespace LST.ModbusGridView
             this.showValueAsASCIIToolStripMenuItem.Size = new System.Drawing.Size(184, 22);
             this.showValueAsASCIIToolStripMenuItem.Text = "Show value as ASCII";
             this.showValueAsASCIIToolStripMenuItem.Click += new System.EventHandler(this.ShowValueAsASCIIToolStripMenuItem_Click);
+            // 
+            // showValueAsStringToolStripMenuItem
+            // 
+            this.showValueAsStringToolStripMenuItem.Name = "showValueAsStringToolStripMenuItem";
+            this.showValueAsStringToolStripMenuItem.Size = new System.Drawing.Size(184, 22);
+            this.showValueAsStringToolStripMenuItem.Text = "Show value as String";
+            this.showValueAsStringToolStripMenuItem.Click += new System.EventHandler(this.ShowValueAsStringToolStripMenuItem_Click);
             // 
             // toolStripSeparator2
             // 
@@ -417,5 +426,6 @@ namespace LST.ModbusGridView
         private System.Windows.Forms.DataGridViewTextBoxColumn colProps;
         private EnumValueColumn colValue;
         private System.Windows.Forms.DataGridViewTextBoxColumn colDebuginfo;
+        private System.Windows.Forms.ToolStripMenuItem showValueAsStringToolStripMenuItem;
     }
 }

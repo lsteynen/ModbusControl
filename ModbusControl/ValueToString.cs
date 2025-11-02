@@ -11,7 +11,7 @@ namespace LST.Helpers
 {
     public static class CValueToString
     {
-        public static string Int16RegistersToValueString(Int16[] Regs, ModbusControlSpace.Global.eFormat Format, int Width, int Decimals = 0, int MinLen = 0, ModbusControlSpace.Global.CEnum EnumDict = null)
+        public static string Int16RegistersToValueString(Int16[] Regs, Global.eFormat Format, int Width, int Decimals = 0, int MinLen = 0, ModbusControlSpace.Global.CEnum EnumDict = null)
         {
             string Result = string.Empty;
             Int32 Int32Val = 0;
@@ -20,7 +20,7 @@ namespace LST.Helpers
 
             switch (Format)
             {
-                case ModbusControlSpace.Global.eFormat.Int:
+                case Global.eFormat.Int:
                     // signed decimal
                     if (Width == 32)
                     {
@@ -34,7 +34,7 @@ namespace LST.Helpers
                     DictSearchValue = Int32Val;
                     break;
 
-                case ModbusControlSpace.Global.eFormat.UInt:
+                case Global.eFormat.UInt:
                     // unsigned decimal
                     if (Width == 32)
                     {
@@ -48,7 +48,7 @@ namespace LST.Helpers
                     DictSearchValue = (Int32)UInt32Val;
                     break;
 
-                case ModbusControlSpace.Global.eFormat.Hex:
+                case Global.eFormat.Hex:
                     // unsigned decimal
                     if (Width == 32)
                     {
@@ -62,7 +62,7 @@ namespace LST.Helpers
                     DictSearchValue = (Int32)UInt32Val;
                     break;
 
-                case ModbusControlSpace.Global.eFormat.Bin:
+                case Global.eFormat.Bin:
                     // binary
                     if (Width == 32)
                     {
@@ -76,7 +76,7 @@ namespace LST.Helpers
                     DictSearchValue = (Int32)UInt32Val;
                     break;
 
-                case ModbusControlSpace.Global.eFormat.Float:
+                case Global.eFormat.Float:
                     // float32
                     if (!(Width == 32))
                     {
@@ -90,7 +90,7 @@ namespace LST.Helpers
                     //DictSearchValue = (Int32)Value;
                     break;
 
-                case ModbusControlSpace.Global.eFormat.ASCII:
+                case Global.eFormat.ASCII:
                     // ASCII
                     if (Width == 32)
                     {
@@ -103,6 +103,18 @@ namespace LST.Helpers
                         Result = "\"" + Converts.Int16ToAscii(Regs[0]) + "\"";
                     }
                     DictSearchValue = (Int32)UInt32Val;
+                    break;
+
+                case Global.eFormat.String:
+                    // string
+                    try
+                    {
+                        Result = "\"" + Converts.Int16ArrayDecodeToString(Regs) + "\"";
+                    }
+                    catch(Exception e)
+                    {
+                        Result = "Error: " + e.Message;
+                    }                    
                     break;
 
                 default:
@@ -143,7 +155,7 @@ namespace LST.Helpers
         /// <param name="MinLen">Optional: minimum number of digits</param>
         /// <param name="EnumDict">Optional: enum dictionary</param>
         /// <returns></returns>
-        public static string IntValueToValueString(Int32 Value, int Width, ModbusControlSpace.Global.eFormat Format, int Decimals = 0, int MinLen = 0, ModbusControlSpace.Global.CEnum EnumDict = null)
+        public static string IntValueToValueString(Int32 Value, int Width, Global.eFormat Format, int Decimals = 0, int MinLen = 0, Global.CEnum EnumDict = null)
         {
             string Result = string.Empty;
             UInt32 UValue;
@@ -158,31 +170,31 @@ namespace LST.Helpers
             // convert
             switch (Format)
             {
-                case ModbusControlSpace.Global.eFormat.Int:
+                case Global.eFormat.Int:
                     // signed decimal
                     Value = ConvertSignedValueToInt32(Value, Width);
                     Result = IntValueToDecString(Value, Decimals, MinLen);
                     DictSearchValue = Value;
                     break;
-                case ModbusControlSpace.Global.eFormat.UInt:
+                case Global.eFormat.UInt:
                     // unsigned decimal
                     UValue = ConvertUnsignedValueTo32bit((UInt32)Value, Width);
                     Result = UIntValueToDecString(UValue, Decimals, MinLen);
                     DictSearchValue = (Int32)UValue;
                     break;
-                case ModbusControlSpace.Global.eFormat.Hex:
+                case Global.eFormat.Hex:
                     // hexadecimal
                     UValue = ConvertUnsignedValueTo32bit((UInt32)Value, Width);
                     Result = UIntValueToStringAsHex(UValue, MinLen);
                     DictSearchValue = (Int32)UValue;
                     break;
-                case ModbusControlSpace.Global.eFormat.Bin:
+                case Global.eFormat.Bin:
                     // binary
                     UValue = ConvertUnsignedValueTo32bit((UInt32)Value, Width);
                     Result = UIntValueToStringAsBin(UValue, MinLen);
                     DictSearchValue = (Int32)UValue;
                     break;
-                case ModbusControlSpace.Global.eFormat.ASCII:
+                case Global.eFormat.ASCII:
                     Result = "\"" + Converts.UInt32ToAscii((UInt32)Value, Width) + "\"";
                     DictSearchValue = (Int32)Value;
                     break;
@@ -350,20 +362,18 @@ namespace LST.Helpers
             return result;
         }
 
-
         /// <summary>
         /// Convert a value string to modbus int16[size] registers
-        /// Accepts Int, UInt, 0x... hex, 0b... binary, quoted ASCII string and float formats
-        /// Accepts Int and UInt with decimals, if allowFloat==false and Decimals >= 1
+        /// Accepts decimal Int and UInt, 0x... hex, 0b... binary, float, quoted ASCII and quoted string formats
+        /// Accepts Int and UInt with decimals, if allowIntegers and decimals >= 1
         /// Accept -32768 .. +65535 into a 16-bit field
         /// Accept -128 .. +255 into an 8-bit field
         /// Accept 0 and 1 into an 1-bit field
-        /// Do not accept 4294967293 in a 8-bit field (was accepted in earlier version it is also -3)
-        /// Store temporary result in Int64 to distinguish between 4294967293 and -3 being parsed
-        /// Checks if value fits in Width bits
-        /// Throws exception on error
+        /// Checks if value fits in Int16[size] registers
+        /// Throws ArgumentException on error
         /// </summary>
-        public static Int16[] ValueStringToInt16Registers(string str, int size, bool IsFloat, int Decimals)
+        public static Int16[] ValueStringToInt16Registers(string str, int size, int decimals, 
+                bool allowIntegers, bool allowFloat, bool allowString)
         {
             Int16[] Result = new Int16[size];
             bool IsValid = false;
@@ -371,7 +381,7 @@ namespace LST.Helpers
             UInt32 numUInt32;
 
             // is it a hex value?
-            if (str.StartsWith("0x", StringComparison.OrdinalIgnoreCase))
+            if (str.StartsWith("0x", StringComparison.OrdinalIgnoreCase) && allowIntegers)
             {
                 // remove the 0x
                 str = str.Substring(2);
@@ -382,7 +392,7 @@ namespace LST.Helpers
                 }
                 catch
                 {
-                    throw new ArgumentException("Invalid value", "str");
+                    throw new ArgumentException("Invalid value");
                 }
                 // to Int16[]
                 if (size == 2)
@@ -394,18 +404,18 @@ namespace LST.Helpers
                     // check width
                     if (!IntFitsWidth(numUInt32, 16))
                     {
-                        throw new ArgumentException("Invalid value", "str");
+                        throw new ArgumentException("Value too large");
                     }
                     Result[0] = (Int16)numUInt32;
                 }
                 else
                 {
                     // invalid
-                    throw new ArgumentException("Invalid value", "size");
+                    throw new ArgumentException("Invalid size");
                 }
             }
             // is it a binary value?
-            else if (str.StartsWith("0b", StringComparison.OrdinalIgnoreCase))
+            else if (str.StartsWith("0b", StringComparison.OrdinalIgnoreCase) && allowIntegers)
             {
                 // remove the 0b
                 str = str.Substring(2);
@@ -413,7 +423,7 @@ namespace LST.Helpers
                 IsValid = BinaryStringToUInt32(str, out numUInt32);
                 if (!IsValid)
                 {
-                    throw new ArgumentException("Invalid value", "str");
+                    throw new ArgumentException("Invalid value");
                 }
                 // to Int16[]
                 if (size == 2)
@@ -425,24 +435,35 @@ namespace LST.Helpers
                     // check width
                     if (!IntFitsWidth(numUInt32, 16))
                     {
-                        throw new ArgumentException("Invalid value", "str");
+                        throw new ArgumentException("Value too large");
                     }
                     Result[0] = (Int16)numUInt32;
                 }
                 else
                 {
                     // invalid
-                    throw new ArgumentException("Invalid value", "size");
+                    throw new ArgumentException("Invalid size");
                 }
             }
-            // is it an ASCII string? 
-            else if (str.StartsWith("\"", StringComparison.OrdinalIgnoreCase) && (IsFloat == false))
+            // is it a string? 
+            else if (str.StartsWith("\"", StringComparison.OrdinalIgnoreCase) && (allowIntegers || allowString))
             {
-                // parse as quoted ASCII string, with escape sequences
-                Result = Converts.AsciiStringToInt16Array(str, size);
+                str = UnquoteStr(str);
+                if (allowString)
+                {
+                    // parse for encoded string
+                    // throws exception if number of bytes > size
+                    // throws exception if string has characters that are not in encoding set
+                    Result = Converts.StringEncodeToInt16Array(str, size);
+                }
+                else
+                {
+                    // parse for ASCII format, width 16/3, quoted ASCII string, with escape sequences
+                    Result = Converts.AsciiStringToInt16Array(str, size);
+                }
             }
             // is it a float? 
-            else if (IsFloat)
+            else if (allowFloat)
             {
                 float fValue;
                 IsValid = TryParseFloat(str, out fValue);
@@ -450,7 +471,7 @@ namespace LST.Helpers
                 if (!IsValid)
                 {
                     // invalid
-                    throw new ArgumentException("Invalid value", "str");
+                    throw new ArgumentException("Invalid value");
                 }
                 // to Int16[]
                 if (size == 2)
@@ -460,19 +481,22 @@ namespace LST.Helpers
                 else
                 {
                     // invalid
-                    throw new ArgumentException("Invalid value", "size");
+                    throw new ArgumentException("Invalid size");
                 }
             }
-            // assume decimal int or uint 
-            else
+            // assume decimal int/uint valu, not allowed for string
+            else if (allowIntegers)
             {
+                // Do not accept 4294967293 in a 8-bit field (was accepted in earlier version it is also -3)
+                // Store temporary result in Int64 to distinguish between 4294967293 and -3 being parsed
+                
                 // with decimals? then parse as float
-                if (Decimals >= 1)
+                if (decimals >= 1)
                 {
                     // get the value as double and scale it up
                     double dValue = ParseDouble(str);
                     // scale up
-                    dValue *= Math.Pow(10.0, Decimals);
+                    dValue *= Math.Pow(10.0, decimals);
                     // to int
                     numInt64 = System.Convert.ToInt64(dValue);
                 }
@@ -485,13 +509,13 @@ namespace LST.Helpers
                     }
                     catch
                     {
-                        throw new ArgumentException("Invalid value", "str");
+                        throw new ArgumentException("Invalid value");
                     }
                 }
                 // check width <= 32
                 if (!IntFitsWidth(numInt64, 32))
                 {
-                    throw new ArgumentException("Invalid value", "str");
+                    throw new ArgumentException("Invalid value");
                 }
                 // to Int16[]
                 if (size == 2)
@@ -503,15 +527,19 @@ namespace LST.Helpers
                     // check width
                     if (!IntFitsWidth(numInt64, 16))
                     {
-                        throw new ArgumentException("Invalid value", "str");
+                        throw new ArgumentException("Value too large");
                     }
                     Result[0] = (Int16)numInt64;
                 }
                 else
                 {
                     // invalid
-                    throw new ArgumentException("Invalid value", "size");
+                    throw new ArgumentException("Invalid size");
                 }
+            }
+            else
+            {
+                throw new ArgumentException("Invalid value");
             }
 
             return Result;
@@ -519,18 +547,16 @@ namespace LST.Helpers
 
         /// <summary>
         /// Convert a string to a value, returned as Int32
-        /// Accepts Int, UInt, 0x... hex, 0b... binary, quoted ASCII string and float formats
-        /// Accepts Int and UInt with decimals, is IsFloat==false and Decimals >= 1
+        /// Accepts Int, UInt, 0x... hex, 0b... binary
+        /// Accepts Int and UInt with decimals, if decimals >= 1
+        /// DOes not accept quoted ASCII string and float formats
         /// Accept -32768 - +65535 into a 16-bit field
         /// Accept -128 - +255 into an 8-bit field
         /// Accept 0 and 1 into an 1-bit field
-        /// Do not accept 4294967293 in a 8-bit field (was accepted in earlier version it is also -3)
-        /// Store temporary result in Int64 to distinguish between 4294967293 and -3 being parsed
-        /// does not support ASCII format
         /// Checks if value fits in Width bits
         /// Throws exception on error
         /// </summary>
-        public static Int32 ValueStringToIntValue(string str, int Width, int Decimals)
+        public static Int32 ValueStringToIntValue(string str, int width, int decimals)
         {
             Int32 Result = 0;
             bool IsValid = false;
@@ -549,12 +575,12 @@ namespace LST.Helpers
                 }
                 catch
                 {
-                    throw new ArgumentException("Invalid value", "str");
+                    throw new ArgumentException("Invalid value");
                 }
                 // check width
-                if (!IntFitsWidth(numUInt32, Width))
+                if (!IntFitsWidth(numUInt32, width))
                 {
-                    throw new ArgumentException("Invalid value", "str");
+                    throw new ArgumentException("Value too large");
                 }
                 Result = (Int32)numUInt32;
             }
@@ -567,38 +593,29 @@ namespace LST.Helpers
                 IsValid = BinaryStringToUInt32(str, out numUInt32);
                 if (!IsValid)
                 {
-                    throw new ArgumentException("Invalid value", "str");
+                    throw new ArgumentException("Invalid value");
                 }
                 // check width
-                if (!IntFitsWidth(numUInt32, Width))
+                if (!IntFitsWidth(numUInt32, width))
                 {
-                    throw new ArgumentException("Invalid value", "str");
+                    throw new ArgumentException("Value too large");
                 }
                 Result = (Int32)numUInt32;
                
             }
-            // is it an ASCII string? 
-            else if (str.StartsWith("\"", StringComparison.OrdinalIgnoreCase))
-            {
-                // parse as quoted ASCII string, with escape sequences
-                numUInt32 = Converts.AsciiStringToUInt32(str);
-                // check width
-                if (!IntFitsWidth(numUInt32, Width))
-                {
-                    throw new ArgumentException("Invalid value", "str");
-                }
-                Result = (Int32)numUInt32;
-            }
             // assume decimal int or uint 
             else
             {
+                // Do not accept 4294967293 in a 8-bit field (was accepted in earlier version it is also -3)
+                // Store temporary result in Int64 to distinguish between 4294967293 and -3 being parsed
+                
                 // with decimals? then parse as float
-                if (Decimals >= 1)
+                if (decimals >= 1)
                 {
                     // get the value as double and scale it up
                     double dValue = ParseDouble(str);
                     // scale up
-                    dValue *= Math.Pow(10.0, Decimals);
+                    dValue *= Math.Pow(10.0, decimals);
                     // to int
                     numInt64 = System.Convert.ToInt64(dValue);
                 }
@@ -611,13 +628,13 @@ namespace LST.Helpers
                     }
                     catch
                     {
-                        throw new ArgumentException("Invalid value", "str");
+                        throw new ArgumentException("Invalid value");
                     }
                 }
                 // check width
-                if (!IntFitsWidth(numInt64, Width))
+                if (!IntFitsWidth(numInt64, width))
                 {
-                    throw new ArgumentException("Invalid value", "str");
+                    throw new ArgumentException("Value too large");
                 }
                 Result = (Int32)numInt64;
             }
@@ -746,7 +763,41 @@ namespace LST.Helpers
             return str.TrimEnd();
         }
 
+        /// <summary>
+        /// Unquote a string, remove begin and ending "
+        /// Begin and ending " are required
+        /// Throws error if string is not properly quoted
+        /// </summary>
+        /// <returns></returns>
+        public static string UnquoteStr(string input)
+        {
+            if (string.IsNullOrEmpty(input))
+            {
+                throw new ArgumentException("Invalid value");
+            }
 
+            // got begin quote?
+            if ((input.Length >= 1) && (input[0] == '"'))
+            {
+                // OK
+            }
+            else
+            {
+                throw new ArgumentException("Invalid value");
+            }
 
+            // got end quote?
+            int end = input.Length - 1;
+            if ((input.Length >= 2) && (input[input.Length-1] == '\"'))
+            {
+                // OK
+            }
+            else
+            {
+                throw new ArgumentException("Invalid value");
+            }
+
+            return input.Substring(1, end - 1);
+        }
     }
 }

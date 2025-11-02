@@ -9,6 +9,8 @@ using System.Net.Sockets;
 using Modbus_net;
 using LST.Helpers;
 
+//TODO; is ook een MifWriteHoldingRegistersPaged() nodig voor import?
+
 namespace ModbusControlSpace
 {
     public class ModbusInterface
@@ -356,7 +358,7 @@ namespace ModbusControlSpace
 
         public void PrepareForClose()
         {
-            //Debug.Print(DateTime.Now.TimeOfDay + ": Modbusinterface: PrepareForClose()");
+            Debug.Print(DateTime.Now.TimeOfDay + ": Modbusinterface: PrepareForClose()");
 
             // Commands the connection will be closed. Threads waiting for mQueryLock will quickly be released.
             // Must be followed by Close() lateron
@@ -426,6 +428,40 @@ namespace ModbusControlSpace
 
                 return result;
             }
+        }
+
+        ///<summary>
+        ///MifReadHoldingRegistersPaged - return Int16[]
+        ///Can read more registers than MifReadHoldingRegisters() can, using pages
+        ///</summary>
+        public ModbusProtocol.Result MifReadHoldingRegistersPaged(byte address, UInt16 startreg, UInt16 regcount, out Int16[] values, int maxRegistersInPage)
+        {
+            values = new Int16[regcount];
+            Int16[] pageValuesBuf = null;
+            int pagePos = 0;
+            int pageSize = 0;
+            ModbusProtocol.Result result = ModbusProtocol.Result.SUCCESS;
+
+            while (pagePos < regcount)
+            {
+                // next page size
+                pageSize = Math.Min(regcount - pagePos, maxRegistersInPage);
+                // send query, get response
+                result = MifReadHoldingRegisters(address, startreg, (UInt16)pageSize, out pageValuesBuf);
+                if (result == ModbusProtocol.Result.SUCCESS)
+                {
+                    Array.Copy(pageValuesBuf, 0, values, pagePos, pageSize);
+                    pagePos += pageSize;
+                    startreg = (UInt16)(startreg + pageSize);
+                }
+                else
+                {
+                    // error
+                    break;
+                }
+            }
+
+            return result;
         }
 
         /// <summary>
