@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Globalization;
 using System.IO;
+using System.Text;
 
 namespace LST.Helpers
 {
@@ -30,7 +31,7 @@ namespace LST.Helpers
             }
 
             // open, optional append
-            writer = new StreamWriter(filePath, Append);
+            writer = new StreamWriter(filePath, Append, new UTF8Encoding(false));
 
             // add begin separation line, if file already has data
             if ((AddHeaderLine) && (HeaderLineText != null))
@@ -48,7 +49,7 @@ namespace LST.Helpers
 
 #if false
 // experiment to write to shared open file
-// does not work
+// did not work
             // open for write in shared mode (can write while Excel has this file open)
             FileStream fs = new FileStream(filePath, FileMode.Append, FileAccess.Write, FileShare.ReadWrite);
             writer = new StreamWriter(fs);
@@ -107,7 +108,7 @@ namespace LST.Helpers
                         // file closed? then reopen for append
                         if (writer.BaseStream.CanWrite == false)
                         {
-                            writer = new StreamWriter(filePath, true);
+                            writer = new StreamWriter(filePath, true, new UTF8Encoding(false));
                         }
                         writer.WriteLine(FooterLineText);
                     }

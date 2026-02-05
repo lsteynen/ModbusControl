@@ -626,7 +626,7 @@ namespace ModbusControlSpace
             if (Continue)
             {
                 if (uint.TryParse(registerStr, out register)
-                    && TryInputregisterGetOffset30001(register, out regOffset))
+                    && TryGetInputregisterOffset(register, out regOffset))
                 {
                     // okay
                 }
@@ -708,7 +708,7 @@ namespace ModbusControlSpace
             if (Continue)
             {
                 if (uint.TryParse(registerStr, out register)
-                    && TryHoldingregisterGetOffset40001(register, out regOffset))
+                    && TryGetHoldingregisterOffset(register, out regOffset))
                 {
                     // okay
                 }
@@ -791,7 +791,7 @@ namespace ModbusControlSpace
             if (Continue)
             {
                 if (uint.TryParse(registerStr, out register)
-                    && TryHoldingregisterGetOffset40001(register, out regOffset))
+                    && TryGetHoldingregisterOffset(register, out regOffset))
                 {
                     // okay
                 }
@@ -901,7 +901,7 @@ namespace ModbusControlSpace
             if (Continue)
             {
                 if (uint.TryParse(registerStr, out register)
-                    && TryHoldingregisterGetOffset40001(register, out regOffset))
+                    && TryGetHoldingregisterOffset(register, out regOffset))
                 {
                     // okay
                 }
@@ -1023,7 +1023,7 @@ namespace ModbusControlSpace
             if (Continue)
             {
                 if (uint.TryParse(registerStr, out register)
-                    && TryDiscreteInputGetOffset10001(register, out regOffset))
+                    && TryGetDiscreteInputOffset(register, out regOffset))
                 {
                     // okay
                 }
@@ -1116,7 +1116,7 @@ namespace ModbusControlSpace
             if (Continue)
             {
                 if (uint.TryParse(registerStr, out register)
-                    && TryCoilGetOffset1(register, out regOffset))
+                    && TryGetCoilOffset(register, out regOffset))
                 {
                     // okay
                 }
@@ -1211,7 +1211,7 @@ namespace ModbusControlSpace
             if (Continue)
             {
                 if (uint.TryParse(registerStr, out register)
-                    && TryCoilGetOffset1(register, out regOffset))
+                    && TryGetCoilOffset(register, out regOffset))
                 {
                     // okay
                 }
@@ -1336,7 +1336,7 @@ namespace ModbusControlSpace
             if (Continue)
             {
                 if (uint.TryParse(registerStr, out register)
-                    && TryCoilGetOffset1(register, out regOffset))
+                    && TryGetCoilOffset(register, out regOffset))
                 {
                     // okay
                 }
@@ -2260,13 +2260,13 @@ namespace ModbusControlSpace
         }
 
         /// <summary>
-        /// Convert holding register number to register offset 0-65536
+        /// Convert holding register number to register offset 0-65536.
+        /// Custom queries has its own register-to-offset conversion to be independant of project parameters.
+        /// Accepts 40001-49999 + 400001-465536.
         /// </summary>
         /// <returns>true if valid, false if not</returns>
-        public bool TryHoldingregisterGetOffset40001(UInt32 Regnr, out UInt16 Offset)
+        public bool TryGetHoldingregisterOffset(UInt32 Regnr, out UInt16 Offset)
         {
-            // accepts: 40001-49999 + 400001-465536
-
             bool ret = false;
             Offset = 0;
 
@@ -2285,13 +2285,13 @@ namespace ModbusControlSpace
         }
 
         /// <summary>
-        /// Convert input register number to register offset 0-65536
+        /// Convert input register number to register offset 0-65536.
+        /// Custom queries has its own register-to-offset conversion to be independant of project parameters.
+        /// Accepts 30001-39999 + 300001-365536.
         /// </summary>
         /// <returns>true if valid, false if not</returns>
-        public bool TryInputregisterGetOffset30001(UInt32 Regnr, out UInt16 Offset)
+        public bool TryGetInputregisterOffset(UInt32 Regnr, out UInt16 Offset)
         {
-            // accepts: 30001-39999 + 300001-365536
-
             bool ret = false;
             Offset = 0;
 
@@ -2310,13 +2310,13 @@ namespace ModbusControlSpace
         }
 
         /// <summary>
-        /// Convert discrete input number to offset 0-65536
+        /// Convert discrete input number to offset 0-65536.
+        /// Custom queries has its own register-to-offset conversion to be independant of project parameters.
+        /// Accepts 10001-19999 + 100001-165536.
         /// </summary>
         /// <returns>true if valid, false if not</returns>
-        public bool TryDiscreteInputGetOffset10001(UInt32 Regnr, out UInt16 Offset)
+        public bool TryGetDiscreteInputOffset(UInt32 Regnr, out UInt16 Offset)
         {
-            // accepts: 10001–19999 + 100001–165536
-
             bool ret = false;
             Offset = 0;
 
@@ -2335,13 +2335,14 @@ namespace ModbusControlSpace
         }
 
         /// <summary>
-        /// Convert coil number to offset 0-65536
+        /// Convert coil number to offset 0-65536.
+        /// Custom queries has its own register-to-offset conversion to be independant of project parameters.
+        /// Accepts 1-9999.
+        /// Does not accept 10000..65536 to void conflict with discrete inputs.
         /// </summary>
         /// <returns>true if valid, false if not</returns>
-        public bool TryCoilGetOffset1(UInt32 Regnr, out UInt16 Offset)
+        public bool TryGetCoilOffset(UInt32 Regnr, out UInt16 Offset)
         {
-            // accepts: 1-9999, not 10000... to void conflict with discrete inputs
-
             bool ret = false;
             Offset = 0;
 
@@ -2488,10 +2489,14 @@ namespace ModbusControlSpace
 #endif
         }
 
-#endregion
+        #endregion
 
-#region Functional Testing
+        #region Functional Testing
 
+        /// <summary>
+        /// Integration test
+        /// ButRunTests appears in test-build
+        /// </summary>
         private void ButRunTests_Click(object sender, EventArgs e)
         {
             /* test all, for dev test
@@ -3789,7 +3794,7 @@ namespace ModbusControlSpace
         private void Test_HoldingRegisterValueEqual(UInt32 register, Int16 expectedValue)
         {
             UInt16 regOffset;
-            if (!mParent.TryHoldingregisterGetOffset(register, out regOffset))
+            if (!TryGetHoldingregisterOffset(register, out regOffset))
             {
                 throw new ArgumentException("TEST FAILED");
             }
@@ -3824,7 +3829,7 @@ namespace ModbusControlSpace
 
             UInt16 nrOfCoils = (UInt16)aRefValues.Length;
             UInt16 regOffset;
-            if (!mParent.TryCoilGetOffset(register, out regOffset))
+            if (!TryGetCoilOffset(register, out regOffset))
             {
                 throw new ArgumentException("TEST FAILED");
             }
@@ -3859,7 +3864,7 @@ namespace ModbusControlSpace
 
             UInt16 nrOfRegisters = (UInt16)aRefValues.Length;
             UInt16 regOffset;
-            if (!mParent.TryHoldingregisterGetOffset(register, out regOffset))
+            if (!TryGetHoldingregisterOffset(register, out regOffset))
             {
                 throw new ArgumentException("TEST FAILED");
             }

@@ -1957,7 +1957,7 @@ namespace UnitTests
                     ar = Converts.StringEncodeToInt16Array("ABC", 1)
                     );
         }
-                
+
 
         [TestMethod]
         public void Test_StringEncodeToInt16Array_5b()

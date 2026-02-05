@@ -32,17 +32,17 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ConfigForm));
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.numericSamplerate = new System.Windows.Forms.NumericUpDown();
-            this.radiobuttonFloat32LittleEndian = new System.Windows.Forms.RadioButton();
-            this.radiobuttonFloat32BigEndian = new System.Windows.Forms.RadioButton();
-            this.radiobuttonStringLittleEndian = new System.Windows.Forms.RadioButton();
-            this.radiobuttonStringBigEndian = new System.Windows.Forms.RadioButton();
+            this.radFloat32LittleEndian = new System.Windows.Forms.RadioButton();
+            this.radFloat32BigEndian = new System.Windows.Forms.RadioButton();
+            this.radStringLittleEndian = new System.Windows.Forms.RadioButton();
+            this.radStringBigEndian = new System.Windows.Forms.RadioButton();
             this.numericTcpServerPort = new System.Windows.Forms.NumericUpDown();
             this.checkboxTcpServerEnable = new System.Windows.Forms.CheckBox();
-            this.radiobuttonInt32LittleEndian = new System.Windows.Forms.RadioButton();
-            this.radiobuttonInt32BigEndian = new System.Windows.Forms.RadioButton();
-            this.radiobuttonWriteFC6 = new System.Windows.Forms.RadioButton();
-            this.radiobuttonWriteFC16 = new System.Windows.Forms.RadioButton();
-            this.radiobuttonWriteFCAuto = new System.Windows.Forms.RadioButton();
+            this.radInt32LittleEndian = new System.Windows.Forms.RadioButton();
+            this.radInt32BigEndian = new System.Windows.Forms.RadioButton();
+            this.radWriteFC6 = new System.Windows.Forms.RadioButton();
+            this.radWriteFC16 = new System.Windows.Forms.RadioButton();
+            this.radWriteFCAuto = new System.Windows.Forms.RadioButton();
             this.numericMaximumFrameSize = new System.Windows.Forms.NumericUpDown();
             this.numericResponseTimeout = new System.Windows.Forms.NumericUpDown();
             this.numericSlaveAddress = new System.Windows.Forms.NumericUpDown();
@@ -164,53 +164,53 @@
             0,
             0});
             // 
-            // radiobuttonFloat32LittleEndian
+            // radFloat32LittleEndian
             // 
-            this.radiobuttonFloat32LittleEndian.AutoSize = true;
-            this.radiobuttonFloat32LittleEndian.Checked = true;
-            this.radiobuttonFloat32LittleEndian.Location = new System.Drawing.Point(6, 13);
-            this.radiobuttonFloat32LittleEndian.Name = "radiobuttonFloat32LittleEndian";
-            this.radiobuttonFloat32LittleEndian.Size = new System.Drawing.Size(70, 17);
-            this.radiobuttonFloat32LittleEndian.TabIndex = 0;
-            this.radiobuttonFloat32LittleEndian.TabStop = true;
-            this.radiobuttonFloat32LittleEndian.Text = "Low-High";
-            this.toolTip1.SetToolTip(this.radiobuttonFloat32LittleEndian, "First register is lower 16 bits of 32-bit float (most used)");
-            this.radiobuttonFloat32LittleEndian.UseVisualStyleBackColor = true;
+            this.radFloat32LittleEndian.AutoSize = true;
+            this.radFloat32LittleEndian.Checked = true;
+            this.radFloat32LittleEndian.Location = new System.Drawing.Point(6, 13);
+            this.radFloat32LittleEndian.Name = "radFloat32LittleEndian";
+            this.radFloat32LittleEndian.Size = new System.Drawing.Size(70, 17);
+            this.radFloat32LittleEndian.TabIndex = 0;
+            this.radFloat32LittleEndian.TabStop = true;
+            this.radFloat32LittleEndian.Text = "Low-High";
+            this.toolTip1.SetToolTip(this.radFloat32LittleEndian, "First register is lower 16 bits of 32-bit float (most used)");
+            this.radFloat32LittleEndian.UseVisualStyleBackColor = true;
             // 
-            // radiobuttonFloat32BigEndian
+            // radFloat32BigEndian
             // 
-            this.radiobuttonFloat32BigEndian.AutoSize = true;
-            this.radiobuttonFloat32BigEndian.Location = new System.Drawing.Point(82, 13);
-            this.radiobuttonFloat32BigEndian.Name = "radiobuttonFloat32BigEndian";
-            this.radiobuttonFloat32BigEndian.Size = new System.Drawing.Size(70, 17);
-            this.radiobuttonFloat32BigEndian.TabIndex = 1;
-            this.radiobuttonFloat32BigEndian.Text = "High-Low";
-            this.toolTip1.SetToolTip(this.radiobuttonFloat32BigEndian, "First register is higher 16 bits of 32-bit float");
-            this.radiobuttonFloat32BigEndian.UseVisualStyleBackColor = true;
+            this.radFloat32BigEndian.AutoSize = true;
+            this.radFloat32BigEndian.Location = new System.Drawing.Point(82, 13);
+            this.radFloat32BigEndian.Name = "radFloat32BigEndian";
+            this.radFloat32BigEndian.Size = new System.Drawing.Size(70, 17);
+            this.radFloat32BigEndian.TabIndex = 1;
+            this.radFloat32BigEndian.Text = "High-Low";
+            this.toolTip1.SetToolTip(this.radFloat32BigEndian, "First register is higher 16 bits of 32-bit float");
+            this.radFloat32BigEndian.UseVisualStyleBackColor = true;
             // 
-            // radiobuttonStringLittleEndian
+            // radStringLittleEndian
             // 
-            this.radiobuttonStringLittleEndian.AutoSize = true;
-            this.radiobuttonStringLittleEndian.Location = new System.Drawing.Point(6, 32);
-            this.radiobuttonStringLittleEndian.Name = "radiobuttonStringLittleEndian";
-            this.radiobuttonStringLittleEndian.Size = new System.Drawing.Size(68, 17);
-            this.radiobuttonStringLittleEndian.TabIndex = 1;
-            this.radiobuttonStringLittleEndian.Text = "Low byte";
-            this.toolTip1.SetToolTip(this.radiobuttonStringLittleEndian, "Register with value 0x4241 is shown as \'AB\'");
-            this.radiobuttonStringLittleEndian.UseVisualStyleBackColor = true;
+            this.radStringLittleEndian.AutoSize = true;
+            this.radStringLittleEndian.Location = new System.Drawing.Point(6, 32);
+            this.radStringLittleEndian.Name = "radStringLittleEndian";
+            this.radStringLittleEndian.Size = new System.Drawing.Size(68, 17);
+            this.radStringLittleEndian.TabIndex = 1;
+            this.radStringLittleEndian.Text = "Low byte";
+            this.toolTip1.SetToolTip(this.radStringLittleEndian, "Register with value 0x4241 is shown as \'AB\'");
+            this.radStringLittleEndian.UseVisualStyleBackColor = true;
             // 
-            // radiobuttonStringBigEndian
+            // radStringBigEndian
             // 
-            this.radiobuttonStringBigEndian.AutoSize = true;
-            this.radiobuttonStringBigEndian.Checked = true;
-            this.radiobuttonStringBigEndian.Location = new System.Drawing.Point(82, 32);
-            this.radiobuttonStringBigEndian.Name = "radiobuttonStringBigEndian";
-            this.radiobuttonStringBigEndian.Size = new System.Drawing.Size(70, 17);
-            this.radiobuttonStringBigEndian.TabIndex = 2;
-            this.radiobuttonStringBigEndian.TabStop = true;
-            this.radiobuttonStringBigEndian.Text = "High byte";
-            this.toolTip1.SetToolTip(this.radiobuttonStringBigEndian, "Register with value 0x4241 is shown as \'BA\'");
-            this.radiobuttonStringBigEndian.UseVisualStyleBackColor = true;
+            this.radStringBigEndian.AutoSize = true;
+            this.radStringBigEndian.Checked = true;
+            this.radStringBigEndian.Location = new System.Drawing.Point(82, 32);
+            this.radStringBigEndian.Name = "radStringBigEndian";
+            this.radStringBigEndian.Size = new System.Drawing.Size(70, 17);
+            this.radStringBigEndian.TabIndex = 2;
+            this.radStringBigEndian.TabStop = true;
+            this.radStringBigEndian.Text = "High byte";
+            this.toolTip1.SetToolTip(this.radStringBigEndian, "Register with value 0x4241 is shown as \'BA\'");
+            this.radStringBigEndian.UseVisualStyleBackColor = true;
             // 
             // numericTcpServerPort
             // 
@@ -246,67 +246,67 @@
             this.toolTip1.SetToolTip(this.checkboxTcpServerEnable, "Enable the Modbus/TCP bridge");
             this.checkboxTcpServerEnable.UseVisualStyleBackColor = true;
             // 
-            // radiobuttonInt32LittleEndian
+            // radInt32LittleEndian
             // 
-            this.radiobuttonInt32LittleEndian.AutoSize = true;
-            this.radiobuttonInt32LittleEndian.Checked = true;
-            this.radiobuttonInt32LittleEndian.Location = new System.Drawing.Point(6, 15);
-            this.radiobuttonInt32LittleEndian.Name = "radiobuttonInt32LittleEndian";
-            this.radiobuttonInt32LittleEndian.Size = new System.Drawing.Size(70, 17);
-            this.radiobuttonInt32LittleEndian.TabIndex = 0;
-            this.radiobuttonInt32LittleEndian.TabStop = true;
-            this.radiobuttonInt32LittleEndian.Text = "Low-High";
-            this.toolTip1.SetToolTip(this.radiobuttonInt32LittleEndian, "First register is lower 16 bits of 32-bit value (most used)");
-            this.radiobuttonInt32LittleEndian.UseVisualStyleBackColor = true;
+            this.radInt32LittleEndian.AutoSize = true;
+            this.radInt32LittleEndian.Checked = true;
+            this.radInt32LittleEndian.Location = new System.Drawing.Point(6, 15);
+            this.radInt32LittleEndian.Name = "radInt32LittleEndian";
+            this.radInt32LittleEndian.Size = new System.Drawing.Size(70, 17);
+            this.radInt32LittleEndian.TabIndex = 0;
+            this.radInt32LittleEndian.TabStop = true;
+            this.radInt32LittleEndian.Text = "Low-High";
+            this.toolTip1.SetToolTip(this.radInt32LittleEndian, "First register is lower 16 bits of 32-bit value (most used)");
+            this.radInt32LittleEndian.UseVisualStyleBackColor = true;
             // 
-            // radiobuttonInt32BigEndian
+            // radInt32BigEndian
             // 
-            this.radiobuttonInt32BigEndian.AutoSize = true;
-            this.radiobuttonInt32BigEndian.Location = new System.Drawing.Point(82, 15);
-            this.radiobuttonInt32BigEndian.Name = "radiobuttonInt32BigEndian";
-            this.radiobuttonInt32BigEndian.Size = new System.Drawing.Size(70, 17);
-            this.radiobuttonInt32BigEndian.TabIndex = 1;
-            this.radiobuttonInt32BigEndian.Text = "High-Low";
-            this.toolTip1.SetToolTip(this.radiobuttonInt32BigEndian, "First register is higher 16 bits of 32-bit value");
-            this.radiobuttonInt32BigEndian.UseVisualStyleBackColor = true;
+            this.radInt32BigEndian.AutoSize = true;
+            this.radInt32BigEndian.Location = new System.Drawing.Point(82, 15);
+            this.radInt32BigEndian.Name = "radInt32BigEndian";
+            this.radInt32BigEndian.Size = new System.Drawing.Size(70, 17);
+            this.radInt32BigEndian.TabIndex = 1;
+            this.radInt32BigEndian.Text = "High-Low";
+            this.toolTip1.SetToolTip(this.radInt32BigEndian, "First register is higher 16 bits of 32-bit value");
+            this.radInt32BigEndian.UseVisualStyleBackColor = true;
             // 
-            // radiobuttonWriteFC6
+            // radWriteFC6
             // 
-            this.radiobuttonWriteFC6.AutoSize = true;
-            this.radiobuttonWriteFC6.Location = new System.Drawing.Point(6, 17);
-            this.radiobuttonWriteFC6.Name = "radiobuttonWriteFC6";
-            this.radiobuttonWriteFC6.Size = new System.Drawing.Size(167, 17);
-            this.radiobuttonWriteFC6.TabIndex = 0;
-            this.radiobuttonWriteFC6.TabStop = true;
-            this.radiobuttonWriteFC6.Text = "Use FC6 only (write single reg)";
-            this.toolTip1.SetToolTip(this.radiobuttonWriteFC6, "Use only function code 6 \'write single register\'");
-            this.radiobuttonWriteFC6.UseVisualStyleBackColor = true;
+            this.radWriteFC6.AutoSize = true;
+            this.radWriteFC6.Location = new System.Drawing.Point(6, 17);
+            this.radWriteFC6.Name = "radWriteFC6";
+            this.radWriteFC6.Size = new System.Drawing.Size(167, 17);
+            this.radWriteFC6.TabIndex = 0;
+            this.radWriteFC6.TabStop = true;
+            this.radWriteFC6.Text = "Use FC6 only (write single reg)";
+            this.toolTip1.SetToolTip(this.radWriteFC6, "Use only function code 6 \'write single register\'");
+            this.radWriteFC6.UseVisualStyleBackColor = true;
             // 
-            // radiobuttonWriteFC16
+            // radWriteFC16
             // 
-            this.radiobuttonWriteFC16.AutoSize = true;
-            this.radiobuttonWriteFC16.Checked = true;
-            this.radiobuttonWriteFC16.Location = new System.Drawing.Point(6, 33);
-            this.radiobuttonWriteFC16.Name = "radiobuttonWriteFC16";
-            this.radiobuttonWriteFC16.Size = new System.Drawing.Size(181, 17);
-            this.radiobuttonWriteFC16.TabIndex = 1;
-            this.radiobuttonWriteFC16.TabStop = true;
-            this.radiobuttonWriteFC16.Text = "Use FC16 only (write multiple reg)";
-            this.toolTip1.SetToolTip(this.radiobuttonWriteFC16, "Use only function code 16 \'write multiple registers\'");
-            this.radiobuttonWriteFC16.UseVisualStyleBackColor = true;
+            this.radWriteFC16.AutoSize = true;
+            this.radWriteFC16.Checked = true;
+            this.radWriteFC16.Location = new System.Drawing.Point(6, 33);
+            this.radWriteFC16.Name = "radWriteFC16";
+            this.radWriteFC16.Size = new System.Drawing.Size(181, 17);
+            this.radWriteFC16.TabIndex = 1;
+            this.radWriteFC16.TabStop = true;
+            this.radWriteFC16.Text = "Use FC16 only (write multiple reg)";
+            this.toolTip1.SetToolTip(this.radWriteFC16, "Use only function code 16 \'write multiple registers\'");
+            this.radWriteFC16.UseVisualStyleBackColor = true;
             // 
-            // radiobuttonWriteFCAuto
+            // radWriteFCAuto
             // 
-            this.radiobuttonWriteFCAuto.AutoSize = true;
-            this.radiobuttonWriteFCAuto.Location = new System.Drawing.Point(6, 49);
-            this.radiobuttonWriteFCAuto.Name = "radiobuttonWriteFCAuto";
-            this.radiobuttonWriteFCAuto.Size = new System.Drawing.Size(140, 17);
-            this.radiobuttonWriteFCAuto.TabIndex = 2;
-            this.radiobuttonWriteFCAuto.TabStop = true;
-            this.radiobuttonWriteFCAuto.Tag = "";
-            this.radiobuttonWriteFCAuto.Text = "Auto select FC6 or FC16";
-            this.toolTip1.SetToolTip(this.radiobuttonWriteFCAuto, "Automatically use FC6 for 16-bit registers or FC16 for 32-bit registers");
-            this.radiobuttonWriteFCAuto.UseVisualStyleBackColor = true;
+            this.radWriteFCAuto.AutoSize = true;
+            this.radWriteFCAuto.Location = new System.Drawing.Point(6, 49);
+            this.radWriteFCAuto.Name = "radWriteFCAuto";
+            this.radWriteFCAuto.Size = new System.Drawing.Size(140, 17);
+            this.radWriteFCAuto.TabIndex = 2;
+            this.radWriteFCAuto.TabStop = true;
+            this.radWriteFCAuto.Tag = "";
+            this.radWriteFCAuto.Text = "Auto select FC6 or FC16";
+            this.toolTip1.SetToolTip(this.radWriteFCAuto, "Automatically use FC6 for 16-bit registers or FC16 for 32-bit registers");
+            this.radWriteFCAuto.UseVisualStyleBackColor = true;
             // 
             // numericMaximumFrameSize
             // 
@@ -776,8 +776,8 @@
             // 
             // groupBox3
             // 
-            this.groupBox3.Controls.Add(this.radiobuttonFloat32LittleEndian);
-            this.groupBox3.Controls.Add(this.radiobuttonFloat32BigEndian);
+            this.groupBox3.Controls.Add(this.radFloat32LittleEndian);
+            this.groupBox3.Controls.Add(this.radFloat32BigEndian);
             this.groupBox3.Location = new System.Drawing.Point(227, 133);
             this.groupBox3.Name = "groupBox3";
             this.groupBox3.Size = new System.Drawing.Size(210, 39);
@@ -787,8 +787,8 @@
             // 
             // groupBox4
             // 
-            this.groupBox4.Controls.Add(this.radiobuttonStringLittleEndian);
-            this.groupBox4.Controls.Add(this.radiobuttonStringBigEndian);
+            this.groupBox4.Controls.Add(this.radStringLittleEndian);
+            this.groupBox4.Controls.Add(this.radStringBigEndian);
             this.groupBox4.Controls.Add(this.label14);
             this.groupBox4.Location = new System.Drawing.Point(227, 180);
             this.groupBox4.Name = "groupBox4";
@@ -829,8 +829,8 @@
             // 
             // groupBox2
             // 
-            this.groupBox2.Controls.Add(this.radiobuttonInt32LittleEndian);
-            this.groupBox2.Controls.Add(this.radiobuttonInt32BigEndian);
+            this.groupBox2.Controls.Add(this.radInt32LittleEndian);
+            this.groupBox2.Controls.Add(this.radInt32BigEndian);
             this.groupBox2.Location = new System.Drawing.Point(227, 89);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(210, 36);
@@ -841,9 +841,9 @@
             // groupBox1
             // 
             this.groupBox1.Controls.Add(this.picwriteregFCIsOverride);
-            this.groupBox1.Controls.Add(this.radiobuttonWriteFC6);
-            this.groupBox1.Controls.Add(this.radiobuttonWriteFC16);
-            this.groupBox1.Controls.Add(this.radiobuttonWriteFCAuto);
+            this.groupBox1.Controls.Add(this.radWriteFC6);
+            this.groupBox1.Controls.Add(this.radWriteFC16);
+            this.groupBox1.Controls.Add(this.radWriteFCAuto);
             this.groupBox1.Location = new System.Drawing.Point(227, 10);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(210, 71);
@@ -1182,23 +1182,23 @@
         private System.Windows.Forms.NumericUpDown numericSamplerate;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.GroupBox groupBox3;
-        private System.Windows.Forms.RadioButton radiobuttonFloat32LittleEndian;
-        private System.Windows.Forms.RadioButton radiobuttonFloat32BigEndian;
+        private System.Windows.Forms.RadioButton radFloat32LittleEndian;
+        private System.Windows.Forms.RadioButton radFloat32BigEndian;
         private System.Windows.Forms.GroupBox groupBox4;
-        private System.Windows.Forms.RadioButton radiobuttonStringLittleEndian;
-        private System.Windows.Forms.RadioButton radiobuttonStringBigEndian;
+        private System.Windows.Forms.RadioButton radStringLittleEndian;
+        private System.Windows.Forms.RadioButton radStringBigEndian;
         private System.Windows.Forms.Label label14;
         private System.Windows.Forms.GroupBox groupboxModbusTcpServer;
         private System.Windows.Forms.NumericUpDown numericTcpServerPort;
         private System.Windows.Forms.CheckBox checkboxTcpServerEnable;
         private System.Windows.Forms.Label label13;
         private System.Windows.Forms.GroupBox groupBox2;
-        private System.Windows.Forms.RadioButton radiobuttonInt32LittleEndian;
-        private System.Windows.Forms.RadioButton radiobuttonInt32BigEndian;
+        private System.Windows.Forms.RadioButton radInt32LittleEndian;
+        private System.Windows.Forms.RadioButton radInt32BigEndian;
         private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.RadioButton radiobuttonWriteFC6;
-        private System.Windows.Forms.RadioButton radiobuttonWriteFC16;
-        private System.Windows.Forms.RadioButton radiobuttonWriteFCAuto;
+        private System.Windows.Forms.RadioButton radWriteFC6;
+        private System.Windows.Forms.RadioButton radWriteFC16;
+        private System.Windows.Forms.RadioButton radWriteFCAuto;
         private System.Windows.Forms.GroupBox groupboxConnection;
         private LST.Controls.NumericUpDown2 numericInterFrameDelay;
         private System.Windows.Forms.Label label15;

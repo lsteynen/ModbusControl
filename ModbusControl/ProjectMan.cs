@@ -52,7 +52,7 @@ namespace ModbusControlSpace
             public int ResponseTimeout;
             public int InterFrameDelay;
             public int Retries;
-            public Global.eWriteHoldingregFunctionCode WriteHoldingregFunctioncode;
+            public int WriteHoldingregFunctioncode;   // 0=auto, 6=single, 16=multiple
             public Global.eEndian Int32Endian;
             public Global.eEndian Float32Endian;
             public Global.eEndian StringEndian;
@@ -168,7 +168,7 @@ namespace ModbusControlSpace
             Connection.ResponseTimeout = 1000;
             Connection.InterFrameDelay = 0;
             Connection.Retries = 0;
-            Connection.WriteHoldingregFunctioncode = Global.eWriteHoldingregFunctionCode.Auto;
+            Connection.WriteHoldingregFunctioncode = 0;
             Connection.Int32Endian = Global.eEndian.Little;
             Connection.Float32Endian = Global.eEndian.Little;
             Connection.StringEndian = Global.eEndian.Big;
@@ -652,20 +652,13 @@ namespace ModbusControlSpace
                     // get value, must be 6, 16 or 'auto'
                     if (byte.TryParse(TmpString, out TmpValue) && ((TmpValue == 6) || (TmpValue == 16)))
                     {
-                        if (TmpValue == 16)
-                        {
-                            Connection.WriteHoldingregFunctioncode = Global.eWriteHoldingregFunctionCode.FC16;
-                        }
-                        else
-                        {
-                            Connection.WriteHoldingregFunctioncode = Global.eWriteHoldingregFunctionCode.FC6;
-                        }
+                        Connection.WriteHoldingregFunctioncode = TmpValue;
                     }
                     // accept obsolete 'alternate' as 'auto'
                     else if ((string.Compare(TmpString, "auto", StringComparison.OrdinalIgnoreCase) == 0)
                           || (string.Compare(TmpString, "alternate", StringComparison.OrdinalIgnoreCase) == 0))
                     {
-                        Connection.WriteHoldingregFunctioncode = Global.eWriteHoldingregFunctionCode.Auto;
+                        Connection.WriteHoldingregFunctioncode = 0;
                     }
                     else
                     {
@@ -754,7 +747,7 @@ namespace ModbusControlSpace
                     UInt32 TmpNum;
                     // allow 40_000, 40_001, 400_000 and 400_001 
                     // use 4xxxx for holding registers 
-                    // use 40001 for traditional numbering 
+                    // use 40001 for 5-digit traditional numbering 
                     // use 400001 for 6-digit numbering when using > 9999 holding registers
                     // use 40000 or 400000 for numbering that actually starts from 0
                     if (UInt32.TryParse(TmpString, out TmpNum)
@@ -953,7 +946,7 @@ namespace ModbusControlSpace
                 // <var> elements, optional, multiple
                 if (CheckElementNameMatch(elemName, "var"))
                 {
-                    // make new var, and init with the defaults, support autonumbering
+                    // make new var, init with the defaults, support autonumbering
                     TVar newVar = ProcessVarElement(xe, NextAutoRegnr, DefaultVar);
 
                     // Add new var to the tab list
@@ -1066,7 +1059,7 @@ namespace ModbusControlSpace
                     else
                     {
                         TFilePosition fp = GetFilePos(xe);
-                        throw new XmlException("XML element <type> has an invalid value. Valid values are int16, uint16, int32, uint32, hex16, hex32, bin16, bin32, float32, ascii16, ascii32 or string2/4/6-300." + Environment.NewLine + LimitXmlTextLength(xe.ToString()) + Environment.NewLine, null, fp.Line, fp.Col);
+                        throw new XmlException("XML element <type> has an invalid value. Valid values are int16, uint16, hex16, bin16, ascii16, int32, uint32, hex32, bin32, ascii32, float32 or string2/4/6.." + Global.StringMaxLength + "." + Environment.NewLine + LimitXmlTextLength(xe.ToString()) + Environment.NewLine, null, fp.Line, fp.Col);
                     }
                 }
                 else
@@ -2052,10 +2045,10 @@ namespace ModbusControlSpace
             }
             else if (text.StartsWith("string"))
             {
-                // allow string2 .. string300
+                // allow string2 .. StringMaxLength
                 Format = Global.eFormat.String;
                 int num = GetNumberFromElementValue(text, "string");
-                if ((num >= 2) && (num <= 300) && ((num % 2) == 0))
+                if ((num >= 2) && (num <= Global.StringMaxLength) && ((num % 2) == 0))
                 {
                     Size = num / 2;
                     return true;
@@ -2226,7 +2219,7 @@ namespace ModbusControlSpace
             }
             xe.Value = Connection.IPPort.ToString();
 
-            //TODO: Add Global.eTcpConnectMode TcpConnectMode  static/dynamic?
+            //TODO: Add Global.eTcpConnectMode TcpConnectMode static/dynamic?
 
             // Find SlaveID node, or create it
             xe = FindElement(xeModbus, "SlaveID");

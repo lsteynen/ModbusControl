@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading;
+using System.Text;
 
 using LST.Helpers;
 using Modbus_net;
@@ -10,17 +11,18 @@ namespace ModbusImport
 {
     public class Import
     {
-        public ModbusInterface mModbus;
-        public byte mSlaveAddress;
+        #region Enums
+		
+        public enum EReturnCode { Success = 0, FileError, CommError };
+
+        #endregion
+
+        #region Data
+
+        //private MainForm mParent;
         private const int mSleeptime = 10;
-        public string mFilename;
-        public bool Verbose;
-        public bool ContinueOnError = false;
-        public List<string> TabsSelectList;      // List of selected tab names to export, in this order
-        public int mWrittenCount;
-        public int mNotWriteableCount;
-        public int mFileErrorCount;
-        public int mCommErrorCount;
+		//private bool mContinueOnError = false;
+		//private BackgroundWorker mWorker;
         
         private class ImportLine
         {
@@ -35,13 +37,13 @@ namespace ModbusImport
                 tabName = null;
                 fields = null;
             }
-        };
+        }
 
         private class Register
         {
             public UInt32 Reg;
             public UInt16 RegOffset;
-            public int Width;
+            public int Size;
             public string Description;
             public bool isReadable;
             public bool isWriteable;
@@ -54,7 +56,7 @@ namespace ModbusImport
             {
                 Reg = 0;
                 RegOffset = 0;
-                Width = 16;
+                Size = 1;
                 Description = null;
                 isReadable = true;
                 isWriteable = true;
@@ -62,97 +64,244 @@ namespace ModbusImport
                 ValueString = null;
                 aRegValue =  null;
             }
-        };
+        }
 
         // list stores the import file
-        List<ImportLine> ImportList = new List<ImportLine>();
+        private List<ImportLine> ImportList = new List<ImportLine>();
 
-        // callback to convert app register numbering to protocol offset
-        public event GetHoldingregisterModbusOffset OnGetHoldingregisterModbusOffset;
-        public delegate bool GetHoldingregisterModbusOffset(UInt32 Regnr, out UInt16 Offset);
+        #endregion
 
-        // callback for progress report, only if Verbose=true
+        #region Properties
+
+        public ModbusInterface Modbus;
+
+        public byte SlaveAddress;
+
+        public int MaximumFrameSize = 256;
+
+        public bool ContinueOnError = false;
+
+        public int SuccessCount;
+
+        public int NotWriteableCount;
+
+        public int FileErrorCount;
+
+        public int CommErrorCount;
+		
+		public string Filename;
+
+        public bool Verbose;
+
+        public List<string> TabsSelectList;      // List of selected tab names to export, in this order
+
+        // callback for progress report
         public event ReportProgress OnReportProgress;
         public delegate void ReportProgress(string s);
 
+        #endregion
+
+        #region Implementation
+
         /// <summary>
-        /// Do import
-        /// Write registers from file to target
-        /// Throw on error
-        /// </summary>
-        public void DoImport()
+        /// Do import, write registers from file to target
+        /// Returns errorcode on error.
+        /// Continues importing when mContinueOnError==true.
+        /// <summary>
+        /// <returns>
+        /// EReturnCode.Success    if there were no error 
+        /// EReturnCode.CommError  if there was communication error 
+        /// </returns>
+        public EReturnCode DoImport()
         {
-            // can throw
-            LoadImportFile(mFilename);
+            EReturnCode retco = EReturnCode.Success;
 
-            // check if port is opened
-            if (mModbus.IsOpen == false)
+            // reset counters
+			SuccessCount = 0;
+			NotWriteableCount = 0;
+            FileErrorCount = 0;
+            CommErrorCount = 0;
+
+            // get the file
+            try
             {
-                throw new CommsException("Connection is not open.");
+                LoadImportFile(Filename);
             }
-
-            // all tabs or TabsSelectList?
+            catch( Exception ex)
+            {
+                ReportError(ex.Message); 
+                ++FileErrorCount;
+                return EReturnCode.FileError;
+            }               
+            
+            // TabsSelectList or all tabs?
             if ((TabsSelectList != null) && (TabsSelectList.Count > 0))
             {
                 // tabs selected on command line
 
                 // validate that selected tab names are valid
-                // throws on error
-                ValidateSelectedTabNames();
+                try
+                {
+                    ValidateSelectedTabNames();
+                }
+                catch( Exception ex)
+                {
+                    ReportError(ex.Message); 
+                    ++FileErrorCount;
+                    return EReturnCode.FileError;
+                }                
 
-                DoImportSelectedTabs();
+                // import the selected tabs
+                retco = DoImportSelectedTabs();
             }
             else
             {
                 // all tabs
 
                 // process all lines in the file, in that order
-                // can throw
-                DoImportAll();
+                retco = DoImportAllTabs();
+            }
+
+            return retco;
+        }
+		
+		/// <summary>
+        /// Validates that all tabnames in TabsSelectList are valid,
+        /// meaning they exist in the CSV list.
+        /// Throws exception on error
+        /// </summary>
+        private void ValidateSelectedTabNames()
+        {
+            foreach (string selName in TabsSelectList)
+            {
+                bool found = false;
+                foreach (ImportLine line in ImportList)
+                {
+                    if (line.tabName.ToLower() == selName.ToLower())
+                    {
+                        // valid
+                        found = true;
+                        break;
+                    }
+                }
+                // error if tab name not found
+                if (found == false)
+                {
+                    throw new Exception("Tab not found: '" + selName + "'");
+                }
             }
         }
 
 
         /// <summary>
+        /// Do the actual import, all tabs in the file
+        /// </summary>
+        private EReturnCode DoImportAllTabs()
+        {
+            EReturnCode retco = EReturnCode.Success;
+
+            // import all lines
+            foreach (ImportLine line in ImportList)
+            {
+                // Import this line
+                EReturnCode tmpRet = ImportOneLine(line);
+                // error?
+                if (tmpRet != EReturnCode.Success)
+                {
+                    // return code
+                    if (retco == EReturnCode.Success)
+                    {
+                        retco = tmpRet;
+                    }
+
+                    // stop on error?
+                    if (ContinueOnError == false)
+                    {
+                        break;
+                    }
+                }                   
+
+                Thread.Sleep(mSleeptime);
+            }
+
+            return retco;
+        }
+
+        /// <summary>
+        /// Do the actual import, only selected tabs, in order of selection
+        /// </summary>
+        private EReturnCode DoImportSelectedTabs()
+        {
+            EReturnCode retco = EReturnCode.Success;
+
+            // import lines of selected tabs
+            // in given order
+            bool abort = false;
+            foreach (string tabName in TabsSelectList)
+            {
+                ReportVerbose("Import tab '" + tabName + "'");
+
+                // import the lines of this tab
+                foreach (ImportLine line in ImportList)
+                {
+                    if (line.tabName.ToLower() == tabName.ToLower())
+                    {
+                        // Import this line
+                        EReturnCode tmpRet = ImportOneLine(line);
+                        // error?
+                        if (tmpRet != EReturnCode.Success)
+                        {
+                            // return code
+                            if (retco == EReturnCode.Success)
+                            {
+                                retco = tmpRet;
+                            }
+
+                            // stop on error?
+                            if (ContinueOnError == false)
+                            {
+                                abort = true;
+                                break;
+                            }
+                        }
+
+                        Thread.Sleep(mSleeptime);
+                    }
+                }
+				
+				if (abort) 
+				{
+					break;
+				}
+            }
+
+            return retco;
+        }
+		
+		/// <summary>
         /// Load import file into ImportList
-        /// Throw on error
+        /// Throws exception on error
         /// </summary>
         /// <param name="FileName"></param>
-        /// <returns></returns>
         private void LoadImportFile(string FileName)
         {
             CsvReader csvreader = null;
 
             ImportList.Clear();
 
-            //ReportVerbose("Open file '" + FileName + "'");
-
             // ensure close
             try
             {
-                // open
-                try
-                {
-                    // Assume Windows's default encoding, usually an ANSI code page (should match default export encoding).
-                    // Can also be System.Text.Encoding.UTF8 for UTF8 encoding.
-                    // Files with a unicode BOM will be recognized and decoded correctly.
-                    // See Modbuscontrol Export.cs for more info on Encodings.
+                // open file to read from
 
-                    csvreader = new CsvReader(FileName, System.Text.Encoding.Default);
-                    csvreader.CommentHeaders = new string[] { "#", "//" };
-                    csvreader.Separator = ';';
-                    csvreader.SkipCommentLines = false;
-                    csvreader.SkipEmptyLines = true;
-
-                    //textboxLog.AppendText("Opened file: " + FileName + Environment.NewLine);
-                }
-                catch (Exception ex)
-                {
-                    // open failed
-                    //textboxLog.AppendText("Error: Can't open file: " + ex.Message + Environment.NewLine); 
-                    string s = "Cannot open file: " + ex.Message;
-                    throw new FileException(s);
-                }
+                // Use UTF-8 encoding. 
+                // reads files with or without UTF-8 BOM
+                
+                csvreader = new CsvReader(FileName, new UTF8Encoding(false));
+                csvreader.CommentHeaders = new string[] { "#", "//" };
+                csvreader.Separator = ';';
+                csvreader.SkipCommentLines = false;
+                csvreader.SkipEmptyLines = true;
 
                 // process all lines in the file
                 List<string> fields;
@@ -176,11 +325,11 @@ namespace ModbusImport
                     {
                         // got a data line
                         // store the fields
-                        ImportLine imp = new ImportLine();
-                        imp.lineNum = csvreader.LineNumber;
-                        imp.tabName = currentTabName;
-                        imp.fields = fields;
-                        ImportList.Add(imp);
+                        ImportLine lin = new ImportLine();
+                        lin.lineNum = csvreader.LineNumber;
+                        lin.tabName = currentTabName;
+                        lin.fields = fields;
+                        ImportList.Add(lin);                // got a data line
                     }
                     else
                     {
@@ -199,159 +348,67 @@ namespace ModbusImport
         }
 
         /// <summary>
-        /// Validates that all tabnames in TabsSelectList are valid,
-        /// meaning they exist in the CSV list.
-        /// Throw on error.
+        /// Import 1 line, write 1 var, 1 var is 1 or more registers
         /// </summary>
-        private void ValidateSelectedTabNames()
-        {
-            foreach (string selName in TabsSelectList)
-            {
-                bool found = false;
-                foreach (ImportLine line in ImportList)
-                {
-                    if (line.tabName.ToLower() == selName.ToLower())
-                    {
-                        // valid
-                        found = true;
-                        break;
-                    }
-                }
-                // error if tab name not found
-                if (found == false)
-                {
-                    throw new ArgumentException("Invalid tab name: '" + selName + "'");
-                }
-            }
-        }
-
-        /// <summary>
-        /// Do the actual import, all tabs
-        /// Throws on error
-        /// </summary>
-        private void DoImportAll()
-        {
-            // Write registers from list to target
-
-            // reset counters
-            mFileErrorCount = 0;
-            mCommErrorCount = 0;
-            mNotWriteableCount = 0;
-            mWrittenCount = 0;
-
-            foreach (ImportLine line in ImportList)
-            {
-                ImportOneLine(line);
-
-                Thread.Sleep(mSleeptime);
-            }
-        }
-
-        /// <summary>
-        /// Do the actual import, only selected tabs, in order of selection
-        /// Throws on error
-        /// </summary>
-        private void DoImportSelectedTabs()
-        {
-            // Write registers from list to target
-
-            // reset counters
-            mFileErrorCount = 0;
-            mCommErrorCount = 0;
-            mNotWriteableCount = 0;
-            mWrittenCount = 0;
-
-            // import each selected tab
-            // in order, may appear multiple times
-            foreach (string selName in TabsSelectList)
-            {
-                ReportVerbose("Import tab: " + selName);
-                foreach (ImportLine line in ImportList)
-                {
-                    if (line.tabName.ToLower() == selName.ToLower())
-                    {
-                        ImportOneLine(line);
-
-                        Thread.Sleep(mSleeptime);
-                    }
-                }
-            }
-        }
-
-        /// <summary>
-        /// Import 1 line, write 1 var
-        /// Throws on error
-        /// </summary>
-        private void ImportOneLine(ImportLine line)
+        private EReturnCode ImportOneLine(ImportLine line)
         {
             Register reg = null;
 
-            // convert line fields to Register
+            // convert line fields to Register class
             try
             {
                 reg = ConvertLineToRegister(line);
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
                 // file error
-                ++mFileErrorCount;
-                // continue?
-                if (ContinueOnError)
-                {
-                    // report error and continue
-                    ReportError("Error: " + e.Message);
-                }
-                else
-                {
-                    //rethrow
-                    throw;
-                }
+                ReportError(ex.Message); 
+                ++FileErrorCount;
+                return EReturnCode.FileError;
             }
 
-            // was valid?
-            if (reg != null)
+            // skip lines that are not writeable
+            if (reg.isWriteable == false)
             {
-                // skip lines that are not writeable
-                if (reg.isWriteable == false)
-                {
-                    ++mNotWriteableCount;
-                    return;
-                }
-
-                // write
-                int regSize = reg.Width / 16;
-                ModbusProtocol.Result result = mModbus.MifWriteHoldingRegistersAuto(mSlaveAddress, reg.RegOffset, (UInt16)regSize, reg.aRegValue);
-
-                if (result == ModbusProtocol.Result.SUCCESS)
-                {
-                    // success
-                    ++mWrittenCount;
-
-                    string s = BuildImportLineString(reg);
-                    ReportVerbose("Write: " + s);
-                }
-                else
-                {
-                    // comms error
-                    ++mCommErrorCount;
-
-                    string s = "Line " + line.lineNum.ToString() + ": Write: " + BuildImportLineString(reg) + " >> " + ModbusProtocol.GetResultText(result);
-                    if (ContinueOnError)
-                        ReportError("Error: " + s);
-                    else
-                        throw new FileException(s);
-                }
+                ++NotWriteableCount;
+                return EReturnCode.Success;
             }
+
+            // write
+            ModbusProtocol.Result result = Modbus.MifWriteHoldingRegistersPaged(SlaveAddress, reg.RegOffset, (UInt16)reg.Size, reg.aRegValue);
+
+            if (result == ModbusProtocol.Result.SUCCESS)
+            {
+                // success                
+                ReportImportLine(line.lineNum, reg.Reg, reg.Size, reg.Description, reg.Format, reg.isReadable, reg.isWriteable, reg.ValueString);
+                ++SuccessCount;
+            }
+            else
+            {
+                // comm error
+                string errorStr = ModbusProtocol.GetResultText(result);
+                ReportImportLineError(line.lineNum, reg.Reg, reg.Size, reg.Description, reg.Format, reg.isReadable, reg.isWriteable, reg.ValueString, errorStr);
+                ++CommErrorCount;
+                return EReturnCode.CommError;
+            }
+
+            return EReturnCode.Success;
         }
 
+        /// <summary>
+        /// Convert 1 import line to Register class
+        /// Throws exception on error
+        /// </summary>
+        /// <param name="line"></param>
+        /// <returns>Register object</returns>
         private Register ConvertLineToRegister(ImportLine line)
         {
-			// we accept 2, 3, 4 ,5, or 6 fields
+			// accept 2, 3, 4 ,5, or 6 fields
 			
             // init default value strings
             // then process all fields
             string RegString = "";
-            string WidthString = "16";
+            string SizeString = "1";
             string DescriptionString = "";
             string RwString = "rw";
             string FormatString = "int";
@@ -367,14 +424,14 @@ namespace ModbusImport
             {
                 // Assume: Reg;Size;Value
                 RegString = line.fields[0];
-                WidthString = line.fields[1];
+                SizeString = line.fields[1];
                 ValueString = line.fields[2];
             }
             else if (line.fields.Count == 4)
             {
                 // Assume: Reg;Size;Description;Value
                 RegString = line.fields[0];
-                WidthString = line.fields[1];
+                SizeString = line.fields[1];
                 DescriptionString = line.fields[2];
                 ValueString = line.fields[3];
             }
@@ -382,7 +439,7 @@ namespace ModbusImport
             {
                 // Assume: Reg;Size;Description;Rw;Value
                 RegString = line.fields[0];
-                WidthString = line.fields[1];
+                SizeString = line.fields[1];
                 DescriptionString = line.fields[2];
                 RwString = line.fields[3];
                 ValueString = line.fields[4];
@@ -391,7 +448,7 @@ namespace ModbusImport
             {
                 // Assume: Reg;Size;Description;Rw;Type;Value
                 RegString = line.fields[0];
-                WidthString = line.fields[1];
+                SizeString = line.fields[1];
                 DescriptionString = line.fields[2];
                 RwString = line.fields[3];
                 FormatString = line.fields[4];
@@ -401,7 +458,7 @@ namespace ModbusImport
             {
                 // incorrect number of fields
                 string s = "Line " + line.lineNum.ToString() + ": Invalid number of fields: found " + line.fields.Count.ToString() + " fields, expecting 2, 3, 4, 5 or 6 fields.";
-                throw new FileException(s);
+                throw new Exception(s);
             }
 
             Register reg = new Register();
@@ -409,13 +466,13 @@ namespace ModbusImport
             if (GetReg(RegString, out reg.Reg, out reg.RegOffset) == false)
             {
                 string s = "Line " + line.lineNum.ToString() + ": Register number '" + RegString + "' is invalid.";
-                throw new FileException(s);
+                throw new Exception(s);
             }
 
-            if (GetWidth(WidthString, out reg.Width) == false)
+            if (GetSize(SizeString, out reg.Size) == false)
             {
-                string s = "Line " + line.lineNum.ToString() + ": Register " + RegString + ": width '" + WidthString + "' is invalid.";
-                throw new FileException(s);
+                string s = "Line " + line.lineNum.ToString() + ": Register " + RegString + ": size '" + SizeString + "' is invalid.";
+                throw new Exception(s);
             }
 
             GetDescr(DescriptionString, out reg.Description);
@@ -423,69 +480,91 @@ namespace ModbusImport
             if (GetReadWriteFlags(RwString, out reg.isReadable, out reg.isWriteable) == false)
             {
                 string s = "Line " + line.lineNum.ToString() + ": Register " + RegString + ": r/w definition '" + RwString + "' is invalid.";
-                throw new FileException(s);
+                throw new Exception(s);
             }
 
             if (GetFormat(FormatString, out reg.Format) == false)
             {
                 string s = "Line " + line.lineNum.ToString() + ": Register " + RegString + ": type '" + FormatString + "' is invalid.";
-                throw new FileException(s);
+                throw new Exception(s);
             }
 
-            if ((reg.Format == Global.eFormat.Float) && (reg.Width != 32))
+            // check format and size combinations
+            if (reg.Format == Global.eFormat.Int || reg.Format == Global.eFormat.UInt || reg.Format == Global.eFormat.Hex || reg.Format == Global.eFormat.Bin || reg.Format == Global.eFormat.ASCII)
             {
-                string s = "Line " + line.lineNum.ToString() + ": Register " + RegString + ": float register width '" + reg.Width.ToString() + "' is not 32-bit.";
-                throw new FileException(s);
+                // accept new format with number of registers
+                if (reg.Size == 1 || reg.Size == 2)
+                {
+                    // OK
+                }
+                else if (reg.Size == 16 || reg.Size == 32)
+                {
+                    // OK, accept old format with width in bits
+                    reg.Size = reg.Size / 16;
+                }
+                else
+                {
+                    string s = "Line " + line.lineNum.ToString() + ": Register " + RegString + " : integer register size '" + reg.Size.ToString() + "' is invalid, must be 1 or 2.";
+                    throw new Exception(s);
+                }
             }
+            if (reg.Format == Global.eFormat.Float)
+            {
+                // accept new format with number of registers
+                if (reg.Size == 2)
+                {
+                    // OK
+                }
+                else if (reg.Size == 32)
+                {
+                    // OK, accept old format with width in bits
+                    reg.Size = reg.Size / 16;
+                }
+                else
+                {
+                    string s = "Line " + line.lineNum.ToString() + ": Register " + RegString + " : float register size '" + reg.Size.ToString() + "' is invalid, must be 2.";
+                    throw new Exception(s);
+                }
+            }
+            if (reg.Format == Global.eFormat.String)
+            {
+                // can only be new format with number of registers
+                if ((reg.Size >= 1) && (reg.Size <= Global.StringMaxRegisters))
+                {
+                    // OK
+                }
+                else
+                {
+                    string s = "Line " + line.lineNum.ToString() + ": Register " + RegString + " : string register size '" + reg.Size.ToString() + "' is invalid, must be 1.." + Global.StringMaxRegisters.ToString() + ".";
+                    throw new Exception(s);
+                }
+            }
+            
             reg.ValueString = ValueString;
             try
             {
-                int regCount = reg.Width / 16;
-                //TODO: testen
+                int regCount = reg.Size;
                 bool allowIntegers = (reg.Format == Global.eFormat.Int) || (reg.Format == Global.eFormat.UInt) || (reg.Format == Global.eFormat.Bin) || (reg.Format == Global.eFormat.Hex) || (reg.Format == Global.eFormat.ASCII) || ((reg.Format == Global.eFormat.Float) && (regCount == 2));
                 bool allowFloat = (reg.Format == Global.eFormat.Float);
                 bool allowString = (reg.Format == Global.eFormat.String);
                 reg.aRegValue = CValueToString.ValueStringToInt16Registers(ValueString, regCount, 0, allowIntegers, allowFloat, allowString); 
+                // if it is a string: write only as many registers as needed
+                if (reg.Format == Global.eFormat.String)
+                {
+                    if (reg.aRegValue.Length < reg.Size)
+                    {
+                        reg.Size = reg.aRegValue.Length;
+                    }
+                }
             }
-            catch
+            catch (Exception ex)
             {
-                string s = "Line " + line.lineNum.ToString() + ": Register " + RegString + ": value '" + ValueString + "' is invalid.";
-                throw new FileException(s);
+                string s = "Line " + line.lineNum.ToString() + ": Register " + RegString + ": value '" + ValueString + "' is invalid. " + ex.Message;
+                throw new Exception(s);
             }
 
+            // valid
             return reg;
-        }
-
-        private string TrimText(string descr)
-        {
-            // replace possible " by ' 
-            descr = descr.Replace('\"', '\'');
-            // replace tabs 
-            descr = descr.Replace("\t", " ");
-            // replace CR/LF 
-            descr = descr.Replace("\r\n", " ");
-            descr = descr.Replace("\r", " ");
-            descr = descr.Replace("\n", " ");
-            // limit length
-            const int maxlen = 60;
-            if (descr.Length >= maxlen)
-            {
-                descr = descr.Substring(0, (maxlen - 2)) + "..";
-            }
-
-            return descr;
-        }
-
-        private string BuildImportLineString(Register reg)
-        {
-            // trim descr
-            string descr = TrimText(reg.Description);
-            // make RW string
-            string RWstring = (reg.isReadable ? "r" : "") + (reg.isWriteable ? "w" : "");
-            // make output string
-            string s = reg.Reg + ";" + reg.Width + ";\"" + descr + "\";" + RWstring + ";" + reg.Format + ";" + reg.ValueString;
-
-            return s;
         }
 
         private bool GetReg(string text, out uint reg, out ushort regOffset)
@@ -495,19 +574,24 @@ namespace ModbusImport
 
             if (uint.TryParse(text, out reg))
             {
-                if (OnGetHoldingregisterModbusOffset(reg, out regOffset))
+                try
                 {
+                    regOffset = RegisterToOffset.GetHoldingregisterOffset(reg);
                     return true;
+                }
+                catch 
+                {
+                    // return false;
                 }
             }
 
             return false;
         }
 
-        private bool GetWidth(string text, out int width)
+        private bool GetSize(string text, out int size)
         {
-            // allow 16, 32
-            return int.TryParse(text, out width) && ((width == 16) || (width == 32));
+            // allow int 1..max
+            return int.TryParse(text, out size) && (size >= 1);
         }
 
         private bool GetDescr(string text, out string descr)
@@ -580,9 +664,65 @@ namespace ModbusImport
                 format = Global.eFormat.ASCII;
                 return true;
             }
+            else if (text == "string")
+            {
+                format = Global.eFormat.String;
+                return true;
+            }
 
             format = Global.eFormat.Int;
             return false;
+        }
+
+        private void ReportImportLine(int Linenum, UInt32 Reg, int Size, string Description, Global.eFormat Format, bool isReadable, bool isWriteable, string ValueString)
+        {
+            // output 1 import line, all register info, and value
+            // linenum is not shown
+
+            // trim descr
+            Description = TrimText(Description);
+            // make RW string
+            string RWstring = (isReadable ? "r" : "") + (isWriteable ? "w" : "");
+            // make output string
+            string s = Reg + ";" + Size + ";\"" + Description + "\";" + RWstring + ";" + Format + ";" + ValueString;
+
+            ReportVerbose("Write: " + s);
+        }
+
+        private void ReportImportLineError(int Linenum, UInt32 Reg, int Size, string Description, Global.eFormat Format, bool isReadable, bool isWriteable, string ValueString, string ErrorText)
+        {
+            // output 1 import line, all register info, and error message
+			// shows linenum
+
+            // trim descr
+            Description = TrimText(Description);
+            // make RW string
+            string RWstring = (isReadable ? "r" : "") + (isWriteable ? "w" : "");
+            // make output string
+            string s = Reg + ";" + Size + ";\"" + Description + "\";" + RWstring + ";" + Format + ";" + ValueString 
+                + "   >> ERROR: " + ErrorText;
+
+            ReportError("Line " + Linenum.ToString() + ": Write: " + s);
+        }
+
+		private string TrimText(string descr)
+        {
+            // replace possible " by ' 
+            descr = descr.Replace('\"', '\'');
+            // replace tabs 
+            descr = descr.Replace("\t", " ");
+            // replace CR/LF 
+            descr = descr.Replace("\r\n", " ");
+            descr = descr.Replace("\r", " ");
+            descr = descr.Replace("\n", " ");
+            // limit length
+            const int maxlen = 60;
+            if (descr.Length >= maxlen)
+            {
+                descr = descr.Substring(0, (maxlen - 2)) + "..";
+            }
+
+            return descr;
         }
 
         private void ReportVerbose(string s)
@@ -597,29 +737,11 @@ namespace ModbusImport
         {
             if (OnReportProgress != null)
             {
-                OnReportProgress(s);
+                OnReportProgress("Error: " + s);
             }
         }
     }
 
-    class FileException : ApplicationException
-    {
-        // thrown in error related to file
-        public FileException() { }
-
-        public FileException(string name) : base(String.Format(name))
-        {
-        }
-    }
-
-    class CommsException : ApplicationException
-    {
-        // thrown in error related to communications
-        public CommsException() { }
-
-        public CommsException(string name) : base(String.Format(name))
-        {
-        }
-    }
+    #endregion
 
 }

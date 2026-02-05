@@ -1559,13 +1559,13 @@ namespace LST.ModbusGridView
         /// <summary>
         /// Get the next group read block.
         /// Group read: read as many consecutive vars as fit in maxFrameSize.
-        /// Or read a single var if it exceeds maxFrameSize. The caller with execute that read in chunks.
+        /// Or read a single var if it exceeds maxFrameSize. The caller will execute that read in chunks.
         /// </summary>
         /// <param name="maxReadRegisters">maximum registers to read</param>
         /// <returns>group or null at the end</returns>
         public CReadGroup GetNextReadGroup(CReadGroup group, int maxReadRegisters)
         {
-            // no registers in grid?
+            // no registers?
             if (RegList.Count == 0)
             {
                 return null;
@@ -1580,7 +1580,7 @@ namespace LST.ModbusGridView
             // voorlopig gaan we er van uit dat in RegList level 0 alleen registers zitten
 
             int iLineIndex = group.lineIndex + group.lineCount;
-            bool iIsGrouping = false;
+            bool isGrouping = false;
             UInt32 iNextRegister = 0;
 
             while (iLineIndex < RegList.Count)
@@ -1588,7 +1588,7 @@ namespace LST.ModbusGridView
                 ListItem Lit = RegList[iLineIndex];
                 RegItem Reg = Lit as RegItem;
 
-                if (iIsGrouping)
+                if (isGrouping)
                 {
                     // find next readable register in group
                     // is consecutive and readable?
@@ -1611,7 +1611,7 @@ namespace LST.ModbusGridView
                 else 
                 {
                     // find next readable register to start new group
-                    if ((Reg as RegItem).Readable)
+                    if (Reg.Readable)
                     {
                         // start group read
                         group.lineIndex = iLineIndex;
@@ -1619,7 +1619,7 @@ namespace LST.ModbusGridView
                         group.readFirstReg = Reg.Reg;       
                         group.readRegCount = Reg.Size;
                         iNextRegister = Reg.Reg + (UInt32)Reg.Size;
-                        iIsGrouping = true;
+                        isGrouping = true;
                         // got room for more?
                         if (group.readRegCount < maxReadRegisters)
                         {
@@ -1637,7 +1637,7 @@ namespace LST.ModbusGridView
             }
 
             // got more?
-            if (iIsGrouping)
+            if (isGrouping)
             {
                 return group;
             }
@@ -2292,10 +2292,10 @@ namespace LST.ModbusGridView
                         // use Format to determine which DisplayFormats are possible
                         // use DisplayFormat to check actual display format
                         // Int
-                        ((ToolStripMenuItem)ContextMenuForValueColumn.Items[0]).Enabled = IsFormatInList(varFormat, Global.eFormat.Int, Global.eFormat.UInt, Global.eFormat.Bin, Global.eFormat.Hex, Global.eFormat.ASCII, Global.eFormat.Float);
+                        ((ToolStripMenuItem)ContextMenuForValueColumn.Items[0]).Enabled = IsFormatInList(varFormat, Global.eFormat.Int, Global.eFormat.UInt, Global.eFormat.Bin, Global.eFormat.Hex, Global.eFormat.ASCII, Global.eFormat.Float, Global.eFormat.String);
                         ((ToolStripMenuItem)ContextMenuForValueColumn.Items[0]).Checked = (varDisplayFormat == Global.eFormat.Int);
                         // UInt
-                        ((ToolStripMenuItem)ContextMenuForValueColumn.Items[1]).Enabled = IsFormatInList(varFormat, Global.eFormat.Int, Global.eFormat.UInt, Global.eFormat.Bin, Global.eFormat.Hex, Global.eFormat.ASCII, Global.eFormat.Float);
+                        ((ToolStripMenuItem)ContextMenuForValueColumn.Items[1]).Enabled = IsFormatInList(varFormat, Global.eFormat.Int, Global.eFormat.UInt, Global.eFormat.Bin, Global.eFormat.Hex, Global.eFormat.ASCII, Global.eFormat.Float, Global.eFormat.String);
                         ((ToolStripMenuItem)ContextMenuForValueColumn.Items[1]).Checked = (varDisplayFormat == Global.eFormat.UInt);
                         // Hex
                         ((ToolStripMenuItem)ContextMenuForValueColumn.Items[2]).Enabled = IsFormatInList(varFormat, Global.eFormat.Int, Global.eFormat.UInt, Global.eFormat.Bin, Global.eFormat.Hex, Global.eFormat.ASCII, Global.eFormat.Float, Global.eFormat.String);

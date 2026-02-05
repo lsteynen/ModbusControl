@@ -118,6 +118,9 @@
     <Compile Include="..\Shared\Logger.cs">
       <Link>Shared\Logger.cs</Link>
     </Compile>
+    <Compile Include="..\Shared\RegisterToOffset.cs">
+      <Link>RegisterToOffset.cs</Link>
+    </Compile>
     <Compile Include="CommandlineProc.cs" />
     <Compile Include="Import.cs" />
     <Compile Include="modbusinterface.cs" />

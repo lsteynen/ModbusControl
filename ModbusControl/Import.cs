@@ -16,15 +16,18 @@ namespace ModbusControlSpace
 {
 	public partial class Import : Form
     {
-        private MainForm mParent;
-        private byte mSlaveAddress;
+        #region Enums
 
-        private ModbusInterface mModbus;
+        public enum EReturnCode { Success = 0, FileError, CommError };
+
+        #endregion
+
+        #region Data
+
+        private MainForm mParent;
         private const int mSleeptime = 10;
+        private bool mContinueOnError = false;
         private BackgroundWorker mWorker;
-        private int mWrittenCount;
-        private int mNotWriteableCount;
-        private int mErrorCount;
 
         private class ImportLine
         {
@@ -39,13 +42,13 @@ namespace ModbusControlSpace
                 tabName = null;
                 fields = null;
             }
-        };
+        }
 
         private class Register
         {
             public UInt32 Reg;
             public UInt16 RegOffset;
-            public int Width;
+            public int Size;
             public string Description;
             public bool isReadable;
             public bool isWriteable;
@@ -58,7 +61,7 @@ namespace ModbusControlSpace
             {
                 Reg = 0;
                 RegOffset = 0;
-                Width = 16;
+                Size = 1;
                 Description = null;
                 isReadable = true;
                 isWriteable = true;
@@ -66,10 +69,43 @@ namespace ModbusControlSpace
                 ValueString = null;
                 aRegValue =  null;
             }
-        };
+        }
 
         // list stores the import file
-        List<ImportLine> ImportList = new List<ImportLine>();
+        private List<ImportLine> ImportList = new List<ImportLine>();
+
+        #endregion
+
+        #region Properties
+
+        public ModbusInterface Modbus;
+
+        public byte SlaveAddress;
+
+        public int MaximumFrameSize = 256; 
+
+        public bool ContinueOnError
+        {
+            get { return mContinueOnError; }
+
+            set
+            {
+                mContinueOnError = value;
+                chkContinueOnError.Checked = value;
+            }
+        }
+
+        public int SuccessCount;
+
+        public int NotWriteableCount;
+
+        public int FileErrorCount;
+
+        public int CommErrorCount;
+
+        #endregion
+
+        #region Implementation
 
         // constructor
         public Import(MainForm parent)
@@ -77,8 +113,20 @@ namespace ModbusControlSpace
             InitializeComponent();
 
             mParent = parent;
-            mModbus = parent.mb;
-            mSlaveAddress = parent.Project.Connection.SlaveID;
+            mContinueOnError = chkContinueOnError.Checked;            
+        }
+
+        private void buttonSelectFile_Click(object sender, EventArgs e)
+        {
+            if (openFileDialog1.ShowDialog() == DialogResult.OK)
+            {
+                textboxFilename.Text = openFileDialog1.FileName;
+            }
+        }
+		
+		private void chkContinueOnError_CheckedChanged(object sender, EventArgs e)
+        {
+            mContinueOnError = chkContinueOnError.Checked;
         }
 
         private void buttonStart_Click(object sender, EventArgs e)
@@ -93,7 +141,20 @@ namespace ModbusControlSpace
                 return;
             }
 
-            DoImport();
+            // check if port is opened
+            if (Modbus.IsOpen == false)
+            {
+                throw new CommException("Connection is not open.");
+            }
+
+            try
+            {
+                StartImport();
+			}
+			catch( Exception ex)
+			{
+				textboxLog.AppendText("ERROR: " + ex.Message + Environment.NewLine);
+			}
         }
 
         private void buttonCancel_Click(object sender, EventArgs e)
@@ -104,47 +165,61 @@ namespace ModbusControlSpace
                 mWorker.CancelAsync();
             }
         }
-
-        private bool DoImport()
+		
+		private void buttonClearLog_Click(object sender, EventArgs e)
         {
-            // Write registers from file to target
-
-            // get the file
-            Cursor.Current = Cursors.WaitCursor;
-            bool bResult = LoadImportFile(textboxFilename.Text);
-            Cursor.Current = Cursors.Default;
-            if (bResult == false)
-            {
-                // LoadImportFile() has already shown error
-                return false;
-            }
-
-            // check if port is opened
-            if (mModbus.IsOpen == false)
-            {
-                textboxLog.AppendText("ERROR: Connection is not open." + Environment.NewLine);
-                return false;
-            }
-
-            // process all lines in the file, in that order
-            DoImportAll();
-
-            return true;
+            textboxLog.Clear();
+            textboxLog.Update();
+        }
+        
+        private void OnFormClosing(object sender, FormClosingEventArgs e)
+        {
+            // Do not close, hide
+            this.Hide();
+            e.Cancel = true; // this cancels the close event.
         }
 
-        private void DoImportAll()
+
+        /// <summary>
+        /// Start import
+		/// Load file, start import thread
+        /// </summary>
+        private void StartImport()
         {
-            // Write registers from list to target
-
-            // reset counters
-            mNotWriteableCount = 0;
-            mWrittenCount = 0;
-            mErrorCount = 0;
-
+            // get the file
+			// can throw exception
+			Cursor.Current = Cursors.WaitCursor;
+            try
+            {
+                LoadImportFile(textboxFilename.Text);
+            }
+            finally
+            {
+                Cursor.Current = Cursors.Default;
+            }
+			
+			// update buttons
             buttonStart.Enabled = false;
             buttonCancel.Enabled = true;
+			// stop main form polling, for import speed
             mParent.MainPollingIsEnabled = false;
 
+            // reset counters
+            SuccessCount = 0;
+            NotWriteableCount = 0;
+            FileErrorCount = 0;
+            CommErrorCount = 0;
+
+            // Write registers from list to target
+			// process all lines in the file, in that order
+            StartImportThread();
+        }
+
+        /// <summary>
+        /// Start the import thread, all tabs
+        /// </summary>
+		private void StartImportThread()
+        {
             // start backgroundworker to do the import, so we can cancel
             mWorker = new BackgroundWorker();
             mWorker.DoWork += new DoWorkEventHandler(Worker_Import);
@@ -162,87 +237,209 @@ namespace ModbusControlSpace
         /// <param name="e"></param>
         private void Worker_Import(object sender, DoWorkEventArgs e)
         {
+            string prevTabName = String.Empty;
+
             foreach (ImportLine line in ImportList)
             {
+                if (line.tabName != prevTabName)
+                {
+                    ReportVerbose("Import tab '" + line.tabName + "'");
+                    prevTabName = line.tabName;
+                }
+
+                // Import this line
+                EReturnCode tmpRet = ImportOneLine(line);
+				// error?
+                if (tmpRet != EReturnCode.Success)
+                {
+					/*
+                    // return code
+                    if (retco == EReturnCode.Success)
+                    {
+                        retco = tmpRet;
+                    }
+					*/
+
+                    // stop on error?
+                    if (ContinueOnError == false)
+                    {
+						break;
+                    }
+                } 
+
                 // cancel?
                 if (mWorker.CancellationPending)
                 {
                     e.Cancel = true;
                     return;
-                }
-
-                try
-                {
-                    ImportOneLine(line);
-                }
-                catch (Exception ex)
-                {
-                    mWorker.ReportProgress(0, "EXCEPTION: " + ex.ToString());
-                    e.Cancel = true;
-                    return;
-                }
-
+                }			
+               
                 Thread.Sleep(mSleeptime);
             }
 
-            // complete
+            //return retco;
         }
-
-        /// <summary>
-        /// Import 1 line, write 1 var
-        /// Throws on error
-        /// </summary>
-        private void ImportOneLine(ImportLine line)
-        {
-            Register reg = null;
-
-            // convert line fields to Register
-            // may throw
-            reg = ConvertLineToRegister(line);
-
-            // was valid?
-            if (reg != null)
-            {
-                // skip lines that are not writeable
-                if (reg.isWriteable == false)
-                {
-                    ++mNotWriteableCount;
-                    return;
-                }
-
-                // write
-                int regSize = reg.Width / 16;
-                ModbusProtocol.Result result = mParent.DoWriteHoldingRegs(reg.Reg, (UInt16)regSize, reg.aRegValue);
-
-                if (result == ModbusProtocol.Result.SUCCESS)
-                {
-                    // success
-                    WriteImportLine(reg.Reg, reg.Width, reg.Description, reg.Format, reg.isReadable, reg.isWriteable, reg.ValueString);
-                    ++mWrittenCount;
-                }
-                else
-                {
-                    // comms error
-                    WriteImportLineError(reg.Reg, reg.Width, reg.Description, reg.Format, reg.isReadable, reg.isWriteable, reg.ValueString, ModbusProtocol.GetResultText(result));
-                    ++mErrorCount;
-                }
-            }
-        }
-
-        private void Worker_ProgressChanged(object sender, ProgressChangedEventArgs e)
+		
+		private void Worker_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
             // ProgressChanged callback is used to display progress strings in textboxLog
             textboxLog.AppendText((e.UserState as String) + Environment.NewLine);
         }
+		
+		private void Worker_ImportWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            // completed or canceled?
+            string ResultString = "Done.";
+            if (e.Cancelled)
+            {
+                ResultString = "Cancelled.";
+            }
 
+            // show counters
+            textboxLog.AppendText(ResultString + " " + SuccessCount + " registers written. " + NotWriteableCount + " registers non-writeable. " + (FileErrorCount + CommErrorCount) + " errors." + Environment.NewLine);
+
+            //Change the status of the buttons on the UI accordingly
+            buttonStart.Enabled = true;
+            buttonCancel.Enabled = false;
+
+            mParent.MainPollingIsEnabled = true;
+        }        
+		
+		/// <summary>
+        /// Load import file into ImportList
+        /// Throws exception on error
+        /// </summary>
+        /// <param name="FileName"></param>
+        private void LoadImportFile(string FileName)
+        {
+            CsvReader csvreader = null;
+
+            ImportList.Clear();
+
+			// ensure close
+            try
+            {
+                // open file to read from
+
+                // Use UTF-8 encoding. 
+                // reads files with or without UTF-8 BOM
+                
+                csvreader = new CsvReader(FileName, new UTF8Encoding(false));
+				csvreader.CommentHeaders = new string[] { "#", "//" };
+				csvreader.Separator = ';';
+				csvreader.SkipCommentLines = false;
+				csvreader.SkipEmptyLines = true;
+
+				// process all lines in the file
+				List<string> fields;
+				bool bContinue = true;
+				string currentTabName = "";
+				
+				while (bContinue)
+				{
+					CsvReader.Result lineType = csvreader.ReadRow(out fields);
+
+					if (lineType == CsvReader.Result.Comment)
+					{
+						// save the tab names, there is an option to import only certain tabs
+						string line = fields[0];
+						if (line.ToLower().StartsWith("tab:"))
+						{
+							currentTabName = line.Substring(4).Trim();
+						}
+					}
+					else if (lineType == CsvReader.Result.Data)
+					{
+						// got a data line
+						// store the fields
+						ImportLine lin = new ImportLine();
+						lin.lineNum = csvreader.LineNumber;
+						lin.tabName = currentTabName;
+						lin.fields = fields;
+						ImportList.Add(lin);                // got a data line
+					}
+					else
+					{
+						// end 
+						bContinue = false;
+					}
+                }
+            }
+            finally
+            {
+                if (csvreader != null)
+                {
+                    csvreader.Close();
+                }
+            }
+        }
+				
+        /// <summary>
+        /// Import 1 line, write 1 var, 1 var is 1 or more registers
+        /// </summary>
+        private EReturnCode ImportOneLine(ImportLine line)
+        {
+            Register reg = null;
+
+#if DEBUG
+            Debug.Print("Import line " + line.lineNum.ToString());
+#endif
+
+            // convert line fields to Register class
+            try
+            {
+                reg = ConvertLineToRegister(line);
+            }
+			catch (Exception ex)
+            {
+                // file error
+                ReportError(ex.Message); 
+                ++FileErrorCount;
+                return EReturnCode.FileError;
+            }
+
+            // skip lines that are not writeable
+			if (reg.isWriteable == false)
+			{
+				++NotWriteableCount;
+				return EReturnCode.Success;
+			}
+
+            // write
+            ModbusProtocol.Result result = Modbus.MifWriteHoldingRegistersPaged(SlaveAddress, reg.RegOffset, (UInt16)reg.Size, reg.aRegValue);
+            
+			if (result == ModbusProtocol.Result.SUCCESS)
+			{
+				// success
+				ReportImportLine(line.lineNum, reg.Reg, reg.Size, reg.Description, reg.Format, reg.isReadable, reg.isWriteable, reg.ValueString);
+				++SuccessCount;
+			}
+			else
+			{
+				// comm error
+				string errorStr = ModbusProtocol.GetResultText(result);
+				ReportImportLineError(line.lineNum, reg.Reg, reg.Size, reg.Description, reg.Format, reg.isReadable, reg.isWriteable, reg.ValueString, errorStr);
+			    ++CommErrorCount;
+				return EReturnCode.CommError;
+			}
+			
+			return EReturnCode.Success;
+        }
+		
+		/// <summary>
+        /// Convert 1 import line to Register class
+        /// Throws exception on error
+        /// </summary>
+        /// <param name="line"></param>
+        /// <returns>Register object</returns>
         private Register ConvertLineToRegister(ImportLine line)
         {
-            // we accept 2, 3, 4 ,5, or 6 fields
+            // accept 2, 3, 4 ,5, or 6 fields
 
             // init default value strings
             // then process all fields
             string RegString = "";
-            string WidthString = "16";
+            string SizeString = "1";
             string DescriptionString = "";
             string RwString = "rw";
             string FormatString = "int";
@@ -258,14 +455,14 @@ namespace ModbusControlSpace
             {
                 // Assume: Reg;Size;Value
                 RegString = line.fields[0];
-                WidthString = line.fields[1];
+                SizeString = line.fields[1];
                 ValueString = line.fields[2];
             }
             else if (line.fields.Count == 4)
             {
                 // Assume: Reg;Size;Description;Value
                 RegString = line.fields[0];
-                WidthString = line.fields[1];
+                SizeString = line.fields[1];
                 DescriptionString = line.fields[2];
                 ValueString = line.fields[3];
             }
@@ -273,7 +470,7 @@ namespace ModbusControlSpace
             {
                 // Assume: Reg;Size;Description;Rw;Value
                 RegString = line.fields[0];
-                WidthString = line.fields[1];
+                SizeString = line.fields[1];
                 DescriptionString = line.fields[2];
                 RwString = line.fields[3];
                 ValueString = line.fields[4];
@@ -282,7 +479,7 @@ namespace ModbusControlSpace
             {
                 // Assume: Reg;Size;Description;Rw;Type;Value
                 RegString = line.fields[0];
-                WidthString = line.fields[1];
+                SizeString = line.fields[1];
                 DescriptionString = line.fields[2];
                 RwString = line.fields[3];
                 FormatString = line.fields[4];
@@ -291,223 +488,141 @@ namespace ModbusControlSpace
             else
             {
                 // incorrect number of fields
-                string s = "ERROR: Line " + line.lineNum.ToString() + ": Invalid number of fields: found " + line.fields.Count.ToString() + " fields, expecting 2, 3, 4, 5 or 6 fields.";
-                mWorker.ReportProgress(0, s);
-                ++mErrorCount; 
-                return null;
+                string s = "Line " + line.lineNum.ToString() + ": Invalid number of fields: found " + line.fields.Count.ToString() + " fields, expecting 2, 3, 4, 5 or 6 fields.";
+                throw new Exception(s);
             }
 
-            // validate the new line and add to list
             Register reg = new Register();
 
             if (GetReg(RegString, out reg.Reg, out reg.RegOffset) == false)
             {
-                string s = "ERROR: Line " + line.lineNum.ToString() + ": Register number '" + RegString + "' is invalid.";
-                mWorker.ReportProgress(0, s);
-                ++mErrorCount;
-                return null;
+                string s = "Line " + line.lineNum.ToString() + ": Register number '" + RegString + "' is invalid.";
+                throw new Exception(s);
             }
 
-            if (GetWidth(WidthString, out reg.Width) == false)
+            if (GetSize(SizeString, out reg.Size) == false)
             {
-                string s = "ERROR: Line " + line.lineNum.ToString() + ": Register " + RegString + ": width '" + WidthString + "' is invalid.";
-                mWorker.ReportProgress(0, s);
-                ++mErrorCount;
-                return null;
+                string s = "Line " + line.lineNum.ToString() + ": Register " + RegString + ": size '" + SizeString + "' is invalid.";
+                throw new Exception(s);
             }
 
             GetDescr(DescriptionString, out reg.Description);
 
             if (GetReadWriteFlags(RwString, out reg.isReadable, out reg.isWriteable) == false)
             {
-                string s = "ERROR: Line " + line.lineNum.ToString() + ": Register " + RegString + ": r/w definition '" + RwString + "' is invalid.";
-                mWorker.ReportProgress(0, s);
-                ++mErrorCount;
-                return null;
+                string s = "Line " + line.lineNum.ToString() + ": Register " + RegString + ": r/w definition '" + RwString + "' is invalid.";
+                throw new Exception(s);
             }
 
             if (GetFormat(FormatString, out reg.Format) == false)
             {
-                string s = "ERROR: Line " + line.lineNum.ToString() + ": Register " + RegString + ": type '" + FormatString + "' is invalid.";
-                mWorker.ReportProgress(0, s);
-                ++mErrorCount;
-                return null;
+                string s = "Line " + line.lineNum.ToString() + ": Register " + RegString + ": type '" + FormatString + "' is invalid.";
+                throw new Exception(s);
             }
 
-            if ((reg.Format == Global.eFormat.Float) && (reg.Width != 32))
+            // check format and size combinations
+            if (reg.Format == Global.eFormat.Int || reg.Format == Global.eFormat.UInt || reg.Format == Global.eFormat.Hex || reg.Format == Global.eFormat.Bin || reg.Format == Global.eFormat.ASCII)
             {
-                string s = "ERROR: Line " + line.lineNum.ToString() + ": Register " + RegString + ": float register width '" + reg.Width.ToString() + "' is not 32-bit.";
-                mWorker.ReportProgress(0, s);
-                ++mErrorCount;
-                return null;
+                // accept new format with number of registers
+                if (reg.Size == 1 || reg.Size == 2)
+                {
+                    // OK
+                }
+                else if (reg.Size == 16 || reg.Size == 32)
+                {
+                    // OK, accept old format with width in bits
+                    reg.Size = reg.Size / 16;
+                }
+                else
+                {
+                    string s = "Line " + line.lineNum.ToString() + ": Register " + RegString + " : integer register size '" + reg.Size.ToString() + "' is invalid, must be 1 or 2.";
+                    throw new Exception(s);
+                }
             }
+            if (reg.Format == Global.eFormat.Float)
+            {
+                // accept new format with number of registers
+                if (reg.Size == 2)
+                {
+                    // OK
+                }
+                else if (reg.Size == 32)
+                {
+                    // OK, accept old format with width in bits
+                    reg.Size = reg.Size / 16;
+                }
+                else
+                {
+                    string s = "Line " + line.lineNum.ToString() + ": Register " + RegString + " : float register size '" + reg.Size.ToString() + "' is invalid, must be 2.";
+                    throw new Exception(s);
+                }
+            }
+            if (reg.Format == Global.eFormat.String)
+            {
+                // can only be new format with number of registers
+                if ((reg.Size >= 1) && (reg.Size <= Global.StringMaxRegisters))
+                {
+                    // OK
+                }
+                else
+                {
+                    string s = "Line " + line.lineNum.ToString() + ": Register " + RegString + " : string register size '" + reg.Size.ToString() + "' is invalid, must be 1.." + Global.StringMaxRegisters.ToString() + ".";
+                    throw new Exception(s);
+                }
+            }
+
             reg.ValueString = ValueString;
             try
             {
-                int regCount = reg.Width / 16;
-                //TODO: testen
+                int regCount = reg.Size;
                 bool allowIntegers = (reg.Format == Global.eFormat.Int) || (reg.Format == Global.eFormat.UInt) || (reg.Format == Global.eFormat.Bin) || (reg.Format == Global.eFormat.Hex) || (reg.Format == Global.eFormat.ASCII) || ((reg.Format == Global.eFormat.Float) && (regCount == 2));
                 bool allowFloat = (reg.Format == Global.eFormat.Float);
                 bool allowString = (reg.Format == Global.eFormat.String);
-                reg.aRegValue = CValueToString.ValueStringToInt16Registers(ValueString, regCount, 0, allowIntegers, allowFloat, allowString); 
+                reg.aRegValue = CValueToString.ValueStringToInt16Registers(ValueString, regCount, 0, allowIntegers, allowFloat, allowString);
+                // if it is a string: write only as many registers as needed
+                if (reg.Format == Global.eFormat.String)
+                {
+                    if (reg.aRegValue.Length < reg.Size)
+                    {
+                        reg.Size = reg.aRegValue.Length;
+                    }
+                }
             }
-            catch
+            catch (Exception ex)
             {
-                string s = "ERROR: Line " + line.lineNum.ToString() + ": Register " + RegString + ": value '" + ValueString + "' is invalid.";
-                mWorker.ReportProgress(0, s);
-                ++mErrorCount;
-                return null;
+                string s = "Line " + line.lineNum.ToString() + ": Register " + RegString + ": value '" + ValueString + "' is invalid. " + ex.Message;
+                throw new Exception(s);
             }
 
-            // all valid
+            // valid
             return reg;
         }
-
-        private void Worker_ImportWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
-        {
-            // completed or canceled?
-            string ResultString = "Done.";
-            if (e.Cancelled)
-            {
-                ResultString = "Cancelled.";
-            }
-
-            // show counters
-            textboxLog.AppendText(ResultString + " " + mWrittenCount + " registers written. " + mNotWriteableCount + " registers non-writeable. " + mErrorCount + " errors." + Environment.NewLine);
-
-            //Change the status of the buttons on the UI accordingly
-            buttonStart.Enabled = true;
-            buttonCancel.Enabled = false;
-
-            mParent.MainPollingIsEnabled = true;
-        }
-
-        private bool WriteImportLine(UInt32 Reg, int Width, string Description, Global.eFormat Format, bool isReadable, bool isWriteable, string ValueString)
-        {
-            // output 1 import line, all register info, and value
-
-            // trim descr
-            Description = TrimText(Description);
-            // make RW string
-            string RWstring = (isReadable ? "r" : "") + (isWriteable ? "w" : "");
-            // make output string
-            string s = Reg + ";" + Width + ";\"" + Description + "\";" + RWstring + ";" + Format + ";" + ValueString;
-
-            mWorker.ReportProgress(0, "Write: " + s);
-
-            return true;
-        }
-
-        private bool WriteImportLineError(UInt32 Reg, int Width, string Description, Global.eFormat Format, bool isReadable, bool isWriteable, string ValueString, string Error)
-        {
-            // output 1 import line, all register info, and error message
-
-            // trim descr
-            Description = TrimText(Description);
-            // make RW string
-            string RWstring = (isReadable ? "r" : "") + (isWriteable ? "w" : "");
-            // make output string
-            string s = Reg + ";" + Width + ";\"" + Description + "\";" + RWstring + ";" + Format + ";" + ValueString + "   >> ERROR: " + Error;
-
-            mWorker.ReportProgress(0, "Write: " + s);
-
-            return true;
-        }
-
-        private void buttonSelectFile_Click(object sender, EventArgs e)
-        {
-            if (openFileDialog1.ShowDialog() == DialogResult.OK)
-            {
-                textboxFilename.Text = openFileDialog1.FileName;
-            }
-        }
-
-        private void buttonClearLog_Click(object sender, EventArgs e)
-        {
-            textboxLog.Clear();
-            textboxLog.Update();
-        }
-
-        // Do not close, hide
-        private void OnFormClosing(object sender, FormClosingEventArgs e)
-        {
-            this.Hide();
-            e.Cancel = true; // this cancels the close event.
-        }
-
-        /// <summary>
-        /// Load import file into ImportList
-        /// </summary>
-        private bool LoadImportFile(string FileName)
-        {
-            CsvReader csvreader = null;
-
-            ImportList.Clear();
-
-            // open file to read from
-            try
-            {
-                // open file
-
-                // Assume Windows's default encoding, usually an ANSI code page (should match default export encoding).
-                // Can also be System.Text.Encoding.UTF8 for UTF8 encoding.
-                // Files with a unicode BOM will be recognized and decoded correctly.
-                // See Export.cs for more info on Encodings.
-
-                csvreader = new CsvReader(FileName, System.Text.Encoding.Default);
-                csvreader.CommentHeaders = new string[] { "#", "//" };
-                csvreader.Separator = ';';
-                csvreader.SkipCommentLines = true;
-                csvreader.SkipEmptyLines = true;
-
-                textboxLog.AppendText("Opened file: " + FileName + Environment.NewLine);
-            }
-            catch (Exception err)
-            {
-                // open failed
-                textboxLog.AppendText("ERROR: Can't open file: " + err.Message + Environment.NewLine);
-                return false;
-            }
-
-            // process all lines in the file
-            List<string> fields;
-            bool bValid = true;
-
-            while ((csvreader.ReadRow(out fields) == CsvReader.Result.Data) && bValid)
-            {
-                // got a data line
-                // store the fields
-                ImportLine imp = new ImportLine();
-                imp.lineNum = csvreader.LineNumber;
-                //imp.tabName = currentTabName;
-                imp.fields = fields;
-                ImportList.Add(imp);                // got a data line
-            }
-
-            csvreader.Close();
-
-            return bValid;
-        }
-
 
         private bool GetReg(string text, out uint reg, out ushort regOffset)
         {
             reg = 0;
             regOffset = 0;
 
-            if (    uint.TryParse(text, out reg)
-                && mParent.TryHoldingregisterGetOffset(reg, out regOffset))
+            if ( uint.TryParse(text, out reg))
             {
-                return true;
+                try
+                {
+                    regOffset = RegisterToOffset.GetHoldingregisterOffset(reg);
+                    return true;
+                }
+                catch
+                {
+                    // return false;
+                }
             }
 
             return false;
         }
 
-        private bool GetWidth(string text, out int width)
+        private bool GetSize(string text, out int size)
         {
-            // allow 16, 32
-            return int.TryParse(text, out width) && ((width == 16) || (width == 32));
+            // allow int 1..max
+            return int.TryParse(text, out size) && (size >= 1);
         }
 
         private bool GetDescr(string text, out string descr)
@@ -580,9 +695,45 @@ namespace ModbusControlSpace
                 format = Global.eFormat.ASCII;
                 return true;
             }
+            else if (text == "string")
+            {
+                format = Global.eFormat.String;
+                return true;
+            }
 
             format = Global.eFormat.Int;
             return false;
+        }
+
+        private void ReportImportLine(int Linenum, UInt32 Reg, int Size, string Description, Global.eFormat Format, bool isReadable, bool isWriteable, string ValueString)
+        {
+            // output 1 import line, all register info, and value
+            // linenum is not shown
+
+            // trim descr
+            Description = TrimText(Description);
+            // make RW string
+            string RWstring = (isReadable ? "r" : "") + (isWriteable ? "w" : "");
+            // make output string
+            string s = Reg + ";" + Size + ";\"" + Description + "\";" + RWstring + ";" + Format + ";" + ValueString;
+
+            ReportVerbose("Write: " + s);
+        }
+
+        private void ReportImportLineError(int Linenum, UInt32 Reg, int Size, string Description, Global.eFormat Format, bool isReadable, bool isWriteable, string ValueString, string ErrorText)
+        {
+            // output 1 import line, all register info, and error message
+			// shows linenum
+
+            // trim descr
+            Description = TrimText(Description);
+            // make RW string
+            string RWstring = (isReadable ? "r" : "") + (isWriteable ? "w" : "");
+            // make output string
+            string s = Reg + ";" + Size + ";\"" + Description + "\";" + RWstring + ";" + Format + ";" + ValueString 
+				+ "   >> ERROR: " + ErrorText;
+
+            ReportError("Line " + Linenum.ToString() + ": Write: " + s);
         }
 
         private string TrimText(string descr)
@@ -604,26 +755,18 @@ namespace ModbusControlSpace
 
             return descr;
         }
-    }
 
-    class FileException : ApplicationException
-    {
-        // thrown in error related to file
-        public FileException() { }
-
-        public FileException(string name) : base(String.Format(name))
+        private void ReportVerbose(string s)
         {
+            mWorker.ReportProgress(0, s);
+        }
+
+        private void ReportError(string s)
+        {
+            mWorker.ReportProgress(0, "Error: " + s);
         }
     }
 
-    class CommsException : ApplicationException
-    {
-        // thrown in error related to communications
-        public CommsException() { }
-
-        public CommsException(string name) : base(String.Format(name))
-        {
-        }
-    }
+    #endregion
 
 }

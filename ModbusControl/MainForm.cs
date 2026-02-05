@@ -398,8 +398,9 @@ namespace ModbusControlSpace
             if (ExportForm != null)
             {
                 Settings1.Roaming.Export.Tabs = ExportForm.TabSelect;
-                Settings1.Roaming.Export.ExportFormat = ExportForm.ExportFormatSelect;
-                Settings1.Roaming.Export.ExportAsciiAs = ExportForm.AsciiFormatSelect;
+                Settings1.Roaming.Export.ExportFormat = ExportForm.ExportFormat;
+                Settings1.Roaming.Export.ExportStringAs = ExportForm.StringExportFormat;
+                Settings1.Roaming.Export.ContinueOnError = ExportForm.ContinueOnError;
             }
 
             // save Custom queries form settings if form exists
@@ -840,6 +841,8 @@ namespace ModbusControlSpace
                        && ((configform.ConnectionIPAddress != Project.Connection.IPAddress)
                            || (configform.ConnectionIPPort != Project.Connection.IPPort)
                            || (configform.ConnectionTcpConnectMode != Project.Connection.TcpConnectMode)))
+                   || (configform.ConnectionMaximumFrameSize != Project.Connection.MaximumFrameSize)
+                   || (configform.ConnectionWriteHoldingregFunctionCode != Project.Connection.WriteHoldingregFunctioncode)
                    || (configform.ConnectionResponseTimeout != Project.Connection.ResponseTimeout)
                    || (configform.ConnectionInterFrameDelay != Project.Connection.InterFrameDelay));
 
@@ -864,9 +867,9 @@ namespace ModbusControlSpace
             Project.Connection.TcpConnectMode = configform.ConnectionTcpConnectMode;
             Project.Connection.SlaveID = configform.ConnectionSlaveID;
             Project.Connection.MaximumFrameSize = configform.ConnectionMaximumFrameSize;
+            Project.Connection.WriteHoldingregFunctioncode = configform.ConnectionWriteHoldingregFunctionCode;
             Project.Connection.ResponseTimeout = configform.ConnectionResponseTimeout;
             Project.Connection.InterFrameDelay = configform.ConnectionInterFrameDelay;
-            Project.Connection.WriteHoldingregFunctioncode = configform.ConnectionWriteHoldingregFunctionCode;
             Project.Connection.Int32Endian = configform.ConnectionInt32Endian;
             Project.Connection.Float32Endian = configform.ConnectionFloat32Endian;
             Project.Connection.StringEndian = configform.ConnectionStringEndian;
@@ -881,6 +884,8 @@ namespace ModbusControlSpace
             Converts.Float32Endian = Project.Connection.Float32Endian;
             Converts.StringEndian = Project.Connection.StringEndian;
             Converts.StringEncodingName = Project.Connection.StringEncoding;
+            // pass new configuration to RegisterToOffset
+            RegisterToOffset.RegisterNumberingScheme = Project.Options.HoldingregistersStart;
 
             // restore connection
             if (ReopenConnection)
@@ -1008,26 +1013,12 @@ namespace ModbusControlSpace
             if (CommandlineArgs.ArgInterframedelay != null)
                 Project.Connection.InterFrameDelay = (int)CommandlineArgs.ArgInterframedelay;
             if (CommandlineArgs.ArgWriteholdingregFC != null)
-                Project.Connection.WriteHoldingregFunctioncode = ConvertCommandlineWriteholdregFCToEnum((int)CommandlineArgs.ArgWriteholdingregFC);
+                Project.Connection.WriteHoldingregFunctioncode = (int)CommandlineArgs.ArgWriteholdingregFC;
             if (CommandlineArgs.ArgSamplerate != null)
                 Project.Options.Samplerate = (int)CommandlineArgs.ArgSamplerate;
         }
 
-        private Global.eWriteHoldingregFunctionCode ConvertCommandlineWriteholdregFCToEnum(int cmdcode)
-        {
-            Global.eWriteHoldingregFunctionCode e = Global.eWriteHoldingregFunctionCode.Auto;
-
-            if (cmdcode == 6)
-                e = Global.eWriteHoldingregFunctionCode.FC6;
-            if (cmdcode == 16)
-                e = Global.eWriteHoldingregFunctionCode.FC16;
-            if (cmdcode == 0)
-                e = Global.eWriteHoldingregFunctionCode.Auto;
-
-            return e;
-        }
-
-
+        
         /// <summary>
         /// Update the form's title
         /// 
@@ -1184,11 +1175,13 @@ namespace ModbusControlSpace
             // apply command line parameters as overrides
             ApplyCommandlineToProjectConfig();
 
-            // pass configuration to Converts
+            // pass new configuration to Converts
             Converts.Int32Endian = Project.Connection.Int32Endian;
             Converts.Float32Endian = Project.Connection.Float32Endian;
             Converts.StringEndian = Project.Connection.StringEndian;
             Converts.StringEncodingName = Project.Connection.StringEncoding;
+            // pass new configuration to RegisterToOffset
+            RegisterToOffset.RegisterNumberingScheme = Project.Options.HoldingregistersStart;
 
             // Create the tab pages
             LoadProjectInTabs();
@@ -1433,6 +1426,8 @@ namespace ModbusControlSpace
                     Project.Connection.SerialPort = Portname;
 
                     // set parameters
+                    mb.MaximumFrameSize = Project.Connection.MaximumFrameSize;
+                    mb.WriteHoldingRegistersFunctioncode = Project.Connection.WriteHoldingregFunctioncode;
                     mb.OneWireEchoSuppression = Project.Connection.SerialOneWireEchoSuppression;
                     mb.ResponseTimeout = (uint)Project.Connection.ResponseTimeout;
                     mb.EndOfMessageTimeout = (uint)Project.Connection.SerialEndOfMessageTimeout;
@@ -1535,6 +1530,8 @@ namespace ModbusControlSpace
                 mb.OpenModbusTcp(TargetIP, Project.Connection.IPPort);
 
                 // ok
+                mb.MaximumFrameSize = Project.Connection.MaximumFrameSize;
+                mb.WriteHoldingRegistersFunctioncode = Project.Connection.WriteHoldingregFunctioncode;
                 mb.ResponseTimeout = (uint)Project.Connection.ResponseTimeout;
                 mb.InterFrameDelay = (uint)Project.Connection.InterFrameDelay;
 
@@ -1596,6 +1593,8 @@ namespace ModbusControlSpace
                 mb.OpenRtuOverTcp(TargetIP, Project.Connection.IPPort);
 
                 // ok
+                mb.MaximumFrameSize = Project.Connection.MaximumFrameSize;
+                mb.WriteHoldingRegistersFunctioncode = Project.Connection.WriteHoldingregFunctioncode;
                 mb.ResponseTimeout = (uint)Project.Connection.ResponseTimeout;
                 mb.InterFrameDelay = (uint)Project.Connection.InterFrameDelay;
 
@@ -1857,8 +1856,8 @@ namespace ModbusControlSpace
                 // read group 
                 // most groups will read maximum <maxReadRegisters> registers
                 // some groups with string vars may read more registers, then MifReadHoldingRegistersPaged() does paged reads 
-                UInt16 firstRegOffset = GetRegOffset(grp.readFirstReg);
-                result = mb.MifReadHoldingRegistersPaged(Project.Connection.SlaveID, firstRegOffset, (UInt16)grp.readRegCount, out tmpdata, maxReadRegisters);
+                UInt16 firstRegOffset = RegisterToOffset.GetHoldingregisterOffset(grp.readFirstReg);
+                result = mb.MifReadHoldingRegistersPaged(Project.Connection.SlaveID, firstRegOffset, (UInt16)grp.readRegCount, out tmpdata);
                 if (result == ModbusProtocol.Result.SUCCESS)
                 {
                     // success
@@ -1889,7 +1888,7 @@ namespace ModbusControlSpace
                             //Debug.Print(DateTime.Now.TimeOfDay + "PollTabPage(): Single read: " + lineIndex + "," + 1 + "," + varp.Reg + "," + varp.Size);
 
                             // read
-                            UInt16 regOffset = GetRegOffset(varp.Reg);
+                            UInt16 regOffset = RegisterToOffset.GetHoldingregisterOffset(varp.Reg);
                             result = mb.MifReadHoldingRegisters(Project.Connection.SlaveID, regOffset, (UInt16)varp.Size, out tmpdata);
                             if (result == ModbusProtocol.Result.SUCCESS)
                             {
@@ -1959,216 +1958,6 @@ namespace ModbusControlSpace
                 grp = mrv.GetNextReadGroup(grp, maxReadRegisters);
             }
 
-        }
-
-        /// <summary>
-        /// Convert holding register number to register offset 0-65536
-        /// Throws exception on error
-        /// </summary>
-        /// <returns>Register offset</returns>
-        public UInt16 GetRegOffset(UInt32 Regnr)
-        {
-            // 40000-49999, 40001-49999
-            // 400000-465535, 400001-465536
-
-            UInt16 Offset;
-
-            if (TryHoldingregisterGetOffset(Regnr, out Offset))
-            {
-                return Offset;
-            }
-
-            // failed
-            throw new ArgumentException();
-        }
-
-        /// <summary>
-        /// Convert holding register number to register offset 0-65536
-        /// </summary>
-        /// <returns>true if valid, false if not</returns>
-        public bool TryHoldingregisterGetOffset(UInt32 Regnr, out UInt16 Offset)
-        {
-            // accepts:
-            // if holdingreg base = 40000/400000: 40000-49999 + 400000-465535
-            // if holdingreg base = 40001/400001: 40001-49999 + 400001-465536
-
-            bool ret = false;
-            Offset = 0;
-
-            if ((Project.Options.HoldingregistersStart == 40000) || (Project.Options.HoldingregistersStart == 400000))
-            { 
-                if ((Regnr >= 40000) && (Regnr <= 49999))
-                {
-                    Offset = (UInt16)(Regnr - 40000);
-                    ret = true;
-                }
-                else if ((Regnr >= 400000) && (Regnr <= 465535))
-                {
-                    Offset = (UInt16)(Regnr - 400000);
-                    ret = true;
-                }
-            }
-            if ((Project.Options.HoldingregistersStart == 40001) || (Project.Options.HoldingregistersStart == 400001))
-            {
-                if ((Regnr >= 40001) && (Regnr <= 49999))
-                {
-                    Offset = (UInt16)(Regnr - 40001);
-                    ret = true;
-                }
-                else if ((Regnr >= 400001) && (Regnr <= 465536))
-                {
-                    Offset = (UInt16)(Regnr - 400001);
-                    ret = true;
-                }
-            }
-
-            return ret;
-        }
-
-        /// <summary>
-        /// Convert input register number to register offset 0-65536
-        /// </summary>
-        /// <returns>true if valid, false if not</returns>
-        public bool TryInputregisterGetOffset(UInt32 Regnr, out UInt16 Offset)
-        {
-            // accepts:
-            // if holdingreg base = 40000/400000: 30000-39999 + 300000-365535
-            // if holdingreg base = 40001/400001: 30001-39999 + 300001-365536
-
-            bool ret = false;
-            Offset = 0;
-
-            // use HoldingregistersStart range to determine this range
-            if ((Project.Options.HoldingregistersStart == 40000) || (Project.Options.HoldingregistersStart == 400000))
-            {
-                if ((Regnr >= 30000) && (Regnr <= 39999))
-                {
-                    Offset = (UInt16)(Regnr - 30000);
-                    ret = true;
-                }
-                else if ((Regnr >= 300000) && (Regnr <= 365535))
-                {
-                    Offset = (UInt16)(Regnr - 300000);
-                    ret = true;
-                }
-            }
-            if ((Project.Options.HoldingregistersStart == 40001) || (Project.Options.HoldingregistersStart == 400001))
-            {
-                if ((Regnr >= 30001) && (Regnr <= 39999))
-                {
-                    Offset = (UInt16)(Regnr - 30001);
-                    ret = true;
-                }
-                else if ((Regnr >= 300001) && (Regnr <= 365536))
-                {
-                    Offset = (UInt16)(Regnr - 300001);
-                    ret = true;
-                }
-            }
-
-            return ret;
-        }
-
-        /// <summary>
-        /// Convert coil number to offset 0-65536
-        /// </summary>
-        /// <returns>true if valid, false if not</returns>
-        public bool TryCoilGetOffset(UInt32 Regnr, out UInt16 Offset)
-        {
-            // accepts:
-            // if holdingreg base = 40000/400000: 0-9999
-            // if holdingreg base = 40001/400001: 1-9999
-
-            bool ret = false;
-            Offset = 0;
-
-            // use HoldingregistersStart range to determine this range
-            if ((Project.Options.HoldingregistersStart == 40000) || (Project.Options.HoldingregistersStart == 400000))
-            {
-                if ((Regnr >= 0) && (Regnr <= 9999))
-                {
-                    Offset = (UInt16)(Regnr - 0);
-                    ret = true;
-                }
-             }
-            if ((Project.Options.HoldingregistersStart == 40001) || (Project.Options.HoldingregistersStart == 400001))
-            {
-                if ((Regnr >= 1) && (Regnr <= 9999))
-                {
-                    Offset = (UInt16)(Regnr - 1);
-                    ret = true;
-                }
-            }
-
-            return ret;
-        }
-
-        /// <summary>
-        /// Convert discrete input number to offset 0-65536
-        /// </summary>
-        /// <returns>true if valid, false if not</returns>
-        public bool TryDiscreteInputGetOffset(UInt32 Regnr, out UInt16 Offset)
-        {
-            // accepts:
-            // if holdingreg base = 40000/400000: 10000–19999 + 100000–165535
-            // if holdingreg base = 40001/400001: 10001–19999 + 100001–165536
-
-            bool ret = false;
-            Offset = 0;
-
-            // use HoldingregistersStart range to determine this range
-            if ((Project.Options.HoldingregistersStart == 40000) || (Project.Options.HoldingregistersStart == 400000))
-            {
-                if ((Regnr >= 10000) && (Regnr <= 19999))
-                {
-                    Offset = (UInt16)(Regnr - 10000);
-                    ret = true;
-                }
-                else if ((Regnr >= 100000) && (Regnr <= 165535))
-                {
-                    Offset = (UInt16)(Regnr - 100000);
-                    ret = true;
-                }
-            }
-            if ((Project.Options.HoldingregistersStart == 40001) || (Project.Options.HoldingregistersStart == 400001))
-            {
-                if ((Regnr >= 10001) && (Regnr <= 19999))
-                {
-                    Offset = (UInt16)(Regnr - 10001);
-                    ret = true;
-                }
-                else if ((Regnr >= 100001) && (Regnr <= 165536))
-                {
-                    Offset = (UInt16)(Regnr - 100001);
-                    ret = true;
-                }
-            }
-
-            return ret;
-        }
-
-        /// <summary>
-        /// Convert holding register number to register offset 0-65536
-        /// </summary>
-        /// <returns>true if valid, false if not</returns>
-        public string HoldingregisterGetRangeString()
-        {
-            // 40000/400000: 40000-49999 + 400000-465535
-            // 40001/400001: 40001-49999 + 400001-465536
-
-            string str = "?";
-
-            // check and calculate registeroffset
-            if ((Project.Options.HoldingregistersStart == 40000) || (Project.Options.HoldingregistersStart == 400000))
-            {
-                str = "40000-49999, 400000-465535";
-            }
-            if ((Project.Options.HoldingregistersStart == 40001) || (Project.Options.HoldingregistersStart == 400001))
-            {
-                str = "40001-49999, 400001-465536";
-            }
-
-            return str;
         }
 
         public int GetMaxRegistersInSingleRead()
@@ -2556,57 +2345,19 @@ namespace ModbusControlSpace
         }
 
         // write a variable
-        // can be 1 or more holding registers
-        // use FC6 or FC16 as configured
+        // MifWriteHoldingRegistersPaged() can write 1 or more holding registers
+        // MifWriteHoldingRegistersPaged() uses FC6 or FC16 as configured
         public ModbusProtocol.Result DoWriteHoldingRegs(UInt32 Reg, UInt16 RegCount, Int16[] Values)
         {
-            ModbusProtocol.Result result = ModbusProtocol.Result.SUCCESS;
+            UInt16 regOffset = RegisterToOffset.GetHoldingregisterOffset(Reg);
 
-            // use FC6 or FC16?
-            //  #reg    FC6     FC16    auto
-            //  1       FC6     FC16#1  FC6
-            //  >1      N*FC6   FC16#N  FC16#N
+            ModbusProtocol.Result result = mb.MifWriteHoldingRegistersPaged(Project.Connection.SlaveID, regOffset, RegCount, Values);
 
-            bool useFC16 = (Project.Connection.WriteHoldingregFunctioncode == Global.eWriteHoldingregFunctionCode.FC16)
-                        || ((Project.Connection.WriteHoldingregFunctioncode == Global.eWriteHoldingregFunctionCode.Auto) && (RegCount > 1));
-
-            if (useFC16)
+            // error?
+            if (result != ModbusProtocol.Result.SUCCESS)
             {
-                // write multiple registers
-                // write in chunks if needed
-                int maxRegisters = GetMaxRegistersInSingleWrite();
-                UInt16 RegOffset = GetRegOffset(Reg);
-                UInt16 nRegisters = (UInt16)Math.Min(RegCount, maxRegisters);
-                result = ModbusProtocol.Result.SUCCESS;
-                for (int i = 0; (i < RegCount) && (result == ModbusProtocol.Result.SUCCESS); i += nRegisters)
-                {
-                    nRegisters = (UInt16)Math.Min((RegCount - i), maxRegisters);
-                    Int16[] valuesChunk = new Int16[nRegisters];
-                    Array.Copy(Values, i, valuesChunk, 0, nRegisters);
-                    result = mb.MifWriteMultipleHoldingRegisters(Project.Connection.SlaveID, (UInt16)(RegOffset + i), nRegisters, valuesChunk);
-                }
-                // error?
-                if (result != ModbusProtocol.Result.SUCCESS)
-                {
-                    SetStatusBarErrorMessage("Write failed: Slave=" + Project.Connection.SlaveID + ", FC16, addr=" + Reg + ", quant=" + nRegisters + ", Error=" + ModbusProtocol.GetResultText(result));
-                    Beep();
-                }
-            }
-            else
-            {
-                // write N times single register
-                UInt16 RegOffset = GetRegOffset(Reg);
-                result = ModbusProtocol.Result.SUCCESS;
-                for (int i = 0; (i < RegCount) && (result == ModbusProtocol.Result.SUCCESS); ++i)
-                {
-                    result = mb.MifWriteSingleHoldingRegister(Project.Connection.SlaveID, (UInt16)(RegOffset + i), Values[i]);
-                }
-                // error?
-                if (result != ModbusProtocol.Result.SUCCESS)
-                {
-                    SetStatusBarErrorMessage("Write failed: Slave=" + Project.Connection.SlaveID + ", FC6, reg=" + Reg + ", data=" + Values[0] + ", Error=" + ModbusProtocol.GetResultText(result));
-                    Beep();
-                }
+                SetStatusBarErrorMessage("Write failed: Slave=" + Project.Connection.SlaveID + ", addr=" + Reg + ", quant=" + RegCount + ", Error=" + ModbusProtocol.GetResultText(result));
+                Beep();
             }
 
             return result;
@@ -2744,38 +2495,57 @@ namespace ModbusControlSpace
 
         private void ImportRegistersFromFileToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            // create once, then hide and show to keep settings
+            // create once, then hide and show, to keep settings
             if (ImportForm == null)
             {
                 ImportForm = new Import(this);
             }
 
-            // show modal
-            ImportForm.ShowDialog();
+            // set settings
+            ImportForm.Modbus = this.mb;
+            ImportForm.SlaveAddress = Project.Connection.SlaveID;
+            ImportForm.MaximumFrameSize = Project.Connection.MaximumFrameSize;
+            ImportForm.ContinueOnError = Settings1.Roaming.Import.ContinueOnError;
 
-            // make sure main tabs polling is restored
-            MainPollingIsEnabled = true;
+            // show modal
+            try
+            {
+                ImportForm.ShowDialog();
+            }
+            finally
+            {
+                // make sure main tabs polling is restored
+                MainPollingIsEnabled = true;
+            }            
         }
 
         private void ExportRegistersToFileToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            // create once, then hide and show to keep settings
+            // create once, then hide and show, to keep settings
             if (ExportForm == null)
             {
                 ExportForm = new Export(this);
             }
 
-            // load settings
-            ExportForm.TabSelect = Settings1.Roaming.Export.Tabs;
-            ExportForm.ExportFormatSelect = Settings1.Roaming.Export.ExportFormat;
-            ExportForm.AsciiFormatSelect = Settings1.Roaming.Export.ExportAsciiAs;
+            // set settings
+            ExportForm.Modbus = this.mb;
+            ExportForm.SlaveAddress = Project.Connection.SlaveID;
             ExportForm.MaximumFrameSize = Project.Connection.MaximumFrameSize;
+            ExportForm.ContinueOnError = Settings1.Roaming.Export.ContinueOnError;
+            ExportForm.TabSelect = Settings1.Roaming.Export.Tabs;
+            ExportForm.ExportFormat = Settings1.Roaming.Export.ExportFormat;
+            ExportForm.StringExportFormat = Settings1.Roaming.Export.ExportStringAs;
 
-            // show modal
-            ExportForm.ShowDialog();
-
-            // make sure main tabs polling is restored
-            MainPollingIsEnabled = true;
+            try
+            {
+                // show modal
+                ExportForm.ShowDialog();
+            }
+            finally
+            {
+                // make sure main tabs polling is restored
+                MainPollingIsEnabled = true;
+            }            
         }
 
         #endregion

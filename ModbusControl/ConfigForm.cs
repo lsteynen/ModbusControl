@@ -150,19 +150,20 @@ namespace ModbusControlSpace
             }
         }
 
-        public Global.eWriteHoldingregFunctionCode ConnectionWriteHoldingregFunctionCode
+        public int ConnectionWriteHoldingregFunctionCode
         {
+            // 6=write_single, 16=write_multiple, 0=auto
             get
             {
-                if (radiobuttonWriteFC6.Checked) return Global.eWriteHoldingregFunctionCode.FC6;
-                if (radiobuttonWriteFC16.Checked) return Global.eWriteHoldingregFunctionCode.FC16;
-                return Global.eWriteHoldingregFunctionCode.Auto;
+                if (radWriteFC6.Checked) return 6;
+                if (radWriteFC16.Checked) return 16;
+                return 0;
             }
             set
             {
-                radiobuttonWriteFC6.Checked = (value == Global.eWriteHoldingregFunctionCode.FC6);
-                radiobuttonWriteFC16.Checked = (value == Global.eWriteHoldingregFunctionCode.FC16);
-                radiobuttonWriteFCAuto.Checked = (value == Global.eWriteHoldingregFunctionCode.Auto);
+                if (value == 6) radWriteFC6.Checked = true;
+                else if (value == 16) radWriteFC16.Checked = true;
+                else radWriteFCAuto.Checked = true;
             }
         }
 
@@ -170,13 +171,13 @@ namespace ModbusControlSpace
         {
             get
             {
-                if (radiobuttonInt32LittleEndian.Checked) return Global.eEndian.Little;
+                if (radInt32LittleEndian.Checked) return Global.eEndian.Little;
                 return Global.eEndian.Big;
             }
             set
             {
-                radiobuttonInt32LittleEndian.Checked = (value == Global.eEndian.Little);
-                radiobuttonInt32BigEndian.Checked = (value == Global.eEndian.Big);
+                radInt32LittleEndian.Checked = (value == Global.eEndian.Little);
+                radInt32BigEndian.Checked = (value == Global.eEndian.Big);
             }
         }
 
@@ -184,13 +185,13 @@ namespace ModbusControlSpace
         {
             get
             {
-                if (radiobuttonFloat32LittleEndian.Checked) return Global.eEndian.Little;
+                if (radFloat32LittleEndian.Checked) return Global.eEndian.Little;
                 return Global.eEndian.Big;
             }
             set
             {
-                radiobuttonFloat32LittleEndian.Checked = (value == Global.eEndian.Little);
-                radiobuttonFloat32BigEndian.Checked = (value == Global.eEndian.Big);
+                radFloat32LittleEndian.Checked = (value == Global.eEndian.Little);
+                radFloat32BigEndian.Checked = (value == Global.eEndian.Big);
             }
         }
 
@@ -198,13 +199,13 @@ namespace ModbusControlSpace
         {
             get
             {
-                if (radiobuttonStringLittleEndian.Checked) return Global.eEndian.Little;
+                if (radStringLittleEndian.Checked) return Global.eEndian.Little;
                 return Global.eEndian.Big;
             }
             set
             {
-                radiobuttonStringLittleEndian.Checked = (value == Global.eEndian.Little);
-                radiobuttonStringBigEndian.Checked = (value == Global.eEndian.Big);
+                radStringLittleEndian.Checked = (value == Global.eEndian.Little);
+                radStringBigEndian.Checked = (value == Global.eEndian.Big);
             }
         }
 

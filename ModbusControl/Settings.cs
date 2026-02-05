@@ -7,7 +7,6 @@ using System.IO;
 using System.Windows.Forms;
 using System.Diagnostics;
 
-
 using LST.Helpers;
 
 // Note: Installer maakt geen default settings file, app doet dat bij eerste close.
@@ -115,7 +114,7 @@ namespace ModbusControlSpace
             public List<string> MbcMruList;
             public ColumnWidthsType ColumnWidths;
             public CExport Export;
-            public CCompare Compare;
+            public CImport Import;
             public CCustomQueries CustomQueries;
             public CLogger Logger;
 
@@ -142,7 +141,7 @@ namespace ModbusControlSpace
                 MbcMruList = new List<string>();
                 ColumnWidths = new ColumnWidthsType();
                 Export = new CExport();
-                Compare = new CCompare();
+                Import = new CImport();
                 CustomQueries = new CCustomQueries();
                 Logger = new CLogger();
 
@@ -212,7 +211,7 @@ namespace ModbusControlSpace
                 ReadElementStringList(xroot, "mbcmrulist", "file", ref MbcMruList);
                 ReadElementMainColumnWidths(xroot, "columnwidths", ref ColumnWidths);
                 Export.Read(xroot);
-                Compare.Read(xroot);
+                Import.Read(xroot);
                 CustomQueries.Read(xroot);
                 Logger.Read(xroot);
             }
@@ -261,7 +260,7 @@ namespace ModbusControlSpace
                 WriteElementStringList(xroot, "mbcmrulist", "file", MbcMruList);
                 WriteElementMainColumnWidths(xroot, "columnwidths", ColumnWidths);
                 Export.Write(xroot);
-                Compare.Write(xroot);
+                Import.Write(xroot);
                 CustomQueries.Write(xroot);                
 
                 // Write file
@@ -386,15 +385,17 @@ namespace ModbusControlSpace
         {
             public string Tabs;
             public string ExportFormat;
-            public string ExportAsciiAs;
+            public string ExportStringAs;
+            public bool ContinueOnError;
 
             // constructor
             public CExport()
             {
                 // sets defaults
                 Tabs = "current";
-                ExportFormat = "grid";
-                ExportAsciiAs = "ascii";
+                ExportFormat = "default";
+                ExportStringAs = "string";
+                ContinueOnError = false;
             }
 
             public void Read(XmlNode xparent)
@@ -404,7 +405,8 @@ namespace ModbusControlSpace
                 {
                     ReadElementString(xn, "tabs", ref Tabs);
                     ReadElementString(xn, "exportformat", ref ExportFormat);
-                    ReadElementString(xn, "exportasciias", ref ExportAsciiAs);
+                    ReadElementString(xn, "exportstringas", ref ExportStringAs);
+                    ReadElementBool(xn, "continueonerror", ref ContinueOnError);
                 }
             }
 
@@ -413,38 +415,39 @@ namespace ModbusControlSpace
                 XmlNode xn = WriteParentElement(xparent, "export");
                 WriteElementString(xn, "tabs", Tabs);
                 WriteElementString(xn, "exportformat", ExportFormat);
-                WriteElementString(xn, "exportasciias", ExportAsciiAs);
+                WriteElementString(xn, "exportstringas", ExportStringAs);
+                WriteElementBool(xn, "continueonerror", ContinueOnError);
             }
         }
 
-        public class CCompare
+        public class CImport
         {
-            public bool ShowEqual;
+            public bool ContinueOnError;
 
             // constructor
-            public CCompare()
+            public CImport()
             {
                 // sets defaults
-                ShowEqual = true;
+                ContinueOnError = false;
             }
 
             public void Read(XmlNode xparent)
             {
-                XmlNode xn = xparent.SelectSingleNode("compare");
+                XmlNode xn = xparent.SelectSingleNode("import");
                 if (xn != null)
                 {
-                    ReadElementBool(xn, "showequal", ref ShowEqual);
+                    ReadElementBool(xn, "continueonerror", ref ContinueOnError);
                 }
             }
 
             public void Write(XmlNode xparent)
             {
-                XmlNode xn = WriteParentElement(xparent, "compare");
-                WriteElementBool(xn, "showequal", ShowEqual);
+                XmlNode xn = WriteParentElement(xparent, "import");
+                WriteElementBool(xn, "continueonerror", ContinueOnError);
             }
         }
 
-        
+
         public class CCustomQueries
         {
             public int HoldingRegistersStartAddress;    // 40_000, 40_001, 400_000, 400_001

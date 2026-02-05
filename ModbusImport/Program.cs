@@ -25,7 +25,8 @@ namespace ModbusImport
             NoError = 0,
             CommandlineError = 1,
             FileError = 2,
-            CommsError = 3
+            CommError = 3,
+            OtherError = 9
         };
 
         static int Main(string[] args)
@@ -120,22 +121,16 @@ namespace ModbusImport
                 }
             }
 
-            if (File.Exists(csvFilename) == false)
-            {
-                string s = "Error: CSV file '" + csvFilename + "' does not exist.";
-                Print(s);
-
-                // exit
-                return (int)eExitcodes.FileError;
-            }
-
             // apply command line arguments to the Project (connections settings)
             ApplyCommandlineToProjectConfig();
 
-            // pass configuration to Endians and CStringToValue
+            // pass new configuration to Converts
             Converts.Int32Endian = Project.Connection.Int32Endian;
             Converts.Float32Endian = Project.Connection.Float32Endian;
             Converts.StringEndian = Project.Connection.StringEndian;
+            Converts.StringEncodingName = Project.Connection.StringEncoding;
+            // pass new configuration to RegisterToOffset
+            RegisterToOffset.RegisterNumberingScheme = Project.Options.HoldingregistersStart;
 
             // Connect
             Print("Opening connection: " + GetConnectionInfoString());
@@ -157,74 +152,67 @@ namespace ModbusImport
                 }
 
                 // exit
-                return (int)eExitcodes.CommsError;
+                return (int)eExitcodes.CommError;
             }
 
             // Import
             Print("Import CSV file: " + csvFilename);
-            import.mModbus = mb;
-            import.mSlaveAddress = Project.Connection.SlaveID;
-            import.mFilename = csvFilename;
-            import.OnGetHoldingregisterModbusOffset += TryHoldingregisterGetOffset;
+            import.Modbus = mb;
+            import.SlaveAddress = Project.Connection.SlaveID;
+            import.Filename = csvFilename;
             import.OnReportProgress += ReportProgressCallback;
             import.Verbose = Verbose;
-            import.mModbus.WriteRegFC = ConvertGlobalWriteHoldingregFunctioncodeEnumToInt(Project.Connection.WriteHoldingregFunctioncode);
             import.ContinueOnError = ContinueOnError;
             import.TabsSelectList = CommandlineArgs.ArgTabsList;
+
+            // exit code
+            int exitCode = (int)eExitcodes.NoError;
 
             // do import
             try
             {
-                import.DoImport();
+                // Can throw exception on error
+                Import.EReturnCode retcode = import.DoImport();
+
+                // show counters
+                Print("Import end: " + import.SuccessCount + " registers written, " + import.NotWriteableCount + " registers non-writeable, " + (import.FileErrorCount + import.CommErrorCount) + " errors.");
+
+                // exitcode
+                if (retcode != Import.EReturnCode.Success)
+                {
+                    if (retcode == Import.EReturnCode.FileError)
+                    {
+                        exitCode = (int)eExitcodes.FileError;
+                    }
+                    else if (retcode == Import.EReturnCode.CommError)
+                    {
+                        exitCode = (int)eExitcodes.CommError;
+                    }
+                    else
+                    {
+                        // other error
+                        exitCode = (int)eExitcodes.OtherError;
+                    }
+                }
             }
             catch (Exception e)
             {
                 string s = "Error: " + e.Message;
                 Print(s);
 
-                // show counters
-                Print("Import end: " + import.mWrittenCount + " registers written, " + import.mNotWriteableCount + " registers non-writeable, " + (import.mFileErrorCount + import.mCommErrorCount) + " errors.");
+                // must return an error
+                exitCode = (int)eExitcodes.OtherError;
+            }            
 
-                // exitcode
-                if (e is ArgumentException)
-                {
-                    return (int)eExitcodes.CommandlineError;
-                }
-                if (e is FileException)
-                {
-                    return (int)eExitcodes.FileError;
-                }
-                return (int)eExitcodes.CommsError;
-            }
-            finally
-            {
-                // close interface
-                CloseConnection();
-            }
+            // close interface
+            CloseConnection();
 
-            // show counters
-            Print("Import end: " + import.mWrittenCount + " registers written, " + import.mNotWriteableCount + " registers non-writeable, " + (import.mFileErrorCount + import.mCommErrorCount) + " errors.");
+#if DEBUG
+            Console.WriteLine(">>> DEBUG - Press any key to end...");
+            Console.ReadKey();
+#endif
 
-            // exitcode
-            if (import.mFileErrorCount > 0)
-            {
-                return (int)eExitcodes.FileError;
-            }
-            if (import.mCommErrorCount > 0)
-            {
-                return (int)eExitcodes.CommsError;
-            }
-
-            return (int)eExitcodes.NoError;
-        }
-
-        private static int ConvertGlobalWriteHoldingregFunctioncodeEnumToInt(Global.eWriteHoldingregFunctionCode e)
-        {
-            if (e == Global.eWriteHoldingregFunctionCode.FC6)
-                return 6;
-            if (e == Global.eWriteHoldingregFunctionCode.FC16)
-                return 16;
-            return 0;
+            return exitCode;
         }
 
         private static void ApplyCommandlineToProjectConfig()
@@ -255,27 +243,13 @@ namespace ModbusImport
             if (CommandlineArgs.ArgRetries != null)
                 Project.Connection.Retries = (int)CommandlineArgs.ArgRetries;
             if (CommandlineArgs.ArgWriteholdingregFC != null)
-                Project.Connection.WriteHoldingregFunctioncode = ConvertCommandlineWriteholdregFCToEnum((int)CommandlineArgs.ArgWriteholdingregFC);
+                Project.Connection.WriteHoldingregFunctioncode = (int)CommandlineArgs.ArgWriteholdingregFC;
             if (CommandlineArgs.ArgInt32Endian != null)
                 Project.Connection.Int32Endian = ConvertCommandlineEndianToEnum((int)CommandlineArgs.ArgInt32Endian);
             if (CommandlineArgs.ArgFloat32Endian != null)
                 Project.Connection.Float32Endian = ConvertCommandlineEndianToEnum((int)CommandlineArgs.ArgFloat32Endian);
             if (CommandlineArgs.ArgStringEndian != null)
                 Project.Connection.StringEndian = ConvertCommandlineEndianToEnum((int)CommandlineArgs.ArgStringEndian);
-        }
-
-        private static Global.eWriteHoldingregFunctionCode ConvertCommandlineWriteholdregFCToEnum(int cmdcode)
-        {
-            Global.eWriteHoldingregFunctionCode e = Global.eWriteHoldingregFunctionCode.Auto;
-
-            if (cmdcode == 6)
-                e = Global.eWriteHoldingregFunctionCode.FC6;
-            if (cmdcode == 16)
-                e = Global.eWriteHoldingregFunctionCode.FC16;
-            if (cmdcode == 0)
-                e = Global.eWriteHoldingregFunctionCode.Auto;
-
-            return e;
         }
 
         private static Global.eEndian ConvertCommandlineEndianToEnum(int end)
@@ -344,6 +318,8 @@ namespace ModbusImport
                 Project.Connection.SerialPort = Portname;
 
                 // set parameters
+                mb.MaximumFrameSize = Project.Connection.MaximumFrameSize;
+                mb.WriteHoldingRegistersFunctioncode = Project.Connection.WriteHoldingregFunctioncode;
                 mb.OneWireEchoSuppression = Project.Connection.SerialOneWireEchoSuppression;
                 mb.ResponseTimeout = (uint)Project.Connection.ResponseTimeout;
                 mb.EndOfMessageTimeout = (uint)Project.Connection.SerialEndOfMessageTimeout;
@@ -383,6 +359,8 @@ namespace ModbusImport
             mb.OpenModbusTcp(TargetIP, Project.Connection.IPPort);
 
             // ok
+            mb.MaximumFrameSize = Project.Connection.MaximumFrameSize;
+            mb.WriteHoldingRegistersFunctioncode = Project.Connection.WriteHoldingregFunctioncode;
             mb.ResponseTimeout = (uint)Project.Connection.ResponseTimeout;
             mb.InterFrameDelay = (uint)Project.Connection.InterFrameDelay;
             mb.Retries = (uint)Project.Connection.Retries;
@@ -416,6 +394,8 @@ namespace ModbusImport
             mb.OpenRtuOverTcp(TargetIP, Project.Connection.IPPort);
 
             // ok
+            mb.MaximumFrameSize = Project.Connection.MaximumFrameSize;
+            mb.WriteHoldingRegistersFunctioncode = Project.Connection.WriteHoldingregFunctioncode;
             mb.ResponseTimeout = (uint)Project.Connection.ResponseTimeout;
             mb.InterFrameDelay = (uint)Project.Connection.InterFrameDelay;
             mb.Retries = (uint)Project.Connection.Retries;
@@ -465,49 +445,6 @@ namespace ModbusImport
             return s;
         }
 
-        /// <summary>
-        /// Convert holding register number to register offset 0-65536
-        /// </summary>
-        /// <returns>true if valid, false if not</returns>
-        public static bool TryHoldingregisterGetOffset(UInt32 Regnr, out UInt16 Offset)
-        {
-            // accepts:
-            // 40000/400000: 40000-49999 + 400000-465535
-            // 40001/400001: 40001-49999 + 400001-465536
-
-            bool ret = false;
-            Offset = 0;
-
-            if ((Project.Options.HoldingregistersStart == 40000) || (Project.Options.HoldingregistersStart == 400000))
-            {
-                if ((Regnr >= 40000) && (Regnr <= 49999))
-                {
-                    Offset = (UInt16)(Regnr - 40000);
-                    ret = true;
-                }
-                else if ((Regnr >= 400000) && (Regnr <= 465535))
-                {
-                    Offset = (UInt16)(Regnr - 400000);
-                    ret = true;
-                }
-            }
-            if ((Project.Options.HoldingregistersStart == 40001) || (Project.Options.HoldingregistersStart == 400001))
-            {
-                if ((Regnr >= 40001) && (Regnr <= 49999))
-                {
-                    Offset = (UInt16)(Regnr - 40001);
-                    ret = true;
-                }
-                else if ((Regnr >= 400001) && (Regnr <= 465536))
-                {
-                    Offset = (UInt16)(Regnr - 400001);
-                    ret = true;
-                }
-            }
-
-            return ret;
-        }
-
         public static void CloseConnection()
         {
             // close interface
@@ -519,6 +456,7 @@ namespace ModbusImport
                 }
                 catch (Exception)
                 {
+                    // ignore
                 }
             }
         }

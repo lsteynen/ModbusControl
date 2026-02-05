@@ -42,8 +42,8 @@ namespace ModbusImport
         public int? ArgInt32Endian;             // 0=little, 1=big
         public int? ArgFloat32Endian;           // 0=little, 1=big
         public int? ArgStringEndian;            // 0=little, 1=big
-        //public string ArgExportFormat;          // ""=default, I=int, U=UInt, H=Hex
-        //public string ArgStringExportFormat;    // ""=ASCII, I=Int, U=UInt, H=Hex
+        //public string ArgExportFormat;          // default, int, uint, hex
+        //public string ArgStringExportFormat;    // string, int, uint, hex
         public List<string> ArgTabsList;        // List of tab names
         public string ArgLogFile;               // logfile
         public bool ArgLogTimeSwitch;           // put timestamps in log    
@@ -306,14 +306,14 @@ namespace ModbusImport
                     }
                     else
                     {
-                        // not mbc, assume csv, 1
+                        // not mbc, can be csv or other
                         if (string.IsNullOrEmpty(ArgCsvFile))
                         {
                             ArgCsvFile = file.Trim();
                         }
                         else
                         {
-                            throw new ArgumentException("More than 1 CSV file was passed: '" + file + "'");
+                            throw new ArgumentException("Too many (non-option) arguments were passed: '" + file + "'");
                         }
                     }
                 }

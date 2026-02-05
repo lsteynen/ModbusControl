@@ -22,31 +22,73 @@ namespace LST.Helpers
             switch (DisplayFormat)
             {
                 case Global.eFormat.Int:
-                    // signed decimal
-                    if (Width == 32)
+                    // is it a string originally?
+                    if (Format == Global.eFormat.String)
                     {
-                        Int32Val = Converts.ToInt32(Regs[0], Regs[1]);
+                        // display as list of UInt values
+                        StringBuilder sb = new StringBuilder(2000);     // 150 * "-16000, "
+                        for (int i = 0; i < Regs.Length; i++)
+                        {
+                            // insert separator
+                            if (i > 0)
+                            {
+                                sb.Append(", ");
+                            }
+
+                            // conv to string, no decimals, no minlen
+                            sb.Append(Converts.IntToString(Regs[i]));
+                        }
+                        Result = sb.ToString();
                     }
                     else
                     {
-                        Int32Val = Regs[0];
+                        // signed decimal
+                        if (Width == 32)
+                        {
+                            Int32Val = Converts.ToInt32(Regs[0], Regs[1]);
+                        }
+                        else
+                        {
+                            Int32Val = Regs[0];
+                        }
+                        Result = IntValueToDecString(Int32Val, Decimals, MinLen);
+                        DictSearchValue = Int32Val;
                     }
-                    Result = IntValueToDecString(Int32Val, Decimals, MinLen);
-                    DictSearchValue = Int32Val;
                     break;
 
                 case Global.eFormat.UInt:
-                    // unsigned decimal
-                    if (Width == 32)
+                    // is it a string originally?
+                    if (Format == Global.eFormat.String)
                     {
-                        UInt32Val = Converts.ToUInt32(Regs[0], Regs[1]);
+                        // display as list of UInt values
+                        StringBuilder sb = new StringBuilder(2000);     // 150 * "-16000, "
+                        for (int i = 0; i < Regs.Length; i++)
+                        {
+                            // insert separator
+                            if (i > 0)
+                            {
+                                sb.Append(", ");
+                            }
+
+                            // conv to string, no decimals, no minlen
+                            sb.Append(Converts.UIntToString((UInt16)Regs[i]));
+                        }
+                        Result = sb.ToString();
                     }
                     else
                     {
-                        UInt32Val = (UInt32)(UInt16)Regs[0];
+                        // unsigned decimal
+                        if (Width == 32)
+                        {
+                            UInt32Val = Converts.ToUInt32(Regs[0], Regs[1]);
+                        }
+                        else
+                        {
+                            UInt32Val = (UInt32)(UInt16)Regs[0];
+                        }
+                        Result = UIntValueToDecString(UInt32Val, Decimals, MinLen);
+                        DictSearchValue = (Int32)UInt32Val;
                     }
-                    Result = UIntValueToDecString(UInt32Val, Decimals, MinLen);
-                    DictSearchValue = (Int32)UInt32Val;
                     break;
 
                 case Global.eFormat.Hex:
@@ -63,14 +105,14 @@ namespace LST.Helpers
                                 sb.Append(", ");
                             }
 
-                            // conv to string, no decimals, no minlen
+                            // conv to string, no decimals, 4 digits
                             sb.Append(Converts.IntToStringHex((UInt16)Regs[i], 4));
                         }
                         Result = sb.ToString();
                     }
                     else
                     {
-                        // unsigned decimal
+                        // unsigned decimal to hex
                         if (Width == 32)
                         {
                             UInt32Val = Converts.ToUInt32(Regs[0], Regs[1]);
@@ -719,7 +761,7 @@ namespace LST.Helpers
 
         /// <summary>
         /// String to double
-        /// Throws on error
+        /// Throws exception on error
         /// </summary>
         private static double ParseDouble(string s)
         {

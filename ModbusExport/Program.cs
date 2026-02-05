@@ -25,12 +25,14 @@ namespace ModbusExport
             NoError = 0,
             CommandlineError = 1,
             FileError = 2,
-            CommsError = 3
+            CommError = 3,
+            OtherError = 9
         };
 
         static int Main(string[] args)
         {
             // create project object, with defaults
+			// is required
             Project = new CProject();
 
             // parse commandline
@@ -119,10 +121,13 @@ namespace ModbusExport
             // apply command line arguments to the Project (connections settings)
             ApplyCommandlineToProjectConfig();
 
-            // pass configuration to Endians and CStringToValue
+            // pass new configuration to Converts
             Converts.Int32Endian = Project.Connection.Int32Endian;
             Converts.Float32Endian = Project.Connection.Float32Endian;
             Converts.StringEndian = Project.Connection.StringEndian;
+            Converts.StringEncodingName = Project.Connection.StringEncoding;
+            // pass new configuration to RegisterToOffset
+            RegisterToOffset.RegisterNumberingScheme = Project.Options.HoldingregistersStart;
 
             // Connect
             Print("Opening connection: " + GetConnectionInfoString());
@@ -144,85 +149,72 @@ namespace ModbusExport
                 }
 
                 // exit
-                return (int)eExitcodes.CommsError;
+                return (int)eExitcodes.CommError;
             }
 
             // Export
             Print("Export to CSV file: " + csvFilename);
             export.TabsList = Project.TabsList;
-            export.mModbus = mb;
-            export.mSlaveAddress = Project.Connection.SlaveID;
-            export.mFilename = csvFilename;
-            export.mMbcFilename = System.IO.Path.GetFileName(mbcFilename);
-            export.OnGetHoldingregisterModbusOffset += TryHoldingregisterGetOffset;
+            export.Modbus = mb;
+            export.SlaveAddress = Project.Connection.SlaveID;
+            export.Filename = csvFilename;
+            export.MbcFilename = System.IO.Path.GetFileName(mbcFilename);
             export.OnReportProgress += ReportProgressCallback;
             export.Verbose = Verbose;
-            export.mModbus.WriteRegFC = ConvertGlobalWriteHoldingregFunctioncodeEnumToInt(Project.Connection.WriteHoldingregFunctioncode);
-            export.ExportFormat = isnull(CommandlineArgs.ArgExportFormat, "");
-            export.ExportAsciiFormat = isnull(CommandlineArgs.ArgStringExportFormat, "");
+            export.ExportFormat = isnull(CommandlineArgs.ArgExportFormat, ""); 
+            export.StringExportFormat = isnull(CommandlineArgs.ArgStringExportFormat, ""); 
             export.MaximumFrameSize = Project.Connection.MaximumFrameSize;
             export.ContinueOnError = ContinueOnError;
             export.TabsSelectList = CommandlineArgs.ArgTabsList;
 
+            // exit code
+            int exitCode = (int)eExitcodes.NoError;
+
             // do export
             try
             {
-                export.DoExport();
+                // Can throw exception on error
+                Export.EReturnCode retcode = export.DoExport();
+
+                // show counters
+                Print("Export end: " + export.SuccessCount + " registers exported, " + (export.FileErrorCount + export.CommErrorCount) + " errors.");
+
+                // exitcode
+                if (retcode != Export.EReturnCode.Success)
+                {
+                    if (retcode == Export.EReturnCode.FileError)
+                    {
+                        exitCode = (int)eExitcodes.FileError;
+                    }
+                    else if (retcode == Export.EReturnCode.CommError)
+                    {
+                        exitCode = (int)eExitcodes.CommError;
+                    }
+                    else 
+                    {
+                        // other error
+                        exitCode = (int)eExitcodes.OtherError;
+                    }
+                }                
             }
             catch (Exception e)
             {
                 string s = "Error: " + e.Message;
                 Print(s);
 
-                // if no error indicated: assume file error, to show "1 errors" in the counts message.
-                if( (export.mFileErrorCount + export.mCommErrorCount) == 0)
-                {
-                    ++export.mFileErrorCount;
-                }
-
-                // show counters
-                Print("Export end: " + export.mExportedCount + " registers exported, " + (export.mFileErrorCount + export.mCommErrorCount) + " errors.");
-
-                // exitcode
-                if (e is ArgumentException)
-                {
-                    return (int)eExitcodes.CommandlineError;
-                }
-                if (e is CommsException)
-                {
-                    return (int)eExitcodes.CommsError;
-                }
-                return (int)eExitcodes.FileError;
-            }
-            finally
-            {
-                // close interface
-                CloseConnection();
+                // must return an error      
+                exitCode = (int)eExitcodes.FileError;
             }
 
-            // show counters
-            Print("Export end: " + export.mExportedCount + " registers exported, " + (export.mFileErrorCount + export.mCommErrorCount) + " errors.");
+            // close interface
+            CloseConnection();
 
-            // exitcode
-            if (export.mCommErrorCount > 0)
-            {
-                return (int)eExitcodes.CommsError;
-            }
-            if (export.mFileErrorCount > 0)
-            {
-                return (int)eExitcodes.FileError;
-            }
+#if DEBUGX
+            Console.WriteLine(">>> DEBUG - Press any key to end...");
+            Console.ReadKey();
+#endif
 
-            return (int)eExitcodes.NoError;
-        }
-
-        private static int ConvertGlobalWriteHoldingregFunctioncodeEnumToInt(Global.eWriteHoldingregFunctionCode e)
-        {
-            if (e == Global.eWriteHoldingregFunctionCode.FC6)
-                return 6;
-            if (e == Global.eWriteHoldingregFunctionCode.FC16)
-                return 16;
-            return 0;
+            return exitCode;
         }
 
         private static void ApplyCommandlineToProjectConfig()
@@ -244,36 +236,22 @@ namespace ModbusExport
                 Project.Connection.IPPort = (ushort)CommandlineArgs.ArgIPPort;
             if (CommandlineArgs.ArgSlaveID != null)
                 Project.Connection.SlaveID = (byte)CommandlineArgs.ArgSlaveID;
-            if (CommandlineArgs.ArgMaxFrameSize != null)
-                Project.Connection.MaximumFrameSize = (int)CommandlineArgs.ArgMaxFrameSize;
+            if (CommandlineArgs.ArgMaximumFrameSize != null)
+                Project.Connection.MaximumFrameSize = (int)CommandlineArgs.ArgMaximumFrameSize;
             if (CommandlineArgs.ArgResponsetimeout != null)
                 Project.Connection.ResponseTimeout = (int)CommandlineArgs.ArgResponsetimeout;
             if (CommandlineArgs.ArgInterframedelay != null)
                 Project.Connection.InterFrameDelay = (int)CommandlineArgs.ArgInterframedelay;
             if (CommandlineArgs.ArgRetries != null)
                 Project.Connection.Retries = (int)CommandlineArgs.ArgRetries;
-            if (CommandlineArgs.ArgWriteholdingregFC != null)
-                Project.Connection.WriteHoldingregFunctioncode = ConvertCommandlineWriteholdregFCToEnum((int)CommandlineArgs.ArgWriteholdingregFC);
+            if (CommandlineArgs.ArgWriteHoldingregFunctioncode != null)
+                Project.Connection.WriteHoldingregFunctioncode = (int)CommandlineArgs.ArgWriteHoldingregFunctioncode;
             if (CommandlineArgs.ArgInt32Endian != null)
                 Project.Connection.Int32Endian = ConvertCommandlineEndianToEnum((int)CommandlineArgs.ArgInt32Endian);
             if (CommandlineArgs.ArgFloat32Endian != null)
                 Project.Connection.Float32Endian = ConvertCommandlineEndianToEnum((int)CommandlineArgs.ArgFloat32Endian);
             if (CommandlineArgs.ArgStringEndian != null)
                 Project.Connection.StringEndian = ConvertCommandlineEndianToEnum((int)CommandlineArgs.ArgStringEndian);
-        }
-
-        private static Global.eWriteHoldingregFunctionCode ConvertCommandlineWriteholdregFCToEnum(int cmdcode)
-        {
-            Global.eWriteHoldingregFunctionCode e = Global.eWriteHoldingregFunctionCode.Auto;
-
-            if (cmdcode == 6)
-                e = Global.eWriteHoldingregFunctionCode.FC6;
-            if (cmdcode == 16)
-                e = Global.eWriteHoldingregFunctionCode.FC16;
-            if (cmdcode == 0)
-                e = Global.eWriteHoldingregFunctionCode.Auto;
-
-            return e;
         }
 
         private static Global.eEndian ConvertCommandlineEndianToEnum(int end)
@@ -342,6 +320,8 @@ namespace ModbusExport
                 Project.Connection.SerialPort = Portname;
 
                 // set parameters
+                mb.MaximumFrameSize = Project.Connection.MaximumFrameSize;
+                mb.WriteHoldingRegistersFunctioncode = Project.Connection.WriteHoldingregFunctioncode;
                 mb.OneWireEchoSuppression = Project.Connection.SerialOneWireEchoSuppression;
                 mb.ResponseTimeout = (uint)Project.Connection.ResponseTimeout;
                 mb.EndOfMessageTimeout = (uint)Project.Connection.SerialEndOfMessageTimeout;
@@ -381,6 +361,8 @@ namespace ModbusExport
             mb.OpenModbusTcp(TargetIP, Project.Connection.IPPort);
 
             // ok
+            mb.MaximumFrameSize = Project.Connection.MaximumFrameSize;
+            mb.WriteHoldingRegistersFunctioncode = Project.Connection.WriteHoldingregFunctioncode;
             mb.ResponseTimeout = (uint)Project.Connection.ResponseTimeout;
             mb.InterFrameDelay = (uint)Project.Connection.InterFrameDelay;
             mb.Retries = (uint)Project.Connection.Retries;
@@ -414,6 +396,8 @@ namespace ModbusExport
             mb.OpenRtuOverTcp(TargetIP, Project.Connection.IPPort);
 
             // ok
+            mb.MaximumFrameSize = Project.Connection.MaximumFrameSize;
+            mb.WriteHoldingRegistersFunctioncode = Project.Connection.WriteHoldingregFunctioncode;
             mb.ResponseTimeout = (uint)Project.Connection.ResponseTimeout;
             mb.InterFrameDelay = (uint)Project.Connection.InterFrameDelay;
             mb.Retries = (uint)Project.Connection.Retries;
@@ -463,49 +447,6 @@ namespace ModbusExport
             return s;
         }
 
-        /// <summary>
-        /// Convert holding register number to register offset 0-65536
-        /// </summary>
-        /// <returns>true if valid, false if not</returns>
-        public static bool TryHoldingregisterGetOffset(UInt32 Regnr, out UInt16 Offset)
-        {
-            // accepts:
-            // 40000/400000: 40000-49999 + 400000-465535
-            // 40001/400001: 40001-49999 + 400001-465536
-
-            bool ret = false;
-            Offset = 0;
-
-            if ((Project.Options.HoldingregistersStart == 40000) || (Project.Options.HoldingregistersStart == 400000))
-            {
-                if ((Regnr >= 40000) && (Regnr <= 49999))
-                {
-                    Offset = (UInt16)(Regnr - 40000);
-                    ret = true;
-                }
-                else if ((Regnr >= 400000) && (Regnr <= 465535))
-                {
-                    Offset = (UInt16)(Regnr - 400000);
-                    ret = true;
-                }
-            }
-            if ((Project.Options.HoldingregistersStart == 40001) || (Project.Options.HoldingregistersStart == 400001))
-            {
-                if ((Regnr >= 40001) && (Regnr <= 49999))
-                {
-                    Offset = (UInt16)(Regnr - 40001);
-                    ret = true;
-                }
-                else if ((Regnr >= 400001) && (Regnr <= 465536))
-                {
-                    Offset = (UInt16)(Regnr - 400001);
-                    ret = true;
-                }
-            }
-
-            return ret;
-        }
-
         public static void CloseConnection()
         {
             // close interface
@@ -517,6 +458,7 @@ namespace ModbusExport
                 }
                 catch (Exception)
                 {
+                    // ignore
                 }
             }
         }

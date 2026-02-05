@@ -976,6 +976,40 @@ namespace UnitTests
             res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.String, Global.eFormat.Hex, 0);
             Assert.AreEqual<string>(@"0x4162, 0x63E4, 0xBDA0, 0xE5A5, 0xBD00, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000", res);
         }
+
+        [TestMethod]
+        public void Test_String_6()
+        {
+            Converts.StringEncodingName = "utf-8";
+            Int16[] Regs = new short[10];
+
+            string res;
+            Converts.StringEndian = Global.eEndian.Big;
+            Regs[0] = 0x4162; Regs[1] = 0x63E4; Regs[2] = Helpers.ConvToInt16(0xBDA0); Regs[3] = Helpers.ConvToInt16(0xE5A5); Regs[4] = Helpers.ConvToInt16(0xBD00);
+            res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.String, Global.eFormat.Int, 0);
+            Assert.AreEqual<string>("16738, 25572, -16992, -6747, -17152, 0, 0, 0, 0, 0", res);
+
+            Converts.StringEndian = Global.eEndian.Little;
+            res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.String, Global.eFormat.Int, 0);
+            Assert.AreEqual<string>("16738, 25572, -16992, -6747, -17152, 0, 0, 0, 0, 0", res);
+        }
+
+        [TestMethod]
+        public void Test_String_7()
+        {
+            Converts.StringEncodingName = "utf-8";
+            Int16[] Regs = new short[10];
+
+            string res;
+            Converts.StringEndian = Global.eEndian.Big;
+            Regs[0] = 0x4162; Regs[1] = 0x63E4; Regs[2] = Helpers.ConvToInt16(0xBDA0); Regs[3] = Helpers.ConvToInt16(0xE5A5); Regs[4] = Helpers.ConvToInt16(0xBD00);
+            res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.String, Global.eFormat.UInt, 0);
+            Assert.AreEqual<string>("16738, 25572, 48544, 58789, 48384, 0, 0, 0, 0, 0", res);
+
+            Converts.StringEndian = Global.eEndian.Little;
+            res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.String, Global.eFormat.UInt, 0);
+            Assert.AreEqual<string>("16738, 25572, 48544, 58789, 48384, 0, 0, 0, 0, 0", res);
+        }
     }
 
     [TestClass]

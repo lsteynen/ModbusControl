@@ -856,19 +856,19 @@ namespace ModbusControlSpace
         public static Int16[] StringEncodeToInt16Array(string str, int maxsize)
         {
             // convert
-            byte[] ab0 = StringEncodeToByteArray(str);
+            byte[] ab = StringEncodeToByteArray(str);
             // append terminating zero
-            byte[] ab = new byte[ab0.Length + 1];
-            Array.Copy(ab0, ab, ab0.Length);
+            byte[] abz = new byte[ab.Length + 1];
+            Array.Copy(ab, abz, ab.Length);
 
             // fits?
-            if ((ab.Length + 1) / 2 > maxsize)
+            if ((abz.Length + 1) / 2 > maxsize)
             {
                 throw new ArgumentException("String too large");
             }
 
             // Copy to Int16[]
-            return Converts.ByteArrayToInt16Array(ab, _stringEndian);
+            return Converts.ByteArrayToInt16Array(abz, _stringEndian);
         }
 
         public static string Int16ArrayDecodeToString(Int16[] aValues)

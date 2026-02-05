@@ -35,6 +35,8 @@
 							<xs:element name="int32endian" type="EndianType" minOccurs="0"/>
 							<xs:element name="float32endian" type="EndianType" minOccurs="0"/>
 							<xs:element name="ascii16endian" type="EndianType" minOccurs="0"/>
+							<xs:element name="stringendian" type="EndianType" minOccurs="0"/>							
+							<xs:element name="stringencoding" type="xs:string" minOccurs="0"/>
 							<xs:element name="showinfo" type="BoolType" minOccurs="0"/>
 							<xs:element name="holdingregisterstart" type="ModbusHoldingRegisterStartType" minOccurs="0"/>
 							<xs:element name="responsetimeout" type="xs:unsignedInt" minOccurs="0"/>

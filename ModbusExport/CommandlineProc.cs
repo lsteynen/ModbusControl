@@ -34,16 +34,16 @@ namespace ModbusExport
         public string ArgIPAddress;             // string is already nullable
         public int? ArgIPPort;
         public int? ArgSlaveID;
-        public int? ArgMaxFrameSize;
+        public int? ArgMaximumFrameSize;
         public int? ArgResponsetimeout;
         public int? ArgInterframedelay;
         public int? ArgRetries;
-        public int? ArgWriteholdingregFC;       // 6, 16, 0=auto 
+        public int? ArgWriteHoldingregFunctioncode; // 6, 16, 0=auto 
         public int? ArgInt32Endian;             // 0=little, 1=big
         public int? ArgFloat32Endian;           // 0=little, 1=big
         public int? ArgStringEndian;            // 0=little, 1=big
-        public string ArgExportFormat;          // ""=default, I=int, U=UInt, H=Hex
-        public string ArgStringExportFormat;    // ""=ASCII, I=Int, U=UInt, H=Hex
+        public string ArgExportFormat;          // default, int, uint, hex
+        public string ArgStringExportFormat;    // string, int, uint, hex
         public List<string> ArgTabsList;        // List of tab names
         public string ArgLogFile;               // logfile
         public bool ArgLogTimeSwitch;           // put timestamps in log    
@@ -66,11 +66,11 @@ namespace ModbusExport
             ArgIPAddress = null;
             ArgIPPort = null;
             ArgSlaveID = null;
-            ArgMaxFrameSize = null;
+            ArgMaximumFrameSize = null;
             ArgResponsetimeout = null;
             ArgInterframedelay = null;
             ArgRetries = null;
-            ArgWriteholdingregFC = null;
+            ArgWriteHoldingregFunctioncode = null;
             ArgInt32Endian = null;
             ArgFloat32Endian = null;
             ArgStringEndian = null;
@@ -195,7 +195,7 @@ namespace ModbusExport
                     else if (optlow == "maxframe")
                     {
                         ++i;
-                        ArgMaxFrameSize = GetOptInt(arg, i, 13, 256);
+                        ArgMaximumFrameSize = GetOptInt(arg, i, 13, 256);
                     }
                     else if (optlow == "responsetimeout")
                     {
@@ -255,24 +255,15 @@ namespace ModbusExport
                     }
                     else if (optlow == "format")
                     {
-                        // ""=default=asinmbc, I=int, U=UInt, H=Hex
+                        // default (as in mbc), int, uint, hex
                         ++i;
                         string val = GetOptString(arg, i);
-                        if (val.ToLowerInvariant() == "default")
+                        if (   (val.ToLowerInvariant() == "default")
+                            || (val.ToLowerInvariant() == "int")
+                            || (val.ToLowerInvariant() == "uint")
+                            || (val.ToLowerInvariant() == "hex"))
                         {
-                            ArgExportFormat = "";
-                        }
-                        else if (val.ToLowerInvariant() == "int")
-                        {
-                            ArgExportFormat = "I";
-                        }
-                        else if (val.ToLowerInvariant() == "uint")
-                        {
-                            ArgExportFormat = "U";
-                        }
-                        else if (val.ToLowerInvariant() == "hex")
-                        {
-                            ArgExportFormat = "H";
+                            ArgExportFormat = val.ToLowerInvariant();
                         }
                         else
                         {
@@ -281,24 +272,15 @@ namespace ModbusExport
                     }
                     else if (optlow == "stringformat")
                     {
-                        // ""=default=ASCII, I=Int, U=UInt, H=Hex
+                        // ascii, string, int, uint, hex
                         ++i;
                         string val = GetOptString(arg, i);
-                        if (val.ToLowerInvariant() == "ascii")
+                        if (   (val.ToLowerInvariant() == "string")
+                            || (val.ToLowerInvariant() == "int")
+                            || (val.ToLowerInvariant() == "uint")
+                            || (val.ToLowerInvariant() == "hex"))
                         {
-                            ArgStringExportFormat = "";
-                        }
-                        else if(val.ToLowerInvariant() == "int")
-                        {
-                            ArgStringExportFormat = "I";
-                        }
-                        else if (val.ToLowerInvariant() == "uint")
-                        {
-                            ArgStringExportFormat = "U";
-                        }
-                        else if (val.ToLowerInvariant() == "hex")
-                        {
-                            ArgStringExportFormat = "H";
+                            ArgStringExportFormat = val.ToLowerInvariant();
                         }
                         else
                         {
@@ -360,14 +342,14 @@ namespace ModbusExport
                     }
                     else
                     {
-                        // not mbc, assume csv, 1
+                        // not mbc, can be csv or other
                         if (string.IsNullOrEmpty(ArgCsvFile))
                         {
                             ArgCsvFile = file.Trim();
                         }
                         else
                         {
-                            throw new ArgumentException("More than 1 CSV file was passed: '" + file + "'");
+                            throw new ArgumentException("Too many (non-option) arguments were passed: '" + file + "'");
                         }
                     }
                 }
@@ -552,7 +534,7 @@ namespace ModbusExport
                  + "-float32endian <endian>         32-bit float word order: little, big" + Environment.NewLine
                  + "-stringendian <endian>          String byte order: little, big" + Environment.NewLine
                  + "-format <format>                Export format: default, int, uint, hex" + Environment.NewLine
-                 + "-stringformat <format>          String export format: ascii, int, uint, hex" + Environment.NewLine
+                 + "-stringformat <format>          String export format: string, int, uint, hex" + Environment.NewLine
                  + "-tabs <tabname> [tabname]...    Names of tab pages to export, in this order" + Environment.NewLine
                  + "-log <file/path>                Append output to a log file" + Environment.NewLine
                  + "-logtime                        Add timestamps to the log file" + Environment.NewLine

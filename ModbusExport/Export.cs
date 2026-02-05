@@ -1,58 +1,110 @@
 ﻿using System;
+using System.Text;
 using System.Collections.Generic;
 
-using LST.Helpers;
 using Modbus_net;
+using LST.Helpers;
 using ModbusControlSpace;
+
+// The first part of this file is different for the GUI en commandline versions.
+// The second part, in region "Implementation - shared" is almost identical.
 
 namespace ModbusExport
 {
-    class FileException : ApplicationException
-    {
-        // thrown in error related to file
-        public FileException() { }
-
-        public FileException(string name) : base(String.Format(name))
-        {
-        }
-    }
-
-    class CommsException : ApplicationException
-    {
-        // thrown in error related to communications
-        public CommsException() { }
-
-        public CommsException(string name) : base(String.Format(name))
-        {
-        }
-    }
-
     public class Export
     {
-        public byte mSlaveAddress;
-        public ModbusInterface mModbus;
-        public string mFilename;
-        public string mMbcFilename;
-        public bool Verbose;
-        public bool ContinueOnError = false;
-        public string ExportFormat = "";        // ""=default, I=int, U=UInt, H=Hex 
-        public string ExportAsciiFormat = "";   // ""=default/ASCII, I=Int, U=UInt, H=Hex 
-        public int MaximumFrameSize = 256;
-        public List<CProject.TTab> TabsList;    // List with all tab pages
-        public List<string> TabsSelectList;      // List of selected tab names to export, in this order
-        public int mFileErrorCount;
-        public int mCommErrorCount;
-        public int mExportedCount;
+        #region Enums
 
-        // callback to convert app register numbering to protocol offset
-        public event GetHoldingregisterModbusOffset OnGetHoldingregisterModbusOffset;
-        public delegate bool GetHoldingregisterModbusOffset(UInt32 Regnr, out UInt16 Offset);
+        //private enum EExportMode { CurrentTab = 0, AllTabs };
+        private enum EExportFormat { Default = 0, AsInt, AsUInt, AsHex };
+        public enum EReturnCode { Success = 0, FileError, CommError };
+
+        #endregion
+
+        #region Data
+
+        //private MainForm mParent;
+        //private BackgroundWorker mWorker;
+        private CsvWriter mCsvWriter;
+        private const int mSleeptime = 10;
+        //private bool mContinueOnError = false;
+        //private EExportMode mExportMode = EExportMode.CurrentTab;
+        private EExportFormat mExportFormat = EExportFormat.Default;
+        private EExportFormat mStringExportFormat = EExportFormat.Default;
+        
+        #endregion
+
+        #region Properties
+
+        public ModbusInterface Modbus;
+
+        public byte SlaveAddress;
+        
+        public string ExportFormat
+        {
+            get
+            {
+                if (mExportFormat == EExportFormat.Default) return "default";
+                else if (mExportFormat == EExportFormat.AsInt) return "int";
+                else if (mExportFormat == EExportFormat.AsUInt) return "uint";
+                else if (mExportFormat == EExportFormat.AsHex) return "hex";
+                else return null;
+            }
+
+            set
+            {
+                if (value == "default") mExportFormat = EExportFormat.Default;
+                else if (value == "int") mExportFormat = EExportFormat.AsInt;
+                else if (value == "uint") mExportFormat = EExportFormat.AsUInt;
+                else if (value == "hex") mExportFormat = EExportFormat.AsHex;
+            }
+        }
+
+        public string StringExportFormat
+        {
+            get
+            {
+                if (mStringExportFormat == EExportFormat.Default) return "string";
+                else if (mStringExportFormat == EExportFormat.AsInt) return "int";
+                else if (mStringExportFormat == EExportFormat.AsUInt) return "uint";
+                else if (mStringExportFormat == EExportFormat.AsHex) return "hex";
+                else return null;
+            }
+
+            set
+            {
+                if (value == "string") mStringExportFormat = EExportFormat.Default;
+                else if (value == "int") mStringExportFormat = EExportFormat.AsInt;
+                else if (value == "uint") mStringExportFormat = EExportFormat.AsUInt;
+                else if (value == "hex") mStringExportFormat = EExportFormat.AsHex;
+            }
+        }
+
+        public int MaximumFrameSize = 256;
+
+        public bool ContinueOnError = false;
+
+        public int SuccessCount;
+
+        public int FileErrorCount;
+
+        public int CommErrorCount;
+
+        public string Filename;
+
+        public bool Verbose;
+
+        public string MbcFilename;
+
+        public List<CProject.TTab> TabsList;   // List with all tab pages
+
+        public List<string> TabsSelectList;      // List of selected tab names to export, in this order
 
         // callback for progress report, only if Verbose=true
         public event ReportProgress OnReportProgress;
         public delegate void ReportProgress(string s);
 
-        public struct TReadGroup
+        public class CReadGroup
         {
             public int lineIndex;
             public int lineCount;
@@ -60,11 +112,12 @@ namespace ModbusExport
             public int readRegCount;
         };
 
+
         public struct TVarProperties
         {
             public UInt32 Reg;          // universal register number 
             public string Descr;        // description
-            public int Size;            // var size in #registers, 1 or 2
+            public int Size;            // var size in #registers
             public Global.eFormat Format;      // display as dec, unsigned, hex, binary
             public int MinLen;          // minimum display length
             public int Decimals;        // nr of decimals to show
@@ -73,94 +126,108 @@ namespace ModbusExport
             public Global.CEnum EnumDict;   // enum convert dictionary
         };
 
-        private const int mSleeptime = 10;
-        private CsvWriter mCsvWriter;
-
-        private class ExportOrderElem
+        private class ExportOrderItem
         {
             public int tabIndex;
             public uint order;
         }
 
+        #endregion
+
+        #region Implementation
+
         /// <summary>
-        /// Do export
+        /// Do export of selected tabs
         /// Read registers from target and write to file 
-        /// Throw on error
+        /// Returns errorcode on error.
+        /// Continues exporting when mContinueOnError==true.
         /// </summary>
-        public void DoExport()
+        /// <returns>
+        /// EReturnCode.Success    if there were no error 
+        /// EReturnCode.CommError  if there was communication error 
+        /// </returns>
+        public EReturnCode DoExport()
         {
-        	// read registers from target, write to file
+            EReturnCode retco = EReturnCode.Success;
 
-			// reset counters
-            mFileErrorCount = 0;
-            mCommErrorCount = 0;
-            mExportedCount = 0;
-  
-            // check if port is opened
-            if (mModbus.IsOpen == false)
-            {
-                throw new CommsException("Connection is not open.");
-            }
-
-            // Use Windows's current ANSI codepage encoding, this allows easy import in Excel.
-            // ANSI encoding is 1 byte per character, 0-127 is ASCII, 128-255 is per codepage.
+            // reset counters
+            SuccessCount = 0;
+            FileErrorCount = 0;
+            CommErrorCount = 0;
+			
+			// open file to write to
+            // Use UTF-8 encoding, without BOM. 
             // Encodings: Encoding.Default for the system's default encoding, usually codepage 1252 in West-EU
             //            Encoding.ASCII for strict ASCII (0-127 only)
             //            System.Text.Encoding.GetEncoding(1252) for windows codepage 1252 for Latin 1 languages
             //            System.Text.Encoding.GetEncoding("ISO-8859-2") for ISO codepage with Polish
             //            Encoding.UTF8 for encoding the whole unicode character set in UTF8
+            //            Use "new UTF8Encoding(false)" for UTF-8 encoding without BOM
             // See http://www.science.co.il/Language/Locale-codes.asp for a list of languages/countries and codepages.
 
-            using (mCsvWriter = new CsvWriter(mFilename, System.Text.Encoding.Default))
+            using (mCsvWriter = new CsvWriter(Filename, new UTF8Encoding(false)))
             {
                 mCsvWriter.CommentHeader = "#";
                 mCsvWriter.Separator = ';';
                 // always put quotes around the description field
-                mCsvWriter.QuoteSelectedFields = new bool[] { false, false, true }; // we choose to always quote the description field
+                mCsvWriter.QuoteSelectedFields = new bool[] { false, false, true }; 
 
-                ReportVerbose("Opened file: " + mFilename);
-                //("(Encoding used: " + enc.WebName + ", Windows code page: " + enc.WindowsCodePage + ")" + Environment.NewLine);
+                ReportVerbose("Opened file: " + Filename);
 
                 // export file header info
                 mCsvWriter.WriteComment("Export file created by ModbusExport " + AppHelpers.VersionString + " - " + DateTime.Now.ToString());
-                mCsvWriter.WriteComment("Project file: " + mMbcFilename);
+                mCsvWriter.WriteComment("Project file: " + MbcFilename);
                 mCsvWriter.WriteComment("Fields: Register;Size;Description;Read/write;Format;Value");
 
                 // export tabs/registers
-                List<ExportOrderElem> exportList = null;
+                List<ExportOrderItem> exportList = null;
 
                 // all tabs or TabsSelectList?
                 if ((TabsSelectList != null) && (TabsSelectList.Count > 0))
                 {
-                    // tabs selected on command line
+                    // export tabs selected on command line
 
                     // make list of tabs in export order
                     exportList = GetTabsExportOrderListFromSelectList(TabsSelectList);
                 }
                 else
                 {
-                    // all tabs
+                    // export all tabs
 
                     // make list of tabs in export order
                     exportList = GetTabsExportOrderList();
                 }
 
                 // export in requested order
-                foreach (ExportOrderElem tabElem in exportList)
+                foreach (ExportOrderItem tabItem in exportList)
                 {
-                    CProject.TTab tab = TabsList[tabElem.tabIndex];
-                    DoExportTab(tab);
+                    CProject.TTab tab = TabsList[tabItem.tabIndex];
+                    // return the first error
+                    EReturnCode retco2 = DoExportTab(tab);
+                    if (retco2 != EReturnCode.Success)
+                    {
+                        retco = retco2;
+                        if (ContinueOnError == false)
+                        {
+                            break;
+                        }
+                    }
                 }
             }
+
+            return retco;
         }
 
-        private List<ExportOrderElem> GetTabsExportOrderList()
+        /// <summary>
+        /// Get list of tabs to export, in desired order if ExportOrder is specified
+        /// </summary>
+        private List<ExportOrderItem> GetTabsExportOrderList()
         {
-            List<ExportOrderElem> list = new List<ExportOrderElem>();
+            List<ExportOrderItem> list = new List<ExportOrderItem>();
 
             for (int i = 0; i < TabsList.Count; ++i)
             {
-                ExportOrderElem el = new ExportOrderElem();
+                ExportOrderItem el = new ExportOrderItem();
                 el.tabIndex = i;
                 el.order = TabsList[i].ExportOrder;
                 list.Add(el);
@@ -171,18 +238,21 @@ namespace ModbusExport
             return list;
         }
 
-        private List<ExportOrderElem> GetTabsExportOrderListFromSelectList(List<string> selectList)
+        /// <summary>
+        /// Get list of tabs to export, from select-list, in order of select-list
+        /// </summary>
+        private List<ExportOrderItem> GetTabsExportOrderListFromSelectList(List<string> selectList)
         {
-            List<ExportOrderElem> list = new List<ExportOrderElem>();
+            List<ExportOrderItem> list = new List<ExportOrderItem>();
 
-            foreach( string tn in selectList)
+            foreach (string tn in selectList)
             {
                 bool found = false;
                 for (int i = 0; i < TabsList.Count; ++i)
                 {
                     if (TabsList[i].Name.ToLower() == tn.ToLower())
                     {
-                        ExportOrderElem el = new ExportOrderElem();
+                        ExportOrderItem el = new ExportOrderItem();
                         el.tabIndex = i;
                         el.order = 0;
                         list.Add(el);
@@ -201,7 +271,7 @@ namespace ModbusExport
             return list;
         }
 
-        private int ExportOrderComparer(ExportOrderElem el1, ExportOrderElem el2)
+        private int ExportOrderComparer(ExportOrderItem el1, ExportOrderItem el2)
         {
             // return 1 if el1 > el2
             // return 0 if el1 == el2
@@ -220,207 +290,94 @@ namespace ModbusExport
             return 0;
         }
 
-        public void DoExportTab(CProject.TTab tabPage)
-        {
-            // read registers from target, write to file
-
-            short[] readData;
-
-            // get tab name 
-            string tabName = tabPage.Name;
-
-            // show tab name 
-            mCsvWriter.WriteComment("Tab: " + tabName);
-            ReportVerbose("Export tab: \"" + TrimText(tabName) + "\"");
-
-            // get groups of vars to read
-            List<TReadGroup> groupList = GetReadGroupingList(tabPage, MaximumFrameSize);
-
-            // read each group, output data
-            foreach (TReadGroup rg in groupList)
-            {
-                //Debug:
-                //ReportVerbose("Read group: " + rg.readFirstReg.ToString() + " #" + rg.readRegCount.ToString());
-
-                // get register offset
-                UInt16 regOffset = 0;
-                if (OnGetHoldingregisterModbusOffset(rg.readFirstReg, out regOffset) == true)
-                {
-                    //ReportVerbose("    firstRegOffset:" + regOffset.ToString());
-
-                    // read 
-                    ModbusProtocol.Result result = mModbus.MifReadHoldingRegisters(mSlaveAddress, regOffset, (UInt16)rg.readRegCount, out readData);
-                    if (result == ModbusProtocol.Result.SUCCESS)
-                    {
-						// success
-
-                        // process value of each register
-                        int lineCount = 0;
-						int valueIndex = 0;
-                        for (int lineIndex = rg.lineIndex; lineCount < rg.lineCount; ++lineIndex, ++lineCount)
-                        {
-							TVarProperties varp = GetVarPropertiesByIndex(tabPage, lineIndex);
-
-                            //Debug:
-                            //string s = "Reg " + var.Regnr.ToString() + " size " + var.Size + " descr \"" + TrimText(var.Description) + "\"";
-                            //ReportVerbose("    " + s);
-
-                            // get the register value as 1 or 2 16-bit registers
-                            Int16[] aTmpRegs = new Int16[varp.Size];
-                            Array.Copy(readData, valueIndex, aTmpRegs, 0, varp.Size);
-                            valueIndex += varp.Size;
-                            
-                            OutputExportLine(varp.Reg, varp.Size, varp.Descr, varp.Format, varp.Readable, varp.Writeable, aTmpRegs);
-                            ++mExportedCount;
-                        }
-                    }
-                    else
-                    {
-                        // error
-
-                        // if it is an address error? and we tried a group read? then read alls vars of this group with single reads to get per-var errors
-                        //  some slaves return eILLEGALDATAVALUE if address + regcount is invalid, some return ILLEGALADDRESSEXCEPTION
-                        if (((result == ModbusProtocol.Result.ILLEGALADDRESSEXCEPTION) || (result == ModbusProtocol.Result.ILLEGALDATAVALUEEXCEPTION)) && (rg.lineCount > 1))
-                        {
-                            // read per var instead of group, detect error per var
-							int lineCount = 0;
-							for (int lineIndex = rg.lineIndex; lineCount < rg.lineCount; ++lineIndex, ++lineCount)
-                            {
-								TVarProperties varp = GetVarPropertiesByIndex(tabPage, lineIndex);
-
-                                // get register offset
-                                OnGetHoldingregisterModbusOffset(varp.Reg, out regOffset);
-                                //Debug.Print(DateTime.Now.TimeOfDay + ": MifReadHoldingRegisters(" + mSlaveAddress + "," + GetUserReg(ReadOffset) + "," + ReadCount + ")");
-                                result = mModbus.MifReadHoldingRegisters(mSlaveAddress, regOffset, (UInt16)varp.Size, out readData);
-                                //Debug.Print(DateTime.Now.TimeOfDay + ": MifReadHoldingRegisters returned " + result);
-                                if (result == ModbusProtocol.Result.SUCCESS)
-                                {
-                                    // get the value, 16 or 32-bit
-
-                                    // the register value is in readData as 1 or 2 16-bit registers
-                                    OutputExportLine(varp.Reg, varp.Size, varp.Descr, varp.Format, varp.Readable, varp.Writeable, readData);
-                                    ++mExportedCount;
-                                }
-                                else
-                                {
-                                    // error
-                                    ++mCommErrorCount;
-                                    // OutputExportLineError() handles ContinueOnError
-                                    OutputExportLineError(varp.Reg, varp.Size, varp.Descr, varp.Format, varp.Readable, varp.Writeable, ModbusProtocol.GetResultText(result));
-                                }
-                            }
-                        }
-                        else
-                        {
-                            // other errors
-                            // show error for each var
-                            int lineCount = 0;
-                            for (int lineIndex = rg.lineIndex; lineCount < rg.lineCount; ++lineIndex, ++lineCount)
-                            {
-                                TVarProperties varp = GetVarPropertiesByIndex(tabPage, lineIndex);
-
-                                //Debug:
-                                //string s = "Reg " + varp.Reg.ToString() + " size " + varp.Size + " descr \"" + TrimText(varp.Descr) + "\"";
-                                //ReportVerbose("    " + s);
-
-                                // error
-                                ++mCommErrorCount;
-                                // OutputExportLineError() handles ContinueOnError
-                                OutputExportLineError(varp.Reg, varp.Size, varp.Descr, varp.Format, varp.Readable, varp.Writeable, ModbusProtocol.GetResultText(result));
-                            }
-                        }
-                    }
-                }
-                else
-                {
-                    string s = "Register " + rg.readFirstReg.ToString() + ": Register number is invalid.";
-                    if (ContinueOnError)
-                        ReportError("Error: " + s);
-                    else
-                        throw new FileException(s);
-                }
-            }
-        }
 
         /// <summary>
-        /// Get a list of group read commands
+        /// Get the next group read block.
+        /// Group read: read as many consecutive vars as fit in maxFrameSize.
+        /// Or read a single var if it exceeds maxFrameSize. The caller will execute that read in chunks.
         /// </summary>
-        /// <param name="maxFrameSize">maximum size of the response frame (in bytes)</param>
-        /// <returns></returns>
-        public List<TReadGroup> GetReadGroupingList(CProject.TTab tab, int maxFrameSize)
+        /// <param name="maxReadRegisters">maximum registers to read</param>
+        /// <returns>group or null at the end</returns>
+        CReadGroup GetNextReadGroup(CProject.TTab tab, CReadGroup group, int maxReadRegisters)
         {
-            List<TReadGroup> glist = new List<TReadGroup>();
-
             // no registers?
             if (tab.VarList.Count == 0)
             {
                 return null;
             }
 
-            // bepaal max aantal 16-bit registers te lezen
-            int max16BitRegs = (int)(maxFrameSize - 5) / 2;
-
-            bool grouping = false;
-            int lineIndex = 0;
-            int groupFirstLineIndex = 0;
-            int groupLineCount = 0;
-            UInt32 groupFirstReg = 0;
-            int groupRegCount = 0;
-            UInt32 groupNextRegister = 0;
-            foreach (CProject.TVar var in tab.VarList)
+            // start new group?
+            if (group == null)
             {
-                if (grouping)
+                group = new CReadGroup();
+            }
+
+            // voorlopig gaan we er van uit dat in RegList level 0 alleen registers zitten
+
+            int iLineIndex = group.lineIndex + group.lineCount;
+            bool isGrouping = false;
+            UInt32 iNextRegister = 0;
+
+            while (iLineIndex < tab.VarList.Count)
+            {
+                CProject.TVar Reg = tab.VarList[iLineIndex];
+
+                if (isGrouping)
                 {
                     // find next readable register in group
                     // is consecutive and readable?
-                    if ((var.Regnr == groupNextRegister)
-                        && (var.isReadable == true)
-                        && ((groupRegCount + var.Size) <= max16BitRegs))           // allowed to read so many registers?
+                    // fits in readgroup?
+                    if ((Reg.isReadable == true)
+                        && (Reg.Regnr == iNextRegister)
+                        && ((group.readRegCount + Reg.Size) <= maxReadRegisters))
                     {
-                        ++groupLineCount;
-                        groupRegCount += var.Size;
-                        groupNextRegister += (UInt32)var.Size;
+                        group.lineCount += 1;
+                        group.readRegCount += Reg.Size;
+                        iNextRegister = Reg.Regnr + (UInt32)Reg.Size;
+                        // try to get more
                     }
                     else
                     {
-                        TReadGroup g = new TReadGroup();
-                        g.lineIndex = groupFirstLineIndex;
-                        g.lineCount = groupLineCount;
-                        g.readFirstReg = groupFirstReg;
-                        g.readRegCount = groupRegCount;
-                        glist.Add(g);
-                        grouping = false;
+                        // end group
+                        break;
                     }
                 }
-                if (grouping == false)
+                else
                 {
                     // find next readable register to start new group
-                    if (var.isReadable)
+                    if (Reg.isReadable)
                     {
-                        groupFirstLineIndex = lineIndex;    // grid line index of first Reg
-                        groupLineCount = 1;
-                        groupFirstReg = var.Regnr;          // first register of group
-                        groupRegCount = var.Size;            // Size in number of 16-bit registers
-                        groupNextRegister = var.Regnr + (UInt32)var.Size;
-                        grouping = true;
+                        // start group read
+                        group.lineIndex = iLineIndex;
+                        group.lineCount = 1;
+                        group.readFirstReg = Reg.Regnr;
+                        group.readRegCount = Reg.Size;
+                        iNextRegister = Reg.Regnr + (UInt32)Reg.Size;
+                        isGrouping = true;
+                        // got room for more?
+                        if (group.readRegCount < maxReadRegisters)
+                        {
+                            // loop for more                            
+                        }
+                        else
+                        {
+                            // end group
+                            break;
+                        }
                     }
                 }
 
-                ++lineIndex;
+                ++iLineIndex;
             }
 
-            if (grouping)
+            // got more ?
+            if (isGrouping)
             {
-                TReadGroup g = new TReadGroup();
-                g.lineIndex = groupFirstLineIndex;
-                g.lineCount = groupLineCount;
-                g.readFirstReg = groupFirstReg;
-                g.readRegCount = groupRegCount;
-                glist.Add(g);
-                grouping = false;
+                return group;
             }
 
-            return glist;
+            // no more
+            return null;
         }
 
         /// <summary>
@@ -449,85 +406,10 @@ namespace ModbusExport
             return p;
         }
 
-        private bool OutputExportLine(UInt32 Reg, int Size, string Description, Global.eFormat Format, bool isReadable, bool isWriteable, Int16[] aRegValues)
-        {
-            // output 1 export line, all register info, and value
-
-            // width in bits
-            int Width = Size * 16;
-
-            // make RW string
-            string RWstring = (isReadable ? "r" : "") + (isWriteable ? "w" : "");
-
-            // Export format as in grid? or override?
-            if (ExportFormat == "")
-            {
-                // As in grid
-                // ASCII can be exported as Int or Hex to avoid CSV format problems
-                if (Format == Global.eFormat.ASCII)
-                {
-                    if (ExportAsciiFormat == "I") Format = Global.eFormat.Int;
-                    if (ExportAsciiFormat == "U") Format = Global.eFormat.UInt;
-                    if (ExportAsciiFormat == "H") Format = Global.eFormat.Hex;
-                }
-            }
-            else if (ExportFormat == "I")
-            {
-                // All to Int
-                Format = Global.eFormat.Int;
-            }
-            else if (ExportFormat == "U")
-            {
-                // All to UInt
-                Format = Global.eFormat.UInt;
-            }
-            else if (ExportFormat == "H")
-            {
-                // All to Hex
-                Format = Global.eFormat.Hex;
-            }
-
-            // make value string
-            // decimals are not used in export
-            // minlen is not used in export
-            string ValueString = CValueToString.Int16RegistersToValueString(aRegValues, Format, Format, Width);
-            
-            // output to file
-            string[] fields = new string[] { Reg.ToString(), Width.ToString(), Description, RWstring, Format.ToString(), ValueString };
-            mCsvWriter.WriteRow(fields);
-
-            // and log
-            string s = Reg.ToString() + ";" + Width.ToString() + ";\"" + TrimText(Description) + "\";" + RWstring + ";" + Format + ";" + ValueString;
-            ReportVerbose("Read: " + s);
-
-            return true;
-        }
-
-        private bool OutputExportLineError(UInt32 Reg, int Size, string Description, Global.eFormat Format, bool isReadable, bool isWriteable, string Error)
-        {
-            // output 1 export line, all register info, and error message
-
-            // width in bits
-            int Width = Size * 16;
-
-            // make RW string
-            string RWstring = (isReadable ? "r" : "") + (isWriteable ? "w" : "");
-
-            // output to file
-            string[] fields = new string[] { Reg.ToString(), Width.ToString(), Description, RWstring, Format.ToString(), "?   >> ERROR: " + Error };
-            mCsvWriter.WriteRow(fields);
-
-            // and log
-            string s = Reg.ToString() + ";" + Width.ToString() + ";\"" + TrimText(Description) + "\";" + RWstring + ";" + Format + ";?   >> ERROR: " + Error;
-            if (ContinueOnError)
-                ReportError("Error: " + s);
-            else
-                throw new CommsException(s);
-
-            return true;
-        }
-
-        private string TrimText(string descr)
+        /// <summary>
+        /// Clean description text for cleaner output
+        /// </summary>
+        private string CleanText(string descr)
         {
             // replace possible " by ' 
             descr = descr.Replace('\"', '\'');
@@ -546,7 +428,7 @@ namespace ModbusExport
 
             return descr;
         }
-
+        
         private void ReportVerbose(string s)
         {
             if ((OnReportProgress != null) && Verbose)
@@ -562,5 +444,307 @@ namespace ModbusExport
                 OnReportProgress(s);
             }
         }
+
+
+        #endregion
+
+        #region Implementation - shared
+
+        //
+        // The "Implementation - shared" region, doing the actual work, is almost identical for ModbusControl.Export and ModbusExport.Export.
+        //
+
+        /// <summary>
+        /// Get all registers from a tab page, read them from target, write to file.
+        /// Continues exporting after error if mContinueOnError==true.
+        /// </summary>
+        /// <param name="tabPage"></param>
+        /// <returns>
+        /// EReturnCode.Success    if there were no error 
+        /// EReturnCode.CommError  if there was communication error 
+        /// </returns>
+        public EReturnCode DoExportTab(CProject.TTab tabPage)
+        {
+            EReturnCode retcode = EReturnCode.Success;
+
+            // read registers from target, write to file
+
+            bool bContinue = true;
+            short[] readData;
+
+            // show tab name 
+            string tabName = tabPage.Name;
+            mCsvWriter.WriteComment("Tab: " + tabName);
+            ReportVerbose("Export tab: \"" + CleanText(tabName) + "\"");
+
+            // determine max number of registers to read in 1 group
+            int maxReadRegisters = Modbus.GetMaxRegisterToReadInFrame();
+
+            // get groups of vars to read
+            CReadGroup grp = GetNextReadGroup(tabPage, null, maxReadRegisters);
+            while ((grp != null) && bContinue)
+            {
+                /*
+                // cancel?
+                if (mWorker.CancellationPending)
+                {
+                    bContinue = false;
+                    break;
+                }
+                */
+
+                // get register offset
+                UInt16 regOffset = 0;
+                if (TryGetHoldingregisterOffset(grp.readFirstReg, out regOffset) == true)
+                {
+                    // read 
+                    // use paged read if needed 
+                    ModbusProtocol.Result result = Modbus.MifReadHoldingRegistersPaged(SlaveAddress, regOffset, (UInt16)grp.readRegCount, out readData);
+                    if (result == ModbusProtocol.Result.SUCCESS)
+                    {
+                        // success
+
+                        // process value of each var
+                        int lineCount = 0;
+                        int valueIndex = 0;
+                        for (int lineIndex = grp.lineIndex;
+                             lineCount < grp.lineCount;
+                             ++lineIndex, ++lineCount)
+                        {
+                            // process per var
+                            // 1, 2 or more registers per var
+
+                            TVarProperties varp = GetVarPropertiesByIndex(tabPage, lineIndex);
+
+                            Int16[] aTmpRegs = new Int16[varp.Size];
+                            Array.Copy(readData, valueIndex, aTmpRegs, 0, varp.Size);
+                            valueIndex += varp.Size;
+                            WriteExportVar(varp.Reg, varp.Size, varp.Descr, varp.Format, varp.Readable, varp.Writeable, aTmpRegs);
+                            ++SuccessCount;
+                            //Thread.Sleep(mSleeptime);
+                        }
+                    }
+                    else
+                    {
+                        // error
+
+                        // if it is an address error? and we tried a group read? then read alls vars of this group with single reads to get per-var errors
+                        //  some slaves return eILLEGALDATAVALUE if address + regcount is invalid, some return ILLEGALADDRESSEXCEPTION
+                        if (((result == ModbusProtocol.Result.ILLEGALADDRESSEXCEPTION) || (result == ModbusProtocol.Result.ILLEGALDATAVALUEEXCEPTION)) && (grp.lineCount > 1))
+                        {
+                            // read per var instead of group, detect error per var
+                            int lineCount = 0;
+                            for (int lineIndex = grp.lineIndex;
+                                 (lineCount < grp.lineCount) && bContinue;
+                                 ++lineIndex, ++lineCount)
+                            {
+                                /*
+                                // cancel?
+                                if (mWorker.CancellationPending)
+                                {
+                                    bContinue = false;
+                                break;
+                                }
+                                */
+
+                                TVarProperties varp = GetVarPropertiesByIndex(tabPage, lineIndex);
+
+                                // get register offset
+                                regOffset = RegisterToOffset.GetHoldingregisterOffset(varp.Reg);
+                                // read
+                                //Debug.Print(DateTime.Now.TimeOfDay + ": MifReadHoldingRegisters(" + mSlaveAddress + "," + GetUserReg(regOffset) + "," + (UInt16)varp.Size + ")");
+                                result = Modbus.MifReadHoldingRegisters(SlaveAddress, regOffset, (UInt16)varp.Size, out readData);
+                                //Debug.Print(DateTime.Now.TimeOfDay + ": MifReadHoldingRegisters returned " + result);
+                                if (result == ModbusProtocol.Result.SUCCESS)
+                                {
+                                    // get the value, 16 or 32-bit
+                                    // the register value is in readData as 1 or 2 16-bit registers
+
+                                    WriteExportVar(varp.Reg, varp.Size, varp.Descr, varp.Format, varp.Readable, varp.Writeable, readData);
+                                    ++SuccessCount;
+                                }
+                                else
+                                {
+                                    // error
+                                    WriteExportError(varp.Reg, varp.Size, varp.Descr, varp.Format, varp.Readable, varp.Writeable, ModbusProtocol.GetResultText(result));
+                                    ++CommErrorCount;
+
+                                    retcode = EReturnCode.CommError;
+
+                                    if (ContinueOnError == false)
+                                    { 
+                                        bContinue = false;
+                                    }
+                                }
+
+                                //Thread.Sleep(mSleeptime);
+                            }
+                        }
+                        else
+                        {
+                            // other errors
+                            // show error for each var
+                            int lineCount = 0;
+                            for (int lineIndex = grp.lineIndex;
+                                 lineCount < grp.lineCount;
+                                 ++lineIndex, ++lineCount)
+                            {
+                                // error
+
+                                TVarProperties varp = GetVarPropertiesByIndex(tabPage, lineIndex);
+
+                                WriteExportError(varp.Reg, varp.Size, varp.Descr, varp.Format, varp.Readable, varp.Writeable, ModbusProtocol.GetResultText(result));
+                                ++CommErrorCount;
+                            }
+
+                            retcode = EReturnCode.CommError;
+
+                            if (ContinueOnError == false)
+                            {
+                                bContinue = false;
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    string s = "Register " + grp.readFirstReg.ToString() + ": Register number is invalid.";
+                    ReportError("Error: " + s);
+                    ++FileErrorCount;
+                    retcode = EReturnCode.CommError;
+
+                    if (ContinueOnError == false)
+                    {
+                        bContinue = false;
+                    }
+                }
+
+                // next group
+                grp = GetNextReadGroup(tabPage, grp, maxReadRegisters);
+            }
+
+            return retcode;
+        }
+
+        private bool TryGetHoldingregisterOffset(UInt32 Regnr, out UInt16 Offset)
+        {
+            Offset = 0;
+
+            try
+            {
+                Offset = RegisterToOffset.GetHoldingregisterOffset(Regnr);
+                return true;
+            }
+            catch
+            {
+                // return false;
+            }
+
+            return false;
+        }
+        
+
+        private void WriteExportVar(UInt32 reg, int size, string description, Global.eFormat format, bool isReadable, bool isWriteable, Int16[] aRegValues)
+        {
+            // export 1 var
+            // can be multiple lines to export string as registers
+
+            // export string as single registers?
+            if ((format == Global.eFormat.String) && (mExportFormat == EExportFormat.AsInt || mExportFormat == EExportFormat.AsUInt || mExportFormat == EExportFormat.AsHex || mStringExportFormat == EExportFormat.AsInt || mStringExportFormat == EExportFormat.AsUInt || mStringExportFormat == EExportFormat.AsHex))
+            {
+                // export string as single registers
+
+                // in desired format
+                if (mExportFormat == EExportFormat.AsInt || mStringExportFormat == EExportFormat.AsInt)
+                {
+                    format = Global.eFormat.Int;
+                }
+                else if (mExportFormat == EExportFormat.AsUInt || mStringExportFormat == EExportFormat.AsUInt)
+                {
+                    format = Global.eFormat.UInt;
+                }
+                else if (mExportFormat == EExportFormat.AsHex || mStringExportFormat == EExportFormat.AsHex)
+                {
+                    format = Global.eFormat.Hex;
+                }
+
+                // each register
+                Int16[] aTmpReg = new Int16[1];
+                for (int i = 0; i < size; ++i)
+                {
+                    aTmpReg[0] = aRegValues[i];
+                    WriteExportVar2((UInt16)(reg + i), 1, description, format, isReadable, isWriteable, aTmpReg);
+                }
+            }
+            else
+            {
+                // use format override?
+                if (mExportFormat == EExportFormat.AsInt || (format == Global.eFormat.ASCII && mStringExportFormat == EExportFormat.AsInt))
+                {
+                    format = Global.eFormat.Int;
+                }
+                else if (mExportFormat == EExportFormat.AsUInt || (format == Global.eFormat.ASCII && mStringExportFormat == EExportFormat.AsUInt))
+                {
+                    format = Global.eFormat.UInt;
+                }
+                else if (mExportFormat == EExportFormat.AsHex || (format == Global.eFormat.ASCII && mStringExportFormat == EExportFormat.AsHex))
+                {
+                    format = Global.eFormat.Hex;
+                }
+
+                WriteExportVar2(reg, size, description, format, isReadable, isWriteable, aRegValues);
+            }
+        }
+
+        private void WriteExportVar2(UInt32 reg, int size, string description, Global.eFormat format, bool isReadable, bool isWriteable, Int16[] aRegValues)
+        {
+            // export 1 simple var as 1 line
+
+            // width in bits
+            int width = size * 16;
+
+            // make RW string
+            string rwString = (isReadable ? "r" : "") + (isWriteable ? "w" : "");
+
+            // use minlen for hex values
+            int minlen = 0;
+            if (format == Global.eFormat.Hex)
+            {
+                minlen = size * 4;
+            }
+
+            // make value string
+            string valueString = CValueToString.Int16RegistersToValueString(aRegValues, format, format, width, 0, minlen);
+
+            // output to file
+            string[] fields = new string[] { reg.ToString(), size.ToString(), description, rwString, format.ToString(), valueString };
+            mCsvWriter.WriteRow(fields);
+
+            // and display
+            string s = reg.ToString() + ";" + size.ToString() + ";\"" + CleanText(description) + "\";" + rwString + ";" + format.ToString() + ";" + valueString;
+            ReportVerbose("Read: " + s);
+        }
+
+        private void WriteExportError(UInt32 reg, int size, string description, Global.eFormat format, bool isReadable, bool isWriteable, string error)
+        {
+            // output 1 export line with error
+
+            // width in bits
+            int width = size * 16;
+
+            // make RW string
+            string rwString = (isReadable ? "r" : "") + (isWriteable ? "w" : "");
+
+            // output to file
+            string[] fields = new string[] { reg.ToString(), size.ToString(), description, rwString, format.ToString(), "?   >> ERROR: " + error };
+            mCsvWriter.WriteRow(fields);
+
+            // and display
+            string s = reg.ToString() + ";" + size.ToString() + ";\"" + CleanText(description) + "\";" + rwString + ";" + format.ToString() + ";?   >> ERROR: " + error;
+
+            ReportError("Error in read: " + s);
+        }
+
+        #endregion
     }
 }

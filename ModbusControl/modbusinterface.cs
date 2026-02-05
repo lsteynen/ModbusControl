@@ -9,8 +9,6 @@ using System.Net.Sockets;
 using Modbus_net;
 using LST.Helpers;
 
-//TODO; is ook een MifWriteHoldingRegistersPaged() nodig voor import?
-
 namespace ModbusControlSpace
 {
     public class ModbusInterface
@@ -19,6 +17,8 @@ namespace ModbusControlSpace
         private UInt32 mEndOfMessageTimeout = 100;
         private UInt32 mInterFrameDelay = 0;
         private bool mOneWireEchoSuppression = false;
+        private int mMaximumFrameSize = 256;
+        private int mWriteHoldingRegistersFunctioncode = 0;     // 0=auto, 6=single, 16=multiple
         private UInt32 mTries = 1;
 
         private ModbusProtocol mb;
@@ -29,12 +29,8 @@ namespace ModbusControlSpace
         private Object mQueryLock = new Object();
         private Logger mLogger;
         private bool mClosing;
-        private int HoldingregisterStart = 40001;
-        private int InputregisterStart = 30001;
-        private int CoilsStart = 1;
-        private int DiscreteInputsStart = 10001;
 
-       #region constructor
+        #region constructor
 
         public ModbusInterface()
         {
@@ -58,10 +54,14 @@ namespace ModbusControlSpace
             {
                 return mResponseTimeout;
             }
+
             set
             {
                 mResponseTimeout = value;
-                if (mb != null) mb.ResponseTimeout = mResponseTimeout;
+                if (mb != null)
+                {
+                    mb.ResponseTimeout = mResponseTimeout;
+                }
             }
         }
 
@@ -71,10 +71,14 @@ namespace ModbusControlSpace
             {
                 return mEndOfMessageTimeout;
             }
+
             set
             {
                 mEndOfMessageTimeout = value;
-                if (mb != null) mb.EndOfMessageTimeout = mEndOfMessageTimeout;
+                if (mb != null)
+                {
+                    mb.EndOfMessageTimeout = mEndOfMessageTimeout;
+                }
             }
         }
 
@@ -84,10 +88,14 @@ namespace ModbusControlSpace
             {
                 return mInterFrameDelay;
             }
+
             set
             {
                 mInterFrameDelay = value;
-                if (mb != null) mb.InterFrameDelay = mInterFrameDelay;
+                if (mb != null)
+                {
+                    mb.InterFrameDelay = mInterFrameDelay;
+                }
             }
         }
 
@@ -97,13 +105,67 @@ namespace ModbusControlSpace
             {
                 return mOneWireEchoSuppression;
             }
+
             set
             {
                 mOneWireEchoSuppression = value;
-                if (mb != null) mb.OneWireEchoSuppression = mOneWireEchoSuppression;
+                if (mb != null)
+                {
+                    mb.OneWireEchoSuppression = mOneWireEchoSuppression;
+                }
             }
         }
-        
+
+        public int MaximumFrameSize
+        {
+            get
+            {
+                return mMaximumFrameSize;
+            }
+
+            set
+            {
+                mMaximumFrameSize = value;
+            }
+        }
+
+        public int WriteHoldingRegistersFunctioncode
+        {
+            get
+            {
+                return mWriteHoldingRegistersFunctioncode;
+            }
+
+            set
+            {
+                if (value == 0 || value == 6 || value == 16)
+                {
+                    mWriteHoldingRegistersFunctioncode = value;
+                }
+                else
+                {
+                    throw new ArgumentException("Invalid value!", "WriteHoldingRegistersFunctioncode");
+                }
+            }
+        }
+
+        public UInt32 Retries
+        {
+            get
+            {
+                return mTries - 1;
+            }
+
+            set
+            {
+                mTries = value + 1;
+                if (mb != null)
+                {
+                    mb.Tries = mTries;
+                }
+            }
+        }
+
         public uint SuccessCount
         {
             get
@@ -281,7 +343,7 @@ namespace ModbusControlSpace
         /// <summary>
         /// Open connection over serial port, using RTU protocol
         /// </summary>
-        public void OpenSerialRtu( string portName, uint baudRate, Parity parity, StopBits stopBits)
+        public void OpenSerialRtu(string portName, uint baudRate, Parity parity, StopBits stopBits)
         {
             mClosing = false;
             mbSerChannel = new SerialChannel(portName, baudRate, 8U, parity, stopBits);
@@ -379,7 +441,8 @@ namespace ModbusControlSpace
         }
 
         ///<summary>
-        ///Readholdingregisters - return Int16[]
+        ///Readholdingregisters 
+        ///return Int16[]
         ///</summary>
         public ModbusProtocol.Result MifReadHoldingRegisters(byte address, UInt16 startreg, UInt16 regcount, out Int16[] values, bool allowAll = true)
         {
@@ -399,7 +462,7 @@ namespace ModbusControlSpace
 
                 if (mLogger.LogReads)
                 {
-                    mLogger.Log(Logger.LogType.Read, "Read holding reg: slave=" + address + ", addr=" + (HoldingregisterStart + startreg).ToString() + ", quant=" + regcount);
+                    mLogger.Log(Logger.LogType.Read, "Read holding reg: slave=" + address + ", addr=" + RegisterToOffset.ConvertHoldingregisterOffsetToRegisterNumber(startreg).ToString() + ", quant=" + regcount);
                 }
 
                 // send query, get response
@@ -431,21 +494,22 @@ namespace ModbusControlSpace
         }
 
         ///<summary>
-        ///MifReadHoldingRegistersPaged - return Int16[]
-        ///Can read more registers than MifReadHoldingRegisters() can, using pages
+        /// MifReadHoldingRegistersPaged 
+        /// return Int16[]
+        /// Can read more registers than MifReadHoldingRegisters() can, using pages
         ///</summary>
-        public ModbusProtocol.Result MifReadHoldingRegistersPaged(byte address, UInt16 startreg, UInt16 regcount, out Int16[] values, int maxRegistersInPage)
+        public ModbusProtocol.Result MifReadHoldingRegistersPaged(byte address, UInt16 startreg, UInt16 regcount, out Int16[] values)
         {
+            ModbusProtocol.Result result = ModbusProtocol.Result.SUCCESS;
             values = new Int16[regcount];
             Int16[] pageValuesBuf = null;
             int pagePos = 0;
-            int pageSize = 0;
-            ModbusProtocol.Result result = ModbusProtocol.Result.SUCCESS;
+            int maxRegistersInPage = GetMaxRegisterToReadInFrame();
 
             while (pagePos < regcount)
             {
                 // next page size
-                pageSize = Math.Min(regcount - pagePos, maxRegistersInPage);
+                int pageSize = Math.Min(regcount - pagePos, maxRegistersInPage);
                 // send query, get response
                 result = MifReadHoldingRegisters(address, startreg, (UInt16)pageSize, out pageValuesBuf);
                 if (result == ModbusProtocol.Result.SUCCESS)
@@ -482,7 +546,7 @@ namespace ModbusControlSpace
 
                 if (mLogger.LogWrites)
                 {
-                    mLogger.Log(Logger.LogType.Write, "Write single holding reg: slave=" + address + ", addr=" + (HoldingregisterStart + startreg).ToString() + ", value=" + value);
+                    mLogger.Log(Logger.LogType.Write, "Write single holding reg: slave=" + address + ", addr=" + RegisterToOffset.ConvertHoldingregisterOffsetToRegisterNumber(startreg).ToString() + ", value=" + value);
                 }
 
                 // send query, get response
@@ -531,7 +595,7 @@ namespace ModbusControlSpace
 
                 if (mLogger.LogWrites)
                 {
-                    mLogger.Log(Logger.LogType.Write, "Write multiple holding reg: slave=" + address + ", addr=" + (HoldingregisterStart + startreg).ToString() + ", quant=" + regcount + ", values=" + Converts.Int16ArrayToStringOfValues(values));
+                    mLogger.Log(Logger.LogType.Write, "Write multiple holding reg: slave=" + address + ", addr=" + RegisterToOffset.ConvertHoldingregisterOffsetToRegisterNumber(startreg).ToString() + ", quant=" + regcount + ", values=" + Converts.Int16ArrayToStringOfValues(values));
                 }
 
                 // send query, get response
@@ -562,6 +626,64 @@ namespace ModbusControlSpace
             }
         }
 
+        /// <summary>
+        /// Write one or more holding registers
+        /// Uses 'FC06 write single register' or 'FC16 write multiple registers' as configured in mWriteHoldingRegistersFunctioncode
+        /// Used paged write if needed to respect mMaximumFrameSize
+        /// </summary>
+        public ModbusProtocol.Result MifWriteHoldingRegistersPaged(byte address, UInt16 startreg, UInt16 regcount, Int16[] values)
+        {
+            // use FC6-write-single or FC16-write-multiple?
+            //
+            //  #reg    FC6     FC16    auto
+            //  ----    ----    ----    ----
+            //  1       FC6     FC16#1  FC6
+            //  >1      N*FC6   FC16#N  FC16#N
+
+            ModbusProtocol.Result result = ModbusProtocol.Result.SUCCESS;
+
+            bool writeMultiple = (mWriteHoldingRegistersFunctioncode == 16)
+                              || ((mWriteHoldingRegistersFunctioncode == 0) && (regcount > 1));
+
+            if (writeMultiple)
+            {
+                // use 'FC16 write multiple registers'
+                // write in pages if needed
+
+                int maxRegistersInPage = GetMaxRegisterToWriteInFrame();
+                Int16[] pageValues = new Int16[maxRegistersInPage];
+
+                int pagePos = 0;
+                while ((pagePos < regcount) && (result == ModbusProtocol.Result.SUCCESS))
+                {
+                    // next page size
+                    int pageSize = Math.Min(regcount - pagePos, maxRegistersInPage);
+                    // next page values
+                    Array.Copy(values, pagePos, pageValues, 0, pageSize);
+                    // send write
+                    result = MifWriteMultipleHoldingRegisters(address, (UInt16)(startreg + pagePos), (UInt16)pageSize, pageValues);
+                    // next
+                    pagePos += pageSize;
+                }
+            }
+            else
+            {
+                // use 'FC06 write single register'
+                // write one by one
+
+                int writeIndex = 0;
+                while ((writeIndex < regcount) && (result == ModbusProtocol.Result.SUCCESS))
+                {
+                    // send write
+                    result = MifWriteSingleHoldingRegister(address, (UInt16)(startreg + writeIndex), values[writeIndex]);
+                    // next
+                    ++writeIndex;
+                }
+            }
+
+            return result;
+        }
+
         ///<summary>
         ///ReadInputRegisters - return Int16[]
         ///</summary>
@@ -583,7 +705,7 @@ namespace ModbusControlSpace
 
                 if (mLogger.LogReads)
                 {
-                    mLogger.Log(Logger.LogType.Read, "Read input reg: slave=" + address + ", addr=" + (InputregisterStart + startreg).ToString() + ", quant=" + regcount);
+                    mLogger.Log(Logger.LogType.Read, "Read input reg: slave=" + address + ", addr=" + RegisterToOffset.ConvertInputregisterOffsetToRegisterNumber(startreg).ToString() + ", quant=" + regcount);
                 }
 
                 // send query, get response
@@ -636,7 +758,7 @@ namespace ModbusControlSpace
 
                 if (mLogger.LogReads)
                 {
-                    mLogger.Log(Logger.LogType.Read, "Read coils: slave=" + address + ", addr=" + (CoilsStart + startreg).ToString() + ", quant=" + regcount);
+                    mLogger.Log(Logger.LogType.Read, "Read coils: slave=" + address + ", addr=" + RegisterToOffset.ConvertCoilOffsetToNumber(startreg).ToString() + ", quant=" + regcount);
                 }
 
                 // send query, get response
@@ -685,7 +807,7 @@ namespace ModbusControlSpace
 
                 if (mLogger.LogWrites)
                 {
-                    mLogger.Log(Logger.LogType.Write, "Write single coil: slave=" + address + ", addr=" + (CoilsStart + startreg).ToString() + ", value=" + value);
+                    mLogger.Log(Logger.LogType.Write, "Write single coil: slave=" + address + ", addr=" + RegisterToOffset.ConvertCoilOffsetToNumber(startreg).ToString() + ", value=" + value);
                 }
 
                 // send query, get response
@@ -735,7 +857,7 @@ namespace ModbusControlSpace
                 if (mLogger.LogWrites)
                 {
                     int nrOfDatabytes = ((regcount + 1) / 8);
-                    mLogger.Log(Logger.LogType.Write, "Write multiple coils: slave=" + address + ", addr=" + (CoilsStart + startreg).ToString() + ", quant=" + regcount + ", values=" + BytesToString.Convert(values, nrOfDatabytes));
+                    mLogger.Log(Logger.LogType.Write, "Write multiple coils: slave=" + address + ", addr=" + RegisterToOffset.ConvertCoilOffsetToNumber(startreg).ToString() + ", quant=" + regcount + ", values=" + BytesToString.Convert(values, nrOfDatabytes));
                 }
 
                 // send query, get response
@@ -788,7 +910,7 @@ namespace ModbusControlSpace
 
                 if (mLogger.LogReads)
                 {
-                    mLogger.Log(Logger.LogType.Read, "Read discrete inputs: slave=" + address + ", addr=" + (DiscreteInputsStart + startreg).ToString() + ", quant=" + regcount);
+                    mLogger.Log(Logger.LogType.Read, "Read discrete inputs: slave=" + address + ", addr=" + RegisterToOffset.ConvertDiscreteInputOffsetToNumber(startreg).ToString() + ", quant=" + regcount);
                 }
 
                 // send query, get response
@@ -898,6 +1020,20 @@ namespace ModbusControlSpace
             }
         }
 
+        public int GetMaxRegisterToReadInFrame()
+        {
+            // maximum number of 16-bit registers that can be read in 1 frame
+            // with a RTU frame size of MaximumFramesize (including CRC)
+            return (mMaximumFrameSize - 5) / 2;
+        }
+
+        public int GetMaxRegisterToWriteInFrame()
+        {
+            // maximum number of 16-bit registers that can be written in 1 frame
+            // with a RTU frame size of MaximumFramesize (including CRC)
+            return (mMaximumFrameSize - 9) / 2;
+        }
+
         public void CloseTcpChannelConnection()
         {
             // If we use short-lived TCP connections: close the TCP connection
@@ -952,6 +1088,6 @@ namespace ModbusControlSpace
             }
         }
 
-
     }
+
 }
