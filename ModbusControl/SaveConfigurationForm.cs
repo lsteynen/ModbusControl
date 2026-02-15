@@ -33,8 +33,7 @@ namespace ModbusControlSpace
 
         private void checkbox_CheckedChanged(object sender, EventArgs e)
         {
-            buttonSave.Enabled = (checkboxConnection.Checked 
-                || checkboxSettings.Checked 
+            buttonSave.Enabled = (checkboxProjectConfig.Checked 
                 || checkboxBridge.Checked 
                 || checkboxFormSize.Checked 
                 || checkboxUpdateXML.Checked);
@@ -47,17 +46,10 @@ namespace ModbusControlSpace
             {
                 bool Changed = false;
 
-                if (checkboxConnection.Checked)
+                if (checkboxProjectConfig.Checked)
                 {
                     // new parameters already in Project
                     Project.WriteConnection();
-                    Changed = true;
-                }
-
-                if (checkboxSettings.Checked)
-                {
-                    // new parameters already in Project
-                    Project.WriteOtherSettings();
                     Changed = true;
                 }
 

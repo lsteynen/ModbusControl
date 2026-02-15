@@ -69,9 +69,13 @@
             this.picSamplerateIsOverride = new System.Windows.Forms.PictureBox();
             this.picMaxFrameSizeIsOverride = new System.Windows.Forms.PictureBox();
             this.picwriteregFCIsOverride = new System.Windows.Forms.PictureBox();
+            this.numericInterFrameDelay = new LST.Controls.NumericUpDown2();
+            this.comboSerialPort = new ModbusControlSpace.SerialPortCombobox();
             this.label5 = new System.Windows.Forms.Label();
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
             this.panel2 = new System.Windows.Forms.Panel();
+            this.label17 = new System.Windows.Forms.Label();
+            this.comboStringEncoding = new System.Windows.Forms.ComboBox();
             this.buttonApply = new System.Windows.Forms.Button();
             this.groupBox5 = new System.Windows.Forms.GroupBox();
             this.buttonCancel = new System.Windows.Forms.Button();
@@ -102,10 +106,6 @@
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.label16 = new System.Windows.Forms.Label();
             this.panelWarning = new System.Windows.Forms.Panel();
-            this.comboStringEncoding = new System.Windows.Forms.ComboBox();
-            this.label17 = new System.Windows.Forms.Label();
-            this.numericInterFrameDelay = new LST.Controls.NumericUpDown2();
-            this.comboSerialPort = new ModbusControlSpace.SerialPortCombobox();
             ((System.ComponentModel.ISupportInitialize)(this.numericSamplerate)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericTcpServerPort)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericMaximumFrameSize)).BeginInit();
@@ -127,6 +127,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.picSamplerateIsOverride)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.picMaxFrameSizeIsOverride)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.picwriteregFCIsOverride)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericInterFrameDelay)).BeginInit();
             this.panel2.SuspendLayout();
             this.groupBox3.SuspendLayout();
             this.groupBox4.SuspendLayout();
@@ -138,7 +139,6 @@
             this.groupBoxSerialInterface.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.panelWarning.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericInterFrameDelay)).BeginInit();
             this.SuspendLayout();
             // 
             // numericSamplerate
@@ -691,6 +691,30 @@
             this.toolTip1.SetToolTip(this.picwriteregFCIsOverride, "This parameter is overridden by the command line! It shows the value as set by th" +
         "e command line, not the value configured in the mbc project file.");
             // 
+            // numericInterFrameDelay
+            // 
+            this.numericInterFrameDelay.Location = new System.Drawing.Point(126, 344);
+            this.numericInterFrameDelay.Maximum = new decimal(new int[] {
+            2147483647,
+            0,
+            0,
+            0});
+            this.numericInterFrameDelay.Name = "numericInterFrameDelay";
+            this.numericInterFrameDelay.Size = new System.Drawing.Size(61, 20);
+            this.numericInterFrameDelay.TabIndex = 11;
+            this.toolTip1.SetToolTip(this.numericInterFrameDelay, "Delay between response and next query, in milliseconds, 0 is auto, auto is 4Tchar" +
+        " for serial channels and 0ms for TCP channels");
+            // 
+            // comboSerialPort
+            // 
+            this.comboSerialPort.FormattingEnabled = true;
+            this.comboSerialPort.Location = new System.Drawing.Point(95, 13);
+            this.comboSerialPort.MaxLength = 30;
+            this.comboSerialPort.Name = "comboSerialPort";
+            this.comboSerialPort.Size = new System.Drawing.Size(91, 21);
+            this.comboSerialPort.TabIndex = 9;
+            this.toolTip1.SetToolTip(this.comboSerialPort, "Serial port name. Dropdown shows existing ports");
+            // 
             // label5
             // 
             this.label5.AutoSize = true;
@@ -726,6 +750,24 @@
             this.panel2.Padding = new System.Windows.Forms.Padding(0, 0, 0, 6);
             this.panel2.Size = new System.Drawing.Size(692, 396);
             this.panel2.TabIndex = 23;
+            // 
+            // label17
+            // 
+            this.label17.AutoSize = true;
+            this.label17.Location = new System.Drawing.Point(225, 246);
+            this.label17.Name = "label17";
+            this.label17.Size = new System.Drawing.Size(133, 13);
+            this.label17.TabIndex = 34;
+            this.label17.Text = "String encoding/decoding:";
+            // 
+            // comboStringEncoding
+            // 
+            this.comboStringEncoding.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboStringEncoding.FormattingEnabled = true;
+            this.comboStringEncoding.Location = new System.Drawing.Point(227, 262);
+            this.comboStringEncoding.Name = "comboStringEncoding";
+            this.comboStringEncoding.Size = new System.Drawing.Size(208, 21);
+            this.comboStringEncoding.TabIndex = 33;
             // 
             // buttonApply
             // 
@@ -811,7 +853,7 @@
             this.groupboxModbusTcpServer.Controls.Add(this.numericTcpServerPort);
             this.groupboxModbusTcpServer.Controls.Add(this.checkboxTcpServerEnable);
             this.groupboxModbusTcpServer.Controls.Add(this.label13);
-            this.groupboxModbusTcpServer.Location = new System.Drawing.Point(463, 270);
+            this.groupboxModbusTcpServer.Location = new System.Drawing.Point(463, 180);
             this.groupboxModbusTcpServer.Name = "groupboxModbusTcpServer";
             this.groupboxModbusTcpServer.Size = new System.Drawing.Size(178, 75);
             this.groupboxModbusTcpServer.TabIndex = 28;
@@ -1058,48 +1100,6 @@
             this.panelWarning.TabIndex = 22;
             this.panelWarning.Visible = false;
             // 
-            // comboStringEncoding
-            // 
-            this.comboStringEncoding.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboStringEncoding.FormattingEnabled = true;
-            this.comboStringEncoding.Location = new System.Drawing.Point(227, 262);
-            this.comboStringEncoding.Name = "comboStringEncoding";
-            this.comboStringEncoding.Size = new System.Drawing.Size(208, 21);
-            this.comboStringEncoding.TabIndex = 33;
-            // 
-            // label17
-            // 
-            this.label17.AutoSize = true;
-            this.label17.Location = new System.Drawing.Point(225, 246);
-            this.label17.Name = "label17";
-            this.label17.Size = new System.Drawing.Size(133, 13);
-            this.label17.TabIndex = 34;
-            this.label17.Text = "String encoding/decoding:";
-            // 
-            // numericInterFrameDelay
-            // 
-            this.numericInterFrameDelay.Location = new System.Drawing.Point(126, 344);
-            this.numericInterFrameDelay.Maximum = new decimal(new int[] {
-            2147483647,
-            0,
-            0,
-            0});
-            this.numericInterFrameDelay.Name = "numericInterFrameDelay";
-            this.numericInterFrameDelay.Size = new System.Drawing.Size(61, 20);
-            this.numericInterFrameDelay.TabIndex = 11;
-            this.toolTip1.SetToolTip(this.numericInterFrameDelay, "Delay between response and next query, in milliseconds, 0 is auto, auto is 4Tchar" +
-        " for serial channels and 0ms for TCP channels");
-            // 
-            // comboSerialPort
-            // 
-            this.comboSerialPort.FormattingEnabled = true;
-            this.comboSerialPort.Location = new System.Drawing.Point(95, 13);
-            this.comboSerialPort.MaxLength = 30;
-            this.comboSerialPort.Name = "comboSerialPort";
-            this.comboSerialPort.Size = new System.Drawing.Size(91, 21);
-            this.comboSerialPort.TabIndex = 9;
-            this.toolTip1.SetToolTip(this.comboSerialPort, "Serial port name. Dropdown shows existing ports");
-            // 
             // ConfigForm
             // 
             this.AcceptButton = this.buttonOK;
@@ -1142,6 +1142,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.picSamplerateIsOverride)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.picMaxFrameSizeIsOverride)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.picwriteregFCIsOverride)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericInterFrameDelay)).EndInit();
             this.panel2.ResumeLayout(false);
             this.panel2.PerformLayout();
             this.groupBox3.ResumeLayout(false);
@@ -1163,7 +1164,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.panelWarning.ResumeLayout(false);
             this.panelWarning.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericInterFrameDelay)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 

@@ -2316,6 +2316,15 @@ namespace ModbusControlSpace
             }
             xe.Value = Connection.StringEncoding.ToString();
 
+            // Find Samplerate node, or create it
+            xe = FindElement(xeModbus, "SampleRate");
+            if (xe == null)
+            {
+                xe = new XElement("samplerate");
+                xeModbus.Add(xe);
+            }
+            xe.Value = Options.Samplerate.ToString();
+
             // Remove ShowType, obsolete
             xe = FindElement(xeModbus, "ShowType");
             if (xe != null)
@@ -2362,30 +2371,6 @@ namespace ModbusControlSpace
                 xeBridge.Add(xe);
             }
             xe.Value = ModbusTcpBridge.IPPort.ToString();
-        }
-
-        /// <summary>
-        /// Write other settings to XML document, like samplerate
-        /// Create XML nodes if they don't exist yet
-        /// </summary>
-        public void WriteOtherSettings()
-        {
-            // Find Modbus node (case insensitive), or create it
-            XElement xeModb = FindElement(XmlRootNode, "Modbus");
-            if (xeModb == null)
-            {
-                xeModb = new XElement("modbus");
-                XmlRootNode.Add(xeModb);
-            }
-
-            // Find Samplerate node, or create it
-            XElement xe = FindElement(xeModb, "SampleRate");
-            if (xe == null)
-            {
-                xe = new XElement("samplerate");
-                xeModb.Add(xe);
-            }
-            xe.Value = Options.Samplerate.ToString();
         }
 
         /// <summary>

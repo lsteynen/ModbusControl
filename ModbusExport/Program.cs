@@ -127,7 +127,7 @@ namespace ModbusExport
             Converts.StringEndian = Project.Connection.StringEndian;
             Converts.StringEncodingName = Project.Connection.StringEncoding;
             // pass new configuration to RegisterToOffset
-            RegisterToOffset.RegisterNumberingScheme = Project.Options.HoldingregistersStart;
+            RegisterToOffset.RegisterNumberingSchema = Project.Options.HoldingregistersStart;
 
             // Connect
             Print("Opening connection: " + GetConnectionInfoString());

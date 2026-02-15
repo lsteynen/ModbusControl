@@ -349,6 +349,27 @@ namespace ModbusControlSpace
         public delegate void ApplyHandler(object sender);
         public event ApplyHandler OnApply;
 
+        // A list of the suppored string encodings, to be shown in the dropdown.
+        // These are the .NET encoding names.
+        // Use only those with a 1-byte 00 encoding of the zero character, used as terminating zero in Converts.cs.
+        private string[] supportedStringEncodings =
+        {   "us-ascii",
+            "utf-8",
+            "windows-1250",
+            //"windows-1251",
+            "windows-1252",
+            //"windows-1253",
+            //"windows-1254",
+            //"windows-1255",
+            //"windows-1256",
+            //"windows-1257",
+            //"windows-1258",
+            "iso-8859-1",
+            "iso-8859-2",
+            "iso-8859-3",
+            "iso-8859-15"
+        };
+
         // Implementation
 
         public ConfigForm()
@@ -368,19 +389,23 @@ namespace ModbusControlSpace
             comboSerialPort.LoadWithFirstSerialPort();
 
             // load a dictionary with the supported string encodings
-            // use dictionary to have 2 values per item: key and displaytext
-            // load it in a list first, to sort
-            List<EncodingInfo> encodingInfos = new List<EncodingInfo>(Encoding.GetEncodings());
-            // sort by encoding name
-            encodingInfos.Sort((a, b) => string.Compare(a.Name, b.Name, StringComparison.OrdinalIgnoreCase));
-            // build dictionary with sorted encodings
-            Dictionary<string, string> sortedEncodingDict = new Dictionary<string, string>();
-            foreach (var enc in encodingInfos)
+            // use a dictionary to have 2 values per item: key/name and displaytext
+            // get the displayname of each encoding
+            Dictionary<string, string> encodingDict = new Dictionary<string, string>();
+            foreach (string encName in supportedStringEncodings)
             {
-                sortedEncodingDict[enc.Name] = enc.Name + "   (" + enc.DisplayName + ")";
+                try
+                {
+                    Encoding enc = Encoding.GetEncoding(encName);
+                    encodingDict[encName] = encName + "   (" + enc.EncodingName + ")";
+                }
+                catch
+                {
+                    // ignore, it seems our encoding is not supported in the current .NET framework.
+                }
             }
             // bind dictionary to ComboBox
-            comboStringEncoding.DataSource = new BindingSource(sortedEncodingDict, null);
+            comboStringEncoding.DataSource = new BindingSource(encodingDict, null);
             comboStringEncoding.DisplayMember = "Value"; // Display name
             comboStringEncoding.ValueMember = "Key";     // Encoding name
 

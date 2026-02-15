@@ -11,7 +11,7 @@
 		<!-- <connection>modbus/tcp</connection> -->
 		<!-- <connection>rtu/tcp</connection> -->
 		<!-- Serial parameters -->
-		<port>COM1</port>
+		<port></port>
 		<baudrate>9600</baudrate>
 		<parity>none</parity>
 		<endofmessagetimeout>100</endofmessagetimeout>
@@ -23,10 +23,11 @@
 		<slaveid>1</slaveid>
 		<responsetimeout>1000</responsetimeout>
 		<maximumframesize>256</maximumframesize>
-		<writeholdingregisterfc>auto</writeholdingregisterfc>
+		<writeholdingregisterfc>6</writeholdingregisterfc>
 		<int32endian>little</int32endian>
 		<float32endian>little</float32endian>
-		<ascii16endian>little</ascii16endian>
+		<stringendian>little</stringendian>
+		<stringencoding>windows-1252</stringencoding>
 		<samplerate>1000</samplerate>
 		<holdingregisterstart>40001</holdingregisterstart>
 		<interframedelay>0</interframedelay>
@@ -265,6 +266,12 @@ Digital inputs bitmap. Each bit corresponds with a digital input.</longdescr>
 				</item>
 				<else>INVALID MODE</else>
 			</enum>
+		</var>
+		<var>
+			<reg>40210</reg>
+			<text>Project name, string 50 bytes or 25 registers</text>
+			<type>string50</type>
+			<rw>rw</rw>
 		</var>
 	</tab>
 </modbuscontrol>

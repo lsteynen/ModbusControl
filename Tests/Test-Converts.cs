@@ -1516,9 +1516,13 @@ namespace UnitTests
         {
             // print all supported encodings
 
-            foreach (var info in Encoding.GetEncodings())
+            string s = string.Format("{0,-10}{1,-30}{2, -50}{3}", "CodePage", "Name", "DisplayName", "\0 length");
+            TestContext.WriteLine(s);
+            foreach (var encinfo in Encoding.GetEncodings())
             {
-                string s = string.Format("{0,-10}{1,-30}{2}", info.CodePage, info.Name, info.DisplayName);
+                Encoding enc = encinfo.GetEncoding();
+                byte[] zbytes = enc.GetBytes(new[] { '\0' });
+                s = string.Format("{0,-10}{1,-30}{2, -50}{3}", encinfo.CodePage, encinfo.Name, encinfo.DisplayName, zbytes.Length);
                 TestContext.WriteLine(s);
             }
         }

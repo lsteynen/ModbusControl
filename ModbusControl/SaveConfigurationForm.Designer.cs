@@ -38,9 +38,8 @@
             this.checkboxBridge = new System.Windows.Forms.CheckBox();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.buttonSave = new System.Windows.Forms.Button();
-            this.checkboxSettings = new System.Windows.Forms.CheckBox();
             this.label1 = new System.Windows.Forms.Label();
-            this.checkboxConnection = new System.Windows.Forms.CheckBox();
+            this.checkboxProjectConfig = new System.Windows.Forms.CheckBox();
             this.checkboxFormSize = new System.Windows.Forms.CheckBox();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.panelWarning.SuspendLayout();
@@ -90,9 +89,8 @@
             this.panel2.Controls.Add(this.checkboxBridge);
             this.panel2.Controls.Add(this.buttonCancel);
             this.panel2.Controls.Add(this.buttonSave);
-            this.panel2.Controls.Add(this.checkboxSettings);
             this.panel2.Controls.Add(this.label1);
-            this.panel2.Controls.Add(this.checkboxConnection);
+            this.panel2.Controls.Add(this.checkboxProjectConfig);
             this.panel2.Controls.Add(this.checkboxFormSize);
             this.panel2.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel2.Location = new System.Drawing.Point(0, 64);
@@ -105,7 +103,7 @@
             this.checkboxUpdateXML.AutoSize = true;
             this.checkboxUpdateXML.Checked = true;
             this.checkboxUpdateXML.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkboxUpdateXML.Location = new System.Drawing.Point(31, 117);
+            this.checkboxUpdateXML.Location = new System.Drawing.Point(31, 93);
             this.checkboxUpdateXML.Name = "checkboxUpdateXML";
             this.checkboxUpdateXML.Size = new System.Drawing.Size(171, 17);
             this.checkboxUpdateXML.TabIndex = 14;
@@ -118,7 +116,7 @@
             // checkboxBridge
             // 
             this.checkboxBridge.AutoSize = true;
-            this.checkboxBridge.Location = new System.Drawing.Point(31, 75);
+            this.checkboxBridge.Location = new System.Drawing.Point(31, 53);
             this.checkboxBridge.Name = "checkboxBridge";
             this.checkboxBridge.Size = new System.Drawing.Size(161, 17);
             this.checkboxBridge.TabIndex = 13;
@@ -150,42 +148,32 @@
             this.buttonSave.UseVisualStyleBackColor = true;
             this.buttonSave.Click += new System.EventHandler(this.buttonSave_Click);
             // 
-            // checkboxSettings
-            // 
-            this.checkboxSettings.AutoSize = true;
-            this.checkboxSettings.Location = new System.Drawing.Point(31, 54);
-            this.checkboxSettings.Name = "checkboxSettings";
-            this.checkboxSettings.Size = new System.Drawing.Size(82, 17);
-            this.checkboxSettings.TabIndex = 10;
-            this.checkboxSettings.Text = "Sample rate";
-            this.toolTip1.SetToolTip(this.checkboxSettings, "Save the current sample rate and ShowInfo flag");
-            this.checkboxSettings.UseVisualStyleBackColor = true;
-            this.checkboxSettings.CheckedChanged += new System.EventHandler(this.checkbox_CheckedChanged);
-            // 
             // label1
             // 
             this.label1.Location = new System.Drawing.Point(12, 12);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(285, 13);
             this.label1.TabIndex = 7;
-            this.label1.Text = "Save the following configuration settings to the project file:";
+            this.label1.Text = "Save the following items to the project file:";
             // 
-            // checkboxConnection
+            // checkboxProjectConfig
             // 
-            this.checkboxConnection.AutoSize = true;
-            this.checkboxConnection.Location = new System.Drawing.Point(31, 33);
-            this.checkboxConnection.Name = "checkboxConnection";
-            this.checkboxConnection.Size = new System.Drawing.Size(181, 17);
-            this.checkboxConnection.TabIndex = 9;
-            this.checkboxConnection.Text = "Connection and protocol settings";
-            this.toolTip1.SetToolTip(this.checkboxConnection, "Save the current connection and protocol settings");
-            this.checkboxConnection.UseVisualStyleBackColor = true;
-            this.checkboxConnection.CheckedChanged += new System.EventHandler(this.checkbox_CheckedChanged);
+            this.checkboxProjectConfig.AutoSize = true;
+            this.checkboxProjectConfig.Checked = true;
+            this.checkboxProjectConfig.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkboxProjectConfig.Location = new System.Drawing.Point(31, 33);
+            this.checkboxProjectConfig.Name = "checkboxProjectConfig";
+            this.checkboxProjectConfig.Size = new System.Drawing.Size(162, 17);
+            this.checkboxProjectConfig.TabIndex = 9;
+            this.checkboxProjectConfig.Text = "Project configuration settings";
+            this.toolTip1.SetToolTip(this.checkboxProjectConfig, "Save the current connection and protocol settings");
+            this.checkboxProjectConfig.UseVisualStyleBackColor = true;
+            this.checkboxProjectConfig.CheckedChanged += new System.EventHandler(this.checkbox_CheckedChanged);
             // 
             // checkboxFormSize
             // 
             this.checkboxFormSize.AutoSize = true;
-            this.checkboxFormSize.Location = new System.Drawing.Point(31, 96);
+            this.checkboxFormSize.Location = new System.Drawing.Point(31, 73);
             this.checkboxFormSize.Name = "checkboxFormSize";
             this.checkboxFormSize.Size = new System.Drawing.Size(104, 17);
             this.checkboxFormSize.TabIndex = 8;
@@ -236,9 +224,8 @@
         private System.Windows.Forms.CheckBox checkboxBridge;
         private System.Windows.Forms.Button buttonCancel;
         private System.Windows.Forms.Button buttonSave;
-        private System.Windows.Forms.CheckBox checkboxSettings;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.CheckBox checkboxConnection;
+        private System.Windows.Forms.CheckBox checkboxProjectConfig;
         private System.Windows.Forms.CheckBox checkboxFormSize;
         private System.Windows.Forms.CheckBox checkboxUpdateXML;
         private System.Windows.Forms.ToolTip toolTip1;

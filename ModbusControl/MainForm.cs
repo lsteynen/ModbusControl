@@ -885,7 +885,7 @@ namespace ModbusControlSpace
             Converts.StringEndian = Project.Connection.StringEndian;
             Converts.StringEncodingName = Project.Connection.StringEncoding;
             // pass new configuration to RegisterToOffset
-            RegisterToOffset.RegisterNumberingScheme = Project.Options.HoldingregistersStart;
+            RegisterToOffset.RegisterNumberingSchema = Project.Options.HoldingregistersStart;
 
             // restore connection
             if (ReopenConnection)
@@ -1181,7 +1181,7 @@ namespace ModbusControlSpace
             Converts.StringEndian = Project.Connection.StringEndian;
             Converts.StringEncodingName = Project.Connection.StringEncoding;
             // pass new configuration to RegisterToOffset
-            RegisterToOffset.RegisterNumberingScheme = Project.Options.HoldingregistersStart;
+            RegisterToOffset.RegisterNumberingSchema = Project.Options.HoldingregistersStart;
 
             // Create the tab pages
             LoadProjectInTabs();

@@ -9,38 +9,38 @@ namespace UnitTests
     public class Test_RegisterToOffset_1
     {
         [TestMethod]
-        public void Test_RegisterNumberingScheme_1()
+        public void Test_RegisterNumberingSchema_1()
         {
-            RegisterToOffset.RegisterNumberingScheme = 40001;
-            Assert.AreEqual<int>(40001, RegisterToOffset.RegisterNumberingScheme);
+            RegisterToOffset.RegisterNumberingSchema = 40001;
+            Assert.AreEqual<int>(40001, RegisterToOffset.RegisterNumberingSchema);
 
-            RegisterToOffset.RegisterNumberingScheme = 40000;
-            Assert.AreEqual<int>(40000, RegisterToOffset.RegisterNumberingScheme);
+            RegisterToOffset.RegisterNumberingSchema = 40000;
+            Assert.AreEqual<int>(40000, RegisterToOffset.RegisterNumberingSchema);
 
-            RegisterToOffset.RegisterNumberingScheme = 400001;
-            Assert.AreEqual<int>(400001, RegisterToOffset.RegisterNumberingScheme);
+            RegisterToOffset.RegisterNumberingSchema = 400001;
+            Assert.AreEqual<int>(400001, RegisterToOffset.RegisterNumberingSchema);
 
-            RegisterToOffset.RegisterNumberingScheme = 400000;
-            Assert.AreEqual<int>(400000, RegisterToOffset.RegisterNumberingScheme);
+            RegisterToOffset.RegisterNumberingSchema = 400000;
+            Assert.AreEqual<int>(400000, RegisterToOffset.RegisterNumberingSchema);
 
             Assert.ThrowsException<ArgumentException>(() =>
-                RegisterToOffset.RegisterNumberingScheme = 0
+                RegisterToOffset.RegisterNumberingSchema = 0
                 );
 
             Assert.ThrowsException<ArgumentException>(() =>
-                RegisterToOffset.RegisterNumberingScheme = 30001
+                RegisterToOffset.RegisterNumberingSchema = 30001
                 );
 
             Assert.ThrowsException<ArgumentException>(() =>
-                RegisterToOffset.RegisterNumberingScheme = 300001
+                RegisterToOffset.RegisterNumberingSchema = 300001
                 );
 
             Assert.ThrowsException<ArgumentException>(() =>
-                RegisterToOffset.RegisterNumberingScheme = 100000
+                RegisterToOffset.RegisterNumberingSchema = 100000
                 );
 
             Assert.ThrowsException<ArgumentException>(() =>
-                RegisterToOffset.RegisterNumberingScheme = 400002
+                RegisterToOffset.RegisterNumberingSchema = 400002
                 );
         }
 
@@ -49,7 +49,7 @@ namespace UnitTests
         [TestMethod]
         public void Test_GetHoldingregOffset_40001()
         {
-            RegisterToOffset.RegisterNumberingScheme = 40001;
+            RegisterToOffset.RegisterNumberingSchema = 40001;
 
             Assert.ThrowsException<ArgumentException>(() =>
                 RegisterToOffset.GetHoldingregisterOffset(40000)
@@ -86,7 +86,7 @@ namespace UnitTests
         [TestMethod]
         public void Test_GetHoldingregOffset_40000()
         {
-            RegisterToOffset.RegisterNumberingScheme = 40000;
+            RegisterToOffset.RegisterNumberingSchema = 40000;
 
             UInt16 offset = RegisterToOffset.GetHoldingregisterOffset(40000);
             Assert.AreEqual<UInt16>(0, offset);
@@ -118,7 +118,7 @@ namespace UnitTests
         [TestMethod]
         public void Test_GetHoldingregOffset_400001()
         {
-            RegisterToOffset.RegisterNumberingScheme = 400001;
+            RegisterToOffset.RegisterNumberingSchema = 400001;
 
             Assert.ThrowsException<ArgumentException>(() =>
                 RegisterToOffset.GetHoldingregisterOffset(40001)
@@ -152,7 +152,7 @@ namespace UnitTests
         [TestMethod]
         public void Test_GetHoldingregOffset_400000()
         {
-            RegisterToOffset.RegisterNumberingScheme = 400000;
+            RegisterToOffset.RegisterNumberingSchema = 400000;
 
             Assert.ThrowsException<ArgumentException>(() =>
                 RegisterToOffset.GetHoldingregisterOffset(40001)
@@ -183,7 +183,7 @@ namespace UnitTests
         [TestMethod]
         public void Test_ConvertHoldingregisterOffsetToRegisterNumber_40001()
         {
-            RegisterToOffset.RegisterNumberingScheme = 40001;
+            RegisterToOffset.RegisterNumberingSchema = 40001;
 
             int regnr = RegisterToOffset.ConvertHoldingregisterOffsetToRegisterNumber(0);
             Assert.AreEqual<int>(40001, regnr);
@@ -207,7 +207,7 @@ namespace UnitTests
         [TestMethod]
         public void Test_ConvertHoldingregisterOffsetToRegisterNumber_40000()
         {
-            RegisterToOffset.RegisterNumberingScheme = 40000;
+            RegisterToOffset.RegisterNumberingSchema = 40000;
 
             int regnr = RegisterToOffset.ConvertHoldingregisterOffsetToRegisterNumber(0);
             Assert.AreEqual<int>(40000, regnr);
@@ -231,7 +231,7 @@ namespace UnitTests
         [TestMethod]
         public void Test_ConvertHoldingregisterOffsetToRegisterNumber_400001()
         {
-            RegisterToOffset.RegisterNumberingScheme = 400001;
+            RegisterToOffset.RegisterNumberingSchema = 400001;
 
             int regnr = RegisterToOffset.ConvertHoldingregisterOffsetToRegisterNumber(0);
             Assert.AreEqual<int>(400001, regnr);
@@ -255,7 +255,7 @@ namespace UnitTests
         [TestMethod]
         public void Test_ConvertHoldingregisterOffsetToRegisterNumber_400000()
         {
-            RegisterToOffset.RegisterNumberingScheme = 400000;
+            RegisterToOffset.RegisterNumberingSchema = 400000;
 
             int regnr = RegisterToOffset.ConvertHoldingregisterOffsetToRegisterNumber(0);
             Assert.AreEqual<int>(400000, regnr);
@@ -281,7 +281,7 @@ namespace UnitTests
         [TestMethod]
         public void Test_GetInputregisterOffset_40001()
         {
-            RegisterToOffset.RegisterNumberingScheme = 40001;
+            RegisterToOffset.RegisterNumberingSchema = 40001;
 
             Assert.ThrowsException<ArgumentException>(() =>
                 RegisterToOffset.GetInputregisterOffset(30000)
@@ -324,7 +324,7 @@ namespace UnitTests
         [TestMethod]
         public void Test_GetInputregisterOffset_40000()
         {
-            RegisterToOffset.RegisterNumberingScheme = 40000;
+            RegisterToOffset.RegisterNumberingSchema = 40000;
 
             UInt16 offset = RegisterToOffset.GetInputregisterOffset(30000);
             Assert.AreEqual<UInt16>(0, offset);
@@ -365,7 +365,7 @@ namespace UnitTests
         [TestMethod]
         public void Test_GetInputregOffset_400001()
         {
-            RegisterToOffset.RegisterNumberingScheme = 400001;
+            RegisterToOffset.RegisterNumberingSchema = 400001;
 
             Assert.ThrowsException<ArgumentException>(() =>
                 RegisterToOffset.GetInputregisterOffset(30001)
@@ -399,7 +399,7 @@ namespace UnitTests
         [TestMethod]
         public void Test_GetInputregOffset_400000()
         {
-            RegisterToOffset.RegisterNumberingScheme = 400000;
+            RegisterToOffset.RegisterNumberingSchema = 400000;
 
             Assert.ThrowsException<ArgumentException>(() =>
                 RegisterToOffset.GetInputregisterOffset(30001)
@@ -432,7 +432,7 @@ namespace UnitTests
         [TestMethod]
         public void Test_ConvertInputregisterOffsetToRegisterNumber_40001()
         {
-            RegisterToOffset.RegisterNumberingScheme = 40001;
+            RegisterToOffset.RegisterNumberingSchema = 40001;
 
             int regnr = RegisterToOffset.ConvertInputregisterOffsetToRegisterNumber(0);
             Assert.AreEqual<int>(30001, regnr);
@@ -457,7 +457,7 @@ namespace UnitTests
         [TestMethod]
         public void Test_ConvertInputregisterOffsetToRegisterNumber_40000()
         {
-            RegisterToOffset.RegisterNumberingScheme = 40000;
+            RegisterToOffset.RegisterNumberingSchema = 40000;
 
             int regnr = RegisterToOffset.ConvertInputregisterOffsetToRegisterNumber(0);
             Assert.AreEqual<int>(30000, regnr);
@@ -482,7 +482,7 @@ namespace UnitTests
         [TestMethod]
         public void Test_ConvertInputregisterOffsetToRegisterNumber_400001()
         {
-            RegisterToOffset.RegisterNumberingScheme = 400001;
+            RegisterToOffset.RegisterNumberingSchema = 400001;
 
             int regnr = RegisterToOffset.ConvertInputregisterOffsetToRegisterNumber(0);
             Assert.AreEqual<int>(300001, regnr);
@@ -507,7 +507,7 @@ namespace UnitTests
         [TestMethod]
         public void Test_ConvertInputregisterOffsetToRegisterNumber_400000()
         {
-            RegisterToOffset.RegisterNumberingScheme = 400000;
+            RegisterToOffset.RegisterNumberingSchema = 400000;
 
             int regnr = RegisterToOffset.ConvertInputregisterOffsetToRegisterNumber(0);
             Assert.AreEqual<int>(300000, regnr);
@@ -533,7 +533,7 @@ namespace UnitTests
         [TestMethod]
         public void Test_GetCoilOffset_40001()
         {
-            RegisterToOffset.RegisterNumberingScheme = 40001;
+            RegisterToOffset.RegisterNumberingSchema = 40001;
 
             Assert.ThrowsException<ArgumentException>(() =>
                 RegisterToOffset.GetCoilOffset(0)
@@ -561,7 +561,7 @@ namespace UnitTests
         [TestMethod]
         public void Test_GetCoilOffset_40000()
         {
-            RegisterToOffset.RegisterNumberingScheme = 40000;
+            RegisterToOffset.RegisterNumberingSchema = 40000;
 
             UInt16 offset = RegisterToOffset.GetCoilOffset(0);
             Assert.AreEqual<UInt16>(0, offset);
@@ -587,7 +587,7 @@ namespace UnitTests
         [TestMethod]
         public void Test_GetCoilOffset_400001()
         {
-            RegisterToOffset.RegisterNumberingScheme = 400001;
+            RegisterToOffset.RegisterNumberingSchema = 400001;
 
             Assert.ThrowsException<ArgumentException>(() =>
                 RegisterToOffset.GetCoilOffset(0)
@@ -619,7 +619,7 @@ namespace UnitTests
         [TestMethod]
         public void Test_GetCoilOffset_400000()
         {
-            RegisterToOffset.RegisterNumberingScheme = 400000;
+            RegisterToOffset.RegisterNumberingSchema = 400000;
 
             UInt16 offset = RegisterToOffset.GetCoilOffset(0);
             Assert.AreEqual<UInt16>(0, offset);
@@ -653,7 +653,7 @@ namespace UnitTests
         [TestMethod]
         public void Test_ConvertCoilOffsetToNumber_40001()
         {
-            RegisterToOffset.RegisterNumberingScheme = 40001;
+            RegisterToOffset.RegisterNumberingSchema = 40001;
 
             int regnr = RegisterToOffset.ConvertCoilOffsetToNumber(0);
             Assert.AreEqual<int>(1, regnr);
@@ -676,7 +676,7 @@ namespace UnitTests
         [TestMethod]
         public void Test_ConvertCoilOffsetToNumber_40000()
         {
-            RegisterToOffset.RegisterNumberingScheme = 40000;
+            RegisterToOffset.RegisterNumberingSchema = 40000;
 
             int regnr = RegisterToOffset.ConvertCoilOffsetToNumber(0);
             Assert.AreEqual<int>(0, regnr);
@@ -702,7 +702,7 @@ namespace UnitTests
         [TestMethod]
         public void Test_ConvertCoilOffsetToNumber_400001()
         {
-            RegisterToOffset.RegisterNumberingScheme = 400001;
+            RegisterToOffset.RegisterNumberingSchema = 400001;
 
             int regnr = RegisterToOffset.ConvertCoilOffsetToNumber(0);
             Assert.AreEqual<int>(1, regnr);
@@ -727,7 +727,7 @@ namespace UnitTests
         [TestMethod]
         public void Test_ConvertCoilOffsetToNumber_400000()
         {
-            RegisterToOffset.RegisterNumberingScheme = 400000;
+            RegisterToOffset.RegisterNumberingSchema = 400000;
 
             int regnr = RegisterToOffset.ConvertCoilOffsetToNumber(0);
             Assert.AreEqual<int>(0, regnr);
@@ -754,7 +754,7 @@ namespace UnitTests
         [TestMethod]
         public void Test_GetDiscreteInputOffset_40001()
         {
-            RegisterToOffset.RegisterNumberingScheme = 40001;
+            RegisterToOffset.RegisterNumberingSchema = 40001;
 
             Assert.ThrowsException<ArgumentException>(() =>
                 RegisterToOffset.GetDiscreteInputOffset(10000)
@@ -794,7 +794,7 @@ namespace UnitTests
         [TestMethod]
         public void Test_GetDiscreteInputOffset_40000()
         {
-            RegisterToOffset.RegisterNumberingScheme = 40000;
+            RegisterToOffset.RegisterNumberingSchema = 40000;
 
             UInt16 offset = RegisterToOffset.GetDiscreteInputOffset(10000);
             Assert.AreEqual<UInt16>(0, offset);
@@ -835,7 +835,7 @@ namespace UnitTests
         [TestMethod]
         public void Test_GetDiscreteInputOffset_400001()
         {
-            RegisterToOffset.RegisterNumberingScheme = 400001;
+            RegisterToOffset.RegisterNumberingSchema = 400001;
 
             Assert.ThrowsException<ArgumentException>(() =>
                 RegisterToOffset.GetDiscreteInputOffset(10001)
@@ -874,7 +874,7 @@ namespace UnitTests
         [TestMethod]
         public void Test_GetDiscreteInputOffset_400000()
         {
-            RegisterToOffset.RegisterNumberingScheme = 400000;
+            RegisterToOffset.RegisterNumberingSchema = 400000;
 
             Assert.ThrowsException<ArgumentException>(() =>
                 RegisterToOffset.GetDiscreteInputOffset(10001)
@@ -908,7 +908,7 @@ namespace UnitTests
         [TestMethod]
         public void Test_ConvertDiscreteInputOffsetToNumber_40001()
         {
-            RegisterToOffset.RegisterNumberingScheme = 40001;
+            RegisterToOffset.RegisterNumberingSchema = 40001;
 
             int regnr = RegisterToOffset.ConvertDiscreteInputOffsetToNumber(0);
             Assert.AreEqual<int>(10001, regnr);
@@ -935,7 +935,7 @@ namespace UnitTests
         [TestMethod]
         public void Test_ConvertDiscreteInputOffsetToNumber_40000()
         {
-            RegisterToOffset.RegisterNumberingScheme = 40000;
+            RegisterToOffset.RegisterNumberingSchema = 40000;
 
             int regnr = RegisterToOffset.ConvertDiscreteInputOffsetToNumber(0);
             Assert.AreEqual<int>(10000, regnr);
@@ -961,7 +961,7 @@ namespace UnitTests
         [TestMethod]
         public void Test_ConvertDiscreteInputOffsetToNumber_400001()
         {
-            RegisterToOffset.RegisterNumberingScheme = 400001;
+            RegisterToOffset.RegisterNumberingSchema = 400001;
 
             int regnr = RegisterToOffset.ConvertDiscreteInputOffsetToNumber(0);
             Assert.AreEqual<int>(100001, regnr);
@@ -985,7 +985,7 @@ namespace UnitTests
         [TestMethod]
         public void Test_ConvertDiscreteInputOffsetToNumber_400000()
         {
-            RegisterToOffset.RegisterNumberingScheme = 400000;
+            RegisterToOffset.RegisterNumberingSchema = 400000;
 
             int regnr = RegisterToOffset.ConvertDiscreteInputOffsetToNumber(0);
             Assert.AreEqual<int>(100000, regnr);
