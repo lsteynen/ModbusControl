@@ -6,11 +6,11 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("ModbusControl")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("Modbus client tool")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("LST")]
 [assembly: AssemblyProduct("ModbusControl")]
-[assembly: AssemblyCopyright("Copyright © 2025")]
+[assembly: AssemblyCopyright("Copyright © 2010-2026")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

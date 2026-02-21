@@ -1423,12 +1423,29 @@ namespace LST.ModbusGridView
 
         private void grid_KeyDown(object sender, KeyEventArgs e)
         {
-            //Debug.Print("e.Control=" + e.Control.ToString() + ", e.KeyCode=" + e.KeyCode.ToString());
+            //Debug.Print("e.Control=" + e.Control.ToString() + ", "
+            //    + "e.KeyCode=" + e.KeyCode.ToString() + ", " 
+            //    + "grid.ColumnIndex=" + grid.CurrentCell.ColumnIndex.ToString() + ", "
+            //    + "grid.RowIndex=" + grid.CurrentCell.RowIndex.ToString()
+            //    );  
 
             // use F2 key to start edit via keyboard
             if (e.KeyCode == Keys.F2)
             {
                 TryBeginEdit(grid.CurrentCell.RowIndex);
+
+                e.Handled = true;
+            }
+
+            // use Control-C in "Value" column to copy the value string to clipboard
+            if (e.Control && (e.KeyCode == Keys.C) && (grid.CurrentCell.ColumnIndex == (int)eGridColIndex.Value))
+            {
+                //Debug.Print("grid_KeyDown: Value column control-C");
+
+                int rowIndex = grid.CurrentCell.RowIndex;
+                DataRow dRow = (grid.Rows[rowIndex].DataBoundItem as DataRowView).Row;
+                string valueString = dRow[(int)dtColIndex.ValueStr].ToString();
+                System.Windows.Forms.Clipboard.SetText(valueString);
 
                 e.Handled = true;
             }
