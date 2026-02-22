@@ -183,8 +183,12 @@ namespace LST.ModbusGridView
         // properties values
         private bool mConnectionIsOpen;
         private bool mStartEditOnAnyCharacter;
+        // entry error timer
+        private DataRow inputErrorRow = null;       // the drow currently in input error
+        private Timer inputErrorTimer;              // timer to make the input error stay for a (inputErrorTimerDelay) ms
+        private const int inputErrorTimerDelay = 2000;
 
-        #endregion
+         #endregion
 
         #region Properties
 
@@ -351,6 +355,11 @@ namespace LST.ModbusGridView
             // otherwise pressing control-C while editing the value copies the whole row content instead of the value string only
             // we handle control-C ourselves in grid_KeyDown()
             grid.ClipboardCopyMode = DataGridViewClipboardCopyMode.Disable;
+
+            // init the error timer
+            inputErrorTimer = new Timer();
+            inputErrorTimer.Interval = inputErrorTimerDelay;
+            inputErrorTimer.Tick += InputErrorTimer_Tick;
 
             // create items list
             RegList = new List<ListItem>();
@@ -1752,7 +1761,7 @@ namespace LST.ModbusGridView
                     RegItem r = RegList[linei] as RegItem;
 
                     // update register value, and its children
-                    SetRegisterError(r, ErrorString);
+                    SetRegisterReadError(r, ErrorString);
                 }
             }
         }
@@ -1796,7 +1805,7 @@ namespace LST.ModbusGridView
             // update the grid
             // but only if is is not beging edited
             DataRow dRow = r.dataRow;
-            if (dRow != editingDatarow)
+            if ((dRow != editingDatarow) && (dRow != inputErrorRow))
             {
                 // update value in grid, only if it changes to minimize flicker
                 if ((r.ValueStr != GetDbStr(dRow[(int)dtColIndex.ValueStr]))
@@ -1821,7 +1830,7 @@ namespace LST.ModbusGridView
             // update the grid
             // but only if is is not beging edited
             DataRow dRow = f.dataRow;
-            if (dRow != editingDatarow)
+            if ((dRow != editingDatarow) && (dRow != inputErrorRow))
             {
                 // update value in grid, only if it changes to minimize flicker
                 if ((f.ValueStr != GetDbStr(dRow[(int)dtColIndex.ValueStr]))
@@ -1835,23 +1844,24 @@ namespace LST.ModbusGridView
         }
 
         /// <summary>
-        /// Update a register value wit herror string, and its children
+        /// Update a register value with error string, and its children
         /// </summary>
         /// <param name="r"></param>
         /// <param name="ErrorString"></param>
-        private void SetRegisterError(RegItem r, string ErrorString)
+        private void SetRegisterReadError(RegItem r, string ErrorString)
         {
             // update the grid
             // but only if is is not beging edited
             DataRow dRow = r.dataRow;
-            if (dRow != editingDatarow)
+            if ((dRow != editingDatarow) && (dRow != inputErrorRow))
             {
                 // update value in grid, only if it changes to minimize flicker
                 string dispStr = r.ValueStr + "  ?  <" + ErrorString + ">";
                 if ((dispStr != GetDbStr(dRow[(int)dtColIndex.ValueStr]))
                     || ((int)dRow[(int)dtColIndex.ValueMode] != ValueModeError))
                 {
-                    dRow[(int)dtColIndex.ValueStr] = dispStr;
+					// set error text
+					dRow[(int)dtColIndex.ValueStr] = dispStr;
                     // set error color
                     dRow[(int)dtColIndex.ValueMode] = ValueModeError;
                 }
@@ -1868,20 +1878,57 @@ namespace LST.ModbusGridView
                     // update the grid
                     // but only if is is not beging edited
                     dRow = bf.dataRow;
-                    if (dRow != editingDatarow)
+                    if ((dRow != editingDatarow) && (dRow != inputErrorRow))
                     {
                         // update value in grid, only if it changes to minimize flicker
                         if ((dispStr != GetDbStr(dRow[(int)dtColIndex.ValueStr]))
                             || ((int)dRow[(int)dtColIndex.ValueMode] != ValueModeError))
                         {
+							// set error text
                             dRow[(int)dtColIndex.ValueStr] = dispStr;
                             // set error color
-                            dRow[(int)dtColIndex.ValueMode] = ValueModeError;
-                        }
+                            dRow[(int)dtColIndex.ValueMode] = ValueModeError;                        }
                     }
                 }
             }
         }
+
+        private void SetRegisterInputError(DataRow dRow, string errorString)
+        {
+            // prevent race conditions
+            inputErrorTimer.Stop();
+
+            // clear previous error
+            if (inputErrorRow != null)
+            {
+                inputErrorRow = null;
+            }
+
+            // set error row
+            inputErrorRow = dRow;
+            dRow[(int)dtColIndex.ValueStr] = errorString;
+            // set error color
+            dRow[(int)dtColIndex.ValueMode] = ValueModeError;
+
+            // start timer
+            inputErrorTimer.Start();
+        }
+
+        /// <summary>
+        /// Entry error timer expired
+        /// </summary>
+        private void InputErrorTimer_Tick(object sender, EventArgs e)
+        {
+            // prevent race conditions
+            inputErrorTimer.Stop();
+
+            // clear the row's error
+            if (inputErrorRow != null)
+            {
+                inputErrorRow = null;
+            }
+        }
+
 
         private Int32 GetBitfieldValue(UInt32 RegValue, int Position, int BitWidth, bool bDoSignExtend)
         {
@@ -1996,10 +2043,8 @@ namespace LST.ModbusGridView
             {
                 // show that the value was not accepted
                 string errorStr = "CONNECTION NOT OPEN";
-                string dispStr = "<" + errorStr + ">";
-                dRow[(int)dtColIndex.ValueStr] = dispStr;
-                // Show error in red
-                dRow[(int)dtColIndex.ValueMode] = ValueModeError;
+                string displayStr = "<" + errorStr + ">";
+                SetRegisterInputError(dRow, displayStr);
 
                 // report error on status bar
                 OnReportErrorMessageEvent("Error: " + errorStr);
@@ -2010,10 +2055,8 @@ namespace LST.ModbusGridView
             {
                 // show that the value was not accepted
                 string errorStr = "REGISTER IS READ-ONLY";
-                string dispStr = "<" + errorStr + ">";
-                dRow[(int)dtColIndex.ValueStr] = dispStr;
-                // Show error in red
-                dRow[(int)dtColIndex.ValueMode] = ValueModeError;
+                string displayStr = "<" + errorStr + ">";
+                SetRegisterInputError(dRow, displayStr);
 
                 // report error on status bar
                 OnReportErrorMessageEvent("Error: " + errorStr);
@@ -2139,14 +2182,12 @@ namespace LST.ModbusGridView
                 }
                 else
                 {
-                    // error
+                    // invalid value
 
                     // show that the new value was not accepted
                     // error message and entered value
-                    string dispStr = "<" + errorString.ToUpper() + "> " + newValueStr;
-                    dRow[(int)dtColIndex.ValueStr] = dispStr;
-                    // Show error in red
-                    dRow[(int)dtColIndex.ValueMode] = ValueModeError;
+                    string displayStr = "<" + errorString.ToUpper() + "> " + newValueStr;
+                    SetRegisterInputError(dRow, displayStr);
 
                     // report error on status bar
                     OnReportErrorMessageEvent("Input error: " + errorString.ToUpper() + "  for register " + editingReg.Reg.ToString() + ": value: " + newValueStr);
