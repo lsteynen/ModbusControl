@@ -347,6 +347,11 @@ namespace LST.ModbusGridView
 
             InitializeComponent();
 
+            // disable DataGridView copying content on control-C
+            // otherwise pressing control-C while editing the value copies the whole row content instead of the value string only
+            // we handle control-C ourselves in grid_KeyDown()
+            grid.ClipboardCopyMode = DataGridViewClipboardCopyMode.Disable;
+
             // create items list
             RegList = new List<ListItem>();
 
@@ -1436,17 +1441,20 @@ namespace LST.ModbusGridView
 
                 e.Handled = true;
             }
-
-            // use Control-C in "Value" column to copy the value string to clipboard
-            if (e.Control && (e.KeyCode == Keys.C) && (grid.CurrentCell.ColumnIndex == (int)eGridColIndex.Value))
+            
+            // programmatically handle Control-C for copying grid data 
+            else if (e.Control && (e.KeyCode == Keys.C))
             {
-                //Debug.Print("grid_KeyDown: Value column control-C");
-
-                int rowIndex = grid.CurrentCell.RowIndex;
-                DataRow dRow = (grid.Rows[rowIndex].DataBoundItem as DataRowView).Row;
-                string valueString = dRow[(int)dtColIndex.ValueStr].ToString();
-                System.Windows.Forms.Clipboard.SetText(valueString);
-
+                // if value columns is selected: copy only the value string
+                if (grid.CurrentCell.ColumnIndex == (int)eGridColIndex.Value)
+                {
+                    CopyRowValueToClipboard(grid.CurrentCell.RowIndex);
+                }
+                else
+                {
+                    CopyRowDataToClipboard(grid.CurrentCell.RowIndex);
+                }
+                
                 e.Handled = true;
             }
         }
@@ -2387,26 +2395,37 @@ namespace LST.ModbusGridView
 
         private void Menu_CopyLine(object sender, EventArgs e)
         {
-            CopyLineToClipboard(rightclickRowIndex);
+            CopyRowDataToClipboard(rightclickRowIndex);
         }
 
-        private void CopyLineToClipboard(int row)
+        private void CopyRowValueToClipboard(int rowIndex)
         {
-            DataRow dRow = (grid.Rows[rightclickRowIndex].DataBoundItem as DataRowView).Row;
+            DataRow dRow = (grid.Rows[rowIndex].DataBoundItem as DataRowView).Row;
+            string valueStr = dRow[(int)dtColIndex.ValueStr].ToString();
 
-            string s = dRow[(int)dtColIndex.RegStr].ToString()
+            if (valueStr.Length > 0)
+            {
+                System.Windows.Forms.Clipboard.SetText(valueStr);
+            }
+        }
+
+        private void CopyRowDataToClipboard(int rowIndex)
+        {
+            DataRow dRow = (grid.Rows[rowIndex].DataBoundItem as DataRowView).Row;
+
+            string rowStr = dRow[(int)dtColIndex.RegStr].ToString()
                     + "\t" + dRow[(int)dtColIndex.Descr].ToString();
 
             if (grid.Columns[(int)eGridColIndex.Properties].Visible)
             {
-                s += "\t" + dRow[(int)dtColIndex.InfoStr].ToString();
+                rowStr += "\t" + dRow[(int)dtColIndex.InfoStr].ToString();
             }
 
-            s += "\t" + dRow[(int)dtColIndex.ValueStr].ToString();
+            rowStr += "\t" + dRow[(int)dtColIndex.ValueStr].ToString();
 
-            if (s.Length > 0)
+            if (rowStr.Length > 0)
             {
-                System.Windows.Forms.Clipboard.SetText(s);
+                System.Windows.Forms.Clipboard.SetText(rowStr);
             }
         }
 
