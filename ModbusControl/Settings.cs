@@ -39,17 +39,46 @@ namespace ModbusControlSpace
         {
             // init paths
             // Get Special Folders paths
-            StoreRoamingDir = Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.ApplicationData), Company, AppName);
+
+            string StoreRoamingDirOld = Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.ApplicationData), Company, AppName);
+            string StoreRoamingPathOld = Path.Combine(StoreRoamingDirOld, "Settings.xml");
+
+            StoreRoamingDir = Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.ApplicationData), AppName);
             StoreRoamingPath = Path.Combine(StoreRoamingDir, "Settings.xml");
+
+            // move the file from old location to new location
+            if (File.Exists(StoreRoamingPathOld) && !File.Exists(StoreRoamingPath))
+            {
+                // Ensure the target directory exists
+                Directory.CreateDirectory(StoreRoamingDir);
+
+                File.Move(StoreRoamingPathOld, StoreRoamingPath);
+            }
+
             //StoreLocalDir = Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.LocalApplicationData), Company, AppName);
             //StoreLocalPath = Path.Combine(StoreLocalDir, "Settings.xml");
-            StoreSharedDir = Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.CommonApplicationData), Company, AppName);
+
+            string StoreSharedDirOld = Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.CommonApplicationData), Company, AppName);
+            string StoreSharedPathOld = Path.Combine(StoreSharedDirOld, "CSettings.xml"); // Common settings, andere filename omdat de file Settings.xml gedelete wordt na migratie van de user settings.
+
+            StoreSharedDir = Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.CommonApplicationData), AppName);
             StoreSharedPath = Path.Combine(StoreSharedDir, "CSettings.xml"); // Common settings, andere filename omdat de file Settings.xml gedelete wordt na migratie van de user settings.
 
+            // move the file from old location to new location
+            if (File.Exists(StoreSharedPathOld) && !File.Exists(StoreSharedPath))
+            {
+                // Ensure the target directory exists
+                Directory.CreateDirectory(StoreSharedDir);
+
+                File.Move(StoreSharedPathOld, StoreSharedPath);
+            }
+            
             Roaming = new CRoaming();
             Roaming.FilePath = StoreRoamingPath;
+            
             //Local = new CLocal();
             //Local.FilePath = StoreLocalPath;
+            
             Shared = new CShared();
             Shared.FilePath = StoreSharedPath;
         }
