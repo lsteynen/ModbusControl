@@ -139,7 +139,7 @@
   </data>
   <assembly alias="mscorlib" name="mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="statusStrip1.TabIndex" type="System.Int32, mscorlib">
-    <value>1</value>
+    <value>2</value>
   </data>
   <data name="statusStrip1.Text" xml:space="preserve">
     <value>statusStrip1</value>
@@ -154,7 +154,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;statusStrip1.ZOrder" xml:space="preserve">
-    <value>1</value>
+    <value>2</value>
   </data>
   <data name="checkboxEnable.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -163,13 +163,13 @@
     <value>NoControl</value>
   </data>
   <data name="checkboxEnable.Location" type="System.Drawing.Point, System.Drawing">
-    <value>10, 12</value>
+    <value>8, 12</value>
   </data>
   <data name="checkboxEnable.Size" type="System.Drawing.Size, System.Drawing">
     <value>59, 17</value>
   </data>
   <data name="checkboxEnable.TabIndex" type="System.Int32, mscorlib">
-    <value>16</value>
+    <value>0</value>
   </data>
   <data name="checkboxEnable.Text" xml:space="preserve">
     <value>Enable</value>
@@ -198,13 +198,13 @@
   <data name="buttonBottom.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAAK/INwWK6QAAAAlwSFlzAAAO
-        vAAADrwBlbxySQAAABl0RVh0U29mdHdhcmUAcGFpbnQubmV0IDQuMC4xNkRpr/UAAAFSSURBVDhPpZG9
-        S0JRGMb9R9ocGgyLGpwUokGCkrj04aRE2tUwsXBJkCjFMqOkEBLpC2ooqCVo6mNocCsoIjDT25eFoRJU
-        XCSezhG8IfcMXRt+nPf9vQ/PclQA/gVTKoEplSAN/aEsuMlrmHwX6PQm0eE+hYE/hM66j1bzNpq4VTR2
-        xaA2LpI4o4Bimcti6wRfjjhgmv2G3i9C4ylA7XxHg/0DWtslif3mKTULxRIRKiXBPYBPiDCFP9E29oLm
-        wSQ512YpMkEZCGUqJTOkZDhRhnbonGh5jsKUlN7gHTaPIOrHU2RlZyhMWYULpMnDvlVhSiVIgyP6gHq+
-        UiqYWs+Vd86K2DguIXZQxPxuCf61AtyxN4ws5WFbyKMv8Ipun8Au8MRzcK08g19+gjXyCHP4Hj3TAowT
-        GRi8aehGb9HiTEFjv0G760peUC9MqQSm/DtQ/QBynOZ/1LufnAAAAABJRU5ErkJggg==
+        vAAADrwBlbxySQAAABl0RVh0U29mdHdhcmUAcGFpbnQubmV0IDQuMC4xNkRpr/UAAAE+SURBVDhPpZE7
+        S4IBGEb9I20ODYZFDU4K0SBBSUgXpyTS1DCxcEmQKMUyo6IQEukGNRTYEjR1GRrcCooIzNRuFoZKUCES
+        J3QQ4lNLGw68PHDO8ooA0X8QDNUiGKqlePS6Y6gnrlDZz2m3hWiznKAwHCDT7tGs2aZBvUp9hw+xcoGS
+        gTz9szG2jvk0+kE184XckUViTSE2vVGnf0equ/ghCwKFiDdeiLiCYAhkUXk+aBl9pnEgJJBLBvL0uaOF
+        yHQQhgI5pINnJeWygTzdrls2D8nKx8Jl5YqBPGpnpKL8a+AvFA/j4j21vLIYmFxP5HZO02wcZfDtp5nb
+        zeBYS2HxvTK8lEQ3n6TH+UKnPV46YPUnMK88YVh+ROt9QOO5o2sqjnI8isIWQTZyQ5MpjER/Tav5Uhio
+        FcFQLYKhWr4BcpzmfwgU+rkAAAAASUVORK5CYII=
 </value>
   </data>
   <data name="buttonBottom.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
@@ -217,7 +217,7 @@
     <value>24, 23</value>
   </data>
   <data name="buttonBottom.TabIndex" type="System.Int32, mscorlib">
-    <value>15</value>
+    <value>5</value>
   </data>
   <data name="buttonBottom.ToolTip" xml:space="preserve">
     <value>Show newest logs, resume auto-scrolling</value>
@@ -240,15 +240,15 @@
   <data name="buttonTop.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAAK/INwWK6QAAAAlwSFlzAAAO
-        vAAADrwBlbxySQAAABl0RVh0U29mdHdhcmUAcGFpbnQubmV0IDQuMC4xNkRpr/UAAAG8SURBVDhPY/j/
-        /z9FmD4gsusRY0LPE6aMKU+Zc2c+Yy2c9ZwNKgUBTrlX2BxzrnzXSbvxwzDr9i+LvDu/7Uvv/vGouv8/
-        sPnhf6AB/4EG/Aca8D9v5jMwBhryA6qdgUHFYwKrqtfk/75VD/6HNr/4n9L36n/WpFf/86e9+V83/93/
-        nlXv/0/d/O7/gr3v/y8/9O4fCDfOf/YNqh1sADMQ/9fwm/5fN3j+f+PIZf8tEtb/t8/Y/t8l/8B/r9IT
-        f/2rL/wJbrj2O7z9wU8Qzpz4+CtUOwQADWDX8J3Gphs8jwVoADPQACaoFPkguOUuIxD/DW29xwgVIg3Y
-        Fd/+t2jv/59AA/5FtN8nzUX6Kef/pM/5/b997b//S/b9/w404F98z0NmqDR+YJB04qdx4fP/fp1f/6fP
-        /vG/BWpIQs/Df/HdD9ihyrAD/dTL32VTv/xXyfr4X7vg3X/b2h///Tr+/M+Y+e//4r3/vgMN+BfZ8YAT
-        qhwVAGPiCzAm/usEz/tvBIxK8/h1/+3St/13ztv/17Pk+B+/qvO/g+qv/gxru/8DGJUsUG0IADSADWgA
-        CzAqmYFRSXk00gEwMAAA9qQb9iBPSC0AAAAASUVORK5CYII=
+        vAAADrwBlbxySQAAABl0RVh0U29mdHdhcmUAcGFpbnQubmV0IDQuMC4xNkRpr/UAAAHGSURBVDhPY/j/
+        /z8DJZg+ILLrEWNCzxOmjClPmXNnPmMtnPWcDUWBU+4VNsecK9910m78MMy6/csi785v+9K7fzyq7v8P
+        bH74P7Lr0f+Enif/M6Y8/Z838xkYF856/gNugIrHBFZVr8n/fase/A9tfvE/pe/V/6xJr/7nT3vzv27+
+        u/89q97/n7r53f8Fe9//X37o3T8Qbpz/7BuyAcwqHhP+a/hN/68bPP+/ceSy/xYJ6//bZ2z/75J/4L9X
+        6Ym//tUX/gQ3XPsd3v7gJwhnTnz8FW4A1BB2Dd9pbLrB81iMI5cxWySsZ0JRQA4IbrnLGNxy929o6z1G
+        dDmigF3x7X+L9v7/Gdp6719E+33SXKSfcv5P+pzf/9vX/vu/ZN//7xHt9//F9zxkRleHFRgknfhpXPj8
+        v1/n1//ps3/8b4EaktDz8F989wN2dPUoQD/18nfZ1C//VbI+/tcuePfftvbHf7+OP/8zZv77v3jvv+/x
+        3Q/+RXY84ETXBwYqHhO+aPhO+68TPO+/UeSy/+bx6/7bpW/775y3/69nyfE/flXnfwfVX/0Z1nb/R3j7
+        AxZ0/SAD2DR8p7HoBs9jNo5cRlqgDRgAAPakG/bIkzLLAAAAAElFTkSuQmCC
 </value>
   </data>
   <data name="buttonTop.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
@@ -261,7 +261,7 @@
     <value>24, 23</value>
   </data>
   <data name="buttonTop.TabIndex" type="System.Int32, mscorlib">
-    <value>13</value>
+    <value>4</value>
   </data>
   <data name="buttonTop.ToolTip" xml:space="preserve">
     <value>Show oldest logs, stop auto-scrolling</value>
@@ -291,10 +291,10 @@
     <value>75, 17</value>
   </data>
   <data name="chkAutoScroll.TabIndex" type="System.Int32, mscorlib">
-    <value>12</value>
+    <value>3</value>
   </data>
   <data name="chkAutoScroll.Text" xml:space="preserve">
-    <value>Auto scroll</value>
+    <value>Auto-scroll</value>
   </data>
   <data name="chkAutoScroll.ToolTip" xml:space="preserve">
     <value>Auto-scrolling on/off</value>
@@ -321,7 +321,7 @@
     <value>92, 23</value>
   </data>
   <data name="buttonSaveToFile.TabIndex" type="System.Int32, mscorlib">
-    <value>10</value>
+    <value>7</value>
   </data>
   <data name="buttonSaveToFile.Text" xml:space="preserve">
     <value>Save to file...</value>
@@ -342,13 +342,13 @@
     <value>4</value>
   </data>
   <data name="logFilter.Location" type="System.Drawing.Point, System.Drawing">
-    <value>73, 9</value>
+    <value>72, 10</value>
   </data>
   <data name="logFilter.Size" type="System.Drawing.Size, System.Drawing">
     <value>94, 21</value>
   </data>
   <data name="logFilter.TabIndex" type="System.Int32, mscorlib">
-    <value>4</value>
+    <value>1</value>
   </data>
   <data name="logFilter.ToolTip" xml:space="preserve">
     <value>Choose which events to log</value>
@@ -357,37 +357,13 @@
     <value>logFilter</value>
   </data>
   <data name="&gt;&gt;logFilter.Type" xml:space="preserve">
-    <value>LST.Helpers.LogFilter, ModbusControl, Version=2.0.8.1044, Culture=neutral, PublicKeyToken=null</value>
+    <value>LST.Helpers.LogFilter, ModbusControl, Version=2.0.22.1435, Culture=neutral, PublicKeyToken=null</value>
   </data>
   <data name="&gt;&gt;logFilter.Parent" xml:space="preserve">
     <value>panel1</value>
   </data>
   <data name="&gt;&gt;logFilter.ZOrder" xml:space="preserve">
     <value>5</value>
-  </data>
-  <data name="Loggrid.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
-    <value>Top, Bottom, Left, Right</value>
-  </data>
-  <data name="Loggrid.Location" type="System.Drawing.Point, System.Drawing">
-    <value>3, 37</value>
-  </data>
-  <data name="Loggrid.Size" type="System.Drawing.Size, System.Drawing">
-    <value>603, 303</value>
-  </data>
-  <data name="Loggrid.TabIndex" type="System.Int32, mscorlib">
-    <value>7</value>
-  </data>
-  <data name="&gt;&gt;Loggrid.Name" xml:space="preserve">
-    <value>Loggrid</value>
-  </data>
-  <data name="&gt;&gt;Loggrid.Type" xml:space="preserve">
-    <value>SourceGrid.DataGrid, SourceGrid, Version=4.40.5527.34240, Culture=neutral, PublicKeyToken=df6f5e538749e85d</value>
-  </data>
-  <data name="&gt;&gt;Loggrid.Parent" xml:space="preserve">
-    <value>panel1</value>
-  </data>
-  <data name="&gt;&gt;Loggrid.ZOrder" xml:space="preserve">
-    <value>6</value>
   </data>
   <data name="buttonClear.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
@@ -399,7 +375,7 @@
     <value>52, 23</value>
   </data>
   <data name="buttonClear.TabIndex" type="System.Int32, mscorlib">
-    <value>5</value>
+    <value>2</value>
   </data>
   <data name="buttonClear.Text" xml:space="preserve">
     <value>Clear</value>
@@ -417,7 +393,7 @@
     <value>panel1</value>
   </data>
   <data name="&gt;&gt;buttonClear.ZOrder" xml:space="preserve">
-    <value>7</value>
+    <value>6</value>
   </data>
   <data name="buttonCopyToClipboard.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
@@ -447,16 +423,16 @@
     <value>panel1</value>
   </data>
   <data name="&gt;&gt;buttonCopyToClipboard.ZOrder" xml:space="preserve">
-    <value>8</value>
+    <value>7</value>
   </data>
   <data name="panel1.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
-    <value>Fill</value>
+    <value>Top</value>
   </data>
   <data name="panel1.Location" type="System.Drawing.Point, System.Drawing">
     <value>0, 0</value>
   </data>
   <data name="panel1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>609, 343</value>
+    <value>609, 38</value>
   </data>
   <data name="panel1.TabIndex" type="System.Int32, mscorlib">
     <value>0</value>
@@ -471,7 +447,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;panel1.ZOrder" xml:space="preserve">
-    <value>0</value>
+    <value>1</value>
   </data>
   <metadata name="timerView.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>126, 7</value>
@@ -481,6 +457,69 @@
   </metadata>
   <data name="SaveFileDialog1.Filter" xml:space="preserve">
     <value>CSV files (*.csv)|*.csv|All files (*.*)|*.*</value>
+  </data>
+  <metadata name="Time.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <data name="Time.HeaderText" xml:space="preserve">
+    <value>Time</value>
+  </data>
+  <data name="Time.Width" type="System.Int32, mscorlib">
+    <value>90</value>
+  </data>
+  <metadata name="Type.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <data name="Type.HeaderText" xml:space="preserve">
+    <value>Type</value>
+  </data>
+  <data name="Type.Width" type="System.Int32, mscorlib">
+    <value>70</value>
+  </data>
+  <metadata name="Logtext.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <data name="Logtext.HeaderText" xml:space="preserve">
+    <value>Text</value>
+  </data>
+  <data name="logGridView.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Fill</value>
+  </data>
+  <data name="logGridView.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 38</value>
+  </data>
+  <data name="logGridView.Size" type="System.Drawing.Size, System.Drawing">
+    <value>609, 305</value>
+  </data>
+  <data name="logGridView.TabIndex" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="&gt;&gt;logGridView.Name" xml:space="preserve">
+    <value>logGridView</value>
+  </data>
+  <data name="&gt;&gt;logGridView.Type" xml:space="preserve">
+    <value>System.Windows.Forms.DataGridView, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;logGridView.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;logGridView.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="dataGridViewTextBoxColumn1.HeaderText" xml:space="preserve">
+    <value>Time</value>
+  </data>
+  <data name="dataGridViewTextBoxColumn1.Width" type="System.Int32, mscorlib">
+    <value>90</value>
+  </data>
+  <data name="dataGridViewTextBoxColumn2.HeaderText" xml:space="preserve">
+    <value>Type</value>
+  </data>
+  <data name="dataGridViewTextBoxColumn2.Width" type="System.Int32, mscorlib">
+    <value>70</value>
+  </data>
+  <data name="dataGridViewTextBoxColumn3.HeaderText" xml:space="preserve">
+    <value>Text</value>
   </data>
   <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
@@ -1740,7 +1779,7 @@
     <value>CenterScreen</value>
   </data>
   <data name="$this.Text" xml:space="preserve">
-    <value>Logger</value>
+    <value>Logging</value>
   </data>
   <data name="&gt;&gt;toolStripStatusLabel1.Name" xml:space="preserve">
     <value>toolStripStatusLabel1</value>
@@ -1771,6 +1810,42 @@
   </data>
   <data name="&gt;&gt;SaveFileDialog1.Type" xml:space="preserve">
     <value>System.Windows.Forms.SaveFileDialog, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;Time.Name" xml:space="preserve">
+    <value>Time</value>
+  </data>
+  <data name="&gt;&gt;Time.Type" xml:space="preserve">
+    <value>System.Windows.Forms.DataGridViewTextBoxColumn, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;Type.Name" xml:space="preserve">
+    <value>Type</value>
+  </data>
+  <data name="&gt;&gt;Type.Type" xml:space="preserve">
+    <value>System.Windows.Forms.DataGridViewTextBoxColumn, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;Logtext.Name" xml:space="preserve">
+    <value>Logtext</value>
+  </data>
+  <data name="&gt;&gt;Logtext.Type" xml:space="preserve">
+    <value>System.Windows.Forms.DataGridViewTextBoxColumn, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;dataGridViewTextBoxColumn1.Name" xml:space="preserve">
+    <value>dataGridViewTextBoxColumn1</value>
+  </data>
+  <data name="&gt;&gt;dataGridViewTextBoxColumn1.Type" xml:space="preserve">
+    <value>System.Windows.Forms.DataGridViewTextBoxColumn, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;dataGridViewTextBoxColumn2.Name" xml:space="preserve">
+    <value>dataGridViewTextBoxColumn2</value>
+  </data>
+  <data name="&gt;&gt;dataGridViewTextBoxColumn2.Type" xml:space="preserve">
+    <value>System.Windows.Forms.DataGridViewTextBoxColumn, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;dataGridViewTextBoxColumn3.Name" xml:space="preserve">
+    <value>dataGridViewTextBoxColumn3</value>
+  </data>
+  <data name="&gt;&gt;dataGridViewTextBoxColumn3.Type" xml:space="preserve">
+    <value>System.Windows.Forms.DataGridViewTextBoxColumn, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;$this.Name" xml:space="preserve">
     <value>Logger</value>

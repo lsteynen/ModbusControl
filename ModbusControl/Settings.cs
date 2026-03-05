@@ -650,8 +650,8 @@ namespace ModbusControlSpace
                 LogWarnings = true;
                 LogInfo = true;
                 LogTrace = false;
-                LogReads = false;
-                LogWrites = false;
+                LogReads = true;
+                LogWrites = true;
                 LogBridgeInfo = false;
                 LogBridgeData = false;
                 LogBridgeDecode = false;

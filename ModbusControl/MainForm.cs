@@ -108,9 +108,8 @@ namespace ModbusControlSpace
 
             // Create logger
             Logger1 = new Logger();
-            Logger1.Text = "ModbusControl log";
-            Logger1.CapacityLines = 5000;
-            Logger1.ViewUpdateInterval = 200;
+            Logger1.Text = "ModbusControl logging";
+            Logger1.Capacity = 5000;
 
             // Create modbus interface
             mb = new ModbusInterface();
@@ -195,7 +194,7 @@ namespace ModbusControlSpace
             // the export form settings will be used later, when form is created
 
             // logger settings
-            Logger1.CapacityLines = Settings1.Roaming.Logger.Capacity;
+            Logger1.Capacity = Settings1.Roaming.Logger.Capacity;
             Logger1.TheLogFilter.LogErrors = Settings1.Roaming.Logger.LogErrors;
             Logger1.TheLogFilter.LogWarnings = Settings1.Roaming.Logger.LogWarnings;
             Logger1.TheLogFilter.LogInfo = Settings1.Roaming.Logger.LogInfo;
@@ -418,7 +417,7 @@ namespace ModbusControlSpace
             }
 
             // save logger settings
-            Settings1.Roaming.Logger.Capacity = Logger1.CapacityLines;
+            Settings1.Roaming.Logger.Capacity = Logger1.Capacity;
             Settings1.Roaming.Logger.LogErrors = Logger1.TheLogFilter.LogErrors;
             Settings1.Roaming.Logger.LogWarnings = Logger1.TheLogFilter.LogWarnings;
             Settings1.Roaming.Logger.LogInfo = Logger1.TheLogFilter.LogInfo;
@@ -921,7 +920,7 @@ namespace ModbusControlSpace
             optionsForm.ShowVarProperties = Options.ShowVarProperties;
             optionsForm.AutoRowSize = Options.AutoRowSize;
             optionsForm.ClearFilterOnTabChange = Options.ClearFilterOnTabChange;
-            optionsForm.LoggerCapacity = Logger1.CapacityLines;
+            optionsForm.LoggerCapacity = Logger1.Capacity;
             optionsForm.MbcfileValidationEnable = Options.MbcfileValidationEnable;
             optionsForm.MbcfileValidationFile = Options.MbcfileValidationXSDFile;
             optionsForm.CustomEditorEnable = Options.CustomEditorEnable;
@@ -940,7 +939,7 @@ namespace ModbusControlSpace
                 Options.ShowVarProperties = optionsForm.ShowVarProperties;
                 Options.AutoRowSize = optionsForm.AutoRowSize;
                 Options.ClearFilterOnTabChange = optionsForm.ClearFilterOnTabChange;
-                Logger1.CapacityLines = optionsForm.LoggerCapacity;
+                Logger1.Capacity = optionsForm.LoggerCapacity;
                 Options.MbcfileValidationEnable = optionsForm.MbcfileValidationEnable;
                 Options.MbcfileValidationXSDFile = optionsForm.MbcfileValidationFile;
                 Options.CustomEditorEnable = optionsForm.CustomEditorEnable;

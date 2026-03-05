@@ -40,14 +40,21 @@
             this.chkAutoScroll = new System.Windows.Forms.CheckBox();
             this.buttonSaveToFile = new System.Windows.Forms.Button();
             this.logFilter = new LST.Helpers.LogFilter();
-            this.Loggrid = new SourceGrid.DataGrid();
             this.buttonClear = new System.Windows.Forms.Button();
             this.buttonCopyToClipboard = new System.Windows.Forms.Button();
             this.timerView = new System.Windows.Forms.Timer(this.components);
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.SaveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
+            this.logGridView = new System.Windows.Forms.DataGridView();
+            this.Time = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Type = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Logtext = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridViewTextBoxColumn2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridViewTextBoxColumn3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.statusStrip1.SuspendLayout();
             this.panel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.logGridView)).BeginInit();
             this.SuspendLayout();
             // 
             // statusStrip1
@@ -77,7 +84,6 @@
             this.panel1.Controls.Add(this.chkAutoScroll);
             this.panel1.Controls.Add(this.buttonSaveToFile);
             this.panel1.Controls.Add(this.logFilter);
-            this.panel1.Controls.Add(this.Loggrid);
             this.panel1.Controls.Add(this.buttonClear);
             this.panel1.Controls.Add(this.buttonCopyToClipboard);
             resources.ApplyResources(this.panel1, "panel1");
@@ -144,19 +150,6 @@
             this.logFilter.Tag = "What to log";
             this.toolTip1.SetToolTip(this.logFilter, resources.GetString("logFilter.ToolTip"));
             // 
-            // Loggrid
-            // 
-            resources.ApplyResources(this.Loggrid, "Loggrid");
-            this.Loggrid.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.Loggrid.DeleteQuestionMessage = "Are you sure to delete all the selected rows?";
-            this.Loggrid.EnableSort = false;
-            this.Loggrid.FixedRows = 1;
-            this.Loggrid.Name = "Loggrid";
-            this.Loggrid.SelectionMode = SourceGrid.GridSelectionMode.Row;
-            this.Loggrid.TabStop = true;
-            this.Loggrid.ToolTipText = "";
-            this.Loggrid.MouseClick += new System.Windows.Forms.MouseEventHandler(this.Loggrid_MouseClick);
-            // 
             // buttonClear
             // 
             resources.ApplyResources(this.buttonClear, "buttonClear");
@@ -184,20 +177,77 @@
             this.SaveFileDialog1.DefaultExt = "csv";
             resources.ApplyResources(this.SaveFileDialog1, "SaveFileDialog1");
             // 
+            // logGridView
+            // 
+            this.logGridView.AllowUserToAddRows = false;
+            this.logGridView.AllowUserToDeleteRows = false;
+            this.logGridView.AllowUserToResizeRows = false;
+            this.logGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.logGridView.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.Time,
+            this.Type,
+            this.Logtext});
+            resources.ApplyResources(this.logGridView, "logGridView");
+            this.logGridView.Name = "logGridView";
+            this.logGridView.ReadOnly = true;
+            this.logGridView.RowHeadersVisible = false;
+            this.logGridView.VirtualMode = true;
+            this.logGridView.CellMouseDown += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.logGridView_CellMouseDown);
+            this.logGridView.CellValueNeeded += new System.Windows.Forms.DataGridViewCellValueEventHandler(this.dataGridView1_CellValueNeeded);
+            // 
+            // Time
+            // 
+            resources.ApplyResources(this.Time, "Time");
+            this.Time.Name = "Time";
+            this.Time.ReadOnly = true;
+            // 
+            // Type
+            // 
+            resources.ApplyResources(this.Type, "Type");
+            this.Type.Name = "Type";
+            this.Type.ReadOnly = true;
+            // 
+            // Logtext
+            // 
+            this.Logtext.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            resources.ApplyResources(this.Logtext, "Logtext");
+            this.Logtext.Name = "Logtext";
+            this.Logtext.ReadOnly = true;
+            // 
+            // dataGridViewTextBoxColumn1
+            // 
+            resources.ApplyResources(this.dataGridViewTextBoxColumn1, "dataGridViewTextBoxColumn1");
+            this.dataGridViewTextBoxColumn1.Name = "dataGridViewTextBoxColumn1";
+            this.dataGridViewTextBoxColumn1.ReadOnly = true;
+            // 
+            // dataGridViewTextBoxColumn2
+            // 
+            resources.ApplyResources(this.dataGridViewTextBoxColumn2, "dataGridViewTextBoxColumn2");
+            this.dataGridViewTextBoxColumn2.Name = "dataGridViewTextBoxColumn2";
+            this.dataGridViewTextBoxColumn2.ReadOnly = true;
+            // 
+            // dataGridViewTextBoxColumn3
+            // 
+            this.dataGridViewTextBoxColumn3.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            resources.ApplyResources(this.dataGridViewTextBoxColumn3, "dataGridViewTextBoxColumn3");
+            this.dataGridViewTextBoxColumn3.Name = "dataGridViewTextBoxColumn3";
+            this.dataGridViewTextBoxColumn3.ReadOnly = true;
+            // 
             // Logger
             // 
             resources.ApplyResources(this, "$this");
-            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
+            this.Controls.Add(this.logGridView);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.statusStrip1);
-            this.Name = "Logger";
+            this.Name = "Logging";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Logger_FormClosing);
             this.Load += new System.EventHandler(this.Form1_Load);
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.logGridView)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -212,7 +262,6 @@
         private System.Windows.Forms.Button buttonCopyToClipboard;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel2;
         private System.Windows.Forms.Button buttonClear;
-        private SourceGrid.DataGrid Loggrid;
         private LogFilter logFilter;
         private System.Windows.Forms.ToolTip toolTip1;
         private System.Windows.Forms.Button buttonSaveToFile;
@@ -221,6 +270,13 @@
         private System.Windows.Forms.Button buttonBottom;
         private System.Windows.Forms.Button buttonTop;
         private System.Windows.Forms.CheckBox checkboxEnable;
+        private System.Windows.Forms.DataGridView logGridView;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn1;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn2;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn3;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Time;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Type;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Logtext;
     }
 }
 

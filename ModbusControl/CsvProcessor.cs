@@ -403,7 +403,7 @@ namespace LST.Helpers
         /// For example: 40020;32;"REC type (32 bit)";r;Int;888019
         /// </summary>
         /// <param name="row">The row to be written</param>
-        public void WriteRow(string[] row)
+        public void WriteRow(string[] row, bool useQuoteSelectedFields = true)
         {
             StringBuilder builder = new StringBuilder();
             bool firstField = true;
@@ -418,8 +418,8 @@ namespace LST.Helpers
                 if (!firstField)
                     builder.Append(Separator);
                 // Implement special handling for values that contain comma or quote
-                // Enclose in quotes and double up any double quotes
-                bool quoteThisField = (QuoteSelectedFields != null) && (index < QuoteSelectedFields.Length) && QuoteSelectedFields[index];
+                // Enclose in quotes and double-up any double quotes
+                bool quoteThisField = useQuoteSelectedFields && (QuoteSelectedFields != null) && (index < QuoteSelectedFields.Length) && QuoteSelectedFields[index];
                 if ((field.IndexOfAny(specialChars) != -1) || quoteThisField || QuoteAllFields)
                     builder.AppendFormat("\"{0}\"", field.Replace("\"", "\"\""));
                 else

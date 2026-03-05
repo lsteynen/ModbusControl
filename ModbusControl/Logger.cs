@@ -6,27 +6,24 @@ using System.Text;
 using System.Threading;
 using System.Windows.Forms;
 
-/*
- * Enable:  on: logging = on
- *          off: logging = off
- * Clear:   
- * Auto scroll on: resume scrolling, jump to end
+/* Usage:
+ * 
+ * Enable:  logging on/off
+ *          
+ * Clear:   clear logger memory
+ * 
+ * Auto-scroll on: resume scrolling, always show newest logs
  *             off: stop scrolling, stay at current position
+ *             
  * Top:     stop scrolling, jump to oldest
- * Bottom:  jump to end, set auto scroll
+ * 
+ * Bottom:  jump to end, auto-scroll on
 */
 
 namespace LST.Helpers
 {
     public partial class Logger : Form
     {
-        private bool mEnable = false;
-        private int mMaxLines = 1000;
-        private int mLogAdded;
-        private bool mAutoScroll;
-        private bool mTemporaryNoRemove;
-        private StringBuilder mStatusStrBuilder = new StringBuilder();
-        
         public enum LogType
         {
             Error,
@@ -39,49 +36,32 @@ namespace LST.Helpers
             Decode,
         };
 
+        // 1 log record
         public class LogEntry
         {
-            private string mTime;
-            public string Time
-            {
-                get { return mTime; }
-                //set { mDateTime = value; }
-            }
-
-            private string mType;
-            public string Type
-            {
-                get { return mType; }
-                //set { mType = value; }
-            }
-
-            private string mText;
-            public string Text
-            {
-                get { return mText; }
-                //set { mText = value; }
-            }
-
-            public LogEntry(DateTime DateTime, LogType Type, string Text)
-            {
-                this.mTime = DateTime.ToString("HH:mm:ss.fff");
-                this.mType = Type.ToString();
-                this.mText = Text;
-            }
+            public string Time;
+            public string Type;
+            public string Text;
         }
 
-        // here's where logs are stored
-        List<LogEntry> LogList = new List<LogEntry>();
-        private DevAge.ComponentModel.BoundList<LogEntry> boundLogList;
-
-        // lock for making things threadsafe
-        private readonly object LogListLock = new object();
-
+        private bool mEnable = false;
+        private int mCapacity = 1000;
+        private bool mAutoScroll;
+        private int mViewUpdateInterval = 150;  // ms
+        private StringBuilder mStatusStringBuilder = new StringBuilder(100);
+        
+        // logs storage
+        private readonly List<LogEntry> logQueue = new List<LogEntry>();
+        private readonly object logLock = new object();     // lock for making things threadsafe
+        private int logDataChanged = 0;                    // flag that show if logdata has changed
+        
         #region constructor
 
         public Logger()
         {
             InitializeComponent();
+
+            mAutoScroll = chkAutoScroll.Checked;
 
             RefreshView();
         }
@@ -101,37 +81,38 @@ namespace LST.Helpers
                 mEnable = value;
                 timerView.Enabled = mEnable;
 
-                // repaint, show enabled/stopped state
-                RefreshView();
+                // repaint if timer doesn't
+                if (mEnable == false)
+                {
+                    RefreshView();
+                }
             }
         }
 
-        public int CapacityLines
+        public int Capacity
         {
             get
             {
-                return mMaxLines;
+                return mCapacity;
             }
             set
             {
-                if (value < 1000) value = 1000;
-                AdjustLoggerSize(value);
-                mMaxLines = value;
+                // minimum
+                if (value < 1000)
+                {
+                    value = 1000;
+                }
 
-                // repaint, show new capacity
-                RefreshView();
-            }
-        }
+                if (value != mCapacity)
+                {
+                    AdjustLoggerCapacity(value);
 
-        public int ViewUpdateInterval
-        {
-            get
-            {
-                return timerView.Interval;
-            }
-            set
-            {
-                timerView.Interval = value;
+                    // repaint if timer doesn't
+                    if (mEnable == false)
+                    {
+                        RefreshView();
+                    }
+                }
             }
         }
 
@@ -219,174 +200,131 @@ namespace LST.Helpers
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            boundLogList = new DevAge.ComponentModel.BoundList<LogEntry>(LogList);
-            boundLogList.AllowDelete = false;
-            boundLogList.AllowEdit = false;
-            boundLogList.AllowNew = false;
-            boundLogList.AllowSort = true;
-
-            Loggrid.Columns.Add("Time", "Time", typeof(string)).Width = 76;
-            Loggrid.Columns.Add("Type", "Type", typeof(string)).Width = 50;
-            Loggrid.Columns.Add("Text", "Text", typeof(string));
-
-            Loggrid.Columns[0].AutoSizeMode = SourceGrid.AutoSizeMode.None;
-            Loggrid.Columns[1].AutoSizeMode = SourceGrid.AutoSizeMode.None;
-            Loggrid.Columns[2].AutoSizeMode = SourceGrid.AutoSizeMode.EnableAutoSize | SourceGrid.AutoSizeMode.EnableStretch;
-            Loggrid.AutoStretchColumnsToFitWidth = true;
-            Loggrid.Columns.StretchToFit();
-
-            Loggrid.DataSource = boundLogList;
-            // Disable sort AFTER assigning datasource
-            Loggrid.EnableSort = false;
-
-            mAutoScroll = chkAutoScroll.Checked;
-
-            timerView.Interval = 200;
+            timerView.Interval = mViewUpdateInterval;
             timerView.Enabled = false;
         }
 
-        private void AdjustLoggerSize( int NewSize)
+        private void AdjustLoggerCapacity( int newCapacity)
         {
-            if( NewSize < mMaxLines)
+            if (newCapacity < mCapacity)
             {
                 // must eliminate oldest entries?
                 // threadsafe
-                // can ignore mTemporaryNoRemove here, uszer can't change size while exporting
-                lock (LogListLock)
+                lock (logLock)
                 {
-                    if (NewSize < LogList.Count)
+                    if (newCapacity < logQueue.Count)
                     {
-                        LogList.RemoveRange(0, LogList.Count - NewSize);
+                        logQueue.RemoveRange(0, logQueue.Count - newCapacity);
                     }
+                    mCapacity = newCapacity;
                 }
 
                 // set changed flag
-                mLogAdded = 1;
+                logDataChanged = 1;
             }
-            else if( NewSize > mMaxLines)
+            else if (newCapacity > mCapacity)
             {
                 // simply set new size
-                mMaxLines = NewSize;
+                mCapacity = newCapacity;
             }
         }
 
         // Do not close, hide
         private void Logger_FormClosing(object sender, FormClosingEventArgs e)
         {
+            // hide
             this.Hide();
-            e.Cancel = true; // this cancels the close event.
+            // cancel this close event
+            e.Cancel = true; 
         }
 
-#if false
-        private void listView1_RetrieveVirtualItem(object sender, RetrieveVirtualItemEventArgs e)
-        {
-            // threadsafe
-            LogEntry Log;
-            lock (LogListLock)
-            {
-                Log = LogList[e.ItemIndex];
-            }
-
-            string[] sa = new string[3];
-
-            sa[0] = Log.DateTime.ToString("HH:mm:ss.fff");
-            sa[1] = Log.Type.ToString();
-            sa[2] = Log.Text;
-
-            e.Item = new ListViewItem(sa);
-        }
-#endif
 
         private void timerView_Tick(object sender, EventArgs e)
         {
+            timerView.Enabled = false;
+
             RefreshView();
+
+            timerView.Enabled = true;
         }
 
         private void RefreshView()
         {
-            // threadsafe
-            if (Interlocked.Exchange(ref mLogAdded, 0) == 1)
+            // if logQueuechanged: do grid refresh
+            // threadsafe exchange
+            if (Interlocked.Exchange(ref logDataChanged, 0) == 1)
             {
-                // if auto scrolling
-                if (mAutoScroll)
+                logGridView.RowCount = logQueue.Count;
+                
+                // if auto-scrolling
+                if (mAutoScroll && (logGridView.RowCount > 0))
                 {
-                	// threadsafe
-                	lock (LogListLock)
-                	{
-                    	//Loggrid.SuspendLayout();
-                    	Loggrid.RecalcCustomScrollBars();
-                    	Loggrid.ShowCell(new SourceGrid.Position(Loggrid.Rows.Count - 1, 0), true);
-                    	Loggrid.Refresh();
-                    	//Loggrid.ResumeLayout();
-                	}
-            	}
-                else
-                {
-                    // threadsafe
-                    lock (LogListLock)
+                    try
                     {
-                        Loggrid.RecalcCustomScrollBars();
-                        Loggrid.Refresh();
+                        int last = logGridView.RowCount - 1;
+                        logGridView.FirstDisplayedScrollingRowIndex = last;
+                    }
+                    catch
+                    {
+                        // ignore
                     }
                 }
+
+                logGridView.Invalidate();
             }
 
             // update status line
-            mStatusStrBuilder.Clear();
+            mStatusStringBuilder.Clear();
             if( mEnable)
             {
-                mStatusStrBuilder.Append("Enabled");
+                mStatusStringBuilder.Append("Enabled");
             }
             else
             {
-                mStatusStrBuilder.Append("Stopped");
+                mStatusStringBuilder.Append("Stopped");
             }
 
-            mStatusStrBuilder.Append(" - ");
-            mStatusStrBuilder.Append(LogList.Count.ToString());
-            mStatusStrBuilder.Append(" / ");
-            mStatusStrBuilder.Append(mMaxLines.ToString());
+            mStatusStringBuilder.Append(" - ");
+            mStatusStringBuilder.Append(logQueue.Count.ToString());
+            mStatusStringBuilder.Append("/");
+            mStatusStringBuilder.Append(mCapacity.ToString());
 
-			if( mAutoScroll == false)
+            if (mAutoScroll)
             {
-                mStatusStrBuilder.Append(" - Scroll lock");
+                mStatusStringBuilder.Append(" - Auto-scroll");
             }
 
-            toolStripStatusLabel2.Text = mStatusStrBuilder.ToString();
+            string s = mStatusStringBuilder.ToString();
+            if (s != toolStripStatusLabel2.Text)
+            {
+                toolStripStatusLabel2.Text = s;
+            }
         }
-
-#if false
-        private void buttonPause_Click(object sender, EventArgs e)
-        {
-            // pause at current position
-            mAutoScroll = false;
-        }
-#endif
 
         private void checkboxEnable_CheckedChanged(object sender, EventArgs e)
         {
-            // Enable/disable logging, via the property
+            // Enable/disable logging, use the property for side effects
             Enable = checkboxEnable.Checked;
         }
 
         private void buttonClear_Click(object sender, EventArgs e)
         {
-            // threadsafe
-            lock (LogListLock)
+            lock (logLock)
             {
                 // clear list
-                LogList.Clear();
+                logQueue.Clear();
+                logDataChanged = 1;
+            }
 
-                // update view
-                Loggrid.Refresh();
-
-                // repaint, show new count
+            // repaint if timer doesn't
+            if (mEnable == false)
+            {
                 RefreshView();
             }
         }
 
         /// <summary>
-        /// Auto scrolling enabled/disable
+        /// Auto-scrolling enabled/disable
         /// </summary>
         private void chkAutoScroll_CheckedChanged(object sender, EventArgs e)
         {
@@ -395,21 +333,22 @@ namespace LST.Helpers
             if (mAutoScroll)
             {
                 // show newest (last) log entry
-                if (Loggrid.Rows.Count > 0)
+                if (logQueue.Count > 0)
                 {
-                    // threadsafe
-                    lock (LogListLock)
+                    try
                     {
-                        //Loggrid.SuspendLayout();
-                        Loggrid.RecalcCustomScrollBars();
-                        Loggrid.ShowCell(new SourceGrid.Position(Loggrid.Rows.Count - 1, 0), true);
-                        Loggrid.Refresh();
-                        //Loggrid.ResumeLayout();
+                        int last = logGridView.RowCount - 1;
+                        logGridView.FirstDisplayedScrollingRowIndex = last;
+                    }
+                    catch
+                    {
+                        // ignore
                     }
                 }
             }
 
-            if( mEnable == false)
+            // repaint if timer doesn't
+            if (mEnable == false)
             {
                 RefreshView();
             }
@@ -417,18 +356,24 @@ namespace LST.Helpers
 
         private void buttonTop_Click(object sender, EventArgs e)
         {
-            // Stop auto scrolling
+            // Stop auto-scroll
             chkAutoScroll.Checked = false;
 
             // Show top (oldest) log entries
-            if (Loggrid.Rows.Count > 0)
+            if (logGridView.RowCount > 0)
             {
-                //Loggrid.SuspendLayout();
-                Loggrid.ShowCell(new SourceGrid.Position(1, 1), true);
-                Loggrid.RecalcCustomScrollBars();
-                Loggrid.Refresh();
-                //Loggrid.ResumeLayout();
+                try
+                {
+                    logGridView.FirstDisplayedScrollingRowIndex = 0;
+                }
+                catch
+                {
+                    // ignore
+                }
             }
+
+            // chkAutoScroll change forces RefreshView
+            //RefreshView();
         }
 
         private void buttonBottom_Click(object sender, EventArgs e)
@@ -436,83 +381,104 @@ namespace LST.Helpers
             // Resume auto-scrolling
             chkAutoScroll.Checked = true;
 
-            // Show last (newest) log entries
-            if (Loggrid.Rows.Count > 0)
+            if (mAutoScroll && (logGridView.RowCount > 0))
             {
-                // threadsafe
-                lock (LogListLock)
+                try
                 {
-                    //Loggrid.SuspendLayout();
-                    Loggrid.RecalcCustomScrollBars();
-                    Loggrid.ShowCell(new SourceGrid.Position(Loggrid.Rows.Count - 1, 0), true);
-                    Loggrid.Refresh();
-                    //Loggrid.ResumeLayout();
+                    int last = logGridView.RowCount - 1;
+                    logGridView.FirstDisplayedScrollingRowIndex = last;
+                }
+                catch
+                {
+                    // ignore
                 }
             }
+
+            // chkAutoScroll change forces RefreshView
+            //RefreshView();
         }
 
         /// <summary>
         /// User clicked in the grid
+        /// Using CellMouseDown because CellClick is unreliable, probably because of auto-scrolling
         /// </summary>
-        private void Loggrid_MouseClick(object sender, MouseEventArgs e)
+        private void logGridView_CellMouseDown(object sender, DataGridViewCellMouseEventArgs e)
         {
-            // pause at current position
-            mAutoScroll = false;
-            chkAutoScroll.Checked = false;
+            // accept left mouse button
+            // accept rows, not column headers
+            if( (e.RowIndex >= 0)
+                 && (e.Button == MouseButtons.Left))
+            {
+                // pause at current position
+                chkAutoScroll.Checked = false;
+
+                // chkAutoScroll change forces RefreshView
+                //RefreshView();
+            }
         }
 
-        // enter a log
+        // enter a log, 1 line
         public void Log(LogType Type, string Text)
         {
             if (mEnable)
             {
-                LogEntry Log = new LogEntry(DateTime.Now, Type, Text);
+                LogEntry newLog = new LogEntry();
+                newLog.Time = DateTime.Now.ToString("HH:mm:ss.fff");
+                newLog.Type = Type.ToString();
+                newLog.Text = Text;
 
-                // threadsafe
-                lock (LogListLock)
+                lock (logLock)
                 {
-                    if ((LogList.Count >= mMaxLines) && (mTemporaryNoRemove == false))
-                    {
-                        LogList.RemoveAt(0);
-                        if (LogList.Count >= mMaxLines)
-                        {
-                            LogList.RemoveAt(0);
-                        }
-                    }
-
-                    LogList.Add(Log);
+                    logQueue.Add(newLog);
                 }
 
-                mLogAdded = 1;
+                // remove oldest logs if needed               
+                lock (logLock)
+                {
+                    int removeCount = logQueue.Count - mCapacity;
+                    if (removeCount > 0)
+                    {
+                        logQueue.RemoveRange(0, removeCount);
+                    }
+                }
+
+                logDataChanged = 1;
             }
         }
 
-        // enter a log, 2 lines
+        // enter a log, 2 lines, keep together
         public void Log(LogType Type, string Text1, string Text2)
         {
             if (mEnable)
             {
-                LogEntry Log1 = new LogEntry(DateTime.Now, Type, Text1);
-                LogEntry Log2 = new LogEntry(DateTime.Now, Type, Text2);
+                LogEntry newLog1 = new LogEntry();
+                newLog1.Time = DateTime.Now.ToString("HH:mm:ss.fff");
+                newLog1.Type = Type.ToString();
+                newLog1.Text = Text;
 
-                // threadsafe
-                lock (LogListLock)
+                LogEntry newLog2 = new LogEntry();
+                newLog2.Time = newLog1.Time;
+                newLog2.Type = newLog1.Type;
+                newLog2.Text = Text;
+
+                // ensure these logs stay together
+                lock (logLock)
                 {
-                    if ((LogList.Count >= mMaxLines) && (mTemporaryNoRemove == false))
-                    {
-                        LogList.RemoveAt(0);
-                        LogList.RemoveAt(0);
-                        if (LogList.Count >= mMaxLines)
-                        {
-                            LogList.RemoveAt(0);
-                        }
-                    }
-
-                    LogList.Add(Log1);
-                    LogList.Add(Log2);
+                    logQueue.Add(newLog1);
+                    logQueue.Add(newLog2);
                 }
 
-                mLogAdded = 1;
+                // remove oldest logs if needed               
+                lock (logLock)
+                {
+                    int removeCount = logQueue.Count - mCapacity;
+                    if (removeCount > 0)
+                    {
+                        logQueue.RemoveRange(0, removeCount);
+                    }
+                }
+
+                logDataChanged = 1;
             }
         }
 
@@ -520,33 +486,47 @@ namespace LST.Helpers
         {
             // copy logger content to clipboard
 
-            StringBuilder builder = new StringBuilder();
-
-            // Append to StringBuilder.
-            lock (LogListLock)
+            if (logQueue.Count > 0)
             {
-                for (int i = 0; i < LogList.Count; ++i)
+                // take a snapshot of the log
+                // to minimize lock time
+                List<LogEntry> snapshot;
+                lock(logLock)
                 {
-                    LogEntry Log = LogList[i];
-
-                    builder.AppendLine(//Log.DateTime.ToString("HH:mm:ss.fff")
-                                       Log.Time
-                                      + ";" + Log.Type.ToString()
-                                      + ";" + Log.Text);
+                    snapshot = new List<LogEntry>(logQueue);
                 }
-            }
 
-            if (builder.Length > 0)
-            {
-                System.Windows.Forms.Clipboard.SetText(builder.ToString());
+                // build the text
+                
+                int initalCapacity = snapshot.Count * 70;
+                StringBuilder sb = new StringBuilder(initalCapacity);
+                string sepa = ";";
+
+                // header
+                sb.AppendLine("Time" + sepa + "Type" + sepa + "Text");
+                sb.AppendLine("#Modbuscontrol logging export - " + DateTime.Now.ToString());
+
+                // rows
+                foreach (LogEntry log in snapshot)
+                {
+                    sb.AppendLine( log.Time
+                                        + sepa + log.Type.ToString()
+                                        + sepa + log.Text);
+                }
+
+                // copy string to clipboard
+                System.Windows.Forms.Clipboard.SetText(sb.ToString());
             }
         }
 
         private void buttonSaveToFile_Click(object sender, EventArgs e)
         {
-            if (SaveFileDialog1.ShowDialog() == DialogResult.OK)
+            if (logQueue.Count > 0)
             {
-                SaveLogbufferToCsvFile( SaveFileDialog1.FileName);
+                if (SaveFileDialog1.ShowDialog() == DialogResult.OK)
+                {
+                    SaveLogbufferToCsvFile(SaveFileDialog1.FileName);
+                }
             }
         }
 
@@ -555,61 +535,82 @@ namespace LST.Helpers
         /// </summary>
         private void SaveLogbufferToCsvFile(string filename)
         {
-            CsvWriter mCsvWriter;
-
-            // open file to write to
-            try
+            if (logQueue.Count > 0)
             {
-                // open output file
-                // Use Windows's current ANSI codepage encoding, this allows easy import in Excel.
-                // ANSI encoding is 1 byte per character, 0-127 is ASCII, 128-255 is per codepage.
-
-                mCsvWriter = new CsvWriter(filename, System.Text.Encoding.Default);
-                // settings
-                mCsvWriter.CommentHeader = "#";
-                mCsvWriter.Separator = ';';
-                // always put quotes around the text field
-                mCsvWriter.QuoteSelectedFields = new bool[] { false, false, true }; // we choose to always quote the description field
-            }
-            catch (Exception ex)
-            {
-                // open failed
-                string msg = ex.Message + Environment.NewLine + filename;
-                MessageBox.Show(msg, this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
-
-            // make sure the file is closed
-            // and mTemporaryNoRemove is reset
-            try
-            {
-                // export file header info
-                mCsvWriter.WriteComment("Modbuscontrol logger export - " + DateTime.Now.ToString());
-                mCsvWriter.WriteComment("Fields: Time;Type;Text");
-
-                // do not remove oldest lines while exporting, may cause missing lines
-                mTemporaryNoRemove = true;
-
-                // export logger lines
-                LogEntry rLog;
-                string[] fields;
-                for (int i = 0; i < LogList.Count; ++i)
+                // take a snapshot of the log
+                // to minimize lock time
+                List<LogEntry> snapshot;
+                lock (logLock)
                 {
-                    // get logs from LogList in a threadsafe way
-                    lock (LogListLock)
-                    {
-                        rLog = LogList[i];
-                    }
-                    fields = new string[] { rLog.Time.ToString(), rLog.Type.ToString(), rLog.Text };
-                    mCsvWriter.WriteRow(fields);
+                    snapshot = new List<LogEntry>(logQueue);
                 }
-            }
-            finally
+
+                CsvWriter mCsvWriter;
+
+                // open file to write to
+                try
+                {
+                    // open output file
+                    // Use Windows's current ANSI codepage encoding and ';' separator, for easy import in Excel
+
+                    mCsvWriter = new CsvWriter(filename, System.Text.Encoding.Default);
+                    // settings
+                    mCsvWriter.CommentHeader = "#";
+                    mCsvWriter.Separator = ';';
+                    // always put quotes around the text field
+                    mCsvWriter.QuoteSelectedFields = new bool[] { false, false, true }; // we choose to always quote the description field
+                }
+                catch (Exception ex)
+                {
+                    // open failed
+                    string msg = ex.Message + Environment.NewLine + filename;
+                    MessageBox.Show(msg, this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+                // ensure the file is closed
+                try
+                {
+                    // export header 
+                    mCsvWriter.WriteRow(new string[] { "Time", "Type", "Text" }, false);
+                    // comment
+                    mCsvWriter.WriteComment("Modbuscontrol logging export - " + DateTime.Now.ToString());
+                    
+                    // export rows
+                    string[] fields;
+                    foreach (LogEntry log in snapshot)
+                    {
+                        fields = new string[] { log.Time.ToString(), log.Type.ToString(), log.Text };
+                        mCsvWriter.WriteRow(fields);
+                    }
+                }
+                finally
+                {
+                    mCsvWriter.Close();
+                }
+            }            
+        }
+
+        private void dataGridView1_CellValueNeeded(object sender, DataGridViewCellValueEventArgs e)
+        {
+            if ((e.RowIndex >= 0) && (e.RowIndex < logQueue.Count))
             {
-                mTemporaryNoRemove = false;
-                mCsvWriter.Close();
+                LogEntry log = logQueue[e.RowIndex];
+                switch (e.ColumnIndex)
+                {
+                    case 0:
+                        e.Value = log.Time;
+                        break;
+                    case 1:
+                        e.Value = log.Type;
+                        break;
+                    case 2:
+                        e.Value = log.Text;
+                        break;
+                }                 
             }
         }
 
+        
     }
 }

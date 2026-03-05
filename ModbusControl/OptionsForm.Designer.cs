@@ -116,7 +116,7 @@
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(86, 13);
             this.label1.TabIndex = 5;
-            this.label1.Text = "Logger capacity:";
+            this.label1.Text = "Logging capacity:";
             // 
             // numericLoggerCapacity
             // 
@@ -139,7 +139,7 @@
             this.numericLoggerCapacity.Name = "numericLoggerCapacity";
             this.numericLoggerCapacity.Size = new System.Drawing.Size(75, 20);
             this.numericLoggerCapacity.TabIndex = 6;
-            this.toolTip1.SetToolTip(this.numericLoggerCapacity, "Logger memory capacity, number of lines");
+            this.toolTip1.SetToolTip(this.numericLoggerCapacity, "Logging memory capacity, number of lines");
             this.numericLoggerCapacity.Value = new decimal(new int[] {
             5000,
             0,
