@@ -213,21 +213,48 @@ namespace ModbusControlSpace
         {
             get
             {
-                // the encoding name is the part before the space
+                // the encoding name 
                 return comboStringEncoding.SelectedValue as string;
             }
             set
             {
-                comboStringEncoding.Text = value;
-                // SelectedValue does not accept null
-                // empty or non-existing results in no item selected
-                if (string.IsNullOrWhiteSpace(value) )
+                bool isValid = SetComboboxSelectedValueWithIgnoreCase(comboStringEncoding, value);
+                if (isValid == false)
                 {
-                    value = "";
+                    comboStringEncoding.SelectedValue = "us-ascii";
                 }
-                comboStringEncoding.SelectedValue = value; 
             }
         }
+
+        public bool SetComboboxSelectedValueWithIgnoreCase(ComboBox combo, string value)
+        {
+            if (combo == null)
+            {
+                return false;
+            }
+
+            if (value == null)
+            {
+                combo.SelectedValue = null;
+                return false;
+            }
+
+            string valueMember = combo.ValueMember;
+            for (int i = 0; i < combo.Items.Count; i++)
+            {
+                object item = combo.Items[i];
+                string itemValue = combo.GetItemText(item.GetType().GetProperty(valueMember)?.GetValue(item, null));
+
+                if (string.Equals(itemValue.Trim(), value.Trim(), StringComparison.OrdinalIgnoreCase))
+                {
+                    combo.SelectedValue = itemValue;
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
 
         public int OptionsHoldingregistersStart
         {
@@ -357,7 +384,7 @@ namespace ModbusControlSpace
             "utf-8",
             "windows-1250",
             //"windows-1251",
-            "windows-1252",
+            "Windows-1252", 
             //"windows-1253",
             //"windows-1254",
             //"windows-1255",
@@ -396,6 +423,7 @@ namespace ModbusControlSpace
             {
                 try
                 {
+                    // Encoding.GetEncoding() is case insensitive
                     Encoding enc = Encoding.GetEncoding(encName);
                     encodingDict[encName] = encName + "   (" + enc.EncodingName + ")";
                 }

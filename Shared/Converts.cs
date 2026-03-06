@@ -51,11 +51,24 @@ namespace ModbusControlSpace
             get { return _stringEncodingName; }
             set
             {
-                // allow empty or valid encoding name
-                if (value != "")
+                // empty encoding name gives ascii
+                if (string.IsNullOrWhiteSpace(value))
+                {
+                    value = "us-ascii";
+                }
+
+                // set encoding
+                // if invalid: use ascii
+                try
                 {
                     Encoding enc = Encoding.GetEncoding(value);
                 }
+                catch
+                {
+                    value = "us-ascii";
+                    Encoding enc = Encoding.GetEncoding(value);
+                }
+                
                 _stringEncodingName = value;
             }
         }
