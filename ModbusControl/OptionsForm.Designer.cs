@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(OptionsForm));
             this.buttonCancel = new System.Windows.Forms.Button();
             this.buttonOK = new System.Windows.Forms.Button();
             this.checkboxStopOnCommsError = new System.Windows.Forms.CheckBox();
@@ -53,6 +54,7 @@
             this.openFileDialog2 = new System.Windows.Forms.OpenFileDialog();
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
+            this.butResetValidationFile = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.numericLoggerCapacity)).BeginInit();
             this.SuspendLayout();
             // 
@@ -62,7 +64,7 @@
             this.buttonCancel.Location = new System.Drawing.Point(230, 318);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 23);
-            this.buttonCancel.TabIndex = 11;
+            this.buttonCancel.TabIndex = 21;
             this.buttonCancel.Text = "Cancel";
             this.buttonCancel.UseVisualStyleBackColor = true;
             // 
@@ -72,7 +74,7 @@
             this.buttonOK.Location = new System.Drawing.Point(142, 318);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(75, 23);
-            this.buttonOK.TabIndex = 10;
+            this.buttonOK.TabIndex = 20;
             this.buttonOK.Text = "OK";
             this.buttonOK.UseVisualStyleBackColor = true;
             // 
@@ -82,7 +84,7 @@
             this.checkboxStopOnCommsError.Location = new System.Drawing.Point(223, 12);
             this.checkboxStopOnCommsError.Name = "checkboxStopOnCommsError";
             this.checkboxStopOnCommsError.Size = new System.Drawing.Size(120, 17);
-            this.checkboxStopOnCommsError.TabIndex = 0;
+            this.checkboxStopOnCommsError.TabIndex = 1;
             this.checkboxStopOnCommsError.Text = "Stop polling on error";
             this.toolTip1.SetToolTip(this.checkboxStopOnCommsError, "Stop polling on read error, show message if stopped");
             this.checkboxStopOnCommsError.UseVisualStyleBackColor = true;
@@ -93,7 +95,7 @@
             this.checkboxBeepOnInputError.Location = new System.Drawing.Point(23, 12);
             this.checkboxBeepOnInputError.Name = "checkboxBeepOnInputError";
             this.checkboxBeepOnInputError.Size = new System.Drawing.Size(116, 17);
-            this.checkboxBeepOnInputError.TabIndex = 2;
+            this.checkboxBeepOnInputError.TabIndex = 0;
             this.checkboxBeepOnInputError.Text = "Beep on input error";
             this.toolTip1.SetToolTip(this.checkboxBeepOnInputError, "Beep when an invalid value is entered");
             this.checkboxBeepOnInputError.UseVisualStyleBackColor = true;
@@ -104,7 +106,7 @@
             this.CheckboxCheckForUpdates.Location = new System.Drawing.Point(23, 282);
             this.CheckboxCheckForUpdates.Name = "CheckboxCheckForUpdates";
             this.CheckboxCheckForUpdates.Size = new System.Drawing.Size(154, 17);
-            this.CheckboxCheckForUpdates.TabIndex = 9;
+            this.CheckboxCheckForUpdates.TabIndex = 19;
             this.CheckboxCheckForUpdates.Text = "Check for program updates";
             this.toolTip1.SetToolTip(this.CheckboxCheckForUpdates, "Check for program update on start, once per day");
             this.CheckboxCheckForUpdates.UseVisualStyleBackColor = true;
@@ -114,8 +116,8 @@
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(21, 249);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(86, 13);
-            this.label1.TabIndex = 5;
+            this.label1.Size = new System.Drawing.Size(91, 13);
+            this.label1.TabIndex = 17;
             this.label1.Text = "Logging capacity:";
             // 
             // numericLoggerCapacity
@@ -138,7 +140,7 @@
             0});
             this.numericLoggerCapacity.Name = "numericLoggerCapacity";
             this.numericLoggerCapacity.Size = new System.Drawing.Size(75, 20);
-            this.numericLoggerCapacity.TabIndex = 6;
+            this.numericLoggerCapacity.TabIndex = 18;
             this.toolTip1.SetToolTip(this.numericLoggerCapacity, "Logging memory capacity, number of lines");
             this.numericLoggerCapacity.Value = new decimal(new int[] {
             5000,
@@ -152,7 +154,7 @@
             this.checkboxNextRowOnEnter.Location = new System.Drawing.Point(23, 33);
             this.checkboxNextRowOnEnter.Name = "checkboxNextRowOnEnter";
             this.checkboxNextRowOnEnter.Size = new System.Drawing.Size(151, 17);
-            this.checkboxNextRowOnEnter.TabIndex = 3;
+            this.checkboxNextRowOnEnter.TabIndex = 2;
             this.checkboxNextRowOnEnter.Text = "Move to next row on Enter";
             this.toolTip1.SetToolTip(this.checkboxNextRowOnEnter, "Move to the next row after entering a new value");
             this.checkboxNextRowOnEnter.UseVisualStyleBackColor = true;
@@ -172,9 +174,8 @@
             // 
             this.textboxCustomEditor.Location = new System.Drawing.Point(71, 215);
             this.textboxCustomEditor.Name = "textboxCustomEditor";
-            this.textboxCustomEditor.Size = new System.Drawing.Size(302, 20);
-            this.textboxCustomEditor.TabIndex = 8;
-            this.toolTip1.SetToolTip(this.textboxCustomEditor, "Custom editor command, for example [\"c:\\windows\\system32\\notepad.exe\" \"%file\"]");
+            this.textboxCustomEditor.Size = new System.Drawing.Size(327, 20);
+            this.textboxCustomEditor.TabIndex = 15;
             // 
             // checkboxCustomEditor
             // 
@@ -182,7 +183,7 @@
             this.checkboxCustomEditor.Location = new System.Drawing.Point(23, 197);
             this.checkboxCustomEditor.Name = "checkboxCustomEditor";
             this.checkboxCustomEditor.Size = new System.Drawing.Size(111, 17);
-            this.checkboxCustomEditor.TabIndex = 7;
+            this.checkboxCustomEditor.TabIndex = 13;
             this.checkboxCustomEditor.Text = "Use custom editor";
             this.toolTip1.SetToolTip(this.checkboxCustomEditor, "Use this editor instead of the default one");
             this.checkboxCustomEditor.UseVisualStyleBackColor = true;
@@ -193,7 +194,7 @@
             this.checkboxIgnoreFormSizeOnReload.Location = new System.Drawing.Point(223, 33);
             this.checkboxIgnoreFormSizeOnReload.Name = "checkboxIgnoreFormSizeOnReload";
             this.checkboxIgnoreFormSizeOnReload.Size = new System.Drawing.Size(182, 17);
-            this.checkboxIgnoreFormSizeOnReload.TabIndex = 12;
+            this.checkboxIgnoreFormSizeOnReload.TabIndex = 3;
             this.checkboxIgnoreFormSizeOnReload.Text = "Ignore form size on project reload";
             this.toolTip1.SetToolTip(this.checkboxIgnoreFormSizeOnReload, "Do not use the form size specified in the mbc file on project reload");
             this.checkboxIgnoreFormSizeOnReload.UseVisualStyleBackColor = true;
@@ -204,7 +205,7 @@
             this.checkboxShowVarProperties.Location = new System.Drawing.Point(23, 75);
             this.checkboxShowVarProperties.Name = "checkboxShowVarProperties";
             this.checkboxShowVarProperties.Size = new System.Drawing.Size(176, 17);
-            this.checkboxShowVarProperties.TabIndex = 13;
+            this.checkboxShowVarProperties.TabIndex = 5;
             this.checkboxShowVarProperties.Text = "Show register properties column";
             this.toolTip1.SetToolTip(this.checkboxShowVarProperties, "Show an extra column with the register properties");
             this.checkboxShowVarProperties.UseVisualStyleBackColor = true;
@@ -215,7 +216,7 @@
             this.checkboxAutoRowSize.Location = new System.Drawing.Point(23, 96);
             this.checkboxAutoRowSize.Name = "checkboxAutoRowSize";
             this.checkboxAutoRowSize.Size = new System.Drawing.Size(176, 17);
-            this.checkboxAutoRowSize.TabIndex = 14;
+            this.checkboxAutoRowSize.TabIndex = 6;
             this.checkboxAutoRowSize.Text = "Multiline rows with auto row size";
             this.toolTip1.SetToolTip(this.checkboxAutoRowSize, "Allow multi-line rows and adjust row heights automatically to fit their contents");
             this.checkboxAutoRowSize.UseVisualStyleBackColor = true;
@@ -225,9 +226,8 @@
             this.textboxUseValidationSchema.Location = new System.Drawing.Point(82, 167);
             this.textboxUseValidationSchema.Margin = new System.Windows.Forms.Padding(2);
             this.textboxUseValidationSchema.Name = "textboxUseValidationSchema";
-            this.textboxUseValidationSchema.Size = new System.Drawing.Size(291, 20);
-            this.textboxUseValidationSchema.TabIndex = 14;
-            this.toolTip1.SetToolTip(this.textboxUseValidationSchema, "Path to the XSD schema file");
+            this.textboxUseValidationSchema.Size = new System.Drawing.Size(316, 20);
+            this.textboxUseValidationSchema.TabIndex = 10;
             // 
             // checkboxClearFilterOnTabChange
             // 
@@ -235,7 +235,7 @@
             this.checkboxClearFilterOnTabChange.Location = new System.Drawing.Point(23, 117);
             this.checkboxClearFilterOnTabChange.Name = "checkboxClearFilterOnTabChange";
             this.checkboxClearFilterOnTabChange.Size = new System.Drawing.Size(169, 17);
-            this.checkboxClearFilterOnTabChange.TabIndex = 19;
+            this.checkboxClearFilterOnTabChange.TabIndex = 7;
             this.checkboxClearFilterOnTabChange.Text = "Clear Find/filter on tab change";
             this.toolTip1.SetToolTip(this.checkboxClearFilterOnTabChange, "Clear the Find/filter when user switches to other tab page");
             this.checkboxClearFilterOnTabChange.UseVisualStyleBackColor = true;
@@ -247,7 +247,7 @@
             this.checkboxUseValidationSchema.Margin = new System.Windows.Forms.Padding(2);
             this.checkboxUseValidationSchema.Name = "checkboxUseValidationSchema";
             this.checkboxUseValidationSchema.Size = new System.Drawing.Size(231, 17);
-            this.checkboxUseValidationSchema.TabIndex = 13;
+            this.checkboxUseValidationSchema.TabIndex = 8;
             this.checkboxUseValidationSchema.Text = "Use XSD validation schema on project load";
             this.toolTip1.SetToolTip(this.checkboxUseValidationSchema, "When an mbc project file is loaded, validate it against an XSD schema");
             this.checkboxUseValidationSchema.UseVisualStyleBackColor = true;
@@ -261,24 +261,26 @@
             // butSelectValidationFile
             // 
             this.butSelectValidationFile.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.butSelectValidationFile.Location = new System.Drawing.Point(374, 167);
+            this.butSelectValidationFile.Location = new System.Drawing.Point(399, 166);
             this.butSelectValidationFile.Margin = new System.Windows.Forms.Padding(2);
             this.butSelectValidationFile.Name = "butSelectValidationFile";
-            this.butSelectValidationFile.Size = new System.Drawing.Size(25, 19);
-            this.butSelectValidationFile.TabIndex = 15;
+            this.butSelectValidationFile.Size = new System.Drawing.Size(25, 21);
+            this.butSelectValidationFile.TabIndex = 11;
             this.butSelectValidationFile.Text = "...";
+            this.toolTip1.SetToolTip(this.butSelectValidationFile, "Browse for a file");
             this.butSelectValidationFile.UseVisualStyleBackColor = true;
             this.butSelectValidationFile.Click += new System.EventHandler(this.butSelectValidationFile_Click);
             // 
             // butSelectCustomEditor
             // 
             this.butSelectCustomEditor.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.butSelectCustomEditor.Location = new System.Drawing.Point(374, 215);
+            this.butSelectCustomEditor.Location = new System.Drawing.Point(399, 214);
             this.butSelectCustomEditor.Margin = new System.Windows.Forms.Padding(2);
             this.butSelectCustomEditor.Name = "butSelectCustomEditor";
-            this.butSelectCustomEditor.Size = new System.Drawing.Size(25, 19);
+            this.butSelectCustomEditor.Size = new System.Drawing.Size(25, 22);
             this.butSelectCustomEditor.TabIndex = 16;
             this.butSelectCustomEditor.Text = "...";
+            this.toolTip1.SetToolTip(this.butSelectCustomEditor, "Browse for a file");
             this.butSelectCustomEditor.UseVisualStyleBackColor = true;
             this.butSelectCustomEditor.Click += new System.EventHandler(this.butSelectCustomEditor_Click);
             // 
@@ -295,7 +297,7 @@
             this.label2.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(49, 13);
-            this.label2.TabIndex = 17;
+            this.label2.TabIndex = 9;
             this.label2.Text = "Schema:";
             // 
             // label3
@@ -305,8 +307,19 @@
             this.label3.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(37, 13);
-            this.label3.TabIndex = 18;
+            this.label3.TabIndex = 14;
             this.label3.Text = "Editor:";
+            // 
+            // butResetValidationFile
+            // 
+            this.butResetValidationFile.Image = ((System.Drawing.Image)(resources.GetObject("butResetValidationFile.Image")));
+            this.butResetValidationFile.Location = new System.Drawing.Point(424, 166);
+            this.butResetValidationFile.Name = "butResetValidationFile";
+            this.butResetValidationFile.Size = new System.Drawing.Size(25, 21);
+            this.butResetValidationFile.TabIndex = 12;
+            this.toolTip1.SetToolTip(this.butResetValidationFile, "Revert to default");
+            this.butResetValidationFile.UseVisualStyleBackColor = true;
+            this.butResetValidationFile.Click += new System.EventHandler(this.butResetValidationFile_Click);
             // 
             // OptionsForm
             // 
@@ -315,8 +328,9 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.AutoSize = true;
             this.CancelButton = this.buttonCancel;
-            this.ClientSize = new System.Drawing.Size(455, 351);
+            this.ClientSize = new System.Drawing.Size(472, 351);
             this.ControlBox = false;
+            this.Controls.Add(this.butResetValidationFile);
             this.Controls.Add(this.checkboxClearFilterOnTabChange);
             this.Controls.Add(this.checkboxAutoRowSize);
             this.Controls.Add(this.checkboxShowVarProperties);
@@ -380,5 +394,6 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.CheckBox checkboxClearFilterOnTabChange;
+        private System.Windows.Forms.Button butResetValidationFile;
     }
 }

@@ -34,6 +34,9 @@ namespace ModbusControlSpace
         //public CLocal Local;        // user local settings
         public CShared Shared;      // per application shared settings
 
+        // the path to the default mbc validation xsd file
+        public string DefaultMbcfileValidationXSDFile;
+
         // constructor
         public CSettings()
         {
@@ -72,13 +75,21 @@ namespace ModbusControlSpace
 
                 File.Move(StoreSharedPathOld, StoreSharedPath);
             }
-            
+
+            // set the path to the default mbc validation xsd file
+            string pathToDefaultXsd = Path.Combine(AppHelpers.ApplicationStartupPath, "MbcValidate.xsd");
+            if (File.Exists(pathToDefaultXsd))
+            {
+                DefaultMbcfileValidationXSDFile = pathToDefaultXsd;
+            }
+
             Roaming = new CRoaming();
             Roaming.FilePath = StoreRoamingPath;
-            
+            Roaming.DefaultMbcfileValidationXSDFile = DefaultMbcfileValidationXSDFile;
+
             //Local = new CLocal();
             //Local.FilePath = StoreLocalPath;
-            
+
             Shared = new CShared();
             Shared.FilePath = StoreSharedPath;
         }
@@ -147,6 +158,8 @@ namespace ModbusControlSpace
             public CCustomQueries CustomQueries;
             public CLogger Logger;
 
+            public string DefaultMbcfileValidationXSDFile;      // not in settings file
+
             private XmlDocument xdoc;
             private XmlNode xroot;
             
@@ -162,8 +175,8 @@ namespace ModbusControlSpace
                 ShowVarProperties = false;
                 MultilineAutosizeRows = false;
                 ClearFilterOnTabChange = false;
-                MbcfileValidationEnable = false; // see further
-                MbcfileValidationXSDFile = ""; // see further
+                MbcfileValidationEnable = false;    // initialised below
+                MbcfileValidationXSDFile = "";      // initialised below
                 ShowFindFilterBox = true;
                 CustomEditorEnable = false;
                 CustomEditorCommand = "";
@@ -174,7 +187,7 @@ namespace ModbusControlSpace
                 CustomQueries = new CCustomQueries();
                 Logger = new CLogger();
 
-                // setup ValidationXSDFile, if we find it
+                // setup default path to XSD file, if it exists
                 string Filepath = Path.Combine(AppHelpers.ApplicationStartupPath, "MbcValidate.xsd");
                 if (File.Exists(Filepath))
                 {
@@ -243,6 +256,18 @@ namespace ModbusControlSpace
                 Import.Read(xroot);
                 CustomQueries.Read(xroot);
                 Logger.Read(xroot);
+
+                string oldPathToXsd = @"C:\Program Files (x86)\E.D.&A\ModbusControl\MbcValidate.xsd";
+                string newPathToXsd = DefaultMbcfileValidationXSDFile;
+                //MessageBox.Show("oldPathToXsd=" + oldPathToXsd + ",\n newPathToXsd=" + newPathToXsd + ",\n MbcfileValidationXSDFile=" + MbcfileValidationXSDFile,
+                //                "INFO", MessageBoxButtons.OK, MessageBoxIcon.Information); 
+                if (string.Equals(MbcfileValidationXSDFile, oldPathToXsd, StringComparison.OrdinalIgnoreCase)
+                       && File.Exists(newPathToXsd))
+                {
+                    //MessageBox.Show("Path changed to: " + newPathToXsd, 
+                    //                "INFO", MessageBoxButtons.OK, MessageBoxIcon.Information); 
+                    MbcfileValidationXSDFile = newPathToXsd;
+                }
             }
 
             /// <summary>

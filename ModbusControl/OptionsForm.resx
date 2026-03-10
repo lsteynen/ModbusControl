@@ -126,6 +126,17 @@
   <metadata name="openFileDialog2.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>254, 17</value>
   </metadata>
+  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <data name="butResetValidationFile.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAO
+        xAAADsQBlSsOGwAAAPBJREFUOE9j+P//P8O3b9/+o2GFb9++zUcTew8VE2CAApBeMAFSwBA8B4xB7Gev
+        P7yvXnryP3/sIri4fPry/yAxqEEGOA14/ubDf72itXA+Oo6ZsA9miABWA5A158w6/H/n2Qdg7Nu2Ay4+
+        a+cVkCENWA1AUwTDASBb7Wo2wy359u3bfbwGwDBYjoEBpCZg5eFbKOKkGpCA1wAC2ACvF/ABmGZQ6MNs
+        xwhEXACbZmg03keJRmwAj2bMhIQOiNEMAlgNIFYzCOAyoP/6o9fwfIBLMwhgNQAEQLnuxPWn4KSMSzMI
+        4DQABKBZF6dmEADpBQBpaDGSpVcrbwAAAABJRU5ErkJggg==
+</value>
+  </data>
   <metadata name="$this.TrayHeight" type="System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>45</value>
   </metadata>

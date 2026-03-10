@@ -10,6 +10,9 @@ namespace ModbusControlSpace
 {
     public partial class OptionsForm : Form
     {
+        // data
+        private string mDefaultMbcfileValidationFile;
+
         // properties
 
         public bool StopOnError
@@ -96,6 +99,16 @@ namespace ModbusControlSpace
             set { textboxUseValidationSchema.Text = value; }
         }
 
+        public string DefaultMbcfileValidationFile
+        {
+            get { return mDefaultMbcfileValidationFile; }
+            set
+            {
+                mDefaultMbcfileValidationFile = value;
+                butResetValidationFile.Enabled = !string.IsNullOrEmpty(DefaultMbcfileValidationFile);
+            }
+        }
+
         public int LoggerCapacity
         {
             get { return (int)numericLoggerCapacity.Value; }
@@ -136,6 +149,11 @@ namespace ModbusControlSpace
             }
         }
 
+        private void butResetValidationFile_Click(object sender, EventArgs e)
+        {
+            textboxUseValidationSchema.Text = DefaultMbcfileValidationFile;
+        }
+
         private void butSelectCustomEditor_Click(object sender, EventArgs e)
         {
             if (openFileDialog2.ShowDialog() == DialogResult.OK)
@@ -143,5 +161,7 @@ namespace ModbusControlSpace
                 textboxCustomEditor.Text = openFileDialog2.FileName;
             }
         }
+
+
     }
 }

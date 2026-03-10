@@ -58,7 +58,6 @@ namespace ModbusControlSpace
         private ModbusServer.ModbusServer TcpBridge;
         private Thread UpdaterThread;   // Updater thread
         private Object UpdaterLock = new Object();  // lock for safely terminating the updater thread
-        private bool Loading;
         private CommandlineProc CommandlineArgs;
         private float CurrentRegisterColumnWidthWeight;
         private float CurrentDescriptionColumnWidthWeight;
@@ -923,6 +922,7 @@ namespace ModbusControlSpace
             optionsForm.LoggerCapacity = Logger1.Capacity;
             optionsForm.MbcfileValidationEnable = Options.MbcfileValidationEnable;
             optionsForm.MbcfileValidationFile = Options.MbcfileValidationXSDFile;
+            optionsForm.DefaultMbcfileValidationFile = Settings1.DefaultMbcfileValidationXSDFile;
             optionsForm.CustomEditorEnable = Options.CustomEditorEnable;
             optionsForm.CustomEditorEnable = Options.CustomEditorEnable;
             optionsForm.CustomEditorCommand = Options.CustomEditorCommand;
@@ -1818,9 +1818,9 @@ namespace ModbusControlSpace
 
             if (Options.ClearFilterOnTabChange)
             {
-                Loading = true;
+                isLoading = true;
                 tbFilterText.Text = "";
-                Loading = false;
+                isLoading = false;
             }
 
             // update page properties factor
@@ -2433,7 +2433,7 @@ namespace ModbusControlSpace
 
         private void TbFilterText_TextChanged(object sender, EventArgs e)
         {
-            if (Loading)
+            if (isLoading)
             {
                 return;
             }
