@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<modbuscontrol>
+	<modbus>
+	</modbus>
+	<tab>
+		<name>String size</name>
+		<var>
+			<reg>40301</reg>
+			<text>string31</text>
+			<type>string31</type>
+			<rw>rw</rw>
+		</var>
+	</tab>
+</modbuscontrol>

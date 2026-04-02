@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<modbuscontrol>
+	<Size>
+		<Width>820</Width>
+		<Height>600</Height>
+	</Size>
+	<Modbus>
+		<Port>COM19</Port>
+		<Baudrate>9600</Baudrate>
+		<Parity>none</Parity>
+		<SlaveID>1</SlaveID>
+		<SampleRate>500</SampleRate>
+		<ResponseTimeout>1000</ResponseTimeout>
+		<MaximumFramesize>129</MaximumFramesize>
+		<HoldingregisterStart>40001</HoldingregisterStart>
+		<WriteHoldingregisterFC>16</WriteHoldingregisterFC>
+		<Value32BitEndian>little</Value32BitEndian>
+		<ShowType>true</ShowType>
+		<ShowReadwrite>true</ShowReadwrite>
+	</Modbus>
+	<tab>
+		<name>Test1</name>
+		<var>
+			<reg>40001</reg>
+			<text>Software version</text>
+			<type>int16</type>
+			<rw>r</rw>
+		</var>
+	</tab>
+</modbuscontrol>

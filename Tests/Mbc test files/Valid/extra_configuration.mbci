@@ -1,0 +1,15 @@
+<modbuscontrol>
+<tab>
+	<name>Tab-include</name>
+	<expandfields>false</expandfields>
+	<fcol>#ff4040</fcol>
+	<bcol>#ff8080</bcol>
+	<var>
+		<reg>40001</reg>
+		<text>TEXT_0001</text>
+		<type>int16</type>
+		<rw>r</rw>
+	</var>
+</tab>
+</modbuscontrol>	
+	

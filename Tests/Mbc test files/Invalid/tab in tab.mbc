@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<modbuscontrol>
+	<modbus>
+	</modbus>
+	<tab>
+		<name>Test1</name>
+		<var>
+			<reg>40001</reg>
+			<text>Software version</text>
+			<type>int16</type>
+			<rw>r</rw>
+		</var>
+		<tab>
+			<name>Tab2</name>
+			<var>
+				<reg>40002</reg>
+				<text>Aaa</text>
+				<type>int16</type>
+				<rw>r</rw>
+			</var>
+		</tab>
+	</tab>
+</modbuscontrol>

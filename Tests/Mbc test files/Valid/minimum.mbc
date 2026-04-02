@@ -1,0 +1,10 @@
+<modbuscontrol>
+<modbus>
+</modbus>
+<tab>
+	<name>Test1</name>
+	<var>
+		<reg>40001</reg>
+	</var>
+</tab>
+</modbuscontrol>

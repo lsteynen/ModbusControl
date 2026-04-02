@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<modbuscontrol>
+	<modbus>
+		<!-- Connection type and protocol -->
+		<connection>modbus/tcp</connection>
+		<!-- <connection>modbus/tcp</connection> -->
+		<!-- <connection>rtu/tcp</connection> -->
+		<!-- Serial parameters -->
+		<port></port>
+		<baudrate>9600</baudrate>
+		<parity>none</parity>
+		<endofmessagetimeout>100</endofmessagetimeout>
+		<onewireechosuppression>false</onewireechosuppression>
+		<!-- TCP/IP parameters -->
+		<ipaddress>127.0.0.1</ipaddress>
+		<ipport>502</ipport>
+		<!-- General parameters -->
+		<slaveid>1</slaveid>
+		<responsetimeout>1000</responsetimeout>
+		<maximumframesize>256</maximumframesize>
+		<writeholdingregisterfc>6</writeholdingregisterfc>
+		<int32endian>little</int32endian>
+		<float32endian>little</float32endian>
+		<stringendian>little</stringendian>
+		<stringencoding>aaaaaaa</stringencoding>
+		<samplerate>1000</samplerate>
+		<holdingregisterstart>40001</holdingregisterstart>
+		<interframedelay>0</interframedelay>
+	</modbus>
+	<tab>
+		<name>Test1</name>
+		<var>
+			<reg>40001</reg>
+			<text>Software version</text>
+			<type>int16</type>
+			<rw>r</rw>
+		</var>
+	</tab>
+</modbuscontrol>

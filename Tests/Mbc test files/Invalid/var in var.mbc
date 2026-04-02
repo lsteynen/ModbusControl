@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<modbuscontrol>
+	<modbus>
+		<connection>modbus/tcp</connection>
+		<samplerate>1.4</samplerate>
+	</modbus>
+	<tab>
+		<name>Test1</name>
+		<var>
+			<reg>40001</reg>
+			<text>Software version</text>
+			<type>int16</type>
+			<rw>r</rw>
+			<var>
+				<reg>40002</reg>
+				<text>Aaa</text>
+				<type>int16</type>
+			<rw>r</rw>
+			</var>
+		</var>
+	</tab>
+</modbuscontrol>

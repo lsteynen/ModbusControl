@@ -5,6 +5,7 @@ using LST.Helpers;
 using ModbusControlSpace;
 using System.Xml;
 using System.Xml.Schema;
+using System.Collections.Generic;
 
 namespace UnitTests
 {
@@ -12,22 +13,22 @@ namespace UnitTests
     public class Test_Loadmbcfiles
     {
         static string targetDirectory = @"..\..\valid mbc files";
-        static string ValidationSchemaPath = @"C:\EDA\Modbuscontrol\xsd\MbcValidate.xsd";
+        static string ValidationSchemaPath = @"..\..\..\xsd\MbcValidate.xsd";
         static int FileCount = 0;
         
         public TestContext TestContext { get; set; }
 
         [TestMethod]
-        public void Test_ValidMbcFilesWithSchemaValidation()
+        public void Test_Load_Valid()
         {
-            targetDirectory = @"..\..\Mbc test files\Valid";
+            targetDirectory = @"..\..\mbc test files\Valid";
 
             TestContext.WriteLine("Testing if .mbc files in \"" + targetDirectory + "\" are valid");
 
-            string[] fileEntries = Directory.GetFiles(targetDirectory, "*.mbc");
-            TestContext.WriteLine("About to testload " + fileEntries.Length + " .mbc files");
+            List<string> fileList = GetDirectoryFilesExact(targetDirectory, "*.mbc");
+            TestContext.WriteLine("About to testload " + fileList.Count + " .mbc files");
 
-            foreach (string filePath in fileEntries)
+            foreach (string filePath in fileList)
             {
                 TryLoadMbcfile(filePath, ValidationSchemaPath);
             }
@@ -36,16 +37,16 @@ namespace UnitTests
         }
 
         [TestMethod]
-        public void Test_ValidMbcFilesWithoutSchemaValidation()
+        public void Test_Load_ValidWithoutSchemaValidation()
         {
-            targetDirectory = @"..\..\Mbc test files\Valid without schemavalidation";
+            targetDirectory = @"..\..\mbc test files\Valid without schemavalidation";
 
             TestContext.WriteLine("Testing if .mbc files in \"" + targetDirectory + "\" are valid without schemavalidation");
 
-            string[] fileEntries = Directory.GetFiles(targetDirectory, "*.mbc");
-            TestContext.WriteLine("About to testload " + fileEntries.Length + " .mbc files");
+            List<string> fileList = GetDirectoryFilesExact(targetDirectory, "*.mbc");
+            TestContext.WriteLine("About to testload " + fileList.Count + " .mbc files");
 
-            foreach (string filePath in fileEntries)
+            foreach (string filePath in fileList)
             {
                 TryLoadMbcfile(filePath);
             }
@@ -54,16 +55,16 @@ namespace UnitTests
         }
 
         [TestMethod]
-        public void Test_InvalidMbcFilesWithSchemaValidation() 
+        public void Test_Load_Invalid() 
         {
-            targetDirectory = @"..\..\Mbc test files\Invalid";
+            targetDirectory = @"..\..\mbc test files\Invalid";
 
             TestContext.WriteLine("Testing if .mbc files in \"" + targetDirectory + "\" throw exception on load");
 
-            string[] fileEntries = Directory.GetFiles(targetDirectory, "*.mbc");
-            TestContext.WriteLine("About to testload " + fileEntries.Length + " .mbc files");
+            List<string> fileList = GetDirectoryFilesExact(targetDirectory, "*.mbc");
+            TestContext.WriteLine("About to testload " + fileList.Count + " .mbc files");
 
-            foreach (string filePath in fileEntries)
+            foreach (string filePath in fileList)
             {
                 try
                 {
@@ -95,9 +96,32 @@ namespace UnitTests
                 project.ValidationSchemaPath = ValidationSchemaPath;
             }
 
-            project.Load(filePath);
-            
+            project.Load(filePath);            
         }
-  
+
+        /// <summary>
+        /// Get directory file list, pass a mask like "*.mbc"
+        /// Return only exact extention, not *.mbci if we want *.mbc
+        /// </summary>
+        public List<string> GetDirectoryFilesExact(string directory, string mask)
+        {
+            string ext = Path.GetExtension(mask);
+
+            string[] all = Directory.GetFiles(directory, mask);
+
+            List<string> result = new List<string>();
+
+            foreach (string file in all)
+            {
+                string fileExt = Path.GetExtension(file);
+
+                if (string.Equals(fileExt, ext, StringComparison.OrdinalIgnoreCase))
+                {
+                    result.Add(file);
+                }
+            }
+
+            return result;
+        }
     }
 }
