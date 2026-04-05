@@ -64,6 +64,7 @@ namespace ModbusControlSpace
         private float CurrentPropertiesColumnWidthWeight;
         private float CurrentValueColumnWidthWeight;
         private bool isLoading;
+        private RegisterToOffset registerToOffset;
 
         // a write entry
         private class WriteEntry
@@ -102,6 +103,9 @@ namespace ModbusControlSpace
             // Enable/disable menu items and toolbar buttons
             UpdateMenus();
 
+            // create default RegisterToOffset converter
+            registerToOffset = new RegisterToOffset(40001);
+
             // enable mousewheel zoom
             this.MouseWheel += new MouseEventHandler(Form_MouseWheel);
 
@@ -112,8 +116,8 @@ namespace ModbusControlSpace
 
             // Create modbus interface
             mb = new ModbusInterface();
-            // attach logger to modbusinterface
-            mb.Logger = Logger1;
+            mb.RegisterToOffset1 = registerToOffset;    // attach RegisterToOffset conversion
+            mb.Logger = Logger1;                        // attach logger 
 
             // create modbus/tcp server
             TcpBridge = new ModbusServer.ModbusServer();
@@ -404,7 +408,7 @@ namespace ModbusControlSpace
             // save Custom queries form settings if form exists
             if (CustomQueriesForm != null)
             {
-                Settings1.Roaming.CustomQueries.HoldingRegistersStartAddress = CustomQueriesForm.HoldingRegistersStartAddress;
+                Settings1.Roaming.CustomQueries.HoldingRegistersStartAddress = CustomQueriesForm.RegisterNumberingScheme;
 
                 Settings1.Roaming.CustomQueries.MultilineAutosizeRows = CustomQueriesForm.MultilineAutosizeRows;
 
@@ -883,7 +887,7 @@ namespace ModbusControlSpace
             Converts.StringEndian = Project.Connection.StringEndian;
             Converts.StringEncodingName = Project.Connection.StringEncoding;
             // pass new configuration to RegisterToOffset
-            RegisterToOffset.RegisterNumberingSchema = Project.Options.HoldingregistersStart;
+            registerToOffset = new RegisterToOffset(Project.Options.HoldingregistersStart);
 
             // restore connection
             if (ReopenConnection)
@@ -1180,7 +1184,7 @@ namespace ModbusControlSpace
             Converts.StringEndian = Project.Connection.StringEndian;
             Converts.StringEncodingName = Project.Connection.StringEncoding;
             // pass new configuration to RegisterToOffset
-            RegisterToOffset.RegisterNumberingSchema = Project.Options.HoldingregistersStart;
+            registerToOffset.RegisterNumberingScheme = Project.Options.HoldingregistersStart;
 
             // Create the tab pages
             LoadProjectInTabs();
@@ -1855,7 +1859,7 @@ namespace ModbusControlSpace
                 // read group 
                 // most groups will read maximum <maxReadRegisters> registers
                 // some groups with string vars may read more registers, then MifReadHoldingRegistersPaged() does paged reads 
-                UInt16 firstRegOffset = RegisterToOffset.GetHoldingregisterOffset(grp.readFirstReg);
+                UInt16 firstRegOffset = registerToOffset.GetHoldingregisterOffset(grp.readFirstReg);
                 result = mb.MifReadHoldingRegistersPaged(Project.Connection.SlaveID, firstRegOffset, (UInt16)grp.readRegCount, out tmpdata);
                 if (result == ModbusProtocol.Result.SUCCESS)
                 {
@@ -1887,7 +1891,7 @@ namespace ModbusControlSpace
                             //Debug.Print(DateTime.Now.TimeOfDay + "PollTabPage(): Single read: " + lineIndex + "," + 1 + "," + varp.Reg + "," + varp.Size);
 
                             // read
-                            UInt16 regOffset = RegisterToOffset.GetHoldingregisterOffset(varp.Reg);
+                            UInt16 regOffset = registerToOffset.GetHoldingregisterOffset(varp.Reg);
                             result = mb.MifReadHoldingRegisters(Project.Connection.SlaveID, regOffset, (UInt16)varp.Size, out tmpdata);
                             if (result == ModbusProtocol.Result.SUCCESS)
                             {
@@ -2348,7 +2352,7 @@ namespace ModbusControlSpace
         // MifWriteHoldingRegistersPaged() uses FC6 or FC16 as configured
         public ModbusProtocol.Result DoWriteHoldingRegs(UInt32 Reg, UInt16 RegCount, Int16[] Values)
         {
-            UInt16 regOffset = RegisterToOffset.GetHoldingregisterOffset(Reg);
+            UInt16 regOffset = registerToOffset.GetHoldingregisterOffset(Reg);
 
             ModbusProtocol.Result result = mb.MifWriteHoldingRegistersPaged(Project.Connection.SlaveID, regOffset, RegCount, Values);
 
@@ -2502,6 +2506,7 @@ namespace ModbusControlSpace
 
             // set settings
             ImportForm.Modbus = this.mb;
+            ImportForm.RegisterToOffset1 = registerToOffset;
             ImportForm.SlaveAddress = Project.Connection.SlaveID;
             ImportForm.MaximumFrameSize = Project.Connection.MaximumFrameSize;
             ImportForm.ContinueOnError = Settings1.Roaming.Import.ContinueOnError;
@@ -2528,6 +2533,7 @@ namespace ModbusControlSpace
 
             // set settings
             ExportForm.Modbus = this.mb;
+            ExportForm.RegisterToOffset1 = registerToOffset;
             ExportForm.SlaveAddress = Project.Connection.SlaveID;
             ExportForm.MaximumFrameSize = Project.Connection.MaximumFrameSize;
             ExportForm.ContinueOnError = Settings1.Roaming.Export.ContinueOnError;
@@ -2560,7 +2566,7 @@ namespace ModbusControlSpace
 
                 // load settings
 
-                CustomQueriesForm.HoldingRegistersStartAddress = Settings1.Roaming.CustomQueries.HoldingRegistersStartAddress;
+                CustomQueriesForm.RegisterNumberingScheme = Settings1.Roaming.CustomQueries.HoldingRegistersStartAddress;
 
                 CustomQueriesForm.MultilineAutosizeRows = Settings1.Roaming.CustomQueries.MultilineAutosizeRows;
 

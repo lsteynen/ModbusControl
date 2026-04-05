@@ -69,8 +69,6 @@
             this.picSamplerateIsOverride = new System.Windows.Forms.PictureBox();
             this.picMaxFrameSizeIsOverride = new System.Windows.Forms.PictureBox();
             this.picwriteregFCIsOverride = new System.Windows.Forms.PictureBox();
-            this.numericInterFrameDelay = new LST.Controls.NumericUpDown2();
-            this.comboSerialPort = new ModbusControlSpace.SerialPortCombobox();
             this.label5 = new System.Windows.Forms.Label();
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
             this.panel2 = new System.Windows.Forms.Panel();
@@ -106,6 +104,8 @@
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.label16 = new System.Windows.Forms.Label();
             this.panelWarning = new System.Windows.Forms.Panel();
+            this.numericInterFrameDelay = new LST.Controls.NumericUpDown2();
+            this.comboSerialPort = new ModbusControlSpace.SerialPortCombobox();
             ((System.ComponentModel.ISupportInitialize)(this.numericSamplerate)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericTcpServerPort)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericMaximumFrameSize)).BeginInit();
@@ -127,7 +127,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.picSamplerateIsOverride)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.picMaxFrameSizeIsOverride)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.picwriteregFCIsOverride)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericInterFrameDelay)).BeginInit();
             this.panel2.SuspendLayout();
             this.groupBox3.SuspendLayout();
             this.groupBox4.SuspendLayout();
@@ -139,6 +138,7 @@
             this.groupBoxSerialInterface.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.panelWarning.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericInterFrameDelay)).BeginInit();
             this.SuspendLayout();
             // 
             // numericSamplerate
@@ -515,13 +515,14 @@
             // 
             // textboxHoldingRegistersStart
             // 
-            this.textboxHoldingRegistersStart.Location = new System.Drawing.Point(571, 41);
+            this.textboxHoldingRegistersStart.Location = new System.Drawing.Point(488, 58);
             this.textboxHoldingRegistersStart.Name = "textboxHoldingRegistersStart";
             this.textboxHoldingRegistersStart.ReadOnly = true;
-            this.textboxHoldingRegistersStart.Size = new System.Drawing.Size(83, 20);
+            this.textboxHoldingRegistersStart.Size = new System.Drawing.Size(165, 20);
             this.textboxHoldingRegistersStart.TabIndex = 26;
-            this.textboxHoldingRegistersStart.Text = "40001/400001";
-            this.toolTip1.SetToolTip(this.textboxHoldingRegistersStart, "Numbering convention of first holding register (40001/400001, 40000/400000)\r\n");
+            this.textboxHoldingRegistersStart.Text = "40001-49999 + 400001-465536";
+            this.textboxHoldingRegistersStart.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.toolTip1.SetToolTip(this.textboxHoldingRegistersStart, "Register numbering scheme, defined by the first holding register number (40001/400001/40000/400000)\r\n");
             // 
             // picConnectionTypeIsOverride
             // 
@@ -691,38 +692,14 @@
             this.toolTip1.SetToolTip(this.picwriteregFCIsOverride, "This parameter is overridden by the command line! It shows the value as set by th" +
         "e command line, not the value configured in the mbc project file.");
             // 
-            // numericInterFrameDelay
-            // 
-            this.numericInterFrameDelay.Location = new System.Drawing.Point(126, 344);
-            this.numericInterFrameDelay.Maximum = new decimal(new int[] {
-            2147483647,
-            0,
-            0,
-            0});
-            this.numericInterFrameDelay.Name = "numericInterFrameDelay";
-            this.numericInterFrameDelay.Size = new System.Drawing.Size(61, 20);
-            this.numericInterFrameDelay.TabIndex = 11;
-            this.toolTip1.SetToolTip(this.numericInterFrameDelay, "Delay between response and next query, in milliseconds, 0 is auto, auto is 4Tchar" +
-        " for serial channels and 0ms for TCP channels");
-            // 
-            // comboSerialPort
-            // 
-            this.comboSerialPort.FormattingEnabled = true;
-            this.comboSerialPort.Location = new System.Drawing.Point(95, 13);
-            this.comboSerialPort.MaxLength = 30;
-            this.comboSerialPort.Name = "comboSerialPort";
-            this.comboSerialPort.Size = new System.Drawing.Size(91, 21);
-            this.comboSerialPort.TabIndex = 9;
-            this.toolTip1.SetToolTip(this.comboSerialPort, "Serial port name. Dropdown shows existing ports");
-            // 
             // label5
             // 
             this.label5.AutoSize = true;
             this.label5.Location = new System.Drawing.Point(459, 44);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(111, 13);
+            this.label5.Size = new System.Drawing.Size(141, 13);
             this.label5.TabIndex = 25;
-            this.label5.Text = "Holding registers start:";
+            this.label5.Text = "Register numbering scheme:";
             // 
             // panel2
             // 
@@ -1100,6 +1077,30 @@
             this.panelWarning.TabIndex = 22;
             this.panelWarning.Visible = false;
             // 
+            // numericInterFrameDelay
+            // 
+            this.numericInterFrameDelay.Location = new System.Drawing.Point(126, 344);
+            this.numericInterFrameDelay.Maximum = new decimal(new int[] {
+            2147483647,
+            0,
+            0,
+            0});
+            this.numericInterFrameDelay.Name = "numericInterFrameDelay";
+            this.numericInterFrameDelay.Size = new System.Drawing.Size(61, 20);
+            this.numericInterFrameDelay.TabIndex = 11;
+            this.toolTip1.SetToolTip(this.numericInterFrameDelay, "Delay between response and next query, in milliseconds, 0 is auto, auto is 4Tchar" +
+        " for serial channels and 0ms for TCP channels");
+            // 
+            // comboSerialPort
+            // 
+            this.comboSerialPort.FormattingEnabled = true;
+            this.comboSerialPort.Location = new System.Drawing.Point(95, 13);
+            this.comboSerialPort.MaxLength = 30;
+            this.comboSerialPort.Name = "comboSerialPort";
+            this.comboSerialPort.Size = new System.Drawing.Size(91, 21);
+            this.comboSerialPort.TabIndex = 9;
+            this.toolTip1.SetToolTip(this.comboSerialPort, "Serial port name. Dropdown shows existing ports");
+            // 
             // ConfigForm
             // 
             this.AcceptButton = this.buttonOK;
@@ -1142,7 +1143,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.picSamplerateIsOverride)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.picMaxFrameSizeIsOverride)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.picwriteregFCIsOverride)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericInterFrameDelay)).EndInit();
             this.panel2.ResumeLayout(false);
             this.panel2.PerformLayout();
             this.groupBox3.ResumeLayout(false);
@@ -1164,6 +1164,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.panelWarning.ResumeLayout(false);
             this.panelWarning.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericInterFrameDelay)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 

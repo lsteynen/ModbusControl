@@ -38,6 +38,8 @@ namespace ModbusExport
 
         public ModbusInterface Modbus;
 
+        public RegisterToOffset RegisterToOffset1;
+
         public byte SlaveAddress;
         
         public string ExportFormat
@@ -550,7 +552,7 @@ namespace ModbusExport
                                 TVarProperties varp = GetVarPropertiesByIndex(tabPage, lineIndex);
 
                                 // get register offset
-                                regOffset = RegisterToOffset.GetHoldingregisterOffset(varp.Reg);
+                                regOffset = RegisterToOffset1.GetHoldingregisterOffset(varp.Reg);
                                 // read
                                 //Debug.Print(DateTime.Now.TimeOfDay + ": MifReadHoldingRegisters(" + mSlaveAddress + "," + GetUserReg(regOffset) + "," + (UInt16)varp.Size + ")");
                                 result = Modbus.MifReadHoldingRegisters(SlaveAddress, regOffset, (UInt16)varp.Size, out readData);
@@ -632,7 +634,7 @@ namespace ModbusExport
 
             try
             {
-                Offset = RegisterToOffset.GetHoldingregisterOffset(Regnr);
+                Offset = RegisterToOffset1.GetHoldingregisterOffset(Regnr);
                 return true;
             }
             catch

@@ -20,7 +20,9 @@ namespace ModbusControlSpace
         private float ZoomFactor = 1.0F;
         private float currentZoomFactor;
         private float originalFontSize;
-        private int mHoldingRegistersStartAddress = 40001;
+        // CustomQueries are global, not per project, so we use standard register numbering
+        private int mRegisterNumberingScheme = 40001;
+        private RegisterToOffset mRegisterToOffset = new RegisterToOffset(40001);
 
         // command enums
         // Must match the order of the texts in the Command dropdown!
@@ -32,17 +34,17 @@ namespace ModbusControlSpace
 
         #region properties
 
-        public int HoldingRegistersStartAddress
+        public int RegisterNumberingScheme
         {
             get
             {
-                return mHoldingRegistersStartAddress;
+                return mRegisterNumberingScheme;
             }
 
             set
             {
-                // ignored
-                mHoldingRegistersStartAddress = value; 
+                mRegisterNumberingScheme = value;
+                mRegisterToOffset.RegisterNumberingScheme = mRegisterNumberingScheme;
             }
         }
 
@@ -607,7 +609,6 @@ namespace ModbusControlSpace
         {
             string ResultStr = "ERROR";
             byte slaveID = 1;
-            UInt32 register = 0;
             UInt16 regOffset = 0;
             UInt16 regQuantity = 0;
             bool Continue = true;
@@ -625,14 +626,13 @@ namespace ModbusControlSpace
 
             if (Continue)
             {
-                if (uint.TryParse(registerStr, out register)
-                    && TryGetInputregisterOffset(register, out regOffset))
+                if (TryGetInputregisterOffset(registerStr, out regOffset))
                 {
                     // okay
                 }
                 else
                 {
-                    ResultStr = "Error: Invalid register";
+                    ResultStr = "Error: Invalid input register number";
                     Continue = false;
                 }
             }
@@ -689,7 +689,6 @@ namespace ModbusControlSpace
         {
             string ResultStr = "ERROR";
             byte slaveID = 1;
-            UInt32 register = 0;
             UInt16 regOffset = 0;
             UInt16 regQuantity = 0;
             bool Continue = true;
@@ -707,14 +706,13 @@ namespace ModbusControlSpace
 
             if (Continue)
             {
-                if (uint.TryParse(registerStr, out register)
-                    && TryGetHoldingregisterOffset(register, out regOffset))
+                if (TryGetHoldingregisterOffset(registerStr, out regOffset))
                 {
                     // okay
                 }
                 else
                 {
-                    ResultStr = "Error: Invalid register";
+                    ResultStr = "Error: Invalid holding register number";
                     Continue = false;
                 }
             }
@@ -771,7 +769,6 @@ namespace ModbusControlSpace
         {
             string ResultStr = "ERROR";
             byte slaveID = 1;
-            UInt32 register = 0;
             UInt16 regOffset = 0;
             UInt16 regQuantity = 0;
             Int16 value16 = 0;
@@ -790,14 +787,13 @@ namespace ModbusControlSpace
 
             if (Continue)
             {
-                if (uint.TryParse(registerStr, out register)
-                    && TryGetHoldingregisterOffset(register, out regOffset))
+                if (TryGetHoldingregisterOffset(registerStr, out regOffset))
                 {
                     // okay
                 }
                 else
                 {
-                    ResultStr = "Error: Invalid register";
+                    ResultStr = "Error: Invalid holding register number";
                     Continue = false;
                 }
             }
@@ -881,7 +877,6 @@ namespace ModbusControlSpace
         {
             string ResultStr = "ERROR";
             byte slaveID = 1;
-            UInt32 register = 0;
             UInt16 regOffset = 0;
             UInt16 regQuantity = 0;
             Int16[] aValues16 = null;
@@ -900,14 +895,13 @@ namespace ModbusControlSpace
 
             if (Continue)
             {
-                if (uint.TryParse(registerStr, out register)
-                    && TryGetHoldingregisterOffset(register, out regOffset))
+                if (TryGetHoldingregisterOffset(registerStr, out regOffset))
                 {
                     // okay
                 }
                 else
                 {
-                    ResultStr = "Error: Invalid register";
+                    ResultStr = "Error: Invalid holding register number";
                     Continue = false;
                 }
             }
@@ -1004,7 +998,6 @@ namespace ModbusControlSpace
         {
             string ResultStr = "ERROR";
             byte slaveID = 1;
-            UInt32 register = 0;
             UInt16 regOffset = 0;
             UInt16 regQuantity = 0;
             bool Continue = true;
@@ -1022,14 +1015,13 @@ namespace ModbusControlSpace
 
             if (Continue)
             {
-                if (uint.TryParse(registerStr, out register)
-                    && TryGetDiscreteInputOffset(register, out regOffset))
+                if (TryGetDiscreteInputOffset(registerStr,  out regOffset))
                 {
                     // okay
                 }
                 else
                 {
-                    ResultStr = "Error: Invalid address";
+                    ResultStr = "Error: Invalid discrete input number";
                     Continue = false;
                 }
             }
@@ -1084,7 +1076,6 @@ namespace ModbusControlSpace
         {
             string ResultStr = "ERROR";
             byte slaveID = 1;
-            UInt32 register = 0;
             UInt16 regOffset = 0;
             UInt16 regQuantity = 0;
             bool Continue = true;
@@ -1115,14 +1106,13 @@ namespace ModbusControlSpace
 
             if (Continue)
             {
-                if (uint.TryParse(registerStr, out register)
-                    && TryGetCoilOffset(register, out regOffset))
+                if (TryGetCoilOffset(registerStr,  out regOffset))
                 {
                     // okay
                 }
                 else
                 {
-                    ResultStr = "Error: Invalid address";
+                    ResultStr = "Error: Invalid coil number";
                     Continue = false;
                 }
             }
@@ -1191,7 +1181,6 @@ namespace ModbusControlSpace
         {
             string ResultStr = "ERROR";
             byte slaveID = 1;
-            UInt32 register = 0;
             UInt16 regOffset = 0;
             UInt16 regQuantity = 0;
             byte[] aBytes = null;
@@ -1210,14 +1199,13 @@ namespace ModbusControlSpace
 
             if (Continue)
             {
-                if (uint.TryParse(registerStr, out register)
-                    && TryGetCoilOffset(register, out regOffset))
+                if (TryGetCoilOffset(registerStr, out regOffset))
                 {
                     // okay
                 }
                 else
                 {
-                    ResultStr = "Error: Invalid address";
+                    ResultStr = "Error: Invalid coil number";
                     Continue = false;
                 }
             }
@@ -1316,7 +1304,6 @@ namespace ModbusControlSpace
         {
             string ResultStr = "ERROR";
             byte slaveID = 1;
-            UInt32 register = 0;
             UInt16 regOffset = 0;
             UInt16 regQuantity = 0;
             byte[] aBytes = null;
@@ -1335,14 +1322,13 @@ namespace ModbusControlSpace
 
             if (Continue)
             {
-                if (uint.TryParse(registerStr, out register)
-                    && TryGetCoilOffset(register, out regOffset))
+                if (TryGetCoilOffset(registerStr, out regOffset))
                 {
                     // okay
                 }
                 else
                 {
-                    ResultStr = "Error: Invalid address";
+                    ResultStr = "Error: Invalid coil number";
                     Continue = false;
                 }
             }
@@ -2260,96 +2246,104 @@ namespace ModbusControlSpace
         }
 
         /// <summary>
-        /// Convert holding register number to register offset 0-65536.
-        /// Custom queries has its own register-to-offset conversion to be independant of project parameters.
-        /// Accepts 40001-49999 + 400001-465536.
+        /// Convert holding register number to holding register offset 0-65535.
         /// </summary>
         /// <returns>true if valid, false if not</returns>
-        public bool TryGetHoldingregisterOffset(UInt32 Regnr, out UInt16 Offset)
+        public bool TryGetHoldingregisterOffset(string regStr, out UInt16 offset)
         {
+            uint regNr;
+            offset = 0;
             bool ret = false;
-            Offset = 0;
 
-            if ((Regnr >= 40001) && (Regnr <= 49999))
+            if (uint.TryParse(regStr, out regNr))
             {
-                Offset = (UInt16)(Regnr - 40001);
-                ret = true;
-            }
-            else if ((Regnr >= 400001) && (Regnr <= 465536))
-            {
-                Offset = (UInt16)(Regnr - 400001);
-                ret = true;
+                try
+                {
+                    offset = mRegisterToOffset.GetHoldingregisterOffset(regNr);
+                    ret = true;
+                }
+                catch
+                {
+                    // fail
+                }
             }
 
             return ret;
         }
 
         /// <summary>
-        /// Convert input register number to register offset 0-65536.
-        /// Custom queries has its own register-to-offset conversion to be independant of project parameters.
-        /// Accepts 30001-39999 + 300001-365536.
+        /// Convert input register number to input register offset 0-65535.
         /// </summary>
         /// <returns>true if valid, false if not</returns>
-        public bool TryGetInputregisterOffset(UInt32 Regnr, out UInt16 Offset)
+        public bool TryGetInputregisterOffset(string regStr, out UInt16 offset)
         {
+            uint regNr;
+            offset = 0;
             bool ret = false;
-            Offset = 0;
 
-            if ((Regnr >= 30001) && (Regnr <= 39999))
+            if (uint.TryParse(regStr, out regNr))
             {
-                Offset = (UInt16)(Regnr - 30001);
-                ret = true;
-            }
-            else if ((Regnr >= 300001) && (Regnr <= 365536))
-            {
-                Offset = (UInt16)(Regnr - 300001);
-                ret = true;
+                try
+                {
+                    offset = mRegisterToOffset.GetInputregisterOffset(regNr);
+                    ret = true;
+                }
+                catch
+                { 
+                    // fail
+                }
             }
 
             return ret;
         }
 
         /// <summary>
-        /// Convert discrete input number to offset 0-65536.
-        /// Custom queries has its own register-to-offset conversion to be independant of project parameters.
-        /// Accepts 10001-19999 + 100001-165536.
+        /// Convert discrete input number to discrete input offset 0-65535.
         /// </summary>
         /// <returns>true if valid, false if not</returns>
-        public bool TryGetDiscreteInputOffset(UInt32 Regnr, out UInt16 Offset)
+        public bool TryGetDiscreteInputOffset(string regStr, out UInt16 offset)
         {
+            uint regNr;
+            offset = 0;
             bool ret = false;
-            Offset = 0;
 
-            if ((Regnr >= 10001) && (Regnr <= 19999))
+            if (uint.TryParse(regStr, out regNr))
             {
-                Offset = (UInt16)(Regnr - 10001);
-                ret = true;
-            }
-            else if ((Regnr >= 100001) && (Regnr <= 165536))
-            {
-                Offset = (UInt16)(Regnr - 100001);
-                ret = true;
+                try
+                {
+                    offset = mRegisterToOffset.GetDiscreteInputOffset(regNr);
+                    ret = true;
+                }
+                catch
+                {
+                    // fail
+                }
             }
 
             return ret;
         }
 
         /// <summary>
-        /// Convert coil number to offset 0-65536.
-        /// Custom queries has its own register-to-offset conversion to be independant of project parameters.
-        /// Accepts 1-9999.
-        /// Does not accept 10000..65536 to void conflict with discrete inputs.
+        /// Convert coil number to coil offset 0-65535.
         /// </summary>
         /// <returns>true if valid, false if not</returns>
-        public bool TryGetCoilOffset(UInt32 Regnr, out UInt16 Offset)
+        public bool TryGetCoilOffset(string regStr, out UInt16 offset)
         {
+            uint regNr;
+            offset = 0;
             bool ret = false;
-            Offset = 0;
 
-            if ((Regnr >= 1) && (Regnr <= 9999))
+            if (uint.TryParse(regStr, out regNr))
             {
-                Offset = (UInt16)(Regnr - 1);
-                ret = true;
+                try
+                {
+                    offset = mRegisterToOffset.GetCoilOffset(regNr);
+                    ret = true;
+                }
+                catch
+                {
+                    // fail
+                }
             }
 
             return ret;
@@ -2515,9 +2509,6 @@ namespace ModbusControlSpace
             {
                 Test_ReadWriteHoldingRegisters();
                 Test_ReadWriteCoils();
-
-                Test_PrepareTestData();
-
                 Test_SendReadInputreg();
                 Test_SendReadHoldingreg();
                 Test_SendWriteSingleHoldingreg();
@@ -2536,22 +2527,25 @@ namespace ModbusControlSpace
             }
 
 #if TESTBUILD
-        private void Test_PrepareTestData()
+        private void Test_WriteTestData()
         {
-            // prepare data in modbusserver
+            // write test data to modbusserver
 
+            // create test data
             Int16[] aValues16W = new Int16[123];
             for (int i = 0; i < aValues16W.Length; ++i)
             {
                 aValues16W[i] = (Int16)(10000 + (i * 5751));
             }
 
+            // write to first 123 registers
             ModbusProtocol.Result result = mModbus.MifWriteMultipleHoldingRegisters(1, 0, 123, aValues16W);
             if (result != ModbusProtocol.Result.SUCCESS)
             {
                 throw new Exception("TEST FAILED");
             }
 
+            // write to last 123 registers of the 2000 available
             result = mModbus.MifWriteMultipleHoldingRegisters(1, 1877, 123, aValues16W);
             if (result != ModbusProtocol.Result.SUCCESS)
             {
@@ -2833,17 +2827,19 @@ namespace ModbusControlSpace
         {
             string rs;
 
+            Test_WriteTestData();
+
             rs = SendReadInputreg("", "30001", "10", EFormat.INT16, "");
             Test_TestResultStrContains("invalid slaveid", rs);
 
             rs = SendReadInputreg("1", "", "1", EFormat.INT16, "");
-            Test_TestResultStrContains("invalid reg", rs);
+            Test_TestResultStrContains("invalid input register", rs);
 
             rs = SendReadInputreg("1", "a", "1", EFormat.INT16, "");
-            Test_TestResultStrContains("invalid reg", rs);
+            Test_TestResultStrContains("invalid input register", rs);
 
             rs = SendReadInputreg("1", "30000", "10", EFormat.INT16, "");
-            Test_TestResultStrContains("invalid reg", rs);
+            Test_TestResultStrContains("invalid input register", rs);
 
             rs = SendReadInputreg("1", "30001", "10", EFormat.INT16, "");
             Test_TestResultStrEquals("10000, 15751, 21502, 27253, -32532, -26781, -21030, -15279, -9528, -3777", rs);
@@ -2852,13 +2848,13 @@ namespace ModbusControlSpace
             Test_TestResultStrEquals("-15025, -9274, 10000, 15751, 21502, 27253, -32532, -26781, -21030, -15279", rs);
 
             rs = SendReadInputreg("1", "40000", "10", EFormat.INT16, "");
-            Test_TestResultStrContains("invalid reg", rs);
+            Test_TestResultStrContains("invalid input register", rs);
 
             rs = SendReadInputreg("1", "40001", "10", EFormat.INT16, "");
-            Test_TestResultStrContains("invalid reg", rs);
+            Test_TestResultStrContains("invalid input register", rs);
 
             rs = SendReadInputreg("1", "300000", "10", EFormat.INT16, "");
-            Test_TestResultStrContains("invalid reg", rs);
+            Test_TestResultStrContains("invalid input register", rs);
 
             rs = SendReadInputreg("1", "300001", "10", EFormat.INT16, "");
             Test_TestResultStrEquals("10000, 15751, 21502, 27253, -32532, -26781, -21030, -15279, -9528, -3777", rs);
@@ -2867,7 +2863,7 @@ namespace ModbusControlSpace
             Test_TestResultStrEquals("0", rs);
 
             rs = SendReadInputreg("1", "365537", "1", EFormat.INT16, "");
-            Test_TestResultStrContains("invalid reg", rs);
+            Test_TestResultStrContains("invalid input register", rs);
 
             rs = SendReadInputreg("1", "30001", "", EFormat.INT16, "");
             Test_TestResultStrContains("invalid qty", rs);
@@ -2920,17 +2916,19 @@ namespace ModbusControlSpace
         {
             string rs;
 
+            Test_WriteTestData();
+
             rs = SendReadHoldingreg("", "40001", "1", EFormat.INT16, "");
             Test_TestResultStrContains("invalid slaveid", rs);
 
             rs = SendReadHoldingreg("1", "", "1", EFormat.INT16, "");
-            Test_TestResultStrContains("invalid reg", rs);
+            Test_TestResultStrContains("invalid holding register number", rs);
 
             rs = SendReadHoldingreg("1", "a", "1", EFormat.INT16, "");
-            Test_TestResultStrContains("invalid reg", rs);
+            Test_TestResultStrContains("invalid holding register number", rs);
 
             rs = SendReadHoldingreg("1", "40000", "10", EFormat.INT16, "");
-            Test_TestResultStrContains("invalid reg", rs);
+            Test_TestResultStrContains("invalid holding register number", rs);
 
             rs = SendReadHoldingreg("1", "40001", "10", EFormat.INT16, "");
             Test_TestResultStrEquals("10000, 15751, 21502, 27253, -32532, -26781, -21030, -15279, -9528, -3777", rs);
@@ -2939,13 +2937,13 @@ namespace ModbusControlSpace
             Test_TestResultStrEquals("-15025, -9274, 10000, 15751, 21502, 27253, -32532, -26781, -21030, -15279", rs);
 
             rs = SendReadHoldingreg("1", "50000", "10", EFormat.INT16, "");
-            Test_TestResultStrContains("invalid reg", rs);
+            Test_TestResultStrContains("invalid holding register number", rs);
 
             rs = SendReadHoldingreg("1", "30001", "10", EFormat.INT16, "");
-            Test_TestResultStrContains("invalid reg", rs);
+            Test_TestResultStrContains("invalid holding register number", rs);
 
             rs = SendReadHoldingreg("1", "400000", "10", EFormat.INT16, "");
-            Test_TestResultStrContains("invalid reg", rs);
+            Test_TestResultStrContains("invalid holding register number", rs);
 
             rs = SendReadHoldingreg("1", "400001", "10", EFormat.INT16, "");
             Test_TestResultStrEquals("10000, 15751, 21502, 27253, -32532, -26781, -21030, -15279, -9528, -3777", rs);
@@ -2954,7 +2952,7 @@ namespace ModbusControlSpace
             Test_TestResultStrContains("ILLEGAL ADDRESS EXCEPTION", rs);
 
             rs = SendReadHoldingreg("1", "465537", "10", EFormat.INT16, "");
-            Test_TestResultStrContains("invalid reg", rs);
+            Test_TestResultStrContains("invalid holding register number", rs);
 
             rs = SendReadHoldingreg("1", "40001", "", EFormat.INT16, "");
             Test_TestResultStrContains("invalid qty", rs);
@@ -3006,17 +3004,19 @@ namespace ModbusControlSpace
         {
             string rs;
 
+            Test_WriteTestData();
+
             rs = SendWriteSingleHoldingreg("", "40001", "1", EFormat.INT16, "100");
             Test_TestResultStrContains("invalid slaveid", rs);
 
             rs = SendWriteSingleHoldingreg("1", "", "1", EFormat.INT16, "100");
-            Test_TestResultStrContains("invalid reg", rs);
+            Test_TestResultStrContains("invalid holding register number", rs);
 
             rs = SendWriteSingleHoldingreg("1", "a", "1", EFormat.INT16, "100");
-            Test_TestResultStrContains("invalid reg", rs);
+            Test_TestResultStrContains("invalid holding register number", rs);
 
             rs = SendWriteSingleHoldingreg("1", "40000", "10", EFormat.INT16, "100");
-            Test_TestResultStrContains("invalid reg", rs);
+            Test_TestResultStrContains("invalid holding register number", rs);
 
             rs = SendWriteSingleHoldingreg("1", "40301", "1", EFormat.INT16, "101");
             Test_TestResultStrContains("success", rs);
@@ -3027,13 +3027,13 @@ namespace ModbusControlSpace
             Test_HoldingRegisterValueEqual(49899, 102);
 
             rs = SendWriteSingleHoldingreg("1", "50000", "1", EFormat.INT16, "103");
-            Test_TestResultStrContains("invalid reg", rs);
+            Test_TestResultStrContains("invalid holding register number", rs);
 
             rs = SendWriteSingleHoldingreg("1", "30001", "1", EFormat.INT16, "104");
-            Test_TestResultStrContains("invalid reg", rs);
+            Test_TestResultStrContains("invalid holding register number", rs);
 
             rs = SendWriteSingleHoldingreg("1", "400000", "1", EFormat.INT16, "105");
-            Test_TestResultStrContains("invalid reg", rs);
+            Test_TestResultStrContains("invalid holding register number", rs);
 
             rs = SendWriteSingleHoldingreg("1", "400301", "1", EFormat.INT16, "106");
             Test_TestResultStrContains("success", rs);
@@ -3044,7 +3044,7 @@ namespace ModbusControlSpace
             Test_HoldingRegisterValueEqual(465436, 107);
 
             rs = SendWriteSingleHoldingreg("1", "465537", "1", EFormat.INT16, "108");
-            Test_TestResultStrContains("invalid reg", rs);
+            Test_TestResultStrContains("invalid holding register number", rs);
 
             rs = SendWriteSingleHoldingreg("1", "40301", "", EFormat.INT16, "109");
             Test_TestResultStrContains("invalid qty", rs);
@@ -3127,17 +3127,19 @@ namespace ModbusControlSpace
         {
             string rs;
 
+            Test_WriteTestData();
+
             rs = SendWriteMultipleHoldingreg("", "40301", "1", EFormat.INT16, "");
             Test_TestResultStrContains("invalid slaveid", rs);
 
             rs = SendWriteMultipleHoldingreg("1", "", "1", EFormat.INT16, "");
-            Test_TestResultStrContains("invalid reg", rs);
+            Test_TestResultStrContains("invalid holding register number", rs);
 
             rs = SendWriteMultipleHoldingreg("1", "a", "1", EFormat.INT16, "");
-            Test_TestResultStrContains("invalid reg", rs);
+            Test_TestResultStrContains("invalid holding register number", rs);
 
             rs = SendWriteMultipleHoldingreg("1", "40000", "1", EFormat.INT16, "123");
-            Test_TestResultStrContains("invalid reg", rs);
+            Test_TestResultStrContains("invalid holding register number", rs);
 
             rs = SendWriteMultipleHoldingreg("1", "40301", "1", EFormat.INT16, "7378");
             Test_TestResultStrContains("success", rs);
@@ -3148,13 +3150,13 @@ namespace ModbusControlSpace
             Test_HoldingRegisterValueEqual(49899, 123);
 
             rs = SendWriteMultipleHoldingreg("1", "50000", "1", EFormat.INT16, "123");
-            Test_TestResultStrContains("invalid reg", rs);
+            Test_TestResultStrContains("invalid holding register number", rs);
 
             rs = SendWriteMultipleHoldingreg("1", "30001", "1", EFormat.INT16, "123");
-            Test_TestResultStrContains("invalid reg", rs);
+            Test_TestResultStrContains("invalid holding register number", rs);
 
             rs = SendWriteMultipleHoldingreg("1", "400000", "1", EFormat.INT16, "1727");
-            Test_TestResultStrContains("invalid reg", rs);
+            Test_TestResultStrContains("invalid holding register number", rs);
 
             rs = SendWriteMultipleHoldingreg("1", "400301", "1", EFormat.INT16, "727");
             Test_TestResultStrContains("success", rs);
@@ -3165,7 +3167,7 @@ namespace ModbusControlSpace
             Test_HoldingRegisterValueEqual(465436, 737);
 
             rs = SendWriteMultipleHoldingreg("1", "465537", "1", EFormat.INT16, "773");
-            Test_TestResultStrContains("invalid reg", rs);
+            Test_TestResultStrContains("invalid holding register number", rs);
 
             rs = SendWriteMultipleHoldingreg("1", "40301", "", EFormat.INT16, "428");
             Test_TestResultStrContains("invalid qty", rs);
@@ -3306,17 +3308,19 @@ namespace ModbusControlSpace
         {
             string rs;
 
+            Test_WriteTestData();
+
             rs = SendReadDiscreteinputs("", "10001", "1", EFormat.HEXBYTES, "");
             Test_TestResultStrContains("invalid slaveid", rs);
 
             rs = SendReadDiscreteinputs("1", "", "1", EFormat.HEXBYTES, "");
-            Test_TestResultStrContains("invalid address", rs);
+            Test_TestResultStrContains("invalid discrete input number", rs);
 
             rs = SendReadDiscreteinputs("1", "a", "1", EFormat.HEXBYTES, "");
-            Test_TestResultStrContains("invalid address", rs);
+            Test_TestResultStrContains("invalid discrete input number", rs);
 
             rs = SendReadDiscreteinputs("1", "10000", "10", EFormat.HEXBYTES, "");
-            Test_TestResultStrContains("invalid address", rs);
+            Test_TestResultStrContains("invalid discrete input number", rs);
 
             rs = SendReadDiscreteinputs("1", "10001", "10", EFormat.HEXBYTES, "");
             Test_TestResultStrEquals("0x10, 0x03", rs);
@@ -3325,13 +3329,13 @@ namespace ModbusControlSpace
             Test_TestResultStrContains("0x00, 0x00", rs);
 
             rs = SendReadDiscreteinputs("1", "20000", "10", EFormat.HEXBYTES, "");
-            Test_TestResultStrContains("invalid address", rs);
+            Test_TestResultStrContains("invalid discrete input number", rs);
 
             rs = SendReadDiscreteinputs("1", "40001", "10", EFormat.HEXBYTES, "");
-            Test_TestResultStrContains("invalid address", rs);
+            Test_TestResultStrContains("invalid discrete input number", rs);
 
             rs = SendReadDiscreteinputs("1", "100000", "10", EFormat.HEXBYTES, "");
-            Test_TestResultStrContains("invalid address", rs);
+            Test_TestResultStrContains("invalid discrete input number", rs);
 
             rs = SendReadDiscreteinputs("1", "100001", "10", EFormat.HEXBYTES, "");
             Test_TestResultStrEquals("0x10, 0x03", rs);
@@ -3340,7 +3344,7 @@ namespace ModbusControlSpace
             Test_TestResultStrContains("ILLEGAL ADDRESS EXCEPTION", rs);
 
             rs = SendReadDiscreteinputs("1", "165537", "10", EFormat.HEXBYTES, "");
-            Test_TestResultStrContains("invalid address", rs);
+            Test_TestResultStrContains("invalid discrete input number", rs);
 
             rs = SendReadDiscreteinputs("1", "10001", "", EFormat.HEXBYTES, "");
             Test_TestResultStrContains("invalid qty", rs);
@@ -3408,14 +3412,16 @@ namespace ModbusControlSpace
         {
             string rs;
 
+            Test_WriteTestData();
+
             rs = SendReadCoils("", "1", "1", EFormat.HEXBYTES, "");
             Test_TestResultStrContains("invalid slaveid", rs);
 
             rs = SendReadCoils("1", "", "1", EFormat.HEXBYTES, "");
-            Test_TestResultStrContains("invalid address", rs);
+            Test_TestResultStrContains("invalid coil number", rs);
 
             rs = SendReadCoils("1", "a", "1", EFormat.HEXBYTES, "");
-            Test_TestResultStrContains("invalid address", rs);
+            Test_TestResultStrContains("invalid coil number", rs);
 
             rs = SendReadCoils("1", "1", "10", EFormat.HEXBYTES, "");
             Test_TestResultStrContains("0x10, 0x03", rs);
@@ -3424,13 +3430,13 @@ namespace ModbusControlSpace
             Test_TestResultStrContains("0x00", rs);
 
             rs = SendReadCoils("1", "10001", "10", EFormat.HEXBYTES, "");
-            Test_TestResultStrContains("invalid address", rs);
+            Test_TestResultStrContains("invalid coil number", rs);
 
             rs = SendReadCoils("1", "40001", "10", EFormat.HEXBYTES, "");
-            Test_TestResultStrContains("invalid address", rs);
+            Test_TestResultStrContains("invalid coil number", rs);
 
             rs = SendReadCoils("1", "100000", "10", EFormat.HEXBYTES, "");
-            Test_TestResultStrContains("invalid address", rs);
+            Test_TestResultStrContains("invalid coil number", rs);
 
             rs = SendReadCoils("1", "1", "10", EFormat.HEXBYTES, "");
             Test_TestResultStrEquals("0x10, 0x03", rs);
@@ -3504,14 +3510,16 @@ namespace ModbusControlSpace
         {
             string rs;
 
+            Test_WriteTestData();
+
             rs = SendWriteSingleCoil("", "1", "1", EFormat.BITS, "0");
             Test_TestResultStrContains("invalid slaveid", rs);
 
             rs = SendWriteSingleCoil("1", "", "1", EFormat.BITS, "0");
-            Test_TestResultStrContains("invalid address", rs);
+            Test_TestResultStrContains("invalid coil number", rs);
 
             rs = SendWriteSingleCoil("1", "a", "1", EFormat.BITS, "0");
-            Test_TestResultStrContains("invalid address", rs);
+            Test_TestResultStrContains("invalid coil number", rs);
 
             rs = SendWriteSingleCoil("1", "1", "", EFormat.BITS, "0");
             Test_TestResultStrContains("invalid qty", rs);
@@ -3531,10 +3539,10 @@ namespace ModbusControlSpace
             Test_CoilValuesEqual(9999, "0");
 
             rs = SendWriteSingleCoil("1", "10000", "1", EFormat.BITS, "0");
-            Test_TestResultStrContains("invalid address", rs);
+            Test_TestResultStrContains("invalid coil number", rs);
 
             rs = SendWriteSingleCoil("1", "40001", "1", EFormat.BITS, "0");
-            Test_TestResultStrContains("invalid address", rs);
+            Test_TestResultStrContains("invalid coil number", rs);
 
             rs = SendWriteSingleCoil("1", "1", "1", EFormat.BITS, "");
             Test_TestResultStrContains("Error: No data", rs);
@@ -3632,14 +3640,16 @@ namespace ModbusControlSpace
         {
             string rs;
 
+            Test_WriteTestData();
+
             rs = SendWriteMultipleCoils("", "1", "1", EFormat.BITS, "0");
             Test_TestResultStrContains("invalid slaveid", rs);
 
             rs = SendWriteMultipleCoils("1", "", "1", EFormat.BITS, "0");
-            Test_TestResultStrContains("invalid address", rs);
+            Test_TestResultStrContains("invalid coil number", rs);
 
             rs = SendWriteMultipleCoils("1", "a", "1", EFormat.BITS, "0");
-            Test_TestResultStrContains("invalid address", rs);
+            Test_TestResultStrContains("invalid coil number", rs);
 
             rs = SendWriteMultipleCoils("1", "1", "", EFormat.BITS, "0");
             Test_TestResultStrContains("invalid qty", rs);
@@ -3659,7 +3669,7 @@ namespace ModbusControlSpace
             Test_TestResultStrContains("success", rs);
 
             rs = SendWriteMultipleCoils("1", "10000", "1", EFormat.BITS, "0");
-            Test_TestResultStrContains("invalid address", rs);
+            Test_TestResultStrContains("invalid coil number", rs);
 
             rs = SendWriteMultipleCoils("1", "1", "1", EFormat.HEXBYTES, "0x3A");  // 00111010
             Test_TestResultStrContains("success", rs);
@@ -3730,6 +3740,8 @@ namespace ModbusControlSpace
         {
             string rs;
 
+            Test_WriteTestData();
+
             rs = SendWriteMultipleHoldingreg("1", "40011", "6", EFormat.INT16, "11001 , 12002, 13003, 14004, 15005, 16006");
             Test_TestResultStrContains("success", rs);
 
@@ -3793,11 +3805,8 @@ namespace ModbusControlSpace
 
         private void Test_HoldingRegisterValueEqual(UInt32 register, Int16 expectedValue)
         {
-            UInt16 regOffset;
-            if (!TryGetHoldingregisterOffset(register, out regOffset))
-            {
-                throw new ArgumentException("TEST FAILED");
-            }
+            UInt16 regOffset = mRegisterToOffset.GetHoldingregisterOffset(register);
+
             Int16[] aValues = null;
             ModbusProtocol.Result result = mModbus.MifReadHoldingRegisters(1, regOffset, 1, out aValues);
             if (result == ModbusProtocol.Result.SUCCESS)
@@ -3828,11 +3837,8 @@ namespace ModbusControlSpace
             }
 
             UInt16 nrOfCoils = (UInt16)aRefValues.Length;
-            UInt16 regOffset;
-            if (!TryGetCoilOffset(register, out regOffset))
-            {
-                throw new ArgumentException("TEST FAILED");
-            }
+            UInt16 regOffset = mRegisterToOffset.GetCoilOffset(register);
+
             byte[] aBytes = null;
             ModbusProtocol.Result result = mModbus.MifReadCoils(1, regOffset, nrOfCoils, out aBytes);
             if (result == ModbusProtocol.Result.SUCCESS)
@@ -3863,11 +3869,7 @@ namespace ModbusControlSpace
             }
 
             UInt16 nrOfRegisters = (UInt16)aRefValues.Length;
-            UInt16 regOffset;
-            if (!TryGetHoldingregisterOffset(register, out regOffset))
-            {
-                throw new ArgumentException("TEST FAILED");
-            }
+            UInt16 regOffset = mRegisterToOffset.GetHoldingregisterOffset(register);
 
             Int16[] aReadValues = null;
             ModbusProtocol.Result result = mModbus.MifReadHoldingRegisters(1, regOffset, nrOfRegisters, out aReadValues);

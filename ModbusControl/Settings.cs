@@ -504,7 +504,7 @@ namespace ModbusControlSpace
 
         public class CCustomQueries
         {
-            public int HoldingRegistersStartAddress;    // 40_000, 40_001, 400_000, 400_001
+            public int HoldingRegistersStartAddress;    // 40_001, 40_000, 400_001, 400_000
             public bool MultilineAutosizeRows;
             public List<CustomQueries.CustomQueryItem> QueriesList;
             public CustomQueries.ColumnWidthsType ColumnWidths;

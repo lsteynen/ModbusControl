@@ -341,7 +341,7 @@ namespace ModbusControlSpace
 
 
         /// <summary>
-        /// Process a <Size> element
+        /// Process a <size> element
         /// The width and height are in pixels at 96dpi. For compatiblity of the mbc file
         /// between standard 96-dpi systems and high-dpi systems.
         /// Throws exception on error
@@ -355,7 +355,7 @@ namespace ModbusControlSpace
             foreach (XElement xe in pxe.Elements())
             {
                 string elemName = xe.Name.LocalName;
-                //Debug.Print("<Size> " + elemName);
+                //Debug.Print("<size> " + elemName);
 
                 // Width, optional
                 if (CheckElementNameMatch(elemName, "Width"))
@@ -408,7 +408,7 @@ namespace ModbusControlSpace
         }
 
         /// <summary>
-        /// Process a <Modbus> element
+        /// Process a <modbus> element
         /// Throws exception on error
         /// </summary>
         /// <param name="pxe">The parent XML element</param>
@@ -420,7 +420,7 @@ namespace ModbusControlSpace
             foreach (XElement xe in pxe.Elements())
             {
                 string elemName = xe.Name.LocalName;
-                //Debug.Print("<Modbus> " + elemName);
+                //Debug.Print("<modbus> " + elemName);
 
                 // Connection, optional
                 if (CheckElementNameMatch(elemName, "Connection"))
@@ -745,20 +745,21 @@ namespace ModbusControlSpace
                     Seen = true;
                     string TmpString = xe.Value.Trim();
                     UInt32 TmpNum;
-                    // allow 40_000, 40_001, 400_000 and 400_001 
-                    // use 4xxxx for holding registers 
-                    // use 40001 for 5-digit traditional numbering 
-                    // use 400001 for 6-digit numbering when using > 9999 holding registers
-                    // use 40000 or 400000 for numbering that actually starts from 0
+                    // allow 40_001, 40_000, 400_001 and 400_000 
+                    // Holding register numbering range depends on HoldingregistersStart:
+                    // HoldingregistersStart 40001:  range 40001-49999 + 400001-465536
+                    // HoldingregistersStart 40000:  range 40000-49999 + 400000-465535
+                    // HoldingregistersStart 400001: range 400001-465536
+                    // HoldingregistersStart 400000: range 400000-465535
                     if (UInt32.TryParse(TmpString, out TmpNum)
-                        && ((TmpNum == 40000) || (TmpNum == 40001) || (TmpNum == 400000) || (TmpNum == 400001)))
+                        && ((TmpNum == 40001) || (TmpNum == 40000) || (TmpNum == 400001) || (TmpNum == 400000)))
                     {
                         Options.HoldingregistersStart = (int)TmpNum;
                     }
                     else
                     {
                         TFilePosition fp = GetFilePos(xe);
-                        throw new XmlException("XML element <" + xe.Name.LocalName + "> has an invalid value. Valid values are 40000, 40001, 400000 or 400001. Use 40001 for traditional numbering. Use 400000 or 400001 (6-digit numbering) to access more than 9999 registers. Use 40000 or 400000 if you want to number the holding registers from 0." + Environment.NewLine + LimitXmlTextLength(xe.ToString()) + Environment.NewLine, null, fp.Line, fp.Col);
+                        throw new XmlException("XML element <" + xe.Name.LocalName + "> has an invalid value. Valid values are 40001, 40000, 400001 or 400000. Use 40001 for traditional numbering. Use 400000 or 400001 6-digit numbering to access more than 9999 registers. Use 40000 or 400000 if you want to number the holding registers from 0." + Environment.NewLine + LimitXmlTextLength(xe.ToString()) + Environment.NewLine, null, fp.Line, fp.Col);
                     }
                 }
                 else
@@ -830,7 +831,7 @@ namespace ModbusControlSpace
             foreach (XElement xe in pxe.Elements())
             {
                 string elemName = xe.Name.LocalName;
-                //Debug.Print("<Tab> " + elemName);
+                //Debug.Print("<tab> " + elemName);
 
                 // <name>, required
                 if (CheckElementNameMatch(elemName, "name"))
@@ -990,7 +991,7 @@ namespace ModbusControlSpace
             foreach (XElement xe in pxe.Elements())
             {
                 string elemName = xe.Name.LocalName;
-                //Debug.Print("<Var> " + elemName);
+                //Debug.Print("<tar> " + elemName);
 
                 // <reg>, required
                 if (CheckElementNameMatch(elemName, "reg"))
@@ -1025,7 +1026,7 @@ namespace ModbusControlSpace
                         else
                         {
                             TFilePosition fp = GetFilePos(xe);
-                            throw new XmlException("<reg> has an invalid value (range defined by <HoldingregisterStart>)" + Environment.NewLine + LimitXmlTextLength(xe.ToString()) + Environment.NewLine, null, fp.Line, fp.Col);
+                            throw new XmlException("<reg> has an invalid value (range defined by <holdingregisterstart>)" + Environment.NewLine + LimitXmlTextLength(xe.ToString()) + Environment.NewLine, null, fp.Line, fp.Col);
                         }
                     }
                     regSeen = true;
@@ -1234,7 +1235,7 @@ namespace ModbusControlSpace
             foreach (XElement xe in pxe.Elements())
             {
                 string elemName = xe.Name.LocalName;
-                //Debug.Print("<Field> " + elemName);
+                //Debug.Print("<field> " + elemName);
 
                 // <pos> bitfield position, optional
                 if (CheckElementNameMatch(elemName, "pos"))
@@ -1519,7 +1520,7 @@ namespace ModbusControlSpace
             foreach (XElement xe in pxe.Elements())
             {
                 string elemName = xe.Name.LocalName;
-                //Debug.Print("<Autostart> " + elemName);
+                //Debug.Print("<autostart> " + elemName);
 
                 // Enable, optional
                 if (CheckElementNameMatch(elemName, "enable"))
@@ -1600,7 +1601,7 @@ namespace ModbusControlSpace
             foreach (XElement xe in pxe.Elements())
             {
                 string elemName = xe.Name.LocalName;
-                //Debug.Print("<Modbustcpserver> " + elemName);
+                //Debug.Print("<modbustcpserver> " + elemName);
 
                 // Enable
                 if (CheckElementNameMatch(elemName, "enable"))
@@ -1661,7 +1662,7 @@ namespace ModbusControlSpace
             foreach (XElement xe in pxe.Elements())
             {
                 string elemName = xe.Name.LocalName;
-                //Debug.Print("<Include> " + elemName);
+                //Debug.Print("<include> " + elemName);
 
                 // <file>, required
                 if (CheckElementNameMatch(elemName, "file"))
@@ -1752,7 +1753,7 @@ namespace ModbusControlSpace
             // Load xml document into incXmlDoc
             XDocument incXmlDoc = XDocument.Load(path, LoadOptions.SetLineInfo);
 
-            //TODO: validation doen?
+            // for now, no validation
 #if false
             // got validation schema?
             // throws exception on validation error
@@ -1909,36 +1910,36 @@ namespace ModbusControlSpace
         /// <returns>true if valid</returns>
         private bool ValidateHoldingregNr(UInt32 Regnr)
         {
-            // accepts:
-            // 40000/400000: 40000-49999 + 400000-465535
-            // 40001/400001: 40001-49999 + 400001-465536
+            // Holding register numbering range depends on HoldingregistersStart:
+            // HoldingregistersStart 40001:  range 40001-49999 + 400001-465536
+            // HoldingregistersStart 40000:  range 40000-49999 + 400000-465535
+            // HoldingregistersStart 400001: range 400001-465536
+            // HoldingregistersStart 400000: range 400000-465535
 
-            bool ret = false;
+            bool valid = false;
 
-            if ((Options.HoldingregistersStart == 40000) || (Options.HoldingregistersStart == 400000))
+            switch (Options.HoldingregistersStart)
             {
-                if ((Regnr >= 40000) && (Regnr <= 49999))
-                {
-                    ret = true;
-                }
-                else if ((Regnr >= 400000) && (Regnr <= 465535))
-                {
-                    ret = true;
-                }
-            }
-            if ((Options.HoldingregistersStart == 40001) || (Options.HoldingregistersStart == 400001))
-            {
-                if ((Regnr >= 40001) && (Regnr <= 49999))
-                {
-                    ret = true;
-                }
-                else if ((Regnr >= 400001) && (Regnr <= 465536))
-                {
-                    ret = true;
-                }
+                case 40001:
+                    valid =    ((Regnr >= 40001) && (Regnr <= 49999))
+                            || ((Regnr >= 400001) && (Regnr <= 465536));
+                    break; 
+
+                case 40000:
+                    valid = ((Regnr >= 40000) && (Regnr <= 49999))
+                            || ((Regnr >= 400000) && (Regnr <= 465535));
+                    break;
+
+                case 400001:
+                    valid = (Regnr >= 400001) && (Regnr <= 465536);
+                    break;
+
+                case 400000:
+                    valid = (Regnr >= 400000) && (Regnr <= 465535);
+                    break;
             }
 
-            return ret;
+            return valid;
         }
 
 
@@ -2424,7 +2425,7 @@ namespace ModbusControlSpace
             // convert elements with enum keywords to lower case
             XMLIterateAllNodesForHandler(XmlDoc, ConvertAllEnumValuesToLowercaseHandler);
 
-            // remove or replace obsolete tags in <Modbus>
+            // remove or replace obsolete tags in <modbus>
             XMLRemoveOrReplaceObsoleteModbusElements(XmlDoc);
         }
 

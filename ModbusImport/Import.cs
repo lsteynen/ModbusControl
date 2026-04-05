@@ -75,6 +75,8 @@ namespace ModbusImport
 
         public ModbusInterface Modbus;
 
+        public RegisterToOffset RegisterToOffset1;
+
         public byte SlaveAddress;
 
         public int MaximumFrameSize = 256;
@@ -576,7 +578,7 @@ namespace ModbusImport
             {
                 try
                 {
-                    regOffset = RegisterToOffset.GetHoldingregisterOffset(reg);
+                    regOffset = RegisterToOffset1.GetHoldingregisterOffset(reg);
                     return true;
                 }
                 catch 

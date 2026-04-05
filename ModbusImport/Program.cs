@@ -129,8 +129,8 @@ namespace ModbusImport
             Converts.Float32Endian = Project.Connection.Float32Endian;
             Converts.StringEndian = Project.Connection.StringEndian;
             Converts.StringEncodingName = Project.Connection.StringEncoding;
-            // pass new configuration to RegisterToOffset
-            RegisterToOffset.RegisterNumberingSchema = Project.Options.HoldingregistersStart;
+            // setup registernumber to offset conversion
+            RegisterToOffset registerToOffset = new RegisterToOffset(Project.Options.HoldingregistersStart);
 
             // Connect
             Print("Opening connection: " + GetConnectionInfoString());
@@ -158,6 +158,7 @@ namespace ModbusImport
             // Import
             Print("Import CSV file: " + csvFilename);
             import.Modbus = mb;
+            import.RegisterToOffset1 = registerToOffset;
             import.SlaveAddress = Project.Connection.SlaveID;
             import.Filename = csvFilename;
             import.OnReportProgress += ReportProgressCallback;

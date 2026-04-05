@@ -983,11 +983,12 @@ namespace UnitTests
         public void Test_Int16RegistersToValue32_Float32_Max()
         {
             Int16[] aInt16 = new Int16[] { 0x7F7F, Helpers.ConvToInt16(0xFFFF) };
-            Converts.Int32Endian = Global.eEndian.Little;
-            UInt32 result = Converts.Int16ArrayToUInt32Value(aInt16, 2, ModbusControlSpace.Global.eType.Float);
-            Assert.AreEqual<UInt32>(0x7F7FFFFF, result); // Largest positive float32
-
             Converts.Int32Endian = Global.eEndian.Big;
+            Converts.Float32Endian = Global.eEndian.Little;
+            UInt32 result = Converts.Int16ArrayToUInt32Value(aInt16, 2, ModbusControlSpace.Global.eType.Float);
+            Assert.AreEqual<UInt32>(0xFFFF7F7F, result); // Largest positive float32
+
+            Converts.Float32Endian = Global.eEndian.Big;
             result = Converts.Int16ArrayToUInt32Value(aInt16, 2, ModbusControlSpace.Global.eType.Float);
             Assert.AreEqual<UInt32>(0x7F7FFFFF, result); // Largest positive float32
         }

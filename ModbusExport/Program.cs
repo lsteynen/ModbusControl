@@ -126,8 +126,8 @@ namespace ModbusExport
             Converts.Float32Endian = Project.Connection.Float32Endian;
             Converts.StringEndian = Project.Connection.StringEndian;
             Converts.StringEncodingName = Project.Connection.StringEncoding;
-            // pass new configuration to RegisterToOffset
-            RegisterToOffset.RegisterNumberingSchema = Project.Options.HoldingregistersStart;
+            // setup registernumber to offset conversion
+            RegisterToOffset registerToOffset = new RegisterToOffset(Project.Options.HoldingregistersStart);
 
             // Connect
             Print("Opening connection: " + GetConnectionInfoString());
@@ -156,6 +156,7 @@ namespace ModbusExport
             Print("Export to CSV file: " + csvFilename);
             export.TabsList = Project.TabsList;
             export.Modbus = mb;
+            export.RegisterToOffset1 = registerToOffset;
             export.SlaveAddress = Project.Connection.SlaveID;
             export.Filename = csvFilename;
             export.MbcFilename = System.IO.Path.GetFileName(mbcFilename);

@@ -1768,7 +1768,8 @@ namespace UnitTests
         [TestMethod]
         public void Test_Int32_7()
         {
-            Converts.Int32Endian = Global.eEndian.Little;
+            Converts.Int32Endian = Global.eEndian.Big;
+            Converts.Float32Endian = Global.eEndian.Little;
             Int16[] res = CValueToString.ValueStringToInt16Registers("123456,789", 2, 0, false, true, false);
             Assert.AreEqual<int>(2, res.Length);
             Assert.AreEqual<Int16>(Helpers.ConvToInt16(0x2065), res[0]);

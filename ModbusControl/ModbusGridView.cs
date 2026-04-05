@@ -1611,7 +1611,7 @@ namespace LST.ModbusGridView
                 group = new CReadGroup();
             }
 
-            // voorlopig gaan we er van uit dat in RegList level 0 alleen registers zitten
+            // for now, we assume that RegList level 0 contains only registers
 
             int iLineIndex = group.lineIndex + group.lineCount;
             bool isGrouping = false;

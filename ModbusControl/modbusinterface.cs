@@ -20,6 +20,7 @@ namespace ModbusControlSpace
         private int mMaximumFrameSize = 256;
         private int mWriteHoldingRegistersFunctioncode = 0;     // 0=auto, 6=single, 16=multiple
         private UInt32 mTries = 1;
+        private RegisterToOffset mRegisterToOffset;
 
         private ModbusProtocol mb;
         private ModbusRtuProtocol mbRtuProtocol;
@@ -39,6 +40,20 @@ namespace ModbusControlSpace
         #endregion
 
         #region properties
+
+        public RegisterToOffset RegisterToOffset1
+        {
+            get
+            {
+                return mRegisterToOffset;
+            }
+
+            set
+            {
+                mRegisterToOffset = value;
+            }
+        }
+        
 
         public bool IsOpen
         {
@@ -462,7 +477,7 @@ namespace ModbusControlSpace
 
                 if (mLogger.LogReads)
                 {
-                    mLogger.Log(Logger.LogType.Read, "Read holding reg: slave=" + address + ", addr=" + RegisterToOffset.ConvertHoldingregisterOffsetToRegisterNumber(startreg).ToString() + ", quant=" + regcount);
+                    mLogger.Log(Logger.LogType.Read, "Read holding reg: slave=" + address + ", addr=" + mRegisterToOffset.ConvertHoldingregisterOffsetToRegisterNumber(startreg).ToString() + ", quant=" + regcount);
                 }
 
                 // send query, get response
@@ -546,7 +561,7 @@ namespace ModbusControlSpace
 
                 if (mLogger.LogWrites)
                 {
-                    mLogger.Log(Logger.LogType.Write, "Write single holding reg: slave=" + address + ", addr=" + RegisterToOffset.ConvertHoldingregisterOffsetToRegisterNumber(startreg).ToString() + ", value=" + value);
+                    mLogger.Log(Logger.LogType.Write, "Write single holding reg: slave=" + address + ", addr=" + mRegisterToOffset.ConvertHoldingregisterOffsetToRegisterNumber(startreg).ToString() + ", value=" + value);
                 }
 
                 // send query, get response
@@ -595,7 +610,7 @@ namespace ModbusControlSpace
 
                 if (mLogger.LogWrites)
                 {
-                    mLogger.Log(Logger.LogType.Write, "Write multiple holding reg: slave=" + address + ", addr=" + RegisterToOffset.ConvertHoldingregisterOffsetToRegisterNumber(startreg).ToString() + ", quant=" + regcount + ", values=" + Converts.Int16ArrayToStringOfValues(values));
+                    mLogger.Log(Logger.LogType.Write, "Write multiple holding reg: slave=" + address + ", addr=" + mRegisterToOffset.ConvertHoldingregisterOffsetToRegisterNumber(startreg).ToString() + ", quant=" + regcount + ", values=" + Converts.Int16ArrayToStringOfValues(values));
                 }
 
                 // send query, get response
@@ -705,7 +720,7 @@ namespace ModbusControlSpace
 
                 if (mLogger.LogReads)
                 {
-                    mLogger.Log(Logger.LogType.Read, "Read input reg: slave=" + address + ", addr=" + RegisterToOffset.ConvertInputregisterOffsetToRegisterNumber(startreg).ToString() + ", quant=" + regcount);
+                    mLogger.Log(Logger.LogType.Read, "Read input reg: slave=" + address + ", addr=" + mRegisterToOffset.ConvertInputregisterOffsetToRegisterNumber(startreg).ToString() + ", quant=" + regcount);
                 }
 
                 // send query, get response
@@ -758,7 +773,7 @@ namespace ModbusControlSpace
 
                 if (mLogger.LogReads)
                 {
-                    mLogger.Log(Logger.LogType.Read, "Read coils: slave=" + address + ", addr=" + RegisterToOffset.ConvertCoilOffsetToNumber(startreg).ToString() + ", quant=" + regcount);
+                    mLogger.Log(Logger.LogType.Read, "Read coils: slave=" + address + ", addr=" + mRegisterToOffset.ConvertCoilOffsetToNumber(startreg).ToString() + ", quant=" + regcount);
                 }
 
                 // send query, get response
@@ -767,6 +782,7 @@ namespace ModbusControlSpace
                 {
                     if (mLogger.LogReads)
                     {
+                        regcount = (ushort)(regcount / 16);  //TODO
                         mLogger.Log(Logger.LogType.Read, "Response: " + Converts.ByteArrayToStringOfValues(values, regcount));
                     }
                 }
@@ -807,7 +823,7 @@ namespace ModbusControlSpace
 
                 if (mLogger.LogWrites)
                 {
-                    mLogger.Log(Logger.LogType.Write, "Write single coil: slave=" + address + ", addr=" + RegisterToOffset.ConvertCoilOffsetToNumber(startreg).ToString() + ", value=" + value);
+                    mLogger.Log(Logger.LogType.Write, "Write single coil: slave=" + address + ", addr=" + mRegisterToOffset.ConvertCoilOffsetToNumber(startreg).ToString() + ", value=" + value);
                 }
 
                 // send query, get response
@@ -857,7 +873,7 @@ namespace ModbusControlSpace
                 if (mLogger.LogWrites)
                 {
                     int nrOfDatabytes = ((regcount + 1) / 8);
-                    mLogger.Log(Logger.LogType.Write, "Write multiple coils: slave=" + address + ", addr=" + RegisterToOffset.ConvertCoilOffsetToNumber(startreg).ToString() + ", quant=" + regcount + ", values=" + BytesToString.Convert(values, nrOfDatabytes));
+                    mLogger.Log(Logger.LogType.Write, "Write multiple coils: slave=" + address + ", addr=" + mRegisterToOffset.ConvertCoilOffsetToNumber(startreg).ToString() + ", quant=" + regcount + ", values=" + BytesToString.Convert(values, nrOfDatabytes));
                 }
 
                 // send query, get response
@@ -910,7 +926,8 @@ namespace ModbusControlSpace
 
                 if (mLogger.LogReads)
                 {
-                    mLogger.Log(Logger.LogType.Read, "Read discrete inputs: slave=" + address + ", addr=" + RegisterToOffset.ConvertDiscreteInputOffsetToNumber(startreg).ToString() + ", quant=" + regcount);
+                    regcount = (ushort)(regcount / 16);  //TODO
+                    mLogger.Log(Logger.LogType.Read, "Read discrete inputs: slave=" + address + ", addr=" + mRegisterToOffset.ConvertDiscreteInputOffsetToNumber(startreg).ToString() + ", quant=" + regcount);
                 }
 
                 // send query, get response

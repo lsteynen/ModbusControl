@@ -45,6 +45,8 @@ namespace ModbusControlSpace
 
         public ModbusInterface Modbus;
 
+        public RegisterToOffset RegisterToOffset1;
+
         public byte SlaveAddress;
 
        public string TabSelect
@@ -522,7 +524,7 @@ namespace ModbusControlSpace
                 }
 
                 // get register offset
-                UInt16 regOffset = RegisterToOffset.GetHoldingregisterOffset(grp.readFirstReg);
+                UInt16 regOffset = RegisterToOffset1.GetHoldingregisterOffset(grp.readFirstReg);
                 // read
                 // use paged read if needed 
                 ModbusProtocol.Result result = Modbus.MifReadHoldingRegistersPaged(SlaveAddress, regOffset, (UInt16)grp.readRegCount, out readData);
@@ -574,7 +576,7 @@ namespace ModbusControlSpace
                             ModbusGridView.TVarProperties varp = mrv.GetVarPropertiesByIndex(lineIndex);
 
                             // get register offset
-                            regOffset = RegisterToOffset.GetHoldingregisterOffset(varp.Reg);
+                            regOffset = RegisterToOffset1.GetHoldingregisterOffset(varp.Reg);
                             // read
                             //Debug.Print(DateTime.Now.TimeOfDay + ": MifReadHoldingRegisters(" + mSlaveAddress + "," + GetUserReg(regOffset) + "," + (UInt16)varp.Size + ")");
                             result = Modbus.MifReadHoldingRegisters(SlaveAddress, regOffset, (UInt16)varp.Size, out readData);

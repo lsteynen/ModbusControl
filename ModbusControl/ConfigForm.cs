@@ -258,19 +258,32 @@ namespace ModbusControlSpace
 
         public int OptionsHoldingregistersStart
         {
-            get { return ValueFromString(textboxHoldingRegistersStart.Text); }
+            // is write only
             set
             {
-                string str = "?";
-                if ((value == 40000) || (value == 400000))
+                string text = string.Empty;
+
+                switch (value)
                 {
-                    str = "40000/400000";
+                    case 40001:
+                        text = "40001-49999 + 400001-465536";
+                        break;
+                    case 40000:
+                        text = "40000-49999 + 400000-465535";
+                        break;
+                    case 400001:
+                        text = "400001-465536";
+                        break;
+                    case 400000:
+                        text = "400000-465535";
+                        break;
+
+                    default:
+                        text = value.ToString() + "(invalid)";
+                        break;
                 }
-                if ((value == 40001) || (value == 400001))
-                {
-                    str = "40001/400001";
-                }
-                textboxHoldingRegistersStart.Text = str;
+                
+                textboxHoldingRegistersStart.Text = text;
             }
         }
 
@@ -443,19 +456,6 @@ namespace ModbusControlSpace
         {
             groupBoxSerialInterface.Enabled = (comboConnection.SelectedIndex == (int)Global.eConnectionType.SerialRTU);
             groupBoxTcpInterface.Enabled = ((comboConnection.SelectedIndex == (int)Global.eConnectionType.ModbusTcp) || (comboConnection.SelectedIndex == (int)Global.eConnectionType.RtuOverTcp));
-        }
-
-        /// <summary>
-        /// Get the value in the begin of the string, ignore non-digits that follow
-        /// </summary>
-        private int ValueFromString(string s)
-        {
-            int result = 0;
-            for (int i = 0; (i < s.Length) && Char.IsDigit(s[i]); ++i)
-            {
-                result = (result * 10) + (s[i] - '0');
-            }
-            return result;
         }
 
         private void ButtonApply_Click(object sender, EventArgs e)
