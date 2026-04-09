@@ -12,16 +12,31 @@ namespace ModbusControlSpace
     public static class Converts
     {
         // configure endians, with defaults
-        private static Global.eEndian _int32Endian = Global.eEndian.Little;       // word order in 32-bit integer
-        private static Global.eEndian _float32Endian = Global.eEndian.Little;     // word order in 32-bit float
-        private static Global.eEndian _stringEndian = Global.eEndian.Big;         // big endian means first character is in high byte of Int16 register
-        private static string _stringEncodingName; 
+        private static Global.eEndian _int32Endian = Global.eEndian.Little;     // word order in 32-bit integer
+        private static Global.eEndian _float32Endian = Global.eEndian.Little;   // word order in 32-bit float
+        private static Global.eEndian _stringEndian = Global.eEndian.Big;       // big endian means first character is in high byte of Int16 register
+        private static string _stringEncodingName = "us-ascii";                 // default is ASCII
+
+        // List of the suppored string encodings,
+        // these are the .NET encoding names.
+        // We support only those with a single byte 00 encoding of the zero character, used as terminating zero in Converts.cs.
+        private static string[] supportedStringEncodings =
+        {   "us-ascii",
+            "utf-8",
+            "windows-1250",
+            "Windows-1252",
+            "iso-8859-1",
+            "iso-8859-2",
+            "iso-8859-3",
+            "iso-8859-15"
+        }; 
 
         #region Properties
 
         public static Global.eEndian Int32Endian
         {
             get { return _int32Endian; }
+
             set
             {
                 _int32Endian = value;
@@ -31,6 +46,7 @@ namespace ModbusControlSpace
         public static Global.eEndian Float32Endian
         {
             get { return _float32Endian; }
+
             set
             {
                 _float32Endian = value;
@@ -40,49 +56,47 @@ namespace ModbusControlSpace
         public static Global.eEndian StringEndian
         {
             get { return _stringEndian; }
+
             set
             {
                 _stringEndian = value;
             }
         }
 
+        /// <summary>
+        /// Set string encoding/decoding by encoding name
+        /// </summary>
         public static string StringEncodingName
         {
             get { return _stringEncodingName; }
+
             set
             {
-                // empty encoding name gives ascii
-                if (string.IsNullOrWhiteSpace(value))
+                if (IsSupportedStringEncoding(value))
                 {
-                    value = "us-ascii";
+                    _stringEncodingName = value;
                 }
-
-                // set encoding
-                // if invalid: use ascii
-                try
+                else
                 {
-                    Encoding enc = Encoding.GetEncoding(value);
+                    throw new ArgumentException("Invalid value"); 
                 }
-                catch
-                {
-                    value = "us-ascii";
-                    Encoding enc = Encoding.GetEncoding(value);
-                }
-                
-                _stringEncodingName = value;
             }
         }
 
-        public static string StringEncodingNameNoValidation
+        /// <summary>
+        /// Reset string encoding/decoding, for testing
+        /// </summary>
+        public static void Test_ResetStringEncodingName()
         {
-            get { return _stringEncodingName; }
-            set
-            {
-                _stringEncodingName = value;
-            }
+            _stringEncodingName = null;
         }
 
         #endregion Properties
+
+        public static string[] GetListOfSupportedStringEncodings()
+        {
+            return supportedStringEncodings;
+        }
 
         public static Int16 ToInt16(byte byte0, byte byte1)
         {
@@ -824,7 +838,7 @@ namespace ModbusControlSpace
             }
             catch
             {
-                throw new Exception("String encoder/decoder is not set");
+                throw new Exception("String encoding/decoding is not set");
             }
 
             // convert
@@ -854,7 +868,7 @@ namespace ModbusControlSpace
             }
             catch
             {
-                throw new Exception("String encoder/decoder is not set");
+                throw new Exception("String encoding/decoding is not set");
             }            
         }
 
@@ -896,10 +910,29 @@ namespace ModbusControlSpace
         /// Returns if OK. 
         /// Throws exception on error
         /// </summary>
-        public static void ValidateStringEncodingName(string encName)
+        public static bool IsSupportedStringEncoding(string encName)
         {
-            // validate encoding name
-            Encoding enc = Encoding.GetEncoding(encName);
+            bool exists = false;
+
+            foreach (string enc in supportedStringEncodings)
+            {
+                if (string.Equals(enc, encName, StringComparison.OrdinalIgnoreCase))
+                {
+                    try
+                    {
+                        Encoding encValid = Encoding.GetEncoding(encName);
+                        exists = true;
+                    }
+                    catch
+                    {
+                        // invalid
+                    }
+                    
+                    break;
+                }
+            }
+
+            return exists;
         }
     }
 

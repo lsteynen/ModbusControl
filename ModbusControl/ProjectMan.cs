@@ -727,12 +727,11 @@ namespace ModbusControlSpace
                 {
                     Seen = true;
                     string encName = xe.Value.Trim();
-                    try
+                    if (Converts.IsSupportedStringEncoding(encName))
                     {
-                        Converts.ValidateStringEncodingName(encName);
                         Connection.StringEncoding = encName;
                     }
-                    catch(Exception)
+                    else
                     {
                         TFilePosition fp = GetFilePos(xe);
                         throw new XmlException("XML element <" + xe.Name.LocalName + "> has an invalid value." + Environment.NewLine + LimitXmlTextLength(xe.ToString()) + " is not a valid encoding." + Environment.NewLine, null, fp.Line, fp.Col);
@@ -2219,8 +2218,6 @@ namespace ModbusControlSpace
                 xeModbus.Add(xe);
             }
             xe.Value = Connection.IPPort.ToString();
-
-            //TODO: Add Global.eTcpConnectMode TcpConnectMode static/dynamic?
 
             // Find SlaveID node, or create it
             xe = FindElement(xeModbus, "SlaveID");

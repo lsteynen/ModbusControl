@@ -1550,16 +1550,15 @@ namespace UnitTests
             // Note: C# string encoding names are not case sensitive
 
             Converts.StringEncodingName = "US-ASCII";
-            Converts.StringEncodingName = "ascii";
-            Converts.StringEncodingName = "ASCII";
+            Converts.StringEncodingName = "US-ascii";
+            Converts.StringEncodingName = "us-Ascii";
             Converts.StringEncodingName = "windows-1252";
-            Converts.StringEncodingName = "ISO-8859-1";
+            Converts.StringEncodingName = "WINDOWS-1252";
+            Converts.StringEncodingName = "Iso-8859-1";
             Converts.StringEncodingName = "UTF-8";
-            Converts.StringEncodingName = "UtF-8";
+            Converts.StringEncodingName = "Utf-8";
         }
-
-        /* 
-        TODO
+        
         [TestMethod]
         public void Test_prop_StringEncodingName_10()
         {
@@ -1577,8 +1576,57 @@ namespace UnitTests
             Assert.ThrowsException<ArgumentException>(() =>
                 Converts.StringEncodingName = "aaa");
         }
-        */
+        
     }
+
+    [TestClass]
+    public class Test_IsSupportedStringEncoding
+    {
+        //public static bool IsSupportedStringEncoding(string encName)
+
+        [TestMethod]
+        public void Test_IsSupportedStringEncoding_1()
+        {
+            bool result;
+
+            result = Converts.IsSupportedStringEncoding("us-ascii");
+            Assert.AreEqual<bool>(true, result);
+
+            result = Converts.IsSupportedStringEncoding("US-ascii");
+            Assert.AreEqual<bool>(true, result);
+
+            result = Converts.IsSupportedStringEncoding("windows-1252");
+            Assert.AreEqual<bool>(true, result);
+
+            result = Converts.IsSupportedStringEncoding("WINDOWS-1252");
+            Assert.AreEqual<bool>(true, result);
+        }
+
+        [TestMethod]
+        public void Test_IsSupportedStringEncoding_2()
+        {
+            bool result;
+
+            result = Converts.IsSupportedStringEncoding(null);
+            Assert.AreEqual<bool>(false, result);
+
+            result = Converts.IsSupportedStringEncoding("");
+            Assert.AreEqual<bool>(false, result);
+
+            result = Converts.IsSupportedStringEncoding("    ");
+            Assert.AreEqual<bool>(false, result);
+
+            result = Converts.IsSupportedStringEncoding("aa");
+            Assert.AreEqual<bool>(false, result);
+
+            result = Converts.IsSupportedStringEncoding("ascii");
+            Assert.AreEqual<bool>(false, result);
+
+            result = Converts.IsSupportedStringEncoding("WINDOWS-125");
+            Assert.AreEqual<bool>(false, result);
+        }
+    }
+
 
     [TestClass]
     public class Test_StringEncodeToByteArray
@@ -1589,18 +1637,7 @@ namespace UnitTests
         public void Test_StringEncodeToByteArray_1()
         {
             // test Converts.StringEncodingName is not set
-            Converts.StringEncodingNameNoValidation = null;
-            byte[] ab;
-            Assert.ThrowsException<Exception>(() =>
-                ab = Converts.StringEncodeToByteArray("Test")
-                );
-        }
-
-        [TestMethod]
-        public void Test_StringEncodeToByteArray_2()
-        {
-            // test Converts.StringEncodingName is not set
-            Converts.StringEncodingNameNoValidation = "";
+            Converts.Test_ResetStringEncodingName();
             byte[] ab;
             Assert.ThrowsException<Exception>(() =>
                 ab = Converts.StringEncodeToByteArray("Test")
@@ -1649,7 +1686,7 @@ namespace UnitTests
         [TestMethod]
         public void Test_StringEncodeToByteArray_21()
         {
-            Converts.StringEncodingName = "ascii";
+            Converts.StringEncodingName = "us-ascii";
             byte[] ab;
             Assert.ThrowsException<EncoderFallbackException>(() =>
                 ab = Converts.StringEncodeToByteArray("Non-ascii characters °  ")
@@ -1714,7 +1751,7 @@ namespace UnitTests
         public void Test_ByteArrayDecodeToString_1()
         {
             // test Converts.StringEncodingName is not set
-            Converts.StringEncodingNameNoValidation = null;
+            Converts.Test_ResetStringEncodingName();
             byte[] ab = { 0x41, 0x42, 0x43 };
             string s;
             Assert.ThrowsException<Exception>(() =>
@@ -1777,7 +1814,7 @@ namespace UnitTests
         {
 
             // test Converts.StringEncodingName is not set
-            Converts.StringEncodingNameNoValidation = null;
+            Converts.Test_ResetStringEncodingName();
             Int16[] ar = { 0x4142, 0x4344, 0x0000 };
             string s;
             Assert.ThrowsException<Exception>(() =>
@@ -1891,7 +1928,7 @@ namespace UnitTests
         public void Test_StringEncodeToInt16Array_1()
         {
             // test Converts.StringEncodingName is not set
-            Converts.StringEncodingNameNoValidation = null;
+            Converts.Test_ResetStringEncodingName();
             Int16[] ar;
             Assert.ThrowsException<Exception>(() =>
                 ar = Converts.StringEncodeToInt16Array("a", 2)

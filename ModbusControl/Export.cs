@@ -754,7 +754,7 @@ namespace ModbusControlSpace
 
             radFormatDefault.Checked = true;
             radStringFormatDefault.Checked = true;
-            textboxFilename.Text = @"C:\EDA\Modbuscontrol\export_as_in_grid.csv";
+            textboxFilename.Text = @"export_as_in_grid.csv";
             Update();
             buttonStart_Click(null, null);
             while (buttonStart.Enabled == false)
@@ -764,7 +764,7 @@ namespace ModbusControlSpace
             }
 
             radFormatAsInt.Checked = true;
-            textboxFilename.Text = @"C:\EDA\Modbuscontrol\export_as_int.csv";
+            textboxFilename.Text = @"export_as_int.csv";
             Update();
             buttonStart_Click(null, null);
             while (buttonStart.Enabled == false)
@@ -774,7 +774,7 @@ namespace ModbusControlSpace
             }
 
             radFormatAsUInt.Checked = true;
-            textboxFilename.Text = @"C:\EDA\Modbuscontrol\export_as_uint.csv";
+            textboxFilename.Text = @"export_as_uint.csv";
             Update();
             buttonStart_Click(null, null);
             while (buttonStart.Enabled == false)
@@ -784,7 +784,7 @@ namespace ModbusControlSpace
             }
 
             radFormatAsHex.Checked = true;
-            textboxFilename.Text = @"C:\EDA\Modbuscontrol\export_as_hex.csv";
+            textboxFilename.Text = @"export_as_hex.csv";
             Update();
             buttonStart_Click(null, null);
             while (buttonStart.Enabled == false)
@@ -795,7 +795,7 @@ namespace ModbusControlSpace
 
             radFormatDefault.Checked = true;
             radStringFormatAsInt.Checked = true;
-            textboxFilename.Text = @"C:\EDA\Modbuscontrol\export_string_as_int.csv";
+            textboxFilename.Text = @"export_string_as_int.csv";
             Update();
             buttonStart_Click(null, null);
             while (buttonStart.Enabled == false)
@@ -806,7 +806,7 @@ namespace ModbusControlSpace
 
             radFormatDefault.Checked = true;
             radStringFormatAsUInt.Checked = true;
-            textboxFilename.Text = @"C:\EDA\Modbuscontrol\export_string_as_uint.csv";
+            textboxFilename.Text = @"export_string_as_uint.csv";
             Update();
             buttonStart_Click(null, null);
             while (buttonStart.Enabled == false)
@@ -817,7 +817,7 @@ namespace ModbusControlSpace
 
             radFormatDefault.Checked = true;
             radStringFormatAsHex.Checked = true;
-            textboxFilename.Text = @"C:\EDA\Modbuscontrol\export_string_as_hex.csv";
+            textboxFilename.Text = @"export_string_as_hex.csv";
             Update();
             buttonStart_Click(null, null);
             while (buttonStart.Enabled == false)

@@ -218,7 +218,7 @@ namespace ModbusControlSpace
             }
             set
             {
-                bool isValid = SetComboboxSelectedValueWithIgnoreCase(comboStringEncoding, value);
+                bool isValid = SetComboboxSelectedValueIgnoreCase(comboStringEncoding, value);
                 if (isValid == false)
                 {
                     comboStringEncoding.SelectedValue = "us-ascii";
@@ -226,7 +226,7 @@ namespace ModbusControlSpace
             }
         }
 
-        public bool SetComboboxSelectedValueWithIgnoreCase(ComboBox combo, string value)
+        public bool SetComboboxSelectedValueIgnoreCase(ComboBox combo, string value)
         {
             if (combo == null)
             {
@@ -389,27 +389,6 @@ namespace ModbusControlSpace
         public delegate void ApplyHandler(object sender);
         public event ApplyHandler OnApply;
 
-        // A list of the suppored string encodings, to be shown in the dropdown.
-        // These are the .NET encoding names.
-        // Use only those with a 1-byte 00 encoding of the zero character, used as terminating zero in Converts.cs.
-        private string[] supportedStringEncodings =
-        {   "us-ascii",
-            "utf-8",
-            "windows-1250",
-            //"windows-1251",
-            "Windows-1252", 
-            //"windows-1253",
-            //"windows-1254",
-            //"windows-1255",
-            //"windows-1256",
-            //"windows-1257",
-            //"windows-1258",
-            "iso-8859-1",
-            "iso-8859-2",
-            "iso-8859-3",
-            "iso-8859-15"
-        };
-
         // Implementation
 
         public ConfigForm()
@@ -432,7 +411,8 @@ namespace ModbusControlSpace
             // use a dictionary to have 2 values per item: key/name and displaytext
             // get the displayname of each encoding
             Dictionary<string, string> encodingDict = new Dictionary<string, string>();
-            foreach (string encName in supportedStringEncodings)
+            string[] listOfSupportedStringEncodings = Converts.GetListOfSupportedStringEncodings();
+            foreach (string encName in listOfSupportedStringEncodings)
             {
                 try
                 {
