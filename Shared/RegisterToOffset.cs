@@ -111,8 +111,8 @@ namespace ModbusControlSpace
 
         /// <summary>
         /// Convert holding register offset to register number.
-        /// RegisterNumberingScheme 40001: produce 40001-49999 + 410000-465536 when needed
-        /// RegisterNumberingScheme 40000: produce 40000-49999 + 410000-465535 when needed
+        /// RegisterNumberingScheme 40001: produce 40001-49999 + 410000-465536 
+        /// RegisterNumberingScheme 40000: produce 40000-49999 + 410000-465535 
         /// RegisterNumberingScheme 400001: produce 400001-465536
         /// RegisterNumberingScheme 400000: produce 400000-465535
         /// </summary>
@@ -163,8 +163,8 @@ namespace ModbusControlSpace
 
         /// <summary>
         /// Convert input register number 3xxxx to register offset 0-65535.
-        /// RegisterNumberingScheme 40001: accept 30001-39999 + 310000-365536 when needed
-        /// RegisterNumberingScheme 40000: accept 30000-39999 + 310000-365535 when needed
+        /// RegisterNumberingScheme 40001: accept 30001-39999 + 310000-365536 
+        /// RegisterNumberingScheme 40000: accept 30000-39999 + 310000-365535 
         /// RegisterNumberingScheme 400001: accept 300001-365536
         /// RegisterNumberingScheme 400000: accept 300000-365535
         /// </summary>
@@ -215,8 +215,8 @@ namespace ModbusControlSpace
 
         /// <summary>
         /// Convert input register offset to register number.
-        /// RegisterNumberingScheme 40001: produce 30001-39999 + 310000-365536 when needed
-        /// RegisterNumberingScheme 40000: produce 30000-39999 + 310000-365535 when needed
+        /// RegisterNumberingScheme 40001: produce 30001-39999 + 310000-365536 
+        /// RegisterNumberingScheme 40000: produce 30000-39999 + 310000-365535 
         /// RegisterNumberingScheme 400001: produce 300001-365536
         /// RegisterNumberingScheme 400000: produce 300000-365535
         /// </summary>
@@ -311,8 +311,8 @@ namespace ModbusControlSpace
 
         /// <summary>
         /// Convert coil offset to coil number.
-        /// RegisterNumberingScheme 40001: produce 1-9999
-        /// RegisterNumberingScheme 40000: produce 0-9999
+        /// RegisterNumberingScheme 40001: produce 1-9999 + 10000-65536
+        /// RegisterNumberingScheme 40000: produce 0-9999 + 10000-65535
         /// RegisterNumberingScheme 400001: produce 1-65536
         /// RegisterNumberingScheme 400000: produce 0-65535
         /// </summary>
@@ -324,11 +324,19 @@ namespace ModbusControlSpace
                 {
                     return 1 + Offset;
                 }
+                if (Offset <= 65535)
+                {
+                    return 1 + Offset;
+                }
             }
 
             if (mRegisterNumberingScheme == 40000)
             {
                 if (Offset <= 9999)
+                {
+                    return 0 + Offset;
+                }
+                if (Offset <= 65535)
                 {
                     return 0 + Offset;
                 }
@@ -407,8 +415,8 @@ namespace ModbusControlSpace
 
         /// <summary>
         /// Convert discrete input offset to register number.
-        /// RegisterNumberingScheme 40001: produce 10001-19999 + 110000-165536 when needed
-        /// RegisterNumberingScheme 40000: produce 10000-19999 + 110000-165535 when needed
+        /// RegisterNumberingScheme 40001: produce 10001-19999 + 110000-165536 
+        /// RegisterNumberingScheme 40000: produce 10000-19999 + 110000-165535 
         /// RegisterNumberingScheme 400001: produce 100001-165536
         /// RegisterNumberingScheme 400000: produce 100000-165535
         /// </summary>
@@ -420,6 +428,10 @@ namespace ModbusControlSpace
                 {
                     return 10001 + Offset;
                 }
+                if (Offset <= 65535)
+                {
+                    return 100001 + Offset;
+                }
             }
 
             if (mRegisterNumberingScheme == 40000)
@@ -427,6 +439,10 @@ namespace ModbusControlSpace
                 if (Offset <= 9999)
                 {
                     return 10000 + Offset;
+                }
+                if (Offset <= 65535)
+                {
+                    return 100000 + Offset;
                 }
             }
 

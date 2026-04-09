@@ -782,8 +782,7 @@ namespace ModbusControlSpace
                 {
                     if (mLogger.LogReads)
                     {
-                        regcount = (ushort)(regcount / 16);  //TODO
-                        mLogger.Log(Logger.LogType.Read, "Response: " + Converts.ByteArrayToStringOfValues(values, regcount));
+                        mLogger.Log(Logger.LogType.Read, "Response: " + Converts.ByteArrayToStringOfValues(values));
                     }
                 }
                 else
@@ -872,8 +871,7 @@ namespace ModbusControlSpace
 
                 if (mLogger.LogWrites)
                 {
-                    int nrOfDatabytes = ((regcount + 1) / 8);
-                    mLogger.Log(Logger.LogType.Write, "Write multiple coils: slave=" + address + ", addr=" + mRegisterToOffset.ConvertCoilOffsetToNumber(startreg).ToString() + ", quant=" + regcount + ", values=" + BytesToString.Convert(values, nrOfDatabytes));
+                    mLogger.Log(Logger.LogType.Write, "Write multiple coils: slave=" + address + ", addr=" + mRegisterToOffset.ConvertCoilOffsetToNumber(startreg).ToString() + ", quant=" + regcount + ", values=" + BytesToString.Convert(values));
                 }
 
                 // send query, get response
@@ -926,7 +924,6 @@ namespace ModbusControlSpace
 
                 if (mLogger.LogReads)
                 {
-                    regcount = (ushort)(regcount / 16);  //TODO
                     mLogger.Log(Logger.LogType.Read, "Read discrete inputs: slave=" + address + ", addr=" + mRegisterToOffset.ConvertDiscreteInputOffsetToNumber(startreg).ToString() + ", quant=" + regcount);
                 }
 
@@ -936,7 +933,7 @@ namespace ModbusControlSpace
                 {
                     if (mLogger.LogReads)
                     {
-                        mLogger.Log(Logger.LogType.Read, "Response: " + Converts.ByteArrayToStringOfValues(values, regcount));
+                        mLogger.Log(Logger.LogType.Read, "Response: " + Converts.ByteArrayToStringOfValues(values));
                     }
                 }
                 else
@@ -980,7 +977,8 @@ namespace ModbusControlSpace
 
                 if (mLogger.LogReads)
                 {
-                    mLogger.Log(Logger.LogType.Read, "Send custom query: slave=" + address + ", query=" + Converts.ByteArrayToStringOfValues(queryBuf, queryLen));
+                    int actQueryLen = Math.Min(queryLen, queryBuf.Length);
+                    mLogger.Log(Logger.LogType.Read, "Send custom query: slave=" + address + ", query=" + Converts.ByteArrayToStringOfValues(queryBuf, actQueryLen));
                 }
 
                 // send query, get response

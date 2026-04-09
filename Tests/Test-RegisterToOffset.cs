@@ -664,13 +664,14 @@ namespace UnitTests
             regnr = registerToOffset.ConvertCoilOffsetToNumber(9998);
             Assert.AreEqual<int>(9999, regnr);
 
-            Assert.ThrowsException<ArgumentException>(() =>
-                registerToOffset.ConvertCoilOffsetToNumber(9999)
-                );
+            regnr = registerToOffset.ConvertCoilOffsetToNumber(9999);
+            Assert.AreEqual<int>(10000, regnr);
 
-            Assert.ThrowsException<ArgumentException>(() =>
-                registerToOffset.ConvertCoilOffsetToNumber(65535)
-                );
+            regnr = registerToOffset.ConvertCoilOffsetToNumber(10000);
+            Assert.AreEqual<int>(10001, regnr);
+
+            regnr = registerToOffset.ConvertCoilOffsetToNumber(65535);
+            Assert.AreEqual<int>(65536, regnr);
         }
 
         [TestMethod]
@@ -690,13 +691,11 @@ namespace UnitTests
             regnr = registerToOffset.ConvertCoilOffsetToNumber(9999);
             Assert.AreEqual<int>(9999, regnr);
 
-            Assert.ThrowsException<ArgumentException>(() =>
-                registerToOffset.ConvertCoilOffsetToNumber(10000)
-                );
+            regnr = registerToOffset.ConvertCoilOffsetToNumber(10000);
+            Assert.AreEqual<int>(10000, regnr);
 
-            Assert.ThrowsException<ArgumentException>(() =>
-                registerToOffset.ConvertCoilOffsetToNumber(65535)
-                );
+            regnr = registerToOffset.ConvertCoilOffsetToNumber(65535);
+            Assert.AreEqual<int>(65535, regnr);
         }
 
         [TestMethod]
@@ -919,17 +918,14 @@ namespace UnitTests
             regnr = registerToOffset.ConvertDiscreteInputOffsetToNumber(9998);
             Assert.AreEqual<int>(19999, regnr);
 
-            Assert.ThrowsException<ArgumentException>(() =>
-                registerToOffset.ConvertDiscreteInputOffsetToNumber(9999)
-                );
+            regnr = registerToOffset.ConvertDiscreteInputOffsetToNumber(9999);
+            Assert.AreEqual<int>(110000, regnr);
 
-            Assert.ThrowsException<ArgumentException>(() =>
-                registerToOffset.ConvertDiscreteInputOffsetToNumber(10000)
-                );
+            regnr = registerToOffset.ConvertDiscreteInputOffsetToNumber(10000);
+            Assert.AreEqual<int>(110001, regnr);
 
-            Assert.ThrowsException<ArgumentException>(() =>
-                registerToOffset.ConvertDiscreteInputOffsetToNumber(65535)
-                );
+            regnr = registerToOffset.ConvertDiscreteInputOffsetToNumber(65535);
+            Assert.AreEqual<int>(165536, regnr);
         }
 
         [TestMethod]
@@ -949,13 +945,11 @@ namespace UnitTests
             regnr = registerToOffset.ConvertDiscreteInputOffsetToNumber(9999);
             Assert.AreEqual<int>(19999, regnr);
 
-            Assert.ThrowsException<ArgumentException>(() =>
-                registerToOffset.ConvertDiscreteInputOffsetToNumber(10000)
-                );
+            regnr = registerToOffset.ConvertDiscreteInputOffsetToNumber(10000);
+            Assert.AreEqual<int>(110000, regnr);
 
-            Assert.ThrowsException<ArgumentException>(() =>
-                registerToOffset.ConvertDiscreteInputOffsetToNumber(65535)
-                );
+            regnr = registerToOffset.ConvertDiscreteInputOffsetToNumber(65535);
+            Assert.AreEqual<int>(165535, regnr);
         }
 
         [TestMethod]
