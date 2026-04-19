@@ -10,6 +10,23 @@ namespace UnitTests
     {
         // public static Int16 ToInt16(byte byte0, byte byte1)
 
+        [TestInitialize]
+        public void Setup()
+        {
+            // This runs before EACH test
+            Converts.Int32Endian = Global.eEndian.Little;
+            Converts.Float32Endian = Global.eEndian.Little;
+            Converts.StringEndian = Global.eEndian.Little;
+            Converts.StringEncodingName = "us-ascii";
+        }
+
+        [TestMethod]
+        public void Test_ToInt16_1()
+        {
+            Int16 res = Converts.ToInt16(200, 30);
+            Assert.AreEqual<Int16>(Helpers.ConvToInt16(0x1ec8), res);
+        }
+
         [TestMethod]
         public void Test_ToInt16_2()
         {
@@ -31,9 +48,19 @@ namespace UnitTests
     }
 
     [TestClass]
-    public class Test_ToUInt1616
+    public class Test_ToUInt16
     {
         // public static UInt16 ToUInt16(byte byte0, byte byte1, Global.eEndian endian = Global.eEndian.Little)
+
+        [TestInitialize]
+        public void Setup()
+        {
+            // This runs before EACH test
+            Converts.Int32Endian = Global.eEndian.Little;
+            Converts.Float32Endian = Global.eEndian.Little;
+            Converts.StringEndian = Global.eEndian.Little;
+            Converts.StringEncodingName = "us-ascii";
+        }
 
         [TestMethod]
         public void Test_ToUInt16_1()
@@ -62,6 +89,16 @@ namespace UnitTests
     public class Test_ToInt32
     {
         // public static Int32 ToInt32(Int16 word0, Int16 word1, Global.eEndian? endian = null)
+
+        [TestInitialize]
+        public void Setup()
+        {
+            // This runs before EACH test
+            Converts.Int32Endian = Global.eEndian.Little;
+            Converts.Float32Endian = Global.eEndian.Little;
+            Converts.StringEndian = Global.eEndian.Little;
+            Converts.StringEncodingName = "us-ascii";
+        }
 
         [TestMethod]
         public void Test_ToInt32_1()
@@ -123,6 +160,16 @@ namespace UnitTests
     {
         // public static UInt32 ToUInt32(Int16 word0, Int16 word1, Global.eEndian? endian = null)
 
+        [TestInitialize]
+        public void Setup()
+        {
+            // This runs before EACH test
+            Converts.Int32Endian = Global.eEndian.Little;
+            Converts.Float32Endian = Global.eEndian.Little;
+            Converts.StringEndian = Global.eEndian.Little;
+            Converts.StringEncodingName = "us-ascii";
+        }
+
         [TestMethod]
         public void Test_ToUInt32_1()
         {
@@ -183,6 +230,16 @@ namespace UnitTests
     {
         // public static UInt16[] Int16ArrayToUInt16Array(Int16[] aValues) 
 
+        [TestInitialize]
+        public void Setup()
+        {
+            // This runs before EACH test
+            Converts.Int32Endian = Global.eEndian.Little;
+            Converts.Float32Endian = Global.eEndian.Little;
+            Converts.StringEndian = Global.eEndian.Little;
+            Converts.StringEncodingName = "us-ascii";
+        }
+
         [TestMethod]
         public void Test_Int16ArrayToUInt16Array_1()
         {
@@ -217,6 +274,16 @@ namespace UnitTests
     public class Test_Int16ArrayToByteArray
     {
         // public static byte[] Int16ArrayToByteArray(Int16[] aValues, Global.eEndian endian = Global.eEndian.Little)
+
+        [TestInitialize]
+        public void Setup()
+        {
+            // This runs before EACH test
+            Converts.Int32Endian = Global.eEndian.Little;
+            Converts.Float32Endian = Global.eEndian.Little;
+            Converts.StringEndian = Global.eEndian.Little;
+            Converts.StringEncodingName = "us-ascii";
+        }
 
         [TestMethod]
         public void Int16ArrayToByteArray_1()
@@ -273,6 +340,16 @@ namespace UnitTests
     public class Test_ByteArrayToInt16Array
     {
         //public static Int16[] ByteArrayToInt16Array(byte[] aBytes, Global.eEndian endian = Global.eEndian.Little)
+
+        [TestInitialize]
+        public void Setup()
+        {
+            // This runs before EACH test
+            Converts.Int32Endian = Global.eEndian.Little;
+            Converts.Float32Endian = Global.eEndian.Little;
+            Converts.StringEndian = Global.eEndian.Little;
+            Converts.StringEncodingName = "us-ascii";
+        }
 
         [TestMethod]
         public void Test_ByteArrayToInt16Array_1()
@@ -359,6 +436,16 @@ namespace UnitTests
     public class Test_IntToString
     {
         // public static string IntToString(Int32 value, int decimals = 0, int minLen = 0)
+
+        [TestInitialize]
+        public void Setup()
+        {
+            // This runs before EACH test
+            Converts.Int32Endian = Global.eEndian.Little;
+            Converts.Float32Endian = Global.eEndian.Little;
+            Converts.StringEndian = Global.eEndian.Little;
+            Converts.StringEncodingName = "us-ascii";
+        }
 
         [TestMethod]
         public void Test_IntToString_1()
@@ -450,6 +537,16 @@ namespace UnitTests
     {
         // public static string UIntToString(UInt32 value, int decimals = 0, int minLen = 0)
 
+        [TestInitialize]
+        public void Setup()
+        {
+            // This runs before EACH test
+            Converts.Int32Endian = Global.eEndian.Little;
+            Converts.Float32Endian = Global.eEndian.Little;
+            Converts.StringEndian = Global.eEndian.Little;
+            Converts.StringEncodingName = "us-ascii";
+        }
+
         [TestMethod]
         public void Test_UIntToString_1()
         {
@@ -505,6 +602,16 @@ namespace UnitTests
     {
         // public static string IntToStringHex(Int32 value, int minLen = 0)
 
+        [TestInitialize]
+        public void Setup()
+        {
+            // This runs before EACH test
+            Converts.Int32Endian = Global.eEndian.Little;
+            Converts.Float32Endian = Global.eEndian.Little;
+            Converts.StringEndian = Global.eEndian.Little;
+            Converts.StringEncodingName = "us-ascii";
+        }
+
         [TestMethod]
         public void Test_IntToStringHex_1()
         {
@@ -552,6 +659,16 @@ namespace UnitTests
     public class Test_Int16ToFloat32
     {
         // public static float Int16ToFloat32(Int16 word0, Int16 word1)
+
+        [TestInitialize]
+        public void Setup()
+        {
+            // This runs before EACH test
+            Converts.Int32Endian = Global.eEndian.Little;
+            Converts.Float32Endian = Global.eEndian.Little;
+            Converts.StringEndian = Global.eEndian.Little;
+            Converts.StringEncodingName = "us-ascii";
+        }
 
         [TestMethod]
         public void Test_Int16ToFloat32_1()
@@ -639,6 +756,16 @@ namespace UnitTests
     {
         // public static string Int16ToAscii(Int16 valInt16)
 
+        [TestInitialize]
+        public void Setup()
+        {
+            // This runs before EACH test
+            Converts.Int32Endian = Global.eEndian.Little;
+            Converts.Float32Endian = Global.eEndian.Little;
+            Converts.StringEndian = Global.eEndian.Little;
+            Converts.StringEncodingName = "us-ascii";
+        }
+
         [TestMethod]
         public void Test_Int16ToAscii_1()
         {
@@ -692,6 +819,16 @@ namespace UnitTests
     public class Test_Int16ArrayToUInt32
     {
         // public static UInt32 Int16ArrayToUInt32(Int16[] aInt16, Global.eEndian? endian = null)
+
+        [TestInitialize]
+        public void Setup()
+        {
+            // This runs before EACH test
+            Converts.Int32Endian = Global.eEndian.Little;
+            Converts.Float32Endian = Global.eEndian.Little;
+            Converts.StringEndian = Global.eEndian.Little;
+            Converts.StringEncodingName = "us-ascii";
+        }
 
         [TestMethod]
         public void Test_Int16ArrayToUInt32_1()
@@ -777,6 +914,16 @@ namespace UnitTests
     {
         // public static string Int16ArrayToStringOfValues(Int16[] aValues)
 
+        [TestInitialize]
+        public void Setup()
+        {
+            // This runs before EACH test
+            Converts.Int32Endian = Global.eEndian.Little;
+            Converts.Float32Endian = Global.eEndian.Little;
+            Converts.StringEndian = Global.eEndian.Little;
+            Converts.StringEncodingName = "us-ascii";
+        }
+
         [TestMethod]
         public void Test_Int16ArrayToStringOfValues_1()
         {
@@ -806,6 +953,16 @@ namespace UnitTests
     public class Test_ByteArrayToStringOfValues
     {
         // public static string ByteArrayToStringOfValues(byte[] aBytes, int maxCount = -1)
+
+        [TestInitialize]
+        public void Setup()
+        {
+            // This runs before EACH test
+            Converts.Int32Endian = Global.eEndian.Little;
+            Converts.Float32Endian = Global.eEndian.Little;
+            Converts.StringEndian = Global.eEndian.Little;
+            Converts.StringEncodingName = "us-ascii";
+        }
 
         [TestMethod]
         public void Test_ByteArrayToStringOfValues_1()
@@ -869,6 +1026,16 @@ namespace UnitTests
     public class Test_Int16RegistersToUInt32Value
     {
         // public static UInt32 Int16RegistersToUInt32Value(Int16[] Regs, int size, ModbusControlSpace.Global.eType type)
+
+        [TestInitialize]
+        public void Setup()
+        {
+            // This runs before EACH test
+            Converts.Int32Endian = Global.eEndian.Little;
+            Converts.Float32Endian = Global.eEndian.Little;
+            Converts.StringEndian = Global.eEndian.Little;
+            Converts.StringEncodingName = "us-ascii";
+        }
 
         [TestMethod]
         public void Test_Int16RegistersToValue32_Int16_1()
@@ -1038,6 +1205,16 @@ namespace UnitTests
     {
         // public static UInt32 AsciiStringToUInt32(string str)
 
+        [TestInitialize]
+        public void Setup()
+        {
+            // This runs before EACH test
+            Converts.Int32Endian = Global.eEndian.Little;
+            Converts.Float32Endian = Global.eEndian.Little;
+            Converts.StringEndian = Global.eEndian.Little;
+            Converts.StringEncodingName = "us-ascii";
+        }
+
         [TestMethod]
         public void Test_AsciiStringToUInt32_1()
         {
@@ -1107,6 +1284,16 @@ namespace UnitTests
     public class Test_UInt32ToAscii
     {
         // public static string UInt32ToAscii(UInt32 value, int width)
+
+        [TestInitialize]
+        public void Setup()
+        {
+            // This runs before EACH test
+            Converts.Int32Endian = Global.eEndian.Little;
+            Converts.Float32Endian = Global.eEndian.Little;
+            Converts.StringEndian = Global.eEndian.Little;
+            Converts.StringEncodingName = "us-ascii";
+        }
 
         [TestMethod]
         public void Test_UInt32ToAscii_1()
@@ -1198,6 +1385,16 @@ namespace UnitTests
     {
         // public static Int16[] AsciiStringToInt16Array(string str, int size)
 
+        [TestInitialize]
+        public void Setup()
+        {
+            // This runs before EACH test
+            Converts.Int32Endian = Global.eEndian.Little;
+            Converts.Float32Endian = Global.eEndian.Little;
+            Converts.StringEndian = Global.eEndian.Little;
+            Converts.StringEncodingName = "us-ascii";
+        }
+
         [TestMethod]
         public void Test_AsciiStringToInt16Array_1()
         {
@@ -1284,6 +1481,16 @@ namespace UnitTests
     public class Test_Int32ToInt16Array
     {
         // public static Int16[] Int32ToInt16Array(Int32 value32, int size = 0)
+
+        [TestInitialize]
+        public void Setup()
+        {
+            // This runs before EACH test
+            Converts.Int32Endian = Global.eEndian.Little;
+            Converts.Float32Endian = Global.eEndian.Little;
+            Converts.StringEndian = Global.eEndian.Little;
+            Converts.StringEncodingName = "us-ascii";
+        }
 
         [TestMethod]
         public void Test_Int32ToInt16Array_1()
@@ -1399,6 +1606,16 @@ namespace UnitTests
     {
         // public static Int16[] UInt32ToInt16Array(UInt32 value32, Global.eEndian? endian = null)
 
+        [TestInitialize]
+        public void Setup()
+        {
+            // This runs before EACH test
+            Converts.Int32Endian = Global.eEndian.Little;
+            Converts.Float32Endian = Global.eEndian.Little;
+            Converts.StringEndian = Global.eEndian.Little;
+            Converts.StringEncodingName = "us-ascii";
+        }
+
         [TestMethod]
         public void Test_UInt32ToInt16Array_1()
         {
@@ -1454,6 +1671,16 @@ namespace UnitTests
         public TestContext TestContext { get; set; }
 
         // public static Int16[] Float32ToInt16Array(float fValue)
+
+        [TestInitialize]
+        public void Setup()
+        {
+            // This runs before EACH test
+            Converts.Int32Endian = Global.eEndian.Little;
+            Converts.Float32Endian = Global.eEndian.Little;
+            Converts.StringEndian = Global.eEndian.Little;
+            Converts.StringEncodingName = "us-ascii";
+        }
 
         [TestMethod]
         public void Test_Float32ToInt16Array_1()
@@ -1511,6 +1738,16 @@ namespace UnitTests
     public class Test_property_StringEncodingName
     {
         public TestContext TestContext { get; set; }
+
+        [TestInitialize]
+        public void Setup()
+        {
+            // This runs before EACH test
+            Converts.Int32Endian = Global.eEndian.Little;
+            Converts.Float32Endian = Global.eEndian.Little;
+            Converts.StringEndian = Global.eEndian.Little;
+            Converts.StringEncodingName = "us-ascii";
+        }
 
         [TestMethod]
         public void Test_GetAllSupportedStringEncodings_1()
@@ -1584,6 +1821,16 @@ namespace UnitTests
     {
         //public static bool IsSupportedStringEncoding(string encName)
 
+        [TestInitialize]
+        public void Setup()
+        {
+            // This runs before EACH test
+            Converts.Int32Endian = Global.eEndian.Little;
+            Converts.Float32Endian = Global.eEndian.Little;
+            Converts.StringEndian = Global.eEndian.Little;
+            Converts.StringEncodingName = "us-ascii";
+        }
+
         [TestMethod]
         public void Test_IsSupportedStringEncoding_1()
         {
@@ -1632,6 +1879,16 @@ namespace UnitTests
     public class Test_StringEncodeToByteArray
     {
         // byte[] StringEncodeToByteArray(string str, string encodingName)
+
+        [TestInitialize]
+        public void Setup()
+        {
+            // This runs before EACH test
+            Converts.Int32Endian = Global.eEndian.Little;
+            Converts.Float32Endian = Global.eEndian.Little;
+            Converts.StringEndian = Global.eEndian.Little;
+            Converts.StringEncodingName = "us-ascii";
+        }
 
         [TestMethod]
         public void Test_StringEncodeToByteArray_1()
@@ -1747,6 +2004,16 @@ namespace UnitTests
     {
         // string ByteArrayDecodeToString(byte[] aBytes)
 
+        [TestInitialize]
+        public void Setup()
+        {
+            // This runs before EACH test
+            Converts.Int32Endian = Global.eEndian.Little;
+            Converts.Float32Endian = Global.eEndian.Little;
+            Converts.StringEndian = Global.eEndian.Little;
+            Converts.StringEncodingName = "us-ascii";
+        }
+
         [TestMethod]
         public void Test_ByteArrayDecodeToString_1()
         {
@@ -1808,6 +2075,16 @@ namespace UnitTests
     public class Test_Int16ArrayDecodeToString
     {
         // string ByteArrayDecodeToString(byte[] aBytes)
+
+        [TestInitialize]
+        public void Setup()
+        {
+            // This runs before EACH test
+            Converts.Int32Endian = Global.eEndian.Little;
+            Converts.Float32Endian = Global.eEndian.Little;
+            Converts.StringEndian = Global.eEndian.Little;
+            Converts.StringEncodingName = "us-ascii";
+        }
 
         [TestMethod]
         public void Test_Int16ArrayDecodeToString_1()
@@ -1923,6 +2200,16 @@ namespace UnitTests
     {
         // public static Int16[] StringEncodeToInt16Array(string str)
         // returns as many Int16 as needed
+
+        [TestInitialize]
+        public void Setup()
+        {
+            // This runs before EACH test
+            Converts.Int32Endian = Global.eEndian.Little;
+            Converts.Float32Endian = Global.eEndian.Little;
+            Converts.StringEndian = Global.eEndian.Little;
+            Converts.StringEncodingName = "us-ascii";
+        }
 
         [TestMethod]
         public void Test_StringEncodeToInt16Array_1()
