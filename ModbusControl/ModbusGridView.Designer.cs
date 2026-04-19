@@ -1,5 +1,5 @@
 ﻿
-namespace LST.ModbusGridView
+namespace ModbusControl
 {
     partial class ModbusGridView
     {
@@ -59,7 +59,7 @@ namespace LST.ModbusGridView
             this.toolStripMenuItem7 = new System.Windows.Forms.ToolStripMenuItem();
             this.expandAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.collapseAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.grid = new LST.Helpers.MyDataGridView();
+            this.grid = new LST.Controls.MyDataGridView();
             this.colReg = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colDescr = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colProps = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -393,7 +393,7 @@ namespace LST.ModbusGridView
 
         #endregion
 
-        private LST.Helpers.MyDataGridView grid;
+        private LST.Controls.MyDataGridView grid;
         private System.Windows.Forms.ContextMenuStrip ContextMenuForOtherColumns;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem markThisLineInGreenToolStripMenuItem;

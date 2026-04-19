@@ -10,7 +10,7 @@ using System.Threading;
 
 using LST.Helpers;
 
-namespace ModbusServer
+namespace ModbusControl
 {
     public class ModbusServer : IDisposable
     {
@@ -28,7 +28,7 @@ namespace ModbusServer
         private string mLastExceptionText;
         private Logger _Logger;
 
-        public ModbusControlSpace.ModbusInterface modbusinterface;
+        public ModbusControl.ModbusInterface modbusinterface;
         private string MyName;
         private string LogHeader;
 

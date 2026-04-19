@@ -1,4 +1,4 @@
-﻿namespace ModbusControlSpace
+﻿namespace ModbusControl
 {
     partial class ConfigForm
     {
@@ -105,7 +105,7 @@
             this.label16 = new System.Windows.Forms.Label();
             this.panelWarning = new System.Windows.Forms.Panel();
             this.numericInterFrameDelay = new LST.Controls.NumericUpDown2();
-            this.comboSerialPort = new ModbusControlSpace.SerialPortCombobox();
+            this.comboSerialPort = new ModbusControl.SerialPortCombobox();
             ((System.ComponentModel.ISupportInitialize)(this.numericSamplerate)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericTcpServerPort)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericMaximumFrameSize)).BeginInit();

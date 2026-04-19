@@ -6,7 +6,7 @@ using System.Threading;
 using System.Net;
 using System.Net.Sockets;
 
-using Modbus_net;
+using LST.Modbus;
 using LST.Helpers;
 
 namespace ModbusImport
@@ -20,15 +20,11 @@ namespace ModbusImport
         private int mMaximumFrameSize = 256;
         private int mWriteHoldingRegistersFunctioncode = 0;     // 0=auto, 6=single, 16=multiple
         private UInt32 mTries = 1;
-
         private ModbusProtocol mb;
         private ModbusRtuProtocol mbRtuProtocol;
         private ModbusTcpProtocol mbTcpProtocol;
         private SerialChannel mbSerChannel;
         private TcpChannel mbTcpChannel;
-        private Object mQueryLock = new Object();
-//        private Logger mLogger;
-        private bool mClosing;
 
         #region constructor
 
@@ -39,6 +35,7 @@ namespace ModbusImport
         #endregion
 
         #region properties
+
 
         public bool IsOpen
         {
@@ -146,7 +143,7 @@ namespace ModbusImport
                 {
                     throw new ArgumentException("Invalid value!", "WriteHoldingRegistersFunctioncode");
                 }
-             }
+            }
         }
 
         public UInt32 Retries
@@ -318,17 +315,6 @@ namespace ModbusImport
             }
         }
 
-//        public Logger Logger
-//        {
-//            get
-//            {
-//                return mLogger;
-//            }
-//            set
-//            {
-//                mLogger = value;
-//            }
-//        }
 
         public bool IsTcpChannel
         {
@@ -343,17 +329,10 @@ namespace ModbusImport
         /// <summary>
         /// Open connection over serial port, using RTU protocol
         /// </summary>
-        public void OpenSerialRtu( string portName, uint baudRate, Parity parity, StopBits stopBits)
+        public void OpenSerialRtu(string portName, uint baudRate, Parity parity, StopBits stopBits)
         {
-            mClosing = false;
             mbSerChannel = new SerialChannel(portName, baudRate, 8U, parity, stopBits);
-            mbSerChannel.OnDataSent += LogChannelSent;
-            mbSerChannel.OnDataReceived += LogChannelReceived;
-            mbSerChannel.OnWarning += LogWarning;
             mbRtuProtocol = new ModbusRtuProtocol();
-            mbRtuProtocol.OnInfo += LogInfo;
-            mbRtuProtocol.OnWarning += LogWarning;
-            mbRtuProtocol.OnError += LogError;
             mb = new ModbusProtocol(mbRtuProtocol, mbSerChannel);
             mb.OneWireEchoSuppression = mOneWireEchoSuppression;
             mb.ResponseTimeout = mResponseTimeout;
@@ -371,15 +350,8 @@ namespace ModbusImport
         /// </summary>
         public void OpenModbusTcp(IPAddress IpAddress, UInt16 TcpPort)
         {
-            mClosing = false;
             mbTcpChannel = new TcpChannel(IpAddress, TcpPort);
-            mbTcpChannel.OnDataSent += LogChannelSent;
-            mbTcpChannel.OnDataReceived += LogChannelReceived;
-            mbTcpChannel.OnWarning += LogWarning;
             mbTcpProtocol = new ModbusTcpProtocol();
-            mbTcpProtocol.OnInfo += LogInfo;
-            mbTcpProtocol.OnWarning += LogWarning;
-            mbTcpProtocol.OnError += LogError;
             mb = new ModbusProtocol(mbTcpProtocol, mbTcpChannel);
             uint ConnectTimeout = Math.Max(3000, mResponseTimeout); // 3000ms or higher if ResponseTimeout is hoger
             mb.ConnectTimeout = ConnectTimeout;
@@ -397,15 +369,8 @@ namespace ModbusImport
         /// </summary>
         public void OpenRtuOverTcp(IPAddress IpAddress, UInt16 TcpPort)
         {
-            mClosing = false;
             mbTcpChannel = new TcpChannel(IpAddress, TcpPort);
-            mbTcpChannel.OnDataSent += LogChannelSent;
-            mbTcpChannel.OnDataReceived += LogChannelReceived;
-            mbTcpChannel.OnWarning += LogWarning;
             mbRtuProtocol = new ModbusRtuProtocol();
-            mbRtuProtocol.OnInfo += LogInfo;
-            mbRtuProtocol.OnWarning += LogWarning;
-            mbRtuProtocol.OnError += LogError;
             mb = new ModbusProtocol(mbRtuProtocol, mbTcpChannel);
             uint ConnectTimeout = Math.Max(3000, mResponseTimeout); // 3000ms or higher if ResponseTimeout is hoger
             mb.ConnectTimeout = ConnectTimeout;
@@ -416,15 +381,6 @@ namespace ModbusImport
 
             // can throw exception!
             mb.Open();
-        }
-
-        public void PrepareForClose()
-        {
-            //Debug.Print(DateTime.Now.TimeOfDay + ": Modbusinterface: PrepareForClose()");
-
-            // Commands the connection will be closed. Threads waiting for mQueryLock will quickly be released.
-            // Must be followed by Close() lateron
-            mClosing = true;
         }
 
         public void Close()
@@ -444,7 +400,7 @@ namespace ModbusImport
         ///Readholdingregisters 
         ///return Int16[]
         ///</summary>
-        public ModbusProtocol.Result MifReadHoldingRegisters(byte address, UInt16 startreg, UInt16 regcount, out Int16[] values)
+        public ModbusProtocol.Result MifReadHoldingRegisters(byte address, UInt16 startreg, UInt16 regcount, out Int16[] values, bool allowAll = true)
         {
             // must assign
             values = null;
@@ -455,42 +411,10 @@ namespace ModbusImport
                 return ModbusProtocol.Result.CHANNELNOTOPEN;
             }
 
-            // make it threadsafe here to keep logging synced with queries/responses
-            lock (mQueryLock)
-            {
-                if (mClosing) return ModbusProtocol.Result.CHANNELNOTOPEN;
+            // send query, get response
+            ModbusProtocol.Result result = mb.ReadHoldingRegisters(address, startreg, regcount, out values, allowAll);
 
-//                if (mLogger.LogReads)
-//                {
-//                    mLogger.Log(Logger.LogType.Read, "Read holding reg: slave=" + address + ", addr=" + (HoldingregisterStart + startreg).ToString() + ", quant=" + regcount);
-//                }
-
-                // send query, get response
-                ModbusProtocol.Result result = mb.ReadHoldingRegisters(address, startreg, regcount, out values);
-                if (result == ModbusProtocol.Result.SUCCESS)
-                {
-//                    if (mLogger.LogReads)
-//                    {
-//                        mLogger.Log(Logger.LogType.Read, "Response: " + Converts.Int16ArrayToStringOfValues(values));
-//                    }
-                }
-                else
-                {
-//                    if (mLogger.LogErrors)
-//                    {
-//                        if (ModbusProtocol.IsExceptionResponse(result))
-//                        {
-//                            mLogger.Log(Logger.LogType.Error, "Read error: Response is exception: " + ModbusProtocol.GetResultText(result));
-//                        }
-//                        else
-//                        {
-//                            mLogger.Log(Logger.LogType.Error, "Read error: " + ModbusProtocol.GetResultText(result));
-//                        }
-//                    }
-                }
-
-                return result;
-            }
+            return result;
         }
 
         ///<summary>
@@ -539,42 +463,10 @@ namespace ModbusImport
                 return ModbusProtocol.Result.CHANNELNOTOPEN;
             }
 
-            // make it threadsafe here to keep logging synced with queries/responses
-            lock (mQueryLock)
-            {
-                if (mClosing) return ModbusProtocol.Result.CHANNELNOTOPEN;
+            // send query, get response
+            ModbusProtocol.Result result = mb.WriteSingleHoldingRegister(address, startreg, value);
 
-//                if (mLogger.LogWrites)
-//                {
-//                    mLogger.Log(Logger.LogType.Write, "Write single holding reg: slave=" + address + ", addr=" + (HoldingregisterStart + startreg).ToString() + ", value=" + value);
-//                }
-
-                // send query, get response
-                ModbusProtocol.Result result = mb.WriteSingleHoldingRegister(address, startreg, value);
-                if (result == ModbusProtocol.Result.SUCCESS)
-                {
-//                    if (mLogger.LogWrites)
-//                    {
-//                        mLogger.Log(Logger.LogType.Write, "Write response: ack");
-//                    }
-                }
-                else
-                {
-//                    if (mLogger.LogErrors)
-//                    {
-//                        if (ModbusProtocol.IsExceptionResponse(result))
-//                        {
-//                            mLogger.Log(Logger.LogType.Error, "Write error: Response is exception: " + ModbusProtocol.GetResultText(result));
-//                        }
-//                        else
-//                        {
-//                            mLogger.Log(Logger.LogType.Error, "Write error: " + ModbusProtocol.GetResultText(result));
-//                        }
-//                    }
-                }
-
-                return result;
-            }
+            return result;
         }
 
         /// <summary>
@@ -588,42 +480,8 @@ namespace ModbusImport
                 return ModbusProtocol.Result.CHANNELNOTOPEN;
             }
 
-            // make it threadsafe here to keep logging synced with queries/responses
-            lock (mQueryLock)
-            {
-                if (mClosing) return ModbusProtocol.Result.CHANNELNOTOPEN;
-
-//                if (mLogger.LogWrites)
-//                {
-//                    mLogger.Log(Logger.LogType.Write, "Write multiple holding reg: slave=" + address + ", addr=" + (HoldingregisterStart + startreg).ToString() + ", quant=" + regcount + ", values=" + Converts.Int16ArrayToStringOfValues(values));
-//                }
-
-                // send query, get response
-                ModbusProtocol.Result result = mb.WriteMultipleHoldingRegisters(address, startreg, regcount, values);
-                if (result == ModbusProtocol.Result.SUCCESS)
-                {
-//                    if (mLogger.LogWrites)
-//                    {
-//                        mLogger.Log(Logger.LogType.Write, "Write response: ack");
-//                    }
-                }
-                else
-                {
-//                    if (mLogger.LogErrors)
-//                    {
-//                        if (ModbusProtocol.IsExceptionResponse(result))
-//                        {
-//                            mLogger.Log(Logger.LogType.Error, "Write error: Response is exception: " + ModbusProtocol.GetResultText(result));
-//                        }
-//                        else
-//                        {
-//                            mLogger.Log(Logger.LogType.Error, "Write error: " + ModbusProtocol.GetResultText(result));
-//                        }
-//                    }
-                }
-
-                return result;
-            }
+            ModbusProtocol.Result result = mb.WriteMultipleHoldingRegisters(address, startreg, regcount, values);
+            return result;
         }
 
         /// <summary>
@@ -639,7 +497,7 @@ namespace ModbusImport
             //  ----    ----    ----    ----
             //  1       FC6     FC16#1  FC6
             //  >1      N*FC6   FC16#N  FC16#N
-            
+
             ModbusProtocol.Result result = ModbusProtocol.Result.SUCCESS;
 
             bool writeMultiple = (mWriteHoldingRegistersFunctioncode == 16)
@@ -649,7 +507,7 @@ namespace ModbusImport
             {
                 // use 'FC16 write multiple registers'
                 // write in pages if needed
-                
+
                 int maxRegistersInPage = GetMaxRegisterToWriteInFrame();
                 Int16[] pageValues = new Int16[maxRegistersInPage];
 
@@ -670,7 +528,7 @@ namespace ModbusImport
             {
                 // use 'FC06 write single register'
                 // write one by one
-                
+
                 int writeIndex = 0;
                 while ((writeIndex < regcount) && (result == ModbusProtocol.Result.SUCCESS))
                 {
@@ -684,7 +542,7 @@ namespace ModbusImport
             return result;
         }
 
-///<summary>
+        ///<summary>
         ///ReadInputRegisters - return Int16[]
         ///</summary>
         public ModbusProtocol.Result MifReadInputRegisters(byte address, UInt16 startreg, UInt16 regcount, out Int16[] values, bool allowAll = true)
@@ -698,42 +556,10 @@ namespace ModbusImport
                 return ModbusProtocol.Result.CHANNELNOTOPEN;
             }
 
-            // make it threadsafe here to keep logging synced with queries/responses
-            lock (mQueryLock)
-            {
-                if (mClosing) return ModbusProtocol.Result.CHANNELNOTOPEN;
+            // send query, get response
+            ModbusProtocol.Result result = mb.ReadInputRegisters(address, startreg, regcount, out values, allowAll);
 
-//                if (mLogger.LogReads)
-//                {
-//                    mLogger.Log(Logger.LogType.Read, "Read input reg: slave=" + address + ", addr=" + (InputregisterStart + startreg).ToString() + ", quant=" + regcount);
-//                }
-
-                // send query, get response
-                ModbusProtocol.Result result = mb.ReadInputRegisters(address, startreg, regcount, out values, allowAll);
-                if (result == ModbusProtocol.Result.SUCCESS)
-                {
-//                    if (mLogger.LogReads)
-//                    {
-//                        mLogger.Log(Logger.LogType.Read, "Response: " + Converts.Int16ArrayToStringOfValues(values));
-//                    }
-                }
-                else
-                {
-//                    if (mLogger.LogErrors)
-//                    {
-//                        if (ModbusProtocol.IsExceptionResponse(result))
-//                        {
-//                            mLogger.Log(Logger.LogType.Error, "Read error: Response is exception: " + ModbusProtocol.GetResultText(result));
-//                        }
-//                        else
-//                        {
-//                            mLogger.Log(Logger.LogType.Error, "Read error: " + ModbusProtocol.GetResultText(result));
-//                        }
-//                    }
-                }
-
-                return result;
-            }
+            return result;
         }
 
         /// <summary>
@@ -751,42 +577,10 @@ namespace ModbusImport
                 return ModbusProtocol.Result.CHANNELNOTOPEN;
             }
 
-            // make it threadsafe here to keep logging synced with queries/responses
-            lock (mQueryLock)
-            {
-                if (mClosing) return ModbusProtocol.Result.CHANNELNOTOPEN;
+            // send query, get response
+            ModbusProtocol.Result result = mb.ReadCoils(address, startreg, regcount, out values, allowAll);
 
-//                if (mLogger.LogReads)
-//                {
-//                    mLogger.Log(Logger.LogType.Read, "Read coils: slave=" + address + ", addr=" + (CoilsStart + startreg).ToString() + ", quant=" + regcount);
-//                }
-
-                // send query, get response
-                ModbusProtocol.Result result = mb.ReadCoils(address, startreg, regcount, out values, allowAll);
-                if (result == ModbusProtocol.Result.SUCCESS)
-                {
-//                    if (mLogger.LogReads)
-//                    {
-//                        mLogger.Log(Logger.LogType.Read, "Response: " + Converts.ByteArrayToStringOfValues(values, regcount));
-//                    }
-                }
-                else
-                {
-//                    if (mLogger.LogErrors)
-//                    {
-//                        if (ModbusProtocol.IsExceptionResponse(result))
-//                        {
-//                            mLogger.Log(Logger.LogType.Error, "Read error: Response is exception: " + ModbusProtocol.GetResultText(result));
-//                        }
-//                        else
-//                        {
-//                            mLogger.Log(Logger.LogType.Error, "Read error: " + ModbusProtocol.GetResultText(result));
-//                        }
-//                    }
-                }
-
-                return result;
-            }
+            return result;
         }
 
         /// <summary>
@@ -800,42 +594,10 @@ namespace ModbusImport
                 return ModbusProtocol.Result.CHANNELNOTOPEN;
             }
 
-            // make it threadsafe here to keep logging synced with queries/responses
-            lock (mQueryLock)
-            {
-                if (mClosing) return ModbusProtocol.Result.CHANNELNOTOPEN;
+            // send query, get response
+            ModbusProtocol.Result result = mb.WriteSingleCoil(address, startreg, value, allowAll);
 
-//                if (mLogger.LogWrites)
-//                {
-//                    mLogger.Log(Logger.LogType.Write, "Write single coil: slave=" + address + ", addr=" + (CoilsStart + startreg).ToString() + ", value=" + value);
-//                }
-
-                // send query, get response
-                ModbusProtocol.Result result = mb.WriteSingleCoil(address, startreg, value, allowAll);
-                if (result == ModbusProtocol.Result.SUCCESS)
-                {
-//                    if (mLogger.LogWrites)
-//                    {
-//                        mLogger.Log(Logger.LogType.Write, "Write response: ack");
-//                    }
-                }
-                else
-                {
-//                    if (mLogger.LogErrors)
-//                    {
-//                        if (ModbusProtocol.IsExceptionResponse(result))
-//                        {
-//                            mLogger.Log(Logger.LogType.Error, "Write error: Response is exception: " + ModbusProtocol.GetResultText(result));
-//                        }
-//                        else
-//                        {
-//                            mLogger.Log(Logger.LogType.Error, "Write error: " + ModbusProtocol.GetResultText(result));
-//                        }
-//                    }
-                }
-
-                return result;
-            }
+            return result;
         }
 
         /// <summary>
@@ -849,43 +611,10 @@ namespace ModbusImport
                 return ModbusProtocol.Result.CHANNELNOTOPEN;
             }
 
-            // make it threadsafe here to keep logging synced with queries/responses
-            lock (mQueryLock)
-            {
-                if (mClosing) return ModbusProtocol.Result.CHANNELNOTOPEN;
+            // send query, get response
+            ModbusProtocol.Result result = mb.WriteMultipleCoils(address, startreg, regcount, values);
 
-//                if (mLogger.LogWrites)
-//                {
-//                    int nrOfDatabytes = ((regcount + 1) / 8);
-//                    mLogger.Log(Logger.LogType.Write, "Write multiple coils: slave=" + address + ", addr=" + (CoilsStart + startreg).ToString() + ", quant=" + regcount + ", values=" + BytesToString.Convert(values, nrOfDatabytes));
-//                }
-
-                // send query, get response
-                ModbusProtocol.Result result = mb.WriteMultipleCoils(address, startreg, regcount, values);
-                if (result == ModbusProtocol.Result.SUCCESS)
-                {
-//                    if (mLogger.LogWrites)
-//                    {
-//                        mLogger.Log(Logger.LogType.Write, "Write response: ack");
-//                    }
-                }
-                else
-                {
-//                    if (mLogger.LogErrors)
-//                    {
-//                        if (ModbusProtocol.IsExceptionResponse(result))
-//                        {
-//                            mLogger.Log(Logger.LogType.Error, "Write error: Response is exception: " + ModbusProtocol.GetResultText(result));
-//                        }
-//                        else
-//                        {
-//                            mLogger.Log(Logger.LogType.Error, "Write error: " + ModbusProtocol.GetResultText(result));
-//                        }
-//                    }
-                }
-
-                return result;
-            }
+            return result;
         }
 
         /// <summary>
@@ -904,43 +633,12 @@ namespace ModbusImport
             }
 
             // make it threadsafe here to keep logging synced with queries/responses
-            lock (mQueryLock)
-            {
-                if (mClosing) return ModbusProtocol.Result.CHANNELNOTOPEN;
+            // send query, get response
+            ModbusProtocol.Result result = mb.ReadDiscreteInputs(address, startreg, regcount, out values, allowAll);
 
-//                if (mLogger.LogReads)
-//                {
-//                    mLogger.Log(Logger.LogType.Read, "Read discrete inputs: slave=" + address + ", addr=" + (DiscreteInputsStart + startreg).ToString() + ", quant=" + regcount);
-//                }
-
-                // send query, get response
-                ModbusProtocol.Result result = mb.ReadDiscreteInputs(address, startreg, regcount, out values, allowAll);
-                if (result == ModbusProtocol.Result.SUCCESS)
-                {
-//                    if (mLogger.LogReads)
-//                    {
-//                        mLogger.Log(Logger.LogType.Read, "Response: " + Converts.ByteArrayToStringOfValues(values, regcount));
-//                    }
-                }
-                else
-                {
-//                    if (mLogger.LogErrors)
-//                    {
-//                        if (ModbusProtocol.IsExceptionResponse(result))
-//                        {
-//                            mLogger.Log(Logger.LogType.Error, "Read error: Response is exception: " + ModbusProtocol.GetResultText(result));
-//                        }
-//                        else
-//                        {
-//                            mLogger.Log(Logger.LogType.Error, "Read error: " + ModbusProtocol.GetResultText(result));
-//                        }
-//                    }
-                }
-
-                return result;
-            }
+            return result;
         }
-        
+
         /// <summary>
         /// Send a custom query
         /// Query and response are array of bytes
@@ -957,41 +655,10 @@ namespace ModbusImport
             }
 
             // make it threadsafe here to keep logging synced with queries/responses
-            lock (mQueryLock)
-            {
-                if (mClosing) return ModbusProtocol.Result.CHANNELNOTOPEN;
+            // send query, get response
+            ModbusProtocol.Result result = mb.SendCustomQuery(address, queryBuf, queryLen, out responseBuf);
 
-//                if (mLogger.LogReads)
-//                {
-//                    mLogger.Log(Logger.LogType.Read, "Send custom query: slave=" + address + ", query=" + Converts.ByteArrayToStringOfValues(queryBuf, queryLen));
-//                }
-
-                // send query, get response
-                ModbusProtocol.Result result = mb.SendCustomQuery(address, queryBuf, queryLen, out responseBuf);
-                if (result == ModbusProtocol.Result.SUCCESS)
-                {
-//                    if (mLogger.LogReads)
-//                    {
-//                        mLogger.Log(Logger.LogType.Read, "Response: " + Converts.ByteArrayToStringOfValues(responseBuf));
-//                    }
-                }
-                else
-                {
-//                    if (mLogger.LogErrors)
-//                    {
-//                        if (ModbusProtocol.IsExceptionResponse(result))
-//                        {
-//                            mLogger.Log(Logger.LogType.Error, "Read error: Response is exception: " + ModbusProtocol.GetResultText(result));
-//                        }
-//                        else
-//                        {
-//                            mLogger.Log(Logger.LogType.Error, "Read error: " + ModbusProtocol.GetResultText(result));
-//                        }
-//                    }
-                }
-
-                return result;
-            }
+            return result;
         }
 
         public ModbusProtocol.Result MifSendQuery(byte[] QueryBuffer, UInt16 QueryLength, out byte[] ResponseBuffer)
@@ -1007,17 +674,10 @@ namespace ModbusImport
 
             // send a raw modbus query message
             // make it threadsafe here to keep logging synced with queries/responses
-            lock (mQueryLock)
-            {
-                if (mClosing) return ModbusProtocol.Result.CHANNELNOTOPEN;
+            // send query, get response
+            ModbusProtocol.Result result = mb.SendQuery(QueryBuffer, QueryLength, out ResponseBuffer);
 
-                // send query, get response
-                ModbusProtocol.Result result = mb.SendQuery(QueryBuffer, QueryLength, out ResponseBuffer);
-
-                // no logging for MifSendQuery()
-
-                return result;
-            }
+            return result;
         }
 
         public int GetMaxRegisterToReadInFrame()
@@ -1048,45 +708,6 @@ namespace ModbusImport
             }
         }
 
-        private void LogChannelSent(byte[] data, int length)
-        {
-//            if (mLogger.LogTrace)
-//            {
-//                mLogger.Log(Logger.LogType.Trace, "Tx: " + BytesToString.Convert(data, length));
-//            }
-        }
-
-        private void LogChannelReceived(byte[] data, int length)
-        {
-//            if (mLogger.LogTrace)
-//            {
-//                mLogger.Log(Logger.LogType.Trace, "Rx: " + BytesToString.Convert(data, length));
-//            }
-        }
-
-        private void LogInfo(string s)
-        {
-//            if (mLogger.LogInfo)
-//            {
-//                mLogger.Log(Logger.LogType.Info, s);
-//            }
-        }
-
-        private void LogWarning(string s)
-        {
-//            if (mLogger.LogWarnings)
-//            {
-//                mLogger.Log(Logger.LogType.Warning, s);
-//            }
-        }
-
-        private void LogError(string s)
-        {
-//            if (mLogger.LogErrors)
-//            {
-//                mLogger.Log(Logger.LogType.Error, s);
-//            }
-        }
 
     }
 

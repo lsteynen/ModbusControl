@@ -1,4 +1,4 @@
-﻿namespace ModbusControlSpace
+﻿namespace ModbusControl
 {
     partial class AboutBox1
     {

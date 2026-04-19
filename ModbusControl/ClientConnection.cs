@@ -8,10 +8,11 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 
-using Modbus_net;
+using LST.Modbus;
 using LST.Helpers;
+using LST.Controls;
 
-namespace ModbusServer
+namespace ModbusControl
 {
     public class ClientConnection : IDisposable
     {
@@ -22,7 +23,7 @@ namespace ModbusServer
         }
 
         public ModbusServer parent;
-        public ModbusControlSpace.ModbusInterface modbusinterface;
+        public ModbusControl.ModbusInterface modbusinterface;
         private Logger mLogger;
         private string mLogHeader;
         //private bool bLogData = true;

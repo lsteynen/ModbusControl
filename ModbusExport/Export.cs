@@ -2,9 +2,9 @@
 using System.Text;
 using System.Collections.Generic;
 
-using Modbus_net;
+using LST.Modbus;
 using LST.Helpers;
-using ModbusControlSpace;
+using ModbusControl;
 
 // The first part of this file is different for the GUI en commandline versions.
 // The second part, in region "Implementation - shared" is almost identical.

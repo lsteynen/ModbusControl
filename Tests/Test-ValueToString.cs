@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using LST.Helpers;
-using ModbusControlSpace;
+using ModbusControl;
 
 namespace UnitTests
 {

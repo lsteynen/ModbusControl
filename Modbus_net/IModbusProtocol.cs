@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Modbus_net
+namespace LST.Modbus
 {
     public delegate void LogCallbackString(string s);
 

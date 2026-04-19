@@ -11,4 +11,4 @@ using System.Runtime.InteropServices;
 //
 [assembly: AssemblyVersion("2.0.23.1445")]
 //AssemblyFileVersion removed so VS studio sets AssemblyFileVersion = AssemblyVersion
-//[assembly: AssemblyFileVersion("2.0.7.0")]
+//[assembly: AssemblyFileVersion("1.0.0.0")]

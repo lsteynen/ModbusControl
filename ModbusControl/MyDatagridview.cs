@@ -5,7 +5,7 @@ using System;
 using System.Windows.Forms;
 using System.Reflection;
 
-namespace LST.Helpers
+namespace LST.Controls
 {
     public class MyDataGridView : DataGridView
     {

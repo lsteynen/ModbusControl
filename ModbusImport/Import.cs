@@ -4,8 +4,8 @@ using System.Threading;
 using System.Text;
 
 using LST.Helpers;
-using Modbus_net;
-using ModbusControlSpace;
+using LST.Modbus;
+using ModbusControl;
 
 namespace ModbusImport
 {
@@ -531,13 +531,14 @@ namespace ModbusImport
             if (reg.Format == Global.eFormat.String)
             {
                 // can only be new format with number of registers
-                if ((reg.Size >= 1) && (reg.Size <= Global.StringMaxRegisters))
+                int stringMaxRegisters = Global.StringMaxLength / 2;
+                if ((reg.Size >= 1) && (reg.Size <= stringMaxRegisters))
                 {
                     // OK
                 }
                 else
                 {
-                    string s = "Line " + line.lineNum.ToString() + ": Register " + RegString + " : string register size '" + reg.Size.ToString() + "' is invalid, must be 1.." + Global.StringMaxRegisters.ToString() + ".";
+                    string s = "Line " + line.lineNum.ToString() + ": Register " + RegString + " : string register size '" + reg.Size.ToString() + "' is invalid, must be 1.." + stringMaxRegisters.ToString() + ".";
                     throw new Exception(s);
                 }
             }

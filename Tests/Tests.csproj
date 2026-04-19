@@ -52,23 +52,23 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\ModbusControl\ColorFromString.cs">
-      <Link>ColorFromString.cs</Link>
-    </Compile>
-    <Compile Include="..\ModbusControl\Global.cs">
-      <Link>Global.cs</Link>
-    </Compile>
-    <Compile Include="..\ModbusControl\ProjectMan.cs">
-      <Link>ProjectMan.cs</Link>
-    </Compile>
-    <Compile Include="..\ModbusControl\ValueToString.cs">
-      <Link>ValueToString.cs</Link>
+    <Compile Include="..\Shared\ColorFromString.cs">
+      <Link>Shared\ColorFromString.cs</Link>
     </Compile>
     <Compile Include="..\Shared\Converts.cs">
       <Link>Shared\Converts.cs</Link>
     </Compile>
+    <Compile Include="..\Shared\Global.cs">
+      <Link>Shared\Global.cs</Link>
+    </Compile>
+    <Compile Include="..\Shared\ProjectFileHandler.cs">
+      <Link>Shared\ProjectFileHandler.cs</Link>
+    </Compile>
     <Compile Include="..\Shared\RegisterToOffset.cs">
       <Link>Shared\RegisterToOffset.cs</Link>
+    </Compile>
+    <Compile Include="..\Shared\ValueToString.cs">
+      <Link>Shared\ValueToString.cs</Link>
     </Compile>
     <Compile Include="Helpers.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

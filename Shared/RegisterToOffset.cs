@@ -7,7 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace ModbusControlSpace
+namespace ModbusControl
 {
     public class RegisterToOffset
     {

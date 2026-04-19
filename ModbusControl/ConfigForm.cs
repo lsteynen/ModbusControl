@@ -7,7 +7,7 @@ using System.Text;
 using System.Windows.Forms;
 using System.IO.Ports;
 
-namespace ModbusControlSpace
+namespace ModbusControl
 {
     public partial class ConfigForm : Form
     {

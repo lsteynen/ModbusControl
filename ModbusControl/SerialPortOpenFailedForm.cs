@@ -8,7 +8,7 @@ using System.IO;
 using System.IO.Ports;
 using System.Windows.Forms;
 
-namespace ModbusControlSpace
+namespace ModbusControl
 {
     public partial class SerialPortOpenFailedForm : Form
     {

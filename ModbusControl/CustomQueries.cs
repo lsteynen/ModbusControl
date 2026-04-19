@@ -8,9 +8,9 @@ using System.Text;
 using System.Windows.Forms;
 using System.Diagnostics;
 using LST.Helpers;
-using Modbus_net;
+using LST.Modbus;
 
-namespace ModbusControlSpace
+namespace ModbusControl
 {
     public partial class CustomQueries : Form
     {

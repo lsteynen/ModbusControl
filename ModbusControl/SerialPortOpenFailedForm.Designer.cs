@@ -1,4 +1,4 @@
-﻿namespace ModbusControlSpace
+﻿namespace ModbusControl
 {
     partial class SerialPortOpenFailedForm
     {
@@ -34,7 +34,7 @@
             this.buttonOK = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
-            this.comboSerialPort = new ModbusControlSpace.SerialPortCombobox();
+            this.comboSerialPort = new ModbusControl.SerialPortCombobox();
             this.pic = new System.Windows.Forms.PictureBox();
             ((System.ComponentModel.ISupportInitialize)(this.pic)).BeginInit();
             this.SuspendLayout();

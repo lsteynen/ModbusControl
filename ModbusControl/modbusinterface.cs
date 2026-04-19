@@ -6,10 +6,11 @@ using System.Threading;
 using System.Net;
 using System.Net.Sockets;
 
-using Modbus_net;
+using LST.Modbus;
 using LST.Helpers;
+using LST.Controls;
 
-namespace ModbusControlSpace
+namespace ModbusControl
 {
     public class ModbusInterface
     {
@@ -435,7 +436,7 @@ namespace ModbusControlSpace
 
         public void PrepareForClose()
         {
-            Debug.Print(DateTime.Now.TimeOfDay + ": Modbusinterface: PrepareForClose()");
+            //Debug.Print(DateTime.Now.TimeOfDay + ": Modbusinterface: PrepareForClose()");
 
             // Commands the connection will be closed. Threads waiting for mQueryLock will quickly be released.
             // Must be followed by Close() lateron

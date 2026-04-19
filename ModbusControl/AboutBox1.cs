@@ -7,7 +7,7 @@ using System.Reflection;
 using System.Windows.Forms;
 using Microsoft.Win32;
 
-namespace ModbusControlSpace
+namespace ModbusControl
 {
     partial class AboutBox1 : Form
     {

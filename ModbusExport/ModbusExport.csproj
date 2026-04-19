@@ -49,30 +49,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\ModbusControl\AppHelpers.cs">
-      <Link>AppHelpers.cs</Link>
-    </Compile>
-    <Compile Include="..\ModbusControl\BytesToString.cs">
-      <Link>BytesToString.cs</Link>
-    </Compile>
-    <Compile Include="..\ModbusControl\ColorFromString.cs">
-      <Link>ColorFromString.cs</Link>
-    </Compile>
-    <Compile Include="..\ModbusControl\CsvProcessor.cs">
-      <Link>CsvProcessor.cs</Link>
-    </Compile>
-    <Compile Include="..\ModbusControl\Global.cs">
-      <Link>Global.cs</Link>
-    </Compile>
-    <Compile Include="..\ModbusControl\ProjectMan.cs">
-      <Link>ProjectMan.cs</Link>
-    </Compile>
-    <Compile Include="..\ModbusControl\Properties\AssemblyInfoShared.cs">
-      <Link>Properties\AssemblyInfoShared.cs</Link>
-    </Compile>
-    <Compile Include="..\ModbusControl\ValueToString.cs">
-      <Link>ValueToString.cs</Link>
-    </Compile>
     <Compile Include="..\Modbus_net\ByteQueue.cs">
       <Link>Modbus_net\ByteQueue.cs</Link>
     </Compile>
@@ -97,14 +73,38 @@
     <Compile Include="..\Modbus_net\TcpChannel.cs">
       <Link>Modbus_net\TcpChannel.cs</Link>
     </Compile>
+    <Compile Include="..\Shared\AppHelpers.cs">
+      <Link>Shared\AppHelpers.cs</Link>
+    </Compile>
+    <Compile Include="..\Shared\AssemblyInfoShared.cs">
+      <Link>Shared\AssemblyInfoShared.cs</Link>
+    </Compile>
+    <Compile Include="..\Shared\BytesToString.cs">
+      <Link>Shared\BytesToString.cs</Link>
+    </Compile>
+    <Compile Include="..\Shared\CLogger.cs">
+      <Link>Shared\CLogger.cs</Link>
+    </Compile>
+    <Compile Include="..\Shared\ColorFromString.cs">
+      <Link>Shared\ColorFromString.cs</Link>
+    </Compile>
     <Compile Include="..\shared\Converts.cs">
       <Link>Shared\Converts.cs</Link>
     </Compile>
-    <Compile Include="..\Shared\Logger.cs">
-      <Link>Shared\Logger.cs</Link>
+    <Compile Include="..\Shared\CsvFileHandler.cs">
+      <Link>Shared\CsvFileHandler.cs</Link>
+    </Compile>
+    <Compile Include="..\Shared\Global.cs">
+      <Link>Shared\Global.cs</Link>
+    </Compile>
+    <Compile Include="..\Shared\ProjectFileHandler.cs">
+      <Link>Shared\ProjectFileHandler.cs</Link>
     </Compile>
     <Compile Include="..\Shared\RegisterToOffset.cs">
-      <Link>RegisterToOffset.cs</Link>
+      <Link>Shared\RegisterToOffset.cs</Link>
+    </Compile>
+    <Compile Include="..\Shared\ValueToString.cs">
+      <Link>Shared\ValueToString.cs</Link>
     </Compile>
     <Compile Include="CommandlineProc.cs" />
     <Compile Include="Export.cs" />

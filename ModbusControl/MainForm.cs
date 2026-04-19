@@ -10,11 +10,10 @@ using System.Windows.Forms;
 using System.Xml;
 using System.Xml.Schema;
 
-using Modbus_net;
+using LST.Modbus;
 using LST.Helpers;
-using LST.ModbusGridView;
 
-namespace ModbusControlSpace
+namespace ModbusControl
 {
     public partial class MainForm : Form
     {
@@ -55,7 +54,7 @@ namespace ModbusControlSpace
         public bool MainPollingIsEnabled = true;
         private bool TabIsChanged;
         private float ZoomFactor = 1.0F;
-        private ModbusServer.ModbusServer TcpBridge;
+        private ModbusServer TcpBridge;
         private Thread UpdaterThread;   // Updater thread
         private Object UpdaterLock = new Object();  // lock for safely terminating the updater thread
         private CommandlineProc CommandlineArgs;
@@ -120,7 +119,7 @@ namespace ModbusControlSpace
             mb.Logger = Logger1;                        // attach logger 
 
             // create modbus/tcp server
-            TcpBridge = new ModbusServer.ModbusServer();
+            TcpBridge = new ModbusServer();
             // attach logger
             TcpBridge.Logger = Logger1;
             // connect it to our modbus interface

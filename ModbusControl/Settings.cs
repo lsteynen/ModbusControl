@@ -14,7 +14,7 @@ using LST.Helpers;
 // ontstaat het probleem dat een aantal XML elementen verdwijnen als je even een oudere versie
 // van de applicatie runt.
 
-namespace ModbusControlSpace
+namespace ModbusControl
 {
     public class CSettings
     {

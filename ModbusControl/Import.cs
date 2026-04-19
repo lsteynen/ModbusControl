@@ -10,9 +10,9 @@ using System.Windows.Forms;
 using System.Threading;
 
 using LST.Helpers;
-using Modbus_net;
+using LST.Modbus;
 
-namespace ModbusControlSpace
+namespace ModbusControl
 {
 	public partial class Import : Form
     {
@@ -562,13 +562,14 @@ namespace ModbusControlSpace
             if (reg.Format == Global.eFormat.String)
             {
                 // can only be new format with number of registers
-                if ((reg.Size >= 1) && (reg.Size <= Global.StringMaxRegisters))
+                int stringMaxRegisters = Global.StringMaxLength / 2;
+                if ((reg.Size >= 1) && (reg.Size <= stringMaxRegisters))
                 {
                     // OK
                 }
                 else
                 {
-                    string s = "Line " + line.lineNum.ToString() + ": Register " + RegString + " : string register size '" + reg.Size.ToString() + "' is invalid, must be 1.." + Global.StringMaxRegisters.ToString() + ".";
+                    string s = "Line " + line.lineNum.ToString() + ": Register " + RegString + " : string register size '" + reg.Size.ToString() + "' is invalid, must be 1.." + stringMaxRegisters.ToString() + ".";
                     throw new Exception(s);
                 }
             }

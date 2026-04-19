@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using LST.Helpers;
 
-namespace Modbus_net
+namespace LST.Modbus
 {
     public class ModbusProtocol
     {

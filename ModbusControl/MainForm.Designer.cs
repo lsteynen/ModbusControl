@@ -1,4 +1,4 @@
-namespace ModbusControlSpace
+namespace ModbusControl
 {
     partial class MainForm
     {
@@ -621,7 +621,7 @@ namespace ModbusControlSpace
             // btnFilterClear
             // 
             this.btnFilterClear.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnFilterClear.Image = global::ModbusControlSpace.Properties.Resources.Erase;
+            this.btnFilterClear.Image = global::ModbusControl.Properties.Resources.Erase;
             this.btnFilterClear.Location = new System.Drawing.Point(397, 3);
             this.btnFilterClear.Margin = new System.Windows.Forms.Padding(2);
             this.btnFilterClear.Name = "btnFilterClear";

@@ -9,14 +9,13 @@ using System.Text;
 using System.Threading;
 using System.Windows.Forms;
 
-using Modbus_net;
+using LST.Modbus;
 using LST.Helpers;
-using LST.ModbusGridView;
 
 // The first part of this file is different for the GUI en commandline versions.
 // The second part, in region "Implementation - shared" is almost identical.
 
-namespace ModbusControlSpace
+namespace ModbusControl
 {
     public partial class Export : Form
     {

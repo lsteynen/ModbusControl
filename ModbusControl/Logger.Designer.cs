@@ -135,7 +135,7 @@
             // 
             this.logFilter.AnchorSize = new System.Drawing.Size(94, 21);
             this.logFilter.BackColor = System.Drawing.Color.White;
-            this.logFilter.DockSide = UControls.DropDownControl.eDockSide.Left;
+            this.logFilter.DockSide = LST.Controls.DropDownControl.eDockSide.Left;
             resources.ApplyResources(this.logFilter, "logFilter");
             this.logFilter.LogBridgeData = false;
             this.logFilter.LogBridgeDecode = false;

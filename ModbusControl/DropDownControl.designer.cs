@@ -1,4 +1,4 @@
-﻿namespace UControls
+﻿namespace LST.Controls
 {
     partial class DropDownControl
     {

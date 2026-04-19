@@ -7,7 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace ModbusControlSpace
+namespace ModbusControl
 {
     public static class Converts
     {
@@ -768,7 +768,7 @@ namespace ModbusControlSpace
             return sb.ToString();
         }
 
-        public static UInt32 Int16ArrayToUInt32Value(Int16[] Regs, int size, ModbusControlSpace.Global.eType type)
+        public static UInt32 Int16ArrayToUInt32Value(Int16[] Regs, int size, ModbusControl.Global.eType type)
         {
             UInt32 Value = 0;
 
@@ -783,7 +783,7 @@ namespace ModbusControlSpace
             
             switch (type)
             {
-                case ModbusControlSpace.Global.eType.Int: 
+                case ModbusControl.Global.eType.Int: 
                     if (size == 2)
                     {
                         // convert with Int32 endian
@@ -795,7 +795,7 @@ namespace ModbusControlSpace
                     }
                     break;
 
-                case ModbusControlSpace.Global.eType.ASCII: 
+                case ModbusControl.Global.eType.ASCII: 
                     if (size == 2)
                     {
                         // this is not a 32-bit value, do not swap 16-bit registers
@@ -807,7 +807,7 @@ namespace ModbusControlSpace
                     }
                     break;
 
-                case ModbusControlSpace.Global.eType.Float:
+                case ModbusControl.Global.eType.Float:
                     // convert with Float2 endian
                     Value = Int16ArrayToUInt32(Regs, _float32Endian);
                     break;

@@ -7,7 +7,7 @@ using System.Diagnostics;
 
 using LST.Helpers;
 
-namespace Modbus_net
+namespace LST.Modbus
 {
     public class SerialChannel : ICommChannel
     {

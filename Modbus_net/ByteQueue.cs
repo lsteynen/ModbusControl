@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading;
 using System.Diagnostics;
 
-namespace LST.Helpers
+namespace LST.Modbus
 {
     class ByteQueue
     {

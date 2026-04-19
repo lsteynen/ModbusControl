@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Text;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using ModbusControlSpace;
+using ModbusControl;
 
 namespace UnitTests
 {
@@ -875,7 +875,7 @@ namespace UnitTests
         {
             Int16[] aInt16 = new Int16[] { 0x1234 };
             Converts.Int32Endian = Global.eEndian.Little;
-            UInt32 result = Converts.Int16ArrayToUInt32Value(aInt16, 1, ModbusControlSpace.Global.eType.Int);
+            UInt32 result = Converts.Int16ArrayToUInt32Value(aInt16, 1, ModbusControl.Global.eType.Int);
             Assert.AreEqual<UInt32>((UInt32)0x1234, result);
         }
 
@@ -884,7 +884,7 @@ namespace UnitTests
         {
             Int16[] aInt16 = new Int16[] { Helpers.ConvToInt16(0x1234), 0x5678 };
             Converts.Int32Endian = Global.eEndian.Big;
-            UInt32 result = Converts.Int16ArrayToUInt32Value(aInt16, 1, ModbusControlSpace.Global.eType.Int);
+            UInt32 result = Converts.Int16ArrayToUInt32Value(aInt16, 1, ModbusControl.Global.eType.Int);
             Assert.AreEqual<UInt32>((UInt32)0x1234, result);
         }
 
@@ -893,11 +893,11 @@ namespace UnitTests
         {
             Int16[] aInt16 = new Int16[] { Helpers.ConvToInt16(0xAAAA), Helpers.ConvToInt16(0xBBBB) };
             Converts.Int32Endian = Global.eEndian.Little;
-            UInt32 result = Converts.Int16ArrayToUInt32Value(aInt16, 2, ModbusControlSpace.Global.eType.Int);
+            UInt32 result = Converts.Int16ArrayToUInt32Value(aInt16, 2, ModbusControl.Global.eType.Int);
             Assert.AreEqual<UInt32>(0xBBBBAAAA, result);
 
             Converts.Int32Endian = Global.eEndian.Big;
-            result = Converts.Int16ArrayToUInt32Value(aInt16, 2, ModbusControlSpace.Global.eType.Int);
+            result = Converts.Int16ArrayToUInt32Value(aInt16, 2, ModbusControl.Global.eType.Int);
             Assert.AreEqual<UInt32>(0xAAAABBBB, result);
         }
 
@@ -906,11 +906,11 @@ namespace UnitTests
         {
             Int16[] aInt16 = new Int16[] { 0x3F80, 0x0010 };
             Converts.Float32Endian = Global.eEndian.Little;
-            UInt32 result = Converts.Int16ArrayToUInt32Value(aInt16, 2, ModbusControlSpace.Global.eType.Float);
+            UInt32 result = Converts.Int16ArrayToUInt32Value(aInt16, 2, ModbusControl.Global.eType.Float);
             Assert.AreEqual<UInt32>(0x00103F80, result); // IEEE 754 for 1.0
 
             Converts.Float32Endian = Global.eEndian.Big;
-            result = Converts.Int16ArrayToUInt32Value(aInt16, 2, ModbusControlSpace.Global.eType.Float);
+            result = Converts.Int16ArrayToUInt32Value(aInt16, 2, ModbusControl.Global.eType.Float);
             Assert.AreEqual<UInt32>(0x3F800010, result); // IEEE 754 for 1.0
         }
 
@@ -919,12 +919,12 @@ namespace UnitTests
         {
             Int16[] aInt16 = new Int16[] { Helpers.ConvToInt16(0xBF80), 0x000A };
             Converts.Float32Endian = Global.eEndian.Little;
-            UInt32 result = Converts.Int16ArrayToUInt32Value(aInt16, 2, ModbusControlSpace.Global.eType.Float);
+            UInt32 result = Converts.Int16ArrayToUInt32Value(aInt16, 2, ModbusControl.Global.eType.Float);
             Assert.AreEqual<UInt32>(0x000ABF80, result); // IEEE 754 for -1.0
 
             aInt16 = new Int16[] { 0x000A, Helpers.ConvToInt16(0xBF80) };
             Converts.Float32Endian = Global.eEndian.Big;
-            result = Converts.Int16ArrayToUInt32Value(aInt16, 2, ModbusControlSpace.Global.eType.Float);
+            result = Converts.Int16ArrayToUInt32Value(aInt16, 2, ModbusControl.Global.eType.Float);
             Assert.AreEqual<UInt32>(0x000ABF80, result); // IEEE 754 for -1.0
         }
 
@@ -933,12 +933,12 @@ namespace UnitTests
         {
             Int16[] aInt16 = new Int16[] { 0x4142, 0x4344 };
             Converts.Int32Endian = Global.eEndian.Little;
-            UInt32 result = Converts.Int16ArrayToUInt32Value(aInt16, 2, ModbusControlSpace.Global.eType.ASCII);
+            UInt32 result = Converts.Int16ArrayToUInt32Value(aInt16, 2, ModbusControl.Global.eType.ASCII);
             Assert.AreEqual<UInt32>(0x43444142, result); // "ABCD", little-endian
 
             // Int32BigEndian does not matter
             Converts.Int32Endian = Global.eEndian.Big;
-            result = Converts.Int16ArrayToUInt32Value(aInt16, 2, ModbusControlSpace.Global.eType.ASCII);
+            result = Converts.Int16ArrayToUInt32Value(aInt16, 2, ModbusControl.Global.eType.ASCII);
             Assert.AreEqual<UInt32>(0x43444142, result); // "ABCD", little-endian
         }
 
@@ -949,11 +949,11 @@ namespace UnitTests
             Int16[] aInt16 = new Int16[] { 0x0041 };
             // StringBigEndian does not matter
             Converts.StringEndian = Global.eEndian.Little;
-            UInt32 result = Converts.Int16ArrayToUInt32Value(aInt16, 1, ModbusControlSpace.Global.eType.ASCII);
+            UInt32 result = Converts.Int16ArrayToUInt32Value(aInt16, 1, ModbusControl.Global.eType.ASCII);
             Assert.AreEqual<UInt32>(0x41u, result); // 'A'
 
             Converts.StringEndian = Global.eEndian.Big;
-            result = Converts.Int16ArrayToUInt32Value(aInt16, 1, ModbusControlSpace.Global.eType.ASCII);
+            result = Converts.Int16ArrayToUInt32Value(aInt16, 1, ModbusControl.Global.eType.ASCII);
             Assert.AreEqual<UInt32>(0x41u, result); // 'A'
         }
 
@@ -963,7 +963,7 @@ namespace UnitTests
         {
             Int16[] aInt16 = new Int16[] { 0x1234 };
             Converts.Int32Endian = Global.eEndian.Little;
-            Converts.Int16ArrayToUInt32Value(aInt16, 1, (ModbusControlSpace.Global.eType)999);
+            Converts.Int16ArrayToUInt32Value(aInt16, 1, (ModbusControl.Global.eType)999);
         }
 
         [TestMethod]
@@ -971,11 +971,11 @@ namespace UnitTests
         {
             Int16[] aInt16 = new Int16[] { 0x0000, 0x0000 };
             Converts.Int32Endian = Global.eEndian.Little;
-            UInt32 result = Converts.Int16ArrayToUInt32Value(aInt16, 1, ModbusControlSpace.Global.eType.Int);
+            UInt32 result = Converts.Int16ArrayToUInt32Value(aInt16, 1, ModbusControl.Global.eType.Int);
             Assert.AreEqual<UInt32>(0x00000000, result);
 
             Converts.Int32Endian = Global.eEndian.Little;
-            result = Converts.Int16ArrayToUInt32Value(aInt16, 1, ModbusControlSpace.Global.eType.Int);
+            result = Converts.Int16ArrayToUInt32Value(aInt16, 1, ModbusControl.Global.eType.Int);
             Assert.AreEqual<UInt32>(0x00000000, result);
         }
 
@@ -985,11 +985,11 @@ namespace UnitTests
             Int16[] aInt16 = new Int16[] { 0x7F7F, Helpers.ConvToInt16(0xFFFF) };
             Converts.Int32Endian = Global.eEndian.Big;
             Converts.Float32Endian = Global.eEndian.Little;
-            UInt32 result = Converts.Int16ArrayToUInt32Value(aInt16, 2, ModbusControlSpace.Global.eType.Float);
+            UInt32 result = Converts.Int16ArrayToUInt32Value(aInt16, 2, ModbusControl.Global.eType.Float);
             Assert.AreEqual<UInt32>(0xFFFF7F7F, result); // Largest positive float32
 
             Converts.Float32Endian = Global.eEndian.Big;
-            result = Converts.Int16ArrayToUInt32Value(aInt16, 2, ModbusControlSpace.Global.eType.Float);
+            result = Converts.Int16ArrayToUInt32Value(aInt16, 2, ModbusControl.Global.eType.Float);
             Assert.AreEqual<UInt32>(0x7F7FFFFF, result); // Largest positive float32
         }
 
@@ -998,11 +998,11 @@ namespace UnitTests
         {
             Int16[] aInt16 = new Int16[] { 0x0000, 0x0000 };
             Converts.Int32Endian = Global.eEndian.Little;
-            UInt32 result = Converts.Int16ArrayToUInt32Value(aInt16, 2, ModbusControlSpace.Global.eType.ASCII);
+            UInt32 result = Converts.Int16ArrayToUInt32Value(aInt16, 2, ModbusControl.Global.eType.ASCII);
             Assert.AreEqual<UInt32>(0x00000000, result);
 
             Converts.Int32Endian = Global.eEndian.Big;
-            result = Converts.Int16ArrayToUInt32Value(aInt16, 2, ModbusControlSpace.Global.eType.ASCII);
+            result = Converts.Int16ArrayToUInt32Value(aInt16, 2, ModbusControl.Global.eType.ASCII);
             Assert.AreEqual<UInt32>(0x00000000, result);
         }
 
@@ -1011,11 +1011,11 @@ namespace UnitTests
         {
             Int16[] aInt16 = new Int16[] { Helpers.ConvToInt16(0xFFFF) };
             Converts.Int32Endian = Global.eEndian.Little;
-            UInt32 result = Converts.Int16ArrayToUInt32Value(aInt16, 1, ModbusControlSpace.Global.eType.Int);
+            UInt32 result = Converts.Int16ArrayToUInt32Value(aInt16, 1, ModbusControl.Global.eType.Int);
             Assert.AreEqual<UInt32>(0x0000FFFFu, result); // Sign extended
 
             Converts.Int32Endian = Global.eEndian.Big;
-            result = Converts.Int16ArrayToUInt32Value(aInt16, 1, ModbusControlSpace.Global.eType.Int);
+            result = Converts.Int16ArrayToUInt32Value(aInt16, 1, ModbusControl.Global.eType.Int);
             Assert.AreEqual<UInt32>(0x0000FFFFu, result); // Sign extended
         }
 
@@ -1024,11 +1024,11 @@ namespace UnitTests
         {
             Int16[] aInt16 = new Int16[] { 0x0000, 0x0000 };
             Converts.Int32Endian = Global.eEndian.Little;
-            UInt32 result = Converts.Int16ArrayToUInt32Value(aInt16, 2, ModbusControlSpace.Global.eType.Float);
+            UInt32 result = Converts.Int16ArrayToUInt32Value(aInt16, 2, ModbusControl.Global.eType.Float);
             Assert.AreEqual<UInt32>(0x00000000u, result); // 0.0
 
             Converts.Int32Endian = Global.eEndian.Big;
-            result = Converts.Int16ArrayToUInt32Value(aInt16, 2, ModbusControlSpace.Global.eType.Float);
+            result = Converts.Int16ArrayToUInt32Value(aInt16, 2, ModbusControl.Global.eType.Float);
             Assert.AreEqual<UInt32>(0x00000000u, result); // 0.0
         }
     }

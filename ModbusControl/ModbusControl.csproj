@@ -8,7 +8,7 @@
     <ProjectGuid>{74E6ABE3-8798-4C63-9E5A-A7C0C2002E9B}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>ModbusControlSpace</RootNamespace>
+    <RootNamespace>ModbusControl</RootNamespace>
     <AssemblyName>ModbusControl</AssemblyName>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
@@ -102,11 +102,41 @@
     <Compile Include="..\Modbus_net\TcpChannel.cs">
       <Link>Modbus_net\TcpChannel.cs</Link>
     </Compile>
+    <Compile Include="..\Shared\AppDpiHelpers.cs">
+      <Link>Shared\AppDpiHelpers.cs</Link>
+    </Compile>
+    <Compile Include="..\Shared\AppHelpers.cs">
+      <Link>Shared\AppHelpers.cs</Link>
+    </Compile>
+    <Compile Include="..\Shared\AssemblyInfoShared.cs">
+      <Link>Shared\AssemblyInfoShared.cs</Link>
+    </Compile>
+    <Compile Include="..\Shared\BytesToString.cs">
+      <Link>Shared\BytesToString.cs</Link>
+    </Compile>
+    <Compile Include="..\Shared\ColorFromString.cs">
+      <Link>Shared\ColorFromString.cs</Link>
+    </Compile>
     <Compile Include="..\Shared\Converts.cs">
       <Link>Shared\Converts.cs</Link>
     </Compile>
+    <Compile Include="..\Shared\CsvFileHandler.cs">
+      <Link>Shared\CsvFileHandler.cs</Link>
+    </Compile>
+    <Compile Include="..\Shared\FindFileAssociation.cs">
+      <Link>Shared\FindFileAssociation.cs</Link>
+    </Compile>
+    <Compile Include="..\Shared\Global.cs">
+      <Link>Shared\Global.cs</Link>
+    </Compile>
+    <Compile Include="..\Shared\ProjectFileHandler.cs">
+      <Link>Shared\ProjectFileHandler.cs</Link>
+    </Compile>
     <Compile Include="..\Shared\RegisterToOffset.cs">
       <Link>Shared\RegisterToOffset.cs</Link>
+    </Compile>
+    <Compile Include="..\Shared\ValueToString.cs">
+      <Link>Shared\ValueToString.cs</Link>
     </Compile>
     <Compile Include="AboutBox1.cs">
       <SubType>Form</SubType>
@@ -114,11 +144,7 @@
     <Compile Include="AboutBox1.Designer.cs">
       <DependentUpon>AboutBox1.cs</DependentUpon>
     </Compile>
-    <Compile Include="AppDpiHelpers.cs" />
-    <Compile Include="AppHelpers.cs" />
-    <Compile Include="BytesToString.cs" />
     <Compile Include="ClientConnection.cs" />
-    <Compile Include="ColorFromString.cs" />
     <Compile Include="CommandlineProc.cs" />
     <Compile Include="ConfigForm.cs">
       <SubType>Form</SubType>
@@ -126,7 +152,6 @@
     <Compile Include="ConfigForm.Designer.cs">
       <DependentUpon>ConfigForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="CsvProcessor.cs" />
     <Compile Include="CustomQueries.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -152,8 +177,6 @@
     <Compile Include="Export.Designer.cs">
       <DependentUpon>Export.cs</DependentUpon>
     </Compile>
-    <Compile Include="FindFileAssociation.cs" />
-    <Compile Include="Global.cs" />
     <Compile Include="Import.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -205,9 +228,7 @@
       <DependentUpon>OptionsForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
-    <Compile Include="ProjectMan.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Properties\AssemblyInfoShared.cs" />
     <Compile Include="RecentsToolStripMenuItem.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -236,7 +257,6 @@
     <Compile Include="ValidationFailedForm.designer.cs">
       <DependentUpon>ValidationFailedForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="ValueToString.cs" />
     <EmbeddedResource Include="AboutBox1.resx">
       <DependentUpon>AboutBox1.cs</DependentUpon>
     </EmbeddedResource>

@@ -2,7 +2,7 @@
 using System.IO;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using LST.Helpers;
-using ModbusControlSpace;
+using ModbusControl;
 using System.Xml;
 using System.Xml.Schema;
 using System.Collections.Generic;

@@ -8,7 +8,7 @@ using System.Windows.Forms;
 
 using LST.Helpers;
 
-namespace ModbusControlSpace
+namespace ModbusControl
 {
     public partial class SaveConfigurationForm : Form
     {
@@ -73,7 +73,7 @@ namespace ModbusControlSpace
                 if (checkboxUpdateXML.Checked)
                 {
                     // update XML to current version, like convert all XML tags to lowercase, ...
-                    Project.UpdateProjectXML();
+                    Project.UpdateXML();
                     Changed = true;
                 }
 

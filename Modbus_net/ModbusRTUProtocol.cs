@@ -4,7 +4,7 @@ using System.Text;
 using System.Threading;
 using System.Diagnostics;
 
-namespace Modbus_net
+namespace LST.Modbus
 {
     public class ModbusRtuProtocol : IModbusProtocol
     {

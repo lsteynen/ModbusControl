@@ -1,4 +1,4 @@
-﻿namespace ModbusControlSpace
+﻿namespace ModbusControl
 {
     partial class CustomQueries
     {
@@ -41,7 +41,7 @@
             this.butMoveDown = new System.Windows.Forms.Button();
             this.butMoveUp = new System.Windows.Forms.Button();
             this.chkMultilineRows = new System.Windows.Forms.CheckBox();
-            this.grid = new LST.Helpers.MyDataGridView();
+            this.grid = new LST.Controls.MyDataGridView();
             this.SendColumn = new System.Windows.Forms.DataGridViewButtonColumn();
             this.SlaveidColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.CommandColumn = new System.Windows.Forms.DataGridViewComboBoxColumn();
@@ -289,7 +289,7 @@
 
         #endregion
         private System.Windows.Forms.ToolTip toolTip1;
-        private LST.Helpers.MyDataGridView grid;
+        private LST.Controls.MyDataGridView grid;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.CheckBox chkMultilineRows;
         private System.Windows.Forms.Button butMoveUp;

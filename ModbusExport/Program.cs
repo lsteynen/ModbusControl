@@ -2,7 +2,7 @@
 using System.IO;
 using System.IO.Ports;
 
-using ModbusControlSpace;
+using ModbusControl;
 using LST.Helpers;
 
 namespace ModbusExport
@@ -18,7 +18,7 @@ namespace ModbusExport
         private static bool Verbose = false;
         private static bool ContinueOnError = false;
         private static bool isSerialOpenPortError;
-        private static Logger logger;
+        private static CLogger logger;
 
         private enum eExitcodes
         {
@@ -73,7 +73,7 @@ namespace ModbusExport
             {
                 try
                 {
-                    logger = new Logger();
+                    logger = new CLogger();
                     logger.Append = true;                   // append to existing file
                     if (CommandlineArgs.ArgLogTimeSwitch)
                     {

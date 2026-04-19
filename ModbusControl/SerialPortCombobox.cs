@@ -3,7 +3,7 @@ using System.Windows.Forms;
 using System.IO.Ports;
 using System.Diagnostics;
 
-namespace ModbusControlSpace
+namespace ModbusControl
 {
     public partial class SerialPortCombobox : ComboBox
     {

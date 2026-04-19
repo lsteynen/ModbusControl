@@ -1,5 +1,5 @@
 ﻿using LST.Helpers;
-using ModbusControlSpace;
+using ModbusControl;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -10,7 +10,7 @@ using System.Windows.Forms;
 
 //#define DEBUG_VISIBILITY
 
-namespace LST.ModbusGridView
+namespace ModbusControl
 {
     public partial class ModbusGridView : UserControl
     {

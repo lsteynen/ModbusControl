@@ -1,6 +1,6 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using ModbusControlSpace;
+using ModbusControl;
 
 namespace UnitTests
 {

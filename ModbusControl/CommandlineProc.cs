@@ -9,7 +9,7 @@ using System.Net;
 // options start with - or / and have a value
 // switches have no value
 
-namespace ModbusControlSpace
+namespace ModbusControl
 {
     class CommandlineProc
     {
