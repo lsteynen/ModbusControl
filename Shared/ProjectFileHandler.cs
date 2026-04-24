@@ -25,8 +25,6 @@ namespace ModbusControl
 
         private string[] ConnectionTypeTexts = new string[] { "serial/rtu", "modbus/tcp", "rtu/tcp" }; // Must be order of Global.eConnectionType.SerialRTU
 
-        private string[] WriteHoldingregisterFunctioncodeTexts = new string[] { "6", "16", "auto" };
-
         public struct TSize
         {
             public bool WidthSeen;
@@ -2262,7 +2260,14 @@ namespace ModbusControl
                 xe = new XElement("writeholdingregisterfc");
                 xeModbus.Add(xe);
             }
-            xe.Value = WriteHoldingregisterFunctioncodeTexts[(int)Connection.WriteHoldingregFunctioncode];
+            if (Connection.WriteHoldingregFunctioncode == 0)
+            {
+                xe.Value = "auto";
+            }
+            else
+            {
+                xe.Value = Connection.WriteHoldingregFunctioncode.ToString();
+            }
 
             // Remove Value32BitEndian, obsolete
             xe = FindElement(xeModbus, "Value32BitEndian");
