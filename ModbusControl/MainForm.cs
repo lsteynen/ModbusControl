@@ -1135,9 +1135,17 @@ namespace ModbusControl
                 }
                 catch (XmlSchemaException ex)
                 {
-                    // schema validation fail
-                    ValidationFailedForm form = new ValidationFailedForm();
-                    form.ErrorText = "Error: Cannot load .mbc project file because XML schema validation failed: " + Environment.NewLine + ex.Message;
+                    // schema validation failed
+                    StretchyMessageForm form = new StretchyMessageForm();
+                    form.Title = "ModbusControl - Error";
+                    form.MessageIcon = SystemIcons.Error;
+                    form.OkButtonText = "Load without schema validation";
+                    form.MessageText = "Cannot load .mbc project file because XML schema validation failed." + Environment.NewLine
+                        + Environment.NewLine 
+                        + ex.Message + Environment.NewLine
+                        + Environment.NewLine
+                        + "Or maybe you need to update to a newer version...";
+
                     System.Windows.Forms.DialogResult Result = form.ShowDialog();
                     form.Dispose();
                     if (Result == System.Windows.Forms.DialogResult.OK)
@@ -1153,18 +1161,36 @@ namespace ModbusControl
                 }
                 catch (XmlException ex)
                 {
-                    MessageBox.Show("Error: Cannot load .mbc project file because it has an error: " + Environment.NewLine +
-                        ex.Message, this.Text,
-                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    // XML error
+                    StretchyMessageForm form = new StretchyMessageForm();
+                    form.Title = "ModbusControl - Error";
+                    form.MessageIcon = SystemIcons.Error;
+                    form.MessageText = "Cannot load .mbc project file because it has an error: " + Environment.NewLine
+                        + Environment.NewLine 
+                        + ex.Message + Environment.NewLine
+                        + Environment.NewLine
+                        + "Or maybe you need to update to a newer version...";
+                    form.CancelButtonVisible = false;
+
+                    form.ShowDialog();
+                    form.Dispose();
 
                     PassOptionsToCurrentClientTab();
                     return false;
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show("Error: Cannot load .mbc project file: " + Environment.NewLine +
-                        ex.Message, this.Text,
-                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    // other error
+                    StretchyMessageForm form = new StretchyMessageForm();
+                    form.Title = "ModbusControl";
+                    form.MessageIcon = SystemIcons.Error;
+                    form.MessageText = "Cannot load .mbc project file: " + Environment.NewLine
+                        + Environment.NewLine
+                        + ex.Message + Environment.NewLine;
+                    form.CancelButtonVisible = false;
+
+                    form.ShowDialog();
+                    form.Dispose();
 
                     PassOptionsToCurrentClientTab();
                     return false;

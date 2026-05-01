@@ -251,11 +251,11 @@
       <DependentUpon>SerialPortOpenFailedForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Settings.cs" />
-    <Compile Include="ValidationFailedForm.cs">
+    <Compile Include="StretchyMessageForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="ValidationFailedForm.designer.cs">
-      <DependentUpon>ValidationFailedForm.cs</DependentUpon>
+    <Compile Include="StretchyMessageForm.designer.cs">
+      <DependentUpon>StretchyMessageForm.cs</DependentUpon>
     </Compile>
     <EmbeddedResource Include="AboutBox1.resx">
       <DependentUpon>AboutBox1.cs</DependentUpon>
@@ -315,8 +315,8 @@
     <EmbeddedResource Include="SerialPortOpenFailedForm.resx">
       <DependentUpon>SerialPortOpenFailedForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="ValidationFailedForm.resx">
-      <DependentUpon>ValidationFailedForm.cs</DependentUpon>
+    <EmbeddedResource Include="StretchyMessageForm.resx">
+      <DependentUpon>StretchyMessageForm.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="..\.editorconfig">
       <Link>.editorconfig</Link>
