@@ -21,7 +21,6 @@
     <ManifestKeyFile>ModbusControl_TemporaryKey.pfx</ManifestKeyFile>
     <GenerateManifests>false</GenerateManifests>
     <TargetZone>LocalIntranet</TargetZone>
-    <ApplicationManifest>Properties\app.manifest</ApplicationManifest>
     <SignManifests>false</SignManifests>
     <ApplicationIcon>Ico5.ico</ApplicationIcon>
     <TargetFrameworkProfile>
@@ -67,6 +66,9 @@
     </DocumentationFile>
     <UseVSHostingProcess>false</UseVSHostingProcess>
     <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -322,6 +324,7 @@
       <Link>.editorconfig</Link>
     </None>
     <None Include="app.config" />
+    <None Include="app.manifest" />
     <None Include="Properties\app.manifest">
       <SubType>Designer</SubType>
     </None>
@@ -399,7 +402,7 @@
   <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PreBuildEvent>"$(ProjectDir)Properties\IncBuildNo.exe" "$(ProjectDir)Properties\AssemblyInfoShared.cs" $(ConfigurationName)</PreBuildEvent>
+    <PreBuildEvent>"$(ProjectDir)\Properties\IncBuildNo.exe" "$(ProjectDir)..\Shared\AssemblyInfoShared.cs" $(ConfigurationName)</PreBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -12,16 +12,10 @@ namespace ModbusControl
         [STAThread]
         static void Main()
         {
-            // Tell windows that this app is DPI-aware. Is supported in Vista and higher.
-            if (Environment.OSVersion.Version.Major >= 6)
-                SetProcessDPIAware(); 
-
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new MainForm());
         }
 
-        [System.Runtime.InteropServices.DllImport("user32.dll")]
-        private static extern bool SetProcessDPIAware();
     }
 }
