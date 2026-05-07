@@ -1,11 +1,11 @@
 ﻿using LST.Helpers;
-using ModbusControl;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics;
 using System.Drawing;
 using System.Runtime.InteropServices;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 
 //#define DEBUG_VISIBILITY
@@ -169,7 +169,9 @@ namespace ModbusControl
         private int indentWidth;
         private int[] columnWidths;
         private string mFilterString;
-        private bool mFilterCaseSensitive;
+        private bool mFilterIsRegex;
+        private bool mFilterIsCaseSensitive;
+        private Regex mFilterRegex;                     // null if not used
         private float originalFontSize;
         private float currentZoomFactor = 1;
         public bool customPainting = true;
@@ -247,15 +249,46 @@ namespace ModbusControl
             set { setLongTooltipTime(value); }
         }
 
-        public void SetFilter(string text, bool caseSensitive)
+        /// <summary>
+        /// Set a filter
+        /// </summary>
+        /// <returns>true if filter is valid, false if invalid</returns>
+        public bool SetFilter(string text, bool isRegex, bool isCaseSensitive)
         {
-            if ((text != mFilterString)
-                || (caseSensitive != mFilterCaseSensitive))
+            // changed?
+            if (   (text != mFilterString)
+                || ((isRegex != mFilterIsRegex) && (text != string.Empty))
+                || ((isCaseSensitive != mFilterIsCaseSensitive) && (text != string.Empty)))
             {
                 mFilterString = text;
-                mFilterCaseSensitive = caseSensitive;
-                UpdateFilter();
+                mFilterIsRegex = isRegex;
+                mFilterIsCaseSensitive = isCaseSensitive;
+
+                if (isRegex)
+                {
+                    // regex filter
+                    RegexOptions options = isCaseSensitive ? RegexOptions.None : RegexOptions.IgnoreCase;
+                    try
+                    {
+                        mFilterRegex = new Regex(mFilterString, options);
+                        ApplyFiltering();
+                    }
+                    catch
+                    {
+                        // regex error
+                        // don't change filtering
+                        return false;
+                    }
+                }
+                else
+                {
+                    // simple filter
+                    mFilterRegex = null;
+                    ApplyFiltering();
+                }                
             }
+
+            return true;
         }
 
         public float RegisterColumnWidthWeight
@@ -1028,20 +1061,18 @@ namespace ModbusControl
             FocusDataRow(focus);
         }
 
-        private void UpdateFilter()
+        private void ApplyFiltering()
         {
-            //bool valid = true;
-
-            //Debug.Print("DoFilter(): filtval=" + filterStr);
-            //Debug.Print(" dt.Rows.Count= " + data.Rows.Count.ToString());
-
+            //Debug.Print("DoFilter(): str=" + mFilterString + "  regex=" + mFilterRegex.ToString() + "  casins=" + mFilterCaseSensitive.ToString());
+            
+            // got data?
             if (data == null)
             {
                 return;
             }
 
-            // get focused datarow
-            TFocusPos dFocus = GetFocusedDataRow();
+            // get focused datarow, to restore later
+            TFocusPos focusedRow = GetFocusedDataRow();
 
             if (mFilterString != string.Empty)
             {
@@ -1052,12 +1083,12 @@ namespace ModbusControl
                 bool[] bufRowsVisible = new bool[numRows];
                 bool[] bufRowsParentExpand = new bool[numRows];
 
-                // ignore case?
+                // set compare mode for simple filter
                 StringComparison compareMode = StringComparison.CurrentCultureIgnoreCase;
-                if (mFilterCaseSensitive) compareMode = StringComparison.CurrentCulture;
+                if (mFilterIsCaseSensitive) compareMode = StringComparison.CurrentCulture;
 
                 // iterate all register and description strings
-                // if contains search string: mark row to be visible
+                // if matches filter: mark row to be visible
                 foreach (ListItem li in RegList)
                 {
                     if (li is RegItem)
@@ -1065,11 +1096,25 @@ namespace ModbusControl
                         RegItem ri = li as RegItem;
                         string regStr = ri.Reg.ToString();
                         string descStr = ri.Descr.ToString();
-                        if ((regStr.IndexOf(mFilterString, compareMode) >= 0)            // simple string search
-                            || (descStr.IndexOf(mFilterString, compareMode) >= 0))
+                        if (mFilterRegex != null)
                         {
-                            // mark this row
-                            bufRowsVisible[ri.dataRowIndex] = true;
+                            // regex search
+                            if (mFilterRegex.IsMatch(regStr)
+                                || mFilterRegex.IsMatch(descStr))
+                            {
+                                // mark this row
+                                bufRowsVisible[ri.dataRowIndex] = true;
+                            }
+                        }
+                        else
+                        {
+                            // simple string search
+                            if ((regStr.IndexOf(mFilterString, compareMode) >= 0)            
+                                ||  (descStr.IndexOf(mFilterString, compareMode) >= 0))
+                            {
+                                // mark this row
+                                bufRowsVisible[ri.dataRowIndex] = true;
+                            }
                         }
 
                         // check children
@@ -1080,14 +1125,31 @@ namespace ModbusControl
                             {
                                 RegfieldItem fi = li2 as RegfieldItem;
                                 descStr = fi.Descr.ToString();
-                                if (descStr.IndexOf(mFilterString, compareMode) >= 0)
+                                if (mFilterRegex != null)
                                 {
-                                    // mark this row
-                                    bufRowsVisible[fi.dataRowIndex] = true;
-                                    // and its parent
-                                    bufRowsVisible[ri.dataRowIndex] = true;
-                                    // and mark parent to expand
-                                    bufRowsParentExpand[ri.dataRowIndex] = true;
+                                    // regex search
+                                    if (mFilterRegex.IsMatch(descStr))
+                                    {
+                                        // mark this row
+                                        bufRowsVisible[fi.dataRowIndex] = true;
+                                        // and its parent
+                                        bufRowsVisible[ri.dataRowIndex] = true;
+                                        // and mark parent to expand
+                                        bufRowsParentExpand[ri.dataRowIndex] = true;
+                                    }
+                                }
+                                else
+                                {
+                                    // simple string search
+                                    if (descStr.IndexOf(mFilterString, compareMode) >= 0)
+                                    {
+                                        // mark this row
+                                        bufRowsVisible[fi.dataRowIndex] = true;
+                                        // and its parent
+                                        bufRowsVisible[ri.dataRowIndex] = true;
+                                        // and mark parent to expand
+                                        bufRowsParentExpand[ri.dataRowIndex] = true;
+                                    }
                                 }
                             }
                         }
@@ -1140,7 +1202,8 @@ namespace ModbusControl
                 }
             }
 
-            FocusDataRow(dFocus);
+            // restore focused row 
+            FocusDataRow(focusedRow);
         }
 
         /// <summary>

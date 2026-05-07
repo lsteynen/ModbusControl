@@ -1369,7 +1369,7 @@ namespace ModbusControl
             // set some more properties
             //mgv.AutosizeAndWrapRows = Options.AutoRowSize;
             mgv.WrapRows = Options.AutoRowSize;
-            mgv.SetFilter(tbFilterText.Text, chkFilterCaseSensitive.Checked);
+            mgv.SetFilter(tbFilterText.Text, chkFilterRegex.Checked, chkFilterCaseSensitive.Checked);
             mgv.SetZoom(ZoomFactor);
 
             isLoading = false;
@@ -2470,7 +2470,8 @@ namespace ModbusControl
             if (CurrentTabPage != null)
             {
                 ModbusGridView mgv = CurrentTabPage.Tag as ModbusGridView;
-                mgv.SetFilter(tbFilterText.Text, chkFilterCaseSensitive.Checked);
+                bool isValid = mgv.SetFilter(tbFilterText.Text, chkFilterRegex.Checked, chkFilterCaseSensitive.Checked);
+                SetFilterColor(isValid);
             }
         }
 
@@ -2484,13 +2485,26 @@ namespace ModbusControl
             if (CurrentTabPage != null)
             {
                 ModbusGridView mgv = CurrentTabPage.Tag as ModbusGridView;
-                mgv.SetFilter(tbFilterText.Text, chkFilterCaseSensitive.Checked);
+                bool isValid = mgv.SetFilter(tbFilterText.Text, chkFilterRegex.Checked, chkFilterCaseSensitive.Checked);
+                SetFilterColor(isValid);
             }
         }
         private void BtnFilterClose_Click(object sender, EventArgs e)
         {
             FilterClear();
             panFilter.Hide();
+        }
+
+        private void SetFilterColor( bool valid)
+        {
+            if (valid)
+            {
+                tbFilterText.BackColor = SystemColors.Window;
+            }
+            else
+            {
+                tbFilterText.BackColor = Color.FromArgb(255, 204, 204); // light red
+            }
         }
 
         private void FindFilterToolStripMenuItem_Click(object sender, EventArgs e)
@@ -2906,8 +2920,17 @@ namespace ModbusControl
             Settings1.Shared.Updater.LastCheckForUpdate = DateTime.Now;
         }
 
-#endregion
 
+        #endregion
 
+        private void chkFilterRegex_CheckedChanged(object sender, EventArgs e)
+        {
+            if( CurrentTabPage != null)
+            {
+                ModbusGridView mgv = CurrentTabPage.Tag as ModbusGridView;
+                bool isValid = mgv.SetFilter(tbFilterText.Text, chkFilterRegex.Checked, chkFilterCaseSensitive.Checked);
+                SetFilterColor(isValid);
+            }
+        }
     }
 }

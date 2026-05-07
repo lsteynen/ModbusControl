@@ -42,7 +42,6 @@ namespace ModbusControl
             this.editProjectFileMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openFileLocationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
-            this.recentFilesMenuItem = new RecentsToolStripMenuItem();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.saveConfigurationMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator6 = new System.Windows.Forms.ToolStripSeparator();
@@ -87,10 +86,12 @@ namespace ModbusControl
             this.StatusbarTimer = new System.Windows.Forms.Timer(this.components);
             this.tbFilterText = new System.Windows.Forms.TextBox();
             this.panFilter = new System.Windows.Forms.Panel();
+            this.chkFilterRegex = new System.Windows.Forms.CheckBox();
             this.chkFilterCaseSensitive = new System.Windows.Forms.CheckBox();
             this.btnFilterClose = new System.Windows.Forms.Button();
             this.btnFilterClear = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
+            this.recentFilesMenuItem = new RecentsToolStripMenuItem();
             this.statusStrip.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
@@ -142,7 +143,7 @@ namespace ModbusControl
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Padding = new System.Windows.Forms.Padding(5, 2, 0, 2);
             this.menuStrip1.Size = new System.Drawing.Size(584, 24);
-            this.menuStrip1.TabIndex = 1;
+            this.menuStrip1.TabIndex = 0;
             this.menuStrip1.Text = "menuStrip1";
             // 
             // fileMenuItem
@@ -201,15 +202,6 @@ namespace ModbusControl
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
             this.toolStripSeparator1.Size = new System.Drawing.Size(252, 6);
-            // 
-            // recentFilesMenuItem
-            // 
-            this.recentFilesMenuItem.Enabled = false;
-            this.recentFilesMenuItem.Name = "recentFilesMenuItem";
-            this.recentFilesMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.F)));
-            this.recentFilesMenuItem.Size = new System.Drawing.Size(255, 22);
-            this.recentFilesMenuItem.Text = "Re&cent project files";
-            this.recentFilesMenuItem.ItemClick += new System.EventHandler(this.RecentFilesMenuItem_ItemClick);
             // 
             // toolStripSeparator2
             // 
@@ -454,7 +446,7 @@ namespace ModbusControl
             this.toolStrip1.Location = new System.Drawing.Point(0, 24);
             this.toolStrip1.Name = "toolStrip1";
             this.toolStrip1.Size = new System.Drawing.Size(584, 27);
-            this.toolStrip1.TabIndex = 2;
+            this.toolStrip1.TabIndex = 1;
             this.toolStrip1.Text = "toolStrip1";
             // 
             // OpenProjectToolbutton
@@ -559,7 +551,7 @@ namespace ModbusControl
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
             this.tabControl1.Size = new System.Drawing.Size(584, 363);
-            this.tabControl1.TabIndex = 4;
+            this.tabControl1.TabIndex = 2;
             this.tabControl1.Selected += new System.Windows.Forms.TabControlEventHandler(this.TabControl1_Selected);
             // 
             // StatusbarTimer
@@ -573,13 +565,14 @@ namespace ModbusControl
             this.tbFilterText.Location = new System.Drawing.Point(59, 3);
             this.tbFilterText.Margin = new System.Windows.Forms.Padding(2);
             this.tbFilterText.Name = "tbFilterText";
-            this.tbFilterText.Size = new System.Drawing.Size(338, 20);
+            this.tbFilterText.Size = new System.Drawing.Size(288, 20);
             this.tbFilterText.TabIndex = 1;
             this.tbFilterText.TextChanged += new System.EventHandler(this.TbFilterText_TextChanged);
             // 
             // panFilter
             // 
             this.panFilter.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panFilter.Controls.Add(this.chkFilterRegex);
             this.panFilter.Controls.Add(this.chkFilterCaseSensitive);
             this.panFilter.Controls.Add(this.btnFilterClose);
             this.panFilter.Controls.Add(this.btnFilterClear);
@@ -593,16 +586,30 @@ namespace ModbusControl
             this.panFilter.Size = new System.Drawing.Size(584, 26);
             this.panFilter.TabIndex = 3;
             // 
+            // chkFilterRegex
+            // 
+            this.chkFilterRegex.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.chkFilterRegex.AutoSize = true;
+            this.chkFilterRegex.Location = new System.Drawing.Point(385, 5);
+            this.chkFilterRegex.Name = "chkFilterRegex";
+            this.chkFilterRegex.Size = new System.Drawing.Size(57, 17);
+            this.chkFilterRegex.TabIndex = 3;
+            this.chkFilterRegex.Text = "Regex";
+            this.toolTip1.SetToolTip(this.chkFilterRegex, resources.GetString("chkFilterRegex.ToolTip"));
+            this.chkFilterRegex.UseVisualStyleBackColor = true;
+            this.chkFilterRegex.CheckedChanged += new System.EventHandler(this.chkFilterRegex_CheckedChanged);
+            // 
             // chkFilterCaseSensitive
             // 
             this.chkFilterCaseSensitive.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.chkFilterCaseSensitive.AutoSize = true;
-            this.chkFilterCaseSensitive.Location = new System.Drawing.Point(426, 5);
+            this.chkFilterCaseSensitive.Location = new System.Drawing.Point(447, 5);
             this.chkFilterCaseSensitive.Margin = new System.Windows.Forms.Padding(2);
             this.chkFilterCaseSensitive.Name = "chkFilterCaseSensitive";
             this.chkFilterCaseSensitive.Size = new System.Drawing.Size(82, 17);
-            this.chkFilterCaseSensitive.TabIndex = 3;
+            this.chkFilterCaseSensitive.TabIndex = 4;
             this.chkFilterCaseSensitive.Text = "Match case";
+            this.toolTip1.SetToolTip(this.chkFilterCaseSensitive, "Case sensitive");
             this.chkFilterCaseSensitive.UseVisualStyleBackColor = true;
             this.chkFilterCaseSensitive.CheckedChanged += new System.EventHandler(this.ChkFilterCaseSensitive_CheckedChanged);
             // 
@@ -613,20 +620,22 @@ namespace ModbusControl
             this.btnFilterClose.Margin = new System.Windows.Forms.Padding(2);
             this.btnFilterClose.Name = "btnFilterClose";
             this.btnFilterClose.Size = new System.Drawing.Size(44, 20);
-            this.btnFilterClose.TabIndex = 4;
+            this.btnFilterClose.TabIndex = 5;
             this.btnFilterClose.Text = "Close";
+            this.toolTip1.SetToolTip(this.btnFilterClose, "Close find/filter");
             this.btnFilterClose.UseVisualStyleBackColor = true;
             this.btnFilterClose.Click += new System.EventHandler(this.BtnFilterClose_Click);
             // 
             // btnFilterClear
             // 
             this.btnFilterClear.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnFilterClear.Image = global::ModbusControl.Properties.Resources.Erase;
-            this.btnFilterClear.Location = new System.Drawing.Point(397, 3);
+            this.btnFilterClear.Image = ((System.Drawing.Image)(resources.GetObject("btnFilterClear.Image")));
+            this.btnFilterClear.Location = new System.Drawing.Point(341, 2);
             this.btnFilterClear.Margin = new System.Windows.Forms.Padding(2);
             this.btnFilterClear.Name = "btnFilterClear";
-            this.btnFilterClear.Size = new System.Drawing.Size(18, 19);
+            this.btnFilterClear.Size = new System.Drawing.Size(25, 20);
             this.btnFilterClear.TabIndex = 2;
+            this.toolTip1.SetToolTip(this.btnFilterClear, "Clear search");
             this.btnFilterClear.UseVisualStyleBackColor = true;
             this.btnFilterClear.Click += new System.EventHandler(this.BtnFilterClear_Click);
             // 
@@ -639,6 +648,15 @@ namespace ModbusControl
             this.label1.Size = new System.Drawing.Size(57, 13);
             this.label1.TabIndex = 0;
             this.label1.Text = "Find/Filter:";
+            // 
+            // recentFilesMenuItem
+            // 
+            this.recentFilesMenuItem.Enabled = false;
+            this.recentFilesMenuItem.Name = "recentFilesMenuItem";
+            this.recentFilesMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.F)));
+            this.recentFilesMenuItem.Size = new System.Drawing.Size(255, 22);
+            this.recentFilesMenuItem.Text = "Re&cent project files";
+            this.recentFilesMenuItem.ItemClick += new System.EventHandler(this.RecentFilesMenuItem_ItemClick);
             // 
             // MainForm
             // 
@@ -736,6 +754,7 @@ namespace ModbusControl
         private System.Windows.Forms.ToolStripMenuItem loggingToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem importRegistersFromFileToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem exportRegistersToFileToolStripMenuItem;
+        private System.Windows.Forms.CheckBox chkFilterRegex;
     }
 }
 
