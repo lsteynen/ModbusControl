@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<updater>
+  <caption>ModbusControl update</caption>
+  <name>ModbusControl</name>
+  <processname>ModbusControl</processname>
+  <infourl>file://\\Fileserver\Original\ModbusControl\UpdaterInfo.xml</infourl>
+</updater>

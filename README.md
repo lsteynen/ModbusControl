@@ -1,19 +1,25 @@
 # ModbusControl
 
-ModbusControl is a set of 3 Windows Modbus client programs. 
-Written in C# with CS, for .NET framework, currenty with VS2019.
+ModbusControl is a Windows‑based Modbus client application for testing, monitoring, and interacting with Modbus TCP and Modbus RTU devices.
+It also includes command‑line tools for importing and exporting Modbus configuration files.
+
 ## Features
-- ModbusControl - a Windows GUI program
-- ModbusImport - a command line import tool
-- ModbusExport - a command line export tool
-- Supports RTU serial port, Modbus/TCP and RTU-over-TCP.
-- Supports 16 and 32-bit registers; int, uint, hex, binary and float formats, bit fields and strings. 
-- User manual.
+- ModbusControl - Windows GUI Modbus client
+- ModbusImport - command‑line tool for importing Modbus project files
+- ModbusExport - command‑line tool for exporting Modbus project files
+- RTU serial, Modbus/TCP, and RTU‑over‑TCP protocols
+- .mbc files - XML project file
+- 16 and 32-bit registers
+- Int, uint, hex, binary, and float formats
+- Bit fields 
+- Enumerations
+- Strings
+- User manual
 
 ## Development
-It is best to start Visual Studio with the 'noscale' option. This launches Visual Studio without scaling (i.e., with scaling set to 100%, 96 DPI).
-If scaling is enabled, unexpected behavior may occur when modifying form layouts because mixed DPI values can be introduced. It is recommended to keep everything at 96 DPI.
+C#, .NET framework 4.7.2, Visual Studio 2026.
 
-**Command:**
-"C:\Program Files (x86)\Microsoft Visual Studio\2019\Professional\Common7\IDE\devenv.exe" /noscale
 
+It’s recommended to start Visual Studio with the '/noscale' option. This forces Visual Studio to run without DPI scaling (equivalent to 100% scaling or 96 DPI).
+
+If scaling is enabled, modifying form layouts may lead to unexpected behavior because mixed DPI values can be introduced. To avoid layout issues, keep the environment at 96 DPI whenever possible.
