@@ -3,6 +3,8 @@
 ModbusControl is a Windows‑based Modbus client application for testing, monitoring, and interacting with Modbus TCP and Modbus RTU devices.
 It also includes command‑line tools for importing and exporting Modbus configuration files.
 
+<img src="ModbusControl-main.png" height="340">
+
 ## Features
 - ModbusControl - Windows GUI Modbus client
 - ModbusImport - command‑line tool for importing Modbus project files
