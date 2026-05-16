@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 using System.IO.Ports;
@@ -282,7 +279,7 @@ namespace ModbusControl
                         text = value.ToString() + "(invalid)";
                         break;
                 }
-                
+
                 textboxHoldingRegistersStart.Text = text;
             }
         }
@@ -298,72 +295,86 @@ namespace ModbusControl
 
         public bool ConnectionTypeIsOverride
         {
-            set { picConnectionTypeIsOverride.Visible = value; }
+            set { picConnectionTypeIsOverride.Visible = value;
+            }
         }
 
         public bool PortIsOverride
         {
-            set { picPortIsOverride.Visible = value; }
+            set { picPortIsOverride.Visible = value;
+            }
         }
 
         public bool BaudrateIsOverride
         {
-            set { picBaudrateIsOverride.Visible = value; }
+            set { picBaudrateIsOverride.Visible = value;
+            }
         }
 
         public bool ParityIsOverride
         {
-            set { picParityIsOverride.Visible = value; }
+            set { picParityIsOverride.Visible = value;
+            }
         }
 
         public bool EndofmessagetimeoutIsOverride
         {
-            set { picEndofmessagetimeoutIsOverride.Visible = value; }
+            set { picEndofmessagetimeoutIsOverride.Visible = value;
+            }
         }
 
         public bool OnewireechosuppressionIsOverride
         {
-            set { picOnewireechosuppressionIsOverride.Visible = value; }
+            set { picOnewireechosuppressionIsOverride.Visible = value;
+            }
         }
 
         public bool IPAddressIsOverride
         {
-            set { picIPAddressIsOverride.Visible = value; }
+            set { picIPAddressIsOverride.Visible = value;
+            }
         }
 
         public bool IPPortIsOverride
         {
-            set { picIPPortIsOverride.Visible = value; }
+            set { picIPPortIsOverride.Visible = value;
+            }
         }
 
         public bool SlaveIDIsOverride
         {
-            set { picSlaveIDIsOverride.Visible = value; }
+            set { picSlaveIDIsOverride.Visible = value;
+            }
         }
 
         public bool MaxFrameSizeIsOverride
         {
-            set { picMaxFrameSizeIsOverride.Visible = value; }
+            set { picMaxFrameSizeIsOverride.Visible = value;
+            }
         }
 
         public bool ResponsetimeoutIsOverride
         {
-            set { picResponsetimeoutIsOverride.Visible = value; }
+            set { picResponsetimeoutIsOverride.Visible = value;
+            }
         }
 
         public bool InterframedelayIsOverride
         {
-            set { picInterframedelayIsOverride.Visible = value; }
+            set { picInterframedelayIsOverride.Visible = value;
+            }
         }
 
         public bool SamplerateIsOverride
         {
-            set { picSamplerateIsOverride.Visible = value; }
+            set { picSamplerateIsOverride.Visible = value;
+            }
         }
 
         public bool WriteregFCIsOverride
         {
-            set { picwriteregFCIsOverride.Visible = value; }
+            set { picwriteregFCIsOverride.Visible = value;
+            }
         }
 
 
@@ -446,6 +457,24 @@ namespace ModbusControl
             }
         }
 
-  
+        private void ConfigForm_Shown(object sender, EventArgs e)
+        {
+            // show warning panel if any of the warning icons is shown
+            // can't do that earlier because the visibility of the icons is set after the properties are set by the caller
+            warningPanel.Visible = picConnectionTypeIsOverride.Visible
+                                || picPortIsOverride.Visible
+                                || picBaudrateIsOverride.Visible
+                                || picParityIsOverride.Visible
+                                || picEndofmessagetimeoutIsOverride.Visible
+                                || picOnewireechosuppressionIsOverride.Visible
+                                || picIPAddressIsOverride.Visible
+                                || picIPPortIsOverride.Visible
+                                || picSlaveIDIsOverride.Visible
+                                || picMaxFrameSizeIsOverride.Visible
+                                || picResponsetimeoutIsOverride.Visible
+                                || picInterframedelayIsOverride.Visible
+                                || picSamplerateIsOverride.Visible
+                                || picwriteregFCIsOverride.Visible;
+        }
     }
 }

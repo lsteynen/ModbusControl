@@ -301,8 +301,13 @@ namespace ModbusControl
                 if (CommandlineArgs.ArgHelpSwitch == true)    
                 {
                     // show command line usage
-                    string s = CommandlineArgs.GetUsageString();
-                    MessageBox.Show(s, "ModbusControl", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    StretchyMessageForm form = new StretchyMessageForm();
+                    form.Title = "ModbusControl";
+                    form.MessageIcon = SystemIcons.Information;
+                    form.MessageText = CommandlineArgs.GetUsageString();
+                    form.CancelButtonVisible = false;
+                    form.ShowDialog();
+                    form.Dispose();
                 }
 
                 // filename passed?

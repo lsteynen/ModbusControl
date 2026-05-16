@@ -74,10 +74,7 @@
             this.panel2 = new System.Windows.Forms.Panel();
             this.label17 = new System.Windows.Forms.Label();
             this.comboStringEncoding = new System.Windows.Forms.ComboBox();
-            this.buttonApply = new System.Windows.Forms.Button();
             this.groupBox5 = new System.Windows.Forms.GroupBox();
-            this.buttonCancel = new System.Windows.Forms.Button();
-            this.buttonOK = new System.Windows.Forms.Button();
             this.label6 = new System.Windows.Forms.Label();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
@@ -103,7 +100,11 @@
             this.label7 = new System.Windows.Forms.Label();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.label16 = new System.Windows.Forms.Label();
-            this.panelWarning = new System.Windows.Forms.Panel();
+            this.warningPanel = new System.Windows.Forms.Panel();
+            this.buttonPanel = new System.Windows.Forms.Panel();
+            this.buttonApply = new System.Windows.Forms.Button();
+            this.buttonCancel = new System.Windows.Forms.Button();
+            this.buttonOK = new System.Windows.Forms.Button();
             this.numericInterFrameDelay = new LST.Controls.NumericUpDown2();
             this.comboSerialPort = new ModbusControl.SerialPortCombobox();
             ((System.ComponentModel.ISupportInitialize)(this.numericSamplerate)).BeginInit();
@@ -137,7 +138,8 @@
             this.groupBoxTcpInterface.SuspendLayout();
             this.groupBoxSerialInterface.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
-            this.panelWarning.SuspendLayout();
+            this.warningPanel.SuspendLayout();
+            this.buttonPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericInterFrameDelay)).BeginInit();
             this.SuspendLayout();
             // 
@@ -522,7 +524,8 @@
             this.textboxHoldingRegistersStart.TabIndex = 26;
             this.textboxHoldingRegistersStart.Text = "40001-49999 + 400001-465536";
             this.textboxHoldingRegistersStart.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.toolTip1.SetToolTip(this.textboxHoldingRegistersStart, "Register numbering scheme, defined by the first holding register number (40001/400001/40000/400000)\r\n");
+            this.toolTip1.SetToolTip(this.textboxHoldingRegistersStart, "Register numbering scheme, as defined by <holdingregisterstart>in he mbc project " +
+        "file.\r\n");
             // 
             // picConnectionTypeIsOverride
             // 
@@ -533,8 +536,8 @@
             this.picConnectionTypeIsOverride.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.picConnectionTypeIsOverride.TabIndex = 12;
             this.picConnectionTypeIsOverride.TabStop = false;
-            this.toolTip1.SetToolTip(this.picConnectionTypeIsOverride, "This parameter is overridden by the command line! It shows the value as set by th" +
-        "e command line, not the value configured in the mbc project file.");
+            this.toolTip1.SetToolTip(this.picConnectionTypeIsOverride, "This parameter is overridden by a command-line option.\r\nThe value shown reflects " +
+        "the command-line setting, not the mbc project file.");
             // 
             // picPortIsOverride
             // 
@@ -545,8 +548,8 @@
             this.picPortIsOverride.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.picPortIsOverride.TabIndex = 13;
             this.picPortIsOverride.TabStop = false;
-            this.toolTip1.SetToolTip(this.picPortIsOverride, "This parameter is overridden by the command line! It shows the value as set by th" +
-        "e command line, not the value configured in the mbc project file.");
+            this.toolTip1.SetToolTip(this.picPortIsOverride, "This parameter is overridden by a command-line option.\r\nThe value shown reflects " +
+        "the command-line setting, not the mbc project file.");
             // 
             // picBaudrateIsOverride
             // 
@@ -557,8 +560,8 @@
             this.picBaudrateIsOverride.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.picBaudrateIsOverride.TabIndex = 14;
             this.picBaudrateIsOverride.TabStop = false;
-            this.toolTip1.SetToolTip(this.picBaudrateIsOverride, "This parameter is overridden by the command line! It shows the value as set by th" +
-        "e command line, not the value configured in the mbc project file.");
+            this.toolTip1.SetToolTip(this.picBaudrateIsOverride, "This parameter is overridden by a command-line option.\r\nThe value shown reflects " +
+        "the command-line setting, not the mbc project file.");
             // 
             // picParityIsOverride
             // 
@@ -569,8 +572,8 @@
             this.picParityIsOverride.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.picParityIsOverride.TabIndex = 15;
             this.picParityIsOverride.TabStop = false;
-            this.toolTip1.SetToolTip(this.picParityIsOverride, "This parameter is overridden by the command line! It shows the value as set by th" +
-        "e command line, not the value configured in the mbc project file.");
+            this.toolTip1.SetToolTip(this.picParityIsOverride, "This parameter is overridden by a command-line option.\r\nThe value shown reflects " +
+        "the command-line setting, not the mbc project file.");
             // 
             // picEndofmessagetimeoutIsOverride
             // 
@@ -581,8 +584,8 @@
             this.picEndofmessagetimeoutIsOverride.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.picEndofmessagetimeoutIsOverride.TabIndex = 16;
             this.picEndofmessagetimeoutIsOverride.TabStop = false;
-            this.toolTip1.SetToolTip(this.picEndofmessagetimeoutIsOverride, "This parameter is overridden by the command line! It shows the value as set by th" +
-        "e command line, not the value configured in the mbc project file.");
+            this.toolTip1.SetToolTip(this.picEndofmessagetimeoutIsOverride, "This parameter is overridden by a command-line option.\r\nThe value shown reflects " +
+        "the command-line setting, not the mbc project file.");
             // 
             // picIPAddressIsOverride
             // 
@@ -593,8 +596,8 @@
             this.picIPAddressIsOverride.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.picIPAddressIsOverride.TabIndex = 17;
             this.picIPAddressIsOverride.TabStop = false;
-            this.toolTip1.SetToolTip(this.picIPAddressIsOverride, "This parameter is overridden by the command line! It shows the value as set by th" +
-        "e command line, not the value configured in the mbc project file.");
+            this.toolTip1.SetToolTip(this.picIPAddressIsOverride, "This parameter is overridden by a command-line option.\r\nThe value shown reflects " +
+        "the command-line setting, not the mbc project file.");
             // 
             // picIPPortIsOverride
             // 
@@ -605,8 +608,8 @@
             this.picIPPortIsOverride.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.picIPPortIsOverride.TabIndex = 18;
             this.picIPPortIsOverride.TabStop = false;
-            this.toolTip1.SetToolTip(this.picIPPortIsOverride, "This parameter is overridden by the command line! It shows the value as set by th" +
-        "e command line, not the value configured in the mbc project file.");
+            this.toolTip1.SetToolTip(this.picIPPortIsOverride, "This parameter is overridden by a command-line option.\r\nThe value shown reflects " +
+        "the command-line setting, not the mbc project file.");
             // 
             // picOnewireechosuppressionIsOverride
             // 
@@ -617,8 +620,8 @@
             this.picOnewireechosuppressionIsOverride.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.picOnewireechosuppressionIsOverride.TabIndex = 19;
             this.picOnewireechosuppressionIsOverride.TabStop = false;
-            this.toolTip1.SetToolTip(this.picOnewireechosuppressionIsOverride, "This parameter is overridden by the command line! It shows the value as set by th" +
-        "e command line, not the value configured in the mbc project file.");
+            this.toolTip1.SetToolTip(this.picOnewireechosuppressionIsOverride, "This parameter is overridden by a command-line option.\r\nThe value shown reflects " +
+        "the command-line setting, not the mbc project file.");
             // 
             // picSlaveIDIsOverride
             // 
@@ -629,8 +632,8 @@
             this.picSlaveIDIsOverride.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.picSlaveIDIsOverride.TabIndex = 20;
             this.picSlaveIDIsOverride.TabStop = false;
-            this.toolTip1.SetToolTip(this.picSlaveIDIsOverride, "This parameter is overridden by the command line! It shows the value as set by th" +
-        "e command line, not the value configured in the mbc project file.");
+            this.toolTip1.SetToolTip(this.picSlaveIDIsOverride, "This parameter is overridden by a command-line option.\r\nThe value shown reflects " +
+        "the command-line setting, not the mbc project file.");
             // 
             // picResponsetimeoutIsOverride
             // 
@@ -641,8 +644,8 @@
             this.picResponsetimeoutIsOverride.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.picResponsetimeoutIsOverride.TabIndex = 21;
             this.picResponsetimeoutIsOverride.TabStop = false;
-            this.toolTip1.SetToolTip(this.picResponsetimeoutIsOverride, "This parameter is overridden by the command line! It shows the value as set by th" +
-        "e command line, not the value configured in the mbc project file.");
+            this.toolTip1.SetToolTip(this.picResponsetimeoutIsOverride, "This parameter is overridden by a command-line option.\r\nThe value shown reflects " +
+        "the command-line setting, not the mbc project file.");
             // 
             // picInterframedelayIsOverride
             // 
@@ -653,8 +656,8 @@
             this.picInterframedelayIsOverride.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.picInterframedelayIsOverride.TabIndex = 22;
             this.picInterframedelayIsOverride.TabStop = false;
-            this.toolTip1.SetToolTip(this.picInterframedelayIsOverride, "This parameter is overridden by the command line! It shows the value as set by th" +
-        "e command line, not the value configured in the mbc project file.");
+            this.toolTip1.SetToolTip(this.picInterframedelayIsOverride, "This parameter is overridden by a command-line option.\r\nThe value shown reflects " +
+        "the command-line setting, not the mbc project file.");
             // 
             // picSamplerateIsOverride
             // 
@@ -665,8 +668,8 @@
             this.picSamplerateIsOverride.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.picSamplerateIsOverride.TabIndex = 23;
             this.picSamplerateIsOverride.TabStop = false;
-            this.toolTip1.SetToolTip(this.picSamplerateIsOverride, "This parameter is overridden by the command line! It shows the value as set by th" +
-        "e command line, not the value configured in the mbc project file.");
+            this.toolTip1.SetToolTip(this.picSamplerateIsOverride, "This parameter is overridden by a command-line option.\r\nThe value shown reflects " +
+        "the command-line setting, not the mbc project file.");
             // 
             // picMaxFrameSizeIsOverride
             // 
@@ -677,8 +680,8 @@
             this.picMaxFrameSizeIsOverride.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.picMaxFrameSizeIsOverride.TabIndex = 23;
             this.picMaxFrameSizeIsOverride.TabStop = false;
-            this.toolTip1.SetToolTip(this.picMaxFrameSizeIsOverride, "This parameter is overridden by the command line! It shows the value as set by th" +
-        "e command line, not the value configured in the mbc project file.");
+            this.toolTip1.SetToolTip(this.picMaxFrameSizeIsOverride, "This parameter is overridden by a command-line option.\r\nThe value shown reflects " +
+        "the command-line setting, not the mbc project file.");
             // 
             // picwriteregFCIsOverride
             // 
@@ -689,8 +692,8 @@
             this.picwriteregFCIsOverride.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.picwriteregFCIsOverride.TabIndex = 13;
             this.picwriteregFCIsOverride.TabStop = false;
-            this.toolTip1.SetToolTip(this.picwriteregFCIsOverride, "This parameter is overridden by the command line! It shows the value as set by th" +
-        "e command line, not the value configured in the mbc project file.");
+            this.toolTip1.SetToolTip(this.picwriteregFCIsOverride, "This parameter is overridden by a command-line option.\r\nThe value shown reflects " +
+        "the command-line setting, not the mbc project file.");
             // 
             // label5
             // 
@@ -703,15 +706,11 @@
             // 
             // panel2
             // 
-            this.panel2.AutoSize = true;
             this.panel2.Controls.Add(this.label17);
             this.panel2.Controls.Add(this.comboStringEncoding);
             this.panel2.Controls.Add(this.picSamplerateIsOverride);
-            this.panel2.Controls.Add(this.buttonApply);
             this.panel2.Controls.Add(this.groupBox5);
             this.panel2.Controls.Add(this.textboxHoldingRegistersStart);
-            this.panel2.Controls.Add(this.buttonCancel);
-            this.panel2.Controls.Add(this.buttonOK);
             this.panel2.Controls.Add(this.label5);
             this.panel2.Controls.Add(this.numericSamplerate);
             this.panel2.Controls.Add(this.label6);
@@ -724,8 +723,7 @@
             this.panel2.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel2.Location = new System.Drawing.Point(0, 38);
             this.panel2.Name = "panel2";
-            this.panel2.Padding = new System.Windows.Forms.Padding(0, 0, 0, 6);
-            this.panel2.Size = new System.Drawing.Size(692, 396);
+            this.panel2.Size = new System.Drawing.Size(692, 382);
             this.panel2.TabIndex = 23;
             // 
             // label17
@@ -746,43 +744,13 @@
             this.comboStringEncoding.Size = new System.Drawing.Size(208, 21);
             this.comboStringEncoding.TabIndex = 33;
             // 
-            // buttonApply
-            // 
-            this.buttonApply.Location = new System.Drawing.Point(430, 364);
-            this.buttonApply.Name = "buttonApply";
-            this.buttonApply.Size = new System.Drawing.Size(75, 23);
-            this.buttonApply.TabIndex = 32;
-            this.buttonApply.Text = "Apply";
-            this.buttonApply.UseVisualStyleBackColor = true;
-            this.buttonApply.Click += new System.EventHandler(this.ButtonApply_Click);
-            // 
             // groupBox5
             // 
             this.groupBox5.Location = new System.Drawing.Point(444, 10);
             this.groupBox5.Name = "groupBox5";
-            this.groupBox5.Size = new System.Drawing.Size(8, 335);
+            this.groupBox5.Size = new System.Drawing.Size(8, 364);
             this.groupBox5.TabIndex = 31;
             this.groupBox5.TabStop = false;
-            // 
-            // buttonCancel
-            // 
-            this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.buttonCancel.Location = new System.Drawing.Point(341, 364);
-            this.buttonCancel.Name = "buttonCancel";
-            this.buttonCancel.Size = new System.Drawing.Size(75, 23);
-            this.buttonCancel.TabIndex = 30;
-            this.buttonCancel.Text = "Cancel";
-            this.buttonCancel.UseVisualStyleBackColor = true;
-            // 
-            // buttonOK
-            // 
-            this.buttonOK.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.buttonOK.Location = new System.Drawing.Point(252, 364);
-            this.buttonOK.Name = "buttonOK";
-            this.buttonOK.Size = new System.Drawing.Size(75, 23);
-            this.buttonOK.TabIndex = 29;
-            this.buttonOK.Text = "OK";
-            this.buttonOK.UseVisualStyleBackColor = true;
             // 
             // label6
             // 
@@ -1060,22 +1028,66 @@
             // 
             this.label16.Location = new System.Drawing.Point(62, 4);
             this.label16.Name = "label16";
-            this.label16.Size = new System.Drawing.Size(578, 30);
+            this.label16.Padding = new System.Windows.Forms.Padding(0, 1, 0, 0);
+            this.label16.Size = new System.Drawing.Size(537, 30);
             this.label16.TabIndex = 1;
-            this.label16.Text = "Some parameters are overridden by the command line! \r\nThey show the value as set " +
-    "by the command line, not the value configured in the mbc project file.";
+            this.label16.Text = "Parameters marked with a warning icon are overridden by command-line options. \r\nT" +
+    "he displayed values come from the command line, not the mbc project file.";
             // 
-            // panelWarning
+            // warningPanel
             // 
-            this.panelWarning.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panelWarning.Controls.Add(this.label16);
-            this.panelWarning.Controls.Add(this.pictureBox1);
-            this.panelWarning.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panelWarning.Location = new System.Drawing.Point(0, 0);
-            this.panelWarning.Name = "panelWarning";
-            this.panelWarning.Size = new System.Drawing.Size(692, 38);
-            this.panelWarning.TabIndex = 22;
-            this.panelWarning.Visible = false;
+            this.warningPanel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.warningPanel.Controls.Add(this.label16);
+            this.warningPanel.Controls.Add(this.pictureBox1);
+            this.warningPanel.Dock = System.Windows.Forms.DockStyle.Top;
+            this.warningPanel.Location = new System.Drawing.Point(0, 0);
+            this.warningPanel.Name = "warningPanel";
+            this.warningPanel.Size = new System.Drawing.Size(692, 38);
+            this.warningPanel.TabIndex = 22;
+            this.warningPanel.Visible = false;
+            // 
+            // buttonPanel
+            // 
+            this.buttonPanel.Controls.Add(this.buttonApply);
+            this.buttonPanel.Controls.Add(this.buttonCancel);
+            this.buttonPanel.Controls.Add(this.buttonOK);
+            this.buttonPanel.Dock = System.Windows.Forms.DockStyle.Top;
+            this.buttonPanel.Location = new System.Drawing.Point(0, 420);
+            this.buttonPanel.Name = "buttonPanel";
+            this.buttonPanel.Size = new System.Drawing.Size(692, 35);
+            this.buttonPanel.TabIndex = 24;
+            // 
+            // buttonApply
+            // 
+            this.buttonApply.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.buttonApply.Location = new System.Drawing.Point(398, 6);
+            this.buttonApply.Name = "buttonApply";
+            this.buttonApply.Size = new System.Drawing.Size(75, 23);
+            this.buttonApply.TabIndex = 35;
+            this.buttonApply.Text = "Apply";
+            this.buttonApply.UseVisualStyleBackColor = true;
+            // 
+            // buttonCancel
+            // 
+            this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+            this.buttonCancel.Location = new System.Drawing.Point(309, 6);
+            this.buttonCancel.Name = "buttonCancel";
+            this.buttonCancel.Size = new System.Drawing.Size(75, 23);
+            this.buttonCancel.TabIndex = 34;
+            this.buttonCancel.Text = "Cancel";
+            this.buttonCancel.UseVisualStyleBackColor = true;
+            // 
+            // buttonOK
+            // 
+            this.buttonOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.buttonOK.DialogResult = System.Windows.Forms.DialogResult.OK;
+            this.buttonOK.Location = new System.Drawing.Point(220, 6);
+            this.buttonOK.Name = "buttonOK";
+            this.buttonOK.Size = new System.Drawing.Size(75, 23);
+            this.buttonOK.TabIndex = 33;
+            this.buttonOK.Text = "OK";
+            this.buttonOK.UseVisualStyleBackColor = true;
             // 
             // numericInterFrameDelay
             // 
@@ -1103,16 +1115,15 @@
             // 
             // ConfigForm
             // 
-            this.AcceptButton = this.buttonOK;
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.AutoSize = true;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.CancelButton = this.buttonCancel;
-            this.ClientSize = new System.Drawing.Size(692, 453);
+            this.ClientSize = new System.Drawing.Size(692, 452);
             this.ControlBox = false;
+            this.Controls.Add(this.buttonPanel);
             this.Controls.Add(this.panel2);
-            this.Controls.Add(this.panelWarning);
+            this.Controls.Add(this.warningPanel);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
@@ -1122,6 +1133,7 @@
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Project configuration";
+            this.Shown += new System.EventHandler(this.ConfigForm_Shown);
             ((System.ComponentModel.ISupportInitialize)(this.numericSamplerate)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericTcpServerPort)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericMaximumFrameSize)).EndInit();
@@ -1162,11 +1174,11 @@
             this.groupBoxSerialInterface.ResumeLayout(false);
             this.groupBoxSerialInterface.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
-            this.panelWarning.ResumeLayout(false);
-            this.panelWarning.PerformLayout();
+            this.warningPanel.ResumeLayout(false);
+            this.warningPanel.PerformLayout();
+            this.buttonPanel.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.numericInterFrameDelay)).EndInit();
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
@@ -1174,11 +1186,8 @@
         private System.Windows.Forms.ToolTip toolTip1;
         private System.ComponentModel.BackgroundWorker backgroundWorker1;
         private System.Windows.Forms.Panel panel2;
-        private System.Windows.Forms.Button buttonApply;
         private System.Windows.Forms.GroupBox groupBox5;
         private System.Windows.Forms.TextBox textboxHoldingRegistersStart;
-        private System.Windows.Forms.Button buttonCancel;
-        private System.Windows.Forms.Button buttonOK;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.NumericUpDown numericSamplerate;
         private System.Windows.Forms.Label label6;
@@ -1229,7 +1238,7 @@
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.Label label16;
-        private System.Windows.Forms.Panel panelWarning;
+        private System.Windows.Forms.Panel warningPanel;
         private SerialPortCombobox comboSerialPort;
         private System.Windows.Forms.PictureBox picConnectionTypeIsOverride;
         private System.Windows.Forms.PictureBox picEndofmessagetimeoutIsOverride;
@@ -1247,5 +1256,9 @@
         private System.Windows.Forms.PictureBox picwriteregFCIsOverride;
         private System.Windows.Forms.Label label17;
         private System.Windows.Forms.ComboBox comboStringEncoding;
+        private System.Windows.Forms.Panel buttonPanel;
+        private System.Windows.Forms.Button buttonApply;
+        private System.Windows.Forms.Button buttonCancel;
+        private System.Windows.Forms.Button buttonOK;
     }
 }
