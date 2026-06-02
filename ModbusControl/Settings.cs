@@ -506,8 +506,8 @@ namespace ModbusControl
         {
             public int HoldingRegistersStartAddress;    // 40_001, 40_000, 400_001, 400_000
             public bool MultilineAutosizeRows;
-            public List<CustomQueries.CustomQueryItem> QueriesList;
-            public CustomQueries.ColumnWidthsType ColumnWidths;
+            public List<CustomQueriesForm.CustomQueryItem> QueriesList;
+            public CustomQueriesForm.ColumnWidthsType ColumnWidths;
 
             // constructor
             public CCustomQueries()
@@ -518,7 +518,7 @@ namespace ModbusControl
                 MultilineAutosizeRows = false;
 
                 // columns widths
-                ColumnWidths = new CustomQueries.ColumnWidthsType
+                ColumnWidths = new CustomQueriesForm.ColumnWidthsType
                 {
                     sendWidth = 50,
                     slaveIDWidth = 28,
@@ -533,9 +533,9 @@ namespace ModbusControl
 
                 // demo queries
 
-                QueriesList = new List<CustomQueries.CustomQueryItem>();
+                QueriesList = new List<CustomQueriesForm.CustomQueryItem>();
 
-                CustomQueries.CustomQueryItem q = new CustomQueries.CustomQueryItem();
+                CustomQueriesForm.CustomQueryItem q = new CustomQueriesForm.CustomQueryItem();
                 q.slaveID = "1";
                 q.command = "RIR";
                 q.register = "30001";
@@ -545,7 +545,7 @@ namespace ModbusControl
                 q.comment = "demo";
                 QueriesList.Add(q);
 
-                q = new CustomQueries.CustomQueryItem();
+                q = new CustomQueriesForm.CustomQueryItem();
                 q.slaveID = "1";
                 q.command = "RHR";
                 q.register = "40001";
@@ -555,7 +555,7 @@ namespace ModbusControl
                 q.comment = "";
                 QueriesList.Add(q);
 
-                q = new CustomQueries.CustomQueryItem();
+                q = new CustomQueriesForm.CustomQueryItem();
                 q.slaveID = "1";
                 q.command = "WSHR";
                 q.register = "40001";
@@ -565,7 +565,7 @@ namespace ModbusControl
                 q.comment = "";
                 QueriesList.Add(q);
 
-                q = new CustomQueries.CustomQueryItem();
+                q = new CustomQueriesForm.CustomQueryItem();
                 q.slaveID = "1";
                 q.command = "WMHR";
                 q.register = "40001";
@@ -575,7 +575,7 @@ namespace ModbusControl
                 q.comment = "";
                 QueriesList.Add(q);
 
-                q = new CustomQueries.CustomQueryItem();
+                q = new CustomQueriesForm.CustomQueryItem();
                 q.slaveID = "1";
                 q.command = "RDI";
                 q.register = "10001";
@@ -585,7 +585,7 @@ namespace ModbusControl
                 q.comment = "";
                 QueriesList.Add(q);
 
-                q = new CustomQueries.CustomQueryItem();
+                q = new CustomQueriesForm.CustomQueryItem();
                 q.slaveID = "1";
                 q.command = "RC";
                 q.register = "1";
@@ -595,7 +595,7 @@ namespace ModbusControl
                 q.comment = "";
                 QueriesList.Add(q);
 
-                q = new CustomQueries.CustomQueryItem();
+                q = new CustomQueriesForm.CustomQueryItem();
                 q.slaveID = "1";
                 q.command = "WSC";
                 q.register = "1";
@@ -605,7 +605,7 @@ namespace ModbusControl
                 q.comment = "";
                 QueriesList.Add(q);
 
-                q = new CustomQueries.CustomQueryItem();
+                q = new CustomQueriesForm.CustomQueryItem();
                 q.slaveID = "1";
                 q.command = "WMC";
                 q.register = "1";
@@ -615,7 +615,7 @@ namespace ModbusControl
                 q.comment = "";
                 QueriesList.Add(q);
 
-                q = new CustomQueries.CustomQueryItem();
+                q = new CustomQueriesForm.CustomQueryItem();
                 q.slaveID = "1";
                 q.command = "CUSTQ";
                 q.register = "";
@@ -643,7 +643,7 @@ namespace ModbusControl
                         {
                             foreach (XmlNode c in xcl)
                             {
-                                CustomQueries.CustomQueryItem nc = new CustomQueries.CustomQueryItem();
+                                CustomQueriesForm.CustomQueryItem nc = new CustomQueriesForm.CustomQueryItem();
                                 ReadElementString(c, "slaveid", ref nc.slaveID);
                                 ReadElementString(c, "command", ref nc.command);
                                 ReadElementString(c, "register", ref nc.register);
@@ -949,7 +949,7 @@ namespace ModbusControl
             return WriteElementString(parent, name, v.ToString());
         }
 
-        private static void WriteElementCustomQueriesQueriesList(XmlNode parent, string parentName, List<CustomQueries.CustomQueryItem> queriesList)
+        private static void WriteElementCustomQueriesQueriesList(XmlNode parent, string parentName, List<CustomQueriesForm.CustomQueryItem> queriesList)
         {
             // do not save if queriesList is null
             if (queriesList != null)
@@ -957,7 +957,7 @@ namespace ModbusControl
                 XmlDocument xdoc = parent.OwnerDocument;
                 XmlNode xpar = WriteParentElement(parent, parentName);
                 xpar.RemoveAll();
-                foreach (CustomQueries.CustomQueryItem q in queriesList)
+                foreach (CustomQueriesForm.CustomQueryItem q in queriesList)
                 {
                     XmlNode xcmd = xdoc.CreateElement("query");
                     WriteElementString(xcmd, "slaveid", q.slaveID);
@@ -973,7 +973,7 @@ namespace ModbusControl
         }
 
 
-        private static void WriteElementCustomQueriesColumnWidths(XmlNode parent, string parentName, CustomQueries.ColumnWidthsType columnWidths)
+        private static void WriteElementCustomQueriesColumnWidths(XmlNode parent, string parentName, CustomQueriesForm.ColumnWidthsType columnWidths)
         {
             XmlDocument xdoc = parent.OwnerDocument;
             XmlNode xcw = WriteParentElement(parent, parentName);

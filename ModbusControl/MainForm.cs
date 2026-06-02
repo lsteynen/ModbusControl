@@ -76,11 +76,11 @@ namespace ModbusControl
         private readonly object WriteListLock = new object();
 
         // the import form, make it global and use show/hide to keep the settings
-        Import ImportForm;
+        ImportForm ImportForm;
         // the export form, make it global and use show/hide to keep the settings
-        Export ExportForm;
+        ExportForm ExportForm;
         // the custom-modbus-command form, make it global and use show/hide to keep the settings
-        CustomQueries CustomQueriesForm;
+        CustomQueriesForm CustomQueriesForm;
 
         // constructor
         public MainForm()
@@ -187,7 +187,7 @@ namespace ModbusControl
             Options.CheckForUpdates = Settings1.Shared.Updater.CheckForUpdates;
 
             // Findbox
-            panFilter.Visible = Options.ShowFindBox;
+            filterPanel.Visible = Options.ShowFindBox;
 
             // MRU list
             recentFilesMenuItem.LoadList(Settings1.Roaming.MbcMruList);
@@ -392,7 +392,7 @@ namespace ModbusControl
             Settings1.Roaming.ClearFilterOnTabChange = Options.ClearFilterOnTabChange;
             Settings1.Roaming.MbcfileValidationEnable = Options.MbcfileValidationEnable;
             Settings1.Roaming.MbcfileValidationXSDFile = Options.MbcfileValidationXSDFile;
-            Settings1.Roaming.ShowFindFilterBox = panFilter.Visible;
+            Settings1.Roaming.ShowFindFilterBox = filterPanel.Visible;
             Settings1.Roaming.CustomEditorEnable = Options.CustomEditorEnable;
             Settings1.Roaming.CustomEditorCommand = Options.CustomEditorCommand;
             Debug.Print(DateTime.Now.TimeOfDay + ": 9) Save settings into Settings1");
@@ -416,10 +416,10 @@ namespace ModbusControl
 
                 Settings1.Roaming.CustomQueries.MultilineAutosizeRows = CustomQueriesForm.MultilineAutosizeRows;
 
-                CustomQueries.ColumnWidthsType widths = CustomQueriesForm.ColumnWidthsInWeights;
+                CustomQueriesForm.ColumnWidthsType widths = CustomQueriesForm.ColumnWidthsInWeights;
                 Settings1.Roaming.CustomQueries.ColumnWidths = widths;
 
-                List<CustomQueries.CustomQueryItem> cmdList = CustomQueriesForm.QueriesList;
+                List<CustomQueriesForm.CustomQueryItem> cmdList = CustomQueriesForm.QueriesList;
                 Settings1.Roaming.CustomQueries.QueriesList = cmdList;
             }
 
@@ -610,6 +610,7 @@ namespace ModbusControl
                                                     || (CommandlineArgs.ArgInterframedelay != null)
                                                     || (CommandlineArgs.ArgWriteholdingregFC != null)
                                                     || (CommandlineArgs.ArgSamplerate != null);
+            
             SaveConfigurationForm1.ShowDialog();
         }
 
@@ -773,7 +774,7 @@ namespace ModbusControl
         /// </summary>
         private void ConfigurationToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            ConfigForm configform = new ConfigForm();
+            ProjectConfigurationForm configform = new ProjectConfigurationForm();
 
             // pass project values to form
             configform.ConnectionInUse = ConnectionInUse;
@@ -831,7 +832,7 @@ namespace ModbusControl
          /// <summary>
         /// Apply the new configuration settings
         /// </summary>
-        private void ApplyConfiguration(ConfigForm configform)
+        private void ApplyConfiguration(ProjectConfigurationForm configform)
         {
             // check if the new settings change the current connection
             // if connection type changes, or connection parameters change...
@@ -2305,7 +2306,7 @@ namespace ModbusControl
         private void ConfigApplyHandler(object sender)
         {
             // apply the new settings
-            ApplyConfiguration((ConfigForm)sender);
+            ApplyConfiguration((ProjectConfigurationForm)sender);
         }
 
         // call when columns widhts were changed
@@ -2497,7 +2498,7 @@ namespace ModbusControl
         private void BtnFilterClose_Click(object sender, EventArgs e)
         {
             FilterClear();
-            panFilter.Hide();
+            filterPanel.Hide();
         }
 
         private void SetFilterColor( bool valid)
@@ -2531,7 +2532,7 @@ namespace ModbusControl
         /// </summary>
         private void FilterStartFind()
         {
-            panFilter.Show();
+            filterPanel.Show();
             tbFilterText.SelectAll();
             tbFilterText.Focus();
         }
@@ -2545,7 +2546,7 @@ namespace ModbusControl
             // create once, then hide and show, to keep settings
             if (ImportForm == null)
             {
-                ImportForm = new Import(this);
+                ImportForm = new ImportForm(this);
             }
 
             // set settings
@@ -2572,7 +2573,7 @@ namespace ModbusControl
             // create once, then hide and show, to keep settings
             if (ExportForm == null)
             {
-                ExportForm = new Export(this);
+                ExportForm = new ExportForm(this);
             }
 
             // set settings
@@ -2606,7 +2607,7 @@ namespace ModbusControl
             // create if needed, else show and hide
             if (CustomQueriesForm == null)
             {
-                CustomQueriesForm = new CustomQueries(this);
+                CustomQueriesForm = new CustomQueriesForm(this);
 
                 // load settings
 
@@ -2614,10 +2615,10 @@ namespace ModbusControl
 
                 CustomQueriesForm.MultilineAutosizeRows = Settings1.Roaming.CustomQueries.MultilineAutosizeRows;
 
-                CustomQueries.ColumnWidthsType widths = Settings1.Roaming.CustomQueries.ColumnWidths;
+                CustomQueriesForm.ColumnWidthsType widths = Settings1.Roaming.CustomQueries.ColumnWidths;
                 CustomQueriesForm.ColumnWidthsInWeights = widths;
 
-                List<CustomQueries.CustomQueryItem> clist = Settings1.Roaming.CustomQueries.QueriesList;
+                List<CustomQueriesForm.CustomQueryItem> clist = Settings1.Roaming.CustomQueries.QueriesList;
                 CustomQueriesForm.QueriesList = clist;
             }
 

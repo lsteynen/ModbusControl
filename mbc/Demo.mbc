@@ -2,8 +2,8 @@
 <!-- Demo.mbc - ModbusControl demo project file -->
 <modbuscontrol>
 	<size>
-		<width>880</width>
-		<height>890</height>
+		<width>660</width>
+		<height>570</height>
 	</size>
 	<modbus>
 		<!-- Connection type and protocol -->

@@ -34,8 +34,8 @@
             this.buttonOK = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
-            this.comboSerialPort = new ModbusControl.SerialPortCombobox();
             this.pic = new System.Windows.Forms.PictureBox();
+            this.comboSerialPort = new ModbusControl.SerialPortCombobox();
             ((System.ComponentModel.ISupportInitialize)(this.pic)).BeginInit();
             this.SuspendLayout();
             // 
@@ -45,7 +45,7 @@
             this.label1.Location = new System.Drawing.Point(20, 111);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(29, 13);
-            this.label1.TabIndex = 2;
+            this.label1.TabIndex = 3;
             this.label1.Text = "Port:";
             // 
             // labelErrortext
@@ -54,7 +54,7 @@
             this.labelErrortext.Location = new System.Drawing.Point(69, 18);
             this.labelErrortext.Name = "labelErrortext";
             this.labelErrortext.Size = new System.Drawing.Size(58, 13);
-            this.labelErrortext.TabIndex = 4;
+            this.labelErrortext.TabIndex = 0;
             this.labelErrortext.Text = "Error text...";
             // 
             // buttonCancel
@@ -63,7 +63,7 @@
             this.buttonCancel.Location = new System.Drawing.Point(154, 145);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 23);
-            this.buttonCancel.TabIndex = 16;
+            this.buttonCancel.TabIndex = 6;
             this.buttonCancel.Text = "Cancel";
             this.buttonCancel.UseVisualStyleBackColor = true;
             // 
@@ -73,7 +73,7 @@
             this.buttonOK.Location = new System.Drawing.Point(65, 145);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(75, 23);
-            this.buttonOK.TabIndex = 15;
+            this.buttonOK.TabIndex = 5;
             this.buttonOK.Text = "OK";
             this.buttonOK.UseVisualStyleBackColor = true;
             // 
@@ -83,7 +83,7 @@
             this.label2.Location = new System.Drawing.Point(18, 70);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(253, 13);
-            this.label2.TabIndex = 18;
+            this.label2.TabIndex = 1;
             this.label2.Text = "Choose another serial port from the list and press OK";
             // 
             // label3
@@ -92,17 +92,8 @@
             this.label3.Location = new System.Drawing.Point(18, 83);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(80, 13);
-            this.label3.TabIndex = 19;
+            this.label3.TabIndex = 2;
             this.label3.Text = "or press Cancel";
-            // 
-            // comboSerialPort
-            // 
-            this.comboSerialPort.FormattingEnabled = true;
-            this.comboSerialPort.Location = new System.Drawing.Point(53, 108);
-            this.comboSerialPort.MaxLength = 30;
-            this.comboSerialPort.Name = "comboSerialPort";
-            this.comboSerialPort.Size = new System.Drawing.Size(91, 21);
-            this.comboSerialPort.TabIndex = 20;
             // 
             // pic
             // 
@@ -111,6 +102,15 @@
             this.pic.Size = new System.Drawing.Size(40, 40);
             this.pic.TabIndex = 17;
             this.pic.TabStop = false;
+            // 
+            // comboSerialPort
+            // 
+            this.comboSerialPort.FormattingEnabled = true;
+            this.comboSerialPort.Location = new System.Drawing.Point(53, 108);
+            this.comboSerialPort.MaxLength = 30;
+            this.comboSerialPort.Name = "comboSerialPort";
+            this.comboSerialPort.Size = new System.Drawing.Size(91, 21);
+            this.comboSerialPort.TabIndex = 4;
             // 
             // SerialPortOpenFailedForm
             // 

@@ -35,6 +35,10 @@ namespace ModbusControl
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.DiagnosticsTimer = new System.Windows.Forms.Timer(this.components);
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            this.chkFilterRegex = new System.Windows.Forms.CheckBox();
+            this.chkFilterCaseSensitive = new System.Windows.Forms.CheckBox();
+            this.btnFilterClose = new System.Windows.Forms.Button();
+            this.btnFilterClear = new System.Windows.Forms.Button();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openProjectFileMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -85,17 +89,15 @@ namespace ModbusControl
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.StatusbarTimer = new System.Windows.Forms.Timer(this.components);
             this.tbFilterText = new System.Windows.Forms.TextBox();
-            this.panFilter = new System.Windows.Forms.Panel();
-            this.chkFilterRegex = new System.Windows.Forms.CheckBox();
-            this.chkFilterCaseSensitive = new System.Windows.Forms.CheckBox();
-            this.btnFilterClose = new System.Windows.Forms.Button();
-            this.btnFilterClear = new System.Windows.Forms.Button();
+            this.filterPanel = new System.Windows.Forms.Panel();
             this.label1 = new System.Windows.Forms.Label();
+            this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.recentFilesMenuItem = new RecentsToolStripMenuItem();
             this.statusStrip.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
-            this.panFilter.SuspendLayout();
+            this.filterPanel.SuspendLayout();
+            this.tableLayoutPanel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // statusStrip
@@ -106,14 +108,14 @@ namespace ModbusControl
             this.statusStrip.Location = new System.Drawing.Point(0, 440);
             this.statusStrip.Name = "statusStrip";
             this.statusStrip.ShowItemToolTips = true;
-            this.statusStrip.Size = new System.Drawing.Size(584, 22);
+            this.statusStrip.Size = new System.Drawing.Size(592, 22);
             this.statusStrip.TabIndex = 0;
             this.statusStrip.Text = "statusStrip";
             // 
             // lblStatus
             // 
             this.lblStatus.Name = "lblStatus";
-            this.lblStatus.Size = new System.Drawing.Size(569, 17);
+            this.lblStatus.Size = new System.Drawing.Size(577, 17);
             this.lblStatus.Spring = true;
             this.lblStatus.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
@@ -130,6 +132,62 @@ namespace ModbusControl
             // 
             this.toolTip1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(225)))));
             // 
+            // chkFilterRegex
+            // 
+            this.chkFilterRegex.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.chkFilterRegex.AutoSize = true;
+            this.chkFilterRegex.Location = new System.Drawing.Point(396, 4);
+            this.chkFilterRegex.Margin = new System.Windows.Forms.Padding(8, 4, 3, 3);
+            this.chkFilterRegex.Name = "chkFilterRegex";
+            this.chkFilterRegex.Size = new System.Drawing.Size(57, 17);
+            this.chkFilterRegex.TabIndex = 3;
+            this.chkFilterRegex.Text = "Regex";
+            this.toolTip1.SetToolTip(this.chkFilterRegex, resources.GetString("chkFilterRegex.ToolTip"));
+            this.chkFilterRegex.UseVisualStyleBackColor = true;
+            this.chkFilterRegex.CheckedChanged += new System.EventHandler(this.chkFilterRegex_CheckedChanged);
+            // 
+            // chkFilterCaseSensitive
+            // 
+            this.chkFilterCaseSensitive.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.chkFilterCaseSensitive.AutoSize = true;
+            this.chkFilterCaseSensitive.Location = new System.Drawing.Point(458, 4);
+            this.chkFilterCaseSensitive.Margin = new System.Windows.Forms.Padding(2, 4, 2, 2);
+            this.chkFilterCaseSensitive.Name = "chkFilterCaseSensitive";
+            this.chkFilterCaseSensitive.Size = new System.Drawing.Size(82, 17);
+            this.chkFilterCaseSensitive.TabIndex = 4;
+            this.chkFilterCaseSensitive.Text = "Match case";
+            this.toolTip1.SetToolTip(this.chkFilterCaseSensitive, "Case sensitive");
+            this.chkFilterCaseSensitive.UseVisualStyleBackColor = true;
+            this.chkFilterCaseSensitive.CheckedChanged += new System.EventHandler(this.ChkFilterCaseSensitive_CheckedChanged);
+            // 
+            // btnFilterClose
+            // 
+            this.btnFilterClose.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnFilterClose.AutoSize = true;
+            this.btnFilterClose.Location = new System.Drawing.Point(544, 2);
+            this.btnFilterClose.Margin = new System.Windows.Forms.Padding(2);
+            this.btnFilterClose.Name = "btnFilterClose";
+            this.btnFilterClose.Size = new System.Drawing.Size(44, 20);
+            this.btnFilterClose.TabIndex = 5;
+            this.btnFilterClose.Text = "Close";
+            this.toolTip1.SetToolTip(this.btnFilterClose, "Close find/filter");
+            this.btnFilterClose.UseVisualStyleBackColor = true;
+            this.btnFilterClose.Click += new System.EventHandler(this.BtnFilterClose_Click);
+            // 
+            // btnFilterClear
+            // 
+            this.btnFilterClear.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnFilterClear.AutoSize = true;
+            this.btnFilterClear.Image = ((System.Drawing.Image)(resources.GetObject("btnFilterClear.Image")));
+            this.btnFilterClear.Location = new System.Drawing.Point(361, 2);
+            this.btnFilterClear.Margin = new System.Windows.Forms.Padding(0, 2, 2, 2);
+            this.btnFilterClear.Name = "btnFilterClear";
+            this.btnFilterClear.Size = new System.Drawing.Size(25, 20);
+            this.btnFilterClear.TabIndex = 2;
+            this.toolTip1.SetToolTip(this.btnFilterClear, "Clear search");
+            this.btnFilterClear.UseVisualStyleBackColor = true;
+            this.btnFilterClear.Click += new System.EventHandler(this.BtnFilterClear_Click);
+            // 
             // menuStrip1
             // 
             this.menuStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
@@ -142,7 +200,7 @@ namespace ModbusControl
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Padding = new System.Windows.Forms.Padding(5, 2, 0, 2);
-            this.menuStrip1.Size = new System.Drawing.Size(584, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(592, 24);
             this.menuStrip1.TabIndex = 0;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -445,7 +503,7 @@ namespace ModbusControl
             this.PollOnceToolbutton});
             this.toolStrip1.Location = new System.Drawing.Point(0, 24);
             this.toolStrip1.Name = "toolStrip1";
-            this.toolStrip1.Size = new System.Drawing.Size(584, 27);
+            this.toolStrip1.Size = new System.Drawing.Size(592, 27);
             this.toolStrip1.TabIndex = 1;
             this.toolStrip1.Text = "toolStrip1";
             // 
@@ -550,8 +608,8 @@ namespace ModbusControl
             this.tabControl1.Location = new System.Drawing.Point(0, 77);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(584, 363);
-            this.tabControl1.TabIndex = 2;
+            this.tabControl1.Size = new System.Drawing.Size(592, 363);
+            this.tabControl1.TabIndex = 3;
             this.tabControl1.Selected += new System.Windows.Forms.TabControlEventHandler(this.TabControl1_Selected);
             // 
             // StatusbarTimer
@@ -560,94 +618,60 @@ namespace ModbusControl
             // 
             // tbFilterText
             // 
-            this.tbFilterText.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.tbFilterText.Location = new System.Drawing.Point(59, 3);
+            this.tbFilterText.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tbFilterText.Location = new System.Drawing.Point(63, 2);
             this.tbFilterText.Margin = new System.Windows.Forms.Padding(2);
             this.tbFilterText.Name = "tbFilterText";
-            this.tbFilterText.Size = new System.Drawing.Size(288, 20);
+            this.tbFilterText.Size = new System.Drawing.Size(296, 20);
             this.tbFilterText.TabIndex = 1;
             this.tbFilterText.TextChanged += new System.EventHandler(this.TbFilterText_TextChanged);
             // 
-            // panFilter
+            // filterPanel
             // 
-            this.panFilter.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panFilter.Controls.Add(this.chkFilterRegex);
-            this.panFilter.Controls.Add(this.chkFilterCaseSensitive);
-            this.panFilter.Controls.Add(this.btnFilterClose);
-            this.panFilter.Controls.Add(this.btnFilterClear);
-            this.panFilter.Controls.Add(this.label1);
-            this.panFilter.Controls.Add(this.tbFilterText);
-            this.panFilter.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panFilter.Location = new System.Drawing.Point(0, 51);
-            this.panFilter.Margin = new System.Windows.Forms.Padding(2);
-            this.panFilter.MinimumSize = new System.Drawing.Size(400, 2);
-            this.panFilter.Name = "panFilter";
-            this.panFilter.Size = new System.Drawing.Size(584, 26);
-            this.panFilter.TabIndex = 3;
-            // 
-            // chkFilterRegex
-            // 
-            this.chkFilterRegex.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.chkFilterRegex.AutoSize = true;
-            this.chkFilterRegex.Location = new System.Drawing.Point(385, 5);
-            this.chkFilterRegex.Name = "chkFilterRegex";
-            this.chkFilterRegex.Size = new System.Drawing.Size(57, 17);
-            this.chkFilterRegex.TabIndex = 3;
-            this.chkFilterRegex.Text = "Regex";
-            this.toolTip1.SetToolTip(this.chkFilterRegex, resources.GetString("chkFilterRegex.ToolTip"));
-            this.chkFilterRegex.UseVisualStyleBackColor = true;
-            this.chkFilterRegex.CheckedChanged += new System.EventHandler(this.chkFilterRegex_CheckedChanged);
-            // 
-            // chkFilterCaseSensitive
-            // 
-            this.chkFilterCaseSensitive.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.chkFilterCaseSensitive.AutoSize = true;
-            this.chkFilterCaseSensitive.Location = new System.Drawing.Point(447, 5);
-            this.chkFilterCaseSensitive.Margin = new System.Windows.Forms.Padding(2);
-            this.chkFilterCaseSensitive.Name = "chkFilterCaseSensitive";
-            this.chkFilterCaseSensitive.Size = new System.Drawing.Size(82, 17);
-            this.chkFilterCaseSensitive.TabIndex = 4;
-            this.chkFilterCaseSensitive.Text = "Match case";
-            this.toolTip1.SetToolTip(this.chkFilterCaseSensitive, "Case sensitive");
-            this.chkFilterCaseSensitive.UseVisualStyleBackColor = true;
-            this.chkFilterCaseSensitive.CheckedChanged += new System.EventHandler(this.ChkFilterCaseSensitive_CheckedChanged);
-            // 
-            // btnFilterClose
-            // 
-            this.btnFilterClose.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnFilterClose.Location = new System.Drawing.Point(533, 2);
-            this.btnFilterClose.Margin = new System.Windows.Forms.Padding(2);
-            this.btnFilterClose.Name = "btnFilterClose";
-            this.btnFilterClose.Size = new System.Drawing.Size(44, 20);
-            this.btnFilterClose.TabIndex = 5;
-            this.btnFilterClose.Text = "Close";
-            this.toolTip1.SetToolTip(this.btnFilterClose, "Close find/filter");
-            this.btnFilterClose.UseVisualStyleBackColor = true;
-            this.btnFilterClose.Click += new System.EventHandler(this.BtnFilterClose_Click);
-            // 
-            // btnFilterClear
-            // 
-            this.btnFilterClear.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnFilterClear.Image = ((System.Drawing.Image)(resources.GetObject("btnFilterClear.Image")));
-            this.btnFilterClear.Location = new System.Drawing.Point(341, 2);
-            this.btnFilterClear.Margin = new System.Windows.Forms.Padding(2);
-            this.btnFilterClear.Name = "btnFilterClear";
-            this.btnFilterClear.Size = new System.Drawing.Size(25, 20);
-            this.btnFilterClear.TabIndex = 2;
-            this.toolTip1.SetToolTip(this.btnFilterClear, "Clear search");
-            this.btnFilterClear.UseVisualStyleBackColor = true;
-            this.btnFilterClear.Click += new System.EventHandler(this.BtnFilterClear_Click);
+            this.filterPanel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.filterPanel.Controls.Add(this.tableLayoutPanel1);
+            this.filterPanel.Dock = System.Windows.Forms.DockStyle.Top;
+            this.filterPanel.Location = new System.Drawing.Point(0, 51);
+            this.filterPanel.Margin = new System.Windows.Forms.Padding(2);
+            this.filterPanel.MinimumSize = new System.Drawing.Size(400, 2);
+            this.filterPanel.Name = "filterPanel";
+            this.filterPanel.Size = new System.Drawing.Size(592, 26);
+            this.filterPanel.TabIndex = 2;
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(1, 6);
-            this.label1.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label1.Location = new System.Drawing.Point(2, 4);
+            this.label1.Margin = new System.Windows.Forms.Padding(2, 4, 2, 0);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(57, 13);
             this.label1.TabIndex = 0;
             this.label1.Text = "Find/Filter:";
+            // 
+            // tableLayoutPanel1
+            // 
+            this.tableLayoutPanel1.AutoSize = true;
+            this.tableLayoutPanel1.ColumnCount = 6;
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.tableLayoutPanel1.Controls.Add(this.tbFilterText, 1, 0);
+            this.tableLayoutPanel1.Controls.Add(this.label1, 0, 0);
+            this.tableLayoutPanel1.Controls.Add(this.btnFilterClose, 5, 0);
+            this.tableLayoutPanel1.Controls.Add(this.chkFilterCaseSensitive, 4, 0);
+            this.tableLayoutPanel1.Controls.Add(this.chkFilterRegex, 3, 0);
+            this.tableLayoutPanel1.Controls.Add(this.btnFilterClear, 2, 0);
+            this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel1.GrowStyle = System.Windows.Forms.TableLayoutPanelGrowStyle.FixedSize;
+            this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
+            this.tableLayoutPanel1.Name = "tableLayoutPanel1";
+            this.tableLayoutPanel1.RowCount = 1;
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(590, 24);
+            this.tableLayoutPanel1.TabIndex = 1;
             // 
             // recentFilesMenuItem
             // 
@@ -662,9 +686,9 @@ namespace ModbusControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(584, 462);
+            this.ClientSize = new System.Drawing.Size(592, 462);
             this.Controls.Add(this.tabControl1);
-            this.Controls.Add(this.panFilter);
+            this.Controls.Add(this.filterPanel);
             this.Controls.Add(this.toolStrip1);
             this.Controls.Add(this.menuStrip1);
             this.Controls.Add(this.statusStrip);
@@ -684,8 +708,10 @@ namespace ModbusControl
             this.menuStrip1.PerformLayout();
             this.toolStrip1.ResumeLayout(false);
             this.toolStrip1.PerformLayout();
-            this.panFilter.ResumeLayout(false);
-            this.panFilter.PerformLayout();
+            this.filterPanel.ResumeLayout(false);
+            this.filterPanel.PerformLayout();
+            this.tableLayoutPanel1.ResumeLayout(false);
+            this.tableLayoutPanel1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -742,7 +768,7 @@ namespace ModbusControl
         private System.Windows.Forms.ToolStripMenuItem openFileLocationToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator9;
         private System.Windows.Forms.TextBox tbFilterText;
-        private System.Windows.Forms.Panel panFilter;
+        private System.Windows.Forms.Panel filterPanel;
         private System.Windows.Forms.Button btnFilterClear;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.CheckBox chkFilterCaseSensitive;
@@ -755,6 +781,7 @@ namespace ModbusControl
         private System.Windows.Forms.ToolStripMenuItem importRegistersFromFileToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem exportRegistersToFileToolStripMenuItem;
         private System.Windows.Forms.CheckBox chkFilterRegex;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
     }
 }
 

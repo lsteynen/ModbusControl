@@ -129,13 +129,35 @@
   <metadata name="toolTip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>486, 17</value>
   </metadata>
+  <data name="chkFilterRegex.ToolTip" xml:space="preserve">
+    <value>Regex basics:  
+. matches any character
+.* matches any text
+^ start of text
+$ end of text
+[abc] any of a, b, or c
+[^abc] anything except a, b, or c
+\d digit, \w word char, \s whitespace
+(abc|def) match abc or def
+abc? c is optional
+abc+ one or more c’s
+abc* zero or more c’s</value>
+  </data>
+  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <data name="btnFilterClear.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAD
+        rwAAA68BGB6xfQAAABl0RVh0U29mdHdhcmUAUGFpbnQuTkVUIDUuMS4xMhMBR3QAAABTSURBVDhPzYyL
+        CgAgCAP9/58uCIxc1wuCGghuOzX7VelgOimwGjzeVWD1WD1lddeCcmKKp6KV98TceeDLCPCcmOAVUE+Z
+        9h2wErL+ZHdQCs3msTL8I1ulLYFXzAAAAABJRU5ErkJggg==
+</value>
+  </data>
   <metadata name="menuStrip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>599, 17</value>
   </metadata>
   <metadata name="toolStrip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>734, 17</value>
   </metadata>
-  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   <data name="OpenProjectToolbutton.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
@@ -355,28 +377,6 @@
   <metadata name="StatusbarTimer.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>858, 17</value>
   </metadata>
-  <data name="chkFilterRegex.ToolTip" xml:space="preserve">
-    <value>Regex basics:  
-. matches any character
-.* matches any text
-^ start of text
-$ end of text
-[abc] any of a, b, or c
-[^abc] anything except a, b, or c
-\d digit, \w word char, \s whitespace
-(abc|def) match abc or def
-abc? c is optional
-abc+ one or more c’s
-abc* zero or more c’s</value>
-  </data>
-  <data name="btnFilterClear.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-    <value>
-        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAD
-        rwAAA68BGB6xfQAAABl0RVh0U29mdHdhcmUAUGFpbnQuTkVUIDUuMS4xMhMBR3QAAABTSURBVDhPzYyL
-        CgAgCAP9/58uCIxc1wuCGghuOzX7VelgOimwGjzeVWD1WD1lddeCcmKKp6KV98TceeDLCPCcmOAVUE+Z
-        9h2wErL+ZHdQCs3msTL8I1ulLYFXzAAAAABJRU5ErkJggg==
-</value>
-  </data>
   <metadata name="$this.TrayHeight" type="System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>73</value>
   </metadata>
