@@ -4,14 +4,14 @@ using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using LST.Helpers;
-using ModbusControlSpace;
+using ModbusControl;
 
 namespace UnitTests
 {
 	[TestClass]
     public class Test_SplitCommandlineString
     {
-		// public static bool SplitCommandlineString(string input, out string command, out string arguments)
+		// public static bool AppHelpers.SplitCommandlineString(string input, out string command, out string arguments)
         
 		
 		[TestMethod]
@@ -20,9 +20,9 @@ namespace UnitTests
 			string testcommand;
 			string testargs;
 			
-            bool ret = SplitCommandlineString("", out testcommand, out testargs);
-            Assert.AreEqual(ret, false);
-        }
+            bool ret = AppHelpers.SplitCommandlineString("", out testcommand, out testargs);
+            Assert.IsFalse(ret);
+        }   
 		
 		[TestMethod]
         public void Test_2()
@@ -30,8 +30,8 @@ namespace UnitTests
 			string testcommand;
 			string testargs;
 			
-            bool ret = SplitCommandlineString(" ", out testcommand, out testargs);
-            Assert.AreEqual(ret, false);
+            bool ret = AppHelpers.SplitCommandlineString(" ", out testcommand, out testargs);
+            Assert.IsFalse(ret);
         }
 		
 		[TestMethod]
@@ -40,8 +40,8 @@ namespace UnitTests
 			string testcommand;
 			string testargs;
 			
-            bool ret = SplitCommandlineString("    ", out testcommand, out testargs);
-            Assert.AreEqual(ret, false);
+            bool ret = AppHelpers.SplitCommandlineString("    ", out testcommand, out testargs);
+            Assert.IsFalse(ret);
         }
 		
 		[TestMethod]
@@ -50,10 +50,10 @@ namespace UnitTests
 			string testcommand;
 			string testargs;
 			
-            bool SplitCommandlineString("a", out testcommand, out testargs);
-            Assert.AreEqual(ret, true);
-            Assert.AreEqual(testcommand, "a");
-            Assert.AreEqual(testargs, "");
+            bool ret = AppHelpers.SplitCommandlineString("a", out testcommand, out testargs);
+            Assert.IsTrue(ret);
+            Assert.AreEqual("a", testcommand);
+            Assert.AreEqual("", testargs);
         }
 		
 		[TestMethod]
@@ -62,10 +62,10 @@ namespace UnitTests
 			string testcommand;
 			string testargs;
 			
-            bool ret = SplitCommandlineString("\"", out testcommand, out testargs);
-            Assert.AreEqual(ret, true);
-            Assert.AreEqual(testcommand, "\"");
-            Assert.AreEqual(testargs, "");
+            bool ret = AppHelpers.SplitCommandlineString("\"", out testcommand, out testargs);
+            Assert.IsTrue(ret);
+            Assert.AreEqual("\"", testcommand);
+            Assert.AreEqual("", testargs);
         }
 		
 		[TestMethod]
@@ -74,10 +74,10 @@ namespace UnitTests
             string testcommand;
 			string testargs;
 			
-            bool ret = SplitCommandlineString("notepad.exe", out testcommand, out testargs);
-            Assert.AreEqual(ret, true);
-            Assert.AreEqual(testcommand, "notepad.exe");
-            Assert.AreEqual(testargs, "");
+            bool ret = AppHelpers.SplitCommandlineString("notepad.exe", out testcommand, out testargs);
+            Assert.IsTrue(ret);
+            Assert.AreEqual("notepad.exe", testcommand);
+            Assert.AreEqual("", testargs);
         }
 
 		[TestMethod]
@@ -86,10 +86,10 @@ namespace UnitTests
             string testcommand;
 			string testargs;
 			
-            bool ret = SplitCommandlineString("   notepad.exe   ", out testcommand, out testargs);
-            Assert.AreEqual(ret, true);
-            Assert.AreEqual(testcommand, "notepad.exe");
-            Assert.AreEqual(testargs, "");
+            bool ret = AppHelpers.SplitCommandlineString("   notepad.exe   ", out testcommand, out testargs);
+            Assert.IsTrue(ret);
+            Assert.AreEqual("notepad.exe", testcommand);
+            Assert.AreEqual("", testargs);
         }
 		
 		[TestMethod]
@@ -98,10 +98,10 @@ namespace UnitTests
             string testcommand;
 			string testargs;
 			
-            bool ret = SplitCommandlineString(@"c:\program files\notepad.exe  ", out testcommand, out testargs);
-            Assert.AreEqual(ret, true);
-            Assert.AreEqual(testcommand, @"c:\program");
-            Assert.AreEqual(testargs, @"files\notepad.exe");
+            bool ret = AppHelpers.SplitCommandlineString(@"c:\program files\notepad.exe  ", out testcommand, out testargs);
+            Assert.IsTrue(ret);
+            Assert.AreEqual(@"c:\program", testcommand);
+            Assert.AreEqual(@"files\notepad.exe", testargs);
         }
 
 		[TestMethod]
@@ -110,10 +110,10 @@ namespace UnitTests
             string testcommand;
 			string testargs;
 			
-            bool ret = SplitCommandlineString("\"c:\\program files\\notepad.exe  ", out testcommand, out testargs);
-            Assert.AreEqual(ret, true);
-            Assert.AreEqual(testcommand, "\"c:\\program files\\notepad.exe");
-            Assert.AreEqual(testargs, "");
+            bool ret = AppHelpers.SplitCommandlineString("\"c:\\program files\\notepad.exe  ", out testcommand, out testargs);
+            Assert.IsTrue(ret);
+            Assert.AreEqual("\"c:\\program files\\notepad.exe", testcommand);
+            Assert.AreEqual("", testargs);
         }
 
 		[TestMethod]
@@ -122,10 +122,10 @@ namespace UnitTests
             string testcommand;
 			string testargs;
 			
-            bool ret = SplitCommandlineString("\"c:\\program files\\notepad.exe  \"", out testcommand, out testargs);
-            Assert.AreEqual(ret, true);
-            Assert.AreEqual(testcommand, "\"c:\\program files\\notepad.exe  \"");
-            Assert.AreEqual(testargs, "");
+            bool ret = AppHelpers.SplitCommandlineString("\"c:\\program files\\notepad.exe  \"", out testcommand, out testargs);
+            Assert.IsTrue(ret);
+            Assert.AreEqual("\"c:\\program files\\notepad.exe  \"", testcommand);
+            Assert.AreEqual("", testargs);
         }
 
         [TestMethod]
@@ -134,10 +134,10 @@ namespace UnitTests
             string testcommand;
 			string testargs;
 			
-            bool ret = SplitCommandlineString(@"c:\program files\notepad.exe file ", out testcommand, out testargs);
-            Assert.AreEqual(ret, true);
-            Assert.AreEqual(testcommand, @"c:\program");
-            Assert.AreEqual(testargs, @"files\notepad.exe file");
+            bool ret = AppHelpers.SplitCommandlineString(@"c:\program files\notepad.exe file ", out testcommand, out testargs);
+            Assert.IsTrue(ret);
+            Assert.AreEqual(@"c:\program", testcommand);
+            Assert.AreEqual(@"files\notepad.exe file", testargs);
         }
 		
 		[TestMethod]
@@ -146,10 +146,10 @@ namespace UnitTests
             string testcommand;
 			string testargs;
 			
-            bool ret = SplitCommandlineString("\"c:\\program files\\notepad.exe    file", out testcommand, out testargs);
-            Assert.AreEqual(ret, true);
-            Assert.AreEqual(testcommand, "\"c:\\program files\\notepad.exe    file");
-            Assert.AreEqual(testargs, @"");
+            bool ret = AppHelpers.SplitCommandlineString("\"c:\\program files\\notepad.exe    file", out testcommand, out testargs);
+            Assert.IsTrue(ret);
+            Assert.AreEqual("\"c:\\program files\\notepad.exe    file", testcommand);
+            Assert.AreEqual(@"", testargs);
         }
 		
 		[TestMethod]
@@ -158,10 +158,10 @@ namespace UnitTests
             string testcommand;
 			string testargs;
 			
-            bool ret = SplitCommandlineString("\"c:\\program files\\notepad.exe\"    file", out testcommand, out testargs);
-            Assert.AreEqual(ret, true);
-            Assert.AreEqual(testcommand, "\"c:\\program files\\notepad.exe\"");
-            Assert.AreEqual(testargs, @"file");
+            bool ret = AppHelpers.SplitCommandlineString("\"c:\\program files\\notepad.exe\"    file", out testcommand, out testargs);
+            Assert.IsTrue(ret);
+            Assert.AreEqual("\"c:\\program files\\notepad.exe\"", testcommand);
+            Assert.AreEqual(@"file", testargs);
         }
 
         [TestMethod]
@@ -170,10 +170,10 @@ namespace UnitTests
             string testcommand;
 			string testargs;
 			
-            bool ret = SplitCommandlineString("\"c:\\program files\\notepad.exe\"    \\\\root\\dir\\file", out testcommand, out testargs);
-            Assert.AreEqual(ret, true);
-            Assert.AreEqual(testcommand, "\"c:\\program files\\notepad.exe\"");
-            Assert.AreEqual(testargs, @"\\root\dir\file");
+            bool ret = AppHelpers.SplitCommandlineString("\"c:\\program files\\notepad.exe\"    \\\\root\\dir\\file", out testcommand, out testargs);
+            Assert.IsTrue(ret);
+            Assert.AreEqual("\"c:\\program files\\notepad.exe\"", testcommand);
+            Assert.AreEqual(@"\\root\dir\file", testargs);
         }
 		
 		[TestMethod]
@@ -182,10 +182,10 @@ namespace UnitTests
             string testcommand;
 			string testargs;
 			
-            bool ret = SplitCommandlineString("\"c:\\program files\\notepad.exe\"    \"\\\\root\\dir\\file  ", out testcommand, out testargs);
-            Assert.AreEqual(ret, true);
-            Assert.AreEqual(testcommand, "\"c:\\program files\\notepad.exe\"");
-            Assert.AreEqual(testargs, "\"\\\\root\\dir\\file");
+            bool ret = AppHelpers.SplitCommandlineString("\"c:\\program files\\notepad.exe\"    \"\\\\root\\dir\\file  ", out testcommand, out testargs);
+            Assert.IsTrue(ret);
+            Assert.AreEqual("\"c:\\program files\\notepad.exe\"", testcommand);
+            Assert.AreEqual("\"\\\\root\\dir\\file", testargs);
         }
 		
 		[TestMethod]
@@ -194,10 +194,10 @@ namespace UnitTests
             string testcommand;
 			string testargs;
 			
-            bool ret = SplitCommandlineString("\"c:\\program files\\notepad.exe\"    \"\\\\root\\dir\\file.exte\"", out testcommand, out testargs);
-            Assert.AreEqual(ret, true);
-            Assert.AreEqual(testcommand, "\"c:\\program files\\notepad.exe\"");
-            Assert.AreEqual(testargs, "\"\\\\root\\dir\\file.exte\"");
+            bool ret = AppHelpers.SplitCommandlineString("\"c:\\program files\\notepad.exe\"    \"\\\\root\\dir\\file.exte\"", out testcommand, out testargs);
+            Assert.IsTrue(ret);
+            Assert.AreEqual("\"c:\\program files\\notepad.exe\"", testcommand);
+            Assert.AreEqual("\"\\\\root\\dir\\file.exte\"", testargs);
         }
 
 

@@ -29,603 +29,614 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DiagnosticsForm));
-            this.label1 = new System.Windows.Forms.Label();
-            this.lRwSuccessCount = new System.Windows.Forms.Label();
-            this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
-            this.label9 = new System.Windows.Forms.Label();
-            this.label5 = new System.Windows.Forms.Label();
-            this.lResponseProtocolErrorCount = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
-            this.lNoResponseCount = new System.Windows.Forms.Label();
-            this.lOnewireEchoErrorCount = new System.Windows.Forms.Label();
-            this.label37 = new System.Windows.Forms.Label();
-            this.label35 = new System.Windows.Forms.Label();
-            this.label33 = new System.Windows.Forms.Label();
-            this.label31 = new System.Windows.Forms.Label();
-            this.label29 = new System.Windows.Forms.Label();
-            this.label27 = new System.Windows.Forms.Label();
-            this.label25 = new System.Windows.Forms.Label();
-            this.lBridgeErrorsCount = new System.Windows.Forms.Label();
-            this.lBridgeQueriesReceivedCount = new System.Windows.Forms.Label();
-            this.lBridgeOpenConnections = new System.Windows.Forms.Label();
-            this.lBridgeConnectCount = new System.Windows.Forms.Label();
-            this.lOtherExceptionCount = new System.Windows.Forms.Label();
-            this.lGatewayDeviceFailedToRespondExceptionCount = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
-            this.label23 = new System.Windows.Forms.Label();
-            this.label21 = new System.Windows.Forms.Label();
-            this.lGatewayPathUnavailableExceptionCount = new System.Windows.Forms.Label();
-            this.lIllegalDataExceptionCount = new System.Windows.Forms.Label();
-            this.lIllegalAddressExceptionCount = new System.Windows.Forms.Label();
-            this.label19 = new System.Windows.Forms.Label();
-            this.label17 = new System.Windows.Forms.Label();
-            this.label15 = new System.Windows.Forms.Label();
-            this.label13 = new System.Windows.Forms.Label();
-            this.lIllegalFunctionExceptionCount = new System.Windows.Forms.Label();
-            this.lTcpClosedOnErrorCount = new System.Windows.Forms.Label();
-            this.lTcpConnectionLostCount = new System.Windows.Forms.Label();
-            this.lTcpConnectFailCount = new System.Windows.Forms.Label();
-            this.label4 = new System.Windows.Forms.Label();
-            this.label11 = new System.Windows.Forms.Label();
-            this.label7 = new System.Windows.Forms.Label();
-            this.lTcpConnectCount = new System.Windows.Forms.Label();
-            this.lResponseDataErrorCount = new System.Windows.Forms.Label();
-            this.lRespMbapErrorCount = new System.Windows.Forms.Label();
-            this.label50 = new System.Windows.Forms.Label();
-            this.lResponseCrcErrorCount = new System.Windows.Forms.Label();
-            this.lResponseShortAndCrcErrorCount = new System.Windows.Forms.Label();
-            this.buttonReset = new System.Windows.Forms.Button();
-            this.tableLayoutPanel1.SuspendLayout();
-            this.SuspendLayout();
+            label1 = new Label();
+            lRwSuccessCount = new Label();
+            tableLayoutPanel1 = new TableLayoutPanel();
+            label9 = new Label();
+            label5 = new Label();
+            lResponseProtocolErrorCount = new Label();
+            label3 = new Label();
+            lNoResponseCount = new Label();
+            lOnewireEchoErrorCount = new Label();
+            label37 = new Label();
+            label35 = new Label();
+            label33 = new Label();
+            label31 = new Label();
+            label29 = new Label();
+            label27 = new Label();
+            label25 = new Label();
+            lBridgeErrorsCount = new Label();
+            lBridgeQueriesReceivedCount = new Label();
+            lBridgeOpenConnections = new Label();
+            lBridgeConnectCount = new Label();
+            lOtherExceptionCount = new Label();
+            lGatewayDeviceFailedToRespondExceptionCount = new Label();
+            label2 = new Label();
+            label23 = new Label();
+            label21 = new Label();
+            lGatewayPathUnavailableExceptionCount = new Label();
+            lIllegalDataExceptionCount = new Label();
+            lIllegalAddressExceptionCount = new Label();
+            label19 = new Label();
+            label17 = new Label();
+            label15 = new Label();
+            label13 = new Label();
+            lIllegalFunctionExceptionCount = new Label();
+            lTcpClosedOnErrorCount = new Label();
+            lTcpConnectionLostCount = new Label();
+            lTcpConnectFailCount = new Label();
+            label4 = new Label();
+            label11 = new Label();
+            label7 = new Label();
+            lTcpConnectCount = new Label();
+            lResponseDataErrorCount = new Label();
+            lRespMbapErrorCount = new Label();
+            label50 = new Label();
+            lResponseCrcErrorCount = new Label();
+            lResponseShortAndCrcErrorCount = new Label();
+            buttonReset = new Button();
+            panel1 = new Panel();
+            tableLayoutPanel1.SuspendLayout();
+            panel1.SuspendLayout();
+            SuspendLayout();
             // 
             // label1
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(3, 0);
-            this.label1.Margin = new System.Windows.Forms.Padding(3, 0, 3, 2);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(105, 13);
-            this.label1.TabIndex = 0;
-            this.label1.Text = "Read/write success:";
+            label1.AutoSize = true;
+            label1.Location = new Point(3, 0);
+            label1.Margin = new Padding(3, 0, 3, 2);
+            label1.Name = "label1";
+            label1.Size = new Size(105, 13);
+            label1.TabIndex = 0;
+            label1.Text = "Read/write success:";
             // 
             // lRwSuccessCount
             // 
-            this.lRwSuccessCount.AutoSize = true;
-            this.lRwSuccessCount.Dock = System.Windows.Forms.DockStyle.Right;
-            this.lRwSuccessCount.Location = new System.Drawing.Point(247, 0);
-            this.lRwSuccessCount.Name = "lRwSuccessCount";
-            this.lRwSuccessCount.Size = new System.Drawing.Size(13, 15);
-            this.lRwSuccessCount.TabIndex = 1;
-            this.lRwSuccessCount.Text = "0";
+            lRwSuccessCount.AutoSize = true;
+            lRwSuccessCount.Dock = DockStyle.Right;
+            lRwSuccessCount.Location = new Point(263, 0);
+            lRwSuccessCount.Name = "lRwSuccessCount";
+            lRwSuccessCount.Size = new Size(13, 15);
+            lRwSuccessCount.TabIndex = 1;
+            lRwSuccessCount.Text = "0";
             // 
             // tableLayoutPanel1
             // 
-            this.tableLayoutPanel1.AutoSize = true;
-            this.tableLayoutPanel1.ColumnCount = 2;
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tableLayoutPanel1.Controls.Add(this.label1, 0, 0);
-            this.tableLayoutPanel1.Controls.Add(this.lRwSuccessCount, 1, 0);
-            this.tableLayoutPanel1.Controls.Add(this.label9, 0, 1);
-            this.tableLayoutPanel1.Controls.Add(this.label5, 0, 3);
-            this.tableLayoutPanel1.Controls.Add(this.lResponseProtocolErrorCount, 1, 3);
-            this.tableLayoutPanel1.Controls.Add(this.label3, 0, 2);
-            this.tableLayoutPanel1.Controls.Add(this.lNoResponseCount, 1, 2);
-            this.tableLayoutPanel1.Controls.Add(this.lOnewireEchoErrorCount, 1, 1);
-            this.tableLayoutPanel1.Controls.Add(this.label37, 0, 21);
-            this.tableLayoutPanel1.Controls.Add(this.label35, 0, 20);
-            this.tableLayoutPanel1.Controls.Add(this.label33, 0, 19);
-            this.tableLayoutPanel1.Controls.Add(this.label31, 0, 18);
-            this.tableLayoutPanel1.Controls.Add(this.label29, 0, 17);
-            this.tableLayoutPanel1.Controls.Add(this.label27, 0, 16);
-            this.tableLayoutPanel1.Controls.Add(this.label25, 0, 15);
-            this.tableLayoutPanel1.Controls.Add(this.lBridgeErrorsCount, 1, 21);
-            this.tableLayoutPanel1.Controls.Add(this.lBridgeQueriesReceivedCount, 1, 20);
-            this.tableLayoutPanel1.Controls.Add(this.lBridgeOpenConnections, 1, 19);
-            this.tableLayoutPanel1.Controls.Add(this.lBridgeConnectCount, 1, 18);
-            this.tableLayoutPanel1.Controls.Add(this.lOtherExceptionCount, 1, 17);
-            this.tableLayoutPanel1.Controls.Add(this.lGatewayDeviceFailedToRespondExceptionCount, 1, 16);
-            this.tableLayoutPanel1.Controls.Add(this.label2, 0, 14);
-            this.tableLayoutPanel1.Controls.Add(this.label23, 0, 13);
-            this.tableLayoutPanel1.Controls.Add(this.label21, 0, 12);
-            this.tableLayoutPanel1.Controls.Add(this.lGatewayPathUnavailableExceptionCount, 1, 15);
-            this.tableLayoutPanel1.Controls.Add(this.lIllegalDataExceptionCount, 1, 14);
-            this.tableLayoutPanel1.Controls.Add(this.lIllegalAddressExceptionCount, 1, 13);
-            this.tableLayoutPanel1.Controls.Add(this.label19, 0, 11);
-            this.tableLayoutPanel1.Controls.Add(this.label17, 0, 10);
-            this.tableLayoutPanel1.Controls.Add(this.label15, 0, 9);
-            this.tableLayoutPanel1.Controls.Add(this.label13, 0, 8);
-            this.tableLayoutPanel1.Controls.Add(this.lIllegalFunctionExceptionCount, 1, 12);
-            this.tableLayoutPanel1.Controls.Add(this.lTcpClosedOnErrorCount, 1, 11);
-            this.tableLayoutPanel1.Controls.Add(this.lTcpConnectionLostCount, 1, 10);
-            this.tableLayoutPanel1.Controls.Add(this.lTcpConnectFailCount, 1, 9);
-            this.tableLayoutPanel1.Controls.Add(this.label4, 0, 7);
-            this.tableLayoutPanel1.Controls.Add(this.label11, 0, 6);
-            this.tableLayoutPanel1.Controls.Add(this.label7, 0, 5);
-            this.tableLayoutPanel1.Controls.Add(this.lTcpConnectCount, 1, 8);
-            this.tableLayoutPanel1.Controls.Add(this.lResponseDataErrorCount, 1, 7);
-            this.tableLayoutPanel1.Controls.Add(this.lRespMbapErrorCount, 1, 6);
-            this.tableLayoutPanel1.Controls.Add(this.label50, 0, 4);
-            this.tableLayoutPanel1.Controls.Add(this.lResponseCrcErrorCount, 1, 5);
-            this.tableLayoutPanel1.Controls.Add(this.lResponseShortAndCrcErrorCount, 1, 4);
-            this.tableLayoutPanel1.Location = new System.Drawing.Point(12, 12);
-            this.tableLayoutPanel1.Name = "tableLayoutPanel1";
-            this.tableLayoutPanel1.RowCount = 22;
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(263, 337);
-            this.tableLayoutPanel1.TabIndex = 0;
+            tableLayoutPanel1.ColumnCount = 2;
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle());
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle());
+            tableLayoutPanel1.Controls.Add(label1, 0, 0);
+            tableLayoutPanel1.Controls.Add(lRwSuccessCount, 1, 0);
+            tableLayoutPanel1.Controls.Add(label9, 0, 1);
+            tableLayoutPanel1.Controls.Add(label5, 0, 3);
+            tableLayoutPanel1.Controls.Add(lResponseProtocolErrorCount, 1, 3);
+            tableLayoutPanel1.Controls.Add(label3, 0, 2);
+            tableLayoutPanel1.Controls.Add(lNoResponseCount, 1, 2);
+            tableLayoutPanel1.Controls.Add(lOnewireEchoErrorCount, 1, 1);
+            tableLayoutPanel1.Controls.Add(label37, 0, 21);
+            tableLayoutPanel1.Controls.Add(label35, 0, 20);
+            tableLayoutPanel1.Controls.Add(label33, 0, 19);
+            tableLayoutPanel1.Controls.Add(label31, 0, 18);
+            tableLayoutPanel1.Controls.Add(label29, 0, 17);
+            tableLayoutPanel1.Controls.Add(label27, 0, 16);
+            tableLayoutPanel1.Controls.Add(label25, 0, 15);
+            tableLayoutPanel1.Controls.Add(lBridgeErrorsCount, 1, 21);
+            tableLayoutPanel1.Controls.Add(lBridgeQueriesReceivedCount, 1, 20);
+            tableLayoutPanel1.Controls.Add(lBridgeOpenConnections, 1, 19);
+            tableLayoutPanel1.Controls.Add(lBridgeConnectCount, 1, 18);
+            tableLayoutPanel1.Controls.Add(lOtherExceptionCount, 1, 17);
+            tableLayoutPanel1.Controls.Add(lGatewayDeviceFailedToRespondExceptionCount, 1, 16);
+            tableLayoutPanel1.Controls.Add(label2, 0, 14);
+            tableLayoutPanel1.Controls.Add(label23, 0, 13);
+            tableLayoutPanel1.Controls.Add(label21, 0, 12);
+            tableLayoutPanel1.Controls.Add(lGatewayPathUnavailableExceptionCount, 1, 15);
+            tableLayoutPanel1.Controls.Add(lIllegalDataExceptionCount, 1, 14);
+            tableLayoutPanel1.Controls.Add(lIllegalAddressExceptionCount, 1, 13);
+            tableLayoutPanel1.Controls.Add(label19, 0, 11);
+            tableLayoutPanel1.Controls.Add(label17, 0, 10);
+            tableLayoutPanel1.Controls.Add(label15, 0, 9);
+            tableLayoutPanel1.Controls.Add(label13, 0, 8);
+            tableLayoutPanel1.Controls.Add(lIllegalFunctionExceptionCount, 1, 12);
+            tableLayoutPanel1.Controls.Add(lTcpClosedOnErrorCount, 1, 11);
+            tableLayoutPanel1.Controls.Add(lTcpConnectionLostCount, 1, 10);
+            tableLayoutPanel1.Controls.Add(lTcpConnectFailCount, 1, 9);
+            tableLayoutPanel1.Controls.Add(label4, 0, 7);
+            tableLayoutPanel1.Controls.Add(label11, 0, 6);
+            tableLayoutPanel1.Controls.Add(label7, 0, 5);
+            tableLayoutPanel1.Controls.Add(lTcpConnectCount, 1, 8);
+            tableLayoutPanel1.Controls.Add(lResponseDataErrorCount, 1, 7);
+            tableLayoutPanel1.Controls.Add(lRespMbapErrorCount, 1, 6);
+            tableLayoutPanel1.Controls.Add(label50, 0, 4);
+            tableLayoutPanel1.Controls.Add(lResponseCrcErrorCount, 1, 5);
+            tableLayoutPanel1.Controls.Add(lResponseShortAndCrcErrorCount, 1, 4);
+            tableLayoutPanel1.Location = new Point(16, 12);
+            tableLayoutPanel1.Name = "tableLayoutPanel1";
+            tableLayoutPanel1.RowCount = 22;
+            tableLayoutPanel1.RowStyles.Add(new RowStyle());
+            tableLayoutPanel1.RowStyles.Add(new RowStyle());
+            tableLayoutPanel1.RowStyles.Add(new RowStyle());
+            tableLayoutPanel1.RowStyles.Add(new RowStyle());
+            tableLayoutPanel1.RowStyles.Add(new RowStyle());
+            tableLayoutPanel1.RowStyles.Add(new RowStyle());
+            tableLayoutPanel1.RowStyles.Add(new RowStyle());
+            tableLayoutPanel1.RowStyles.Add(new RowStyle());
+            tableLayoutPanel1.RowStyles.Add(new RowStyle());
+            tableLayoutPanel1.RowStyles.Add(new RowStyle());
+            tableLayoutPanel1.RowStyles.Add(new RowStyle());
+            tableLayoutPanel1.RowStyles.Add(new RowStyle());
+            tableLayoutPanel1.RowStyles.Add(new RowStyle());
+            tableLayoutPanel1.RowStyles.Add(new RowStyle());
+            tableLayoutPanel1.RowStyles.Add(new RowStyle());
+            tableLayoutPanel1.RowStyles.Add(new RowStyle());
+            tableLayoutPanel1.RowStyles.Add(new RowStyle());
+            tableLayoutPanel1.RowStyles.Add(new RowStyle());
+            tableLayoutPanel1.RowStyles.Add(new RowStyle());
+            tableLayoutPanel1.RowStyles.Add(new RowStyle());
+            tableLayoutPanel1.RowStyles.Add(new RowStyle());
+            tableLayoutPanel1.RowStyles.Add(new RowStyle());
+            tableLayoutPanel1.Size = new Size(279, 339);
+            tableLayoutPanel1.TabIndex = 0;
             // 
             // label9
             // 
-            this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(3, 15);
-            this.label9.Margin = new System.Windows.Forms.Padding(3, 0, 3, 2);
-            this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(105, 13);
-            this.label9.TabIndex = 2;
-            this.label9.Text = "Onewire echo errors:";
+            label9.AutoSize = true;
+            label9.Location = new Point(3, 15);
+            label9.Margin = new Padding(3, 0, 3, 2);
+            label9.Name = "label9";
+            label9.Size = new Size(105, 13);
+            label9.TabIndex = 2;
+            label9.Text = "Onewire echo errors:";
             // 
             // label5
             // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(3, 45);
-            this.label5.Margin = new System.Windows.Forms.Padding(3, 0, 3, 2);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(128, 13);
-            this.label5.TabIndex = 6;
-            this.label5.Text = "Response protocol errors:";
+            label5.AutoSize = true;
+            label5.Location = new Point(3, 45);
+            label5.Margin = new Padding(3, 0, 3, 2);
+            label5.Name = "label5";
+            label5.Size = new Size(128, 13);
+            label5.TabIndex = 6;
+            label5.Text = "Response protocol errors:";
             // 
             // lResponseProtocolErrorCount
             // 
-            this.lResponseProtocolErrorCount.AutoSize = true;
-            this.lResponseProtocolErrorCount.Dock = System.Windows.Forms.DockStyle.Right;
-            this.lResponseProtocolErrorCount.Location = new System.Drawing.Point(247, 45);
-            this.lResponseProtocolErrorCount.Name = "lResponseProtocolErrorCount";
-            this.lResponseProtocolErrorCount.Size = new System.Drawing.Size(13, 15);
-            this.lResponseProtocolErrorCount.TabIndex = 7;
-            this.lResponseProtocolErrorCount.Text = "0";
+            lResponseProtocolErrorCount.AutoSize = true;
+            lResponseProtocolErrorCount.Dock = DockStyle.Right;
+            lResponseProtocolErrorCount.Location = new Point(263, 45);
+            lResponseProtocolErrorCount.Name = "lResponseProtocolErrorCount";
+            lResponseProtocolErrorCount.Size = new Size(13, 15);
+            lResponseProtocolErrorCount.TabIndex = 7;
+            lResponseProtocolErrorCount.Text = "0";
             // 
             // label3
             // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(3, 30);
-            this.label3.Margin = new System.Windows.Forms.Padding(3, 0, 3, 2);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(70, 13);
-            this.label3.TabIndex = 4;
-            this.label3.Text = "No response:";
+            label3.AutoSize = true;
+            label3.Location = new Point(3, 30);
+            label3.Margin = new Padding(3, 0, 3, 2);
+            label3.Name = "label3";
+            label3.Size = new Size(70, 13);
+            label3.TabIndex = 4;
+            label3.Text = "No response:";
             // 
             // lNoResponseCount
             // 
-            this.lNoResponseCount.AutoSize = true;
-            this.lNoResponseCount.Dock = System.Windows.Forms.DockStyle.Right;
-            this.lNoResponseCount.Location = new System.Drawing.Point(247, 30);
-            this.lNoResponseCount.Name = "lNoResponseCount";
-            this.lNoResponseCount.Size = new System.Drawing.Size(13, 15);
-            this.lNoResponseCount.TabIndex = 5;
-            this.lNoResponseCount.Text = "0";
+            lNoResponseCount.AutoSize = true;
+            lNoResponseCount.Dock = DockStyle.Right;
+            lNoResponseCount.Location = new Point(263, 30);
+            lNoResponseCount.Name = "lNoResponseCount";
+            lNoResponseCount.Size = new Size(13, 15);
+            lNoResponseCount.TabIndex = 5;
+            lNoResponseCount.Text = "0";
             // 
             // lOnewireEchoErrorCount
             // 
-            this.lOnewireEchoErrorCount.AutoSize = true;
-            this.lOnewireEchoErrorCount.Dock = System.Windows.Forms.DockStyle.Right;
-            this.lOnewireEchoErrorCount.Location = new System.Drawing.Point(247, 15);
-            this.lOnewireEchoErrorCount.Name = "lOnewireEchoErrorCount";
-            this.lOnewireEchoErrorCount.Size = new System.Drawing.Size(13, 15);
-            this.lOnewireEchoErrorCount.TabIndex = 3;
-            this.lOnewireEchoErrorCount.Text = "0";
+            lOnewireEchoErrorCount.AutoSize = true;
+            lOnewireEchoErrorCount.Dock = DockStyle.Right;
+            lOnewireEchoErrorCount.Location = new Point(263, 15);
+            lOnewireEchoErrorCount.Name = "lOnewireEchoErrorCount";
+            lOnewireEchoErrorCount.Size = new Size(13, 15);
+            lOnewireEchoErrorCount.TabIndex = 3;
+            lOnewireEchoErrorCount.Text = "0";
             // 
             // label37
             // 
-            this.label37.AutoSize = true;
-            this.label37.Location = new System.Drawing.Point(3, 315);
-            this.label37.Margin = new System.Windows.Forms.Padding(3, 0, 3, 2);
-            this.label37.Name = "label37";
-            this.label37.Size = new System.Drawing.Size(135, 13);
-            this.label37.TabIndex = 42;
-            this.label37.Text = "Modbus/TCP bridge errors:";
+            label37.AutoSize = true;
+            label37.Location = new Point(3, 315);
+            label37.Margin = new Padding(3, 0, 3, 2);
+            label37.Name = "label37";
+            label37.Size = new Size(135, 13);
+            label37.TabIndex = 42;
+            label37.Text = "Modbus/TCP bridge errors:";
             // 
             // label35
             // 
-            this.label35.AutoSize = true;
-            this.label35.Location = new System.Drawing.Point(3, 300);
-            this.label35.Margin = new System.Windows.Forms.Padding(3, 0, 3, 2);
-            this.label35.Name = "label35";
-            this.label35.Size = new System.Drawing.Size(143, 13);
-            this.label35.TabIndex = 40;
-            this.label35.Text = "Modbus/TCP bridge queries:";
+            label35.AutoSize = true;
+            label35.Location = new Point(3, 300);
+            label35.Margin = new Padding(3, 0, 3, 2);
+            label35.Name = "label35";
+            label35.Size = new Size(143, 13);
+            label35.TabIndex = 40;
+            label35.Text = "Modbus/TCP bridge queries:";
             // 
             // label33
             // 
-            this.label33.AutoSize = true;
-            this.label33.Location = new System.Drawing.Point(3, 285);
-            this.label33.Margin = new System.Windows.Forms.Padding(3, 0, 3, 2);
-            this.label33.Name = "label33";
-            this.label33.Size = new System.Drawing.Size(194, 13);
-            this.label33.TabIndex = 38;
-            this.label33.Text = "Modbus/TCP bridge open connections:";
+            label33.AutoSize = true;
+            label33.Location = new Point(3, 285);
+            label33.Margin = new Padding(3, 0, 3, 2);
+            label33.Name = "label33";
+            label33.Size = new Size(194, 13);
+            label33.TabIndex = 38;
+            label33.Text = "Modbus/TCP bridge open connections:";
             // 
             // label31
             // 
-            this.label31.AutoSize = true;
-            this.label31.Location = new System.Drawing.Point(3, 270);
-            this.label31.Margin = new System.Windows.Forms.Padding(3, 0, 3, 2);
-            this.label31.Name = "label31";
-            this.label31.Size = new System.Drawing.Size(153, 13);
-            this.label31.TabIndex = 36;
-            this.label31.Text = "Modbus/TCP bridge connects:";
+            label31.AutoSize = true;
+            label31.Location = new Point(3, 270);
+            label31.Margin = new Padding(3, 0, 3, 2);
+            label31.Name = "label31";
+            label31.Size = new Size(153, 13);
+            label31.TabIndex = 36;
+            label31.Text = "Modbus/TCP bridge connects:";
             // 
             // label29
             // 
-            this.label29.AutoSize = true;
-            this.label29.Location = new System.Drawing.Point(3, 255);
-            this.label29.Margin = new System.Windows.Forms.Padding(3, 0, 3, 2);
-            this.label29.Name = "label29";
-            this.label29.Size = new System.Drawing.Size(137, 13);
-            this.label29.TabIndex = 34;
-            this.label29.Text = "Received other exceptions:";
+            label29.AutoSize = true;
+            label29.Location = new Point(3, 255);
+            label29.Margin = new Padding(3, 0, 3, 2);
+            label29.Name = "label29";
+            label29.Size = new Size(137, 13);
+            label29.TabIndex = 34;
+            label29.Text = "Received other exceptions:";
             // 
             // label27
             // 
-            this.label27.AutoSize = true;
-            this.label27.Location = new System.Drawing.Point(3, 240);
-            this.label27.Margin = new System.Windows.Forms.Padding(3, 0, 3, 2);
-            this.label27.Name = "label27";
-            this.label27.Size = new System.Drawing.Size(188, 13);
-            this.label27.TabIndex = 32;
-            this.label27.Text = "Gateway dev no response exceptions:";
+            label27.AutoSize = true;
+            label27.Location = new Point(3, 240);
+            label27.Margin = new Padding(3, 0, 3, 2);
+            label27.Name = "label27";
+            label27.Size = new Size(188, 13);
+            label27.TabIndex = 32;
+            label27.Text = "Gateway dev no response exceptions:";
             // 
             // label25
             // 
-            this.label25.AutoSize = true;
-            this.label25.Location = new System.Drawing.Point(3, 225);
-            this.label25.Margin = new System.Windows.Forms.Padding(3, 0, 3, 2);
-            this.label25.Name = "label25";
-            this.label25.Size = new System.Drawing.Size(167, 13);
-            this.label25.TabIndex = 30;
-            this.label25.Text = "Gateway path unavail exceptions:";
+            label25.AutoSize = true;
+            label25.Location = new Point(3, 225);
+            label25.Margin = new Padding(3, 0, 3, 2);
+            label25.Name = "label25";
+            label25.Size = new Size(167, 13);
+            label25.TabIndex = 30;
+            label25.Text = "Gateway path unavail exceptions:";
             // 
             // lBridgeErrorsCount
             // 
-            this.lBridgeErrorsCount.AutoSize = true;
-            this.lBridgeErrorsCount.Dock = System.Windows.Forms.DockStyle.Right;
-            this.lBridgeErrorsCount.Location = new System.Drawing.Point(247, 315);
-            this.lBridgeErrorsCount.Name = "lBridgeErrorsCount";
-            this.lBridgeErrorsCount.Size = new System.Drawing.Size(13, 22);
-            this.lBridgeErrorsCount.TabIndex = 43;
-            this.lBridgeErrorsCount.Text = "0";
+            lBridgeErrorsCount.AutoSize = true;
+            lBridgeErrorsCount.Dock = DockStyle.Right;
+            lBridgeErrorsCount.Location = new Point(263, 315);
+            lBridgeErrorsCount.Name = "lBridgeErrorsCount";
+            lBridgeErrorsCount.Size = new Size(13, 24);
+            lBridgeErrorsCount.TabIndex = 43;
+            lBridgeErrorsCount.Text = "0";
             // 
             // lBridgeQueriesReceivedCount
             // 
-            this.lBridgeQueriesReceivedCount.AutoSize = true;
-            this.lBridgeQueriesReceivedCount.Dock = System.Windows.Forms.DockStyle.Right;
-            this.lBridgeQueriesReceivedCount.Location = new System.Drawing.Point(247, 300);
-            this.lBridgeQueriesReceivedCount.Name = "lBridgeQueriesReceivedCount";
-            this.lBridgeQueriesReceivedCount.Size = new System.Drawing.Size(13, 15);
-            this.lBridgeQueriesReceivedCount.TabIndex = 41;
-            this.lBridgeQueriesReceivedCount.Text = "0";
+            lBridgeQueriesReceivedCount.AutoSize = true;
+            lBridgeQueriesReceivedCount.Dock = DockStyle.Right;
+            lBridgeQueriesReceivedCount.Location = new Point(263, 300);
+            lBridgeQueriesReceivedCount.Name = "lBridgeQueriesReceivedCount";
+            lBridgeQueriesReceivedCount.Size = new Size(13, 15);
+            lBridgeQueriesReceivedCount.TabIndex = 41;
+            lBridgeQueriesReceivedCount.Text = "0";
             // 
             // lBridgeOpenConnections
             // 
-            this.lBridgeOpenConnections.AutoSize = true;
-            this.lBridgeOpenConnections.Dock = System.Windows.Forms.DockStyle.Right;
-            this.lBridgeOpenConnections.Location = new System.Drawing.Point(247, 285);
-            this.lBridgeOpenConnections.Name = "lBridgeOpenConnections";
-            this.lBridgeOpenConnections.Size = new System.Drawing.Size(13, 15);
-            this.lBridgeOpenConnections.TabIndex = 39;
-            this.lBridgeOpenConnections.Text = "0";
+            lBridgeOpenConnections.AutoSize = true;
+            lBridgeOpenConnections.Dock = DockStyle.Right;
+            lBridgeOpenConnections.Location = new Point(263, 285);
+            lBridgeOpenConnections.Name = "lBridgeOpenConnections";
+            lBridgeOpenConnections.Size = new Size(13, 15);
+            lBridgeOpenConnections.TabIndex = 39;
+            lBridgeOpenConnections.Text = "0";
             // 
             // lBridgeConnectCount
             // 
-            this.lBridgeConnectCount.AutoSize = true;
-            this.lBridgeConnectCount.Dock = System.Windows.Forms.DockStyle.Right;
-            this.lBridgeConnectCount.Location = new System.Drawing.Point(247, 270);
-            this.lBridgeConnectCount.Name = "lBridgeConnectCount";
-            this.lBridgeConnectCount.Size = new System.Drawing.Size(13, 15);
-            this.lBridgeConnectCount.TabIndex = 37;
-            this.lBridgeConnectCount.Text = "0";
+            lBridgeConnectCount.AutoSize = true;
+            lBridgeConnectCount.Dock = DockStyle.Right;
+            lBridgeConnectCount.Location = new Point(263, 270);
+            lBridgeConnectCount.Name = "lBridgeConnectCount";
+            lBridgeConnectCount.Size = new Size(13, 15);
+            lBridgeConnectCount.TabIndex = 37;
+            lBridgeConnectCount.Text = "0";
             // 
             // lOtherExceptionCount
             // 
-            this.lOtherExceptionCount.AutoSize = true;
-            this.lOtherExceptionCount.Dock = System.Windows.Forms.DockStyle.Right;
-            this.lOtherExceptionCount.Location = new System.Drawing.Point(247, 255);
-            this.lOtherExceptionCount.Name = "lOtherExceptionCount";
-            this.lOtherExceptionCount.Size = new System.Drawing.Size(13, 15);
-            this.lOtherExceptionCount.TabIndex = 35;
-            this.lOtherExceptionCount.Text = "0";
+            lOtherExceptionCount.AutoSize = true;
+            lOtherExceptionCount.Dock = DockStyle.Right;
+            lOtherExceptionCount.Location = new Point(263, 255);
+            lOtherExceptionCount.Name = "lOtherExceptionCount";
+            lOtherExceptionCount.Size = new Size(13, 15);
+            lOtherExceptionCount.TabIndex = 35;
+            lOtherExceptionCount.Text = "0";
             // 
             // lGatewayDeviceFailedToRespondExceptionCount
             // 
-            this.lGatewayDeviceFailedToRespondExceptionCount.AutoSize = true;
-            this.lGatewayDeviceFailedToRespondExceptionCount.Dock = System.Windows.Forms.DockStyle.Right;
-            this.lGatewayDeviceFailedToRespondExceptionCount.Location = new System.Drawing.Point(247, 240);
-            this.lGatewayDeviceFailedToRespondExceptionCount.Name = "lGatewayDeviceFailedToRespondExceptionCount";
-            this.lGatewayDeviceFailedToRespondExceptionCount.Size = new System.Drawing.Size(13, 15);
-            this.lGatewayDeviceFailedToRespondExceptionCount.TabIndex = 33;
-            this.lGatewayDeviceFailedToRespondExceptionCount.Text = "0";
+            lGatewayDeviceFailedToRespondExceptionCount.AutoSize = true;
+            lGatewayDeviceFailedToRespondExceptionCount.Dock = DockStyle.Right;
+            lGatewayDeviceFailedToRespondExceptionCount.Location = new Point(263, 240);
+            lGatewayDeviceFailedToRespondExceptionCount.Name = "lGatewayDeviceFailedToRespondExceptionCount";
+            lGatewayDeviceFailedToRespondExceptionCount.Size = new Size(13, 15);
+            lGatewayDeviceFailedToRespondExceptionCount.TabIndex = 33;
+            lGatewayDeviceFailedToRespondExceptionCount.Text = "0";
             // 
             // label2
             // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(3, 210);
-            this.label2.Margin = new System.Windows.Forms.Padding(3, 0, 3, 2);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(115, 13);
-            this.label2.TabIndex = 28;
-            this.label2.Text = "Illegal data exceptions:";
+            label2.AutoSize = true;
+            label2.Location = new Point(3, 210);
+            label2.Margin = new Padding(3, 0, 3, 2);
+            label2.Name = "label2";
+            label2.Size = new Size(115, 13);
+            label2.TabIndex = 28;
+            label2.Text = "Illegal data exceptions:";
             // 
             // label23
             // 
-            this.label23.AutoSize = true;
-            this.label23.Location = new System.Drawing.Point(3, 195);
-            this.label23.Margin = new System.Windows.Forms.Padding(3, 0, 3, 2);
-            this.label23.Name = "label23";
-            this.label23.Size = new System.Drawing.Size(131, 13);
-            this.label23.TabIndex = 26;
-            this.label23.Text = "Illegal address exceptions:";
+            label23.AutoSize = true;
+            label23.Location = new Point(3, 195);
+            label23.Margin = new Padding(3, 0, 3, 2);
+            label23.Name = "label23";
+            label23.Size = new Size(131, 13);
+            label23.TabIndex = 26;
+            label23.Text = "Illegal address exceptions:";
             // 
             // label21
             // 
-            this.label21.AutoSize = true;
-            this.label21.Location = new System.Drawing.Point(3, 180);
-            this.label21.Margin = new System.Windows.Forms.Padding(3, 0, 3, 2);
-            this.label21.Name = "label21";
-            this.label21.Size = new System.Drawing.Size(132, 13);
-            this.label21.TabIndex = 24;
-            this.label21.Text = "Illegal function exceptions:";
+            label21.AutoSize = true;
+            label21.Location = new Point(3, 180);
+            label21.Margin = new Padding(3, 0, 3, 2);
+            label21.Name = "label21";
+            label21.Size = new Size(132, 13);
+            label21.TabIndex = 24;
+            label21.Text = "Illegal function exceptions:";
             // 
             // lGatewayPathUnavailableExceptionCount
             // 
-            this.lGatewayPathUnavailableExceptionCount.AutoSize = true;
-            this.lGatewayPathUnavailableExceptionCount.Dock = System.Windows.Forms.DockStyle.Right;
-            this.lGatewayPathUnavailableExceptionCount.Location = new System.Drawing.Point(247, 225);
-            this.lGatewayPathUnavailableExceptionCount.Name = "lGatewayPathUnavailableExceptionCount";
-            this.lGatewayPathUnavailableExceptionCount.Size = new System.Drawing.Size(13, 15);
-            this.lGatewayPathUnavailableExceptionCount.TabIndex = 31;
-            this.lGatewayPathUnavailableExceptionCount.Text = "0";
+            lGatewayPathUnavailableExceptionCount.AutoSize = true;
+            lGatewayPathUnavailableExceptionCount.Dock = DockStyle.Right;
+            lGatewayPathUnavailableExceptionCount.Location = new Point(263, 225);
+            lGatewayPathUnavailableExceptionCount.Name = "lGatewayPathUnavailableExceptionCount";
+            lGatewayPathUnavailableExceptionCount.Size = new Size(13, 15);
+            lGatewayPathUnavailableExceptionCount.TabIndex = 31;
+            lGatewayPathUnavailableExceptionCount.Text = "0";
             // 
             // lIllegalDataExceptionCount
             // 
-            this.lIllegalDataExceptionCount.AutoSize = true;
-            this.lIllegalDataExceptionCount.Dock = System.Windows.Forms.DockStyle.Right;
-            this.lIllegalDataExceptionCount.Location = new System.Drawing.Point(247, 210);
-            this.lIllegalDataExceptionCount.Name = "lIllegalDataExceptionCount";
-            this.lIllegalDataExceptionCount.Size = new System.Drawing.Size(13, 15);
-            this.lIllegalDataExceptionCount.TabIndex = 29;
-            this.lIllegalDataExceptionCount.Text = "0";
+            lIllegalDataExceptionCount.AutoSize = true;
+            lIllegalDataExceptionCount.Dock = DockStyle.Right;
+            lIllegalDataExceptionCount.Location = new Point(263, 210);
+            lIllegalDataExceptionCount.Name = "lIllegalDataExceptionCount";
+            lIllegalDataExceptionCount.Size = new Size(13, 15);
+            lIllegalDataExceptionCount.TabIndex = 29;
+            lIllegalDataExceptionCount.Text = "0";
             // 
             // lIllegalAddressExceptionCount
             // 
-            this.lIllegalAddressExceptionCount.AutoSize = true;
-            this.lIllegalAddressExceptionCount.Dock = System.Windows.Forms.DockStyle.Right;
-            this.lIllegalAddressExceptionCount.Location = new System.Drawing.Point(247, 195);
-            this.lIllegalAddressExceptionCount.Name = "lIllegalAddressExceptionCount";
-            this.lIllegalAddressExceptionCount.Size = new System.Drawing.Size(13, 15);
-            this.lIllegalAddressExceptionCount.TabIndex = 27;
-            this.lIllegalAddressExceptionCount.Text = "0";
+            lIllegalAddressExceptionCount.AutoSize = true;
+            lIllegalAddressExceptionCount.Dock = DockStyle.Right;
+            lIllegalAddressExceptionCount.Location = new Point(263, 195);
+            lIllegalAddressExceptionCount.Name = "lIllegalAddressExceptionCount";
+            lIllegalAddressExceptionCount.Size = new Size(13, 15);
+            lIllegalAddressExceptionCount.TabIndex = 27;
+            lIllegalAddressExceptionCount.Text = "0";
             // 
             // label19
             // 
-            this.label19.AutoSize = true;
-            this.label19.Location = new System.Drawing.Point(3, 165);
-            this.label19.Margin = new System.Windows.Forms.Padding(3, 0, 3, 2);
-            this.label19.Name = "label19";
-            this.label19.Size = new System.Drawing.Size(154, 13);
-            this.label19.TabIndex = 22;
-            this.label19.Text = "TCP connection close on error:";
+            label19.AutoSize = true;
+            label19.Location = new Point(3, 165);
+            label19.Margin = new Padding(3, 0, 3, 2);
+            label19.Name = "label19";
+            label19.Size = new Size(154, 13);
+            label19.TabIndex = 22;
+            label19.Text = "TCP connection close on error:";
             // 
             // label17
             // 
-            this.label17.AutoSize = true;
-            this.label17.Location = new System.Drawing.Point(3, 150);
-            this.label17.Margin = new System.Windows.Forms.Padding(3, 0, 3, 2);
-            this.label17.Name = "label17";
-            this.label17.Size = new System.Drawing.Size(139, 13);
-            this.label17.TabIndex = 20;
-            this.label17.Text = "TCP connection lost count: ";
+            label17.AutoSize = true;
+            label17.Location = new Point(3, 150);
+            label17.Margin = new Padding(3, 0, 3, 2);
+            label17.Name = "label17";
+            label17.Size = new Size(139, 13);
+            label17.TabIndex = 20;
+            label17.Text = "TCP connection lost count: ";
             // 
             // label15
             // 
-            this.label15.AutoSize = true;
-            this.label15.Location = new System.Drawing.Point(3, 135);
-            this.label15.Margin = new System.Windows.Forms.Padding(3, 0, 3, 2);
-            this.label15.Name = "label15";
-            this.label15.Size = new System.Drawing.Size(119, 13);
-            this.label15.TabIndex = 18;
-            this.label15.Text = "TCP connect fail count:";
+            label15.AutoSize = true;
+            label15.Location = new Point(3, 135);
+            label15.Margin = new Padding(3, 0, 3, 2);
+            label15.Name = "label15";
+            label15.Size = new Size(119, 13);
+            label15.TabIndex = 18;
+            label15.Text = "TCP connect fail count:";
             // 
             // label13
             // 
-            this.label13.AutoSize = true;
-            this.label13.Location = new System.Drawing.Point(3, 120);
-            this.label13.Margin = new System.Windows.Forms.Padding(3, 0, 3, 2);
-            this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(103, 13);
-            this.label13.TabIndex = 16;
-            this.label13.Text = "TCP connect count:";
+            label13.AutoSize = true;
+            label13.Location = new Point(3, 120);
+            label13.Margin = new Padding(3, 0, 3, 2);
+            label13.Name = "label13";
+            label13.Size = new Size(103, 13);
+            label13.TabIndex = 16;
+            label13.Text = "TCP connect count:";
             // 
             // lIllegalFunctionExceptionCount
             // 
-            this.lIllegalFunctionExceptionCount.AutoSize = true;
-            this.lIllegalFunctionExceptionCount.Dock = System.Windows.Forms.DockStyle.Right;
-            this.lIllegalFunctionExceptionCount.Location = new System.Drawing.Point(247, 180);
-            this.lIllegalFunctionExceptionCount.Name = "lIllegalFunctionExceptionCount";
-            this.lIllegalFunctionExceptionCount.Size = new System.Drawing.Size(13, 15);
-            this.lIllegalFunctionExceptionCount.TabIndex = 25;
-            this.lIllegalFunctionExceptionCount.Text = "0";
+            lIllegalFunctionExceptionCount.AutoSize = true;
+            lIllegalFunctionExceptionCount.Dock = DockStyle.Right;
+            lIllegalFunctionExceptionCount.Location = new Point(263, 180);
+            lIllegalFunctionExceptionCount.Name = "lIllegalFunctionExceptionCount";
+            lIllegalFunctionExceptionCount.Size = new Size(13, 15);
+            lIllegalFunctionExceptionCount.TabIndex = 25;
+            lIllegalFunctionExceptionCount.Text = "0";
             // 
             // lTcpClosedOnErrorCount
             // 
-            this.lTcpClosedOnErrorCount.AutoSize = true;
-            this.lTcpClosedOnErrorCount.Dock = System.Windows.Forms.DockStyle.Right;
-            this.lTcpClosedOnErrorCount.Location = new System.Drawing.Point(247, 165);
-            this.lTcpClosedOnErrorCount.Name = "lTcpClosedOnErrorCount";
-            this.lTcpClosedOnErrorCount.Size = new System.Drawing.Size(13, 15);
-            this.lTcpClosedOnErrorCount.TabIndex = 23;
-            this.lTcpClosedOnErrorCount.Text = "0";
+            lTcpClosedOnErrorCount.AutoSize = true;
+            lTcpClosedOnErrorCount.Dock = DockStyle.Right;
+            lTcpClosedOnErrorCount.Location = new Point(263, 165);
+            lTcpClosedOnErrorCount.Name = "lTcpClosedOnErrorCount";
+            lTcpClosedOnErrorCount.Size = new Size(13, 15);
+            lTcpClosedOnErrorCount.TabIndex = 23;
+            lTcpClosedOnErrorCount.Text = "0";
             // 
             // lTcpConnectionLostCount
             // 
-            this.lTcpConnectionLostCount.AutoSize = true;
-            this.lTcpConnectionLostCount.Dock = System.Windows.Forms.DockStyle.Right;
-            this.lTcpConnectionLostCount.Location = new System.Drawing.Point(247, 150);
-            this.lTcpConnectionLostCount.Name = "lTcpConnectionLostCount";
-            this.lTcpConnectionLostCount.Size = new System.Drawing.Size(13, 15);
-            this.lTcpConnectionLostCount.TabIndex = 21;
-            this.lTcpConnectionLostCount.Text = "0";
+            lTcpConnectionLostCount.AutoSize = true;
+            lTcpConnectionLostCount.Dock = DockStyle.Right;
+            lTcpConnectionLostCount.Location = new Point(263, 150);
+            lTcpConnectionLostCount.Name = "lTcpConnectionLostCount";
+            lTcpConnectionLostCount.Size = new Size(13, 15);
+            lTcpConnectionLostCount.TabIndex = 21;
+            lTcpConnectionLostCount.Text = "0";
             // 
             // lTcpConnectFailCount
             // 
-            this.lTcpConnectFailCount.AutoSize = true;
-            this.lTcpConnectFailCount.Dock = System.Windows.Forms.DockStyle.Right;
-            this.lTcpConnectFailCount.Location = new System.Drawing.Point(247, 135);
-            this.lTcpConnectFailCount.Name = "lTcpConnectFailCount";
-            this.lTcpConnectFailCount.Size = new System.Drawing.Size(13, 15);
-            this.lTcpConnectFailCount.TabIndex = 19;
-            this.lTcpConnectFailCount.Text = "0";
+            lTcpConnectFailCount.AutoSize = true;
+            lTcpConnectFailCount.Dock = DockStyle.Right;
+            lTcpConnectFailCount.Location = new Point(263, 135);
+            lTcpConnectFailCount.Name = "lTcpConnectFailCount";
+            lTcpConnectFailCount.Size = new Size(13, 15);
+            lTcpConnectFailCount.TabIndex = 19;
+            lTcpConnectFailCount.Text = "0";
             // 
             // label4
             // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(3, 105);
-            this.label4.Margin = new System.Windows.Forms.Padding(3, 0, 3, 2);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(106, 13);
-            this.label4.TabIndex = 14;
-            this.label4.Text = "Reponse data errors:";
+            label4.AutoSize = true;
+            label4.Location = new Point(3, 105);
+            label4.Margin = new Padding(3, 0, 3, 2);
+            label4.Name = "label4";
+            label4.Size = new Size(106, 13);
+            label4.TabIndex = 14;
+            label4.Text = "Reponse data errors:";
             // 
             // label11
             // 
-            this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(3, 90);
-            this.label11.Margin = new System.Windows.Forms.Padding(3, 0, 3, 2);
-            this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(156, 13);
-            this.label11.TabIndex = 12;
-            this.label11.Text = "Response MBAP-header errors:";
+            label11.AutoSize = true;
+            label11.Location = new Point(3, 90);
+            label11.Margin = new Padding(3, 0, 3, 2);
+            label11.Name = "label11";
+            label11.Size = new Size(156, 13);
+            label11.TabIndex = 12;
+            label11.Text = "Response MBAP-header errors:";
             // 
             // label7
             // 
-            this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(3, 75);
-            this.label7.Margin = new System.Windows.Forms.Padding(3, 0, 3, 2);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(112, 13);
-            this.label7.TabIndex = 10;
-            this.label7.Text = "Response CRC errors:";
+            label7.AutoSize = true;
+            label7.Location = new Point(3, 75);
+            label7.Margin = new Padding(3, 0, 3, 2);
+            label7.Name = "label7";
+            label7.Size = new Size(112, 13);
+            label7.TabIndex = 10;
+            label7.Text = "Response CRC errors:";
             // 
             // lTcpConnectCount
             // 
-            this.lTcpConnectCount.AutoSize = true;
-            this.lTcpConnectCount.Dock = System.Windows.Forms.DockStyle.Right;
-            this.lTcpConnectCount.Location = new System.Drawing.Point(247, 120);
-            this.lTcpConnectCount.Name = "lTcpConnectCount";
-            this.lTcpConnectCount.Size = new System.Drawing.Size(13, 15);
-            this.lTcpConnectCount.TabIndex = 17;
-            this.lTcpConnectCount.Text = "0";
+            lTcpConnectCount.AutoSize = true;
+            lTcpConnectCount.Dock = DockStyle.Right;
+            lTcpConnectCount.Location = new Point(263, 120);
+            lTcpConnectCount.Name = "lTcpConnectCount";
+            lTcpConnectCount.Size = new Size(13, 15);
+            lTcpConnectCount.TabIndex = 17;
+            lTcpConnectCount.Text = "0";
             // 
             // lResponseDataErrorCount
             // 
-            this.lResponseDataErrorCount.AutoSize = true;
-            this.lResponseDataErrorCount.Dock = System.Windows.Forms.DockStyle.Right;
-            this.lResponseDataErrorCount.Location = new System.Drawing.Point(247, 105);
-            this.lResponseDataErrorCount.Name = "lResponseDataErrorCount";
-            this.lResponseDataErrorCount.Size = new System.Drawing.Size(13, 15);
-            this.lResponseDataErrorCount.TabIndex = 15;
-            this.lResponseDataErrorCount.Text = "0";
+            lResponseDataErrorCount.AutoSize = true;
+            lResponseDataErrorCount.Dock = DockStyle.Right;
+            lResponseDataErrorCount.Location = new Point(263, 105);
+            lResponseDataErrorCount.Name = "lResponseDataErrorCount";
+            lResponseDataErrorCount.Size = new Size(13, 15);
+            lResponseDataErrorCount.TabIndex = 15;
+            lResponseDataErrorCount.Text = "0";
             // 
             // lRespMbapErrorCount
             // 
-            this.lRespMbapErrorCount.AutoSize = true;
-            this.lRespMbapErrorCount.Dock = System.Windows.Forms.DockStyle.Right;
-            this.lRespMbapErrorCount.Location = new System.Drawing.Point(247, 90);
-            this.lRespMbapErrorCount.Name = "lRespMbapErrorCount";
-            this.lRespMbapErrorCount.Size = new System.Drawing.Size(13, 15);
-            this.lRespMbapErrorCount.TabIndex = 13;
-            this.lRespMbapErrorCount.Text = "0";
+            lRespMbapErrorCount.AutoSize = true;
+            lRespMbapErrorCount.Dock = DockStyle.Right;
+            lRespMbapErrorCount.Location = new Point(263, 90);
+            lRespMbapErrorCount.Name = "lRespMbapErrorCount";
+            lRespMbapErrorCount.Size = new Size(13, 15);
+            lRespMbapErrorCount.TabIndex = 13;
+            lRespMbapErrorCount.Text = "0";
             // 
             // label50
             // 
-            this.label50.AutoSize = true;
-            this.label50.Location = new System.Drawing.Point(3, 60);
-            this.label50.Margin = new System.Windows.Forms.Padding(3, 0, 3, 2);
-            this.label50.Name = "label50";
-            this.label50.Size = new System.Drawing.Size(177, 13);
-            this.label50.TabIndex = 8;
-            this.label50.Text = "Response too short and CRC errors:";
+            label50.AutoSize = true;
+            label50.Location = new Point(3, 60);
+            label50.Margin = new Padding(3, 0, 3, 2);
+            label50.Name = "label50";
+            label50.Size = new Size(177, 13);
+            label50.TabIndex = 8;
+            label50.Text = "Response too short and CRC errors:";
             // 
             // lResponseCrcErrorCount
             // 
-            this.lResponseCrcErrorCount.AutoSize = true;
-            this.lResponseCrcErrorCount.Dock = System.Windows.Forms.DockStyle.Right;
-            this.lResponseCrcErrorCount.Location = new System.Drawing.Point(247, 75);
-            this.lResponseCrcErrorCount.Name = "lResponseCrcErrorCount";
-            this.lResponseCrcErrorCount.Size = new System.Drawing.Size(13, 15);
-            this.lResponseCrcErrorCount.TabIndex = 11;
-            this.lResponseCrcErrorCount.Text = "0";
+            lResponseCrcErrorCount.AutoSize = true;
+            lResponseCrcErrorCount.Dock = DockStyle.Right;
+            lResponseCrcErrorCount.Location = new Point(263, 75);
+            lResponseCrcErrorCount.Name = "lResponseCrcErrorCount";
+            lResponseCrcErrorCount.Size = new Size(13, 15);
+            lResponseCrcErrorCount.TabIndex = 11;
+            lResponseCrcErrorCount.Text = "0";
             // 
             // lResponseShortAndCrcErrorCount
             // 
-            this.lResponseShortAndCrcErrorCount.AutoSize = true;
-            this.lResponseShortAndCrcErrorCount.Dock = System.Windows.Forms.DockStyle.Right;
-            this.lResponseShortAndCrcErrorCount.Location = new System.Drawing.Point(247, 60);
-            this.lResponseShortAndCrcErrorCount.Name = "lResponseShortAndCrcErrorCount";
-            this.lResponseShortAndCrcErrorCount.Size = new System.Drawing.Size(13, 15);
-            this.lResponseShortAndCrcErrorCount.TabIndex = 9;
-            this.lResponseShortAndCrcErrorCount.Text = "0";
+            lResponseShortAndCrcErrorCount.AutoSize = true;
+            lResponseShortAndCrcErrorCount.Dock = DockStyle.Right;
+            lResponseShortAndCrcErrorCount.Location = new Point(263, 60);
+            lResponseShortAndCrcErrorCount.Name = "lResponseShortAndCrcErrorCount";
+            lResponseShortAndCrcErrorCount.Size = new Size(13, 15);
+            lResponseShortAndCrcErrorCount.TabIndex = 9;
+            lResponseShortAndCrcErrorCount.Text = "0";
             // 
             // buttonReset
             // 
-            this.buttonReset.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.buttonReset.Location = new System.Drawing.Point(107, 355);
-            this.buttonReset.Name = "buttonReset";
-            this.buttonReset.Size = new System.Drawing.Size(75, 23);
-            this.buttonReset.TabIndex = 1;
-            this.buttonReset.Text = "Reset";
-            this.buttonReset.UseVisualStyleBackColor = true;
-            this.buttonReset.Click += new System.EventHandler(this.buttonReset_Click);
+            buttonReset.Anchor = AnchorStyles.Top;
+            buttonReset.AutoSize = true;
+            buttonReset.Location = new Point(104, 3);
+            buttonReset.Name = "buttonReset";
+            buttonReset.Size = new Size(75, 25);
+            buttonReset.TabIndex = 1;
+            buttonReset.Text = "Reset";
+            buttonReset.UseVisualStyleBackColor = true;
+            buttonReset.Click += buttonReset_Click;
+            // 
+            // panel1
+            // 
+            panel1.Controls.Add(buttonReset);
+            panel1.Location = new Point(13, 357);
+            panel1.Name = "panel1";
+            panel1.Size = new Size(282, 32);
+            panel1.TabIndex = 2;
             // 
             // DiagnosticsForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.AutoSize = true;
-            this.ClientSize = new System.Drawing.Size(296, 383);
-            this.Controls.Add(this.buttonReset);
-            this.Controls.Add(this.tableLayoutPanel1);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
-            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.MaximizeBox = false;
-            this.MinimizeBox = false;
-            this.Name = "DiagnosticsForm";
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "ModbusControl diagnostics counters";
-            this.tableLayoutPanel1.ResumeLayout(false);
-            this.tableLayoutPanel1.PerformLayout();
-            this.ResumeLayout(false);
-            this.PerformLayout();
+            AutoScaleDimensions = new SizeF(96F, 96F);
+            AutoScaleMode = AutoScaleMode.Dpi;
+            ClientSize = new Size(307, 396);
+            Controls.Add(panel1);
+            Controls.Add(tableLayoutPanel1);
+            Font = new Font("Microsoft Sans Serif", 8.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            FormBorderStyle = FormBorderStyle.FixedDialog;
+            Icon = (Icon)resources.GetObject("$this.Icon");
+            MaximizeBox = false;
+            MinimizeBox = false;
+            Name = "DiagnosticsForm";
+            StartPosition = FormStartPosition.CenterParent;
+            Text = "ModbusControl diagnostics counters";
+            tableLayoutPanel1.ResumeLayout(false);
+            tableLayoutPanel1.PerformLayout();
+            panel1.ResumeLayout(false);
+            panel1.PerformLayout();
+            ResumeLayout(false);
 
         }
 
@@ -677,5 +688,6 @@
         private System.Windows.Forms.Label lResponseDataErrorCount;
         private System.Windows.Forms.Label label50;
         private System.Windows.Forms.Label lResponseShortAndCrcErrorCount;
+        private Panel panel1;
     }
 }

@@ -28,262 +28,293 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            components = new System.ComponentModel.Container();
+            DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CustomQueriesForm));
-            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-            this.panel1 = new System.Windows.Forms.Panel();
-            this.butDeleteRows = new System.Windows.Forms.Button();
-            this.butAddRow = new System.Windows.Forms.Button();
-            this.butClearResults = new System.Windows.Forms.Button();
-            this.butSendAll = new System.Windows.Forms.Button();
-            this.butRunTests = new System.Windows.Forms.Button();
-            this.butMoveDown = new System.Windows.Forms.Button();
-            this.butMoveUp = new System.Windows.Forms.Button();
-            this.chkMultilineRows = new System.Windows.Forms.CheckBox();
-            this.grid = new LST.Controls.MyDataGridView();
-            this.SendColumn = new System.Windows.Forms.DataGridViewButtonColumn();
-            this.SlaveidColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.CommandColumn = new System.Windows.Forms.DataGridViewComboBoxColumn();
-            this.RegisterColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.QtyColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.FormatColumn = new System.Windows.Forms.DataGridViewComboBoxColumn();
-            this.DataColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.ResultColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.CommentColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.CountColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.panel1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.grid)).BeginInit();
-            this.SuspendLayout();
+            toolTip1 = new ToolTip(components);
+            panel1 = new Panel();
+            tableLayoutPanel1 = new TableLayoutPanel();
+            butDebug = new Button();
+            butMoveUp = new Button();
+            butRunTests = new Button();
+            butClearResults = new Button();
+            butDeleteRows = new Button();
+            butSendAll = new Button();
+            butMoveDown = new Button();
+            butAddRow = new Button();
+            chkMultilineRows = new CheckBox();
+            grid = new LST.Controls.MyDataGridView();
+            SendColumn = new DataGridViewButtonColumn();
+            SlaveidColumn = new DataGridViewTextBoxColumn();
+            CommandColumn = new DataGridViewComboBoxColumn();
+            RegisterColumn = new DataGridViewTextBoxColumn();
+            QtyColumn = new DataGridViewTextBoxColumn();
+            FormatColumn = new DataGridViewComboBoxColumn();
+            DataColumn = new DataGridViewTextBoxColumn();
+            ResultColumn = new DataGridViewTextBoxColumn();
+            CommentColumn = new DataGridViewTextBoxColumn();
+            CountColumn = new DataGridViewTextBoxColumn();
+            panel1.SuspendLayout();
+            tableLayoutPanel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)grid).BeginInit();
+            SuspendLayout();
             // 
             // panel1
             // 
-            this.panel1.Controls.Add(this.butDeleteRows);
-            this.panel1.Controls.Add(this.butAddRow);
-            this.panel1.Controls.Add(this.butClearResults);
-            this.panel1.Controls.Add(this.butSendAll);
-            this.panel1.Controls.Add(this.butRunTests);
-            this.panel1.Controls.Add(this.butMoveDown);
-            this.panel1.Controls.Add(this.butMoveUp);
-            this.panel1.Controls.Add(this.chkMultilineRows);
-            this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel1.Location = new System.Drawing.Point(0, 0);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(1003, 29);
-            this.panel1.TabIndex = 0;
+            panel1.Controls.Add(tableLayoutPanel1);
+            panel1.Dock = DockStyle.Top;
+            panel1.Location = new Point(0, 0);
+            panel1.Name = "panel1";
+            panel1.Size = new Size(1003, 38);
+            panel1.TabIndex = 0;
             // 
-            // butDeleteRows
+            // tableLayoutPanel1
             // 
-            this.butDeleteRows.Location = new System.Drawing.Point(246, 4);
-            this.butDeleteRows.Name = "butDeleteRows";
-            this.butDeleteRows.Size = new System.Drawing.Size(72, 21);
-            this.butDeleteRows.TabIndex = 3;
-            this.butDeleteRows.Text = "Delete row";
-            this.butDeleteRows.UseVisualStyleBackColor = true;
-            this.butDeleteRows.Click += new System.EventHandler(this.ButDeleteRows_Click);
+            tableLayoutPanel1.ColumnCount = 9;
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle());
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle());
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle());
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle());
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle());
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle());
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle());
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle());
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle());
+            tableLayoutPanel1.Controls.Add(butDebug, 8, 0);
+            tableLayoutPanel1.Controls.Add(butMoveUp, 0, 0);
+            tableLayoutPanel1.Controls.Add(butRunTests, 7, 0);
+            tableLayoutPanel1.Controls.Add(butClearResults, 6, 0);
+            tableLayoutPanel1.Controls.Add(butDeleteRows, 3, 0);
+            tableLayoutPanel1.Controls.Add(butSendAll, 5, 0);
+            tableLayoutPanel1.Controls.Add(butMoveDown, 1, 0);
+            tableLayoutPanel1.Controls.Add(butAddRow, 2, 0);
+            tableLayoutPanel1.Controls.Add(chkMultilineRows, 4, 0);
+            tableLayoutPanel1.Location = new Point(3, 3);
+            tableLayoutPanel1.Name = "tableLayoutPanel1";
+            tableLayoutPanel1.RowCount = 1;
+            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            tableLayoutPanel1.Size = new Size(997, 30);
+            tableLayoutPanel1.TabIndex = 8;
             // 
-            // butAddRow
+            // butDebug
             // 
-            this.butAddRow.Location = new System.Drawing.Point(168, 4);
-            this.butAddRow.Name = "butAddRow";
-            this.butAddRow.Size = new System.Drawing.Size(72, 21);
-            this.butAddRow.TabIndex = 2;
-            this.butAddRow.Text = "Add row";
-            this.butAddRow.UseVisualStyleBackColor = true;
-            this.butAddRow.Click += new System.EventHandler(this.ButAddRow_Click);
-            // 
-            // butClearResults
-            // 
-            this.butClearResults.Location = new System.Drawing.Point(601, 3);
-            this.butClearResults.Name = "butClearResults";
-            this.butClearResults.Size = new System.Drawing.Size(89, 23);
-            this.butClearResults.TabIndex = 6;
-            this.butClearResults.Text = "Clear all results";
-            this.butClearResults.UseVisualStyleBackColor = true;
-            this.butClearResults.Click += new System.EventHandler(this.ButClearResults_Click);
-            // 
-            // butSendAll
-            // 
-            this.butSendAll.Location = new System.Drawing.Point(511, 3);
-            this.butSendAll.Name = "butSendAll";
-            this.butSendAll.Size = new System.Drawing.Size(75, 23);
-            this.butSendAll.TabIndex = 5;
-            this.butSendAll.Text = "Send all";
-            this.butSendAll.UseVisualStyleBackColor = true;
-            this.butSendAll.Click += new System.EventHandler(this.ButSendAll_Click);
-            // 
-            // butRunTests
-            // 
-            this.butRunTests.Location = new System.Drawing.Point(708, 3);
-            this.butRunTests.Name = "butRunTests";
-            this.butRunTests.Size = new System.Drawing.Size(75, 23);
-            this.butRunTests.TabIndex = 7;
-            this.butRunTests.Text = "Run tests";
-            this.butRunTests.UseVisualStyleBackColor = true;
-            this.butRunTests.Visible = false;
-            this.butRunTests.Click += new System.EventHandler(this.ButRunTests_Click);
-            // 
-            // butMoveDown
-            // 
-            this.butMoveDown.Location = new System.Drawing.Point(90, 4);
-            this.butMoveDown.Name = "butMoveDown";
-            this.butMoveDown.Size = new System.Drawing.Size(72, 21);
-            this.butMoveDown.TabIndex = 1;
-            this.butMoveDown.Text = "Move down";
-            this.butMoveDown.UseVisualStyleBackColor = true;
-            this.butMoveDown.Click += new System.EventHandler(this.ButMoveDown_Click);
+            butDebug.AutoSize = true;
+            butDebug.Location = new Point(802, 3);
+            butDebug.Name = "butDebug";
+            butDebug.Size = new Size(78, 24);
+            butDebug.TabIndex = 8;
+            butDebug.Text = "DEBUG info";
+            butDebug.UseVisualStyleBackColor = true;
+            butDebug.Visible = false;
+            butDebug.Click += butDebug_Click;
             // 
             // butMoveUp
             // 
-            this.butMoveUp.Location = new System.Drawing.Point(12, 4);
-            this.butMoveUp.Name = "butMoveUp";
-            this.butMoveUp.Size = new System.Drawing.Size(72, 21);
-            this.butMoveUp.TabIndex = 0;
-            this.butMoveUp.Text = "Move up";
-            this.butMoveUp.UseVisualStyleBackColor = true;
-            this.butMoveUp.Click += new System.EventHandler(this.ButMoveUp_Click);
+            butMoveUp.AutoSize = true;
+            butMoveUp.Location = new Point(3, 3);
+            butMoveUp.Margin = new Padding(3, 3, 6, 3);
+            butMoveUp.Name = "butMoveUp";
+            butMoveUp.Size = new Size(75, 24);
+            butMoveUp.TabIndex = 0;
+            butMoveUp.Text = "Move up";
+            butMoveUp.UseVisualStyleBackColor = true;
+            butMoveUp.Click += ButMoveUp_Click;
+            // 
+            // butRunTests
+            // 
+            butRunTests.AutoSize = true;
+            butRunTests.Location = new Point(718, 3);
+            butRunTests.Margin = new Padding(3, 3, 6, 3);
+            butRunTests.Name = "butRunTests";
+            butRunTests.Size = new Size(75, 24);
+            butRunTests.TabIndex = 7;
+            butRunTests.Text = "Run tests";
+            butRunTests.UseVisualStyleBackColor = true;
+            butRunTests.Visible = false;
+            butRunTests.Click += ButRunTests_Click;
+            // 
+            // butClearResults
+            // 
+            butClearResults.AutoSize = true;
+            butClearResults.Location = new Point(613, 3);
+            butClearResults.Margin = new Padding(3, 3, 6, 3);
+            butClearResults.Name = "butClearResults";
+            butClearResults.Size = new Size(96, 24);
+            butClearResults.TabIndex = 6;
+            butClearResults.Text = "Clear all results";
+            butClearResults.UseVisualStyleBackColor = true;
+            butClearResults.Click += ButClearResults_Click;
+            // 
+            // butDeleteRows
+            // 
+            butDeleteRows.AutoSize = true;
+            butDeleteRows.Location = new Point(260, 3);
+            butDeleteRows.Margin = new Padding(3, 3, 6, 3);
+            butDeleteRows.Name = "butDeleteRows";
+            butDeleteRows.Size = new Size(75, 24);
+            butDeleteRows.TabIndex = 3;
+            butDeleteRows.Text = "Delete row";
+            butDeleteRows.UseVisualStyleBackColor = true;
+            butDeleteRows.Click += ButDeleteRows_Click;
+            // 
+            // butSendAll
+            // 
+            butSendAll.AutoSize = true;
+            butSendAll.Location = new Point(529, 3);
+            butSendAll.Margin = new Padding(3, 3, 6, 3);
+            butSendAll.Name = "butSendAll";
+            butSendAll.Size = new Size(75, 24);
+            butSendAll.TabIndex = 5;
+            butSendAll.Text = "Send all";
+            butSendAll.UseVisualStyleBackColor = true;
+            butSendAll.Click += ButSendAll_Click;
+            // 
+            // butMoveDown
+            // 
+            butMoveDown.AutoSize = true;
+            butMoveDown.Location = new Point(87, 3);
+            butMoveDown.Margin = new Padding(3, 3, 6, 3);
+            butMoveDown.Name = "butMoveDown";
+            butMoveDown.Size = new Size(80, 24);
+            butMoveDown.TabIndex = 1;
+            butMoveDown.Text = "Move down";
+            butMoveDown.UseVisualStyleBackColor = true;
+            butMoveDown.Click += ButMoveDown_Click;
+            // 
+            // butAddRow
+            // 
+            butAddRow.AutoSize = true;
+            butAddRow.Location = new Point(176, 3);
+            butAddRow.Margin = new Padding(3, 3, 6, 3);
+            butAddRow.Name = "butAddRow";
+            butAddRow.Size = new Size(75, 24);
+            butAddRow.TabIndex = 2;
+            butAddRow.Text = "Add row";
+            butAddRow.UseVisualStyleBackColor = true;
+            butAddRow.Click += ButAddRow_Click;
             // 
             // chkMultilineRows
             // 
-            this.chkMultilineRows.AutoSize = true;
-            this.chkMultilineRows.Location = new System.Drawing.Point(324, 7);
-            this.chkMultilineRows.Name = "chkMultilineRows";
-            this.chkMultilineRows.Size = new System.Drawing.Size(176, 17);
-            this.chkMultilineRows.TabIndex = 4;
-            this.chkMultilineRows.Text = "Multiline rows with auto row size";
-            this.chkMultilineRows.UseVisualStyleBackColor = true;
-            this.chkMultilineRows.CheckedChanged += new System.EventHandler(this.ChkMultilineRows_CheckedChanged);
+            chkMultilineRows.AutoSize = true;
+            chkMultilineRows.Location = new Point(344, 8);
+            chkMultilineRows.Margin = new Padding(3, 8, 6, 3);
+            chkMultilineRows.Name = "chkMultilineRows";
+            chkMultilineRows.Size = new Size(176, 17);
+            chkMultilineRows.TabIndex = 4;
+            chkMultilineRows.Text = "Multiline rows with auto row size";
+            chkMultilineRows.UseVisualStyleBackColor = true;
+            chkMultilineRows.CheckedChanged += ChkMultilineRows_CheckedChanged;
             // 
             // grid
             // 
-            this.grid.AllowUserToAddRows = false;
-            this.grid.AllowUserToDeleteRows = false;
-            this.grid.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
-            this.grid.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.DisplayedCellsExceptHeaders;
-            this.grid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.grid.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.SendColumn,
-            this.SlaveidColumn,
-            this.CommandColumn,
-            this.RegisterColumn,
-            this.QtyColumn,
-            this.FormatColumn,
-            this.DataColumn,
-            this.ResultColumn,
-            this.CommentColumn,
-            this.CountColumn});
-            this.grid.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.grid.Location = new System.Drawing.Point(0, 29);
-            this.grid.Margin = new System.Windows.Forms.Padding(2);
-            this.grid.Name = "grid";
-            this.grid.RowHeadersVisible = false;
-            this.grid.RowTemplate.Height = 23;
-            this.grid.Size = new System.Drawing.Size(1003, 563);
-            this.grid.TabIndex = 1;
-            this.grid.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.MyDataGridView1_CellContentClick);
+            grid.AllowUserToAddRows = false;
+            grid.AllowUserToDeleteRows = false;
+            grid.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+            grid.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.DisplayedCellsExceptHeaders;
+            grid.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            grid.Columns.AddRange(new DataGridViewColumn[] { SendColumn, SlaveidColumn, CommandColumn, RegisterColumn, QtyColumn, FormatColumn, DataColumn, ResultColumn, CommentColumn, CountColumn });
+            grid.Dock = DockStyle.Fill;
+            grid.Location = new Point(0, 38);
+            grid.Margin = new Padding(2);
+            grid.Name = "grid";
+            grid.RowHeadersVisible = false;
+            grid.RowTemplate.Height = 23;
+            grid.Size = new Size(1003, 554);
+            grid.TabIndex = 1;
+            grid.CellContentClick += MyDataGridView1_CellContentClick;
+            grid.EditingControlShowing += grid_EditingControlShowing;
             // 
             // SendColumn
             // 
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            this.SendColumn.DefaultCellStyle = dataGridViewCellStyle1;
-            this.SendColumn.FillWeight = 50F;
-            this.SendColumn.HeaderText = "Send";
-            this.SendColumn.Name = "SendColumn";
-            this.SendColumn.Text = "Send";
-            this.SendColumn.UseColumnTextForButtonValue = true;
+            dataGridViewCellStyle1.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            SendColumn.DefaultCellStyle = dataGridViewCellStyle1;
+            SendColumn.FillWeight = 50F;
+            SendColumn.HeaderText = "Send";
+            SendColumn.Name = "SendColumn";
+            SendColumn.Text = "Send";
+            SendColumn.UseColumnTextForButtonValue = true;
             // 
             // SlaveidColumn
             // 
-            this.SlaveidColumn.FillWeight = 20F;
-            this.SlaveidColumn.HeaderText = "SlaveID";
-            this.SlaveidColumn.Name = "SlaveidColumn";
+            SlaveidColumn.FillWeight = 20F;
+            SlaveidColumn.HeaderText = "SlaveID";
+            SlaveidColumn.Name = "SlaveidColumn";
             // 
             // CommandColumn
             // 
-            this.CommandColumn.DropDownWidth = 220;
-            this.CommandColumn.HeaderText = "Command";
-            this.CommandColumn.Items.AddRange(new object[] {
-            "R input registers (FC 04)",
-            "R holding registers (FC 03)",
-            "W single holding register (FC 06)",
-            "W multiple holding registers (FC 10)",
-            "R discrete inputs (FC 02)",
-            "R coils (FC 01)",
-            "W single coil (FC 05)",
-            "W multiple coils (FC 0F)",
-            "Custom query"});
-            this.CommandColumn.Name = "CommandColumn";
-            this.CommandColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+            CommandColumn.AutoComplete = false;
+            CommandColumn.DropDownWidth = 220;
+            CommandColumn.HeaderText = "Command";
+            CommandColumn.Items.AddRange(new object[] { "R input registers (FC 04)", "R holding registers (FC 03)", "W single holding register (FC 06)", "W multiple holding registers (FC 10)", "R discrete inputs (FC 02)", "R coils (FC 01)", "W single coil (FC 05)", "W multiple coils (FC 0F)", "Custom query" });
+            CommandColumn.Name = "CommandColumn";
+            CommandColumn.SortMode = DataGridViewColumnSortMode.Automatic;
             // 
             // RegisterColumn
             // 
-            this.RegisterColumn.FillWeight = 50F;
-            this.RegisterColumn.HeaderText = "Register";
-            this.RegisterColumn.Name = "RegisterColumn";
+            RegisterColumn.FillWeight = 50F;
+            RegisterColumn.HeaderText = "Register";
+            RegisterColumn.Name = "RegisterColumn";
             // 
             // QtyColumn
             // 
-            this.QtyColumn.FillWeight = 50F;
-            this.QtyColumn.HeaderText = "Qty";
-            this.QtyColumn.Name = "QtyColumn";
+            QtyColumn.FillWeight = 50F;
+            QtyColumn.HeaderText = "Qty";
+            QtyColumn.Name = "QtyColumn";
             // 
             // FormatColumn
             // 
-            this.FormatColumn.FillWeight = 50F;
-            this.FormatColumn.HeaderText = "Format";
-            this.FormatColumn.Items.AddRange(new object[] {
-            "Int16",
-            "UInt16",
-            "Hex16",
-            "Int32",
-            "UInt32",
-            "Hex32",
-            "HexBytes",
-            "Bits"});
-            this.FormatColumn.Name = "FormatColumn";
-            this.FormatColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+            FormatColumn.AutoComplete = false;
+            FormatColumn.FillWeight = 50F;
+            FormatColumn.HeaderText = "Format";
+            FormatColumn.Items.AddRange(new object[] { "Int16", "UInt16", "Hex16", "Int32", "UInt32", "Hex32", "HexBytes", "Bits" });
+            FormatColumn.Name = "FormatColumn";
+            FormatColumn.SortMode = DataGridViewColumnSortMode.Automatic;
             // 
             // DataColumn
             // 
-            this.DataColumn.HeaderText = "Data";
-            this.DataColumn.Name = "DataColumn";
+            DataColumn.HeaderText = "Data";
+            DataColumn.Name = "DataColumn";
             // 
             // ResultColumn
             // 
-            this.ResultColumn.FillWeight = 300F;
-            this.ResultColumn.HeaderText = "Result";
-            this.ResultColumn.Name = "ResultColumn";
-            this.ResultColumn.ReadOnly = true;
+            ResultColumn.FillWeight = 300F;
+            ResultColumn.HeaderText = "Result";
+            ResultColumn.Name = "ResultColumn";
+            ResultColumn.ReadOnly = true;
             // 
             // CommentColumn
             // 
-            this.CommentColumn.HeaderText = "Comment";
-            this.CommentColumn.Name = "CommentColumn";
+            CommentColumn.HeaderText = "Comment";
+            CommentColumn.Name = "CommentColumn";
             // 
             // CountColumn
             // 
-            this.CountColumn.FillWeight = 40F;
-            this.CountColumn.HeaderText = "Count";
-            this.CountColumn.Name = "CountColumn";
-            this.CountColumn.ReadOnly = true;
-            this.CountColumn.Visible = false;
+            CountColumn.FillWeight = 40F;
+            CountColumn.HeaderText = "Count";
+            CountColumn.Name = "CountColumn";
+            CountColumn.ReadOnly = true;
+            CountColumn.Visible = false;
             // 
-            // CustomQueries
+            // CustomQueriesForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(1003, 592);
-            this.Controls.Add(this.grid);
-            this.Controls.Add(this.panel1);
-            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.Name = "CustomQueries";
-            this.Text = "Custom modbus queries";
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.CustomQueries_FormClosing);
-            this.Shown += new System.EventHandler(this.CustomQueries_Shown);
-            this.panel1.ResumeLayout(false);
-            this.panel1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.grid)).EndInit();
-            this.ResumeLayout(false);
+            AutoScaleDimensions = new SizeF(96F, 96F);
+            AutoScaleMode = AutoScaleMode.Dpi;
+            ClientSize = new Size(1003, 592);
+            Controls.Add(grid);
+            Controls.Add(panel1);
+            Font = new Font("Microsoft Sans Serif", 8.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            Icon = (Icon)resources.GetObject("$this.Icon");
+            KeyPreview = true;
+            Name = "CustomQueriesForm";
+            StartPosition = FormStartPosition.CenterParent;
+            Text = "Custom modbus queries";
+            FormClosing += CustomQueries_FormClosing;
+            KeyDown += CustomQueriesForm_KeyDown;
+            panel1.ResumeLayout(false);
+            tableLayoutPanel1.ResumeLayout(false);
+            tableLayoutPanel1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)grid).EndInit();
+            ResumeLayout(false);
 
         }
 
@@ -299,15 +330,17 @@
         private System.Windows.Forms.Button butClearResults;
         private System.Windows.Forms.Button butAddRow;
         private System.Windows.Forms.Button butDeleteRows;
-        private System.Windows.Forms.DataGridViewButtonColumn SendColumn;
-        private System.Windows.Forms.DataGridViewTextBoxColumn SlaveidColumn;
-        private System.Windows.Forms.DataGridViewComboBoxColumn CommandColumn;
-        private System.Windows.Forms.DataGridViewTextBoxColumn RegisterColumn;
-        private System.Windows.Forms.DataGridViewTextBoxColumn QtyColumn;
-        private System.Windows.Forms.DataGridViewComboBoxColumn FormatColumn;
-        private System.Windows.Forms.DataGridViewTextBoxColumn DataColumn;
-        private System.Windows.Forms.DataGridViewTextBoxColumn ResultColumn;
-        private System.Windows.Forms.DataGridViewTextBoxColumn CommentColumn;
-        private System.Windows.Forms.DataGridViewTextBoxColumn CountColumn;
+        private TableLayoutPanel tableLayoutPanel1;
+        private Button butDebug;
+        private DataGridViewButtonColumn SendColumn;
+        private DataGridViewTextBoxColumn SlaveidColumn;
+        private DataGridViewComboBoxColumn CommandColumn;
+        private DataGridViewTextBoxColumn RegisterColumn;
+        private DataGridViewTextBoxColumn QtyColumn;
+        private DataGridViewComboBoxColumn FormatColumn;
+        private DataGridViewTextBoxColumn DataColumn;
+        private DataGridViewTextBoxColumn ResultColumn;
+        private DataGridViewTextBoxColumn CommentColumn;
+        private DataGridViewTextBoxColumn CountColumn;
     }
 }

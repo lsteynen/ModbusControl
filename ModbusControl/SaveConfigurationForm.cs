@@ -1,12 +1,12 @@
-﻿using System;
+﻿using LST.Helpers;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
-
-using LST.Helpers;
 
 namespace ModbusControl
 {
@@ -15,6 +15,7 @@ namespace ModbusControl
         // properties
         public CProject Project;
         public bool OverridesWarning;
+        public int MainformDeviceDPI;
         public int SizeWidth;
         public int SizeHeight;
 
@@ -33,9 +34,9 @@ namespace ModbusControl
 
         private void checkbox_CheckedChanged(object sender, EventArgs e)
         {
-            buttonSave.Enabled = (checkboxProjectConfig.Checked 
-                || checkboxBridge.Checked 
-                || checkboxFormSize.Checked 
+            buttonSave.Enabled = (checkboxProjectConfig.Checked
+                || checkboxBridge.Checked
+                || checkboxFormSize.Checked
                 || checkboxUpdateXML.Checked);
         }
 
@@ -63,9 +64,9 @@ namespace ModbusControl
                 if (checkboxFormSize.Checked)
                 {
                     // put new size in Project
-                    // Project holds width in 96DPI
-                    Project.FormSize.Width = AppDpiHelpers.ScaleXcoordFromSystemDpiTo96Dpi(SizeWidth);
-                    Project.FormSize.Height = AppDpiHelpers.ScaleYcoordFromSystemDpiTo96Dpi(SizeHeight);
+                    // Project holds width in 96DPI, scale MainForm_DPI
+                    Project.FormSize.Width = AppDpiHelpers.ScaleValueFromThisDpiTo96DpiInt(SizeWidth, MainformDeviceDPI);
+                    Project.FormSize.Height = AppDpiHelpers.ScaleValueFromThisDpiTo96DpiInt(SizeHeight, MainformDeviceDPI);
                     Project.WriteFormSize();
                     Changed = true;
                 }
@@ -91,5 +92,24 @@ namespace ModbusControl
             Close();
         }
 
+        private void SaveConfigurationForm_Shown(object sender, EventArgs e)
+        {
+            AdjustFormSize();
+        }
+
+        private void AdjustFormSize()
+        {
+            Debug.Print("AdjustFormSize:");
+            Debug.Print($"DeviceDpi={DeviceDpi}");
+
+            // get margin, DPI adjusted 
+            int hmargin = AppDpiHelpers.ScaleValueFrom96DpiToThisDpiInt(6, DeviceDpi);
+            int vmargin = AppDpiHelpers.ScaleValueFrom96DpiToThisDpiInt(6, DeviceDpi);
+            // get new form size
+            int newWidth = ClientSize.Width+ hmargin;
+            int newHeight = optionsPanel.Location.Y + optionsPanel.Height + vmargin;
+            Debug.Print($"newWidth={newWidth}, newHeight={newHeight}");
+            ClientSize = new Size(newWidth, newHeight);
+        }
     }
 }

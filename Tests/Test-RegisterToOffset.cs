@@ -23,23 +23,23 @@ namespace UnitTests
             registerToOffset = new RegisterToOffset(400000);
             Assert.AreEqual<int>(400000, registerToOffset.RegisterNumberingScheme);
 
-            Assert.ThrowsException<ArgumentException>(() =>
+            Assert.ThrowsExactly<ArgumentException>(() =>
                 registerToOffset.RegisterNumberingScheme = 0
                 );
 
-            Assert.ThrowsException<ArgumentException>(() =>
+            Assert.ThrowsExactly<ArgumentException>(() =>
                 registerToOffset.RegisterNumberingScheme = 30001
                 );
 
-            Assert.ThrowsException<ArgumentException>(() =>
+            Assert.ThrowsExactly<ArgumentException>(() =>
                 registerToOffset.RegisterNumberingScheme = 300001
                 );
 
-            Assert.ThrowsException<ArgumentException>(() =>
+            Assert.ThrowsExactly<ArgumentException>(() =>
                 registerToOffset.RegisterNumberingScheme = 100000
                 );
 
-            Assert.ThrowsException<ArgumentException>(() =>
+            Assert.ThrowsExactly<ArgumentException>(() =>
                 registerToOffset.RegisterNumberingScheme = 400002
                 );
         }
@@ -51,7 +51,7 @@ namespace UnitTests
         {
             RegisterToOffset registerToOffset = new RegisterToOffset(40001);
 
-            Assert.ThrowsException<ArgumentException>(() =>
+            Assert.ThrowsExactly<ArgumentException>(() =>
                 registerToOffset.GetHoldingregisterOffset(40000)
                 );
 
@@ -64,11 +64,11 @@ namespace UnitTests
             offset = registerToOffset.GetHoldingregisterOffset(49999);
             Assert.AreEqual<UInt16>(9998, offset);
 
-            Assert.ThrowsException<ArgumentException>(() =>
+            Assert.ThrowsExactly<ArgumentException>(() =>
                 registerToOffset.GetHoldingregisterOffset(50000)
                 );
 
-            Assert.ThrowsException<ArgumentException>(() =>
+            Assert.ThrowsExactly<ArgumentException>(() =>
                registerToOffset.GetHoldingregisterOffset(400000)
                );
 
@@ -78,7 +78,7 @@ namespace UnitTests
             offset = registerToOffset.GetHoldingregisterOffset(465536);
             Assert.AreEqual<UInt16>(65535, offset);
 
-            Assert.ThrowsException<ArgumentException>(() =>
+            Assert.ThrowsExactly<ArgumentException>(() =>
                 registerToOffset.GetHoldingregisterOffset(465537)
                 );
         }
@@ -97,7 +97,7 @@ namespace UnitTests
             offset = registerToOffset.GetHoldingregisterOffset(49999);
             Assert.AreEqual<UInt16>(9999, offset);
 
-            Assert.ThrowsException<ArgumentException>(() =>
+            Assert.ThrowsExactly<ArgumentException>(() =>
                 registerToOffset.GetHoldingregisterOffset(50000)
                 );
 
@@ -110,7 +110,7 @@ namespace UnitTests
             offset = registerToOffset.GetHoldingregisterOffset(465535);
             Assert.AreEqual<UInt16>(65535, offset);
 
-            Assert.ThrowsException<ArgumentException>(() =>
+            Assert.ThrowsExactly<ArgumentException>(() =>
                 registerToOffset.GetHoldingregisterOffset(465536)
                 );
         }
@@ -120,11 +120,11 @@ namespace UnitTests
         {
             RegisterToOffset registerToOffset = new RegisterToOffset(400001);
 
-            Assert.ThrowsException<ArgumentException>(() =>
+            Assert.ThrowsExactly<ArgumentException>(() =>
                 registerToOffset.GetHoldingregisterOffset(40001)
                 );
 
-            Assert.ThrowsException<ArgumentException>(() =>
+            Assert.ThrowsExactly<ArgumentException>(() =>
                 registerToOffset.GetHoldingregisterOffset(400000)
                 );
 
@@ -140,11 +140,11 @@ namespace UnitTests
             offset = registerToOffset.GetHoldingregisterOffset(465536);
             Assert.AreEqual<UInt16>(65535, offset);
 
-            Assert.ThrowsException<ArgumentException>(() =>
+            Assert.ThrowsExactly<ArgumentException>(() =>
                 registerToOffset.GetHoldingregisterOffset(465537)
                 );
 
-            Assert.ThrowsException<ArgumentException>(() =>
+            Assert.ThrowsExactly<ArgumentException>(() =>
                 registerToOffset.GetHoldingregisterOffset(300001)
                 );
         }
@@ -154,7 +154,7 @@ namespace UnitTests
         {
             RegisterToOffset registerToOffset = new RegisterToOffset(400000);
 
-            Assert.ThrowsException<ArgumentException>(() =>
+            Assert.ThrowsExactly<ArgumentException>(() =>
                 registerToOffset.GetHoldingregisterOffset(40001)
                 );
 
@@ -173,7 +173,7 @@ namespace UnitTests
             offset = registerToOffset.GetHoldingregisterOffset(465535);
             Assert.AreEqual<UInt16>(65535, offset);
 
-            Assert.ThrowsException<ArgumentException>(() =>
+            Assert.ThrowsExactly<ArgumentException>(() =>
                 registerToOffset.GetHoldingregisterOffset(465536)
                 );
         }
@@ -283,7 +283,7 @@ namespace UnitTests
         {
             RegisterToOffset registerToOffset = new RegisterToOffset(40001);
 
-            Assert.ThrowsException<ArgumentException>(() =>
+            Assert.ThrowsExactly<ArgumentException>(() =>
                 registerToOffset.GetInputregisterOffset(30000)
                 );
 
@@ -296,11 +296,11 @@ namespace UnitTests
             offset = registerToOffset.GetInputregisterOffset(39999);
             Assert.AreEqual<UInt16>(9998, offset);
 
-            Assert.ThrowsException<ArgumentException>(() =>
+            Assert.ThrowsExactly<ArgumentException>(() =>
                 registerToOffset.GetInputregisterOffset(40000)
                 );
 
-            Assert.ThrowsException<ArgumentException>(() =>
+            Assert.ThrowsExactly<ArgumentException>(() =>
                  registerToOffset.GetInputregisterOffset(300000)
                  );
 
@@ -316,7 +316,7 @@ namespace UnitTests
             offset = registerToOffset.GetInputregisterOffset(365536);
             Assert.AreEqual<UInt16>(65535, offset);
 
-            Assert.ThrowsException<ArgumentException>(() =>
+            Assert.ThrowsExactly<ArgumentException>(() =>
                 registerToOffset.GetInputregisterOffset(365537)
                 );
         }
@@ -335,7 +335,7 @@ namespace UnitTests
             offset = registerToOffset.GetInputregisterOffset(39999);
             Assert.AreEqual<UInt16>(9999, offset);
 
-            Assert.ThrowsException<ArgumentException>(() =>
+            Assert.ThrowsExactly<ArgumentException>(() =>
                 registerToOffset.GetInputregisterOffset(40000)
                 );
 
@@ -357,7 +357,7 @@ namespace UnitTests
             offset = registerToOffset.GetInputregisterOffset(365535);
             Assert.AreEqual<UInt16>(65535, offset);
 
-            Assert.ThrowsException<ArgumentException>(() =>
+            Assert.ThrowsExactly<ArgumentException>(() =>
                 registerToOffset.GetInputregisterOffset(365536)
                 );
         }
@@ -367,11 +367,11 @@ namespace UnitTests
         {
             RegisterToOffset registerToOffset = new RegisterToOffset(400001);
 
-            Assert.ThrowsException<ArgumentException>(() =>
+            Assert.ThrowsExactly<ArgumentException>(() =>
                 registerToOffset.GetInputregisterOffset(30001)
                 );
 
-            Assert.ThrowsException<ArgumentException>(() =>
+            Assert.ThrowsExactly<ArgumentException>(() =>
                 registerToOffset.GetInputregisterOffset(300000)
                 );
 
@@ -387,11 +387,11 @@ namespace UnitTests
             offset = registerToOffset.GetInputregisterOffset(365536);
             Assert.AreEqual<UInt16>(65535, offset);
 
-            Assert.ThrowsException<ArgumentException>(() =>
+            Assert.ThrowsExactly<ArgumentException>(() =>
                 registerToOffset.GetInputregisterOffset(365537)
                 );
 
-            Assert.ThrowsException<ArgumentException>(() =>
+            Assert.ThrowsExactly<ArgumentException>(() =>
                 registerToOffset.GetInputregisterOffset(400001)
                 );
         }
@@ -401,7 +401,7 @@ namespace UnitTests
         {
             RegisterToOffset registerToOffset = new RegisterToOffset(400000);
 
-            Assert.ThrowsException<ArgumentException>(() =>
+            Assert.ThrowsExactly<ArgumentException>(() =>
                 registerToOffset.GetInputregisterOffset(30001)
                 );
 
@@ -423,7 +423,7 @@ namespace UnitTests
             offset = registerToOffset.GetInputregisterOffset(365535);
             Assert.AreEqual<UInt16>(65535, offset);
 
-            Assert.ThrowsException<ArgumentException>(() =>
+            Assert.ThrowsExactly<ArgumentException>(() =>
                 registerToOffset.GetInputregisterOffset(365536)
                 );
         }
@@ -535,7 +535,7 @@ namespace UnitTests
         {
             RegisterToOffset registerToOffset = new RegisterToOffset(40001);
 
-            Assert.ThrowsException<ArgumentException>(() =>
+            Assert.ThrowsExactly<ArgumentException>(() =>
                 registerToOffset.GetCoilOffset(0)
                 );
 
@@ -548,11 +548,11 @@ namespace UnitTests
             offset = registerToOffset.GetCoilOffset(9999);
             Assert.AreEqual<UInt16>(9998, offset);
 
-            Assert.ThrowsException<ArgumentException>(() =>
+            Assert.ThrowsExactly<ArgumentException>(() =>
                 registerToOffset.GetCoilOffset(10000)
                 );
 
-            Assert.ThrowsException<ArgumentException>(() =>
+            Assert.ThrowsExactly<ArgumentException>(() =>
                  registerToOffset.GetCoilOffset(65535)
                  );
         }
@@ -575,11 +575,11 @@ namespace UnitTests
             offset = registerToOffset.GetCoilOffset(9999);
             Assert.AreEqual<UInt16>(9999, offset);
 
-            Assert.ThrowsException<ArgumentException>(() =>
+            Assert.ThrowsExactly<ArgumentException>(() =>
                 registerToOffset.GetCoilOffset(10000)
                 );
 
-            Assert.ThrowsException<ArgumentException>(() =>
+            Assert.ThrowsExactly<ArgumentException>(() =>
                  registerToOffset.GetCoilOffset(65535)
                  );
         }
@@ -589,7 +589,7 @@ namespace UnitTests
         {
             RegisterToOffset registerToOffset = new RegisterToOffset(400001);
 
-            Assert.ThrowsException<ArgumentException>(() =>
+            Assert.ThrowsExactly<ArgumentException>(() =>
                 registerToOffset.GetCoilOffset(0)
                 );
 
@@ -611,7 +611,7 @@ namespace UnitTests
             offset = registerToOffset.GetCoilOffset(65536);
             Assert.AreEqual<UInt16>(65535, offset);
 
-            Assert.ThrowsException<ArgumentException>(() =>
+            Assert.ThrowsExactly<ArgumentException>(() =>
                 registerToOffset.GetCoilOffset(65537)
                 );
         }
@@ -639,11 +639,11 @@ namespace UnitTests
             offset = registerToOffset.GetCoilOffset(65535);
             Assert.AreEqual<UInt16>(65535, offset);
 
-           Assert.ThrowsException<ArgumentException>(() =>
+           Assert.ThrowsExactly<ArgumentException>(() =>
                 registerToOffset.GetCoilOffset(65536)
                 );
 
-            Assert.ThrowsException<ArgumentException>(() =>
+            Assert.ThrowsExactly<ArgumentException>(() =>
                 registerToOffset.GetCoilOffset(65537)
                 );
         }
@@ -755,7 +755,7 @@ namespace UnitTests
         {
             RegisterToOffset registerToOffset = new RegisterToOffset(40001);
 
-            Assert.ThrowsException<ArgumentException>(() =>
+            Assert.ThrowsExactly<ArgumentException>(() =>
                 registerToOffset.GetDiscreteInputOffset(10000)
                 );
 
@@ -768,11 +768,11 @@ namespace UnitTests
             offset = registerToOffset.GetDiscreteInputOffset(19999);
             Assert.AreEqual<UInt16>(9998, offset);
 
-            Assert.ThrowsException<ArgumentException>(() =>
+            Assert.ThrowsExactly<ArgumentException>(() =>
                 registerToOffset.GetDiscreteInputOffset(20000)
                 );
 
-            Assert.ThrowsException<ArgumentException>(() =>
+            Assert.ThrowsExactly<ArgumentException>(() =>
                  registerToOffset.GetDiscreteInputOffset(100000)
                  );
 
@@ -785,7 +785,7 @@ namespace UnitTests
             offset = registerToOffset.GetDiscreteInputOffset(165536);
             Assert.AreEqual<UInt16>(65535, offset);
 
-            Assert.ThrowsException<ArgumentException>(() =>
+            Assert.ThrowsExactly<ArgumentException>(() =>
                 registerToOffset.GetDiscreteInputOffset(365537)
                 );
         }
@@ -804,7 +804,7 @@ namespace UnitTests
             offset = registerToOffset.GetDiscreteInputOffset(19999);
             Assert.AreEqual<UInt16>(9999, offset);
 
-            Assert.ThrowsException<ArgumentException>(() =>
+            Assert.ThrowsExactly<ArgumentException>(() =>
                 registerToOffset.GetDiscreteInputOffset(20000)
                 );
 
@@ -826,7 +826,7 @@ namespace UnitTests
             offset = registerToOffset.GetDiscreteInputOffset(165535);
             Assert.AreEqual<UInt16>(65535, offset);
 
-            Assert.ThrowsException<ArgumentException>(() =>
+            Assert.ThrowsExactly<ArgumentException>(() =>
                 registerToOffset.GetDiscreteInputOffset(165536)
                 );
         }
@@ -836,11 +836,11 @@ namespace UnitTests
         {
             RegisterToOffset registerToOffset = new RegisterToOffset(400001);
 
-            Assert.ThrowsException<ArgumentException>(() =>
+            Assert.ThrowsExactly<ArgumentException>(() =>
                 registerToOffset.GetDiscreteInputOffset(10001)
                 );
 
-            Assert.ThrowsException<ArgumentException>(() =>
+            Assert.ThrowsExactly<ArgumentException>(() =>
                 registerToOffset.GetDiscreteInputOffset(100000)
                 );
 
@@ -865,7 +865,7 @@ namespace UnitTests
             offset = registerToOffset.GetDiscreteInputOffset(165536);
             Assert.AreEqual<UInt16>(65535, offset);
 
-            Assert.ThrowsException<ArgumentException>(() =>
+            Assert.ThrowsExactly<ArgumentException>(() =>
                 registerToOffset.GetDiscreteInputOffset(165537)
                 );
         }
@@ -875,7 +875,7 @@ namespace UnitTests
         {
             RegisterToOffset registerToOffset = new RegisterToOffset(400000);
 
-            Assert.ThrowsException<ArgumentException>(() =>
+            Assert.ThrowsExactly<ArgumentException>(() =>
                 registerToOffset.GetDiscreteInputOffset(10001)
                 );
 
@@ -897,7 +897,7 @@ namespace UnitTests
             offset = registerToOffset.GetDiscreteInputOffset(165535);
             Assert.AreEqual<UInt16>(65535, offset);
 
-            Assert.ThrowsException<ArgumentException>(() =>
+            Assert.ThrowsExactly<ArgumentException>(() =>
                 registerToOffset.GetDiscreteInputOffset(165536)
                 );
         }

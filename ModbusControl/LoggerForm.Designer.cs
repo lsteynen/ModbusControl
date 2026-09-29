@@ -28,238 +28,232 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
+            components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Logger));
-            this.statusStrip1 = new System.Windows.Forms.StatusStrip();
-            this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
-            this.toolStripStatusLabel2 = new System.Windows.Forms.ToolStripStatusLabel();
-            this.panel1 = new System.Windows.Forms.Panel();
-            this.checkboxEnable = new System.Windows.Forms.CheckBox();
-            this.logFilter = new LST.Helpers.LogFilter();
-            this.buttonClear = new System.Windows.Forms.Button();
-            this.chkAutoScroll = new System.Windows.Forms.CheckBox();
-            this.buttonTop = new System.Windows.Forms.Button();
-            this.buttonBottom = new System.Windows.Forms.Button();
-            this.buttonCopyToClipboard = new System.Windows.Forms.Button();
-            this.buttonSaveToFile = new System.Windows.Forms.Button();
-            this.timerView = new System.Windows.Forms.Timer(this.components);
-            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-            this.SaveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
-            this.logGridView = new System.Windows.Forms.DataGridView();
-            this.Time = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Type = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Logtext = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dataGridViewTextBoxColumn2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dataGridViewTextBoxColumn3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
-            this.statusStrip1.SuspendLayout();
-            this.panel1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.logGridView)).BeginInit();
-            this.tableLayoutPanel1.SuspendLayout();
-            this.SuspendLayout();
+            statusStrip1 = new StatusStrip();
+            toolStripStatusLabel1 = new ToolStripStatusLabel();
+            toolStripStatusLabel2 = new ToolStripStatusLabel();
+            panel1 = new Panel();
+            tableLayoutPanel1 = new TableLayoutPanel();
+            buttonSaveToFile = new Button();
+            buttonCopyToClipboard = new Button();
+            buttonBottom = new Button();
+            buttonTop = new Button();
+            chkAutoScroll = new CheckBox();
+            buttonClear = new Button();
+            logFilter = new LogFilter();
+            checkboxEnable = new CheckBox();
+            timerView = new System.Windows.Forms.Timer(components);
+            toolTip1 = new ToolTip(components);
+            SaveFileDialog1 = new SaveFileDialog();
+            logGridView = new DataGridView();
+            Time = new DataGridViewTextBoxColumn();
+            Type = new DataGridViewTextBoxColumn();
+            Logtext = new DataGridViewTextBoxColumn();
+            dataGridViewTextBoxColumn1 = new DataGridViewTextBoxColumn();
+            dataGridViewTextBoxColumn2 = new DataGridViewTextBoxColumn();
+            dataGridViewTextBoxColumn3 = new DataGridViewTextBoxColumn();
+            statusStrip1.SuspendLayout();
+            panel1.SuspendLayout();
+            tableLayoutPanel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)logGridView).BeginInit();
+            SuspendLayout();
             // 
             // statusStrip1
             // 
-            this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripStatusLabel1,
-            this.toolStripStatusLabel2});
-            resources.ApplyResources(this.statusStrip1, "statusStrip1");
-            this.statusStrip1.Name = "statusStrip1";
+            statusStrip1.Items.AddRange(new ToolStripItem[] { toolStripStatusLabel1, toolStripStatusLabel2 });
+            resources.ApplyResources(statusStrip1, "statusStrip1");
+            statusStrip1.Name = "statusStrip1";
             // 
             // toolStripStatusLabel1
             // 
-            this.toolStripStatusLabel1.Name = "toolStripStatusLabel1";
-            resources.ApplyResources(this.toolStripStatusLabel1, "toolStripStatusLabel1");
+            toolStripStatusLabel1.Name = "toolStripStatusLabel1";
+            resources.ApplyResources(toolStripStatusLabel1, "toolStripStatusLabel1");
             // 
             // toolStripStatusLabel2
             // 
-            this.toolStripStatusLabel2.BorderStyle = System.Windows.Forms.Border3DStyle.Etched;
-            resources.ApplyResources(this.toolStripStatusLabel2, "toolStripStatusLabel2");
-            this.toolStripStatusLabel2.Name = "toolStripStatusLabel2";
+            toolStripStatusLabel2.BorderStyle = Border3DStyle.Etched;
+            resources.ApplyResources(toolStripStatusLabel2, "toolStripStatusLabel2");
+            toolStripStatusLabel2.Name = "toolStripStatusLabel2";
             // 
             // panel1
             // 
-            resources.ApplyResources(this.panel1, "panel1");
-            this.panel1.Controls.Add(this.tableLayoutPanel1);
-            this.panel1.Name = "panel1";
-            // 
-            // checkboxEnable
-            // 
-            resources.ApplyResources(this.checkboxEnable, "checkboxEnable");
-            this.checkboxEnable.Name = "checkboxEnable";
-            this.toolTip1.SetToolTip(this.checkboxEnable, resources.GetString("checkboxEnable.ToolTip"));
-            this.checkboxEnable.UseVisualStyleBackColor = true;
-            this.checkboxEnable.CheckedChanged += new System.EventHandler(this.checkboxEnable_CheckedChanged);
-            // 
-            // logFilter
-            // 
-            this.logFilter.AnchorSize = new System.Drawing.Size(94, 21);
-            this.logFilter.BackColor = System.Drawing.Color.White;
-            this.logFilter.DockSide = LST.Controls.DropDownControl.eDockSide.Left;
-            resources.ApplyResources(this.logFilter, "logFilter");
-            this.logFilter.LogBridgeData = false;
-            this.logFilter.LogBridgeDecode = false;
-            this.logFilter.LogBridgeInfo = false;
-            this.logFilter.LogErrors = true;
-            this.logFilter.LogInfo = true;
-            this.logFilter.LogReads = false;
-            this.logFilter.LogTrace = true;
-            this.logFilter.LogWarnings = true;
-            this.logFilter.LogWrites = false;
-            this.logFilter.Name = "logFilter";
-            this.logFilter.Tag = "What to log";
-            this.toolTip1.SetToolTip(this.logFilter, resources.GetString("logFilter.ToolTip"));
-            // 
-            // buttonClear
-            // 
-            resources.ApplyResources(this.buttonClear, "buttonClear");
-            this.buttonClear.Name = "buttonClear";
-            this.toolTip1.SetToolTip(this.buttonClear, resources.GetString("buttonClear.ToolTip"));
-            this.buttonClear.UseVisualStyleBackColor = true;
-            this.buttonClear.Click += new System.EventHandler(this.buttonClear_Click);
-            // 
-            // chkAutoScroll
-            // 
-            resources.ApplyResources(this.chkAutoScroll, "chkAutoScroll");
-            this.chkAutoScroll.Checked = true;
-            this.chkAutoScroll.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chkAutoScroll.Name = "chkAutoScroll";
-            this.toolTip1.SetToolTip(this.chkAutoScroll, resources.GetString("chkAutoScroll.ToolTip"));
-            this.chkAutoScroll.UseVisualStyleBackColor = true;
-            this.chkAutoScroll.CheckedChanged += new System.EventHandler(this.chkAutoScroll_CheckedChanged);
-            // 
-            // buttonTop
-            // 
-            resources.ApplyResources(this.buttonTop, "buttonTop");
-            this.buttonTop.Name = "buttonTop";
-            this.toolTip1.SetToolTip(this.buttonTop, resources.GetString("buttonTop.ToolTip"));
-            this.buttonTop.UseVisualStyleBackColor = true;
-            this.buttonTop.Click += new System.EventHandler(this.buttonTop_Click);
-            // 
-            // buttonBottom
-            // 
-            resources.ApplyResources(this.buttonBottom, "buttonBottom");
-            this.buttonBottom.Name = "buttonBottom";
-            this.toolTip1.SetToolTip(this.buttonBottom, resources.GetString("buttonBottom.ToolTip"));
-            this.buttonBottom.UseVisualStyleBackColor = true;
-            this.buttonBottom.Click += new System.EventHandler(this.buttonBottom_Click);
-            // 
-            // buttonCopyToClipboard
-            // 
-            resources.ApplyResources(this.buttonCopyToClipboard, "buttonCopyToClipboard");
-            this.buttonCopyToClipboard.Name = "buttonCopyToClipboard";
-            this.toolTip1.SetToolTip(this.buttonCopyToClipboard, resources.GetString("buttonCopyToClipboard.ToolTip"));
-            this.buttonCopyToClipboard.UseVisualStyleBackColor = true;
-            this.buttonCopyToClipboard.Click += new System.EventHandler(this.buttonCopyToClipboard_Click);
-            // 
-            // buttonSaveToFile
-            // 
-            resources.ApplyResources(this.buttonSaveToFile, "buttonSaveToFile");
-            this.buttonSaveToFile.Name = "buttonSaveToFile";
-            this.toolTip1.SetToolTip(this.buttonSaveToFile, resources.GetString("buttonSaveToFile.ToolTip"));
-            this.buttonSaveToFile.UseVisualStyleBackColor = true;
-            this.buttonSaveToFile.Click += new System.EventHandler(this.buttonSaveToFile_Click);
-            // 
-            // timerView
-            // 
-            this.timerView.Interval = 150;
-            this.timerView.Tick += new System.EventHandler(this.timerView_Tick);
-            // 
-            // SaveFileDialog1
-            // 
-            this.SaveFileDialog1.AddExtension = false;
-            this.SaveFileDialog1.DefaultExt = "csv";
-            resources.ApplyResources(this.SaveFileDialog1, "SaveFileDialog1");
-            // 
-            // logGridView
-            // 
-            this.logGridView.AllowUserToAddRows = false;
-            this.logGridView.AllowUserToDeleteRows = false;
-            this.logGridView.AllowUserToResizeRows = false;
-            this.logGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.logGridView.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.Time,
-            this.Type,
-            this.Logtext});
-            resources.ApplyResources(this.logGridView, "logGridView");
-            this.logGridView.Name = "logGridView";
-            this.logGridView.ReadOnly = true;
-            this.logGridView.RowHeadersVisible = false;
-            this.logGridView.VirtualMode = true;
-            this.logGridView.CellMouseDown += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.logGridView_CellMouseDown);
-            this.logGridView.CellValueNeeded += new System.Windows.Forms.DataGridViewCellValueEventHandler(this.dataGridView1_CellValueNeeded);
-            // 
-            // Time
-            // 
-            resources.ApplyResources(this.Time, "Time");
-            this.Time.Name = "Time";
-            this.Time.ReadOnly = true;
-            // 
-            // Type
-            // 
-            resources.ApplyResources(this.Type, "Type");
-            this.Type.Name = "Type";
-            this.Type.ReadOnly = true;
-            // 
-            // Logtext
-            // 
-            this.Logtext.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            resources.ApplyResources(this.Logtext, "Logtext");
-            this.Logtext.Name = "Logtext";
-            this.Logtext.ReadOnly = true;
-            // 
-            // dataGridViewTextBoxColumn1
-            // 
-            resources.ApplyResources(this.dataGridViewTextBoxColumn1, "dataGridViewTextBoxColumn1");
-            this.dataGridViewTextBoxColumn1.Name = "dataGridViewTextBoxColumn1";
-            this.dataGridViewTextBoxColumn1.ReadOnly = true;
-            // 
-            // dataGridViewTextBoxColumn2
-            // 
-            resources.ApplyResources(this.dataGridViewTextBoxColumn2, "dataGridViewTextBoxColumn2");
-            this.dataGridViewTextBoxColumn2.Name = "dataGridViewTextBoxColumn2";
-            this.dataGridViewTextBoxColumn2.ReadOnly = true;
-            // 
-            // dataGridViewTextBoxColumn3
-            // 
-            this.dataGridViewTextBoxColumn3.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            resources.ApplyResources(this.dataGridViewTextBoxColumn3, "dataGridViewTextBoxColumn3");
-            this.dataGridViewTextBoxColumn3.Name = "dataGridViewTextBoxColumn3";
-            this.dataGridViewTextBoxColumn3.ReadOnly = true;
+            resources.ApplyResources(panel1, "panel1");
+            panel1.Controls.Add(tableLayoutPanel1);
+            panel1.Name = "panel1";
             // 
             // tableLayoutPanel1
             // 
-            resources.ApplyResources(this.tableLayoutPanel1, "tableLayoutPanel1");
-            this.tableLayoutPanel1.Controls.Add(this.buttonSaveToFile, 7, 0);
-            this.tableLayoutPanel1.Controls.Add(this.buttonCopyToClipboard, 6, 0);
-            this.tableLayoutPanel1.Controls.Add(this.buttonBottom, 5, 0);
-            this.tableLayoutPanel1.Controls.Add(this.buttonTop, 4, 0);
-            this.tableLayoutPanel1.Controls.Add(this.chkAutoScroll, 3, 0);
-            this.tableLayoutPanel1.Controls.Add(this.buttonClear, 2, 0);
-            this.tableLayoutPanel1.Controls.Add(this.logFilter, 1, 0);
-            this.tableLayoutPanel1.Controls.Add(this.checkboxEnable, 0, 0);
-            this.tableLayoutPanel1.Name = "tableLayoutPanel1";
+            resources.ApplyResources(tableLayoutPanel1, "tableLayoutPanel1");
+            tableLayoutPanel1.Controls.Add(buttonSaveToFile, 7, 0);
+            tableLayoutPanel1.Controls.Add(buttonCopyToClipboard, 6, 0);
+            tableLayoutPanel1.Controls.Add(buttonBottom, 5, 0);
+            tableLayoutPanel1.Controls.Add(buttonTop, 4, 0);
+            tableLayoutPanel1.Controls.Add(chkAutoScroll, 3, 0);
+            tableLayoutPanel1.Controls.Add(buttonClear, 2, 0);
+            tableLayoutPanel1.Controls.Add(logFilter, 1, 0);
+            tableLayoutPanel1.Controls.Add(checkboxEnable, 0, 0);
+            tableLayoutPanel1.Name = "tableLayoutPanel1";
             // 
-            // LoggerForm
+            // buttonSaveToFile
+            // 
+            resources.ApplyResources(buttonSaveToFile, "buttonSaveToFile");
+            buttonSaveToFile.Name = "buttonSaveToFile";
+            toolTip1.SetToolTip(buttonSaveToFile, resources.GetString("buttonSaveToFile.ToolTip"));
+            buttonSaveToFile.UseVisualStyleBackColor = true;
+            buttonSaveToFile.Click += buttonSaveToFile_Click;
+            // 
+            // buttonCopyToClipboard
+            // 
+            resources.ApplyResources(buttonCopyToClipboard, "buttonCopyToClipboard");
+            buttonCopyToClipboard.Name = "buttonCopyToClipboard";
+            toolTip1.SetToolTip(buttonCopyToClipboard, resources.GetString("buttonCopyToClipboard.ToolTip"));
+            buttonCopyToClipboard.UseVisualStyleBackColor = true;
+            buttonCopyToClipboard.Click += buttonCopyToClipboard_Click;
+            // 
+            // buttonBottom
+            // 
+            resources.ApplyResources(buttonBottom, "buttonBottom");
+            buttonBottom.Name = "buttonBottom";
+            toolTip1.SetToolTip(buttonBottom, resources.GetString("buttonBottom.ToolTip"));
+            buttonBottom.UseVisualStyleBackColor = true;
+            buttonBottom.Click += buttonBottom_Click;
+            // 
+            // buttonTop
+            // 
+            resources.ApplyResources(buttonTop, "buttonTop");
+            buttonTop.Name = "buttonTop";
+            toolTip1.SetToolTip(buttonTop, resources.GetString("buttonTop.ToolTip"));
+            buttonTop.UseVisualStyleBackColor = true;
+            buttonTop.Click += buttonTop_Click;
+            // 
+            // chkAutoScroll
+            // 
+            resources.ApplyResources(chkAutoScroll, "chkAutoScroll");
+            chkAutoScroll.Checked = true;
+            chkAutoScroll.CheckState = CheckState.Checked;
+            chkAutoScroll.Name = "chkAutoScroll";
+            toolTip1.SetToolTip(chkAutoScroll, resources.GetString("chkAutoScroll.ToolTip"));
+            chkAutoScroll.UseVisualStyleBackColor = true;
+            chkAutoScroll.CheckedChanged += chkAutoScroll_CheckedChanged;
+            // 
+            // buttonClear
+            // 
+            resources.ApplyResources(buttonClear, "buttonClear");
+            buttonClear.Name = "buttonClear";
+            toolTip1.SetToolTip(buttonClear, resources.GetString("buttonClear.ToolTip"));
+            buttonClear.UseVisualStyleBackColor = true;
+            buttonClear.Click += buttonClear_Click;
+            // 
+            // logFilter
+            // 
+            logFilter.AnchorSize = new Size(122, 21);
+            logFilter.BackColor = Color.White;
+            logFilter.DockSide = LST.Controls.DropDownControl.eDockSide.Left;
+            resources.ApplyResources(logFilter, "logFilter");
+            logFilter.LogBridgeData = false;
+            logFilter.LogBridgeDecode = false;
+            logFilter.LogBridgeInfo = false;
+            logFilter.LogErrors = true;
+            logFilter.LogInfo = true;
+            logFilter.LogReads = false;
+            logFilter.LogTrace = true;
+            logFilter.LogWarnings = true;
+            logFilter.LogWrites = false;
+            logFilter.Name = "logFilter";
+            logFilter.Tag = "What to log";
+            // 
+            // checkboxEnable
+            // 
+            resources.ApplyResources(checkboxEnable, "checkboxEnable");
+            checkboxEnable.Name = "checkboxEnable";
+            toolTip1.SetToolTip(checkboxEnable, resources.GetString("checkboxEnable.ToolTip"));
+            checkboxEnable.UseVisualStyleBackColor = true;
+            checkboxEnable.CheckedChanged += checkboxEnable_CheckedChanged;
+            // 
+            // timerView
+            // 
+            timerView.Interval = 150;
+            timerView.Tick += timerView_Tick;
+            // 
+            // SaveFileDialog1
+            // 
+            SaveFileDialog1.AddExtension = false;
+            SaveFileDialog1.DefaultExt = "csv";
+            resources.ApplyResources(SaveFileDialog1, "SaveFileDialog1");
+            // 
+            // logGridView
+            // 
+            logGridView.AllowUserToAddRows = false;
+            logGridView.AllowUserToDeleteRows = false;
+            logGridView.AllowUserToResizeRows = false;
+            logGridView.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            logGridView.Columns.AddRange(new DataGridViewColumn[] { Time, Type, Logtext });
+            resources.ApplyResources(logGridView, "logGridView");
+            logGridView.Name = "logGridView";
+            logGridView.ReadOnly = true;
+            logGridView.RowHeadersVisible = false;
+            logGridView.VirtualMode = true;
+            logGridView.CellMouseDown += logGridView_CellMouseDown;
+            logGridView.CellValueNeeded += dataGridView1_CellValueNeeded;
+            // 
+            // Time
+            // 
+            resources.ApplyResources(Time, "Time");
+            Time.Name = "Time";
+            Time.ReadOnly = true;
+            // 
+            // Type
+            // 
+            resources.ApplyResources(Type, "Type");
+            Type.Name = "Type";
+            Type.ReadOnly = true;
+            // 
+            // Logtext
+            // 
+            Logtext.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            resources.ApplyResources(Logtext, "Logtext");
+            Logtext.Name = "Logtext";
+            Logtext.ReadOnly = true;
+            // 
+            // dataGridViewTextBoxColumn1
+            // 
+            resources.ApplyResources(dataGridViewTextBoxColumn1, "dataGridViewTextBoxColumn1");
+            dataGridViewTextBoxColumn1.Name = "dataGridViewTextBoxColumn1";
+            dataGridViewTextBoxColumn1.ReadOnly = true;
+            // 
+            // dataGridViewTextBoxColumn2
+            // 
+            resources.ApplyResources(dataGridViewTextBoxColumn2, "dataGridViewTextBoxColumn2");
+            dataGridViewTextBoxColumn2.Name = "dataGridViewTextBoxColumn2";
+            dataGridViewTextBoxColumn2.ReadOnly = true;
+            // 
+            // dataGridViewTextBoxColumn3
+            // 
+            dataGridViewTextBoxColumn3.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            resources.ApplyResources(dataGridViewTextBoxColumn3, "dataGridViewTextBoxColumn3");
+            dataGridViewTextBoxColumn3.Name = "dataGridViewTextBoxColumn3";
+            dataGridViewTextBoxColumn3.ReadOnly = true;
+            // 
+            // Logger
             // 
             resources.ApplyResources(this, "$this");
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.Controls.Add(this.logGridView);
-            this.Controls.Add(this.panel1);
-            this.Controls.Add(this.statusStrip1);
-            this.Name = "LoggerForm";
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Logger_FormClosing);
-            this.Load += new System.EventHandler(this.Form1_Load);
-            this.statusStrip1.ResumeLayout(false);
-            this.statusStrip1.PerformLayout();
-            this.panel1.ResumeLayout(false);
-            this.panel1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.logGridView)).EndInit();
-            this.tableLayoutPanel1.ResumeLayout(false);
-            this.tableLayoutPanel1.PerformLayout();
-            this.ResumeLayout(false);
-            this.PerformLayout();
+            AutoScaleMode = AutoScaleMode.Dpi;
+            Controls.Add(logGridView);
+            Controls.Add(panel1);
+            Controls.Add(statusStrip1);
+            Name = "Logger";
+            FormClosing += Logger_FormClosing;
+            Load += Form1_Load;
+            statusStrip1.ResumeLayout(false);
+            statusStrip1.PerformLayout();
+            panel1.ResumeLayout(false);
+            panel1.PerformLayout();
+            tableLayoutPanel1.ResumeLayout(false);
+            tableLayoutPanel1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)logGridView).EndInit();
+            ResumeLayout(false);
+            PerformLayout();
 
         }
 

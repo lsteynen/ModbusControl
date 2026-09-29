@@ -47,14 +47,14 @@ namespace UnitTests
         [TestMethod]
         public void Test_signed_e1()
         {
-            Assert.ThrowsException<ArgumentException>(() =>
+            Assert.ThrowsExactly<ArgumentException>(() =>
                 CValueToString.IntFitsWidth(123, 0));
         }
 
         [TestMethod]
         public void Test_signed_e2()
         {
-            Assert.ThrowsException<ArgumentException>(() =>
+            Assert.ThrowsExactly<ArgumentException>(() =>
                 CValueToString.IntFitsWidth(123, 33));
         }
 
@@ -63,7 +63,7 @@ namespace UnitTests
         {
             int w = 1;
             bool res = CValueToString.IntFitsWidth(-12345678, w);
-            Assert.AreEqual<bool>(false, res);
+            Assert.IsFalse(res);
         }
 
         [TestMethod]
@@ -71,7 +71,7 @@ namespace UnitTests
         {
             int w = 1;
             bool res = CValueToString.IntFitsWidth(-1, w);
-            Assert.AreEqual<bool>(false, res);
+            Assert.IsFalse(res);
         }
 
         [TestMethod]
@@ -79,7 +79,7 @@ namespace UnitTests
         {
             int w = 1;
             bool res = CValueToString.IntFitsWidth(0, w);
-            Assert.AreEqual<bool>(true, res);
+            Assert.IsTrue(res);
         }
 
         [TestMethod]
@@ -87,7 +87,7 @@ namespace UnitTests
         {
             int w = 1;
             bool res = CValueToString.IntFitsWidth(1, w);
-            Assert.AreEqual<bool>(true, res);
+            Assert.IsTrue(res);
         }
 
         [TestMethod]
@@ -95,7 +95,7 @@ namespace UnitTests
         { 
             int w = 1;
             bool res = CValueToString.IntFitsWidth(2, w);
-            Assert.AreEqual<bool>(false, res);
+            Assert.IsFalse(res);
         }
 
         [TestMethod]
@@ -103,7 +103,7 @@ namespace UnitTests
         {   
             int w = 1;
             bool res = CValueToString.IntFitsWidth(12345678, w);
-            Assert.AreEqual<bool>(false, res);
+            Assert.IsFalse(res);
         }
 
         [TestMethod]
@@ -111,7 +111,7 @@ namespace UnitTests
         {
             int w = 2;
             bool res = CValueToString.IntFitsWidth(-2000111222, w);
-            Assert.AreEqual<bool>(false, res);
+            Assert.IsFalse(res);
         }
 
         [TestMethod]
@@ -119,7 +119,7 @@ namespace UnitTests
         {
             int w = 2;
             bool res = CValueToString.IntFitsWidth(-3, w);
-            Assert.AreEqual<bool>(false, res);
+            Assert.IsFalse(res);
         }
 
         [TestMethod]
@@ -127,7 +127,7 @@ namespace UnitTests
         {
             int w = 2;
             bool res = CValueToString.IntFitsWidth(-2, w);
-            Assert.AreEqual<bool>(true, res);
+            Assert.IsTrue(res);
         }
 
         [TestMethod]
@@ -135,7 +135,7 @@ namespace UnitTests
         {
             int w = 2;
             bool res = CValueToString.IntFitsWidth(-1, w);
-            Assert.AreEqual<bool>(true, res);
+            Assert.IsTrue(res);
         }
 
         [TestMethod]
@@ -143,7 +143,7 @@ namespace UnitTests
         {
             int w = 2;
             bool res = CValueToString.IntFitsWidth(0, w);
-            Assert.AreEqual<bool>(true, res);
+            Assert.IsTrue(res);
         }
 
         [TestMethod]
@@ -151,7 +151,7 @@ namespace UnitTests
         {
             int w = 2;
             bool res = CValueToString.IntFitsWidth(1, w);
-            Assert.AreEqual<bool>(true, res);
+            Assert.IsTrue(res);
         }
 
         [TestMethod]
@@ -159,7 +159,7 @@ namespace UnitTests
         {
             int w = 2;
             bool res = CValueToString.IntFitsWidth(3, w);
-            Assert.AreEqual<bool>(true, res);
+            Assert.IsTrue(res);
         }
 
         [TestMethod]
@@ -167,7 +167,7 @@ namespace UnitTests
         {
             int w = 2;
             bool res = CValueToString.IntFitsWidth(4, w);
-            Assert.AreEqual<bool>(false, res);
+            Assert.IsFalse(res);
         }
 
         [TestMethod]
@@ -175,7 +175,7 @@ namespace UnitTests
         {
             int w = 2;
             bool res = CValueToString.IntFitsWidth(1000, w);
-            Assert.AreEqual<bool>(false, res);
+            Assert.IsFalse(res);
         }
 
         [TestMethod]
@@ -183,7 +183,7 @@ namespace UnitTests
         {
             int w = 3;
             bool res = CValueToString.IntFitsWidth(-2000111222, w);
-            Assert.AreEqual<bool>(false, res);
+            Assert.IsFalse(res);
         }
 
         [TestMethod]
@@ -191,7 +191,7 @@ namespace UnitTests
         {
             int w = 3;
             bool res = CValueToString.IntFitsWidth(-5, w);
-            Assert.AreEqual<bool>(false, res);
+            Assert.IsFalse(res);
         }
 
         [TestMethod]
@@ -199,7 +199,7 @@ namespace UnitTests
         {
             int w = 3; 
             bool res = CValueToString.IntFitsWidth(-4, w);
-            Assert.AreEqual<bool>(true, res);
+            Assert.IsTrue(res);
         }
 
         [TestMethod]
@@ -207,7 +207,7 @@ namespace UnitTests
         {
             int w = 3;
             bool res = CValueToString.IntFitsWidth(-1, w);
-            Assert.AreEqual<bool>(true, res);
+            Assert.IsTrue(res);
         }
 
         [TestMethod]
@@ -215,7 +215,7 @@ namespace UnitTests
         {
             int w = 3;
             bool res = CValueToString.IntFitsWidth(0, w);
-            Assert.AreEqual<bool>(true, res);
+            Assert.IsTrue(res);
         }
 
         [TestMethod]
@@ -223,7 +223,7 @@ namespace UnitTests
         {
             int w = 3;
             bool res = CValueToString.IntFitsWidth(1, w);
-            Assert.AreEqual<bool>(true, res);
+            Assert.IsTrue(res);
         }
 
         [TestMethod]
@@ -231,7 +231,7 @@ namespace UnitTests
         {
             int w = 3;
             bool res = CValueToString.IntFitsWidth(7, w);
-            Assert.AreEqual<bool>(true, res);
+            Assert.IsTrue(res);
         }
 
         [TestMethod]
@@ -239,7 +239,7 @@ namespace UnitTests
         {
             int w = 3;
             bool res = CValueToString.IntFitsWidth(8, w);
-            Assert.AreEqual<bool>(false, res);
+            Assert.IsFalse(res);
         }
 
         [TestMethod]
@@ -247,7 +247,7 @@ namespace UnitTests
         {
             int w = 3;
             bool res = CValueToString.IntFitsWidth(12345, w);
-            Assert.AreEqual<bool>(false, res);
+            Assert.IsFalse(res);
         }
 
         [TestMethod]
@@ -255,7 +255,7 @@ namespace UnitTests
         {
             int w = 8;
             bool res = CValueToString.IntFitsWidth(-2147483647, w);
-            Assert.AreEqual<bool>(false, res);
+            Assert.IsFalse(res);
         }
 
         [TestMethod]
@@ -263,7 +263,7 @@ namespace UnitTests
         {
             int w = 8;
             bool res = CValueToString.IntFitsWidth(-129, w);
-            Assert.AreEqual<bool>(false, res);
+            Assert.IsFalse(res);
         }
 
         [TestMethod]
@@ -271,7 +271,7 @@ namespace UnitTests
         {
             int w = 8;
             bool res = CValueToString.IntFitsWidth(-128, w);
-            Assert.AreEqual<bool>(true, res);
+            Assert.IsTrue(res);
         }
 
         [TestMethod]
@@ -279,7 +279,7 @@ namespace UnitTests
         {
             int w = 8;
             bool res = CValueToString.IntFitsWidth(-1, w);
-            Assert.AreEqual<bool>(true, res);
+            Assert.IsTrue(res);
         }
 
         [TestMethod]
@@ -287,7 +287,7 @@ namespace UnitTests
         {
             int w = 8;
             bool res = CValueToString.IntFitsWidth(0, w);
-            Assert.AreEqual<bool>(true, res);
+            Assert.IsTrue(res);
         }
 
         [TestMethod]
@@ -295,7 +295,7 @@ namespace UnitTests
         {
             int w = 8;
             bool res = CValueToString.IntFitsWidth(1, w);
-            Assert.AreEqual<bool>(true, res);
+            Assert.IsTrue(res);
         }
 
         [TestMethod]
@@ -303,7 +303,7 @@ namespace UnitTests
         {
             int w = 8;
             bool res = CValueToString.IntFitsWidth(255, w);
-            Assert.AreEqual<bool>(true, res);
+            Assert.IsTrue(res);
         }
 
         [TestMethod]
@@ -311,7 +311,7 @@ namespace UnitTests
         {
             int w = 8;
             bool res = CValueToString.IntFitsWidth(256, w);
-            Assert.AreEqual<bool>(false, res);
+            Assert.IsFalse(res);
         }
 
         [TestMethod]
@@ -319,7 +319,7 @@ namespace UnitTests
         {
             int w = 8;
             bool res = CValueToString.IntFitsWidth(123456, w);
-            Assert.AreEqual<bool>(false, res);
+            Assert.IsFalse(res);
         }
 
         [TestMethod]
@@ -327,7 +327,7 @@ namespace UnitTests
         {
             int w = 16;
             bool res = CValueToString.IntFitsWidth(-2147483647, w);
-            Assert.AreEqual<bool>(false, res);
+            Assert.IsFalse(res);
         }
 
         [TestMethod]
@@ -335,7 +335,7 @@ namespace UnitTests
         {
             int w = 16;
             bool res = CValueToString.IntFitsWidth(-32769, w);
-            Assert.AreEqual<bool>(false, res);
+            Assert.IsFalse(res);
         }
 
         [TestMethod]
@@ -343,7 +343,7 @@ namespace UnitTests
         {
             int w = 16;
             bool res = CValueToString.IntFitsWidth(-32768, w);
-            Assert.AreEqual<bool>(true, res);
+            Assert.IsTrue(res);
         }
 
         [TestMethod]
@@ -351,7 +351,7 @@ namespace UnitTests
         {
             int w = 16;
             bool res = CValueToString.IntFitsWidth(-1, w);
-            Assert.AreEqual<bool>(true, res);
+            Assert.IsTrue(res);
         }
 
         [TestMethod]
@@ -359,7 +359,7 @@ namespace UnitTests
         {
             int w = 16;
             bool res = CValueToString.IntFitsWidth(0, w);
-            Assert.AreEqual<bool>(true, res);
+            Assert.IsTrue(res);
         }
 
         [TestMethod]
@@ -367,7 +367,7 @@ namespace UnitTests
         {
             int w = 16;
             bool res = CValueToString.IntFitsWidth(1, w);
-            Assert.AreEqual<bool>(true, res);
+            Assert.IsTrue(res);
         }
 
         [TestMethod]
@@ -375,7 +375,7 @@ namespace UnitTests
         {
             int w = 16;
             bool res = CValueToString.IntFitsWidth(1000, w);
-            Assert.AreEqual<bool>(true, res);
+            Assert.IsTrue(res);
         }
 
         [TestMethod]
@@ -383,7 +383,7 @@ namespace UnitTests
         {
             int w = 16;
             bool res = CValueToString.IntFitsWidth(65535, w);
-            Assert.AreEqual<bool>(true, res);
+            Assert.IsTrue(res);
         }
 
         [TestMethod]
@@ -391,7 +391,7 @@ namespace UnitTests
         {
             int w = 16;
             bool res = CValueToString.IntFitsWidth(65536, w);
-            Assert.AreEqual<bool>(false, res);
+            Assert.IsFalse(res);
         }
 
         [TestMethod]
@@ -399,7 +399,7 @@ namespace UnitTests
         {
             int w = 16;
             bool res = CValueToString.IntFitsWidth(2111222333, w);
-            Assert.AreEqual<bool>(false, res);
+            Assert.IsFalse(res);
         }
 
         // 32-bit range: -2,147,483,648 .. 4,294,967,295
@@ -409,7 +409,7 @@ namespace UnitTests
         {
             int w = 32;
             bool res = CValueToString.IntFitsWidth(-2147483649111, w);
-            Assert.AreEqual<bool>(false, res);
+            Assert.IsFalse(res);
         }
 
         [TestMethod]
@@ -417,7 +417,7 @@ namespace UnitTests
         {
             int w = 32;
             bool res = CValueToString.IntFitsWidth(-2147483649, w);
-            Assert.AreEqual<bool>(false, res);
+            Assert.IsFalse(res);
         }
 
 
@@ -426,7 +426,7 @@ namespace UnitTests
         {
             int w = 32;
             bool res = CValueToString.IntFitsWidth(-2147483648, w);
-            Assert.AreEqual<bool>(true, res);
+            Assert.IsTrue(res);
         }
 
         [TestMethod]
@@ -434,7 +434,7 @@ namespace UnitTests
         {
             int w = 32;
             bool res = CValueToString.IntFitsWidth(-1000, w);
-            Assert.AreEqual<bool>(true, res);
+            Assert.IsTrue(res);
         }
 
         [TestMethod]
@@ -442,7 +442,7 @@ namespace UnitTests
         {
             int w = 32;
             bool res = CValueToString.IntFitsWidth(0, w);
-            Assert.AreEqual<bool>(true, res);
+            Assert.IsTrue(res);
         }
 
         [TestMethod]
@@ -450,7 +450,7 @@ namespace UnitTests
         {
             int w = 32;
             bool res = CValueToString.IntFitsWidth(2110220330, w);
-            Assert.AreEqual<bool>(true, res);
+            Assert.IsTrue(res);
         }
 
         [TestMethod]
@@ -458,7 +458,7 @@ namespace UnitTests
         {
             int w = 32;
             bool res = CValueToString.IntFitsWidth(2147483647, w);
-            Assert.AreEqual<bool>(true, res);
+            Assert.IsTrue(res);
         }
 
         [TestMethod]
@@ -466,7 +466,7 @@ namespace UnitTests
         {
             int w = 32;
             bool res = CValueToString.IntFitsWidth(2147483648, w);
-            Assert.AreEqual<bool>(true, res);
+            Assert.IsTrue(res);
         }
 
         [TestMethod]
@@ -474,7 +474,7 @@ namespace UnitTests
         {
             int w = 32;
             bool res = CValueToString.IntFitsWidth(4294967295, w);
-            Assert.AreEqual<bool>(true, res);
+            Assert.IsTrue(res);
         }
 
         [TestMethod]
@@ -482,7 +482,7 @@ namespace UnitTests
         {
             int w = 32;
             bool res = CValueToString.IntFitsWidth(4294967296, w);
-            Assert.AreEqual<bool>(false, res);
+            Assert.IsFalse(res);
         }
 
         [TestMethod]
@@ -490,7 +490,7 @@ namespace UnitTests
         {
             int w = 32;
             bool res = CValueToString.IntFitsWidth(4294967295999, w);
-            Assert.AreEqual<bool>(false, res);
+            Assert.IsFalse(res);
         }
 
     }

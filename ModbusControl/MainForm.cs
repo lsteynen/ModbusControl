@@ -1,3 +1,5 @@
+using LST.Helpers;
+using LST.Modbus;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -5,13 +7,13 @@ using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.IO.Ports;
+using System.Text;
 using System.Threading;
 using System.Windows.Forms;
 using System.Xml;
 using System.Xml.Schema;
-
-using LST.Modbus;
-using LST.Helpers;
+using Windows.Data.Pdf;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace ModbusControl
 {
@@ -53,7 +55,9 @@ namespace ModbusControl
         private TabPage CurrentTabPage; // null if none
         public bool MainPollingIsEnabled = true;
         private bool TabIsChanged;
-        private float ZoomFactor = 1.0F;
+        private float zoomFactor = 1.0f;
+        private float zoomFactorStep = 1.10f;
+        private float zoomFactorMaximum = 10.0f;
         private ModbusServer TcpBridge;
         private Thread UpdaterThread;   // Updater thread
         private Object UpdaterLock = new Object();  // lock for safely terminating the updater thread
@@ -87,9 +91,12 @@ namespace ModbusControl
         {
             InitializeComponent();
 
-            // This app is DPI-aware, get system DPI
-            // We do per-monitor-DPI.
-            AppDpiHelpers.GetCurrentSystemDpi(this);
+            // Add the legacy Windows/ code - page encodings to the encodings that the System.Text.Encoding class knows how to provide.
+            // needed in .net core 3.0 and later, because some of the legacy encodings are used in this app
+            Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+
+            // debug: show current screen DPI, We do per-monitor-DPI.
+            Debug.Print($"Mainform: DeviceDpi={DeviceDpi}");
 
             SaveStatusbarDefaultValues();
 
@@ -97,7 +104,7 @@ namespace ModbusControl
             Settings1 = new CSettings();
 
             // Init MRU project files list
-            recentFilesMenuItem.MaxItems = 10;
+            recentsToolStripMenuItem1.MaxItems = 10;
 
             // Enable/disable menu items and toolbar buttons
             UpdateMenus();
@@ -137,6 +144,10 @@ namespace ModbusControl
             tabControl1.AllowDrop = true;
             tabControl1.DragEnter += new DragEventHandler(Form1_DragEnter);
             tabControl1.DragDrop += new DragEventHandler(Form1_DragDrop);
+
+#if DEBUG
+            butDebug.Visible = true;
+#endif
         }
 
         /// <summary>
@@ -178,10 +189,16 @@ namespace ModbusControl
             CurrentRegisterColumnWidthWeight = ColumnWidths.registerWidthWeight;
             CurrentDescriptionColumnWidthWeight = ColumnWidths.descriptionWidthWeight;
             CurrentPropertiesColumnWidthWeight = ColumnWidths.propertiesWidthWeight;
-            CurrentValueColumnWidthWeight = ColumnWidths.valueWidthWeight;       
+            CurrentValueColumnWidthWeight = ColumnWidths.valueWidthWeight;
 
             // pass options to clients
             PassOptionsToCurrentClientTab();
+
+#if CHECKFORUPDATE
+            checkForUpdateMenuItem.Enabled = true;  
+#else
+            checkForUpdateMenuItem.Enabled = false;
+#endif
 
             // shared
             Options.CheckForUpdates = Settings1.Shared.Updater.CheckForUpdates;
@@ -190,7 +207,7 @@ namespace ModbusControl
             filterPanel.Visible = Options.ShowFindBox;
 
             // MRU list
-            recentFilesMenuItem.LoadList(Settings1.Roaming.MbcMruList);
+            recentsToolStripMenuItem1.LoadList(Settings1.Roaming.MbcMruList);
 
             // there are no import form settings
             // the export form settings will be used later, when form is created
@@ -277,7 +294,7 @@ namespace ModbusControl
                 ShowReleaseNotes();
             }
 
-#if !DEBUG
+#if CHECKFORUPDATE
             // Start updater thread
             // if auto-update enabled
             // and only once per day, check if this is 1 day later
@@ -293,12 +310,12 @@ namespace ModbusControl
 
             // process command line parameters
             CommandlineArgs = new CommandlineProc();
-			CommandlineArgs.versionString = AppHelpers.VersionString;
+            CommandlineArgs.versionString = AppHelpers.VersionString;
             try
             {
                 CommandlineArgs.Load();
 
-                if (CommandlineArgs.ArgHelpSwitch == true)    
+                if (CommandlineArgs.ArgHelpSwitch == true)
                 {
                     // show command line usage
                     StretchyMessageForm form = new StretchyMessageForm();
@@ -314,7 +331,7 @@ namespace ModbusControl
                 if (string.IsNullOrEmpty(CommandlineArgs.ArgMbcFile) == false)
                 {
                     // got filename
-                    ProjectPath = CommandlineArgs.ArgMbcFile.Trim(); 
+                    ProjectPath = CommandlineArgs.ArgMbcFile.Trim();
 
                     // get the full path of the file
                     // in case a filename only or relative path was passed
@@ -381,7 +398,7 @@ namespace ModbusControl
             //Debug.Print(DateTime.Now.TimeOfDay + ": Form1_FormClosing()-5");
 
             // save the current settings
-            Settings1.Roaming.MbcMruList = recentFilesMenuItem.GetList();
+            Settings1.Roaming.MbcMruList = recentsToolStripMenuItem1.GetList();
             Settings1.Roaming.StopOnError = Options.StopOnError;
             Settings1.Roaming.BeepOnInputError = Options.BeepOnInputError;
             Settings1.Roaming.AutoNextRowOnEnter = Options.AutoNextRowOnEnter;
@@ -456,19 +473,19 @@ namespace ModbusControl
             // Control with '+' is zoom in
             if (e.Control && ((e.KeyCode == Keys.Add) || (e.KeyCode == Keys.Oemplus)))
             {
-                ChangeZoom(+1);
+                DoZoomInStep();
                 e.Handled = true;
             }
             // Control with '-' is zoom out
             else if (e.Control && ((e.KeyCode == Keys.Subtract) || (e.KeyCode == Keys.OemMinus)))
             {
-                ChangeZoom(-1);
+                DoZoomOutStep();
                 e.Handled = true;
             }
             // Control 0 is reset zoom
             else if (e.Control && ((e.KeyCode == Keys.NumPad0) || (e.KeyCode == Keys.D0)))
             {
-                ChangeZoom(0);
+                DoZoomReset();
                 e.Handled = true;
             }
         }
@@ -556,7 +573,7 @@ namespace ModbusControl
         /// <summary>
         /// Open recent file
         /// </summary>
-        private void RecentFilesMenuItem_ItemClick(object sender, EventArgs e)
+        private void recentsToolStripMenuItem1_ItemClick(object sender, EventArgs e)
         {
             string path = sender.ToString();
 
@@ -593,8 +610,9 @@ namespace ModbusControl
             }
 
             // pass parameters
-            SaveConfigurationForm1.SizeWidth = this.Width;
-            SaveConfigurationForm1.SizeHeight = this.Height;
+            SaveConfigurationForm1.MainformDeviceDPI = DeviceDpi;
+            SaveConfigurationForm1.SizeWidth = Width;
+            SaveConfigurationForm1.SizeHeight = Height;
             SaveConfigurationForm1.Project = Project;
             SaveConfigurationForm1.OverridesWarning = (CommandlineArgs.ArgConnectionType != null)
                                                     || (CommandlineArgs.ArgPort != null)
@@ -610,7 +628,8 @@ namespace ModbusControl
                                                     || (CommandlineArgs.ArgInterframedelay != null)
                                                     || (CommandlineArgs.ArgWriteholdingregFC != null)
                                                     || (CommandlineArgs.ArgSamplerate != null);
-            
+            //SaveConfigurationForm1.OverridesWarning = true;  //TODO: remove this line, it is for testing only
+
             SaveConfigurationForm1.ShowDialog();
         }
 
@@ -657,17 +676,17 @@ namespace ModbusControl
 
         private void ZoomInToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            ChangeZoom(+1);
+            DoZoomInStep();
         }
 
         private void ZoomOutToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            ChangeZoom(-1);
+            DoZoomOutStep();
         }
 
         private void ResetZoomToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            ChangeZoom(0);
+            DoZoomReset();
         }
 
         #endregion
@@ -808,13 +827,14 @@ namespace ModbusControl
             configform.BaudrateIsOverride = (CommandlineArgs.ArgBaudrate != null);
             configform.ParityIsOverride = (CommandlineArgs.ArgParity != null);
             configform.EndofmessagetimeoutIsOverride = (CommandlineArgs.ArgEndofmessagetimeout != null);
+            //configform.EndofmessagetimeoutIsOverride = true;   //TODO: remove this line, it is for testing only
             configform.OnewireechosuppressionIsOverride = CommandlineArgs.ArgOnewireechosuppressionSwitch == true;
             configform.IPAddressIsOverride = (CommandlineArgs.ArgIPAddress != null);
             configform.IPPortIsOverride = (CommandlineArgs.ArgIPPort != null);
             configform.SlaveIDIsOverride = (CommandlineArgs.ArgSlaveID != null);
             configform.MaxFrameSizeIsOverride = (CommandlineArgs.ArgMaxFrameSize != null);
             configform.ResponsetimeoutIsOverride = (CommandlineArgs.ArgResponsetimeout != null);
-            configform.InterframedelayIsOverride = (CommandlineArgs.ArgInterframedelay != null); 
+            configform.InterframedelayIsOverride = (CommandlineArgs.ArgInterframedelay != null);
             configform.WriteregFCIsOverride = (CommandlineArgs.ArgWriteholdingregFC != null);
             configform.SamplerateIsOverride = (CommandlineArgs.ArgSamplerate != null);
 
@@ -829,7 +849,7 @@ namespace ModbusControl
             }
         }
 
-         /// <summary>
+        /// <summary>
         /// Apply the new configuration settings
         /// </summary>
         private void ApplyConfiguration(ProjectConfigurationForm configform)
@@ -1026,7 +1046,7 @@ namespace ModbusControl
                 Project.Options.Samplerate = (int)CommandlineArgs.ArgSamplerate;
         }
 
-        
+
         /// <summary>
         /// Update the form's title
         /// 
@@ -1092,7 +1112,7 @@ namespace ModbusControl
         private void ResetBeforeLoad()
         {
             // reset zoom
-            ChangeZoom(0);
+            DoZoomReset();
 
             // clear commandline overrides
             CommandlineArgs.Clear();
@@ -1147,10 +1167,10 @@ namespace ModbusControl
                     form.MessageIcon = SystemIcons.Error;
                     form.OkButtonText = "Load without schema validation";
                     form.MessageText = "Cannot load .mbc project file because XML schema validation failed." + Environment.NewLine
-                        + Environment.NewLine 
+                        + Environment.NewLine
                         + ex.Message + Environment.NewLine
                         + Environment.NewLine
-                        + "Or maybe you need to update to a newer version...";
+                        + "Or maybe you need to update ModbusControl to a newer version...";
 
                     System.Windows.Forms.DialogResult Result = form.ShowDialog();
                     form.Dispose();
@@ -1172,10 +1192,10 @@ namespace ModbusControl
                     form.Title = "ModbusControl - Error";
                     form.MessageIcon = SystemIcons.Error;
                     form.MessageText = "Cannot load .mbc project file because it has an error: " + Environment.NewLine
-                        + Environment.NewLine 
+                        + Environment.NewLine
                         + ex.Message + Environment.NewLine
                         + Environment.NewLine
-                        + "Or maybe you need to update to a newer version...";
+                        + "Or maybe you need to update ModbusControl to a newer version...";
                     form.CancelButtonVisible = false;
 
                     form.ShowDialog();
@@ -1227,19 +1247,18 @@ namespace ModbusControl
             UpdateModbusTcpBridge();
 
             // Set the form size
+            // Project holds width at 96DPI, scale to this form current DPI
             if (Project.FormSize.WidthSeen && (ignoreFormSize == false))
             {
-                // Project holds width in 96DPI
-                this.Width = AppDpiHelpers.ScaleXcoordFrom96DpiToSystemDpi(Project.FormSize.Width);
+                Width = AppDpiHelpers.ScaleValueFrom96DpiToThisDpiInt(Project.FormSize.Width, DeviceDpi);
             }
             if (Project.FormSize.HeightSeen && (ignoreFormSize == false))
             {
-                // Project holds width in 96DPI
-                this.Height = AppDpiHelpers.ScaleYcoordFrom96DpiToSystemDpi(Project.FormSize.Height);
+                Height = AppDpiHelpers.ScaleValueFrom96DpiToThisDpiInt(Project.FormSize.Height, DeviceDpi);
             }
 
             // Add to MRU list
-            recentFilesMenuItem.AddRecentItem(path);
+            recentsToolStripMenuItem1.AddRecentItem(path);
 
             return true;
         }
@@ -1360,7 +1379,7 @@ namespace ModbusControl
 
             // pass column widths
             // check if > 0, grid throws exception on 0
-            if ( (CurrentRegisterColumnWidthWeight > 0)
+            if ((CurrentRegisterColumnWidthWeight > 0)
                 && (CurrentDescriptionColumnWidthWeight > 0)
                 && (CurrentPropertiesColumnWidthWeight > 0)
                 && (CurrentValueColumnWidthWeight > 0))
@@ -1371,12 +1390,12 @@ namespace ModbusControl
                 mgv.PropertiesColumnWidthWeight = CurrentPropertiesColumnWidthWeight;
                 mgv.ValueColumnWidthWeight = CurrentValueColumnWidthWeight;
             }
-            
+
             // set some more properties
             //mgv.AutosizeAndWrapRows = Options.AutoRowSize;
             mgv.WrapRows = Options.AutoRowSize;
             mgv.SetFilter(tbFilterText.Text, chkFilterRegex.Checked, chkFilterCaseSensitive.Checked);
-            mgv.SetZoom(ZoomFactor);
+            mgv.SetZoomFactor(zoomFactor);
 
             isLoading = false;
         }
@@ -1754,7 +1773,7 @@ namespace ModbusControl
 
                     // measure the time used by the reads
                     Timer.Restart();
-                    
+
                     // to abort polling the current tab if user changes tab
                     TabIsChanged = false;
 
@@ -1788,7 +1807,7 @@ namespace ModbusControl
                     {
                         // do possible pending writes
                         DoPendingWrites();
-                    
+
                         int TimeToSleep = (int)Math.Min(Project.Options.Samplerate - TimePassed, 50);
                         Thread.Sleep(TimeToSleep);
                         TimePassed = (int)Timer.ElapsedMilliseconds;
@@ -1796,7 +1815,7 @@ namespace ModbusControl
 
                     // do possible pending writes
                     DoPendingWrites();
-                    
+
                     // do a minimal sleep to avoid hogging the cpu
                     Thread.Sleep(10);
                 }
@@ -1879,7 +1898,7 @@ namespace ModbusControl
             ModbusGridView.CReadGroup grp = mrv.GetNextReadGroup(null, maxReadRegisters);
             while (grp != null)
             {
-               // stop polling on tab change or stop
+                // stop polling on tab change or stop
                 if (ContinuePolling() == false)
                 {
                     break;
@@ -2102,7 +2121,12 @@ namespace ModbusControl
             {
                 try
                 {
-                    Process.Start(tmi.Tag.ToString());
+                    string filepath = tmi.Tag.ToString();
+                    Process.Start(new ProcessStartInfo
+                    {
+                        FileName = filepath,
+                        UseShellExecute = true
+                    });
                 }
                 catch (Exception ex)
                 {
@@ -2134,7 +2158,11 @@ namespace ModbusControl
                     string path = files[0];
                     try
                     {
-                        Process.Start(path);
+                        Process.Start(new ProcessStartInfo
+                        {
+                            FileName = path,
+                            UseShellExecute = true
+                        });
                     }
                     catch (Exception ex)
                     {
@@ -2408,57 +2436,65 @@ namespace ModbusControl
             // CTRL+scrollwheel: zoom/unzoom
             if (Control.ModifierKeys == Keys.Control)
             {
-                // send +1 to zoom in, -1 to zoom out
                 if ((e.Delta / wheelFactor) >= +1)
                 {
-                    ChangeZoom(+1);
+                    DoZoomInStep();
                 }
                 else if ((e.Delta / wheelFactor) <= -1)
                 {
-                    ChangeZoom(-1);
+                    DoZoomOutStep();
                 }
             }
         }
 
         /// <summary>
-        /// Change the zoom factor
+        /// Zoom in, 1 step
         /// </summary>
-        /// <param name="action">+1 do zoom in, -1 for zoom out, 0 for reset zoom</param>
-        private void ChangeZoom(int action)
+        private void DoZoomInStep()
         {
-            // zoom callback from RegView
-
-            float minZoom = 1;
-            float maxZoom = 10;
-            float changeFactor = 1.15F;
-
-            if (action > 0)
+            if (CurrentTabPage != null)
             {
-                // zoom in
-                if (ZoomFactor < maxZoom)
+                if (zoomFactor < zoomFactorMaximum)
                 {
-                    ZoomFactor *= changeFactor;
+                    zoomFactor *= zoomFactorStep;
+
+                    ModbusGridView mgv = CurrentTabPage.Tag as ModbusGridView;
+                    mgv.SetZoomFactor(zoomFactor);
                 }
             }
-            else if (action < 0)
+        }
+
+        /// <summary>
+        /// Zoom out, 1 step
+        /// </summary>
+        private void DoZoomOutStep()
+        {
+            if (CurrentTabPage != null)
             {
-                // zoom out
-                if (ZoomFactor > minZoom)
+                if (zoomFactor > 1)
                 {
-                    ZoomFactor /= changeFactor;
+                    zoomFactor /= zoomFactorStep;
+                    if (zoomFactor < 1.0f)
+                    {
+                        zoomFactor = 1.0f;
+                    }
+
+                    ModbusGridView mgv = CurrentTabPage.Tag as ModbusGridView;
+                    mgv.SetZoomFactor(zoomFactor);
                 }
             }
-            else
-            {
-                // reset zoom
-                ZoomFactor = 1.0F;
-            }
+        }
 
-            // update zoom of the current page
+        /// <summary>
+        /// Reset zoom
+        /// </summary>
+        private void DoZoomReset()
+        {
+            zoomFactor = 1.0f;
             if (CurrentTabPage != null)
             {
                 ModbusGridView mgv = CurrentTabPage.Tag as ModbusGridView;
-                mgv.SetZoom(ZoomFactor);
+                mgv.SetZoomFactor(zoomFactor);
             }
         }
 
@@ -2501,7 +2537,7 @@ namespace ModbusControl
             filterPanel.Hide();
         }
 
-        private void SetFilterColor( bool valid)
+        private void SetFilterColor(bool valid)
         {
             if (valid)
             {
@@ -2565,7 +2601,7 @@ namespace ModbusControl
             {
                 // make sure main tabs polling is restored
                 MainPollingIsEnabled = true;
-            }            
+            }
         }
 
         private void ExportRegistersToFileToolStripMenuItem_Click(object sender, EventArgs e)
@@ -2595,7 +2631,7 @@ namespace ModbusControl
             {
                 // make sure main tabs polling is restored
                 MainPollingIsEnabled = true;
-            }            
+            }
         }
 
         #endregion
@@ -2626,7 +2662,7 @@ namespace ModbusControl
             ShowForm(CustomQueriesForm);
         }
 
-#endregion
+        #endregion
 
         private void ShowForm(Form f)
         {
@@ -2638,7 +2674,7 @@ namespace ModbusControl
             f.BringToFront();
         }
 
-#region Status bar message system
+        #region Status bar message system
 
         Color StatusbarDefaultBackColor;
         Color StatusbarNoPollingBackColor = Color.FromArgb(135, 206, 250); // kind of blue;
@@ -2751,7 +2787,7 @@ namespace ModbusControl
             }
         }
 
-#endregion
+        #endregion
 
         private void StartEditor(string file)
         {
@@ -2821,7 +2857,7 @@ namespace ModbusControl
             }
         }
 
-#region Drag & drop support
+        #region Drag & drop support
 
         // Drag & drop a .mbc file on this app
         void Form1_DragEnter(object sender, DragEventArgs e)
@@ -2867,9 +2903,9 @@ namespace ModbusControl
             }
         }
 
-#endregion
+        #endregion
 
-#region auto-update
+        #region auto-update
 
         // Thread that starts the updater tool after a delay
         private void UpdaterThread_Work()
@@ -2883,14 +2919,10 @@ namespace ModbusControl
                 // Start the updater, silent auto-check
                 StartUpdater(false);
             }
-#if DEBUGX
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message, "Exception");
             }
-#else
-            catch { }
-#endif
         }
 
         /// <summary>
@@ -2931,12 +2963,46 @@ namespace ModbusControl
 
         private void chkFilterRegex_CheckedChanged(object sender, EventArgs e)
         {
-            if( CurrentTabPage != null)
+            if (CurrentTabPage != null)
             {
                 ModbusGridView mgv = CurrentTabPage.Tag as ModbusGridView;
                 bool isValid = mgv.SetFilter(tbFilterText.Text, chkFilterRegex.Checked, chkFilterCaseSensitive.Checked);
                 SetFilterColor(isValid);
             }
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            Debug.Print($"Button debug info:");
+            Debug.Print($" DeviceDpi={DeviceDpi}");
+            Debug.Print($" Form.Width={this.Width}, Form.Height={this.Height}");
+            if (CurrentTabPage != null)
+            {
+                ModbusGridView mgv = CurrentTabPage.Tag as ModbusGridView;
+                DataGridView dgv = mgv.TheGrid;
+                Debug.Print($" DataGridView1.Font: {dgv.Rows[1].Cells[1].InheritedStyle.Font}");
+                Debug.Print($" DataGridView1 cell(1,1) Inherited Font: {dgv.Rows[1].Cells[1].InheritedStyle.Font}");
+            }
+        }
+
+        private void MainForm_DpiChanged(object sender, DpiChangedEventArgs e)
+        {
+            Debug.Print($"MainForm_DpiChanged:");
+            Debug.Print($" DeviceDpiOld={e.DeviceDpiOld}");
+            Debug.Print($" DeviceDpiNew={e.DeviceDpiNew}");
+            Debug.Print($" Width={Width}");
+            Debug.Print($" Height={Height}");
+            Debug.Print($" SuggestedRectangle.Width={e.SuggestedRectangle.Width}");
+            Debug.Print($" SuggestedRectangle.Height={e.SuggestedRectangle.Height}");
+
+            //TODO: probeer de form size beter te houden bij move naar ander scherm
+            /*
+            // Custom logic instead of blindly trusting SuggestedRectangle
+            var newRect = e.SuggestedRectangle;
+            newRect.Width = 200; // adjust as needed
+
+            this.Bounds = newRect; // apply your modified version
+            */
         }
     }
 }

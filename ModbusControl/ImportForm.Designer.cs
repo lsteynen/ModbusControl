@@ -28,147 +28,154 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
+            components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ImportForm));
-            this.buttonStart = new System.Windows.Forms.Button();
-            this.textboxLog = new System.Windows.Forms.TextBox();
-            this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
-            this.SelectFileButton = new System.Windows.Forms.Button();
-            this.textboxFilename = new System.Windows.Forms.TextBox();
-            this.buttonClearLog = new System.Windows.Forms.Button();
-            this.buttonCancel = new System.Windows.Forms.Button();
-            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-            this.panel1 = new System.Windows.Forms.Panel();
-            this.chkContinueOnError = new System.Windows.Forms.CheckBox();
-            this.panel2 = new System.Windows.Forms.Panel();
-            this.panel1.SuspendLayout();
-            this.panel2.SuspendLayout();
-            this.SuspendLayout();
+            buttonStart = new Button();
+            textboxLog = new TextBox();
+            openFileDialog1 = new OpenFileDialog();
+            SelectFileButton = new Button();
+            textboxFilename = new TextBox();
+            buttonClearLog = new Button();
+            buttonCancel = new Button();
+            toolTip1 = new ToolTip(components);
+            panel1 = new Panel();
+            chkContinueOnError = new CheckBox();
+            panel2 = new Panel();
+            panel1.SuspendLayout();
+            panel2.SuspendLayout();
+            SuspendLayout();
             // 
             // buttonStart
             // 
-            this.buttonStart.Location = new System.Drawing.Point(12, 63);
-            this.buttonStart.Name = "buttonStart";
-            this.buttonStart.Size = new System.Drawing.Size(150, 23);
-            this.buttonStart.TabIndex = 3;
-            this.buttonStart.Text = "Start";
-            this.toolTip1.SetToolTip(this.buttonStart, "Start the import");
-            this.buttonStart.UseVisualStyleBackColor = true;
-            this.buttonStart.Click += new System.EventHandler(this.buttonStart_Click);
+            buttonStart.AutoSize = true;
+            buttonStart.Location = new Point(12, 61);
+            buttonStart.Name = "buttonStart";
+            buttonStart.Size = new Size(150, 25);
+            buttonStart.TabIndex = 3;
+            buttonStart.Text = "Start";
+            toolTip1.SetToolTip(buttonStart, "Start the import");
+            buttonStart.UseVisualStyleBackColor = true;
+            buttonStart.Click += buttonStart_Click;
             // 
             // textboxLog
             // 
-            this.textboxLog.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.textboxLog.Location = new System.Drawing.Point(0, 0);
-            this.textboxLog.Multiline = true;
-            this.textboxLog.Name = "textboxLog";
-            this.textboxLog.ReadOnly = true;
-            this.textboxLog.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.textboxLog.Size = new System.Drawing.Size(544, 266);
-            this.textboxLog.TabIndex = 0;
-            this.textboxLog.WordWrap = false;
+            textboxLog.BorderStyle = BorderStyle.FixedSingle;
+            textboxLog.Dock = DockStyle.Fill;
+            textboxLog.Location = new Point(0, 0);
+            textboxLog.Multiline = true;
+            textboxLog.Name = "textboxLog";
+            textboxLog.ReadOnly = true;
+            textboxLog.ScrollBars = ScrollBars.Both;
+            textboxLog.Size = new Size(544, 270);
+            textboxLog.TabIndex = 0;
+            textboxLog.WordWrap = false;
             // 
             // openFileDialog1
             // 
-            this.openFileDialog1.AddExtension = false;
-            this.openFileDialog1.CheckFileExists = false;
-            this.openFileDialog1.DefaultExt = "csv";
-            this.openFileDialog1.Filter = "CSV files (*.csv)|*.csv|All files (*.*)|*.*";
+            openFileDialog1.AddExtension = false;
+            openFileDialog1.CheckFileExists = false;
+            openFileDialog1.DefaultExt = "csv";
+            openFileDialog1.Filter = "CSV files (*.csv)|*.csv|All files (*.*)|*.*";
             // 
             // SelectFileButton
             // 
-            this.SelectFileButton.Location = new System.Drawing.Point(13, 11);
-            this.SelectFileButton.Name = "SelectFileButton";
-            this.SelectFileButton.Size = new System.Drawing.Size(75, 23);
-            this.SelectFileButton.TabIndex = 0;
-            this.SelectFileButton.Text = "Select file...";
-            this.toolTip1.SetToolTip(this.SelectFileButton, "Select the file to import");
-            this.SelectFileButton.UseVisualStyleBackColor = true;
-            this.SelectFileButton.Click += new System.EventHandler(this.buttonSelectFile_Click);
+            SelectFileButton.AutoSize = true;
+            SelectFileButton.Location = new Point(13, 11);
+            SelectFileButton.Name = "SelectFileButton";
+            SelectFileButton.Size = new Size(88, 25);
+            SelectFileButton.TabIndex = 0;
+            SelectFileButton.Text = "Select file...";
+            toolTip1.SetToolTip(SelectFileButton, "Select the file to import");
+            SelectFileButton.UseVisualStyleBackColor = true;
+            SelectFileButton.Click += buttonSelectFile_Click;
             // 
             // textboxFilename
             // 
-            this.textboxFilename.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.textboxFilename.Location = new System.Drawing.Point(94, 13);
-            this.textboxFilename.Name = "textboxFilename";
-            this.textboxFilename.Size = new System.Drawing.Size(438, 20);
-            this.textboxFilename.TabIndex = 1;
+            textboxFilename.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            textboxFilename.Location = new Point(107, 14);
+            textboxFilename.Name = "textboxFilename";
+            textboxFilename.Size = new Size(425, 20);
+            textboxFilename.TabIndex = 1;
+            textboxFilename.Text = "Aaaa";
             // 
             // buttonClearLog
             // 
-            this.buttonClearLog.Location = new System.Drawing.Point(249, 63);
-            this.buttonClearLog.Name = "buttonClearLog";
-            this.buttonClearLog.Size = new System.Drawing.Size(75, 23);
-            this.buttonClearLog.TabIndex = 5;
-            this.buttonClearLog.Text = "Clear log";
-            this.toolTip1.SetToolTip(this.buttonClearLog, "Clear the result log window");
-            this.buttonClearLog.UseVisualStyleBackColor = true;
-            this.buttonClearLog.Click += new System.EventHandler(this.buttonClearLog_Click);
+            buttonClearLog.AutoSize = true;
+            buttonClearLog.Location = new Point(249, 61);
+            buttonClearLog.Name = "buttonClearLog";
+            buttonClearLog.Size = new Size(75, 25);
+            buttonClearLog.TabIndex = 5;
+            buttonClearLog.Text = "Clear log";
+            toolTip1.SetToolTip(buttonClearLog, "Clear the result log window");
+            buttonClearLog.UseVisualStyleBackColor = true;
+            buttonClearLog.Click += buttonClearLog_Click;
             // 
             // buttonCancel
             // 
-            this.buttonCancel.Enabled = false;
-            this.buttonCancel.Location = new System.Drawing.Point(168, 63);
-            this.buttonCancel.Name = "buttonCancel";
-            this.buttonCancel.Size = new System.Drawing.Size(75, 23);
-            this.buttonCancel.TabIndex = 4;
-            this.buttonCancel.Text = "Cancel";
-            this.toolTip1.SetToolTip(this.buttonCancel, "Cancel the current operation");
-            this.buttonCancel.UseVisualStyleBackColor = true;
-            this.buttonCancel.Click += new System.EventHandler(this.buttonCancel_Click);
+            buttonCancel.AutoSize = true;
+            buttonCancel.Enabled = false;
+            buttonCancel.Location = new Point(168, 61);
+            buttonCancel.Name = "buttonCancel";
+            buttonCancel.Size = new Size(75, 25);
+            buttonCancel.TabIndex = 4;
+            buttonCancel.Text = "Cancel";
+            toolTip1.SetToolTip(buttonCancel, "Cancel the current operation");
+            buttonCancel.UseVisualStyleBackColor = true;
+            buttonCancel.Click += buttonCancel_Click;
             // 
             // panel1
             // 
-            this.panel1.Controls.Add(this.chkContinueOnError);
-            this.panel1.Controls.Add(this.buttonStart);
-            this.panel1.Controls.Add(this.buttonCancel);
-            this.panel1.Controls.Add(this.SelectFileButton);
-            this.panel1.Controls.Add(this.buttonClearLog);
-            this.panel1.Controls.Add(this.textboxFilename);
-            this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel1.Location = new System.Drawing.Point(0, 0);
-            this.panel1.Margin = new System.Windows.Forms.Padding(0);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(544, 96);
-            this.panel1.TabIndex = 0;
+            panel1.Controls.Add(chkContinueOnError);
+            panel1.Controls.Add(buttonStart);
+            panel1.Controls.Add(buttonCancel);
+            panel1.Controls.Add(SelectFileButton);
+            panel1.Controls.Add(buttonClearLog);
+            panel1.Controls.Add(textboxFilename);
+            panel1.Dock = DockStyle.Top;
+            panel1.Location = new Point(0, 0);
+            panel1.Margin = new Padding(0);
+            panel1.Name = "panel1";
+            panel1.Size = new Size(544, 92);
+            panel1.TabIndex = 0;
             // 
             // chkContinueOnError
             // 
-            this.chkContinueOnError.AutoSize = true;
-            this.chkContinueOnError.Location = new System.Drawing.Point(14, 40);
-            this.chkContinueOnError.Name = "chkContinueOnError";
-            this.chkContinueOnError.Size = new System.Drawing.Size(107, 17);
-            this.chkContinueOnError.TabIndex = 2;
-            this.chkContinueOnError.Text = "Continue on error";
-            this.chkContinueOnError.UseVisualStyleBackColor = true;
-            this.chkContinueOnError.CheckedChanged += new System.EventHandler(this.chkContinueOnError_CheckedChanged);
+            chkContinueOnError.AutoSize = true;
+            chkContinueOnError.Location = new Point(14, 41);
+            chkContinueOnError.Name = "chkContinueOnError";
+            chkContinueOnError.Size = new Size(107, 17);
+            chkContinueOnError.TabIndex = 2;
+            chkContinueOnError.Text = "Continue on error";
+            chkContinueOnError.UseVisualStyleBackColor = true;
+            chkContinueOnError.CheckedChanged += chkContinueOnError_CheckedChanged;
             // 
             // panel2
             // 
-            this.panel2.Controls.Add(this.textboxLog);
-            this.panel2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel2.Location = new System.Drawing.Point(0, 96);
-            this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(544, 266);
-            this.panel2.TabIndex = 101;
+            panel2.Controls.Add(textboxLog);
+            panel2.Dock = DockStyle.Fill;
+            panel2.Location = new Point(0, 92);
+            panel2.Name = "panel2";
+            panel2.Size = new Size(544, 270);
+            panel2.TabIndex = 101;
             // 
-            // Import
+            // ImportForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(544, 362);
-            this.Controls.Add(this.panel2);
-            this.Controls.Add(this.panel1);
-            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.Name = "Import";
-            this.Text = "Import registers from file";
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.OnFormClosing);
-            this.panel1.ResumeLayout(false);
-            this.panel1.PerformLayout();
-            this.panel2.ResumeLayout(false);
-            this.panel2.PerformLayout();
-            this.ResumeLayout(false);
+            AutoScaleDimensions = new SizeF(96F, 96F);
+            AutoScaleMode = AutoScaleMode.Dpi;
+            ClientSize = new Size(544, 362);
+            Controls.Add(panel2);
+            Controls.Add(panel1);
+            Font = new Font("Microsoft Sans Serif", 8.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            Icon = (Icon)resources.GetObject("$this.Icon");
+            Name = "ImportForm";
+            StartPosition = FormStartPosition.CenterParent;
+            Text = "Import registers from file";
+            FormClosing += OnFormClosing;
+            panel1.ResumeLayout(false);
+            panel1.PerformLayout();
+            panel2.ResumeLayout(false);
+            panel2.PerformLayout();
+            ResumeLayout(false);
 
         }
 

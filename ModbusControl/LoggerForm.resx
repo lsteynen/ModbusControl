@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <root>
-  <!-- 
-    Microsoft ResX Schema 
-    
+  <!--
+    Microsoft ResX Schema
+
     Version 2.0
-    
-    The primary goals of this format is to allow a simple XML format 
-    that is mostly human readable. The generation and parsing of the 
-    various data types are done through the TypeConverter classes 
+
+    The primary goals of this format is to allow a simple XML format
+    that is mostly human readable. The generation and parsing of the
+    various data types are done through the TypeConverter classes
     associated with the data types.
-    
+
     Example:
-    
+
     ... ado.net/XML headers & schema ...
     <resheader name="resmimetype">text/microsoft-resx</resheader>
     <resheader name="version">2.0</resheader>
@@ -26,36 +26,36 @@
         <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
         <comment>This is a comment</comment>
     </data>
-                
-    There are any number of "resheader" rows that contain simple 
+
+    There are any number of "resheader" rows that contain simple
     name/value pairs.
-    
-    Each data row contains a name, and value. The row also contains a 
-    type or mimetype. Type corresponds to a .NET class that support 
-    text/value conversion through the TypeConverter architecture. 
-    Classes that don't support this are serialized and stored with the 
+
+    Each data row contains a name, and value. The row also contains a
+    type or mimetype. Type corresponds to a .NET class that support
+    text/value conversion through the TypeConverter architecture.
+    Classes that don't support this are serialized and stored with the
     mimetype set.
-    
-    The mimetype is used for serialized objects, and tells the 
-    ResXResourceReader how to depersist the object. This is currently not 
+
+    The mimetype is used for serialized objects, and tells the
+    ResXResourceReader how to depersist the object. This is currently not
     extensible. For a given mimetype the value must be set accordingly:
-    
-    Note - application/x-microsoft.net.object.binary.base64 is the format 
-    that the ResXResourceWriter will generate, however the reader can 
+
+    Note - application/x-microsoft.net.object.binary.base64 is the format
+    that the ResXResourceWriter will generate, however the reader can
     read any of the formats listed below.
-    
+
     mimetype: application/x-microsoft.net.object.binary.base64
-    value   : The object must be serialized with 
+    value   : The object must be serialized with
             : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
             : and then encoded with base64 encoding.
-    
+
     mimetype: application/x-microsoft.net.object.soap.base64
-    value   : The object must be serialized with 
+    value   : The object must be serialized with
             : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
             : and then encoded with base64 encoding.
 
     mimetype: application/x-microsoft.net.object.bytearray.base64
-    value   : The object must be serialized into a byte array 
+    value   : The object must be serialized into a byte array
             : using a System.ComponentModel.TypeConverter
             : and then encoded with base64 encoding.
     -->
@@ -124,7 +124,7 @@
   <data name="toolStripStatusLabel1.Size" type="System.Drawing.Size, System.Drawing">
     <value>0, 17</value>
   </data>
-  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="toolStripStatusLabel2.ImageScaling" type="System.Windows.Forms.ToolStripItemImageScaling, System.Windows.Forms">
     <value>None</value>
   </data>
@@ -135,7 +135,7 @@
     <value>0, 343</value>
   </data>
   <data name="statusStrip1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>609, 22</value>
+    <value>628, 22</value>
   </data>
   <assembly alias="mscorlib" name="mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="statusStrip1.TabIndex" type="System.Int32, mscorlib">
@@ -148,7 +148,7 @@
     <value>statusStrip1</value>
   </data>
   <data name="&gt;&gt;statusStrip1.Type" xml:space="preserve">
-    <value>System.Windows.Forms.StatusStrip, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Windows.Forms.StatusStrip, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;statusStrip1.Parent" xml:space="preserve">
     <value>$this</value>
@@ -165,11 +165,14 @@
   <data name="tableLayoutPanel1.ColumnCount" type="System.Int32, mscorlib">
     <value>8</value>
   </data>
+  <data name="buttonSaveToFile.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
   <data name="buttonSaveToFile.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
   </data>
   <data name="buttonSaveToFile.Location" type="System.Drawing.Point, System.Drawing">
-    <value>498, 3</value>
+    <value>529, 3</value>
   </data>
   <data name="buttonSaveToFile.Size" type="System.Drawing.Size, System.Drawing">
     <value>92, 23</value>
@@ -190,7 +193,7 @@
     <value>buttonSaveToFile</value>
   </data>
   <data name="&gt;&gt;buttonSaveToFile.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;buttonSaveToFile.Parent" xml:space="preserve">
     <value>tableLayoutPanel1</value>
@@ -198,17 +201,21 @@
   <data name="&gt;&gt;buttonSaveToFile.ZOrder" xml:space="preserve">
     <value>0</value>
   </data>
+  <data name="buttonCopyToClipboard.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
   <data name="buttonCopyToClipboard.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
   </data>
   <data name="buttonCopyToClipboard.Location" type="System.Drawing.Point, System.Drawing">
-    <value>383, 3</value>
+    <value>411, 3</value>
   </data>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="buttonCopyToClipboard.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
     <value>8, 3, 3, 3</value>
   </data>
   <data name="buttonCopyToClipboard.Size" type="System.Drawing.Size, System.Drawing">
-    <value>109, 23</value>
+    <value>112, 23</value>
   </data>
   <data name="buttonCopyToClipboard.TabIndex" type="System.Int32, mscorlib">
     <value>6</value>
@@ -223,13 +230,16 @@
     <value>buttonCopyToClipboard</value>
   </data>
   <data name="&gt;&gt;buttonCopyToClipboard.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;buttonCopyToClipboard.Parent" xml:space="preserve">
     <value>tableLayoutPanel1</value>
   </data>
   <data name="&gt;&gt;buttonCopyToClipboard.ZOrder" xml:space="preserve">
     <value>1</value>
+  </data>
+  <data name="buttonBottom.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
   </data>
   <data name="buttonBottom.BackgroundImageLayout" type="System.Windows.Forms.ImageLayout, System.Windows.Forms">
     <value>None</value>
@@ -250,7 +260,7 @@
     <value>NoControl</value>
   </data>
   <data name="buttonBottom.Location" type="System.Drawing.Point, System.Drawing">
-    <value>348, 3</value>
+    <value>376, 3</value>
   </data>
   <data name="buttonBottom.Size" type="System.Drawing.Size, System.Drawing">
     <value>24, 23</value>
@@ -265,13 +275,16 @@
     <value>buttonBottom</value>
   </data>
   <data name="&gt;&gt;buttonBottom.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;buttonBottom.Parent" xml:space="preserve">
     <value>tableLayoutPanel1</value>
   </data>
   <data name="&gt;&gt;buttonBottom.ZOrder" xml:space="preserve">
     <value>2</value>
+  </data>
+  <data name="buttonTop.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
   </data>
   <data name="buttonTop.BackgroundImageLayout" type="System.Windows.Forms.ImageLayout, System.Windows.Forms">
     <value>None</value>
@@ -294,7 +307,7 @@
     <value>NoControl</value>
   </data>
   <data name="buttonTop.Location" type="System.Drawing.Point, System.Drawing">
-    <value>318, 3</value>
+    <value>346, 3</value>
   </data>
   <data name="buttonTop.Size" type="System.Drawing.Size, System.Drawing">
     <value>24, 23</value>
@@ -309,7 +322,7 @@
     <value>buttonTop</value>
   </data>
   <data name="&gt;&gt;buttonTop.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;buttonTop.Parent" xml:space="preserve">
     <value>tableLayoutPanel1</value>
@@ -324,10 +337,10 @@
     <value>NoControl</value>
   </data>
   <data name="chkAutoScroll.Location" type="System.Drawing.Point, System.Drawing">
-    <value>237, 6</value>
+    <value>265, 7</value>
   </data>
   <data name="chkAutoScroll.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>8, 6, 3, 3</value>
+    <value>8, 7, 3, 3</value>
   </data>
   <data name="chkAutoScroll.Size" type="System.Drawing.Size, System.Drawing">
     <value>75, 17</value>
@@ -345,7 +358,7 @@
     <value>chkAutoScroll</value>
   </data>
   <data name="&gt;&gt;chkAutoScroll.Type" xml:space="preserve">
-    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;chkAutoScroll.Parent" xml:space="preserve">
     <value>tableLayoutPanel1</value>
@@ -353,11 +366,14 @@
   <data name="&gt;&gt;chkAutoScroll.ZOrder" xml:space="preserve">
     <value>4</value>
   </data>
+  <data name="buttonClear.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
   <data name="buttonClear.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
     <value>NoControl</value>
   </data>
   <data name="buttonClear.Location" type="System.Drawing.Point, System.Drawing">
-    <value>174, 3</value>
+    <value>202, 3</value>
   </data>
   <data name="buttonClear.Size" type="System.Drawing.Size, System.Drawing">
     <value>52, 23</value>
@@ -375,7 +391,7 @@
     <value>buttonClear</value>
   </data>
   <data name="&gt;&gt;buttonClear.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;buttonClear.Parent" xml:space="preserve">
     <value>tableLayoutPanel1</value>
@@ -383,26 +399,26 @@
   <data name="&gt;&gt;buttonClear.ZOrder" xml:space="preserve">
     <value>5</value>
   </data>
+  <data name="logFilter.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Microsoft Sans Serif, 8.25pt</value>
+  </data>
   <data name="logFilter.Location" type="System.Drawing.Point, System.Drawing">
-    <value>74, 4</value>
+    <value>74, 5</value>
   </data>
   <data name="logFilter.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>3, 4, 3, 3</value>
+    <value>3, 5, 3, 3</value>
   </data>
   <data name="logFilter.Size" type="System.Drawing.Size, System.Drawing">
-    <value>94, 21</value>
+    <value>122, 21</value>
   </data>
   <data name="logFilter.TabIndex" type="System.Int32, mscorlib">
-    <value>1</value>
-  </data>
-  <data name="logFilter.ToolTip" xml:space="preserve">
-    <value>Choose which events to log</value>
+    <value>8</value>
   </data>
   <data name="&gt;&gt;logFilter.Name" xml:space="preserve">
     <value>logFilter</value>
   </data>
   <data name="&gt;&gt;logFilter.Type" xml:space="preserve">
-    <value>LST.Helpers.LogFilter, ModbusControl, Version=2.0.24.1456, Culture=neutral, PublicKeyToken=null</value>
+    <value>LST.Helpers.LogFilter, ModbusControl, Culture=neutral, PublicKeyToken=null</value>
   </data>
   <data name="&gt;&gt;logFilter.Parent" xml:space="preserve">
     <value>tableLayoutPanel1</value>
@@ -417,10 +433,10 @@
     <value>NoControl</value>
   </data>
   <data name="checkboxEnable.Location" type="System.Drawing.Point, System.Drawing">
-    <value>9, 6</value>
+    <value>9, 7</value>
   </data>
   <data name="checkboxEnable.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>5, 6, 3, 3</value>
+    <value>5, 7, 3, 3</value>
   </data>
   <data name="checkboxEnable.Size" type="System.Drawing.Size, System.Drawing">
     <value>59, 17</value>
@@ -438,7 +454,7 @@
     <value>checkboxEnable</value>
   </data>
   <data name="&gt;&gt;checkboxEnable.Type" xml:space="preserve">
-    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;checkboxEnable.Parent" xml:space="preserve">
     <value>tableLayoutPanel1</value>
@@ -459,7 +475,7 @@
     <value>1</value>
   </data>
   <data name="tableLayoutPanel1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>609, 29</value>
+    <value>628, 29</value>
   </data>
   <data name="tableLayoutPanel1.TabIndex" type="System.Int32, mscorlib">
     <value>1</value>
@@ -468,7 +484,7 @@
     <value>tableLayoutPanel1</value>
   </data>
   <data name="&gt;&gt;tableLayoutPanel1.Type" xml:space="preserve">
-    <value>System.Windows.Forms.TableLayoutPanel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Windows.Forms.TableLayoutPanel, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;tableLayoutPanel1.Parent" xml:space="preserve">
     <value>panel1</value>
@@ -486,7 +502,7 @@
     <value>0, 0</value>
   </data>
   <data name="panel1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>609, 29</value>
+    <value>628, 29</value>
   </data>
   <data name="panel1.TabIndex" type="System.Int32, mscorlib">
     <value>0</value>
@@ -495,7 +511,7 @@
     <value>panel1</value>
   </data>
   <data name="&gt;&gt;panel1.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Panel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Windows.Forms.Panel, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;panel1.Parent" xml:space="preserve">
     <value>$this</value>
@@ -543,7 +559,7 @@
     <value>0, 29</value>
   </data>
   <data name="logGridView.Size" type="System.Drawing.Size, System.Drawing">
-    <value>609, 314</value>
+    <value>628, 314</value>
   </data>
   <data name="logGridView.TabIndex" type="System.Int32, mscorlib">
     <value>1</value>
@@ -552,7 +568,7 @@
     <value>logGridView</value>
   </data>
   <data name="&gt;&gt;logGridView.Type" xml:space="preserve">
-    <value>System.Windows.Forms.DataGridView, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Windows.Forms.DataGridView, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;logGridView.Parent" xml:space="preserve">
     <value>$this</value>
@@ -582,7 +598,7 @@
     <value>96, 96</value>
   </data>
   <data name="$this.ClientSize" type="System.Drawing.Size, System.Drawing">
-    <value>609, 365</value>
+    <value>628, 365</value>
   </data>
   <data name="$this.Icon" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
@@ -1830,7 +1846,7 @@
     <value>200, 200</value>
   </data>
   <data name="$this.StartPosition" type="System.Windows.Forms.FormStartPosition, System.Windows.Forms">
-    <value>CenterScreen</value>
+    <value>CenterParent</value>
   </data>
   <data name="$this.Text" xml:space="preserve">
     <value>Logging</value>
@@ -1839,72 +1855,72 @@
     <value>toolStripStatusLabel1</value>
   </data>
   <data name="&gt;&gt;toolStripStatusLabel1.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripStatusLabel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Windows.Forms.ToolStripStatusLabel, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;toolStripStatusLabel2.Name" xml:space="preserve">
     <value>toolStripStatusLabel2</value>
   </data>
   <data name="&gt;&gt;toolStripStatusLabel2.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStripStatusLabel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Windows.Forms.ToolStripStatusLabel, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;timerView.Name" xml:space="preserve">
     <value>timerView</value>
   </data>
   <data name="&gt;&gt;timerView.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Timer, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Windows.Forms.Timer, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;toolTip1.Name" xml:space="preserve">
     <value>toolTip1</value>
   </data>
   <data name="&gt;&gt;toolTip1.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolTip, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Windows.Forms.ToolTip, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;SaveFileDialog1.Name" xml:space="preserve">
     <value>SaveFileDialog1</value>
   </data>
   <data name="&gt;&gt;SaveFileDialog1.Type" xml:space="preserve">
-    <value>System.Windows.Forms.SaveFileDialog, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Windows.Forms.SaveFileDialog, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;Time.Name" xml:space="preserve">
     <value>Time</value>
   </data>
   <data name="&gt;&gt;Time.Type" xml:space="preserve">
-    <value>System.Windows.Forms.DataGridViewTextBoxColumn, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Windows.Forms.DataGridViewTextBoxColumn, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;Type.Name" xml:space="preserve">
     <value>Type</value>
   </data>
   <data name="&gt;&gt;Type.Type" xml:space="preserve">
-    <value>System.Windows.Forms.DataGridViewTextBoxColumn, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Windows.Forms.DataGridViewTextBoxColumn, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;Logtext.Name" xml:space="preserve">
     <value>Logtext</value>
   </data>
   <data name="&gt;&gt;Logtext.Type" xml:space="preserve">
-    <value>System.Windows.Forms.DataGridViewTextBoxColumn, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Windows.Forms.DataGridViewTextBoxColumn, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;dataGridViewTextBoxColumn1.Name" xml:space="preserve">
     <value>dataGridViewTextBoxColumn1</value>
   </data>
   <data name="&gt;&gt;dataGridViewTextBoxColumn1.Type" xml:space="preserve">
-    <value>System.Windows.Forms.DataGridViewTextBoxColumn, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Windows.Forms.DataGridViewTextBoxColumn, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;dataGridViewTextBoxColumn2.Name" xml:space="preserve">
     <value>dataGridViewTextBoxColumn2</value>
   </data>
   <data name="&gt;&gt;dataGridViewTextBoxColumn2.Type" xml:space="preserve">
-    <value>System.Windows.Forms.DataGridViewTextBoxColumn, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Windows.Forms.DataGridViewTextBoxColumn, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;dataGridViewTextBoxColumn3.Name" xml:space="preserve">
     <value>dataGridViewTextBoxColumn3</value>
   </data>
   <data name="&gt;&gt;dataGridViewTextBoxColumn3.Type" xml:space="preserve">
-    <value>System.Windows.Forms.DataGridViewTextBoxColumn, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Windows.Forms.DataGridViewTextBoxColumn, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;$this.Name" xml:space="preserve">
-    <value>LoggerForm</value>
+    <value>Logger</value>
   </data>
   <data name="&gt;&gt;$this.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Form, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Windows.Forms.Form, System.Windows.Forms, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
 </root>

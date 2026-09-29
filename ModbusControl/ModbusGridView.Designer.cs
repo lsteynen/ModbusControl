@@ -29,365 +29,335 @@ namespace ModbusControl
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
+            components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ModbusGridView));
-            this.ContextMenuForOtherColumns = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.markThisLineInGreenToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.markThisLineInBlueToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.markThisLineInYellowToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.removeColorMarkOfThisLineToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
-            this.copyGridLineToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.ContextMenuForValueColumn = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.showValueAsIntToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.showValueAsUIntToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.showValueAsHexToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.showValueAsBinaryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.showValueAsFloatToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.showValueAsASCIIToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.showValueAsStringToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
-            this.copyValueToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.ContextMenuForRegColumn = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem4 = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem5 = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem6 = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
-            this.toolStripMenuItem7 = new System.Windows.Forms.ToolStripMenuItem();
-            this.expandAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.collapseAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.grid = new LST.Controls.MyDataGridView();
-            this.colReg = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colDescr = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colProps = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colValue = new EnumValueColumn();
-            this.colDebuginfo = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.ContextMenuForOtherColumns.SuspendLayout();
-            this.ContextMenuForValueColumn.SuspendLayout();
-            this.ContextMenuForRegColumn.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.grid)).BeginInit();
-            this.SuspendLayout();
+            ContextMenuForOtherColumns = new ContextMenuStrip(components);
+            toolStripMenuItem1 = new ToolStripMenuItem();
+            markThisLineInGreenToolStripMenuItem = new ToolStripMenuItem();
+            markThisLineInBlueToolStripMenuItem = new ToolStripMenuItem();
+            markThisLineInYellowToolStripMenuItem = new ToolStripMenuItem();
+            removeColorMarkOfThisLineToolStripMenuItem = new ToolStripMenuItem();
+            toolStripSeparator1 = new ToolStripSeparator();
+            copyGridLineToolStripMenuItem = new ToolStripMenuItem();
+            ContextMenuForValueColumn = new ContextMenuStrip(components);
+            showValueAsIntToolStripMenuItem = new ToolStripMenuItem();
+            showValueAsUIntToolStripMenuItem = new ToolStripMenuItem();
+            showValueAsHexToolStripMenuItem = new ToolStripMenuItem();
+            showValueAsBinaryToolStripMenuItem = new ToolStripMenuItem();
+            showValueAsFloatToolStripMenuItem = new ToolStripMenuItem();
+            showValueAsASCIIToolStripMenuItem = new ToolStripMenuItem();
+            showValueAsStringToolStripMenuItem = new ToolStripMenuItem();
+            toolStripSeparator2 = new ToolStripSeparator();
+            copyValueToolStripMenuItem = new ToolStripMenuItem();
+            ContextMenuForRegColumn = new ContextMenuStrip(components);
+            toolStripMenuItem2 = new ToolStripMenuItem();
+            toolStripMenuItem3 = new ToolStripMenuItem();
+            toolStripMenuItem4 = new ToolStripMenuItem();
+            toolStripMenuItem5 = new ToolStripMenuItem();
+            toolStripMenuItem6 = new ToolStripMenuItem();
+            toolStripSeparator3 = new ToolStripSeparator();
+            toolStripMenuItem7 = new ToolStripMenuItem();
+            expandAllToolStripMenuItem = new ToolStripMenuItem();
+            collapseAllToolStripMenuItem = new ToolStripMenuItem();
+            grid = new LST.Controls.MyDataGridView();
+            colReg = new DataGridViewTextBoxColumn();
+            colDescr = new DataGridViewTextBoxColumn();
+            colProps = new DataGridViewTextBoxColumn();
+            colValue = new EnumValueColumn();
+            colDebuginfo = new DataGridViewTextBoxColumn();
+            ContextMenuForOtherColumns.SuspendLayout();
+            ContextMenuForValueColumn.SuspendLayout();
+            ContextMenuForRegColumn.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)grid).BeginInit();
+            SuspendLayout();
             // 
             // ContextMenuForOtherColumns
             // 
-            this.ContextMenuForOtherColumns.ImageScalingSize = new System.Drawing.Size(20, 20);
-            this.ContextMenuForOtherColumns.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripMenuItem1,
-            this.markThisLineInGreenToolStripMenuItem,
-            this.markThisLineInBlueToolStripMenuItem,
-            this.markThisLineInYellowToolStripMenuItem,
-            this.removeColorMarkOfThisLineToolStripMenuItem,
-            this.toolStripSeparator1,
-            this.copyGridLineToolStripMenuItem});
-            this.ContextMenuForOtherColumns.Name = "ContextMenuForFirstColumns";
-            this.ContextMenuForOtherColumns.Size = new System.Drawing.Size(240, 166);
+            ContextMenuForOtherColumns.ImageScalingSize = new Size(20, 20);
+            ContextMenuForOtherColumns.Items.AddRange(new ToolStripItem[] { toolStripMenuItem1, markThisLineInGreenToolStripMenuItem, markThisLineInBlueToolStripMenuItem, markThisLineInYellowToolStripMenuItem, removeColorMarkOfThisLineToolStripMenuItem, toolStripSeparator1, copyGridLineToolStripMenuItem });
+            ContextMenuForOtherColumns.Name = "ContextMenuForFirstColumns";
+            ContextMenuForOtherColumns.Size = new Size(240, 166);
             // 
             // toolStripMenuItem1
             // 
-            this.toolStripMenuItem1.Image = ((System.Drawing.Image)(resources.GetObject("toolStripMenuItem1.Image")));
-            this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-            this.toolStripMenuItem1.Size = new System.Drawing.Size(239, 26);
-            this.toolStripMenuItem1.Text = "Mark this line in red";
-            this.toolStripMenuItem1.Click += new System.EventHandler(this.Menu_SetColorRed);
+            toolStripMenuItem1.Image = (Image)resources.GetObject("toolStripMenuItem1.Image");
+            toolStripMenuItem1.Name = "toolStripMenuItem1";
+            toolStripMenuItem1.Size = new Size(239, 26);
+            toolStripMenuItem1.Text = "Mark this line in red";
+            toolStripMenuItem1.Click += Menu_SetColorRed;
             // 
             // markThisLineInGreenToolStripMenuItem
             // 
-            this.markThisLineInGreenToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("markThisLineInGreenToolStripMenuItem.Image")));
-            this.markThisLineInGreenToolStripMenuItem.Name = "markThisLineInGreenToolStripMenuItem";
-            this.markThisLineInGreenToolStripMenuItem.Size = new System.Drawing.Size(239, 26);
-            this.markThisLineInGreenToolStripMenuItem.Text = "Mark this line in green";
-            this.markThisLineInGreenToolStripMenuItem.Click += new System.EventHandler(this.Menu_SetColorGreen);
+            markThisLineInGreenToolStripMenuItem.Image = (Image)resources.GetObject("markThisLineInGreenToolStripMenuItem.Image");
+            markThisLineInGreenToolStripMenuItem.Name = "markThisLineInGreenToolStripMenuItem";
+            markThisLineInGreenToolStripMenuItem.Size = new Size(239, 26);
+            markThisLineInGreenToolStripMenuItem.Text = "Mark this line in green";
+            markThisLineInGreenToolStripMenuItem.Click += Menu_SetColorGreen;
             // 
             // markThisLineInBlueToolStripMenuItem
             // 
-            this.markThisLineInBlueToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("markThisLineInBlueToolStripMenuItem.Image")));
-            this.markThisLineInBlueToolStripMenuItem.Name = "markThisLineInBlueToolStripMenuItem";
-            this.markThisLineInBlueToolStripMenuItem.Size = new System.Drawing.Size(239, 26);
-            this.markThisLineInBlueToolStripMenuItem.Text = "Mark this line in blue";
-            this.markThisLineInBlueToolStripMenuItem.Click += new System.EventHandler(this.Menu_SetColorBlue);
+            markThisLineInBlueToolStripMenuItem.Image = (Image)resources.GetObject("markThisLineInBlueToolStripMenuItem.Image");
+            markThisLineInBlueToolStripMenuItem.Name = "markThisLineInBlueToolStripMenuItem";
+            markThisLineInBlueToolStripMenuItem.Size = new Size(239, 26);
+            markThisLineInBlueToolStripMenuItem.Text = "Mark this line in blue";
+            markThisLineInBlueToolStripMenuItem.Click += Menu_SetColorBlue;
             // 
             // markThisLineInYellowToolStripMenuItem
             // 
-            this.markThisLineInYellowToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("markThisLineInYellowToolStripMenuItem.Image")));
-            this.markThisLineInYellowToolStripMenuItem.Name = "markThisLineInYellowToolStripMenuItem";
-            this.markThisLineInYellowToolStripMenuItem.Size = new System.Drawing.Size(239, 26);
-            this.markThisLineInYellowToolStripMenuItem.Text = "Mark this line in yellow";
-            this.markThisLineInYellowToolStripMenuItem.Click += new System.EventHandler(this.Menu_SetColorYellow);
+            markThisLineInYellowToolStripMenuItem.Image = (Image)resources.GetObject("markThisLineInYellowToolStripMenuItem.Image");
+            markThisLineInYellowToolStripMenuItem.Name = "markThisLineInYellowToolStripMenuItem";
+            markThisLineInYellowToolStripMenuItem.Size = new Size(239, 26);
+            markThisLineInYellowToolStripMenuItem.Text = "Mark this line in yellow";
+            markThisLineInYellowToolStripMenuItem.Click += Menu_SetColorYellow;
             // 
             // removeColorMarkOfThisLineToolStripMenuItem
             // 
-            this.removeColorMarkOfThisLineToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("removeColorMarkOfThisLineToolStripMenuItem.Image")));
-            this.removeColorMarkOfThisLineToolStripMenuItem.Name = "removeColorMarkOfThisLineToolStripMenuItem";
-            this.removeColorMarkOfThisLineToolStripMenuItem.Size = new System.Drawing.Size(239, 26);
-            this.removeColorMarkOfThisLineToolStripMenuItem.Text = "Remove color mark of this line";
-            this.removeColorMarkOfThisLineToolStripMenuItem.Click += new System.EventHandler(this.Menu_SetColorDefault);
+            removeColorMarkOfThisLineToolStripMenuItem.Image = (Image)resources.GetObject("removeColorMarkOfThisLineToolStripMenuItem.Image");
+            removeColorMarkOfThisLineToolStripMenuItem.Name = "removeColorMarkOfThisLineToolStripMenuItem";
+            removeColorMarkOfThisLineToolStripMenuItem.Size = new Size(239, 26);
+            removeColorMarkOfThisLineToolStripMenuItem.Text = "Remove color mark of this line";
+            removeColorMarkOfThisLineToolStripMenuItem.Click += Menu_SetColorDefault;
             // 
             // toolStripSeparator1
             // 
-            this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(236, 6);
+            toolStripSeparator1.Name = "toolStripSeparator1";
+            toolStripSeparator1.Size = new Size(236, 6);
             // 
             // copyGridLineToolStripMenuItem
             // 
-            this.copyGridLineToolStripMenuItem.Name = "copyGridLineToolStripMenuItem";
-            this.copyGridLineToolStripMenuItem.Size = new System.Drawing.Size(239, 26);
-            this.copyGridLineToolStripMenuItem.Text = "Copy grid line";
-            this.copyGridLineToolStripMenuItem.Click += new System.EventHandler(this.Menu_CopyLine);
+            copyGridLineToolStripMenuItem.Name = "copyGridLineToolStripMenuItem";
+            copyGridLineToolStripMenuItem.Size = new Size(239, 26);
+            copyGridLineToolStripMenuItem.Text = "Copy grid line";
+            copyGridLineToolStripMenuItem.Click += Menu_CopyLine;
             // 
             // ContextMenuForValueColumn
             // 
-            this.ContextMenuForValueColumn.ImageScalingSize = new System.Drawing.Size(20, 20);
-            this.ContextMenuForValueColumn.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.showValueAsIntToolStripMenuItem,
-            this.showValueAsUIntToolStripMenuItem,
-            this.showValueAsHexToolStripMenuItem,
-            this.showValueAsBinaryToolStripMenuItem,
-            this.showValueAsFloatToolStripMenuItem,
-            this.showValueAsASCIIToolStripMenuItem,
-            this.showValueAsStringToolStripMenuItem,
-            this.toolStripSeparator2,
-            this.copyValueToolStripMenuItem});
-            this.ContextMenuForValueColumn.Name = "ContextMenuForValueColumn";
-            this.ContextMenuForValueColumn.Size = new System.Drawing.Size(185, 208);
+            ContextMenuForValueColumn.ImageScalingSize = new Size(20, 20);
+            ContextMenuForValueColumn.Items.AddRange(new ToolStripItem[] { showValueAsIntToolStripMenuItem, showValueAsUIntToolStripMenuItem, showValueAsHexToolStripMenuItem, showValueAsBinaryToolStripMenuItem, showValueAsFloatToolStripMenuItem, showValueAsASCIIToolStripMenuItem, showValueAsStringToolStripMenuItem, toolStripSeparator2, copyValueToolStripMenuItem });
+            ContextMenuForValueColumn.Name = "ContextMenuForValueColumn";
+            ContextMenuForValueColumn.Size = new Size(185, 186);
             // 
             // showValueAsIntToolStripMenuItem
             // 
-            this.showValueAsIntToolStripMenuItem.Name = "showValueAsIntToolStripMenuItem";
-            this.showValueAsIntToolStripMenuItem.Size = new System.Drawing.Size(184, 22);
-            this.showValueAsIntToolStripMenuItem.Text = "Show value as Int";
-            this.showValueAsIntToolStripMenuItem.Click += new System.EventHandler(this.ShowValueAsIntToolStripMenuItem_Click);
+            showValueAsIntToolStripMenuItem.Name = "showValueAsIntToolStripMenuItem";
+            showValueAsIntToolStripMenuItem.Size = new Size(184, 22);
+            showValueAsIntToolStripMenuItem.Text = "Show value as Int";
+            showValueAsIntToolStripMenuItem.Click += ShowValueAsIntToolStripMenuItem_Click;
             // 
             // showValueAsUIntToolStripMenuItem
             // 
-            this.showValueAsUIntToolStripMenuItem.Name = "showValueAsUIntToolStripMenuItem";
-            this.showValueAsUIntToolStripMenuItem.Size = new System.Drawing.Size(184, 22);
-            this.showValueAsUIntToolStripMenuItem.Text = "Show value as UInt";
-            this.showValueAsUIntToolStripMenuItem.Click += new System.EventHandler(this.ShowValueAsUIntToolStripMenuItem_Click);
+            showValueAsUIntToolStripMenuItem.Name = "showValueAsUIntToolStripMenuItem";
+            showValueAsUIntToolStripMenuItem.Size = new Size(184, 22);
+            showValueAsUIntToolStripMenuItem.Text = "Show value as UInt";
+            showValueAsUIntToolStripMenuItem.Click += ShowValueAsUIntToolStripMenuItem_Click;
             // 
             // showValueAsHexToolStripMenuItem
             // 
-            this.showValueAsHexToolStripMenuItem.Name = "showValueAsHexToolStripMenuItem";
-            this.showValueAsHexToolStripMenuItem.Size = new System.Drawing.Size(184, 22);
-            this.showValueAsHexToolStripMenuItem.Text = "Show value as Hex";
-            this.showValueAsHexToolStripMenuItem.Click += new System.EventHandler(this.ShowValueAsHexToolStripMenuItem_Click);
+            showValueAsHexToolStripMenuItem.Name = "showValueAsHexToolStripMenuItem";
+            showValueAsHexToolStripMenuItem.Size = new Size(184, 22);
+            showValueAsHexToolStripMenuItem.Text = "Show value as Hex";
+            showValueAsHexToolStripMenuItem.Click += ShowValueAsHexToolStripMenuItem_Click;
             // 
             // showValueAsBinaryToolStripMenuItem
             // 
-            this.showValueAsBinaryToolStripMenuItem.Name = "showValueAsBinaryToolStripMenuItem";
-            this.showValueAsBinaryToolStripMenuItem.Size = new System.Drawing.Size(184, 22);
-            this.showValueAsBinaryToolStripMenuItem.Text = "Show value as Binary";
-            this.showValueAsBinaryToolStripMenuItem.Click += new System.EventHandler(this.ShowValueAsBinaryToolStripMenuItem_Click);
+            showValueAsBinaryToolStripMenuItem.Name = "showValueAsBinaryToolStripMenuItem";
+            showValueAsBinaryToolStripMenuItem.Size = new Size(184, 22);
+            showValueAsBinaryToolStripMenuItem.Text = "Show value as Binary";
+            showValueAsBinaryToolStripMenuItem.Click += ShowValueAsBinaryToolStripMenuItem_Click;
             // 
             // showValueAsFloatToolStripMenuItem
             // 
-            this.showValueAsFloatToolStripMenuItem.Name = "showValueAsFloatToolStripMenuItem";
-            this.showValueAsFloatToolStripMenuItem.Size = new System.Drawing.Size(184, 22);
-            this.showValueAsFloatToolStripMenuItem.Text = "Show value as Float";
-            this.showValueAsFloatToolStripMenuItem.Click += new System.EventHandler(this.ShowValueAsFloatToolStripMenuItem_Click);
+            showValueAsFloatToolStripMenuItem.Name = "showValueAsFloatToolStripMenuItem";
+            showValueAsFloatToolStripMenuItem.Size = new Size(184, 22);
+            showValueAsFloatToolStripMenuItem.Text = "Show value as Float";
+            showValueAsFloatToolStripMenuItem.Click += ShowValueAsFloatToolStripMenuItem_Click;
             // 
             // showValueAsASCIIToolStripMenuItem
             // 
-            this.showValueAsASCIIToolStripMenuItem.Name = "showValueAsASCIIToolStripMenuItem";
-            this.showValueAsASCIIToolStripMenuItem.Size = new System.Drawing.Size(184, 22);
-            this.showValueAsASCIIToolStripMenuItem.Text = "Show value as ASCII";
-            this.showValueAsASCIIToolStripMenuItem.Click += new System.EventHandler(this.ShowValueAsASCIIToolStripMenuItem_Click);
+            showValueAsASCIIToolStripMenuItem.Name = "showValueAsASCIIToolStripMenuItem";
+            showValueAsASCIIToolStripMenuItem.Size = new Size(184, 22);
+            showValueAsASCIIToolStripMenuItem.Text = "Show value as ASCII";
+            showValueAsASCIIToolStripMenuItem.Click += ShowValueAsASCIIToolStripMenuItem_Click;
             // 
             // showValueAsStringToolStripMenuItem
             // 
-            this.showValueAsStringToolStripMenuItem.Name = "showValueAsStringToolStripMenuItem";
-            this.showValueAsStringToolStripMenuItem.Size = new System.Drawing.Size(184, 22);
-            this.showValueAsStringToolStripMenuItem.Text = "Show value as String";
-            this.showValueAsStringToolStripMenuItem.Click += new System.EventHandler(this.ShowValueAsStringToolStripMenuItem_Click);
+            showValueAsStringToolStripMenuItem.Name = "showValueAsStringToolStripMenuItem";
+            showValueAsStringToolStripMenuItem.Size = new Size(184, 22);
+            showValueAsStringToolStripMenuItem.Text = "Show value as String";
+            showValueAsStringToolStripMenuItem.Click += ShowValueAsStringToolStripMenuItem_Click;
             // 
             // toolStripSeparator2
             // 
-            this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(181, 6);
+            toolStripSeparator2.Name = "toolStripSeparator2";
+            toolStripSeparator2.Size = new Size(181, 6);
             // 
             // copyValueToolStripMenuItem
             // 
-            this.copyValueToolStripMenuItem.Name = "copyValueToolStripMenuItem";
-            this.copyValueToolStripMenuItem.Size = new System.Drawing.Size(184, 22);
-            this.copyValueToolStripMenuItem.Text = "Copy value";
-            this.copyValueToolStripMenuItem.Click += new System.EventHandler(this.CopyValueToolStripMenuItem_Click);
+            copyValueToolStripMenuItem.Name = "copyValueToolStripMenuItem";
+            copyValueToolStripMenuItem.Size = new Size(184, 22);
+            copyValueToolStripMenuItem.Text = "Copy value";
+            copyValueToolStripMenuItem.Click += CopyValueToolStripMenuItem_Click;
             // 
             // ContextMenuForRegColumn
             // 
-            this.ContextMenuForRegColumn.ImageScalingSize = new System.Drawing.Size(20, 20);
-            this.ContextMenuForRegColumn.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripMenuItem2,
-            this.toolStripMenuItem3,
-            this.toolStripMenuItem4,
-            this.toolStripMenuItem5,
-            this.toolStripMenuItem6,
-            this.toolStripSeparator3,
-            this.toolStripMenuItem7,
-            this.expandAllToolStripMenuItem,
-            this.collapseAllToolStripMenuItem});
-            this.ContextMenuForRegColumn.Name = "ContextMenuForFirstColumns";
-            this.ContextMenuForRegColumn.Size = new System.Drawing.Size(240, 218);
+            ContextMenuForRegColumn.ImageScalingSize = new Size(20, 20);
+            ContextMenuForRegColumn.Items.AddRange(new ToolStripItem[] { toolStripMenuItem2, toolStripMenuItem3, toolStripMenuItem4, toolStripMenuItem5, toolStripMenuItem6, toolStripSeparator3, toolStripMenuItem7, expandAllToolStripMenuItem, collapseAllToolStripMenuItem });
+            ContextMenuForRegColumn.Name = "ContextMenuForFirstColumns";
+            ContextMenuForRegColumn.Size = new Size(240, 218);
             // 
             // toolStripMenuItem2
             // 
-            this.toolStripMenuItem2.Image = ((System.Drawing.Image)(resources.GetObject("toolStripMenuItem2.Image")));
-            this.toolStripMenuItem2.Name = "toolStripMenuItem2";
-            this.toolStripMenuItem2.Size = new System.Drawing.Size(239, 26);
-            this.toolStripMenuItem2.Text = "Mark this line in red";
-            this.toolStripMenuItem2.Click += new System.EventHandler(this.Menu_SetColorRed);
+            toolStripMenuItem2.Image = (Image)resources.GetObject("toolStripMenuItem2.Image");
+            toolStripMenuItem2.Name = "toolStripMenuItem2";
+            toolStripMenuItem2.Size = new Size(239, 26);
+            toolStripMenuItem2.Text = "Mark this line in red";
+            toolStripMenuItem2.Click += Menu_SetColorRed;
             // 
             // toolStripMenuItem3
             // 
-            this.toolStripMenuItem3.Image = ((System.Drawing.Image)(resources.GetObject("toolStripMenuItem3.Image")));
-            this.toolStripMenuItem3.Name = "toolStripMenuItem3";
-            this.toolStripMenuItem3.Size = new System.Drawing.Size(239, 26);
-            this.toolStripMenuItem3.Text = "Mark this line in green";
-            this.toolStripMenuItem3.Click += new System.EventHandler(this.Menu_SetColorGreen);
+            toolStripMenuItem3.Image = (Image)resources.GetObject("toolStripMenuItem3.Image");
+            toolStripMenuItem3.Name = "toolStripMenuItem3";
+            toolStripMenuItem3.Size = new Size(239, 26);
+            toolStripMenuItem3.Text = "Mark this line in green";
+            toolStripMenuItem3.Click += Menu_SetColorGreen;
             // 
             // toolStripMenuItem4
             // 
-            this.toolStripMenuItem4.Image = ((System.Drawing.Image)(resources.GetObject("toolStripMenuItem4.Image")));
-            this.toolStripMenuItem4.Name = "toolStripMenuItem4";
-            this.toolStripMenuItem4.Size = new System.Drawing.Size(239, 26);
-            this.toolStripMenuItem4.Text = "Mark this line in blue";
-            this.toolStripMenuItem4.Click += new System.EventHandler(this.Menu_SetColorBlue);
+            toolStripMenuItem4.Image = (Image)resources.GetObject("toolStripMenuItem4.Image");
+            toolStripMenuItem4.Name = "toolStripMenuItem4";
+            toolStripMenuItem4.Size = new Size(239, 26);
+            toolStripMenuItem4.Text = "Mark this line in blue";
+            toolStripMenuItem4.Click += Menu_SetColorBlue;
             // 
             // toolStripMenuItem5
             // 
-            this.toolStripMenuItem5.Image = ((System.Drawing.Image)(resources.GetObject("toolStripMenuItem5.Image")));
-            this.toolStripMenuItem5.Name = "toolStripMenuItem5";
-            this.toolStripMenuItem5.Size = new System.Drawing.Size(239, 26);
-            this.toolStripMenuItem5.Text = "Mark this line in yellow";
-            this.toolStripMenuItem5.Click += new System.EventHandler(this.Menu_SetColorYellow);
+            toolStripMenuItem5.Image = (Image)resources.GetObject("toolStripMenuItem5.Image");
+            toolStripMenuItem5.Name = "toolStripMenuItem5";
+            toolStripMenuItem5.Size = new Size(239, 26);
+            toolStripMenuItem5.Text = "Mark this line in yellow";
+            toolStripMenuItem5.Click += Menu_SetColorYellow;
             // 
             // toolStripMenuItem6
             // 
-            this.toolStripMenuItem6.Image = ((System.Drawing.Image)(resources.GetObject("toolStripMenuItem6.Image")));
-            this.toolStripMenuItem6.Name = "toolStripMenuItem6";
-            this.toolStripMenuItem6.Size = new System.Drawing.Size(239, 26);
-            this.toolStripMenuItem6.Text = "Remove color mark of this line";
-            this.toolStripMenuItem6.Click += new System.EventHandler(this.Menu_SetColorDefault);
+            toolStripMenuItem6.Image = (Image)resources.GetObject("toolStripMenuItem6.Image");
+            toolStripMenuItem6.Name = "toolStripMenuItem6";
+            toolStripMenuItem6.Size = new Size(239, 26);
+            toolStripMenuItem6.Text = "Remove color mark of this line";
+            toolStripMenuItem6.Click += Menu_SetColorDefault;
             // 
             // toolStripSeparator3
             // 
-            this.toolStripSeparator3.Name = "toolStripSeparator3";
-            this.toolStripSeparator3.Size = new System.Drawing.Size(236, 6);
+            toolStripSeparator3.Name = "toolStripSeparator3";
+            toolStripSeparator3.Size = new Size(236, 6);
             // 
             // toolStripMenuItem7
             // 
-            this.toolStripMenuItem7.Name = "toolStripMenuItem7";
-            this.toolStripMenuItem7.Size = new System.Drawing.Size(239, 26);
-            this.toolStripMenuItem7.Text = "Copy grid line";
-            this.toolStripMenuItem7.Click += new System.EventHandler(this.Menu_CopyLine);
+            toolStripMenuItem7.Name = "toolStripMenuItem7";
+            toolStripMenuItem7.Size = new Size(239, 26);
+            toolStripMenuItem7.Text = "Copy grid line";
+            toolStripMenuItem7.Click += Menu_CopyLine;
             // 
             // expandAllToolStripMenuItem
             // 
-            this.expandAllToolStripMenuItem.Name = "expandAllToolStripMenuItem";
-            this.expandAllToolStripMenuItem.Size = new System.Drawing.Size(239, 26);
-            this.expandAllToolStripMenuItem.Text = "Expand all";
-            this.expandAllToolStripMenuItem.Click += new System.EventHandler(this.expandAllToolStripMenuItem_Click);
+            expandAllToolStripMenuItem.Name = "expandAllToolStripMenuItem";
+            expandAllToolStripMenuItem.Size = new Size(239, 26);
+            expandAllToolStripMenuItem.Text = "Expand all";
+            expandAllToolStripMenuItem.Click += expandAllToolStripMenuItem_Click;
             // 
             // collapseAllToolStripMenuItem
             // 
-            this.collapseAllToolStripMenuItem.Name = "collapseAllToolStripMenuItem";
-            this.collapseAllToolStripMenuItem.Size = new System.Drawing.Size(239, 26);
-            this.collapseAllToolStripMenuItem.Text = "Collapse all";
-            this.collapseAllToolStripMenuItem.Click += new System.EventHandler(this.collapseAllToolStripMenuItem_Click);
+            collapseAllToolStripMenuItem.Name = "collapseAllToolStripMenuItem";
+            collapseAllToolStripMenuItem.Size = new Size(239, 26);
+            collapseAllToolStripMenuItem.Text = "Collapse all";
+            collapseAllToolStripMenuItem.Click += collapseAllToolStripMenuItem_Click;
             // 
             // grid
             // 
-            this.grid.AllowUserToAddRows = false;
-            this.grid.AllowUserToDeleteRows = false;
-            this.grid.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
-            this.grid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.grid.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.colReg,
-            this.colDescr,
-            this.colProps,
-            this.colValue,
-            this.colDebuginfo});
-            this.grid.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.grid.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
-            this.grid.Location = new System.Drawing.Point(0, 0);
-            this.grid.Margin = new System.Windows.Forms.Padding(2);
-            this.grid.MultiSelect = false;
-            this.grid.Name = "grid";
-            this.grid.RowHeadersVisible = false;
-            this.grid.RowHeadersWidth = 25;
-            this.grid.RowTemplate.Height = 23;
-            this.grid.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.grid.Size = new System.Drawing.Size(669, 222);
-            this.grid.TabIndex = 0;
-            this.grid.CellBeginEdit += new System.Windows.Forms.DataGridViewCellCancelEventHandler(this.grid_CellBeginEdit);
-            this.grid.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.grid_CellDoubleClick);
-            this.grid.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.grid_CellEndEdit);
-            this.grid.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.grid_CellFormatting);
-            this.grid.CellMouseDown += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.grid_CellMouseDown);
-            this.grid.CellPainting += new System.Windows.Forms.DataGridViewCellPaintingEventHandler(this.grid_CellPainting);
-            this.grid.CellToolTipTextNeeded += new System.Windows.Forms.DataGridViewCellToolTipTextNeededEventHandler(this.grid_CellToolTipTextNeeded);
-            this.grid.ColumnWidthChanged += new System.Windows.Forms.DataGridViewColumnEventHandler(this.grid_ColumnWidthChanged);
-            this.grid.EditingControlShowing += new System.Windows.Forms.DataGridViewEditingControlShowingEventHandler(this.grid_EditingControlShowing);
-            this.grid.RowPrePaint += new System.Windows.Forms.DataGridViewRowPrePaintEventHandler(this.grid_RowPrePaint);
-            this.grid.KeyDown += new System.Windows.Forms.KeyEventHandler(this.grid_KeyDown);
-            this.grid.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.grid_KeyPress);
-            this.grid.MouseUp += new System.Windows.Forms.MouseEventHandler(this.grid_MouseUp);
+            grid.AllowUserToAddRows = false;
+            grid.AllowUserToDeleteRows = false;
+            grid.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+            grid.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            grid.Columns.AddRange(new DataGridViewColumn[] { colReg, colDescr, colProps, colValue, colDebuginfo });
+            grid.Dock = DockStyle.Fill;
+            grid.EditMode = DataGridViewEditMode.EditProgrammatically;
+            grid.Location = new Point(0, 0);
+            grid.MultiSelect = false;
+            grid.Name = "grid";
+            grid.RowHeadersVisible = false;
+            grid.RowHeadersWidth = 25;
+            grid.RowTemplate.Height = 23;
+            grid.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            grid.Size = new Size(669, 222);
+            grid.TabIndex = 0;
+            grid.CellBeginEdit += grid_CellBeginEdit;
+            grid.CellDoubleClick += grid_CellDoubleClick;
+            grid.CellEndEdit += grid_CellEndEdit;
+            grid.CellFormatting += grid_CellFormatting;
+            grid.CellMouseDown += grid_CellMouseDown;
+            grid.CellPainting += grid_CellPainting;
+            grid.CellToolTipTextNeeded += grid_CellToolTipTextNeeded;
+            grid.ColumnWidthChanged += grid_ColumnWidthChanged;
+            grid.EditingControlShowing += grid_EditingControlShowing;
+            grid.RowPrePaint += grid_RowPrePaint;
+            grid.KeyDown += grid_KeyDown;
+            grid.KeyPress += grid_KeyPress;
+            grid.MouseUp += grid_MouseUp;
             // 
             // colReg
             // 
-            this.colReg.HeaderText = "Register";
-            this.colReg.MinimumWidth = 6;
-            this.colReg.Name = "colReg";
-            this.colReg.ReadOnly = true;
-            this.colReg.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            colReg.HeaderText = "Register";
+            colReg.MinimumWidth = 6;
+            colReg.Name = "colReg";
+            colReg.ReadOnly = true;
+            colReg.SortMode = DataGridViewColumnSortMode.NotSortable;
             // 
             // colDescr
             // 
-            this.colDescr.FillWeight = 400F;
-            this.colDescr.HeaderText = "Description";
-            this.colDescr.MinimumWidth = 6;
-            this.colDescr.Name = "colDescr";
-            this.colDescr.ReadOnly = true;
-            this.colDescr.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            colDescr.FillWeight = 400F;
+            colDescr.HeaderText = "Description";
+            colDescr.MinimumWidth = 6;
+            colDescr.Name = "colDescr";
+            colDescr.ReadOnly = true;
+            colDescr.SortMode = DataGridViewColumnSortMode.NotSortable;
             // 
             // colProps
             // 
-            this.colProps.HeaderText = "Properties";
-            this.colProps.MinimumWidth = 6;
-            this.colProps.Name = "colProps";
-            this.colProps.ReadOnly = true;
-            this.colProps.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            colProps.HeaderText = "Properties";
+            colProps.MinimumWidth = 6;
+            colProps.Name = "colProps";
+            colProps.ReadOnly = true;
+            colProps.SortMode = DataGridViewColumnSortMode.NotSortable;
             // 
             // colValue
             // 
-            this.colValue.HeaderText = "Value";
-            this.colValue.MinimumWidth = 6;
-            this.colValue.Name = "colValue";
+            colValue.HeaderText = "Value";
+            colValue.MinimumWidth = 6;
+            colValue.Name = "colValue";
             // 
             // colDebuginfo
             // 
-            this.colDebuginfo.FillWeight = 400F;
-            this.colDebuginfo.HeaderText = "Debuginfo";
-            this.colDebuginfo.MinimumWidth = 6;
-            this.colDebuginfo.Name = "colDebuginfo";
-            this.colDebuginfo.ReadOnly = true;
-            this.colDebuginfo.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            this.colDebuginfo.Visible = false;
+            colDebuginfo.FillWeight = 400F;
+            colDebuginfo.HeaderText = "Debuginfo";
+            colDebuginfo.MinimumWidth = 6;
+            colDebuginfo.Name = "colDebuginfo";
+            colDebuginfo.ReadOnly = true;
+            colDebuginfo.SortMode = DataGridViewColumnSortMode.NotSortable;
+            colDebuginfo.Visible = false;
             // 
             // ModbusGridView
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.Controls.Add(this.grid);
-            this.Margin = new System.Windows.Forms.Padding(2);
-            this.Name = "ModbusGridView";
-            this.Size = new System.Drawing.Size(669, 222);
-            this.ContextMenuForOtherColumns.ResumeLayout(false);
-            this.ContextMenuForValueColumn.ResumeLayout(false);
-            this.ContextMenuForRegColumn.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.grid)).EndInit();
-            this.ResumeLayout(false);
+            AutoScaleDimensions = new SizeF(96F, 96F);
+            AutoScaleMode = AutoScaleMode.Dpi;
+            Controls.Add(grid);
+            Font = new Font("Microsoft Sans Serif", 8.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            Margin = new Padding(2);
+            Name = "ModbusGridView";
+            Size = new Size(669, 222);
+            ContextMenuForOtherColumns.ResumeLayout(false);
+            ContextMenuForValueColumn.ResumeLayout(false);
+            ContextMenuForRegColumn.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)grid).EndInit();
+            ResumeLayout(false);
 
         }
 

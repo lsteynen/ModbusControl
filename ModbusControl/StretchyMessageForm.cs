@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.IO.Ports;
@@ -33,9 +34,9 @@ namespace ModbusControl
 
         public string MessageText
         {
-            set 
-            { 
-                labelMessagetext.Text = value; 
+            set
+            {
+                labelMessagetext.Text = value;
             }
         }
 
@@ -78,9 +79,28 @@ namespace ModbusControl
             InitializeComponent();
 
             // default icon
-            pic.Image = SystemIcons.Warning.ToBitmap();            
+            pic.Image = SystemIcons.Warning.ToBitmap();
 
         }
 
+        private void StretchyMessageForm_Shown(object sender, EventArgs e)
+        {
+            AdjustFormSize();
+        }
+
+        private void AdjustFormSize()
+        {
+            Debug.Print("AdjustFormSize:");
+            Debug.Print($"DeviceDpi={DeviceDpi}");
+
+            // get margin, DPI adjusted 
+            int hmargin = AppDpiHelpers.ScaleValueFrom96DpiToThisDpiInt(40, DeviceDpi);
+            int vmargin = AppDpiHelpers.ScaleValueFrom96DpiToThisDpiInt(8, DeviceDpi);
+            // get new form size
+            int newWidth = tableLayoutPanel1.Location.X + tableLayoutPanel1.PreferredSize.Width + hmargin;
+            int newHeight = tableLayoutPanel1.Location.Y + tableLayoutPanel1.Height + vmargin;
+            Debug.Print($"newWidth={newWidth}, newHeight={newHeight}");
+            ClientSize = new Size(newWidth, newHeight);
+        }
     }
 }

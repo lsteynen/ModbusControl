@@ -1,49 +1,53 @@
-﻿using System;
-using System.IO;
+﻿using LST.Helpers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using LST.Helpers;
 using ModbusControl;
+using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Xml;
 using System.Xml.Schema;
-using System.Collections.Generic;
+using static System.Net.WebRequestMethods;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace UnitTests
 {
     [TestClass]
     public class Test_Loadmbcfiles
     {
-        static string targetDirectory = @"..\..\valid mbc files";
-        static string ValidationSchemaPath = @"..\..\..\xsd\MbcValidate.xsd";
-        static int FileCount = 0;
+        // these paths relative from where the test is executed
+        static string mbcFilesBaseDirectory = @"..\..\..\mbc test files";
+        static string validationSchemaPath = @"..\..\..\..\xsd\MbcValidate.xsd";
+        static int fileCount = 0;
         
         public TestContext TestContext { get; set; }
 
         [TestMethod]
         public void Test_Load_Valid()
         {
-            targetDirectory = @"..\..\mbc test files\Valid";
+            string currentDirectory = Directory.GetCurrentDirectory();  // debugging
+            string targetDir = mbcFilesBaseDirectory + @"\Valid";
 
-            TestContext.WriteLine("Testing if .mbc files in \"" + targetDirectory + "\" are valid");
+            TestContext.WriteLine("Testing if .mbc files in \"" + targetDir + "\" are valid");
 
-            List<string> fileList = GetDirectoryFilesExact(targetDirectory, "*.mbc");
+            List<string> fileList = GetDirectoryFilesExact(targetDir, "*.mbc");
             TestContext.WriteLine("About to testload " + fileList.Count + " .mbc files");
 
             foreach (string filePath in fileList)
             {
-                TryLoadMbcfile(filePath, ValidationSchemaPath);
+                TryLoadMbcfile(filePath, validationSchemaPath);
             }
 
-            TestContext.WriteLine("All passed, " + FileCount + " files");
+            TestContext.WriteLine("All passed, " + fileCount + " files");
         }
 
         [TestMethod]
         public void Test_Load_ValidWithoutSchemaValidation()
         {
-            targetDirectory = @"..\..\mbc test files\Valid without schemavalidation";
+            string targetDir = mbcFilesBaseDirectory + @"\Valid without schemavalidation";
 
-            TestContext.WriteLine("Testing if .mbc files in \"" + targetDirectory + "\" are valid without schemavalidation");
+            TestContext.WriteLine("Testing if .mbc files in \"" + targetDir + "\" are valid without schemavalidation");
 
-            List<string> fileList = GetDirectoryFilesExact(targetDirectory, "*.mbc");
+            List<string> fileList = GetDirectoryFilesExact(targetDir, "*.mbc");
             TestContext.WriteLine("About to testload " + fileList.Count + " .mbc files");
 
             foreach (string filePath in fileList)
@@ -51,24 +55,24 @@ namespace UnitTests
                 TryLoadMbcfile(filePath);
             }
 
-            TestContext.WriteLine("All passed, " + FileCount + " files");
+            TestContext.WriteLine("All passed, " + fileCount + " files");
         }
 
         [TestMethod]
         public void Test_Load_Invalid() 
         {
-            targetDirectory = @"..\..\mbc test files\Invalid";
+            string targetDir = mbcFilesBaseDirectory + @"\Invalid";
 
-            TestContext.WriteLine("Testing if .mbc files in \"" + targetDirectory + "\" throw exception on load");
+            TestContext.WriteLine("Testing if .mbc files in \"" + targetDir + "\" throw exception on load");
 
-            List<string> fileList = GetDirectoryFilesExact(targetDirectory, "*.mbc");
+            List<string> fileList = GetDirectoryFilesExact(targetDir, "*.mbc");
             TestContext.WriteLine("About to testload " + fileList.Count + " .mbc files");
 
             foreach (string filePath in fileList)
             {
                 try
                 {
-                    TryLoadMbcfile(filePath, ValidationSchemaPath);
+                    TryLoadMbcfile(filePath, validationSchemaPath);
 
                     Assert.Fail("Loading mbc file did not produce an exception");
                 }
@@ -82,18 +86,18 @@ namespace UnitTests
                 }
             }
 
-            TestContext.WriteLine("All threw exception, as expected, " + FileCount + " files");
+            TestContext.WriteLine("All threw exception, as expected, " + fileCount + " files");
         }
 
         private void TryLoadMbcfile(string filePath, string validationSchemaPath = "")
         {
             TestContext.WriteLine("Test \"" + filePath + "\"");
-            ++FileCount;
+            ++fileCount;
 
             CProject project = new CProject();
             if (validationSchemaPath != "")
             {
-                project.ValidationSchemaPath = ValidationSchemaPath;
+                project.ValidationSchemaPath = Test_Loadmbcfiles.validationSchemaPath;
             }
 
             project.Load(filePath);            

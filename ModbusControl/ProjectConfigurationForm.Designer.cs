@@ -28,1157 +28,1053 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
+            components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ProjectConfigurationForm));
-            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-            this.numericSamplerate = new System.Windows.Forms.NumericUpDown();
-            this.radFloat32LittleEndian = new System.Windows.Forms.RadioButton();
-            this.radFloat32BigEndian = new System.Windows.Forms.RadioButton();
-            this.radStringLittleEndian = new System.Windows.Forms.RadioButton();
-            this.radStringBigEndian = new System.Windows.Forms.RadioButton();
-            this.numericTcpServerPort = new System.Windows.Forms.NumericUpDown();
-            this.checkboxTcpServerEnable = new System.Windows.Forms.CheckBox();
-            this.radInt32LittleEndian = new System.Windows.Forms.RadioButton();
-            this.radInt32BigEndian = new System.Windows.Forms.RadioButton();
-            this.radWriteFC6 = new System.Windows.Forms.RadioButton();
-            this.radWriteFC16 = new System.Windows.Forms.RadioButton();
-            this.radWriteFCAuto = new System.Windows.Forms.RadioButton();
-            this.numericMaximumFrameSize = new System.Windows.Forms.NumericUpDown();
-            this.numericResponseTimeout = new System.Windows.Forms.NumericUpDown();
-            this.numericSlaveAddress = new System.Windows.Forms.NumericUpDown();
-            this.numericIpPort = new System.Windows.Forms.NumericUpDown();
-            this.comboTcpConnectMode = new System.Windows.Forms.ComboBox();
-            this.textboxIpAddress = new System.Windows.Forms.TextBox();
-            this.numericSerialEndOfMessageTimeout = new System.Windows.Forms.NumericUpDown();
-            this.checkboxSerialOneWireEchoSuppression = new System.Windows.Forms.CheckBox();
-            this.comboSerialParity = new System.Windows.Forms.ComboBox();
-            this.comboSerialBaudrate = new System.Windows.Forms.ComboBox();
-            this.comboConnection = new System.Windows.Forms.ComboBox();
-            this.textboxHoldingRegistersStart = new System.Windows.Forms.TextBox();
-            this.picConnectionTypeIsOverride = new System.Windows.Forms.PictureBox();
-            this.picPortIsOverride = new System.Windows.Forms.PictureBox();
-            this.picBaudrateIsOverride = new System.Windows.Forms.PictureBox();
-            this.picParityIsOverride = new System.Windows.Forms.PictureBox();
-            this.picEndofmessagetimeoutIsOverride = new System.Windows.Forms.PictureBox();
-            this.picIPAddressIsOverride = new System.Windows.Forms.PictureBox();
-            this.picIPPortIsOverride = new System.Windows.Forms.PictureBox();
-            this.picOnewireechosuppressionIsOverride = new System.Windows.Forms.PictureBox();
-            this.picSlaveIDIsOverride = new System.Windows.Forms.PictureBox();
-            this.picResponsetimeoutIsOverride = new System.Windows.Forms.PictureBox();
-            this.picInterframedelayIsOverride = new System.Windows.Forms.PictureBox();
-            this.picSamplerateIsOverride = new System.Windows.Forms.PictureBox();
-            this.picMaxFrameSizeIsOverride = new System.Windows.Forms.PictureBox();
-            this.picwriteregFCIsOverride = new System.Windows.Forms.PictureBox();
-            this.numericInterFrameDelay = new LST.Controls.NumericUpDown2();
-            this.comboSerialPort = new ModbusControl.SerialPortCombobox();
-            this.label5 = new System.Windows.Forms.Label();
-            this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
-            this.panel2 = new System.Windows.Forms.Panel();
-            this.label17 = new System.Windows.Forms.Label();
-            this.comboStringEncoding = new System.Windows.Forms.ComboBox();
-            this.groupBox5 = new System.Windows.Forms.GroupBox();
-            this.label6 = new System.Windows.Forms.Label();
-            this.groupBox3 = new System.Windows.Forms.GroupBox();
-            this.groupBox4 = new System.Windows.Forms.GroupBox();
-            this.label14 = new System.Windows.Forms.Label();
-            this.groupboxModbusTcpServer = new System.Windows.Forms.GroupBox();
-            this.label13 = new System.Windows.Forms.Label();
-            this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.groupboxConnection = new System.Windows.Forms.GroupBox();
-            this.label15 = new System.Windows.Forms.Label();
-            this.groupBoxTcpInterface = new System.Windows.Forms.GroupBox();
-            this.label9 = new System.Windows.Forms.Label();
-            this.label11 = new System.Windows.Forms.Label();
-            this.label10 = new System.Windows.Forms.Label();
-            this.groupBoxSerialInterface = new System.Windows.Forms.GroupBox();
-            this.label12 = new System.Windows.Forms.Label();
-            this.label1 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
-            this.label4 = new System.Windows.Forms.Label();
-            this.labelConnection = new System.Windows.Forms.Label();
-            this.label8 = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
-            this.label7 = new System.Windows.Forms.Label();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.label16 = new System.Windows.Forms.Label();
-            this.warningPanel = new System.Windows.Forms.Panel();
-            this.buttonPanel = new System.Windows.Forms.Panel();
-            this.buttonApply = new System.Windows.Forms.Button();
-            this.buttonCancel = new System.Windows.Forms.Button();
-            this.buttonOK = new System.Windows.Forms.Button();
-            ((System.ComponentModel.ISupportInitialize)(this.numericSamplerate)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericTcpServerPort)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericMaximumFrameSize)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericResponseTimeout)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericSlaveAddress)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericIpPort)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericSerialEndOfMessageTimeout)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.picConnectionTypeIsOverride)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.picPortIsOverride)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.picBaudrateIsOverride)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.picParityIsOverride)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.picEndofmessagetimeoutIsOverride)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.picIPAddressIsOverride)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.picIPPortIsOverride)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.picOnewireechosuppressionIsOverride)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.picSlaveIDIsOverride)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.picResponsetimeoutIsOverride)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.picInterframedelayIsOverride)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.picSamplerateIsOverride)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.picMaxFrameSizeIsOverride)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.picwriteregFCIsOverride)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericInterFrameDelay)).BeginInit();
-            this.panel2.SuspendLayout();
-            this.groupBox3.SuspendLayout();
-            this.groupBox4.SuspendLayout();
-            this.groupboxModbusTcpServer.SuspendLayout();
-            this.groupBox2.SuspendLayout();
-            this.groupBox1.SuspendLayout();
-            this.groupboxConnection.SuspendLayout();
-            this.groupBoxTcpInterface.SuspendLayout();
-            this.groupBoxSerialInterface.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
-            this.warningPanel.SuspendLayout();
-            this.buttonPanel.SuspendLayout();
-            this.SuspendLayout();
+            toolTip1 = new ToolTip(components);
+            numericSamplerate = new NumericUpDown();
+            radFloat32LittleEndian = new RadioButton();
+            radFloat32BigEndian = new RadioButton();
+            radStringLittleEndian = new RadioButton();
+            radStringBigEndian = new RadioButton();
+            numericTcpServerPort = new NumericUpDown();
+            checkboxTcpServerEnable = new CheckBox();
+            radInt32LittleEndian = new RadioButton();
+            radInt32BigEndian = new RadioButton();
+            radWriteFC6 = new RadioButton();
+            radWriteFC16 = new RadioButton();
+            radWriteFCAuto = new RadioButton();
+            numericMaximumFrameSize = new NumericUpDown();
+            numericResponseTimeout = new NumericUpDown();
+            numericSlaveAddress = new NumericUpDown();
+            numericIpPort = new NumericUpDown();
+            comboTcpConnectMode = new ComboBox();
+            textboxIpAddress = new TextBox();
+            numericSerialEndOfMessageTimeout = new NumericUpDown();
+            checkboxSerialOneWireEchoSuppression = new CheckBox();
+            comboSerialParity = new ComboBox();
+            comboSerialBaudrate = new ComboBox();
+            comboConnection = new ComboBox();
+            textboxHoldingRegistersStart = new TextBox();
+            picConnectionTypeIsOverride = new PictureBox();
+            picPortIsOverride = new PictureBox();
+            picBaudrateIsOverride = new PictureBox();
+            picParityIsOverride = new PictureBox();
+            picEndofmessagetimeoutIsOverride = new PictureBox();
+            picIPAddressIsOverride = new PictureBox();
+            picIPPortIsOverride = new PictureBox();
+            picOnewireechosuppressionIsOverride = new PictureBox();
+            picSlaveIDIsOverride = new PictureBox();
+            picResponsetimeoutIsOverride = new PictureBox();
+            picInterframedelayIsOverride = new PictureBox();
+            picSamplerateIsOverride = new PictureBox();
+            picMaxFrameSizeIsOverride = new PictureBox();
+            picwriteregFCIsOverride = new PictureBox();
+            numericInterFrameDelay = new LST.Controls.NumericUpDown2();
+            comboSerialPort = new SerialPortCombobox();
+            label5 = new Label();
+            backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
+            panel2 = new Panel();
+            label17 = new Label();
+            comboStringEncoding = new ComboBox();
+            label6 = new Label();
+            groupBox3 = new GroupBox();
+            groupBox4 = new GroupBox();
+            label14 = new Label();
+            groupboxModbusTcpServer = new GroupBox();
+            label13 = new Label();
+            groupBox2 = new GroupBox();
+            groupBox1 = new GroupBox();
+            groupboxConnection = new GroupBox();
+            label15 = new Label();
+            groupBoxTcpInterface = new GroupBox();
+            label9 = new Label();
+            label11 = new Label();
+            label10 = new Label();
+            groupBoxSerialInterface = new GroupBox();
+            label12 = new Label();
+            label1 = new Label();
+            label2 = new Label();
+            label4 = new Label();
+            labelConnection = new Label();
+            label8 = new Label();
+            label3 = new Label();
+            label7 = new Label();
+            butDebugInfo = new Button();
+            pictureBox1 = new PictureBox();
+            label16 = new Label();
+            warningPanel = new Panel();
+            buttonPanel = new Panel();
+            buttonApply = new Button();
+            buttonCancel = new Button();
+            buttonOK = new Button();
+            ((System.ComponentModel.ISupportInitialize)numericSamplerate).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)numericTcpServerPort).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)numericMaximumFrameSize).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)numericResponseTimeout).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)numericSlaveAddress).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)numericIpPort).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)numericSerialEndOfMessageTimeout).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)picConnectionTypeIsOverride).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)picPortIsOverride).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)picBaudrateIsOverride).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)picParityIsOverride).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)picEndofmessagetimeoutIsOverride).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)picIPAddressIsOverride).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)picIPPortIsOverride).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)picOnewireechosuppressionIsOverride).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)picSlaveIDIsOverride).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)picResponsetimeoutIsOverride).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)picInterframedelayIsOverride).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)picSamplerateIsOverride).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)picMaxFrameSizeIsOverride).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)picwriteregFCIsOverride).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)numericInterFrameDelay).BeginInit();
+            panel2.SuspendLayout();
+            groupBox3.SuspendLayout();
+            groupBox4.SuspendLayout();
+            groupboxModbusTcpServer.SuspendLayout();
+            groupBox2.SuspendLayout();
+            groupBox1.SuspendLayout();
+            groupboxConnection.SuspendLayout();
+            groupBoxTcpInterface.SuspendLayout();
+            groupBoxSerialInterface.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
+            warningPanel.SuspendLayout();
+            buttonPanel.SuspendLayout();
+            SuspendLayout();
             // 
             // numericSamplerate
             // 
-            this.numericSamplerate.Increment = new decimal(new int[] {
-            100,
-            0,
-            0,
-            0});
-            this.numericSamplerate.Location = new System.Drawing.Point(571, 16);
-            this.numericSamplerate.Maximum = new decimal(new int[] {
-            2147483647,
-            0,
-            0,
-            0});
-            this.numericSamplerate.Name = "numericSamplerate";
-            this.numericSamplerate.Size = new System.Drawing.Size(82, 20);
-            this.numericSamplerate.TabIndex = 9;
-            this.toolTip1.SetToolTip(this.numericSamplerate, "Sample period in milliseconds");
-            this.numericSamplerate.Value = new decimal(new int[] {
-            2147483647,
-            0,
-            0,
-            0});
+            numericSamplerate.Increment = new decimal(new int[] { 100, 0, 0, 0 });
+            numericSamplerate.Location = new Point(574, 16);
+            numericSamplerate.Maximum = new decimal(new int[] { int.MaxValue, 0, 0, 0 });
+            numericSamplerate.Name = "numericSamplerate";
+            numericSamplerate.Size = new Size(82, 20);
+            numericSamplerate.TabIndex = 8;
+            toolTip1.SetToolTip(numericSamplerate, "Sample period in milliseconds");
+            numericSamplerate.Value = new decimal(new int[] { int.MaxValue, 0, 0, 0 });
             // 
             // radFloat32LittleEndian
             // 
-            this.radFloat32LittleEndian.AutoSize = true;
-            this.radFloat32LittleEndian.Checked = true;
-            this.radFloat32LittleEndian.Location = new System.Drawing.Point(6, 13);
-            this.radFloat32LittleEndian.Name = "radFloat32LittleEndian";
-            this.radFloat32LittleEndian.Size = new System.Drawing.Size(70, 17);
-            this.radFloat32LittleEndian.TabIndex = 0;
-            this.radFloat32LittleEndian.TabStop = true;
-            this.radFloat32LittleEndian.Text = "Low-High";
-            this.toolTip1.SetToolTip(this.radFloat32LittleEndian, "First register is lower 16 bits of 32-bit float (most used)");
-            this.radFloat32LittleEndian.UseVisualStyleBackColor = true;
+            radFloat32LittleEndian.AutoSize = true;
+            radFloat32LittleEndian.Checked = true;
+            radFloat32LittleEndian.Location = new Point(6, 16);
+            radFloat32LittleEndian.Name = "radFloat32LittleEndian";
+            radFloat32LittleEndian.Size = new Size(70, 17);
+            radFloat32LittleEndian.TabIndex = 0;
+            radFloat32LittleEndian.TabStop = true;
+            radFloat32LittleEndian.Text = "Low-High";
+            toolTip1.SetToolTip(radFloat32LittleEndian, "First register is lower 16 bits of 32-bit float (most used)");
+            radFloat32LittleEndian.UseVisualStyleBackColor = true;
             // 
             // radFloat32BigEndian
             // 
-            this.radFloat32BigEndian.AutoSize = true;
-            this.radFloat32BigEndian.Location = new System.Drawing.Point(82, 13);
-            this.radFloat32BigEndian.Name = "radFloat32BigEndian";
-            this.radFloat32BigEndian.Size = new System.Drawing.Size(70, 17);
-            this.radFloat32BigEndian.TabIndex = 1;
-            this.radFloat32BigEndian.Text = "High-Low";
-            this.toolTip1.SetToolTip(this.radFloat32BigEndian, "First register is higher 16 bits of 32-bit float");
-            this.radFloat32BigEndian.UseVisualStyleBackColor = true;
+            radFloat32BigEndian.AutoSize = true;
+            radFloat32BigEndian.Location = new Point(87, 16);
+            radFloat32BigEndian.Name = "radFloat32BigEndian";
+            radFloat32BigEndian.Size = new Size(70, 17);
+            radFloat32BigEndian.TabIndex = 1;
+            radFloat32BigEndian.Text = "High-Low";
+            toolTip1.SetToolTip(radFloat32BigEndian, "First register is higher 16 bits of 32-bit float");
+            radFloat32BigEndian.UseVisualStyleBackColor = true;
             // 
             // radStringLittleEndian
             // 
-            this.radStringLittleEndian.AutoSize = true;
-            this.radStringLittleEndian.Location = new System.Drawing.Point(6, 32);
-            this.radStringLittleEndian.Name = "radStringLittleEndian";
-            this.radStringLittleEndian.Size = new System.Drawing.Size(68, 17);
-            this.radStringLittleEndian.TabIndex = 1;
-            this.radStringLittleEndian.Text = "Low byte";
-            this.toolTip1.SetToolTip(this.radStringLittleEndian, "Register with value 0x4241 is shown as \'AB\'");
-            this.radStringLittleEndian.UseVisualStyleBackColor = true;
+            radStringLittleEndian.AutoSize = true;
+            radStringLittleEndian.Location = new Point(6, 33);
+            radStringLittleEndian.Name = "radStringLittleEndian";
+            radStringLittleEndian.Size = new Size(68, 17);
+            radStringLittleEndian.TabIndex = 1;
+            radStringLittleEndian.Text = "Low byte";
+            toolTip1.SetToolTip(radStringLittleEndian, "Register with value 0x4241 is shown as 'AB'");
+            radStringLittleEndian.UseVisualStyleBackColor = true;
             // 
             // radStringBigEndian
             // 
-            this.radStringBigEndian.AutoSize = true;
-            this.radStringBigEndian.Checked = true;
-            this.radStringBigEndian.Location = new System.Drawing.Point(82, 32);
-            this.radStringBigEndian.Name = "radStringBigEndian";
-            this.radStringBigEndian.Size = new System.Drawing.Size(70, 17);
-            this.radStringBigEndian.TabIndex = 2;
-            this.radStringBigEndian.TabStop = true;
-            this.radStringBigEndian.Text = "High byte";
-            this.toolTip1.SetToolTip(this.radStringBigEndian, "Register with value 0x4241 is shown as \'BA\'");
-            this.radStringBigEndian.UseVisualStyleBackColor = true;
+            radStringBigEndian.AutoSize = true;
+            radStringBigEndian.Checked = true;
+            radStringBigEndian.Location = new Point(87, 33);
+            radStringBigEndian.Name = "radStringBigEndian";
+            radStringBigEndian.Size = new Size(70, 17);
+            radStringBigEndian.TabIndex = 2;
+            radStringBigEndian.TabStop = true;
+            radStringBigEndian.Text = "High byte";
+            toolTip1.SetToolTip(radStringBigEndian, "Register with value 0x4241 is shown as 'BA'");
+            radStringBigEndian.UseVisualStyleBackColor = true;
             // 
             // numericTcpServerPort
             // 
-            this.numericTcpServerPort.Location = new System.Drawing.Point(66, 38);
-            this.numericTcpServerPort.Maximum = new decimal(new int[] {
-            65535,
-            0,
-            0,
-            0});
-            this.numericTcpServerPort.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.numericTcpServerPort.Name = "numericTcpServerPort";
-            this.numericTcpServerPort.Size = new System.Drawing.Size(63, 20);
-            this.numericTcpServerPort.TabIndex = 2;
-            this.toolTip1.SetToolTip(this.numericTcpServerPort, "TCP port number where server listens on (default 502)");
-            this.numericTcpServerPort.Value = new decimal(new int[] {
-            502,
-            0,
-            0,
-            0});
+            numericTcpServerPort.Location = new Point(66, 37);
+            numericTcpServerPort.Maximum = new decimal(new int[] { 65535, 0, 0, 0 });
+            numericTcpServerPort.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
+            numericTcpServerPort.Name = "numericTcpServerPort";
+            numericTcpServerPort.Size = new Size(63, 20);
+            numericTcpServerPort.TabIndex = 2;
+            toolTip1.SetToolTip(numericTcpServerPort, "TCP port number where server listens on (default 502)");
+            numericTcpServerPort.Value = new decimal(new int[] { 502, 0, 0, 0 });
             // 
             // checkboxTcpServerEnable
             // 
-            this.checkboxTcpServerEnable.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.checkboxTcpServerEnable.Location = new System.Drawing.Point(7, 20);
-            this.checkboxTcpServerEnable.Name = "checkboxTcpServerEnable";
-            this.checkboxTcpServerEnable.Size = new System.Drawing.Size(73, 17);
-            this.checkboxTcpServerEnable.TabIndex = 0;
-            this.checkboxTcpServerEnable.Text = "Enable:";
-            this.toolTip1.SetToolTip(this.checkboxTcpServerEnable, "Enable the Modbus/TCP bridge");
-            this.checkboxTcpServerEnable.UseVisualStyleBackColor = true;
+            checkboxTcpServerEnable.CheckAlign = ContentAlignment.MiddleRight;
+            checkboxTcpServerEnable.Location = new Point(7, 17);
+            checkboxTcpServerEnable.Name = "checkboxTcpServerEnable";
+            checkboxTcpServerEnable.Size = new Size(73, 17);
+            checkboxTcpServerEnable.TabIndex = 0;
+            checkboxTcpServerEnable.Text = "Enable:";
+            toolTip1.SetToolTip(checkboxTcpServerEnable, "Enable the Modbus/TCP bridge");
+            checkboxTcpServerEnable.UseVisualStyleBackColor = true;
             // 
             // radInt32LittleEndian
             // 
-            this.radInt32LittleEndian.AutoSize = true;
-            this.radInt32LittleEndian.Checked = true;
-            this.radInt32LittleEndian.Location = new System.Drawing.Point(6, 15);
-            this.radInt32LittleEndian.Name = "radInt32LittleEndian";
-            this.radInt32LittleEndian.Size = new System.Drawing.Size(70, 17);
-            this.radInt32LittleEndian.TabIndex = 0;
-            this.radInt32LittleEndian.TabStop = true;
-            this.radInt32LittleEndian.Text = "Low-High";
-            this.toolTip1.SetToolTip(this.radInt32LittleEndian, "First register is lower 16 bits of 32-bit value (most used)");
-            this.radInt32LittleEndian.UseVisualStyleBackColor = true;
+            radInt32LittleEndian.AutoSize = true;
+            radInt32LittleEndian.Checked = true;
+            radInt32LittleEndian.Location = new Point(6, 16);
+            radInt32LittleEndian.Name = "radInt32LittleEndian";
+            radInt32LittleEndian.Size = new Size(70, 17);
+            radInt32LittleEndian.TabIndex = 0;
+            radInt32LittleEndian.TabStop = true;
+            radInt32LittleEndian.Text = "Low-High";
+            toolTip1.SetToolTip(radInt32LittleEndian, "First register is lower 16 bits of 32-bit value (most used)");
+            radInt32LittleEndian.UseVisualStyleBackColor = true;
             // 
             // radInt32BigEndian
             // 
-            this.radInt32BigEndian.AutoSize = true;
-            this.radInt32BigEndian.Location = new System.Drawing.Point(82, 15);
-            this.radInt32BigEndian.Name = "radInt32BigEndian";
-            this.radInt32BigEndian.Size = new System.Drawing.Size(70, 17);
-            this.radInt32BigEndian.TabIndex = 1;
-            this.radInt32BigEndian.Text = "High-Low";
-            this.toolTip1.SetToolTip(this.radInt32BigEndian, "First register is higher 16 bits of 32-bit value");
-            this.radInt32BigEndian.UseVisualStyleBackColor = true;
+            radInt32BigEndian.AutoSize = true;
+            radInt32BigEndian.Location = new Point(87, 16);
+            radInt32BigEndian.Name = "radInt32BigEndian";
+            radInt32BigEndian.Size = new Size(70, 17);
+            radInt32BigEndian.TabIndex = 1;
+            radInt32BigEndian.Text = "High-Low";
+            toolTip1.SetToolTip(radInt32BigEndian, "First register is higher 16 bits of 32-bit value");
+            radInt32BigEndian.UseVisualStyleBackColor = true;
             // 
             // radWriteFC6
             // 
-            this.radWriteFC6.AutoSize = true;
-            this.radWriteFC6.Location = new System.Drawing.Point(6, 17);
-            this.radWriteFC6.Name = "radWriteFC6";
-            this.radWriteFC6.Size = new System.Drawing.Size(167, 17);
-            this.radWriteFC6.TabIndex = 0;
-            this.radWriteFC6.TabStop = true;
-            this.radWriteFC6.Text = "Use FC6 only (write single reg)";
-            this.toolTip1.SetToolTip(this.radWriteFC6, "Use only function code 6 \'write single register\'");
-            this.radWriteFC6.UseVisualStyleBackColor = true;
+            radWriteFC6.AutoSize = true;
+            radWriteFC6.Location = new Point(6, 16);
+            radWriteFC6.Name = "radWriteFC6";
+            radWriteFC6.Size = new Size(167, 17);
+            radWriteFC6.TabIndex = 0;
+            radWriteFC6.TabStop = true;
+            radWriteFC6.Text = "Use FC6 only (write single reg)";
+            toolTip1.SetToolTip(radWriteFC6, "Use only function code 6 'write single register'");
+            radWriteFC6.UseVisualStyleBackColor = true;
             // 
             // radWriteFC16
             // 
-            this.radWriteFC16.AutoSize = true;
-            this.radWriteFC16.Checked = true;
-            this.radWriteFC16.Location = new System.Drawing.Point(6, 33);
-            this.radWriteFC16.Name = "radWriteFC16";
-            this.radWriteFC16.Size = new System.Drawing.Size(181, 17);
-            this.radWriteFC16.TabIndex = 1;
-            this.radWriteFC16.TabStop = true;
-            this.radWriteFC16.Text = "Use FC16 only (write multiple reg)";
-            this.toolTip1.SetToolTip(this.radWriteFC16, "Use only function code 16 \'write multiple registers\'");
-            this.radWriteFC16.UseVisualStyleBackColor = true;
+            radWriteFC16.AutoSize = true;
+            radWriteFC16.Checked = true;
+            radWriteFC16.Location = new Point(6, 34);
+            radWriteFC16.Name = "radWriteFC16";
+            radWriteFC16.Size = new Size(181, 17);
+            radWriteFC16.TabIndex = 1;
+            radWriteFC16.TabStop = true;
+            radWriteFC16.Text = "Use FC16 only (write multiple reg)";
+            toolTip1.SetToolTip(radWriteFC16, "Use only function code 16 'write multiple registers'");
+            radWriteFC16.UseVisualStyleBackColor = true;
             // 
             // radWriteFCAuto
             // 
-            this.radWriteFCAuto.AutoSize = true;
-            this.radWriteFCAuto.Location = new System.Drawing.Point(6, 49);
-            this.radWriteFCAuto.Name = "radWriteFCAuto";
-            this.radWriteFCAuto.Size = new System.Drawing.Size(140, 17);
-            this.radWriteFCAuto.TabIndex = 2;
-            this.radWriteFCAuto.TabStop = true;
-            this.radWriteFCAuto.Tag = "";
-            this.radWriteFCAuto.Text = "Auto select FC6 or FC16";
-            this.toolTip1.SetToolTip(this.radWriteFCAuto, "Automatically use FC6 for 16-bit registers or FC16 for 32-bit registers");
-            this.radWriteFCAuto.UseVisualStyleBackColor = true;
+            radWriteFCAuto.AutoSize = true;
+            radWriteFCAuto.Location = new Point(6, 52);
+            radWriteFCAuto.Name = "radWriteFCAuto";
+            radWriteFCAuto.Size = new Size(140, 17);
+            radWriteFCAuto.TabIndex = 2;
+            radWriteFCAuto.TabStop = true;
+            radWriteFCAuto.Tag = "";
+            radWriteFCAuto.Text = "Auto select FC6 or FC16";
+            toolTip1.SetToolTip(radWriteFCAuto, "Automatically use FC6 for 16-bit registers or FC16 for 32-bit registers");
+            radWriteFCAuto.UseVisualStyleBackColor = true;
             // 
             // numericMaximumFrameSize
             // 
-            this.numericMaximumFrameSize.Location = new System.Drawing.Point(125, 320);
-            this.numericMaximumFrameSize.Maximum = new decimal(new int[] {
-            256,
-            0,
-            0,
-            0});
-            this.numericMaximumFrameSize.Minimum = new decimal(new int[] {
-            13,
-            0,
-            0,
-            0});
-            this.numericMaximumFrameSize.Name = "numericMaximumFrameSize";
-            this.numericMaximumFrameSize.Size = new System.Drawing.Size(61, 20);
-            this.numericMaximumFrameSize.TabIndex = 9;
-            this.toolTip1.SetToolTip(this.numericMaximumFrameSize, "Maximum number of bytes of query or response frame in RTU format ");
-            this.numericMaximumFrameSize.Value = new decimal(new int[] {
-            256,
-            0,
-            0,
-            0});
+            numericMaximumFrameSize.Location = new Point(136, 318);
+            numericMaximumFrameSize.Maximum = new decimal(new int[] { 256, 0, 0, 0 });
+            numericMaximumFrameSize.Minimum = new decimal(new int[] { 13, 0, 0, 0 });
+            numericMaximumFrameSize.Name = "numericMaximumFrameSize";
+            numericMaximumFrameSize.Size = new Size(61, 20);
+            numericMaximumFrameSize.TabIndex = 9;
+            toolTip1.SetToolTip(numericMaximumFrameSize, "Maximum number of bytes of query or response frame in RTU format ");
+            numericMaximumFrameSize.Value = new decimal(new int[] { 256, 0, 0, 0 });
             // 
             // numericResponseTimeout
             // 
-            this.numericResponseTimeout.Increment = new decimal(new int[] {
-            100,
-            0,
-            0,
-            0});
-            this.numericResponseTimeout.Location = new System.Drawing.Point(124, 296);
-            this.numericResponseTimeout.Maximum = new decimal(new int[] {
-            2147483647,
-            0,
-            0,
-            0});
-            this.numericResponseTimeout.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.numericResponseTimeout.Name = "numericResponseTimeout";
-            this.numericResponseTimeout.Size = new System.Drawing.Size(62, 20);
-            this.numericResponseTimeout.TabIndex = 7;
-            this.toolTip1.SetToolTip(this.numericResponseTimeout, "Response timeout, in milliseconds");
-            this.numericResponseTimeout.Value = new decimal(new int[] {
-            1000,
-            0,
-            0,
-            0});
+            numericResponseTimeout.Increment = new decimal(new int[] { 100, 0, 0, 0 });
+            numericResponseTimeout.Location = new Point(135, 295);
+            numericResponseTimeout.Maximum = new decimal(new int[] { int.MaxValue, 0, 0, 0 });
+            numericResponseTimeout.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
+            numericResponseTimeout.Name = "numericResponseTimeout";
+            numericResponseTimeout.Size = new Size(62, 20);
+            numericResponseTimeout.TabIndex = 7;
+            toolTip1.SetToolTip(numericResponseTimeout, "Response timeout, in milliseconds");
+            numericResponseTimeout.Value = new decimal(new int[] { 1000, 0, 0, 0 });
             // 
             // numericSlaveAddress
             // 
-            this.numericSlaveAddress.Location = new System.Drawing.Point(125, 272);
-            this.numericSlaveAddress.Maximum = new decimal(new int[] {
-            255,
-            0,
-            0,
-            0});
-            this.numericSlaveAddress.Name = "numericSlaveAddress";
-            this.numericSlaveAddress.Size = new System.Drawing.Size(61, 20);
-            this.numericSlaveAddress.TabIndex = 5;
-            this.toolTip1.SetToolTip(this.numericSlaveAddress, "Slave ID (or slave address or unit identifier) 0-255");
-            this.numericSlaveAddress.Value = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
+            numericSlaveAddress.Location = new Point(136, 272);
+            numericSlaveAddress.Maximum = new decimal(new int[] { 255, 0, 0, 0 });
+            numericSlaveAddress.Name = "numericSlaveAddress";
+            numericSlaveAddress.Size = new Size(61, 20);
+            numericSlaveAddress.TabIndex = 5;
+            toolTip1.SetToolTip(numericSlaveAddress, "Slave ID (or slave address or unit identifier) 0-255");
+            numericSlaveAddress.Value = new decimal(new int[] { 1, 0, 0, 0 });
             // 
             // numericIpPort
             // 
-            this.numericIpPort.Location = new System.Drawing.Point(84, 43);
-            this.numericIpPort.Maximum = new decimal(new int[] {
-            65535,
-            0,
-            0,
-            0});
-            this.numericIpPort.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.numericIpPort.Name = "numericIpPort";
-            this.numericIpPort.Size = new System.Drawing.Size(102, 20);
-            this.numericIpPort.TabIndex = 3;
-            this.toolTip1.SetToolTip(this.numericIpPort, "TCP port number, default 502");
-            this.numericIpPort.Value = new decimal(new int[] {
-            502,
-            0,
-            0,
-            0});
+            numericIpPort.Location = new Point(80, 42);
+            numericIpPort.Maximum = new decimal(new int[] { 65535, 0, 0, 0 });
+            numericIpPort.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
+            numericIpPort.Name = "numericIpPort";
+            numericIpPort.Size = new Size(102, 20);
+            numericIpPort.TabIndex = 3;
+            toolTip1.SetToolTip(numericIpPort, "TCP port number, default 502");
+            numericIpPort.Value = new decimal(new int[] { 502, 0, 0, 0 });
             // 
             // comboTcpConnectMode
             // 
-            this.comboTcpConnectMode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboTcpConnectMode.Enabled = false;
-            this.comboTcpConnectMode.FormattingEnabled = true;
-            this.comboTcpConnectMode.Items.AddRange(new object[] {
-            "Long-lived connection",
-            "Short-lived connections"});
-            this.comboTcpConnectMode.Location = new System.Drawing.Point(61, 67);
-            this.comboTcpConnectMode.Name = "comboTcpConnectMode";
-            this.comboTcpConnectMode.Size = new System.Drawing.Size(125, 21);
-            this.comboTcpConnectMode.TabIndex = 5;
-            this.toolTip1.SetToolTip(this.comboTcpConnectMode, "Type of TCP connection:");
-            this.comboTcpConnectMode.Visible = false;
+            comboTcpConnectMode.DropDownStyle = ComboBoxStyle.DropDownList;
+            comboTcpConnectMode.Enabled = false;
+            comboTcpConnectMode.FormattingEnabled = true;
+            comboTcpConnectMode.Items.AddRange(new object[] { "Long-lived connection", "Short-lived connections" });
+            comboTcpConnectMode.Location = new Point(57, 65);
+            comboTcpConnectMode.Name = "comboTcpConnectMode";
+            comboTcpConnectMode.Size = new Size(125, 21);
+            comboTcpConnectMode.TabIndex = 5;
+            toolTip1.SetToolTip(comboTcpConnectMode, "Type of TCP connection:");
+            comboTcpConnectMode.Visible = false;
             // 
             // textboxIpAddress
             // 
-            this.textboxIpAddress.Location = new System.Drawing.Point(84, 18);
-            this.textboxIpAddress.MaxLength = 15;
-            this.textboxIpAddress.Name = "textboxIpAddress";
-            this.textboxIpAddress.Size = new System.Drawing.Size(102, 20);
-            this.textboxIpAddress.TabIndex = 1;
-            this.toolTip1.SetToolTip(this.textboxIpAddress, "Target IP address");
+            textboxIpAddress.Location = new Point(80, 18);
+            textboxIpAddress.MaxLength = 15;
+            textboxIpAddress.Name = "textboxIpAddress";
+            textboxIpAddress.Size = new Size(102, 20);
+            textboxIpAddress.TabIndex = 1;
+            toolTip1.SetToolTip(textboxIpAddress, "Target IP address");
             // 
             // numericSerialEndOfMessageTimeout
             // 
-            this.numericSerialEndOfMessageTimeout.Increment = new decimal(new int[] {
-            10,
-            0,
-            0,
-            0});
-            this.numericSerialEndOfMessageTimeout.Location = new System.Drawing.Point(115, 85);
-            this.numericSerialEndOfMessageTimeout.Maximum = new decimal(new int[] {
-            2147483647,
-            0,
-            0,
-            0});
-            this.numericSerialEndOfMessageTimeout.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.numericSerialEndOfMessageTimeout.Name = "numericSerialEndOfMessageTimeout";
-            this.numericSerialEndOfMessageTimeout.Size = new System.Drawing.Size(71, 20);
-            this.numericSerialEndOfMessageTimeout.TabIndex = 7;
-            this.toolTip1.SetToolTip(this.numericSerialEndOfMessageTimeout, "Response end-of-message timeout, or character timeout, in milliseconds");
-            this.numericSerialEndOfMessageTimeout.Value = new decimal(new int[] {
-            100,
-            0,
-            0,
-            0});
+            numericSerialEndOfMessageTimeout.Increment = new decimal(new int[] { 10, 0, 0, 0 });
+            numericSerialEndOfMessageTimeout.Location = new Point(114, 85);
+            numericSerialEndOfMessageTimeout.Maximum = new decimal(new int[] { int.MaxValue, 0, 0, 0 });
+            numericSerialEndOfMessageTimeout.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
+            numericSerialEndOfMessageTimeout.Name = "numericSerialEndOfMessageTimeout";
+            numericSerialEndOfMessageTimeout.Size = new Size(68, 20);
+            numericSerialEndOfMessageTimeout.TabIndex = 7;
+            toolTip1.SetToolTip(numericSerialEndOfMessageTimeout, "Response end-of-message timeout, or character timeout, in milliseconds");
+            numericSerialEndOfMessageTimeout.Value = new decimal(new int[] { 100, 0, 0, 0 });
             // 
             // checkboxSerialOneWireEchoSuppression
             // 
-            this.checkboxSerialOneWireEchoSuppression.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.checkboxSerialOneWireEchoSuppression.Location = new System.Drawing.Point(18, 108);
-            this.checkboxSerialOneWireEchoSuppression.Name = "checkboxSerialOneWireEchoSuppression";
-            this.checkboxSerialOneWireEchoSuppression.Size = new System.Drawing.Size(169, 17);
-            this.checkboxSerialOneWireEchoSuppression.TabIndex = 8;
-            this.checkboxSerialOneWireEchoSuppression.Text = "One-wire echo suppression:";
-            this.toolTip1.SetToolTip(this.checkboxSerialOneWireEchoSuppression, "Suppress the echo of the command on 1-wire connections");
-            this.checkboxSerialOneWireEchoSuppression.UseVisualStyleBackColor = true;
+            checkboxSerialOneWireEchoSuppression.CheckAlign = ContentAlignment.MiddleRight;
+            checkboxSerialOneWireEchoSuppression.Location = new Point(12, 108);
+            checkboxSerialOneWireEchoSuppression.Name = "checkboxSerialOneWireEchoSuppression";
+            checkboxSerialOneWireEchoSuppression.Size = new Size(170, 17);
+            checkboxSerialOneWireEchoSuppression.TabIndex = 8;
+            checkboxSerialOneWireEchoSuppression.Text = "One-wire echo suppression:";
+            toolTip1.SetToolTip(checkboxSerialOneWireEchoSuppression, "Suppress the echo of the command on 1-wire connections");
+            checkboxSerialOneWireEchoSuppression.UseVisualStyleBackColor = true;
             // 
             // comboSerialParity
             // 
-            this.comboSerialParity.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboSerialParity.FormattingEnabled = true;
-            this.comboSerialParity.Items.AddRange(new object[] {
-            "None",
-            "Odd",
-            "Even",
-            "Mark",
-            "Space"});
-            this.comboSerialParity.Location = new System.Drawing.Point(95, 61);
-            this.comboSerialParity.Name = "comboSerialParity";
-            this.comboSerialParity.Size = new System.Drawing.Size(91, 21);
-            this.comboSerialParity.TabIndex = 5;
-            this.toolTip1.SetToolTip(this.comboSerialParity, "Parity");
+            comboSerialParity.DropDownStyle = ComboBoxStyle.DropDownList;
+            comboSerialParity.FormattingEnabled = true;
+            comboSerialParity.Items.AddRange(new object[] { "None", "Odd", "Even", "Mark", "Space" });
+            comboSerialParity.Location = new Point(91, 61);
+            comboSerialParity.Name = "comboSerialParity";
+            comboSerialParity.Size = new Size(91, 21);
+            comboSerialParity.TabIndex = 5;
+            toolTip1.SetToolTip(comboSerialParity, "Parity");
             // 
             // comboSerialBaudrate
             // 
-            this.comboSerialBaudrate.FormattingEnabled = true;
-            this.comboSerialBaudrate.Items.AddRange(new object[] {
-            "1200",
-            "2400",
-            "4800",
-            "9600",
-            "19200",
-            "38400",
-            "57600",
-            "115200"});
-            this.comboSerialBaudrate.Location = new System.Drawing.Point(95, 37);
-            this.comboSerialBaudrate.MaxLength = 8;
-            this.comboSerialBaudrate.Name = "comboSerialBaudrate";
-            this.comboSerialBaudrate.Size = new System.Drawing.Size(91, 21);
-            this.comboSerialBaudrate.TabIndex = 3;
-            this.toolTip1.SetToolTip(this.comboSerialBaudrate, "Baudrate, bits per second");
+            comboSerialBaudrate.FormattingEnabled = true;
+            comboSerialBaudrate.Items.AddRange(new object[] { "1200", "2400", "4800", "9600", "19200", "38400", "57600", "115200" });
+            comboSerialBaudrate.Location = new Point(91, 37);
+            comboSerialBaudrate.MaxLength = 8;
+            comboSerialBaudrate.Name = "comboSerialBaudrate";
+            comboSerialBaudrate.Size = new Size(91, 21);
+            comboSerialBaudrate.TabIndex = 3;
+            toolTip1.SetToolTip(comboSerialBaudrate, "Baudrate, bits per second");
             // 
             // comboConnection
             // 
-            this.comboConnection.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboConnection.FormattingEnabled = true;
-            this.comboConnection.Items.AddRange(new object[] {
-            "Serial/RTU",
-            "Modbus/TCP",
-            "RTU over TCP"});
-            this.comboConnection.Location = new System.Drawing.Point(74, 18);
-            this.comboConnection.Name = "comboConnection";
-            this.comboConnection.Size = new System.Drawing.Size(112, 21);
-            this.comboConnection.TabIndex = 1;
-            this.toolTip1.SetToolTip(this.comboConnection, "Select connection and protocol");
-            this.comboConnection.SelectedIndexChanged += new System.EventHandler(this.ComboConnection_SelectedIndexChanged);
+            comboConnection.DropDownStyle = ComboBoxStyle.DropDownList;
+            comboConnection.FormattingEnabled = true;
+            comboConnection.Items.AddRange(new object[] { "Serial/RTU", "Modbus/TCP", "RTU over TCP" });
+            comboConnection.Location = new Point(80, 18);
+            comboConnection.Name = "comboConnection";
+            comboConnection.Size = new Size(103, 21);
+            comboConnection.TabIndex = 1;
+            toolTip1.SetToolTip(comboConnection, "Select connection and protocol");
+            comboConnection.SelectedIndexChanged += ComboConnection_SelectedIndexChanged;
             // 
             // textboxHoldingRegistersStart
             // 
-            this.textboxHoldingRegistersStart.Location = new System.Drawing.Point(488, 58);
-            this.textboxHoldingRegistersStart.Name = "textboxHoldingRegistersStart";
-            this.textboxHoldingRegistersStart.ReadOnly = true;
-            this.textboxHoldingRegistersStart.Size = new System.Drawing.Size(165, 20);
-            this.textboxHoldingRegistersStart.TabIndex = 11;
-            this.textboxHoldingRegistersStart.Text = "40001-49999 + 400001-465536";
-            this.textboxHoldingRegistersStart.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.toolTip1.SetToolTip(this.textboxHoldingRegistersStart, "Register numbering scheme, as defined by <holdingregisterstart>in he mbc project " +
-        "file.\r\n");
+            textboxHoldingRegistersStart.Location = new Point(475, 58);
+            textboxHoldingRegistersStart.Name = "textboxHoldingRegistersStart";
+            textboxHoldingRegistersStart.ReadOnly = true;
+            textboxHoldingRegistersStart.Size = new Size(181, 20);
+            textboxHoldingRegistersStart.TabIndex = 10;
+            textboxHoldingRegistersStart.Text = "40001-49999 + 400001-465536";
+            textboxHoldingRegistersStart.TextAlign = HorizontalAlignment.Right;
+            toolTip1.SetToolTip(textboxHoldingRegistersStart, "Register numbering scheme, as defined by <holdingregisterstart>in the mbc project file.\r\n");
             // 
             // picConnectionTypeIsOverride
             // 
-            this.picConnectionTypeIsOverride.Image = ((System.Drawing.Image)(resources.GetObject("picConnectionTypeIsOverride.Image")));
-            this.picConnectionTypeIsOverride.Location = new System.Drawing.Point(188, 18);
-            this.picConnectionTypeIsOverride.Name = "picConnectionTypeIsOverride";
-            this.picConnectionTypeIsOverride.Size = new System.Drawing.Size(20, 20);
-            this.picConnectionTypeIsOverride.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.picConnectionTypeIsOverride.TabIndex = 12;
-            this.picConnectionTypeIsOverride.TabStop = false;
-            this.toolTip1.SetToolTip(this.picConnectionTypeIsOverride, "This parameter is overridden by a command-line option.\r\nThe value shown reflects " +
-        "the command-line setting, not the mbc project file.");
+            picConnectionTypeIsOverride.Image = (Image)resources.GetObject("picConnectionTypeIsOverride.Image");
+            picConnectionTypeIsOverride.Location = new Point(186, 18);
+            picConnectionTypeIsOverride.Name = "picConnectionTypeIsOverride";
+            picConnectionTypeIsOverride.Size = new Size(20, 20);
+            picConnectionTypeIsOverride.SizeMode = PictureBoxSizeMode.StretchImage;
+            picConnectionTypeIsOverride.TabIndex = 12;
+            picConnectionTypeIsOverride.TabStop = false;
+            toolTip1.SetToolTip(picConnectionTypeIsOverride, "This parameter is overridden by a command-line option.\r\nThe value shown reflects the command-line setting, not the mbc project file.");
+            picConnectionTypeIsOverride.Visible = false;
             // 
             // picPortIsOverride
             // 
-            this.picPortIsOverride.Image = ((System.Drawing.Image)(resources.GetObject("picPortIsOverride.Image")));
-            this.picPortIsOverride.Location = new System.Drawing.Point(188, 58);
-            this.picPortIsOverride.Name = "picPortIsOverride";
-            this.picPortIsOverride.Size = new System.Drawing.Size(20, 20);
-            this.picPortIsOverride.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.picPortIsOverride.TabIndex = 13;
-            this.picPortIsOverride.TabStop = false;
-            this.toolTip1.SetToolTip(this.picPortIsOverride, "This parameter is overridden by a command-line option.\r\nThe value shown reflects " +
-        "the command-line setting, not the mbc project file.");
+            picPortIsOverride.Image = (Image)resources.GetObject("picPortIsOverride.Image");
+            picPortIsOverride.Location = new Point(186, 13);
+            picPortIsOverride.Name = "picPortIsOverride";
+            picPortIsOverride.Size = new Size(20, 20);
+            picPortIsOverride.SizeMode = PictureBoxSizeMode.StretchImage;
+            picPortIsOverride.TabIndex = 13;
+            picPortIsOverride.TabStop = false;
+            toolTip1.SetToolTip(picPortIsOverride, "This parameter is overridden by a command-line option.\r\nThe value shown reflects the command-line setting, not the mbc project file.");
+            picPortIsOverride.Visible = false;
             // 
             // picBaudrateIsOverride
             // 
-            this.picBaudrateIsOverride.Image = ((System.Drawing.Image)(resources.GetObject("picBaudrateIsOverride.Image")));
-            this.picBaudrateIsOverride.Location = new System.Drawing.Point(188, 82);
-            this.picBaudrateIsOverride.Name = "picBaudrateIsOverride";
-            this.picBaudrateIsOverride.Size = new System.Drawing.Size(20, 20);
-            this.picBaudrateIsOverride.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.picBaudrateIsOverride.TabIndex = 14;
-            this.picBaudrateIsOverride.TabStop = false;
-            this.toolTip1.SetToolTip(this.picBaudrateIsOverride, "This parameter is overridden by a command-line option.\r\nThe value shown reflects " +
-        "the command-line setting, not the mbc project file.");
+            picBaudrateIsOverride.Image = (Image)resources.GetObject("picBaudrateIsOverride.Image");
+            picBaudrateIsOverride.Location = new Point(186, 37);
+            picBaudrateIsOverride.Name = "picBaudrateIsOverride";
+            picBaudrateIsOverride.Size = new Size(20, 20);
+            picBaudrateIsOverride.SizeMode = PictureBoxSizeMode.StretchImage;
+            picBaudrateIsOverride.TabIndex = 14;
+            picBaudrateIsOverride.TabStop = false;
+            toolTip1.SetToolTip(picBaudrateIsOverride, "This parameter is overridden by a command-line option.\r\nThe value shown reflects the command-line setting, not the mbc project file.");
+            picBaudrateIsOverride.Visible = false;
             // 
             // picParityIsOverride
             // 
-            this.picParityIsOverride.Image = ((System.Drawing.Image)(resources.GetObject("picParityIsOverride.Image")));
-            this.picParityIsOverride.Location = new System.Drawing.Point(188, 106);
-            this.picParityIsOverride.Name = "picParityIsOverride";
-            this.picParityIsOverride.Size = new System.Drawing.Size(20, 20);
-            this.picParityIsOverride.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.picParityIsOverride.TabIndex = 15;
-            this.picParityIsOverride.TabStop = false;
-            this.toolTip1.SetToolTip(this.picParityIsOverride, "This parameter is overridden by a command-line option.\r\nThe value shown reflects " +
-        "the command-line setting, not the mbc project file.");
+            picParityIsOverride.Image = (Image)resources.GetObject("picParityIsOverride.Image");
+            picParityIsOverride.Location = new Point(186, 61);
+            picParityIsOverride.Name = "picParityIsOverride";
+            picParityIsOverride.Size = new Size(20, 20);
+            picParityIsOverride.SizeMode = PictureBoxSizeMode.StretchImage;
+            picParityIsOverride.TabIndex = 15;
+            picParityIsOverride.TabStop = false;
+            toolTip1.SetToolTip(picParityIsOverride, "This parameter is overridden by a command-line option.\r\nThe value shown reflects the command-line setting, not the mbc project file.");
+            picParityIsOverride.Visible = false;
             // 
             // picEndofmessagetimeoutIsOverride
             // 
-            this.picEndofmessagetimeoutIsOverride.Image = ((System.Drawing.Image)(resources.GetObject("picEndofmessagetimeoutIsOverride.Image")));
-            this.picEndofmessagetimeoutIsOverride.Location = new System.Drawing.Point(188, 129);
-            this.picEndofmessagetimeoutIsOverride.Name = "picEndofmessagetimeoutIsOverride";
-            this.picEndofmessagetimeoutIsOverride.Size = new System.Drawing.Size(20, 20);
-            this.picEndofmessagetimeoutIsOverride.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.picEndofmessagetimeoutIsOverride.TabIndex = 16;
-            this.picEndofmessagetimeoutIsOverride.TabStop = false;
-            this.toolTip1.SetToolTip(this.picEndofmessagetimeoutIsOverride, "This parameter is overridden by a command-line option.\r\nThe value shown reflects " +
-        "the command-line setting, not the mbc project file.");
+            picEndofmessagetimeoutIsOverride.Image = (Image)resources.GetObject("picEndofmessagetimeoutIsOverride.Image");
+            picEndofmessagetimeoutIsOverride.Location = new Point(186, 85);
+            picEndofmessagetimeoutIsOverride.Name = "picEndofmessagetimeoutIsOverride";
+            picEndofmessagetimeoutIsOverride.Size = new Size(20, 20);
+            picEndofmessagetimeoutIsOverride.SizeMode = PictureBoxSizeMode.StretchImage;
+            picEndofmessagetimeoutIsOverride.TabIndex = 16;
+            picEndofmessagetimeoutIsOverride.TabStop = false;
+            toolTip1.SetToolTip(picEndofmessagetimeoutIsOverride, "This parameter is overridden by a command-line option.\r\nThe value shown reflects the command-line setting, not the mbc project file.");
+            picEndofmessagetimeoutIsOverride.Visible = false;
             // 
             // picIPAddressIsOverride
             // 
-            this.picIPAddressIsOverride.Image = ((System.Drawing.Image)(resources.GetObject("picIPAddressIsOverride.Image")));
-            this.picIPAddressIsOverride.Location = new System.Drawing.Point(188, 192);
-            this.picIPAddressIsOverride.Name = "picIPAddressIsOverride";
-            this.picIPAddressIsOverride.Size = new System.Drawing.Size(20, 20);
-            this.picIPAddressIsOverride.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.picIPAddressIsOverride.TabIndex = 17;
-            this.picIPAddressIsOverride.TabStop = false;
-            this.toolTip1.SetToolTip(this.picIPAddressIsOverride, "This parameter is overridden by a command-line option.\r\nThe value shown reflects " +
-        "the command-line setting, not the mbc project file.");
+            picIPAddressIsOverride.Image = (Image)resources.GetObject("picIPAddressIsOverride.Image");
+            picIPAddressIsOverride.Location = new Point(185, 18);
+            picIPAddressIsOverride.Name = "picIPAddressIsOverride";
+            picIPAddressIsOverride.Size = new Size(20, 20);
+            picIPAddressIsOverride.SizeMode = PictureBoxSizeMode.StretchImage;
+            picIPAddressIsOverride.TabIndex = 17;
+            picIPAddressIsOverride.TabStop = false;
+            toolTip1.SetToolTip(picIPAddressIsOverride, "This parameter is overridden by a command-line option.\r\nThe value shown reflects the command-line setting, not the mbc project file.");
+            picIPAddressIsOverride.Visible = false;
             // 
             // picIPPortIsOverride
             // 
-            this.picIPPortIsOverride.Image = ((System.Drawing.Image)(resources.GetObject("picIPPortIsOverride.Image")));
-            this.picIPPortIsOverride.Location = new System.Drawing.Point(188, 218);
-            this.picIPPortIsOverride.Name = "picIPPortIsOverride";
-            this.picIPPortIsOverride.Size = new System.Drawing.Size(20, 20);
-            this.picIPPortIsOverride.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.picIPPortIsOverride.TabIndex = 18;
-            this.picIPPortIsOverride.TabStop = false;
-            this.toolTip1.SetToolTip(this.picIPPortIsOverride, "This parameter is overridden by a command-line option.\r\nThe value shown reflects " +
-        "the command-line setting, not the mbc project file.");
+            picIPPortIsOverride.Image = (Image)resources.GetObject("picIPPortIsOverride.Image");
+            picIPPortIsOverride.Location = new Point(186, 42);
+            picIPPortIsOverride.Name = "picIPPortIsOverride";
+            picIPPortIsOverride.Size = new Size(20, 20);
+            picIPPortIsOverride.SizeMode = PictureBoxSizeMode.StretchImage;
+            picIPPortIsOverride.TabIndex = 18;
+            picIPPortIsOverride.TabStop = false;
+            toolTip1.SetToolTip(picIPPortIsOverride, "This parameter is overridden by a command-line option.\r\nThe value shown reflects the command-line setting, not the mbc project file.");
+            picIPPortIsOverride.Visible = false;
             // 
             // picOnewireechosuppressionIsOverride
             // 
-            this.picOnewireechosuppressionIsOverride.Image = ((System.Drawing.Image)(resources.GetObject("picOnewireechosuppressionIsOverride.Image")));
-            this.picOnewireechosuppressionIsOverride.Location = new System.Drawing.Point(188, 151);
-            this.picOnewireechosuppressionIsOverride.Name = "picOnewireechosuppressionIsOverride";
-            this.picOnewireechosuppressionIsOverride.Size = new System.Drawing.Size(20, 20);
-            this.picOnewireechosuppressionIsOverride.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.picOnewireechosuppressionIsOverride.TabIndex = 19;
-            this.picOnewireechosuppressionIsOverride.TabStop = false;
-            this.toolTip1.SetToolTip(this.picOnewireechosuppressionIsOverride, "This parameter is overridden by a command-line option.\r\nThe value shown reflects " +
-        "the command-line setting, not the mbc project file.");
+            picOnewireechosuppressionIsOverride.Image = (Image)resources.GetObject("picOnewireechosuppressionIsOverride.Image");
+            picOnewireechosuppressionIsOverride.Location = new Point(185, 105);
+            picOnewireechosuppressionIsOverride.Name = "picOnewireechosuppressionIsOverride";
+            picOnewireechosuppressionIsOverride.Size = new Size(20, 20);
+            picOnewireechosuppressionIsOverride.SizeMode = PictureBoxSizeMode.StretchImage;
+            picOnewireechosuppressionIsOverride.TabIndex = 19;
+            picOnewireechosuppressionIsOverride.TabStop = false;
+            toolTip1.SetToolTip(picOnewireechosuppressionIsOverride, "This parameter is overridden by a command-line option.\r\nThe value shown reflects the command-line setting, not the mbc project file.");
+            picOnewireechosuppressionIsOverride.Visible = false;
             // 
             // picSlaveIDIsOverride
             // 
-            this.picSlaveIDIsOverride.Image = ((System.Drawing.Image)(resources.GetObject("picSlaveIDIsOverride.Image")));
-            this.picSlaveIDIsOverride.Location = new System.Drawing.Point(188, 272);
-            this.picSlaveIDIsOverride.Name = "picSlaveIDIsOverride";
-            this.picSlaveIDIsOverride.Size = new System.Drawing.Size(20, 20);
-            this.picSlaveIDIsOverride.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.picSlaveIDIsOverride.TabIndex = 20;
-            this.picSlaveIDIsOverride.TabStop = false;
-            this.toolTip1.SetToolTip(this.picSlaveIDIsOverride, "This parameter is overridden by a command-line option.\r\nThe value shown reflects " +
-        "the command-line setting, not the mbc project file.");
+            picSlaveIDIsOverride.Image = (Image)resources.GetObject("picSlaveIDIsOverride.Image");
+            picSlaveIDIsOverride.Location = new Point(199, 272);
+            picSlaveIDIsOverride.Name = "picSlaveIDIsOverride";
+            picSlaveIDIsOverride.Size = new Size(20, 20);
+            picSlaveIDIsOverride.SizeMode = PictureBoxSizeMode.StretchImage;
+            picSlaveIDIsOverride.TabIndex = 20;
+            picSlaveIDIsOverride.TabStop = false;
+            toolTip1.SetToolTip(picSlaveIDIsOverride, "This parameter is overridden by a command-line option.\r\nThe value shown reflects the command-line setting, not the mbc project file.");
+            picSlaveIDIsOverride.Visible = false;
             // 
             // picResponsetimeoutIsOverride
             // 
-            this.picResponsetimeoutIsOverride.Image = ((System.Drawing.Image)(resources.GetObject("picResponsetimeoutIsOverride.Image")));
-            this.picResponsetimeoutIsOverride.Location = new System.Drawing.Point(188, 296);
-            this.picResponsetimeoutIsOverride.Name = "picResponsetimeoutIsOverride";
-            this.picResponsetimeoutIsOverride.Size = new System.Drawing.Size(20, 20);
-            this.picResponsetimeoutIsOverride.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.picResponsetimeoutIsOverride.TabIndex = 21;
-            this.picResponsetimeoutIsOverride.TabStop = false;
-            this.toolTip1.SetToolTip(this.picResponsetimeoutIsOverride, "This parameter is overridden by a command-line option.\r\nThe value shown reflects " +
-        "the command-line setting, not the mbc project file.");
+            picResponsetimeoutIsOverride.Image = (Image)resources.GetObject("picResponsetimeoutIsOverride.Image");
+            picResponsetimeoutIsOverride.Location = new Point(199, 295);
+            picResponsetimeoutIsOverride.Name = "picResponsetimeoutIsOverride";
+            picResponsetimeoutIsOverride.Size = new Size(20, 20);
+            picResponsetimeoutIsOverride.SizeMode = PictureBoxSizeMode.StretchImage;
+            picResponsetimeoutIsOverride.TabIndex = 21;
+            picResponsetimeoutIsOverride.TabStop = false;
+            toolTip1.SetToolTip(picResponsetimeoutIsOverride, "This parameter is overridden by a command-line option.\r\nThe value shown reflects the command-line setting, not the mbc project file.");
+            picResponsetimeoutIsOverride.Visible = false;
             // 
             // picInterframedelayIsOverride
             // 
-            this.picInterframedelayIsOverride.Image = ((System.Drawing.Image)(resources.GetObject("picInterframedelayIsOverride.Image")));
-            this.picInterframedelayIsOverride.Location = new System.Drawing.Point(188, 344);
-            this.picInterframedelayIsOverride.Name = "picInterframedelayIsOverride";
-            this.picInterframedelayIsOverride.Size = new System.Drawing.Size(20, 20);
-            this.picInterframedelayIsOverride.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.picInterframedelayIsOverride.TabIndex = 22;
-            this.picInterframedelayIsOverride.TabStop = false;
-            this.toolTip1.SetToolTip(this.picInterframedelayIsOverride, "This parameter is overridden by a command-line option.\r\nThe value shown reflects " +
-        "the command-line setting, not the mbc project file.");
+            picInterframedelayIsOverride.Image = (Image)resources.GetObject("picInterframedelayIsOverride.Image");
+            picInterframedelayIsOverride.Location = new Point(199, 341);
+            picInterframedelayIsOverride.Name = "picInterframedelayIsOverride";
+            picInterframedelayIsOverride.Size = new Size(20, 20);
+            picInterframedelayIsOverride.SizeMode = PictureBoxSizeMode.StretchImage;
+            picInterframedelayIsOverride.TabIndex = 22;
+            picInterframedelayIsOverride.TabStop = false;
+            toolTip1.SetToolTip(picInterframedelayIsOverride, "This parameter is overridden by a command-line option.\r\nThe value shown reflects the command-line setting, not the mbc project file.");
+            picInterframedelayIsOverride.Visible = false;
             // 
             // picSamplerateIsOverride
             // 
-            this.picSamplerateIsOverride.Image = ((System.Drawing.Image)(resources.GetObject("picSamplerateIsOverride.Image")));
-            this.picSamplerateIsOverride.Location = new System.Drawing.Point(654, 15);
-            this.picSamplerateIsOverride.Name = "picSamplerateIsOverride";
-            this.picSamplerateIsOverride.Size = new System.Drawing.Size(20, 20);
-            this.picSamplerateIsOverride.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.picSamplerateIsOverride.TabIndex = 23;
-            this.picSamplerateIsOverride.TabStop = false;
-            this.toolTip1.SetToolTip(this.picSamplerateIsOverride, "This parameter is overridden by a command-line option.\r\nThe value shown reflects " +
-        "the command-line setting, not the mbc project file.");
+            picSamplerateIsOverride.Image = (Image)resources.GetObject("picSamplerateIsOverride.Image");
+            picSamplerateIsOverride.Location = new Point(658, 16);
+            picSamplerateIsOverride.Name = "picSamplerateIsOverride";
+            picSamplerateIsOverride.Size = new Size(20, 20);
+            picSamplerateIsOverride.SizeMode = PictureBoxSizeMode.StretchImage;
+            picSamplerateIsOverride.TabIndex = 23;
+            picSamplerateIsOverride.TabStop = false;
+            toolTip1.SetToolTip(picSamplerateIsOverride, "This parameter is overridden by a command-line option.\r\nThe value shown reflects the command-line setting, not the mbc project file.");
+            picSamplerateIsOverride.Visible = false;
             // 
             // picMaxFrameSizeIsOverride
             // 
-            this.picMaxFrameSizeIsOverride.Image = ((System.Drawing.Image)(resources.GetObject("picMaxFrameSizeIsOverride.Image")));
-            this.picMaxFrameSizeIsOverride.Location = new System.Drawing.Point(188, 320);
-            this.picMaxFrameSizeIsOverride.Name = "picMaxFrameSizeIsOverride";
-            this.picMaxFrameSizeIsOverride.Size = new System.Drawing.Size(20, 20);
-            this.picMaxFrameSizeIsOverride.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.picMaxFrameSizeIsOverride.TabIndex = 23;
-            this.picMaxFrameSizeIsOverride.TabStop = false;
-            this.toolTip1.SetToolTip(this.picMaxFrameSizeIsOverride, "This parameter is overridden by a command-line option.\r\nThe value shown reflects " +
-        "the command-line setting, not the mbc project file.");
+            picMaxFrameSizeIsOverride.Image = (Image)resources.GetObject("picMaxFrameSizeIsOverride.Image");
+            picMaxFrameSizeIsOverride.Location = new Point(199, 318);
+            picMaxFrameSizeIsOverride.Name = "picMaxFrameSizeIsOverride";
+            picMaxFrameSizeIsOverride.Size = new Size(20, 20);
+            picMaxFrameSizeIsOverride.SizeMode = PictureBoxSizeMode.StretchImage;
+            picMaxFrameSizeIsOverride.TabIndex = 23;
+            picMaxFrameSizeIsOverride.TabStop = false;
+            toolTip1.SetToolTip(picMaxFrameSizeIsOverride, "This parameter is overridden by a command-line option.\r\nThe value shown reflects the command-line setting, not the mbc project file.");
+            picMaxFrameSizeIsOverride.Visible = false;
             // 
             // picwriteregFCIsOverride
             // 
-            this.picwriteregFCIsOverride.Image = ((System.Drawing.Image)(resources.GetObject("picwriteregFCIsOverride.Image")));
-            this.picwriteregFCIsOverride.Location = new System.Drawing.Point(188, 13);
-            this.picwriteregFCIsOverride.Name = "picwriteregFCIsOverride";
-            this.picwriteregFCIsOverride.Size = new System.Drawing.Size(20, 20);
-            this.picwriteregFCIsOverride.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.picwriteregFCIsOverride.TabIndex = 13;
-            this.picwriteregFCIsOverride.TabStop = false;
-            this.toolTip1.SetToolTip(this.picwriteregFCIsOverride, "This parameter is overridden by a command-line option.\r\nThe value shown reflects " +
-        "the command-line setting, not the mbc project file.");
+            picwriteregFCIsOverride.Image = (Image)resources.GetObject("picwriteregFCIsOverride.Image");
+            picwriteregFCIsOverride.Location = new Point(188, 16);
+            picwriteregFCIsOverride.Name = "picwriteregFCIsOverride";
+            picwriteregFCIsOverride.Size = new Size(20, 20);
+            picwriteregFCIsOverride.SizeMode = PictureBoxSizeMode.StretchImage;
+            picwriteregFCIsOverride.TabIndex = 13;
+            picwriteregFCIsOverride.TabStop = false;
+            toolTip1.SetToolTip(picwriteregFCIsOverride, "This parameter is overridden by a command-line option.\r\nThe value shown reflects the command-line setting, not the mbc project file.");
+            picwriteregFCIsOverride.Visible = false;
             // 
             // numericInterFrameDelay
             // 
-            this.numericInterFrameDelay.Location = new System.Drawing.Point(126, 344);
-            this.numericInterFrameDelay.Maximum = new decimal(new int[] {
-            2147483647,
-            0,
-            0,
-            0});
-            this.numericInterFrameDelay.Name = "numericInterFrameDelay";
-            this.numericInterFrameDelay.Size = new System.Drawing.Size(61, 20);
-            this.numericInterFrameDelay.TabIndex = 11;
-            this.toolTip1.SetToolTip(this.numericInterFrameDelay, "Delay between response and next query, in milliseconds, 0 is auto, auto is 4Tchar" +
-        " for serial channels and 0ms for TCP channels");
+            numericInterFrameDelay.Location = new Point(137, 341);
+            numericInterFrameDelay.Maximum = new decimal(new int[] { int.MaxValue, 0, 0, 0 });
+            numericInterFrameDelay.Name = "numericInterFrameDelay";
+            numericInterFrameDelay.Size = new Size(61, 20);
+            numericInterFrameDelay.TabIndex = 11;
+            toolTip1.SetToolTip(numericInterFrameDelay, "Delay between response and next query, in milliseconds, 0 is auto, auto is 4Tchar for serial channels and 0ms for TCP channels");
             // 
             // comboSerialPort
             // 
-            this.comboSerialPort.FormattingEnabled = true;
-            this.comboSerialPort.Location = new System.Drawing.Point(95, 13);
-            this.comboSerialPort.MaxLength = 30;
-            this.comboSerialPort.Name = "comboSerialPort";
-            this.comboSerialPort.Size = new System.Drawing.Size(91, 21);
-            this.comboSerialPort.TabIndex = 1;
-            this.toolTip1.SetToolTip(this.comboSerialPort, "Serial port name. Dropdown shows existing ports");
+            comboSerialPort.FormattingEnabled = true;
+            comboSerialPort.Location = new Point(91, 13);
+            comboSerialPort.MaxLength = 30;
+            comboSerialPort.Name = "comboSerialPort";
+            comboSerialPort.Size = new Size(91, 21);
+            comboSerialPort.TabIndex = 1;
+            toolTip1.SetToolTip(comboSerialPort, "Serial port name. Dropdown shows existing ports");
             // 
             // label5
             // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(459, 44);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(141, 13);
-            this.label5.TabIndex = 10;
-            this.label5.Text = "Register numbering scheme:";
+            label5.AutoSize = true;
+            label5.Location = new Point(471, 44);
+            label5.Name = "label5";
+            label5.Size = new Size(141, 13);
+            label5.TabIndex = 9;
+            label5.Text = "Register numbering scheme:";
             // 
             // panel2
             // 
-            this.panel2.Controls.Add(this.label17);
-            this.panel2.Controls.Add(this.comboStringEncoding);
-            this.panel2.Controls.Add(this.picSamplerateIsOverride);
-            this.panel2.Controls.Add(this.groupBox5);
-            this.panel2.Controls.Add(this.textboxHoldingRegistersStart);
-            this.panel2.Controls.Add(this.label5);
-            this.panel2.Controls.Add(this.numericSamplerate);
-            this.panel2.Controls.Add(this.label6);
-            this.panel2.Controls.Add(this.groupBox3);
-            this.panel2.Controls.Add(this.groupBox4);
-            this.panel2.Controls.Add(this.groupboxModbusTcpServer);
-            this.panel2.Controls.Add(this.groupBox2);
-            this.panel2.Controls.Add(this.groupBox1);
-            this.panel2.Controls.Add(this.groupboxConnection);
-            this.panel2.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel2.Location = new System.Drawing.Point(0, 38);
-            this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(695, 382);
-            this.panel2.TabIndex = 1;
+            panel2.Controls.Add(label17);
+            panel2.Controls.Add(comboStringEncoding);
+            panel2.Controls.Add(picSamplerateIsOverride);
+            panel2.Controls.Add(textboxHoldingRegistersStart);
+            panel2.Controls.Add(label5);
+            panel2.Controls.Add(numericSamplerate);
+            panel2.Controls.Add(label6);
+            panel2.Controls.Add(groupBox3);
+            panel2.Controls.Add(groupBox4);
+            panel2.Controls.Add(groupboxModbusTcpServer);
+            panel2.Controls.Add(groupBox2);
+            panel2.Controls.Add(groupBox1);
+            panel2.Controls.Add(groupboxConnection);
+            panel2.Dock = DockStyle.Top;
+            panel2.Location = new Point(0, 38);
+            panel2.Name = "panel2";
+            panel2.Size = new Size(699, 382);
+            panel2.TabIndex = 1;
             // 
             // label17
             // 
-            this.label17.AutoSize = true;
-            this.label17.Location = new System.Drawing.Point(225, 246);
-            this.label17.Name = "label17";
-            this.label17.Size = new System.Drawing.Size(133, 13);
-            this.label17.TabIndex = 5;
-            this.label17.Text = "String encoding/decoding:";
+            label17.AutoSize = true;
+            label17.Location = new Point(241, 252);
+            label17.Name = "label17";
+            label17.Size = new Size(133, 13);
+            label17.TabIndex = 5;
+            label17.Text = "String encoding/decoding:";
             // 
             // comboStringEncoding
             // 
-            this.comboStringEncoding.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboStringEncoding.FormattingEnabled = true;
-            this.comboStringEncoding.Location = new System.Drawing.Point(227, 262);
-            this.comboStringEncoding.Name = "comboStringEncoding";
-            this.comboStringEncoding.Size = new System.Drawing.Size(208, 21);
-            this.comboStringEncoding.TabIndex = 6;
-            // 
-            // groupBox5
-            // 
-            this.groupBox5.Location = new System.Drawing.Point(444, 10);
-            this.groupBox5.Name = "groupBox5";
-            this.groupBox5.Size = new System.Drawing.Size(8, 364);
-            this.groupBox5.TabIndex = 7;
-            this.groupBox5.TabStop = false;
+            comboStringEncoding.DropDownStyle = ComboBoxStyle.DropDownList;
+            comboStringEncoding.FormattingEnabled = true;
+            comboStringEncoding.Location = new Point(243, 268);
+            comboStringEncoding.Name = "comboStringEncoding";
+            comboStringEncoding.Size = new Size(218, 21);
+            comboStringEncoding.TabIndex = 6;
             // 
             // label6
             // 
-            this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(459, 18);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(88, 13);
-            this.label6.TabIndex = 8;
-            this.label6.Text = "Sample rate (ms):";
+            label6.AutoSize = true;
+            label6.Location = new Point(471, 18);
+            label6.Name = "label6";
+            label6.Size = new Size(88, 13);
+            label6.TabIndex = 7;
+            label6.Text = "Sample rate (ms):";
             // 
             // groupBox3
             // 
-            this.groupBox3.Controls.Add(this.radFloat32LittleEndian);
-            this.groupBox3.Controls.Add(this.radFloat32BigEndian);
-            this.groupBox3.Location = new System.Drawing.Point(227, 133);
-            this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(210, 39);
-            this.groupBox3.TabIndex = 3;
-            this.groupBox3.TabStop = false;
-            this.groupBox3.Text = "32-bit float word order";
+            groupBox3.Controls.Add(radFloat32BigEndian);
+            groupBox3.Controls.Add(radFloat32LittleEndian);
+            groupBox3.Location = new Point(243, 137);
+            groupBox3.Name = "groupBox3";
+            groupBox3.Size = new Size(218, 39);
+            groupBox3.TabIndex = 3;
+            groupBox3.TabStop = false;
+            groupBox3.Text = "32-bit float word order";
             // 
             // groupBox4
             // 
-            this.groupBox4.Controls.Add(this.radStringLittleEndian);
-            this.groupBox4.Controls.Add(this.radStringBigEndian);
-            this.groupBox4.Controls.Add(this.label14);
-            this.groupBox4.Location = new System.Drawing.Point(227, 180);
-            this.groupBox4.Name = "groupBox4";
-            this.groupBox4.Size = new System.Drawing.Size(210, 63);
-            this.groupBox4.TabIndex = 4;
-            this.groupBox4.TabStop = false;
-            this.groupBox4.Text = "String/ASCII byte order";
+            groupBox4.Controls.Add(radStringBigEndian);
+            groupBox4.Controls.Add(radStringLittleEndian);
+            groupBox4.Controls.Add(label14);
+            groupBox4.Location = new Point(243, 184);
+            groupBox4.Name = "groupBox4";
+            groupBox4.Size = new Size(218, 55);
+            groupBox4.TabIndex = 4;
+            groupBox4.TabStop = false;
+            groupBox4.Text = "String/ASCII byte order";
             // 
             // label14
             // 
-            this.label14.AutoSize = true;
-            this.label14.Location = new System.Drawing.Point(3, 16);
-            this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(88, 13);
-            this.label14.TabIndex = 0;
-            this.label14.Text = "First character in:";
+            label14.AutoSize = true;
+            label14.Location = new Point(3, 17);
+            label14.Name = "label14";
+            label14.Size = new Size(88, 13);
+            label14.TabIndex = 0;
+            label14.Text = "First character in:";
             // 
             // groupboxModbusTcpServer
             // 
-            this.groupboxModbusTcpServer.Controls.Add(this.numericTcpServerPort);
-            this.groupboxModbusTcpServer.Controls.Add(this.checkboxTcpServerEnable);
-            this.groupboxModbusTcpServer.Controls.Add(this.label13);
-            this.groupboxModbusTcpServer.Location = new System.Drawing.Point(463, 180);
-            this.groupboxModbusTcpServer.Name = "groupboxModbusTcpServer";
-            this.groupboxModbusTcpServer.Size = new System.Drawing.Size(178, 75);
-            this.groupboxModbusTcpServer.TabIndex = 12;
-            this.groupboxModbusTcpServer.TabStop = false;
-            this.groupboxModbusTcpServer.Text = "Modbus/TCP bridge server";
+            groupboxModbusTcpServer.Controls.Add(numericTcpServerPort);
+            groupboxModbusTcpServer.Controls.Add(checkboxTcpServerEnable);
+            groupboxModbusTcpServer.Controls.Add(label13);
+            groupboxModbusTcpServer.Location = new Point(475, 93);
+            groupboxModbusTcpServer.Name = "groupboxModbusTcpServer";
+            groupboxModbusTcpServer.Size = new Size(178, 67);
+            groupboxModbusTcpServer.TabIndex = 11;
+            groupboxModbusTcpServer.TabStop = false;
+            groupboxModbusTcpServer.Text = "Modbus/TCP bridge server";
             // 
             // label13
             // 
-            this.label13.AutoSize = true;
-            this.label13.Location = new System.Drawing.Point(8, 40);
-            this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(52, 13);
-            this.label13.TabIndex = 1;
-            this.label13.Text = "TCP port:";
+            label13.AutoSize = true;
+            label13.Location = new Point(8, 39);
+            label13.Name = "label13";
+            label13.Size = new Size(52, 13);
+            label13.TabIndex = 1;
+            label13.Text = "TCP port:";
             // 
             // groupBox2
             // 
-            this.groupBox2.Controls.Add(this.radInt32LittleEndian);
-            this.groupBox2.Controls.Add(this.radInt32BigEndian);
-            this.groupBox2.Location = new System.Drawing.Point(227, 89);
-            this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(210, 36);
-            this.groupBox2.TabIndex = 2;
-            this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "32-bit integer word order";
+            groupBox2.Controls.Add(radInt32BigEndian);
+            groupBox2.Controls.Add(radInt32LittleEndian);
+            groupBox2.Location = new Point(243, 93);
+            groupBox2.Name = "groupBox2";
+            groupBox2.Size = new Size(218, 38);
+            groupBox2.TabIndex = 2;
+            groupBox2.TabStop = false;
+            groupBox2.Text = "32-bit integer word order";
             // 
             // groupBox1
             // 
-            this.groupBox1.Controls.Add(this.picwriteregFCIsOverride);
-            this.groupBox1.Controls.Add(this.radWriteFC6);
-            this.groupBox1.Controls.Add(this.radWriteFC16);
-            this.groupBox1.Controls.Add(this.radWriteFCAuto);
-            this.groupBox1.Location = new System.Drawing.Point(227, 10);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(210, 71);
-            this.groupBox1.TabIndex = 1;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Functioncode to write holding registers";
+            groupBox1.Controls.Add(picwriteregFCIsOverride);
+            groupBox1.Controls.Add(radWriteFC6);
+            groupBox1.Controls.Add(radWriteFC16);
+            groupBox1.Controls.Add(radWriteFCAuto);
+            groupBox1.Location = new Point(243, 10);
+            groupBox1.Name = "groupBox1";
+            groupBox1.Size = new Size(218, 74);
+            groupBox1.TabIndex = 1;
+            groupBox1.TabStop = false;
+            groupBox1.Text = "Functioncode to write holding registers";
             // 
             // groupboxConnection
             // 
-            this.groupboxConnection.Controls.Add(this.picMaxFrameSizeIsOverride);
-            this.groupboxConnection.Controls.Add(this.picInterframedelayIsOverride);
-            this.groupboxConnection.Controls.Add(this.picResponsetimeoutIsOverride);
-            this.groupboxConnection.Controls.Add(this.picSlaveIDIsOverride);
-            this.groupboxConnection.Controls.Add(this.picOnewireechosuppressionIsOverride);
-            this.groupboxConnection.Controls.Add(this.picIPPortIsOverride);
-            this.groupboxConnection.Controls.Add(this.picIPAddressIsOverride);
-            this.groupboxConnection.Controls.Add(this.picEndofmessagetimeoutIsOverride);
-            this.groupboxConnection.Controls.Add(this.picParityIsOverride);
-            this.groupboxConnection.Controls.Add(this.picBaudrateIsOverride);
-            this.groupboxConnection.Controls.Add(this.picPortIsOverride);
-            this.groupboxConnection.Controls.Add(this.picConnectionTypeIsOverride);
-            this.groupboxConnection.Controls.Add(this.numericInterFrameDelay);
-            this.groupboxConnection.Controls.Add(this.label15);
-            this.groupboxConnection.Controls.Add(this.numericMaximumFrameSize);
-            this.groupboxConnection.Controls.Add(this.numericResponseTimeout);
-            this.groupboxConnection.Controls.Add(this.numericSlaveAddress);
-            this.groupboxConnection.Controls.Add(this.groupBoxTcpInterface);
-            this.groupboxConnection.Controls.Add(this.groupBoxSerialInterface);
-            this.groupboxConnection.Controls.Add(this.labelConnection);
-            this.groupboxConnection.Controls.Add(this.comboConnection);
-            this.groupboxConnection.Controls.Add(this.label8);
-            this.groupboxConnection.Controls.Add(this.label3);
-            this.groupboxConnection.Controls.Add(this.label7);
-            this.groupboxConnection.Location = new System.Drawing.Point(9, 10);
-            this.groupboxConnection.Name = "groupboxConnection";
-            this.groupboxConnection.Size = new System.Drawing.Size(212, 372);
-            this.groupboxConnection.TabIndex = 0;
-            this.groupboxConnection.TabStop = false;
-            this.groupboxConnection.Text = "Connection / Protocol";
+            groupboxConnection.Controls.Add(numericInterFrameDelay);
+            groupboxConnection.Controls.Add(numericMaximumFrameSize);
+            groupboxConnection.Controls.Add(numericResponseTimeout);
+            groupboxConnection.Controls.Add(numericSlaveAddress);
+            groupboxConnection.Controls.Add(picMaxFrameSizeIsOverride);
+            groupboxConnection.Controls.Add(picInterframedelayIsOverride);
+            groupboxConnection.Controls.Add(picResponsetimeoutIsOverride);
+            groupboxConnection.Controls.Add(picSlaveIDIsOverride);
+            groupboxConnection.Controls.Add(picConnectionTypeIsOverride);
+            groupboxConnection.Controls.Add(label15);
+            groupboxConnection.Controls.Add(groupBoxTcpInterface);
+            groupboxConnection.Controls.Add(groupBoxSerialInterface);
+            groupboxConnection.Controls.Add(labelConnection);
+            groupboxConnection.Controls.Add(comboConnection);
+            groupboxConnection.Controls.Add(label8);
+            groupboxConnection.Controls.Add(label3);
+            groupboxConnection.Controls.Add(label7);
+            groupboxConnection.Location = new Point(9, 10);
+            groupboxConnection.Name = "groupboxConnection";
+            groupboxConnection.Size = new Size(224, 366);
+            groupboxConnection.TabIndex = 0;
+            groupboxConnection.TabStop = false;
+            groupboxConnection.Text = "Connection / Protocol";
             // 
             // label15
             // 
-            this.label15.AutoSize = true;
-            this.label15.Location = new System.Drawing.Point(7, 346);
-            this.label15.Name = "label15";
-            this.label15.Size = new System.Drawing.Size(110, 13);
-            this.label15.TabIndex = 10;
-            this.label15.Text = "Inter-frame delay (ms):";
+            label15.AutoSize = true;
+            label15.Location = new Point(6, 343);
+            label15.Name = "label15";
+            label15.Size = new Size(110, 13);
+            label15.TabIndex = 10;
+            label15.Text = "Inter-frame delay (ms):";
             // 
             // groupBoxTcpInterface
             // 
-            this.groupBoxTcpInterface.Controls.Add(this.label9);
-            this.groupBoxTcpInterface.Controls.Add(this.numericIpPort);
-            this.groupBoxTcpInterface.Controls.Add(this.comboTcpConnectMode);
-            this.groupBoxTcpInterface.Controls.Add(this.textboxIpAddress);
-            this.groupBoxTcpInterface.Controls.Add(this.label11);
-            this.groupBoxTcpInterface.Controls.Add(this.label10);
-            this.groupBoxTcpInterface.Enabled = false;
-            this.groupBoxTcpInterface.Location = new System.Drawing.Point(0, 175);
-            this.groupBoxTcpInterface.Name = "groupBoxTcpInterface";
-            this.groupBoxTcpInterface.Size = new System.Drawing.Size(210, 94);
-            this.groupBoxTcpInterface.TabIndex = 3;
-            this.groupBoxTcpInterface.TabStop = false;
-            this.groupBoxTcpInterface.Text = "TCP connection";
+            groupBoxTcpInterface.Controls.Add(picIPPortIsOverride);
+            groupBoxTcpInterface.Controls.Add(label9);
+            groupBoxTcpInterface.Controls.Add(numericIpPort);
+            groupBoxTcpInterface.Controls.Add(comboTcpConnectMode);
+            groupBoxTcpInterface.Controls.Add(textboxIpAddress);
+            groupBoxTcpInterface.Controls.Add(picIPAddressIsOverride);
+            groupBoxTcpInterface.Controls.Add(label11);
+            groupBoxTcpInterface.Controls.Add(label10);
+            groupBoxTcpInterface.Enabled = false;
+            groupBoxTcpInterface.Location = new Point(0, 175);
+            groupBoxTcpInterface.Name = "groupBoxTcpInterface";
+            groupBoxTcpInterface.Size = new Size(212, 94);
+            groupBoxTcpInterface.TabIndex = 3;
+            groupBoxTcpInterface.TabStop = false;
+            groupBoxTcpInterface.Text = "TCP connection";
             // 
             // label9
             // 
-            this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(18, 71);
-            this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(37, 13);
-            this.label9.TabIndex = 4;
-            this.label9.Text = "Mode:";
-            this.label9.Visible = false;
+            label9.AutoSize = true;
+            label9.Location = new Point(12, 69);
+            label9.Name = "label9";
+            label9.Size = new Size(37, 13);
+            label9.TabIndex = 4;
+            label9.Text = "Mode:";
+            label9.Visible = false;
             // 
             // label11
             // 
-            this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(18, 45);
-            this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(52, 13);
-            this.label11.TabIndex = 2;
-            this.label11.Text = "TCP port:";
+            label11.AutoSize = true;
+            label11.Location = new Point(12, 44);
+            label11.Name = "label11";
+            label11.Size = new Size(52, 13);
+            label11.TabIndex = 2;
+            label11.Text = "TCP port:";
             // 
             // label10
             // 
-            this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(18, 21);
-            this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(60, 13);
-            this.label10.TabIndex = 0;
-            this.label10.Text = "IP address:";
+            label10.AutoSize = true;
+            label10.Location = new Point(12, 21);
+            label10.Name = "label10";
+            label10.Size = new Size(60, 13);
+            label10.TabIndex = 0;
+            label10.Text = "IP address:";
             // 
             // groupBoxSerialInterface
             // 
-            this.groupBoxSerialInterface.Controls.Add(this.comboSerialPort);
-            this.groupBoxSerialInterface.Controls.Add(this.numericSerialEndOfMessageTimeout);
-            this.groupBoxSerialInterface.Controls.Add(this.checkboxSerialOneWireEchoSuppression);
-            this.groupBoxSerialInterface.Controls.Add(this.label12);
-            this.groupBoxSerialInterface.Controls.Add(this.label1);
-            this.groupBoxSerialInterface.Controls.Add(this.label2);
-            this.groupBoxSerialInterface.Controls.Add(this.label4);
-            this.groupBoxSerialInterface.Controls.Add(this.comboSerialParity);
-            this.groupBoxSerialInterface.Controls.Add(this.comboSerialBaudrate);
-            this.groupBoxSerialInterface.Location = new System.Drawing.Point(0, 45);
-            this.groupBoxSerialInterface.Name = "groupBoxSerialInterface";
-            this.groupBoxSerialInterface.Size = new System.Drawing.Size(210, 128);
-            this.groupBoxSerialInterface.TabIndex = 2;
-            this.groupBoxSerialInterface.TabStop = false;
-            this.groupBoxSerialInterface.Text = "Serial interface";
+            groupBoxSerialInterface.Controls.Add(numericSerialEndOfMessageTimeout);
+            groupBoxSerialInterface.Controls.Add(comboSerialPort);
+            groupBoxSerialInterface.Controls.Add(picOnewireechosuppressionIsOverride);
+            groupBoxSerialInterface.Controls.Add(picBaudrateIsOverride);
+            groupBoxSerialInterface.Controls.Add(picPortIsOverride);
+            groupBoxSerialInterface.Controls.Add(checkboxSerialOneWireEchoSuppression);
+            groupBoxSerialInterface.Controls.Add(label12);
+            groupBoxSerialInterface.Controls.Add(label1);
+            groupBoxSerialInterface.Controls.Add(picEndofmessagetimeoutIsOverride);
+            groupBoxSerialInterface.Controls.Add(label2);
+            groupBoxSerialInterface.Controls.Add(label4);
+            groupBoxSerialInterface.Controls.Add(picParityIsOverride);
+            groupBoxSerialInterface.Controls.Add(comboSerialParity);
+            groupBoxSerialInterface.Controls.Add(comboSerialBaudrate);
+            groupBoxSerialInterface.Location = new Point(0, 45);
+            groupBoxSerialInterface.Name = "groupBoxSerialInterface";
+            groupBoxSerialInterface.Size = new Size(212, 128);
+            groupBoxSerialInterface.TabIndex = 2;
+            groupBoxSerialInterface.TabStop = false;
+            groupBoxSerialInterface.Text = "Serial interface";
             // 
             // label12
             // 
-            this.label12.AutoSize = true;
-            this.label12.Location = new System.Drawing.Point(18, 86);
-            this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(93, 13);
-            this.label12.TabIndex = 6;
-            this.label12.Text = "EOM timeout (ms):";
+            label12.AutoSize = true;
+            label12.Location = new Point(12, 86);
+            label12.Name = "label12";
+            label12.Size = new Size(93, 13);
+            label12.TabIndex = 6;
+            label12.Text = "EOM timeout (ms):";
             // 
             // label1
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(18, 16);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(29, 13);
-            this.label1.TabIndex = 0;
-            this.label1.Text = "Port:";
+            label1.AutoSize = true;
+            label1.Location = new Point(12, 16);
+            label1.Name = "label1";
+            label1.Size = new Size(29, 13);
+            label1.TabIndex = 0;
+            label1.Text = "Port:";
             // 
             // label2
             // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(18, 40);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(53, 13);
-            this.label2.TabIndex = 2;
-            this.label2.Text = "Baudrate:";
+            label2.AutoSize = true;
+            label2.Location = new Point(12, 40);
+            label2.Name = "label2";
+            label2.Size = new Size(53, 13);
+            label2.TabIndex = 2;
+            label2.Text = "Baudrate:";
             // 
             // label4
             // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(18, 65);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(36, 13);
-            this.label4.TabIndex = 4;
-            this.label4.Text = "Parity:";
+            label4.AutoSize = true;
+            label4.Location = new Point(12, 65);
+            label4.Name = "label4";
+            label4.Size = new Size(36, 13);
+            label4.TabIndex = 4;
+            label4.Text = "Parity:";
             // 
             // labelConnection
             // 
-            this.labelConnection.AutoSize = true;
-            this.labelConnection.Location = new System.Drawing.Point(7, 21);
-            this.labelConnection.Name = "labelConnection";
-            this.labelConnection.Size = new System.Drawing.Size(64, 13);
-            this.labelConnection.TabIndex = 0;
-            this.labelConnection.Text = "Connection:";
+            labelConnection.AutoSize = true;
+            labelConnection.Location = new Point(7, 21);
+            labelConnection.Name = "labelConnection";
+            labelConnection.Size = new Size(64, 13);
+            labelConnection.TabIndex = 0;
+            labelConnection.Text = "Connection:";
             // 
             // label8
             // 
-            this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(6, 298);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(117, 13);
-            this.label8.TabIndex = 6;
-            this.label8.Text = "Response timeout (ms):";
+            label8.AutoSize = true;
+            label8.Location = new Point(6, 297);
+            label8.Name = "label8";
+            label8.Size = new Size(117, 13);
+            label8.TabIndex = 6;
+            label8.Text = "Response timeout (ms):";
             // 
             // label3
             // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(7, 274);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(51, 13);
-            this.label3.TabIndex = 4;
-            this.label3.Text = "Slave ID:";
+            label3.AutoSize = true;
+            label3.Location = new Point(6, 274);
+            label3.Name = "label3";
+            label3.Size = new Size(51, 13);
+            label3.TabIndex = 4;
+            label3.Text = "Slave ID:";
             // 
             // label7
             // 
-            this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(6, 322);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(104, 13);
-            this.label7.TabIndex = 8;
-            this.label7.Text = "Maximum frame size:";
+            label7.AutoSize = true;
+            label7.Location = new Point(6, 320);
+            label7.Name = "label7";
+            label7.Size = new Size(104, 13);
+            label7.TabIndex = 8;
+            label7.Text = "Maximum frame size:";
+            // 
+            // butDebugInfo
+            // 
+            butDebugInfo.AutoSize = true;
+            butDebugInfo.Location = new Point(529, 6);
+            butDebugInfo.Name = "butDebugInfo";
+            butDebugInfo.Size = new Size(100, 25);
+            butDebugInfo.TabIndex = 24;
+            butDebugInfo.Text = "DEBUG info";
+            butDebugInfo.UseVisualStyleBackColor = true;
+            butDebugInfo.Visible = false;
+            butDebugInfo.Click += button1_Click;
             // 
             // pictureBox1
             // 
-            this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
-            this.pictureBox1.Location = new System.Drawing.Point(17, 3);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(32, 32);
-            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
-            this.pictureBox1.TabIndex = 0;
-            this.pictureBox1.TabStop = false;
+            pictureBox1.Image = (Image)resources.GetObject("pictureBox1.Image");
+            pictureBox1.Location = new Point(17, 3);
+            pictureBox1.Name = "pictureBox1";
+            pictureBox1.Size = new Size(32, 32);
+            pictureBox1.SizeMode = PictureBoxSizeMode.AutoSize;
+            pictureBox1.TabIndex = 0;
+            pictureBox1.TabStop = false;
             // 
             // label16
             // 
-            this.label16.Location = new System.Drawing.Point(62, 4);
-            this.label16.Name = "label16";
-            this.label16.Padding = new System.Windows.Forms.Padding(0, 1, 0, 0);
-            this.label16.Size = new System.Drawing.Size(537, 30);
-            this.label16.TabIndex = 0;
-            this.label16.Text = "Parameters marked with a warning icon are overridden by command-line options. \r\nT" +
-    "he displayed values come from the command line, not the mbc project file.";
+            label16.Location = new Point(62, 4);
+            label16.Name = "label16";
+            label16.Padding = new Padding(0, 1, 0, 0);
+            label16.Size = new Size(537, 30);
+            label16.TabIndex = 0;
+            label16.Text = "Parameters marked with a warning icon are overridden by command-line options. \r\nThe displayed values come from the command line, not from the mbc project file.";
             // 
             // warningPanel
             // 
-            this.warningPanel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.warningPanel.Controls.Add(this.label16);
-            this.warningPanel.Controls.Add(this.pictureBox1);
-            this.warningPanel.Dock = System.Windows.Forms.DockStyle.Top;
-            this.warningPanel.Location = new System.Drawing.Point(0, 0);
-            this.warningPanel.Name = "warningPanel";
-            this.warningPanel.Size = new System.Drawing.Size(695, 38);
-            this.warningPanel.TabIndex = 0;
-            this.warningPanel.Visible = false;
+            warningPanel.BorderStyle = BorderStyle.FixedSingle;
+            warningPanel.Controls.Add(label16);
+            warningPanel.Controls.Add(pictureBox1);
+            warningPanel.Dock = DockStyle.Top;
+            warningPanel.Location = new Point(0, 0);
+            warningPanel.Name = "warningPanel";
+            warningPanel.Size = new Size(699, 38);
+            warningPanel.TabIndex = 0;
+            warningPanel.Visible = false;
             // 
             // buttonPanel
             // 
-            this.buttonPanel.Controls.Add(this.buttonApply);
-            this.buttonPanel.Controls.Add(this.buttonCancel);
-            this.buttonPanel.Controls.Add(this.buttonOK);
-            this.buttonPanel.Dock = System.Windows.Forms.DockStyle.Top;
-            this.buttonPanel.Location = new System.Drawing.Point(0, 420);
-            this.buttonPanel.Name = "buttonPanel";
-            this.buttonPanel.Size = new System.Drawing.Size(695, 35);
-            this.buttonPanel.TabIndex = 2;
+            buttonPanel.Controls.Add(butDebugInfo);
+            buttonPanel.Controls.Add(buttonApply);
+            buttonPanel.Controls.Add(buttonCancel);
+            buttonPanel.Controls.Add(buttonOK);
+            buttonPanel.Dock = DockStyle.Top;
+            buttonPanel.Location = new Point(0, 420);
+            buttonPanel.Name = "buttonPanel";
+            buttonPanel.Size = new Size(699, 35);
+            buttonPanel.TabIndex = 2;
             // 
             // buttonApply
             // 
-            this.buttonApply.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.buttonApply.Location = new System.Drawing.Point(398, 6);
-            this.buttonApply.Name = "buttonApply";
-            this.buttonApply.Size = new System.Drawing.Size(75, 23);
-            this.buttonApply.TabIndex = 2;
-            this.buttonApply.Text = "Apply";
-            this.buttonApply.UseVisualStyleBackColor = true;
+            buttonApply.Anchor = AnchorStyles.Top;
+            buttonApply.AutoSize = true;
+            buttonApply.Location = new Point(401, 6);
+            buttonApply.Name = "buttonApply";
+            buttonApply.Size = new Size(75, 25);
+            buttonApply.TabIndex = 2;
+            buttonApply.Text = "Apply";
+            buttonApply.UseVisualStyleBackColor = true;
+            buttonApply.Click += ButtonApply_Click;
             // 
             // buttonCancel
             // 
-            this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.buttonCancel.Location = new System.Drawing.Point(309, 6);
-            this.buttonCancel.Name = "buttonCancel";
-            this.buttonCancel.Size = new System.Drawing.Size(75, 23);
-            this.buttonCancel.TabIndex = 1;
-            this.buttonCancel.Text = "Cancel";
-            this.buttonCancel.UseVisualStyleBackColor = true;
+            buttonCancel.Anchor = AnchorStyles.Top;
+            buttonCancel.AutoSize = true;
+            buttonCancel.DialogResult = DialogResult.Cancel;
+            buttonCancel.Location = new Point(312, 6);
+            buttonCancel.Name = "buttonCancel";
+            buttonCancel.Size = new Size(75, 25);
+            buttonCancel.TabIndex = 1;
+            buttonCancel.Text = "Cancel";
+            buttonCancel.UseVisualStyleBackColor = true;
             // 
             // buttonOK
             // 
-            this.buttonOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.buttonOK.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.buttonOK.Location = new System.Drawing.Point(220, 6);
-            this.buttonOK.Name = "buttonOK";
-            this.buttonOK.Size = new System.Drawing.Size(75, 23);
-            this.buttonOK.TabIndex = 0;
-            this.buttonOK.Text = "OK";
-            this.buttonOK.UseVisualStyleBackColor = true;
+            buttonOK.Anchor = AnchorStyles.Top;
+            buttonOK.AutoSize = true;
+            buttonOK.DialogResult = DialogResult.OK;
+            buttonOK.Location = new Point(223, 6);
+            buttonOK.Name = "buttonOK";
+            buttonOK.Size = new Size(75, 25);
+            buttonOK.TabIndex = 0;
+            buttonOK.Text = "OK";
+            buttonOK.UseVisualStyleBackColor = true;
             // 
             // ProjectConfigurationForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.AutoSize = true;
-            this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.ClientSize = new System.Drawing.Size(695, 452);
-            this.ControlBox = false;
-            this.Controls.Add(this.buttonPanel);
-            this.Controls.Add(this.panel2);
-            this.Controls.Add(this.warningPanel);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
-            this.MaximizeBox = false;
-            this.MinimizeBox = false;
-            this.MinimumSize = new System.Drawing.Size(698, 45);
-            this.Name = "ProjectConfigurationForm";
-            this.ShowIcon = false;
-            this.ShowInTaskbar = false;
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "Project configuration";
-            this.Shown += new System.EventHandler(this.ConfigForm_Shown);
-            ((System.ComponentModel.ISupportInitialize)(this.numericSamplerate)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericTcpServerPort)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericMaximumFrameSize)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericResponseTimeout)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericSlaveAddress)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericIpPort)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericSerialEndOfMessageTimeout)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.picConnectionTypeIsOverride)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.picPortIsOverride)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.picBaudrateIsOverride)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.picParityIsOverride)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.picEndofmessagetimeoutIsOverride)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.picIPAddressIsOverride)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.picIPPortIsOverride)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.picOnewireechosuppressionIsOverride)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.picSlaveIDIsOverride)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.picResponsetimeoutIsOverride)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.picInterframedelayIsOverride)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.picSamplerateIsOverride)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.picMaxFrameSizeIsOverride)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.picwriteregFCIsOverride)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericInterFrameDelay)).EndInit();
-            this.panel2.ResumeLayout(false);
-            this.panel2.PerformLayout();
-            this.groupBox3.ResumeLayout(false);
-            this.groupBox3.PerformLayout();
-            this.groupBox4.ResumeLayout(false);
-            this.groupBox4.PerformLayout();
-            this.groupboxModbusTcpServer.ResumeLayout(false);
-            this.groupboxModbusTcpServer.PerformLayout();
-            this.groupBox2.ResumeLayout(false);
-            this.groupBox2.PerformLayout();
-            this.groupBox1.ResumeLayout(false);
-            this.groupBox1.PerformLayout();
-            this.groupboxConnection.ResumeLayout(false);
-            this.groupboxConnection.PerformLayout();
-            this.groupBoxTcpInterface.ResumeLayout(false);
-            this.groupBoxTcpInterface.PerformLayout();
-            this.groupBoxSerialInterface.ResumeLayout(false);
-            this.groupBoxSerialInterface.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
-            this.warningPanel.ResumeLayout(false);
-            this.warningPanel.PerformLayout();
-            this.buttonPanel.ResumeLayout(false);
-            this.ResumeLayout(false);
+            AutoScaleDimensions = new SizeF(96F, 96F);
+            AutoScaleMode = AutoScaleMode.Dpi;
+            AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            ClientSize = new Size(699, 457);
+            ControlBox = false;
+            Controls.Add(buttonPanel);
+            Controls.Add(panel2);
+            Controls.Add(warningPanel);
+            Font = new Font("Microsoft Sans Serif", 8.25F, FontStyle.Regular, GraphicsUnit.Point, 177);
+            FormBorderStyle = FormBorderStyle.FixedDialog;
+            MaximizeBox = false;
+            MinimizeBox = false;
+            MinimumSize = new Size(698, 45);
+            Name = "ProjectConfigurationForm";
+            ShowIcon = false;
+            ShowInTaskbar = false;
+            StartPosition = FormStartPosition.CenterParent;
+            Text = "Project configuration";
+            Shown += ConfigForm_Shown;
+            ((System.ComponentModel.ISupportInitialize)numericSamplerate).EndInit();
+            ((System.ComponentModel.ISupportInitialize)numericTcpServerPort).EndInit();
+            ((System.ComponentModel.ISupportInitialize)numericMaximumFrameSize).EndInit();
+            ((System.ComponentModel.ISupportInitialize)numericResponseTimeout).EndInit();
+            ((System.ComponentModel.ISupportInitialize)numericSlaveAddress).EndInit();
+            ((System.ComponentModel.ISupportInitialize)numericIpPort).EndInit();
+            ((System.ComponentModel.ISupportInitialize)numericSerialEndOfMessageTimeout).EndInit();
+            ((System.ComponentModel.ISupportInitialize)picConnectionTypeIsOverride).EndInit();
+            ((System.ComponentModel.ISupportInitialize)picPortIsOverride).EndInit();
+            ((System.ComponentModel.ISupportInitialize)picBaudrateIsOverride).EndInit();
+            ((System.ComponentModel.ISupportInitialize)picParityIsOverride).EndInit();
+            ((System.ComponentModel.ISupportInitialize)picEndofmessagetimeoutIsOverride).EndInit();
+            ((System.ComponentModel.ISupportInitialize)picIPAddressIsOverride).EndInit();
+            ((System.ComponentModel.ISupportInitialize)picIPPortIsOverride).EndInit();
+            ((System.ComponentModel.ISupportInitialize)picOnewireechosuppressionIsOverride).EndInit();
+            ((System.ComponentModel.ISupportInitialize)picSlaveIDIsOverride).EndInit();
+            ((System.ComponentModel.ISupportInitialize)picResponsetimeoutIsOverride).EndInit();
+            ((System.ComponentModel.ISupportInitialize)picInterframedelayIsOverride).EndInit();
+            ((System.ComponentModel.ISupportInitialize)picSamplerateIsOverride).EndInit();
+            ((System.ComponentModel.ISupportInitialize)picMaxFrameSizeIsOverride).EndInit();
+            ((System.ComponentModel.ISupportInitialize)picwriteregFCIsOverride).EndInit();
+            ((System.ComponentModel.ISupportInitialize)numericInterFrameDelay).EndInit();
+            panel2.ResumeLayout(false);
+            panel2.PerformLayout();
+            groupBox3.ResumeLayout(false);
+            groupBox3.PerformLayout();
+            groupBox4.ResumeLayout(false);
+            groupBox4.PerformLayout();
+            groupboxModbusTcpServer.ResumeLayout(false);
+            groupboxModbusTcpServer.PerformLayout();
+            groupBox2.ResumeLayout(false);
+            groupBox2.PerformLayout();
+            groupBox1.ResumeLayout(false);
+            groupBox1.PerformLayout();
+            groupboxConnection.ResumeLayout(false);
+            groupboxConnection.PerformLayout();
+            groupBoxTcpInterface.ResumeLayout(false);
+            groupBoxTcpInterface.PerformLayout();
+            groupBoxSerialInterface.ResumeLayout(false);
+            groupBoxSerialInterface.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
+            warningPanel.ResumeLayout(false);
+            warningPanel.PerformLayout();
+            buttonPanel.ResumeLayout(false);
+            buttonPanel.PerformLayout();
+            ResumeLayout(false);
 
         }
 
@@ -1186,7 +1082,6 @@
         private System.Windows.Forms.ToolTip toolTip1;
         private System.ComponentModel.BackgroundWorker backgroundWorker1;
         private System.Windows.Forms.Panel panel2;
-        private System.Windows.Forms.GroupBox groupBox5;
         private System.Windows.Forms.TextBox textboxHoldingRegistersStart;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.NumericUpDown numericSamplerate;
@@ -1260,5 +1155,6 @@
         private System.Windows.Forms.Button buttonApply;
         private System.Windows.Forms.Button buttonCancel;
         private System.Windows.Forms.Button buttonOK;
+        private Button butDebugInfo;
     }
 }

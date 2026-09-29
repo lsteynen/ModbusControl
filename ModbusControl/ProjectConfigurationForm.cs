@@ -1,8 +1,10 @@
-﻿using System;
+﻿using LST.Helpers;
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO.Ports;
 using System.Text;
 using System.Windows.Forms;
-using System.IO.Ports;
 
 namespace ModbusControl
 {
@@ -295,85 +297,113 @@ namespace ModbusControl
 
         public bool ConnectionTypeIsOverride
         {
-            set { picConnectionTypeIsOverride.Visible = value;
+            set
+            {
+                picConnectionTypeIsOverride.Visible = value;
             }
         }
 
         public bool PortIsOverride
         {
-            set { picPortIsOverride.Visible = value;
+            set
+            {
+                picPortIsOverride.Visible = value;
             }
         }
 
         public bool BaudrateIsOverride
         {
-            set { picBaudrateIsOverride.Visible = value;
+            set
+            {
+                picBaudrateIsOverride.Visible = value;
             }
         }
 
         public bool ParityIsOverride
         {
-            set { picParityIsOverride.Visible = value;
+            set
+            {
+                picParityIsOverride.Visible = value;
             }
         }
 
         public bool EndofmessagetimeoutIsOverride
         {
-            set { picEndofmessagetimeoutIsOverride.Visible = value;
+            set
+            {
+                picEndofmessagetimeoutIsOverride.Visible = value;
             }
         }
 
         public bool OnewireechosuppressionIsOverride
         {
-            set { picOnewireechosuppressionIsOverride.Visible = value;
+            set
+            {
+                picOnewireechosuppressionIsOverride.Visible = value;
             }
         }
 
         public bool IPAddressIsOverride
         {
-            set { picIPAddressIsOverride.Visible = value;
+            set
+            {
+                picIPAddressIsOverride.Visible = value;
             }
         }
 
         public bool IPPortIsOverride
         {
-            set { picIPPortIsOverride.Visible = value;
+            set
+            {
+                picIPPortIsOverride.Visible = value;
             }
         }
 
         public bool SlaveIDIsOverride
         {
-            set { picSlaveIDIsOverride.Visible = value;
+            set
+            {
+                picSlaveIDIsOverride.Visible = value;
             }
         }
 
         public bool MaxFrameSizeIsOverride
         {
-            set { picMaxFrameSizeIsOverride.Visible = value;
+            set
+            {
+                picMaxFrameSizeIsOverride.Visible = value;
             }
         }
 
         public bool ResponsetimeoutIsOverride
         {
-            set { picResponsetimeoutIsOverride.Visible = value;
+            set
+            {
+                picResponsetimeoutIsOverride.Visible = value;
             }
         }
 
         public bool InterframedelayIsOverride
         {
-            set { picInterframedelayIsOverride.Visible = value;
+            set
+            {
+                picInterframedelayIsOverride.Visible = value;
             }
         }
 
         public bool SamplerateIsOverride
         {
-            set { picSamplerateIsOverride.Visible = value;
+            set
+            {
+                picSamplerateIsOverride.Visible = value;
             }
         }
 
         public bool WriteregFCIsOverride
         {
-            set { picwriteregFCIsOverride.Visible = value;
+            set
+            {
+                picwriteregFCIsOverride.Visible = value;
             }
         }
 
@@ -441,6 +471,10 @@ namespace ModbusControl
             comboStringEncoding.DisplayMember = "Value"; // Display name
             comboStringEncoding.ValueMember = "Key";     // Encoding name
 
+#if DEBUG
+            butDebugInfo.Visible = true;
+#endif
+
         }
 
         private void ComboConnection_SelectedIndexChanged(object sender, EventArgs e)
@@ -475,6 +509,30 @@ namespace ModbusControl
                                 || picInterframedelayIsOverride.Visible
                                 || picSamplerateIsOverride.Visible
                                 || picwriteregFCIsOverride.Visible;
+
+            AdjustFormSize();
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            Debug.Print("Debug: Print info: ");
+            Debug.Print($"buttonPanel.Location.Y={buttonPanel.Location.Y}, buttonPanel.Height={buttonPanel.Height}");
+            Debug.Print($"form.Height={Height}");
+        }
+
+        private void AdjustFormSize()
+        {
+            Debug.Print("AdjustFormSize:");
+            Debug.Print($"DeviceDpi={DeviceDpi}");
+
+            // get margin, DPI adjusted 
+            int hmargin = AppDpiHelpers.ScaleValueFrom96DpiToThisDpiInt(6, DeviceDpi);
+            int vmargin = AppDpiHelpers.ScaleValueFrom96DpiToThisDpiInt(6, DeviceDpi);
+            // get new form size
+            int newWidth = ClientSize.Width + hmargin;
+            int newHeight = buttonPanel.Location.Y + buttonPanel.Height + vmargin;
+            Debug.Print($"newWidth={newWidth}, newHeight={newHeight}");
+            ClientSize = new Size(newWidth, newHeight);
         }
     }
 }

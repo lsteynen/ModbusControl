@@ -24,7 +24,7 @@ namespace ModbusControl
         {   "us-ascii",
             "utf-8",
             "windows-1250",
-            "Windows-1252",
+            "windows-1252",
             "iso-8859-1",
             "iso-8859-2",
             "iso-8859-3",
@@ -95,7 +95,16 @@ namespace ModbusControl
 
         public static string[] GetListOfSupportedStringEncodings()
         {
+#if SUPPORT_ALL_ENCODINGS
+            List<string> list = new List<string>();
+            foreach (var info in Encoding.GetEncodings())
+            {
+                list.Add(info.Name);
+            }
+            return list.ToArray();
+#else
             return supportedStringEncodings;
+#endif
         }
 
         public static Int16 ToInt16(byte byte0, byte byte1)

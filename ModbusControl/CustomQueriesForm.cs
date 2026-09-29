@@ -17,9 +17,10 @@ namespace ModbusControl
         public ModbusInterface mModbus;
 
         private MainForm mParent;
-        private float ZoomFactor = 1.0F;
-        private float currentZoomFactor;
-        private float originalFontSize;
+        private float zoomFactor = 1.0f;
+        private float zoomFactorStep = 1.10f;
+        private float zoomFactorMaximum = 10.0f;
+        private float baseGridFontSizeAt96Dpi;          // default gridfont size 
         // CustomQueries are global, not per project, so we use standard register numbering
         private int mRegisterNumberingScheme = 40001;
         private RegisterToOffset mRegisterToOffset = new RegisterToOffset(40001);
@@ -71,7 +72,7 @@ namespace ModbusControl
 
             set
             {
-                SetColumnWidthsInWeights( value);
+                SetColumnWidthsInWeights(value);
             }
         }
 
@@ -127,7 +128,8 @@ namespace ModbusControl
             mParent = parent;
             mModbus = parent.mb;
 
-            originalFontSize = grid.Font.Size;
+            // get default font size
+            baseGridFontSizeAt96Dpi = AppDpiHelpers.ScaleValueFromThisDpiTo96Dpi(grid.Font.Size, DeviceDpi);
 
             //grid.RowTemplate.Height = 25;
             SetAutoSizeRows(true);
@@ -136,6 +138,10 @@ namespace ModbusControl
 
             // enable mousewheel zoom
             this.MouseWheel += new MouseEventHandler(Form_MouseWheel);
+
+#if DEBUG
+            butDebug.Visible = true;
+#endif
 
 #if TESTBUILD
             // add rows for testing
@@ -165,7 +171,7 @@ namespace ModbusControl
             AddQueryRow("RIR", "1", "30001", "10", "UINT32", "", "data");
             AddQueryRow("RIR", "1", "30001", "10", "HEX32", "", "data");
             AddQueryRow("RIR", "1", "30001", "9", "HEX32", "", "invalid qty");
-            AddQueryRow("RIR", "1", "30001", "4", "HEXBYTES", "", "data");  
+            AddQueryRow("RIR", "1", "30001", "4", "HEXBYTES", "", "data");
             AddQueryRow("RIR", "1", "30001", "1", "BITS", "", "invalid format");
 
             AddQueryRow("RHR", "", "----------", "----------", "INT16", "------------------------------", "----------");
@@ -257,7 +263,7 @@ namespace ModbusControl
             AddQueryRow("WMHR", "1", "40001", "8", "INT32", "1000000, -1000001, 4000000000, 0x49A9C916", "success");
             AddQueryRow("WMHR", "1", "40001", "2", "UINT32", "1000000", "success");
             AddQueryRow("WMHR", "1", "40001", "4", "HEX32", "1000001000, 2000001000", "success");
-            AddQueryRow("WMHR", "1", "40001", "1", "HEXBYTES", "31", "invalid format"); 
+            AddQueryRow("WMHR", "1", "40001", "1", "HEXBYTES", "31", "invalid format");
             AddQueryRow("WMHR", "1", "40001", "1", "BITS", "32", "invalid format");
 
             AddQueryRow("RDI", "", "----------", "----------", "INT16", "------------------------------", "----------");
@@ -383,7 +389,6 @@ namespace ModbusControl
             AddQueryRow("CUSTQ", "1", "", "", "INT32", "0x03,0x00,0x10,0x00,0x11", "invalid format");
             AddQueryRow("CUSTQ", "1", "", "", "UINT32", "0x03,0x00,0x10,0x00,0x11", "invalid format");
             AddQueryRow("CUSTQ", "1", "", "", "HEX32", "0x03,0x00,0x10,0x00,0x11", "invalid format");
-
 #endif
         }
 
@@ -423,72 +428,65 @@ namespace ModbusControl
             // CTRL+scrollwheel: zoom/unzoom
             if (Control.ModifierKeys == Keys.Control)
             {
-                // send +1 to zoom in, -1 to zoom out
                 if ((e.Delta / wheelFactor) >= +1)
                 {
-                    ChangeZoom(+1);
+                    DoZoomInStep();
                 }
                 else if ((e.Delta / wheelFactor) <= -1)
                 {
-                    ChangeZoom(-1);
+                    DoZoomOutStep();
                 }
             }
         }
 
         /// <summary>
-        /// Change the zoom factor
+        /// Zoom in, 1 step
         /// </summary>
-        /// <param name="action">+1 do zoom in, -1 for zoom out, 0 for reset zoom</param>
-        private void ChangeZoom(int action)
+        private void DoZoomInStep()
         {
-            // zoom callback from RegView
-
-            float minZoom = 1;
-            float maxZoom = 10;
-            float changeFactor = 1.15F;
-
-            if (action > 0)
+            if (zoomFactor < zoomFactorMaximum)
             {
-                // zoom in
-                if (ZoomFactor < maxZoom)
-                {
-                    ZoomFactor *= changeFactor;
-                }
-            }
-            else if (action < 0)
-            {
-                // zoom out
-                if (ZoomFactor > minZoom)
-                {
-                    ZoomFactor /= changeFactor;
-                }
-            }
-            else
-            {
-                // reset zoom
-                ZoomFactor = 1.0F;
-            }
+                zoomFactor *= zoomFactorStep;
 
-            // update zoom 
-            SetZoom(ZoomFactor);
-        }
-
-        public void SetZoom(float factor)
-        {
-            if (factor != currentZoomFactor)
-            {
-                currentZoomFactor = factor;
-
-                // zoom this grid
-                float newFontSize = originalFontSize * currentZoomFactor;
-                Font newFont = new Font(Font.FontFamily, newFontSize, Font.Style, Font.Unit);
-                grid.ColumnHeadersDefaultCellStyle.Font = newFont;
-                grid.DefaultCellStyle.Font = newFont;
+                SetZoomFactor(zoomFactor);
             }
         }
 
-        private void CustomQueries_Shown(object sender, EventArgs e)
+        /// <summary>
+        /// Zoom out, 1 step
+        /// </summary>
+        private void DoZoomOutStep()
         {
+            if (zoomFactor > 1)
+            {
+                zoomFactor /= zoomFactorStep;
+                if (zoomFactor < 1.0f)
+                {
+                    zoomFactor = 1.0f;
+                }
+
+                SetZoomFactor(zoomFactor);
+            }
+        }
+
+        /// <summary>
+        /// Reset zoom
+        /// </summary>
+        private void DoZoomReset()
+        {
+            zoomFactor = 1.0f;
+            SetZoomFactor(zoomFactor);
+        }
+
+        public void SetZoomFactor(float newZoomFactor)
+        {
+            Debug.Print($"SetZoomFactor={newZoomFactor}");
+            // zoom this grid
+            float newFontSize = AppDpiHelpers.ScaleValueFrom96DpiToThisDpi(baseGridFontSizeAt96Dpi * zoomFactor, DeviceDpi);
+            Debug.Print($"Set new font size = {newFontSize}, DeviceDpi={DeviceDpi}");
+            Font newFont = new Font(Font.FontFamily, newFontSize, Font.Style, Font.Unit);
+            grid.ColumnHeadersDefaultCellStyle.Font = newFont;
+            grid.DefaultCellStyle.Font = newFont;
         }
 
         private void MyDataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
@@ -1015,7 +1013,7 @@ namespace ModbusControl
 
             if (Continue)
             {
-                if (TryGetDiscreteInputOffset(registerStr,  out regOffset))
+                if (TryGetDiscreteInputOffset(registerStr, out regOffset))
                 {
                     // okay
                 }
@@ -1050,7 +1048,7 @@ namespace ModbusControl
                     {
                         // bits as 0, 0, 1, 0
                         ResultStr = ConvertPackedBitsToResultString(aBytes, (int)regQuantity);
-                    } 
+                    }
                     else if (format == EFormat.HEXBYTES)
                     {
                         // bytes as 0x01, 0xFA, ...
@@ -1106,7 +1104,7 @@ namespace ModbusControl
 
             if (Continue)
             {
-                if (TryGetCoilOffset(registerStr,  out regOffset))
+                if (TryGetCoilOffset(registerStr, out regOffset))
                 {
                     // okay
                 }
@@ -1273,7 +1271,7 @@ namespace ModbusControl
                         ResultStr = "Error: " + e.Message;
                         Continue = false;
                     }
-                }                
+                }
                 else
                 {
                     ResultStr = "Error: Invalid format";
@@ -1442,7 +1440,7 @@ namespace ModbusControl
                 {
                     // okay
                 }
-            }            
+            }
 
             byte[] aQueryBytes = null;
             byte[] aResponseBuf = null;
@@ -1455,14 +1453,14 @@ namespace ModbusControl
                 {
                     // OK
                 }
-                
+
             }
 
             if (Continue)
             {
                 // query must be hexbytes
                 if (format == EFormat.HEXBYTES)
-                { 
+                {
                     try
                     {
                         aQueryBytes = ParseValuesStringIntoByteValues(dataStr);
@@ -1604,7 +1602,7 @@ namespace ModbusControl
         {
             // get data
             string[] aFields = MySplit(str, ',');
-            
+
             // array of 32-bit values to store binary data
             Int32[] aValues = new Int32[aFields.Length];
 
@@ -1641,7 +1639,7 @@ namespace ModbusControl
         {
             // get data
             string[] aFields = MySplit(str, ',');
-            
+
             // array of byte values to store binary data
             byte[] aValues = new byte[aFields.Length];
 
@@ -1692,7 +1690,7 @@ namespace ModbusControl
         {
             // get data
             string[] aFields = MySplit(str, ',');
-            
+
             // array of byte values to store binary data
             int nrOfBytes = (aFields.Length + 7) / 8;
             byte[] aBytes = new byte[nrOfBytes];
@@ -2289,7 +2287,7 @@ namespace ModbusControl
                     ret = true;
                 }
                 catch
-                { 
+                {
                     // fail
                 }
             }
@@ -2524,7 +2522,7 @@ namespace ModbusControl
                 Cursor.Current = Cursors.Default;
             }
 #endif
-            }
+        }
 
 #if TESTBUILD
         private void Test_WriteTestData()
@@ -2902,13 +2900,13 @@ namespace ModbusControl
             Test_TestResultStrContains("Qty must be multiple of 2", rs);
 
             rs = SendReadInputreg("1", "30001", "1", EFormat.HEXBYTES, "");
-            Test_TestResultStrContains("0x27, 0x10", rs);  
+            Test_TestResultStrContains("0x27, 0x10", rs);
 
             rs = SendReadInputreg("1", "30001", "6", EFormat.HEXBYTES, "");
-            Test_TestResultStrContains("0x27, 0x10, 0x3D, 0x87, 0x53, 0xFE, 0x6A, 0x75, 0x80, 0xEC, 0x97, 0x63", rs); 
+            Test_TestResultStrContains("0x27, 0x10, 0x3D, 0x87, 0x53, 0xFE, 0x6A, 0x75, 0x80, 0xEC, 0x97, 0x63", rs);
 
             rs = SendReadInputreg("1", "30001", "1", EFormat.BITS, "");
-            Test_TestResultStrContains("invalid format", rs); 
+            Test_TestResultStrContains("invalid format", rs);
 
         }
 
@@ -3890,10 +3888,86 @@ namespace ModbusControl
             }
         }
 
-        
+
 #endif
 
-#endregion
+        #endregion
 
+        private void CustomQueriesForm_KeyDown(object sender, KeyEventArgs e)
+        {
+            // Control with '+' is zoom in
+            if (e.Control && ((e.KeyCode == Keys.Add) || (e.KeyCode == Keys.Oemplus)))
+            {
+                DoZoomInStep();
+                e.Handled = true;
+            }
+            // Control with '-' is zoom out
+            else if (e.Control && ((e.KeyCode == Keys.Subtract) || (e.KeyCode == Keys.OemMinus)))
+            {
+                DoZoomOutStep();
+                e.Handled = true;
+            }
+            // Control 0 is reset zoom
+            else if (e.Control && ((e.KeyCode == Keys.NumPad0) || (e.KeyCode == Keys.D0)))
+            {
+                DoZoomReset();
+                e.Handled = true;
+            }
         }
+
+        private void butDebug_Click(object sender, EventArgs e)
+        {
+            Debug.Print($"Button debug info:");
+            Debug.Print($"DeviceDpi={DeviceDpi}");
+            Debug.Print($"Form.Width={this.Width}, Form.Height={this.Height}");
+            Debug.Print($"DataGridView1.Font: {grid.Rows[1].Cells[1].InheritedStyle.Font}");
+            Debug.Print($"DataGridView1 cell(1,1) Inherited Font: {grid.Rows[1].Cells[1].InheritedStyle.Font}");
+        }
+
+        private void grid_EditingControlShowing(object sender, DataGridViewEditingControlShowingEventArgs e)
+        {
+            // fix to set the correct font when the editor starts the first time on the 100% screen, otherwise the font is too small, scaling issue
+            
+            Debug.WriteLine($">>> grid_EditingControlShowing");
+
+            // is it a TextBoxEditingControl?
+            if (e.Control is DataGridViewTextBoxEditingControl ed)
+            {
+                ed.Enter -= DGV_TextBoxEditor_Enter;
+                ed.Enter += DGV_TextBoxEditor_Enter;
+            }
+
+            if (e.Control is DataGridViewComboBoxEditingControl cb)
+            {
+                cb.Enter -= DGV_ComboBoxEditor_Enter;
+                cb.Enter += DGV_ComboBoxEditor_Enter;
+            }            
+        }
+
+        private void DGV_TextBoxEditor_Enter(object? sender, EventArgs e)
+        {
+            // fix to set the correct font when the editor starts the first time on the 100% screen, otherwise the font is too small, scaling issue
+            Debug.WriteLine($"  DGV_TextBoxEditor_Enter");
+
+            if (sender is DataGridViewTextBoxEditingControl ed)
+            {
+                ed.Font = grid.DefaultCellStyle.Font;
+                //ed.BackColor = Color.Yellow;
+                //ed.ForeColor = Color.Red;
+            }
+        }
+
+        private void DGV_ComboBoxEditor_Enter(object? sender, EventArgs e)
+        {
+            // fix to set the correct font when the editor starts the first time on the 100% screen, otherwise the font is too small, scaling issue
+            Debug.WriteLine($"  DGV_ComboBoxEditor_Enter");
+
+            if (sender is DataGridViewComboBoxEditingControl ed)
+            {
+                ed.Font = grid.DefaultCellStyle.Font;
+                //ed.BackColor = Color.Yellow;
+                //ed.ForeColor = Color.Red;
+            }
+        }
+    }
 }

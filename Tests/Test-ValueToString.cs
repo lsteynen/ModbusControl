@@ -805,7 +805,7 @@ namespace UnitTests
             Regs[0] = Helpers.ConvToInt16(0xe4cd); Regs[1] = Helpers.ConvToInt16(0xc497);
             Converts.Float32Endian = Global.eEndian.Little;
             string res;
-            Assert.ThrowsException<ArgumentException>(() =>
+            Assert.ThrowsExactly<ArgumentException>(() =>
                 res = CValueToString.Int16RegistersToValueString(Regs, Global.eFormat.Float, Global.eFormat.Float, 16)
                 );
         }
@@ -1462,7 +1462,7 @@ namespace UnitTests
         {
             Converts.Int32Endian = Global.eEndian.Little;
             Int16[] res = CValueToString.ValueStringToInt16Registers("0", 1, 0, true, false, false);
-            Assert.AreEqual<int>(1, res.Length);
+            Assert.HasCount(1, res);
             Assert.AreEqual<Int16>(0, res[0]);
         }
 
@@ -1471,7 +1471,7 @@ namespace UnitTests
         {
             Converts.Int32Endian = Global.eEndian.Little;
             Int16[] res = CValueToString.ValueStringToInt16Registers(" 1", 1, 0, true, false, false);
-            Assert.AreEqual<int>(1, res.Length);
+            Assert.HasCount(1, res);
             Assert.AreEqual<Int16>(1, res[0]);
         }
 
@@ -1480,7 +1480,7 @@ namespace UnitTests
         {
             Converts.Int32Endian = Global.eEndian.Little;
             Int16[] res = CValueToString.ValueStringToInt16Registers(" 35 ", 1, 0, true, false, false);
-            Assert.AreEqual<int>(1, res.Length);
+            Assert.HasCount(1, res);
             Assert.AreEqual<Int16>(35, res[0]);
         }
 
@@ -1489,12 +1489,12 @@ namespace UnitTests
         {
             Converts.Int32Endian = Global.eEndian.Little;
             Int16[] res = CValueToString.ValueStringToInt16Registers("32000", 1, 0, true, false, false);
-            Assert.AreEqual<int>(1, res.Length);
+            Assert.HasCount(1, res);
             Assert.AreEqual<Int16>(32000, res[0]);
 
             Converts.Int32Endian = Global.eEndian.Big; // no effect
             res = CValueToString.ValueStringToInt16Registers("32000", 1, 0, true, false, false);
-            Assert.AreEqual<int>(1, res.Length);
+            Assert.HasCount(1, res);
             Assert.AreEqual<Int16>(32000, res[0]);
         }
 
@@ -1503,7 +1503,7 @@ namespace UnitTests
         {
             Converts.Int32Endian = Global.eEndian.Little;
             Int16[] res = CValueToString.ValueStringToInt16Registers("50000", 1, 0, true, false, false);
-            Assert.AreEqual<int>(1, res.Length);
+            Assert.HasCount(1, res);
             Assert.AreEqual<Int16>(-15536, res[0]);
         }
 
@@ -1512,7 +1512,7 @@ namespace UnitTests
         {
             Converts.Int32Endian = Global.eEndian.Little;
             Int16[] res = CValueToString.ValueStringToInt16Registers("-1234", 1, 0, true, false, false);
-            Assert.AreEqual<int>(1, res.Length);
+            Assert.HasCount(1, res);
             Assert.AreEqual<Int16>(-1234, res[0]);
         }
 
@@ -1521,7 +1521,7 @@ namespace UnitTests
         {
             Converts.Int32Endian = Global.eEndian.Little;
             Int16[] res = CValueToString.ValueStringToInt16Registers("65535", 1, 0, true, false, false);
-            Assert.AreEqual<int>(1, res.Length);
+            Assert.HasCount(1, res);
             Assert.AreEqual<Int16>(Helpers.ConvToInt16(65535), res[0]);
         }
 
@@ -1530,7 +1530,7 @@ namespace UnitTests
         {
             Converts.Int32Endian = Global.eEndian.Little;
             Int16[] res;
-            Assert.ThrowsException<ArgumentException>(() =>
+            Assert.ThrowsExactly<ArgumentException>(() =>
                 res = CValueToString.ValueStringToInt16Registers("65536", 1, 0, true, false, false)
                 );
         }
@@ -1540,7 +1540,7 @@ namespace UnitTests
         {
             Converts.Int32Endian = Global.eEndian.Little;
             Int16[] res = CValueToString.ValueStringToInt16Registers("123.45", 1, 2, true, false, false);
-            Assert.AreEqual<int>(1, res.Length);
+            Assert.HasCount(1, res);
             Assert.AreEqual<Int16>(Helpers.ConvToInt16(12345), res[0]);
         }
 
@@ -1549,7 +1549,7 @@ namespace UnitTests
         {
             Converts.Int32Endian = Global.eEndian.Little;
             Int16[] res = CValueToString.ValueStringToInt16Registers("0x0", 1, 0, true, false, false);
-            Assert.AreEqual<int>(1, res.Length);
+            Assert.HasCount(1, res);
             Assert.AreEqual<Int16>(0, res[0]);
         }
 
@@ -1558,12 +1558,12 @@ namespace UnitTests
         {
             Converts.Int32Endian = Global.eEndian.Little;
             Int16[] res = CValueToString.ValueStringToInt16Registers("0x7151", 1, 0, true, false, false);
-            Assert.AreEqual<int>(1, res.Length);
+            Assert.HasCount(1, res);
             Assert.AreEqual<Int16>(29009, res[0]);
 
             Converts.Int32Endian = Global.eEndian.Big; // no effect
             res = CValueToString.ValueStringToInt16Registers("0x7151", 1, 0, true, false, false);
-            Assert.AreEqual<int>(1, res.Length);
+            Assert.HasCount(1, res);
             Assert.AreEqual<Int16>(29009, res[0]);
         }
 
@@ -1572,7 +1572,7 @@ namespace UnitTests
         {
             Converts.Int32Endian = Global.eEndian.Little;
             Int16[] res = CValueToString.ValueStringToInt16Registers("0x00ABCD", 1, 0, true, false, false);
-            Assert.AreEqual<int>(1, res.Length);
+            Assert.HasCount(1, res);
             Assert.AreEqual<Int16>(-21555, res[0]);
         }
 
@@ -1581,7 +1581,7 @@ namespace UnitTests
         {
             Converts.Int32Endian = Global.eEndian.Little;
             Int16[] res = CValueToString.ValueStringToInt16Registers("0xFFFF", 1, 0, true, false, false);
-            Assert.AreEqual<int>(1, res.Length);
+            Assert.HasCount(1, res);
             Assert.AreEqual<Int16>(Helpers.ConvToInt16(65535), res[0]);
         }
 
@@ -1589,7 +1589,7 @@ namespace UnitTests
         public void Test_Int16_h_5()
         {
             Int16[] res;
-            Assert.ThrowsException<ArgumentException>(() =>
+            Assert.ThrowsExactly<ArgumentException>(() =>
                 res = CValueToString.ValueStringToInt16Registers("0x10000", 1, 0, true, false, false)
                 );
         }
@@ -1599,7 +1599,7 @@ namespace UnitTests
         {
             Converts.Int32Endian = Global.eEndian.Little;
             Int16[] res = CValueToString.ValueStringToInt16Registers("0b101011001", 1, 0, true, false, false);
-            Assert.AreEqual<int>(1, res.Length);
+            Assert.HasCount(1, res);
             Assert.AreEqual<Int16>(345, res[0]);
         }
 
@@ -1608,7 +1608,7 @@ namespace UnitTests
         {
             Converts.Int32Endian = Global.eEndian.Little;
             Int16[] res = CValueToString.ValueStringToInt16Registers("0b00000000111101", 1, 0, true, false, false);
-            Assert.AreEqual<int>(1, res.Length);
+            Assert.HasCount(1, res);
             Assert.AreEqual<Int16>(61, res[0]);
         }
 
@@ -1617,7 +1617,7 @@ namespace UnitTests
         {
             Converts.Int32Endian = Global.eEndian.Little;
             Int16[] res = CValueToString.ValueStringToInt16Registers("0b000", 1, 0, true, false, false);
-            Assert.AreEqual<int>(1, res.Length);
+            Assert.HasCount(1, res);
             Assert.AreEqual<Int16>(0, res[0]);
         }
 
@@ -1626,7 +1626,7 @@ namespace UnitTests
         {
             Int16[] res;
             Converts.Int32Endian = Global.eEndian.Little;
-            Assert.ThrowsException<ArgumentException>(() =>
+            Assert.ThrowsExactly<ArgumentException>(() =>
                 res = CValueToString.ValueStringToInt16Registers("0b10000000000000000", 1, 0, true, false, false)
                 );
         }
@@ -1636,12 +1636,12 @@ namespace UnitTests
         {
             Converts.StringEndian = Global.eEndian.Big;
             Int16[] res = CValueToString.ValueStringToInt16Registers("\"A\"", 1, 0, true, false, false);
-            Assert.AreEqual<int>(1, res.Length);
+            Assert.HasCount(1, res);
             Assert.AreEqual<Int16>(0x4100, res[0]);
 
             Converts.StringEndian = Global.eEndian.Little;
             res = CValueToString.ValueStringToInt16Registers("\"A\"", 1, 0, true, false, false);
-            Assert.AreEqual<int>(1, res.Length);
+            Assert.HasCount(1, res);
             Assert.AreEqual<Int16>(0x0041, res[0]);
         }
 
@@ -1650,12 +1650,12 @@ namespace UnitTests
         {
             Converts.StringEndian = Global.eEndian.Big;
             Int16[] res = CValueToString.ValueStringToInt16Registers("\"AB\"", 1, 0, true, false, false);
-            Assert.AreEqual<int>(1, res.Length);
+            Assert.HasCount(1, res);
             Assert.AreEqual<Int16>(0x4142, res[0]);
 
             Converts.StringEndian = Global.eEndian.Little;
             res = CValueToString.ValueStringToInt16Registers("\"AB\"", 1, 0, true, false, false);
-            Assert.AreEqual<int>(1, res.Length);
+            Assert.HasCount(1, res);
             Assert.AreEqual<Int16>(0x4241, res[0]);
         }
 
@@ -1664,7 +1664,7 @@ namespace UnitTests
         {
             Converts.StringEndian = Global.eEndian.Big;
             Int16[] res = CValueToString.ValueStringToInt16Registers(@"""A\x81""", 1, 0, true, false, false); // "A\x81"
-            Assert.AreEqual<int>(1, res.Length);
+            Assert.HasCount(1, res);
             Assert.AreEqual<Int16>(0x4181, res[0]);
         }
 
@@ -1673,7 +1673,7 @@ namespace UnitTests
         {
             Converts.StringEndian = Global.eEndian.Big;
             Int16[] res = CValueToString.ValueStringToInt16Registers(@"""\x01A""", 1, 0, true, false, false); // "\x01A"
-            Assert.AreEqual<int>(1, res.Length);
+            Assert.HasCount(1, res);
             Assert.AreEqual<Int16>(0x0141, res[0]);
         }
 
@@ -1682,7 +1682,7 @@ namespace UnitTests
         {
             Int16[] res;
             Converts.StringEndian = Global.eEndian.Big;
-            Assert.ThrowsException<ArgumentException>(() =>
+            Assert.ThrowsExactly<ArgumentException>(() =>
                 res = CValueToString.ValueStringToInt16Registers("ABC", 1, 0, true, false, false)
                 );
         }
@@ -1692,13 +1692,13 @@ namespace UnitTests
         {
             Converts.Int32Endian = Global.eEndian.Little;
             Int16[] res = CValueToString.ValueStringToInt16Registers("0", 2, 0, true, false, false);
-            Assert.AreEqual<int>(2, res.Length);
+            Assert.HasCount(2, res);
             Assert.AreEqual<Int16>(0, res[0]);
             Assert.AreEqual<Int16>(0, res[1]);
 
             Converts.Int32Endian = Global.eEndian.Big;
             res = CValueToString.ValueStringToInt16Registers("0", 2, 0, true, false, false);
-            Assert.AreEqual<int>(2, res.Length);
+            Assert.HasCount(2, res);
             Assert.AreEqual<Int16>(0, res[0]);
             Assert.AreEqual<Int16>(0, res[1]);
         }
@@ -1708,13 +1708,13 @@ namespace UnitTests
         {
             Converts.Int32Endian = Global.eEndian.Little;
             Int16[] res = CValueToString.ValueStringToInt16Registers("1000", 2, 0, true, false, false);
-            Assert.AreEqual<int>(2, res.Length);
+            Assert.HasCount(2, res);
             Assert.AreEqual<Int16>(1000, res[0]);
             Assert.AreEqual<Int16>(0, res[1]);
 
             Converts.Int32Endian = Global.eEndian.Big;
             res = CValueToString.ValueStringToInt16Registers("1000", 2, 0, true, false, false);
-            Assert.AreEqual<int>(2, res.Length);
+            Assert.HasCount(2, res);
             Assert.AreEqual<Int16>(0, res[0]);
             Assert.AreEqual<Int16>(1000, res[1]);
         }
@@ -1724,13 +1724,13 @@ namespace UnitTests
         {
             Converts.Int32Endian = Global.eEndian.Little;
             Int16[] res = CValueToString.ValueStringToInt16Registers("2111222333", 2, 0, true, false, false);
-            Assert.AreEqual<int>(2, res.Length);
+            Assert.HasCount(2, res);
             Assert.AreEqual<Int16>(Helpers.ConvToInt16(0xb23d), res[0]);
             Assert.AreEqual<Int16>(0x7dd6, res[1]);
 
             Converts.Int32Endian = Global.eEndian.Big;
             res = CValueToString.ValueStringToInt16Registers("2111222333", 2, 0, true, false, false);
-            Assert.AreEqual<int>(2, res.Length);
+            Assert.HasCount(2, res);
             Assert.AreEqual<Int16>(0x7dd6, res[0]);
             Assert.AreEqual<Int16>(Helpers.ConvToInt16(0xb23d), res[1]);
         }
@@ -1740,7 +1740,7 @@ namespace UnitTests
         {
             Converts.Int32Endian = Global.eEndian.Little;
             Int16[] res = CValueToString.ValueStringToInt16Registers("-2000000000", 2, 0, true, false, false);
-            Assert.AreEqual<int>(2, res.Length);
+            Assert.HasCount(2, res);
             Assert.AreEqual<Int16>(Helpers.ConvToInt16(0x6c00), res[0]);
             Assert.AreEqual<Int16>(Helpers.ConvToInt16(0x88ca), res[1]);
         }
@@ -1750,7 +1750,7 @@ namespace UnitTests
         {
             Converts.Int32Endian = Global.eEndian.Little;
             Int16[] res = CValueToString.ValueStringToInt16Registers("4111000222", 2, 0, true, false, false);
-            Assert.AreEqual<int>(2, res.Length);
+            Assert.HasCount(2, res);
             Assert.AreEqual<Int16>(Helpers.ConvToInt16(0xe29e), res[0]);
             Assert.AreEqual<Int16>(Helpers.ConvToInt16(0xf508), res[1]);
         }
@@ -1760,7 +1760,7 @@ namespace UnitTests
         {
             Converts.Int32Endian = Global.eEndian.Little;
             Int16[] res;
-            Assert.ThrowsException<ArgumentException>(() =>
+            Assert.ThrowsExactly<ArgumentException>(() =>
                 res = CValueToString.ValueStringToInt16Registers("4555444333", 2, 0, true, false, false)
                 );
         }
@@ -1771,7 +1771,7 @@ namespace UnitTests
             Converts.Int32Endian = Global.eEndian.Big;
             Converts.Float32Endian = Global.eEndian.Little;
             Int16[] res = CValueToString.ValueStringToInt16Registers("123456,789", 2, 0, false, true, false);
-            Assert.AreEqual<int>(2, res.Length);
+            Assert.HasCount(2, res);
             Assert.AreEqual<Int16>(Helpers.ConvToInt16(0x2065), res[0]);
             Assert.AreEqual<Int16>(Helpers.ConvToInt16(0x47f1), res[1]);
         }
@@ -1781,7 +1781,7 @@ namespace UnitTests
         {
             Converts.Int32Endian = Global.eEndian.Little;
             Int16[] res = CValueToString.ValueStringToInt16Registers("0x1324564", 2, 0, true, false, false);
-            Assert.AreEqual<int>(2, res.Length);
+            Assert.HasCount(2, res);
             Assert.AreEqual<Int16>(Helpers.ConvToInt16(0x4564), res[0]);
             Assert.AreEqual<Int16>(Helpers.ConvToInt16(0x0132), res[1]);
         }
@@ -1791,7 +1791,7 @@ namespace UnitTests
         {
             Converts.Int32Endian = Global.eEndian.Little;
             Int16[] res = CValueToString.ValueStringToInt16Registers("0xFFEEDDCC", 2, 0, true, false, false);
-            Assert.AreEqual<int>(2, res.Length);
+            Assert.HasCount(2, res);
             Assert.AreEqual<Int16>(Helpers.ConvToInt16(0xDDCC), res[0]);
             Assert.AreEqual<Int16>(Helpers.ConvToInt16(0xFFEE), res[1]);
         }
@@ -1801,7 +1801,7 @@ namespace UnitTests
         {
             Converts.Int32Endian = Global.eEndian.Little;
             Int16[] res = CValueToString.ValueStringToInt16Registers("0b1001", 2, 0, true, false, false);
-            Assert.AreEqual<int>(2, res.Length);
+            Assert.HasCount(2, res);
             Assert.AreEqual<Int16>(Helpers.ConvToInt16(0x0009), res[0]);
             Assert.AreEqual<Int16>(Helpers.ConvToInt16(0x0000), res[1]);
         }
@@ -1811,7 +1811,7 @@ namespace UnitTests
         {
             Converts.Int32Endian = Global.eEndian.Little;
             Int16[] res = CValueToString.ValueStringToInt16Registers("0b10011000011101100101010000110010", 2, 0, true, false, false);
-            Assert.AreEqual<int>(2, res.Length);
+            Assert.HasCount(2, res);
             Assert.AreEqual<Int16>(Helpers.ConvToInt16(0x5432), res[0]);
             Assert.AreEqual<Int16>(Helpers.ConvToInt16(0x9876), res[1]);
         }
@@ -1821,7 +1821,7 @@ namespace UnitTests
         {
             Converts.Int32Endian = Global.eEndian.Little;
             Int16[] res;
-            Assert.ThrowsException<ArgumentException>(() =>
+            Assert.ThrowsExactly<ArgumentException>(() =>
                 res = CValueToString.ValueStringToInt16Registers("0b110011000011101100101010000110010", 2, 0, true, false, false)
                 );
         }
@@ -1831,7 +1831,7 @@ namespace UnitTests
         {
             Converts.StringEndian = Global.eEndian.Big;
             Int16[] res = CValueToString.ValueStringToInt16Registers("\"A\"", 2, 0, true, false, false);
-            Assert.AreEqual<int>(2, res.Length);
+            Assert.HasCount(2, res);
             Assert.AreEqual<Int16>(0x4100, res[0]);
             Assert.AreEqual<Int16>(0x0000, res[1]);
         }
@@ -1841,13 +1841,13 @@ namespace UnitTests
         {
             Converts.StringEndian = Global.eEndian.Big;
             Int16[] res = CValueToString.ValueStringToInt16Registers("\"ABCD\"", 2, 0, true, false, false);
-            Assert.AreEqual<int>(2, res.Length);
+            Assert.HasCount(2, res);
             Assert.AreEqual<Int16>(0x4142, res[0]);
             Assert.AreEqual<Int16>(0x4344, res[1]);
 
             Converts.StringEndian = Global.eEndian.Little;
             res = CValueToString.ValueStringToInt16Registers("\"ABCD\"", 2, 0, true, false, false);
-            Assert.AreEqual<int>(2, res.Length);
+            Assert.HasCount(2, res);
             Assert.AreEqual<Int16>(0x4241, res[0]);
             Assert.AreEqual<Int16>(0x4443, res[1]);
         }
@@ -1857,7 +1857,7 @@ namespace UnitTests
         {
             Converts.StringEndian = Global.eEndian.Big;
             Int16[] res;
-            Assert.ThrowsException<ArgumentException>(() =>
+            Assert.ThrowsExactly<ArgumentException>(() =>
                 res = CValueToString.ValueStringToInt16Registers("\"ABCDE\"", 2, 0, true, false, false)
                 );
         }
@@ -1867,7 +1867,7 @@ namespace UnitTests
         {
             Converts.Float32Endian = Global.eEndian.Little;
             Int16[] res;
-            Assert.ThrowsException<ArgumentException>(() =>
+            Assert.ThrowsExactly<ArgumentException>(() =>
                 res = CValueToString.ValueStringToInt16Registers("12.34", 2, 0, true, false, false)
                 );
         }
@@ -1877,7 +1877,7 @@ namespace UnitTests
         {
             Converts.Float32Endian = Global.eEndian.Little;
             Int16[] res;
-            Assert.ThrowsException<ArgumentException>(() =>
+            Assert.ThrowsExactly<ArgumentException>(() =>
                 res = CValueToString.ValueStringToInt16Registers("12,34", 2, 0, true, false, false)
                 );
         }
@@ -1887,7 +1887,7 @@ namespace UnitTests
         {
             Converts.Float32Endian = Global.eEndian.Little;
             Int16[] res;
-            Assert.ThrowsException<ArgumentException>(() =>
+            Assert.ThrowsExactly<ArgumentException>(() =>
                 res = CValueToString.ValueStringToInt16Registers("12,34", 1, 0, false, true, false)
                 );
         }
@@ -1897,7 +1897,7 @@ namespace UnitTests
         {
             Converts.Float32Endian = Global.eEndian.Little;
             Int16[] res = CValueToString.ValueStringToInt16Registers("12,34", 2, 0, false, true, false);
-            Assert.AreEqual<int>(2, res.Length);
+            Assert.HasCount(2, res);
             Assert.AreEqual<Int16>(0x70a4, res[0]);
             Assert.AreEqual<Int16>(0x4145, res[1]);
         }
@@ -1907,13 +1907,13 @@ namespace UnitTests
         {
             Converts.Float32Endian = Global.eEndian.Little;
             Int16[] res = CValueToString.ValueStringToInt16Registers("-9123.158", 2, 0, false, true, false);
-            Assert.AreEqual<int>(2, res.Length);
+            Assert.HasCount(2, res);
             Assert.AreEqual<Int16>(Helpers.ConvToInt16(0x8ca2), res[0]);
             Assert.AreEqual<Int16>(Helpers.ConvToInt16(0xc60e), res[1]);
 
             Converts.Float32Endian = Global.eEndian.Big;
             res = CValueToString.ValueStringToInt16Registers("-9123.158", 2, 0, false, true, false);
-            Assert.AreEqual<int>(2, res.Length);
+            Assert.HasCount(2, res);
             Assert.AreEqual<Int16>(Helpers.ConvToInt16(0xc60e), res[0]);
             Assert.AreEqual<Int16>(Helpers.ConvToInt16(0x8ca2), res[1]);
         }
@@ -1922,7 +1922,7 @@ namespace UnitTests
         public void Test_float32_6()
         {
             Int16[] res;
-            Assert.ThrowsException<ArgumentException>(() =>
+            Assert.ThrowsExactly<ArgumentException>(() =>
                 res = CValueToString.ValueStringToInt16Registers("12,34,5", 2, 0, false, true, false)
                 );
         }
@@ -1977,7 +1977,7 @@ namespace UnitTests
         public void Test_Int16_6()
         {
             Int32 res;
-            Assert.ThrowsException<ArgumentException>(() =>
+            Assert.ThrowsExactly<ArgumentException>(() =>
                 res = CValueToString.ValueStringToIntValue("65536", 16, 0)
                 );
         }
@@ -2024,7 +2024,7 @@ namespace UnitTests
         public void Test_Int16_h_5()
         {
             Int32 res;
-            Assert.ThrowsException<ArgumentException>(() =>
+            Assert.ThrowsExactly<ArgumentException>(() =>
                 res = CValueToString.ValueStringToIntValue("0x10000", 16, 0)
                 );
         }
@@ -2055,7 +2055,7 @@ namespace UnitTests
         {
             Int32 res;
             Converts.Int32Endian = Global.eEndian.Little;
-            Assert.ThrowsException<ArgumentException>(() =>
+            Assert.ThrowsExactly<ArgumentException>(() =>
                 res = CValueToString.ValueStringToIntValue("0b10000000000000000", 16, 0)
                 );
         }
@@ -2065,7 +2065,7 @@ namespace UnitTests
         {
             Int32 res;
             Converts.Int32Endian = Global.eEndian.Little;
-            Assert.ThrowsException<ArgumentException>(() =>
+            Assert.ThrowsExactly<ArgumentException>(() =>
                 res = CValueToString.ValueStringToIntValue("\"A\"", 16, 0)
                 );
         }
@@ -2075,7 +2075,7 @@ namespace UnitTests
         {
             Int32 res;
             Converts.StringEndian = Global.eEndian.Big;
-            Assert.ThrowsException<ArgumentException>(() =>
+            Assert.ThrowsExactly<ArgumentException>(() =>
                 res = CValueToString.ValueStringToIntValue("ABC", 16, 0)
                 );
         }
@@ -2136,7 +2136,7 @@ namespace UnitTests
         {
             Converts.Int32Endian = Global.eEndian.Little;
             Int32 res;
-            Assert.ThrowsException<ArgumentException>(() =>
+            Assert.ThrowsExactly<ArgumentException>(() =>
                 res = CValueToString.ValueStringToIntValue("4555444333", 32, 0)
                 );
         }
@@ -2186,7 +2186,7 @@ namespace UnitTests
         {
             Converts.Int32Endian = Global.eEndian.Little;
             Int32 res;
-            Assert.ThrowsException<ArgumentException>(() =>
+            Assert.ThrowsExactly<ArgumentException>(() =>
                 res = CValueToString.ValueStringToIntValue("0b110011000011101100101010000110010", 32, 0)
                 );
         }
@@ -2196,7 +2196,7 @@ namespace UnitTests
         {
             Converts.Int32Endian = Global.eEndian.Little;
             Int32 res;
-            Assert.ThrowsException<ArgumentException>(() =>
+            Assert.ThrowsExactly<ArgumentException>(() =>
                 res = CValueToString.ValueStringToIntValue("\"A\"", 32, 0)
                 );
         }
@@ -2206,7 +2206,7 @@ namespace UnitTests
         {
             Converts.StringEndian = Global.eEndian.Big;
             Int32 res;
-            Assert.ThrowsException<ArgumentException>(() =>
+            Assert.ThrowsExactly<ArgumentException>(() =>
                 res = CValueToString.ValueStringToIntValue("\"ABCDE\"", 32, 0)
                 );
         }
@@ -2221,7 +2221,7 @@ namespace UnitTests
         public void Test_UnquoteStr_1()
         {
             string res;
-            Assert.ThrowsException<ArgumentException>(() =>
+            Assert.ThrowsExactly<ArgumentException>(() =>
                 res = CValueToString.UnquoteStr("")
                 );
         }
@@ -2230,7 +2230,7 @@ namespace UnitTests
         public void Test_UnquoteStr_2()
         {
             string res;
-            Assert.ThrowsException<ArgumentException>(() =>
+            Assert.ThrowsExactly<ArgumentException>(() =>
                 res = CValueToString.UnquoteStr("A")
                 );
         }
@@ -2239,7 +2239,7 @@ namespace UnitTests
         public void Test_UnquoteStr_3()
         {
             string res;
-            Assert.ThrowsException<ArgumentException>(() =>
+            Assert.ThrowsExactly<ArgumentException>(() =>
                 res = CValueToString.UnquoteStr("Abc")
                 );
         }
@@ -2248,7 +2248,7 @@ namespace UnitTests
         public void Test_UnquoteStr_4()
         {
             string res;
-            Assert.ThrowsException<ArgumentException>(() =>
+            Assert.ThrowsExactly<ArgumentException>(() =>
                 res = CValueToString.UnquoteStr("\"Abc")
                 );
         }
@@ -2257,7 +2257,7 @@ namespace UnitTests
         public void Test_UnquoteStr_5()
         {
             string res;
-            Assert.ThrowsException<ArgumentException>(() =>
+            Assert.ThrowsExactly<ArgumentException>(() =>
                 res = CValueToString.UnquoteStr("Abc\"")
                 );
         }
@@ -2266,7 +2266,7 @@ namespace UnitTests
         public void Test_UnquoteStr_6()
         {
             string res;
-            Assert.ThrowsException<ArgumentException>(() =>
+            Assert.ThrowsExactly<ArgumentException>(() =>
                 res = CValueToString.UnquoteStr("A\"Abc\"")
                 );
         }

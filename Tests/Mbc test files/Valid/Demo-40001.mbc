@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Numbering schema 40001:
+	 The most commonly used scheme. Ranges 40001–49999 and 400001–465536 are supported and can be used simultaneously. 
+	 Both 40001 and 400001 refer to the first holding register. 
+-->
+<modbuscontrol>
+	<size>
+		<width>880</width>
+		<height>890</height>
+	</size>
+	<modbus>
+		<!-- Connection type and protocol -->
+		<connection>modbus/tcp</connection>
+		<!-- <connection>modbus/tcp</connection> -->
+		<!-- <connection>rtu/tcp</connection> -->
+		<!-- Serial parameters -->
+		<port></port>
+		<baudrate>9600</baudrate>
+		<parity>none</parity>
+		<endofmessagetimeout>100</endofmessagetimeout>
+		<onewireechosuppression>false</onewireechosuppression>
+		<!-- TCP/IP parameters -->
+		<ipaddress>127.0.0.1</ipaddress>
+		<ipport>502</ipport>
+		<!-- General parameters -->
+		<slaveid>1</slaveid>
+		<responsetimeout>1000</responsetimeout>
+		<maximumframesize>256</maximumframesize>
+		<writeholdingregisterfc>6</writeholdingregisterfc>
+		<int32endian>little</int32endian>
+		<float32endian>little</float32endian>
+		<stringendian>little</stringendian>
+		<stringencoding>windows-1252</stringencoding>
+		<samplerate>1000</samplerate>
+		<holdingregisterstart>40001</holdingregisterstart>
+		<interframedelay>0</interframedelay>
+	</modbus>
+	<!--autostart>
+		<enable>true</enable>
+		<page>1</page>
+	</autostart-->
+	<tab>
+		<name>Inputs (read only)</name>
+		<expandfields>true</expandfields>
+		<var>
+			<reg>40001</reg>
+			<text>Software version - Major</text>
+			<type>int16</type>
+			<rw>r</rw>
+			<fcol>mediumblue</fcol>
+		</var>
+		<var>
+			<reg>40002</reg>
+			<text>Software version - Minor</text>
+			<type>int16</type>
+			<rw>r</rw>
+			<fcol>mediumblue</fcol>
+		</var>
+		<var>
+			<reg>40003</reg>
+			<text>Software version - Revision</text>
+			<type>int16</type>
+			<rw>r</rw>
+			<fcol>mediumblue</fcol>
+		</var>
+		<var>
+			<reg>40004</reg>
+			<text>Digital inputs (bitmap)</text>
+			<longdescr>This is a long description that shows as a tooltip.
+Digital inputs bitmap. Each bit corresponds with a digital input.</longdescr>
+			<type>bin16</type>
+			<minlen>8</minlen>
+			<rw>r</rw>
+			<field>
+				<pos>0</pos>
+				<text>RESET</text>
+				<bcol>255,230,230</bcol>
+			</field>
+			<field>
+				<pos>1</pos>
+				<text>IN1</text>
+			</field>
+			<field>
+				<pos>2</pos>
+				<text>IN2</text>
+			</field>
+			<field>
+				<pos>3</pos>
+				<text>IN3</text>
+			</field>
+			<field>
+				<pos>4</pos>
+				<text>IN4</text>
+			</field>
+		</var>
+		<var>
+			<reg>400001</reg>
+			<text>Analog in 1 (0..1023 = 0..10V)</text>
+			<type>uint16</type>
+			<rw>r</rw>
+			<bcol>255,255,200</bcol>
+		</var>
+		<var>
+			<reg>400022</reg>
+			<text>Analog in 2 (0..1023 = 0..10V)</text>
+			<type>uint16</type>
+			<rw>r</rw>
+			<bcol>255,255,200</bcol>
+		</var>
+		<var>
+			<reg>400023</reg>
+			<text>Analog in 3 (0..1023 = 0..10V)</text>
+			<type>uint16</type>
+			<rw>r</rw>
+			<bcol>255,255,200</bcol>
+		</var>
+		<var>
+			<reg>400024</reg>
+			<text>Counter 1 (32-bit)</text>
+			<type>uint32</type>
+			<rw>r</rw>
+		</var>
+		<var>
+			<reg>400026</reg>
+			<text>Counter 2 (32-bit)</text>
+			<type>uint32</type>
+			<rw>r</rw>
+		</var>
+		<var>
+			<reg>400028</reg>
+			<text>Temperature 1 (0,1°C unit, -999 .. 999 is -99,9 .. +99,9°C)</text>
+			<type>int16</type>
+			<decimals>1</decimals>
+			<rw>r</rw>
+		</var>
+		<var>
+			<reg>400029</reg>
+			<text>Temperature 2 (0,1°C unit</text>
+			<type>int16</type>
+			<decimals>1</decimals>
+			<rw>r</rw>
+		</var>
+		<var>
+			<reg>400041</reg>
+			<text>Alarm code (0 = none)</text>
+			<type>int16</type>
+			<rw>r</rw>
+			<fcol>Red</fcol>
+			<bcol>255,200,200</bcol>
+			<enum>
+				<item>
+					<value>0</value>
+					<text>no alarm</text>
+				</item>
+				<item>
+					<value>1</value>
+					<text>T1 FAIL</text>
+				</item>
+				<item>
+					<value>2</value>
+					<text>T1 TOO HOT</text>
+				</item>
+				<item>
+					<value>3</value>
+					<text>T2 FAIL</text>
+				</item>
+				<item>
+					<value>4</value>
+					<text>T2 TOO HOT</text>
+				</item>
+			</enum>
+		</var>
+	</tab>
+</modbuscontrol>

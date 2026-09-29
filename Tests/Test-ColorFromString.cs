@@ -15,7 +15,7 @@ namespace UnitTests
         public void Test_null()
         {
             Color c;
-            Assert.ThrowsException<NullReferenceException>(() =>
+            Assert.ThrowsExactly<NullReferenceException>(() =>
                 c = ColorFromString.ToColor(null)
                 );
         }
@@ -24,7 +24,7 @@ namespace UnitTests
         public void Test_empty()
         {
             Color c;
-            Assert.ThrowsException<ArgumentException>(() =>
+            Assert.ThrowsExactly<ArgumentException>(() =>
                 c = ColorFromString.ToColor("")
                 );
         }
@@ -33,7 +33,7 @@ namespace UnitTests
         public void Test_empty2()
         {
             Color c;
-            Assert.ThrowsException<ArgumentException>(() =>
+            Assert.ThrowsExactly<ArgumentException>(() =>
                 c = ColorFromString.ToColor("  ")
                 );
         }
@@ -42,7 +42,7 @@ namespace UnitTests
         public void Test_garb()
         {
             Color c;
-            Assert.ThrowsException<ArgumentException>(() =>
+            Assert.ThrowsExactly<ArgumentException>(() =>
                 c = ColorFromString.ToColor("kajzhd")
                 );
         }
@@ -51,7 +51,7 @@ namespace UnitTests
         public void Test_garb2()
         {
             Color c;
-            Assert.ThrowsException<ArgumentException>(() =>
+            Assert.ThrowsExactly<ArgumentException>(() =>
                 c = ColorFromString.ToColor("----")
                 );
         }
@@ -108,7 +108,7 @@ namespace UnitTests
         public void Test_html_e1()
         {
             Color c;
-            Assert.ThrowsException<ArgumentException>(() =>
+            Assert.ThrowsExactly<ArgumentException>(() =>
                 c = ColorFromString.ToColor("#")
                 );
         }
@@ -117,7 +117,7 @@ namespace UnitTests
         public void Test_html_e2()
         {
             Color c;
-            Assert.ThrowsException<ArgumentException>(() =>
+            Assert.ThrowsExactly<ArgumentException>(() =>
                 c = ColorFromString.ToColor("#     ")
                 );
         }
@@ -126,7 +126,7 @@ namespace UnitTests
         public void Test_html_e3()
         {
             Color c;
-            Assert.ThrowsException<ArgumentException>(() =>
+            Assert.ThrowsExactly<ArgumentException>(() =>
                 c = ColorFromString.ToColor("#00")
                 );
         }
@@ -135,7 +135,7 @@ namespace UnitTests
         public void Test_html_e4()
         {
             Color c;
-            Assert.ThrowsException<ArgumentException>(() =>
+            Assert.ThrowsExactly<ArgumentException>(() =>
                 c = ColorFromString.ToColor("#1A4C5")
                 );
         }
@@ -144,7 +144,7 @@ namespace UnitTests
         public void Test_html_e5()
         {
             Color c;
-            Assert.ThrowsException<ArgumentException>(() =>
+            Assert.ThrowsExactly<ArgumentException>(() =>
                 c = ColorFromString.ToColor("#1A4C5F9")
                 );
         }
@@ -201,7 +201,7 @@ namespace UnitTests
         public void Test_rgb_e1()
         {
             Color c;
-            Assert.ThrowsException<ArgumentException>(() =>
+            Assert.ThrowsExactly<ArgumentException>(() =>
                     c = ColorFromString.ToColor("100,,")
                     );
         }
@@ -210,7 +210,7 @@ namespace UnitTests
         public void Test_rgb_e2()
         {
             Color c;
-            Assert.ThrowsException<ArgumentException>(() =>
+            Assert.ThrowsExactly<ArgumentException>(() =>
                     c = ColorFromString.ToColor("10,,20,30")
                     );
         }
@@ -219,7 +219,7 @@ namespace UnitTests
         public void Test_rgb_e3()
         {
             Color c;
-            Assert.ThrowsException<ArgumentException>(() =>
+            Assert.ThrowsExactly<ArgumentException>(() =>
                     c = ColorFromString.ToColor("10, 20")
                     );
         }
@@ -228,7 +228,7 @@ namespace UnitTests
         public void Test_rgb_e4()
         {
             Color c;
-            Assert.ThrowsException<ArgumentException>(() =>
+            Assert.ThrowsExactly<ArgumentException>(() =>
                     c = ColorFromString.ToColor("100, 256, 200")
                     );
         }
@@ -237,7 +237,7 @@ namespace UnitTests
         public void Test_rgb_e5()
         {
             Color c;
-            Assert.ThrowsException<ArgumentException>(() =>
+            Assert.ThrowsExactly<ArgumentException>(() =>
                     c = ColorFromString.ToColor("10, 20, 30, 40")
                     );
         }
@@ -286,7 +286,7 @@ namespace UnitTests
         public void Test_name_e1()
         {
             Color c;
-            Assert.ThrowsException<ArgumentException>(() =>
+            Assert.ThrowsExactly<ArgumentException>(() =>
                     c = ColorFromString.ToColor("whi te")
                     );
         }

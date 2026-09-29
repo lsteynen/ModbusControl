@@ -10,51 +10,38 @@ namespace LST.Helpers
     /// </summary>
     public static class AppDpiHelpers
     {
-        public static float SystemDpiX = 96.0F;
-        public static float SystemDpiY = 96.0F;
-
-        public static void GetCurrentSystemDpi(Control control)
+        /// <summary>
+        /// Convert high-DPI value (like position) to standard 96-DPI value 
+        /// </summary>
+        public static float ScaleValueFromThisDpiTo96Dpi(float v, int deviceDpi)
         {
-            // This app is DPI-aware, get system DPI
-            // We do per-monitor-DPI.
-            // Store it in the Global class
-            Graphics g = control.CreateGraphics();
-            SystemDpiX = g.DpiX;
-            SystemDpiY = g.DpiY;
-            g.Dispose();
+            return v / deviceDpi * 96.0f;
         }
 
         /// <summary>
-        /// Convert high-DPI screen X value to standard 96-DPI value 
+        /// Like ScaleValueFromThisDpiTo96Dpi() but returns rounded int
         /// </summary>
-        public static int ScaleXcoordFromSystemDpiTo96Dpi(int x)
+        public static int ScaleValueFromThisDpiTo96DpiInt(float v, int deviceDpi)
         {
-            return (int)Math.Round((double)x / SystemDpiX * 96.0f);
+            // Use Math.Round(xxx, MidpointRounding.AwayFromZero) to get normal rounding insteaad of banker's rounding
+            return (int)Math.Round(ScaleValueFromThisDpiTo96Dpi(v, deviceDpi), MidpointRounding.AwayFromZero);
         }
 
         /// <summary>
-        /// Convert standard 96-DPI value X value to high-DPI value
+        /// Convert standard 96-DPI position to high-DPI high-DPI screen position
         /// </summary>
-        public static int ScaleXcoordFrom96DpiToSystemDpi(int x)
+        public static float ScaleValueFrom96DpiToThisDpi(float v, int deviceDpi)
         {
-            return (int)Math.Round((double)x / 96.0f * SystemDpiX);
+            return v / 96.0f * deviceDpi;
         }
 
         /// <summary>
-        /// Convert high-DPI screen Y value to standard 96-DPI value 
+        /// Convert standard 96-DPI position to high-DPI high-DPI screen position
         /// </summary>
-        public static int ScaleYcoordFromSystemDpiTo96Dpi(int y)
+        public static int ScaleValueFrom96DpiToThisDpiInt(float v, int deviceDpi)
         {
-            return (int)Math.Round((double)y / SystemDpiY * 96.0f);
+            return (int)Math.Round(ScaleValueFrom96DpiToThisDpi(v, deviceDpi), MidpointRounding.AwayFromZero);
         }
 
-        /// <summary>
-        /// Convert standard 96-DPI value Y value to high-DPI value
-        /// </summary>
-        public static int ScaleYcoordFrom96DpiToSystemDpi(int y)
-        {
-            return (int)Math.Round((double)y / 96.0f * SystemDpiY);
-        }
-        
     }
 }

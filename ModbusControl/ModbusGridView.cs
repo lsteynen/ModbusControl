@@ -7,6 +7,7 @@ using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 //#define DEBUG_VISIBILITY
 
@@ -172,8 +173,8 @@ namespace ModbusControl
         private bool mFilterIsRegex;
         private bool mFilterIsCaseSensitive;
         private Regex mFilterRegex;                     // null if not used
-        private float originalFontSize;
-        private float currentZoomFactor = 1;
+        private float zoomFactor = 1.00f;               // current zoom factor
+        private float baseGridFontSizeAt96Dpi;          // default gridfont size 
         public bool customPainting = true;
         private RegItem editingReg;
         private RegfieldItem editingRegfield;
@@ -187,7 +188,7 @@ namespace ModbusControl
         private bool mStartEditOnAnyCharacter;
         // entry error timer
         private DataRow inputErrorRow = null;       // the drow currently in input error
-        private Timer inputErrorTimer;              // timer to make the input error stay for a (inputErrorTimerDelay) ms
+        private System.Windows.Forms.Timer inputErrorTimer;              // timer to make the input error stay for a (inputErrorTimerDelay) ms
         private const int inputErrorTimerDelay = 2000;
 
          #endregion
@@ -247,6 +248,11 @@ namespace ModbusControl
         public bool LongTooltipTime
         {
             set { setLongTooltipTime(value); }
+        }
+
+        public DataGridView TheGrid
+        {
+            get { return grid; }
         }
 
         /// <summary>
@@ -390,7 +396,7 @@ namespace ModbusControl
             grid.ClipboardCopyMode = DataGridViewClipboardCopyMode.Disable;
 
             // init the error timer
-            inputErrorTimer = new Timer();
+            inputErrorTimer = new System.Windows.Forms.Timer();
             inputErrorTimer.Interval = inputErrorTimerDelay;
             inputErrorTimer.Tick += InputErrorTimer_Tick;
 
@@ -405,10 +411,11 @@ namespace ModbusControl
             grid.Columns[(int)eGridColIndex.Properties].DataPropertyName = "InfoStr";
             grid.Columns[(int)eGridColIndex.Value].DataPropertyName = "ValueStr";
 
+            // get default font size
+            baseGridFontSizeAt96Dpi = AppDpiHelpers.ScaleValueFromThisDpiTo96Dpi(grid.Font.Size, DeviceDpi);
+
             // set grid icons and their sizes
             SetIconSizes();
-
-            originalFontSize = Font.Size;
 
             // show debugging columns
             //.Columns[(int)eGridColIndex.Debuginfo].Visible = true;
@@ -818,7 +825,7 @@ namespace ModbusControl
                     else
                     {
                         e.Graphics.DrawIcon(expandIcon, e.CellBounds.X + xpos + expandIconPadding, ypos);
-                    }
+                    }                    
                 }
                 // indent
                 xpos += indentWidth;
@@ -1063,7 +1070,7 @@ namespace ModbusControl
 
         private void ApplyFiltering()
         {
-            //Debug.Print("DoFilter(): str=" + mFilterString + "  regex=" + mFilterRegex.ToString() + "  casins=" + mFilterCaseSensitive.ToString());
+            Debug.Print($"ApplyFiltering(): str={mFilterString}, regex={mFilterRegex}, casesensitive={mFilterIsCaseSensitive}");
             
             // got data?
             if (data == null)
@@ -1212,7 +1219,7 @@ namespace ModbusControl
         /// </summary>
         private void UpdateDataExpandedCollapsed()
         {
-            //Debug.Print("UpdateExpandedCollapsed()");
+            Debug.Print("UpdateExpandedCollapsed()");
 
             // Check all parents, if collapsed: hide its children and grandchildren
 
@@ -1339,13 +1346,13 @@ namespace ModbusControl
                 int level = (int)dRow[(int)dtColIndex.RowLevel];
 
                 /* 
-                //op het icon geklikt? stricte check
+                // clicked expand/collapse icon? strict check
                 int iconXPos = (indentWidth * level) + ExpandIconPadding;
                 int iconYPos = (datagridView1.Rows[e.RowIndex].Height - ExpandIconHeight) / 2;
                 Rectangle hitRect = new Rectangle(iconXPos, iconYPos, ExpandIconWidth, ExpandIconHeight);
                 */
 
-                //op het icon geklikt? tolerante check, je mag er ook wat naast klikken
+                // clicked expand/collapse icon? loose check, you can click a bit next to it
                 int clickMargin = 3;
                 int iconXPos = (indentWidth * level) + expandIconPadding - clickMargin;
                 int iconYPos = (grid.Rows[e.RowIndex].Height - expandIconHeight - (2 * clickMargin)) / 2;
@@ -1581,9 +1588,12 @@ namespace ModbusControl
             if (grid.CurrentCell.ColumnIndex == (int)eGridColIndex.Value)
             {
                 // is it a EnumValueEditingControl?
-                EnumValueEditingControl cb = e.Control as EnumValueEditingControl;
-                if (cb != null)
+                if (e.Control is EnumValueEditingControl cb)
                 {
+                    // fix to set the correct font when the editor starts the first time on the 100% screen, otherwise the font is too small, scaling issue
+                    cb.Enter -= DGV_EnumValueEditingControl_Enter;
+                    cb.Enter += DGV_EnumValueEditingControl_Enter;
+
                     // get IsEnum property 
                     EnumValueCell c = this.grid.CurrentCell as EnumValueCell;
                     if (c.IsEnum)
@@ -1619,11 +1629,14 @@ namespace ModbusControl
                         editingBufferedChar = (char)0;
                     }
                 }
-                
+
                 // is it a TextBoxEditingControl?
-                DataGridViewTextBoxEditingControl ed = e.Control as DataGridViewTextBoxEditingControl;
-                if (ed != null)
+                if (e.Control is DataGridViewTextBoxEditingControl ed)
                 {
+                    // fix to set the correct font when the editor starts the first time on the 100% screen, otherwise the font is too small, scaling issue
+                    ed.Enter -= DGV_TextBoxEditor_Enter;
+                    ed.Enter += DGV_TextBoxEditor_Enter;                
+
                     // got a buffered key?
                     // then send it to the editing control
                     if (editingBufferedChar > 0)
@@ -1636,21 +1649,47 @@ namespace ModbusControl
             }
         }
 
-        public void SetZoom(float factor)
+        private void DGV_TextBoxEditor_Enter(object? sender, EventArgs e)
         {
-            if (factor != currentZoomFactor)
+            // fix to set the correct font when the editor starts the first time on the 100% screen, otherwise the font is too small, scaling issue
+            Debug.WriteLine($"--- TextBoxEditor_Enter");
+            if (sender is DataGridViewTextBoxEditingControl ed)
             {
-                currentZoomFactor = factor;
-
-                // zoom this grid
-                float newFontSize = originalFontSize * currentZoomFactor;
-                Font newFont = new Font(Font.FontFamily, newFontSize, Font.Style, Font.Unit);
-                grid.ColumnHeadersDefaultCellStyle.Font = newFont;
-                grid.DefaultCellStyle.Font = newFont;
-
-                // adjust the grid icons 
-                SetIconSizes();
+                ed.Font = grid.DefaultCellStyle.Font;
+                //ed.BackColor = Color.Yellow;
+                //ed.ForeColor = Color.Red;
             }
+        }
+
+        private void DGV_EnumValueEditingControl_Enter(object? sender, EventArgs e)
+        {
+            // fix to set the correct font when the editor starts the first time on the 100% screen, otherwise the font is too small, scaling issue
+            Debug.WriteLine($"--- EnumValueEditingControl");
+            if (sender is EnumValueEditingControl ed)
+            {
+                ed.Font = grid.DefaultCellStyle.Font;
+                //ed.BackColor = Color.Yellow;
+                //ed.ForeColor = Color.Red;
+            }
+        }
+
+        public void SetZoomFactor(float newZoomFactor)
+        {
+            Debug.Print($"SetZoomFactor={newZoomFactor}");
+
+            zoomFactor = newZoomFactor;
+
+            float newFontSize = AppDpiHelpers.ScaleValueFrom96DpiToThisDpi(baseGridFontSizeAt96Dpi * zoomFactor, DeviceDpi);
+            Debug.Print($"Set new font size = {newFontSize}, DeviceDpi={DeviceDpi}");
+            grid.Font = new Font(grid.Font.FontFamily, newFontSize, grid.Font.Style, grid.Font.Unit);
+            //grid.Font = new Font(
+            //    "Microsoft Sans Serif",
+            //    (float)newFontSize,
+            //    FontStyle.Regular,
+            //    GraphicsUnit.Point);
+
+            // adjust the grid icons 
+            SetIconSizes();
         }
 
         /// <summary>
@@ -2730,26 +2769,28 @@ namespace ModbusControl
         private void SetIconSizes()
         {
             // the icons in ModbusGridViewRes2 have images in multiple sizes
-            // select one mathing the zoom factor
+            // select the one matching the zoom factor
 
-            // default size at zoomfactor=1 = 9x9 pixels
-            int size = (int)(9.0 * currentZoomFactor + 0.5);    // round
+            // default size at zoomfactor=1 and DPI=96
+            float iconBaseSize = 7.0f;
+            int size = AppDpiHelpers.ScaleValueFrom96DpiToThisDpiInt(iconBaseSize * zoomFactor, DeviceDpi);  
 
             expandIcon = new Icon(ModbusGridViewRes2.TreeExpand, size, size);
             collapseIcon = new Icon(ModbusGridViewRes2.TreeCollapse, size, size);
-            enumIndicatorIcon = new Icon(ModbusGridViewRes2.EnumIndicator, size, size);
+            float enumIndicatorIconBaseSize = 12f;
+            int enumIndicatorSize = AppDpiHelpers.ScaleValueFrom96DpiToThisDpiInt(enumIndicatorIconBaseSize * zoomFactor, DeviceDpi);
+            enumIndicatorIcon = new Icon(ModbusGridViewRes2.EnumIndicator, enumIndicatorSize, enumIndicatorSize);
 
             // size is used multiple times
             expandIconWidth = expandIcon.Width;
             expandIconHeight = expandIcon.Height;
 
             //Debug.Print("SetIconSizes(): currentZoomFactor=" + currentZoomFactor.ToString() + ", size=" + size.ToString() + ", iconWidth=" + expandIcon.Width.ToString());
-
         }
 
         private void grid_ColumnWidthChanged(object sender, DataGridViewColumnEventArgs e)
         {
-            // call the handler
+            // callback
             if ((OnColumnWidthChanged != null) && (isLoading == false))
             {
                 OnColumnWidthChanged(this);

@@ -28,123 +28,124 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.buttonCancel = new System.Windows.Forms.Button();
-            this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
-            this.labelMessagetext = new System.Windows.Forms.Label();
-            this.pic = new System.Windows.Forms.PictureBox();
-            this.buttonOK = new System.Windows.Forms.Button();
-            this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
-            this.tableLayoutPanel1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pic)).BeginInit();
-            this.tableLayoutPanel2.SuspendLayout();
-            this.SuspendLayout();
+            buttonCancel = new Button();
+            tableLayoutPanel1 = new TableLayoutPanel();
+            labelMessagetext = new Label();
+            pic = new PictureBox();
+            tableLayoutPanel2 = new TableLayoutPanel();
+            buttonOK = new Button();
+            tableLayoutPanel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)pic).BeginInit();
+            tableLayoutPanel2.SuspendLayout();
+            SuspendLayout();
             // 
             // buttonCancel
             // 
-            this.buttonCancel.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.buttonCancel.AutoSize = true;
-            this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.buttonCancel.Location = new System.Drawing.Point(84, 3);
-            this.buttonCancel.Name = "buttonCancel";
-            this.buttonCancel.Size = new System.Drawing.Size(75, 23);
-            this.buttonCancel.TabIndex = 1;
-            this.buttonCancel.Text = "Cancel";
-            this.buttonCancel.UseVisualStyleBackColor = true;
+            buttonCancel.Anchor = AnchorStyles.Top;
+            buttonCancel.AutoSize = true;
+            buttonCancel.DialogResult = DialogResult.Cancel;
+            buttonCancel.Location = new Point(84, 3);
+            buttonCancel.Name = "buttonCancel";
+            buttonCancel.Size = new Size(75, 25);
+            buttonCancel.TabIndex = 1;
+            buttonCancel.Text = "Cancel";
+            buttonCancel.UseVisualStyleBackColor = true;
             // 
             // tableLayoutPanel1
             // 
-            this.tableLayoutPanel1.AutoSize = true;
-            this.tableLayoutPanel1.ColumnCount = 2;
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tableLayoutPanel1.Controls.Add(this.labelMessagetext, 1, 0);
-            this.tableLayoutPanel1.Controls.Add(this.pic, 0, 0);
-            this.tableLayoutPanel1.Controls.Add(this.tableLayoutPanel2, 0, 1);
-            this.tableLayoutPanel1.Location = new System.Drawing.Point(12, 12);
-            this.tableLayoutPanel1.Name = "tableLayoutPanel1";
-            this.tableLayoutPanel1.RowCount = 2;
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(485, 102);
-            this.tableLayoutPanel1.TabIndex = 0;
+            tableLayoutPanel1.AutoSize = true;
+            tableLayoutPanel1.ColumnCount = 2;
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle());
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle());
+            tableLayoutPanel1.Controls.Add(labelMessagetext, 1, 0);
+            tableLayoutPanel1.Controls.Add(pic, 0, 0);
+            tableLayoutPanel1.Controls.Add(tableLayoutPanel2, 0, 1);
+            tableLayoutPanel1.Location = new Point(12, 12);
+            tableLayoutPanel1.Name = "tableLayoutPanel1";
+            tableLayoutPanel1.RowCount = 2;
+            tableLayoutPanel1.RowStyles.Add(new RowStyle());
+            tableLayoutPanel1.RowStyles.Add(new RowStyle());
+            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
+            tableLayoutPanel1.Size = new Size(485, 101);
+            tableLayoutPanel1.TabIndex = 0;
             // 
             // labelMessagetext
             // 
-            this.labelMessagetext.AutoSize = true;
-            this.labelMessagetext.Location = new System.Drawing.Point(72, 0);
-            this.labelMessagetext.Margin = new System.Windows.Forms.Padding(0, 0, 0, 12);
-            this.labelMessagetext.MaximumSize = new System.Drawing.Size(400, 0);
-            this.labelMessagetext.Name = "labelMessagetext";
-            this.labelMessagetext.Size = new System.Drawing.Size(79, 13);
-            this.labelMessagetext.TabIndex = 0;
-            this.labelMessagetext.Text = "Message text...";
+            labelMessagetext.AutoSize = true;
+            labelMessagetext.Location = new Point(72, 0);
+            labelMessagetext.Margin = new Padding(0, 0, 0, 12);
+            labelMessagetext.MaximumSize = new Size(400, 0);
+            labelMessagetext.Name = "labelMessagetext";
+            labelMessagetext.Size = new Size(79, 13);
+            labelMessagetext.TabIndex = 0;
+            labelMessagetext.Text = "Message text...";
             // 
             // pic
             // 
-            this.pic.Location = new System.Drawing.Point(12, 12);
-            this.pic.Margin = new System.Windows.Forms.Padding(12, 12, 20, 12);
-            this.pic.Name = "pic";
-            this.pic.Size = new System.Drawing.Size(40, 40);
-            this.pic.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
-            this.pic.TabIndex = 18;
-            this.pic.TabStop = false;
-            // 
-            // buttonOK
-            // 
-            this.buttonOK.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.buttonOK.AutoSize = true;
-            this.buttonOK.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.buttonOK.Location = new System.Drawing.Point(3, 3);
-            this.buttonOK.Name = "buttonOK";
-            this.buttonOK.Size = new System.Drawing.Size(75, 23);
-            this.buttonOK.TabIndex = 0;
-            this.buttonOK.Text = "OK";
-            this.buttonOK.UseVisualStyleBackColor = true;
+            pic.Location = new Point(12, 12);
+            pic.Margin = new Padding(12, 12, 20, 12);
+            pic.Name = "pic";
+            pic.Size = new Size(40, 40);
+            pic.SizeMode = PictureBoxSizeMode.AutoSize;
+            pic.TabIndex = 18;
+            pic.TabStop = false;
             // 
             // tableLayoutPanel2
             // 
-            this.tableLayoutPanel2.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.tableLayoutPanel2.AutoSize = true;
-            this.tableLayoutPanel2.ColumnCount = 2;
-            this.tableLayoutPanel1.SetColumnSpan(this.tableLayoutPanel2, 2);
-            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel2.Controls.Add(this.buttonCancel, 1, 0);
-            this.tableLayoutPanel2.Controls.Add(this.buttonOK, 0, 0);
-            this.tableLayoutPanel2.Location = new System.Drawing.Point(161, 67);
-            this.tableLayoutPanel2.Name = "tableLayoutPanel2";
-            this.tableLayoutPanel2.RowCount = 1;
-            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel2.Size = new System.Drawing.Size(162, 29);
-            this.tableLayoutPanel2.TabIndex = 1;
+            tableLayoutPanel2.Anchor = AnchorStyles.Top;
+            tableLayoutPanel2.AutoSize = true;
+            tableLayoutPanel2.ColumnCount = 2;
+            tableLayoutPanel1.SetColumnSpan(tableLayoutPanel2, 2);
+            tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
+            tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
+            tableLayoutPanel2.Controls.Add(buttonCancel, 1, 0);
+            tableLayoutPanel2.Controls.Add(buttonOK, 0, 0);
+            tableLayoutPanel2.Location = new Point(161, 67);
+            tableLayoutPanel2.Name = "tableLayoutPanel2";
+            tableLayoutPanel2.RowCount = 1;
+            tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
+            tableLayoutPanel2.Size = new Size(162, 31);
+            tableLayoutPanel2.TabIndex = 1;
+            // 
+            // buttonOK
+            // 
+            buttonOK.Anchor = AnchorStyles.Top;
+            buttonOK.AutoSize = true;
+            buttonOK.DialogResult = DialogResult.OK;
+            buttonOK.Location = new Point(3, 3);
+            buttonOK.Name = "buttonOK";
+            buttonOK.Size = new Size(75, 25);
+            buttonOK.TabIndex = 0;
+            buttonOK.Text = "OK";
+            buttonOK.UseVisualStyleBackColor = true;
             // 
             // StretchyMessageForm
             // 
-            this.AcceptButton = this.buttonOK;
-            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.AutoSize = true;
-            this.CancelButton = this.buttonCancel;
-            this.ClientSize = new System.Drawing.Size(504, 125);
-            this.ControlBox = false;
-            this.Controls.Add(this.tableLayoutPanel1);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
-            this.MaximizeBox = false;
-            this.MinimizeBox = false;
-            this.Name = "StretchyMessageForm";
-            this.Padding = new System.Windows.Forms.Padding(12, 12, 24, 12);
-            this.ShowIcon = false;
-            this.ShowInTaskbar = false;
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "Title";
-            this.tableLayoutPanel1.ResumeLayout(false);
-            this.tableLayoutPanel1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pic)).EndInit();
-            this.tableLayoutPanel2.ResumeLayout(false);
-            this.tableLayoutPanel2.PerformLayout();
-            this.ResumeLayout(false);
-            this.PerformLayout();
+            AcceptButton = buttonOK;
+            AutoScaleDimensions = new SizeF(96F, 96F);
+            AutoScaleMode = AutoScaleMode.Dpi;
+            CancelButton = buttonCancel;
+            ClientSize = new Size(504, 118);
+            ControlBox = false;
+            Controls.Add(tableLayoutPanel1);
+            Font = new Font("Microsoft Sans Serif", 8.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            FormBorderStyle = FormBorderStyle.FixedDialog;
+            MaximizeBox = false;
+            MinimizeBox = false;
+            Name = "StretchyMessageForm";
+            Padding = new Padding(12, 12, 24, 12);
+            ShowIcon = false;
+            ShowInTaskbar = false;
+            StartPosition = FormStartPosition.CenterParent;
+            Text = "Title";
+            Shown += StretchyMessageForm_Shown;
+            tableLayoutPanel1.ResumeLayout(false);
+            tableLayoutPanel1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)pic).EndInit();
+            tableLayoutPanel2.ResumeLayout(false);
+            tableLayoutPanel2.PerformLayout();
+            ResumeLayout(false);
+            PerformLayout();
 
         }
 

@@ -28,692 +28,661 @@ namespace ModbusControl
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
+            components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
-            this.statusStrip = new System.Windows.Forms.StatusStrip();
-            this.lblStatus = new System.Windows.Forms.ToolStripStatusLabel();
-            this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
-            this.DiagnosticsTimer = new System.Windows.Forms.Timer(this.components);
-            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-            this.chkFilterRegex = new System.Windows.Forms.CheckBox();
-            this.chkFilterCaseSensitive = new System.Windows.Forms.CheckBox();
-            this.btnFilterClose = new System.Windows.Forms.Button();
-            this.btnFilterClear = new System.Windows.Forms.Button();
-            this.menuStrip1 = new System.Windows.Forms.MenuStrip();
-            this.fileMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.openProjectFileMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.reloadProjectFileMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.editProjectFileMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.openFileLocationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
-            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
-            this.saveConfigurationMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator6 = new System.Windows.Forms.ToolStripSeparator();
-            this.importRegistersFromFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.exportRegistersToFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator8 = new System.Windows.Forms.ToolStripSeparator();
-            this.exitMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.connectionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.openConnectionMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.closeConnectionMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator7 = new System.Windows.Forms.ToolStripSeparator();
-            this.startPollingMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.stopPollingMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.pollOnceMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.viewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.zoomInToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.zoomOutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.resetZoomToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator9 = new System.Windows.Forms.ToolStripSeparator();
-            this.findFilterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.extraMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.configurationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.optionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
-            this.customQueriesMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.diagnosticsCountersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.loggingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.helpMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.checkForUpdateMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.aboutMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStrip1 = new System.Windows.Forms.ToolStrip();
-            this.OpenProjectToolbutton = new System.Windows.Forms.ToolStripButton();
-            this.ReloadToolbutton = new System.Windows.Forms.ToolStripButton();
-            this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
-            this.OpenConnectionToolbutton = new System.Windows.Forms.ToolStripButton();
-            this.CloseConnectionToolbutton = new System.Windows.Forms.ToolStripButton();
-            this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
-            this.StartPollingToolbutton = new System.Windows.Forms.ToolStripButton();
-            this.StopPollingToolbutton = new System.Windows.Forms.ToolStripButton();
-            this.PollOnceToolbutton = new System.Windows.Forms.ToolStripButton();
-            this.tabControl1 = new System.Windows.Forms.TabControl();
-            this.StatusbarTimer = new System.Windows.Forms.Timer(this.components);
-            this.tbFilterText = new System.Windows.Forms.TextBox();
-            this.filterPanel = new System.Windows.Forms.Panel();
-            this.label1 = new System.Windows.Forms.Label();
-            this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
-            this.recentFilesMenuItem = new RecentsToolStripMenuItem();
-            this.statusStrip.SuspendLayout();
-            this.menuStrip1.SuspendLayout();
-            this.toolStrip1.SuspendLayout();
-            this.filterPanel.SuspendLayout();
-            this.tableLayoutPanel1.SuspendLayout();
-            this.SuspendLayout();
+            statusStrip = new StatusStrip();
+            lblStatus = new ToolStripStatusLabel();
+            openFileDialog1 = new OpenFileDialog();
+            DiagnosticsTimer = new System.Windows.Forms.Timer(components);
+            toolTip1 = new ToolTip(components);
+            chkFilterRegex = new CheckBox();
+            chkFilterCaseSensitive = new CheckBox();
+            btnFilterClose = new Button();
+            btnFilterClear = new Button();
+            menuStrip1 = new MenuStrip();
+            fileMenuItem = new ToolStripMenuItem();
+            openProjectFileMenuItem = new ToolStripMenuItem();
+            reloadProjectFileMenuItem = new ToolStripMenuItem();
+            editProjectFileMenuItem = new ToolStripMenuItem();
+            openFileLocationToolStripMenuItem = new ToolStripMenuItem();
+            toolStripSeparator1 = new ToolStripSeparator();
+            recentsToolStripMenuItem1 = new RecentsToolStripMenuItem();
+            toolStripSeparator2 = new ToolStripSeparator();
+            saveConfigurationMenuItem = new ToolStripMenuItem();
+            toolStripSeparator6 = new ToolStripSeparator();
+            importRegistersFromFileToolStripMenuItem = new ToolStripMenuItem();
+            exportRegistersToFileToolStripMenuItem = new ToolStripMenuItem();
+            toolStripSeparator8 = new ToolStripSeparator();
+            exitMenuItem = new ToolStripMenuItem();
+            connectionToolStripMenuItem = new ToolStripMenuItem();
+            openConnectionMenuItem = new ToolStripMenuItem();
+            closeConnectionMenuItem = new ToolStripMenuItem();
+            toolStripSeparator7 = new ToolStripSeparator();
+            startPollingMenuItem = new ToolStripMenuItem();
+            stopPollingMenuItem = new ToolStripMenuItem();
+            pollOnceMenuItem = new ToolStripMenuItem();
+            viewToolStripMenuItem = new ToolStripMenuItem();
+            zoomInToolStripMenuItem = new ToolStripMenuItem();
+            zoomOutToolStripMenuItem = new ToolStripMenuItem();
+            resetZoomToolStripMenuItem = new ToolStripMenuItem();
+            toolStripSeparator9 = new ToolStripSeparator();
+            findFilterToolStripMenuItem = new ToolStripMenuItem();
+            extraMenuItem = new ToolStripMenuItem();
+            configurationToolStripMenuItem = new ToolStripMenuItem();
+            optionsToolStripMenuItem = new ToolStripMenuItem();
+            toolStripSeparator5 = new ToolStripSeparator();
+            customQueriesMenuItem = new ToolStripMenuItem();
+            diagnosticsCountersToolStripMenuItem = new ToolStripMenuItem();
+            loggingToolStripMenuItem = new ToolStripMenuItem();
+            helpMenuItem = new ToolStripMenuItem();
+            checkForUpdateMenuItem = new ToolStripMenuItem();
+            aboutMenuItem = new ToolStripMenuItem();
+            toolStrip1 = new ToolStrip();
+            OpenProjectToolbutton = new ToolStripButton();
+            ReloadToolbutton = new ToolStripButton();
+            toolStripSeparator3 = new ToolStripSeparator();
+            OpenConnectionToolbutton = new ToolStripButton();
+            CloseConnectionToolbutton = new ToolStripButton();
+            toolStripSeparator4 = new ToolStripSeparator();
+            StartPollingToolbutton = new ToolStripButton();
+            StopPollingToolbutton = new ToolStripButton();
+            PollOnceToolbutton = new ToolStripButton();
+            tabControl1 = new TabControl();
+            StatusbarTimer = new System.Windows.Forms.Timer(components);
+            tbFilterText = new TextBox();
+            filterPanel = new Panel();
+            tableLayoutPanel1 = new TableLayoutPanel();
+            label1 = new Label();
+            butDebug = new Button();
+            statusStrip.SuspendLayout();
+            menuStrip1.SuspendLayout();
+            toolStrip1.SuspendLayout();
+            filterPanel.SuspendLayout();
+            tableLayoutPanel1.SuspendLayout();
+            SuspendLayout();
             // 
             // statusStrip
             // 
-            this.statusStrip.ImageScalingSize = new System.Drawing.Size(20, 20);
-            this.statusStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.lblStatus});
-            this.statusStrip.Location = new System.Drawing.Point(0, 440);
-            this.statusStrip.Name = "statusStrip";
-            this.statusStrip.ShowItemToolTips = true;
-            this.statusStrip.Size = new System.Drawing.Size(592, 22);
-            this.statusStrip.TabIndex = 0;
-            this.statusStrip.Text = "statusStrip";
+            statusStrip.ImageScalingSize = new Size(20, 20);
+            statusStrip.Items.AddRange(new ToolStripItem[] { lblStatus });
+            statusStrip.Location = new Point(0, 440);
+            statusStrip.Name = "statusStrip";
+            statusStrip.ShowItemToolTips = true;
+            statusStrip.Size = new Size(592, 22);
+            statusStrip.TabIndex = 0;
+            statusStrip.Text = "statusStrip";
             // 
             // lblStatus
             // 
-            this.lblStatus.Name = "lblStatus";
-            this.lblStatus.Size = new System.Drawing.Size(577, 17);
-            this.lblStatus.Spring = true;
-            this.lblStatus.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            lblStatus.Name = "lblStatus";
+            lblStatus.Size = new Size(577, 17);
+            lblStatus.Spring = true;
+            lblStatus.TextAlign = ContentAlignment.MiddleLeft;
             // 
             // openFileDialog1
             // 
-            this.openFileDialog1.DefaultExt = "mbc";
-            this.openFileDialog1.Filter = "ModbusControl project (*.mbc)|*.mbc|All files (*.*)|*.*";
+            openFileDialog1.DefaultExt = "mbc";
+            openFileDialog1.Filter = "ModbusControl project (*.mbc)|*.mbc|All files (*.*)|*.*";
             // 
             // DiagnosticsTimer
             // 
-            this.DiagnosticsTimer.Tick += new System.EventHandler(this.Formtimer1_Tick);
+            DiagnosticsTimer.Tick += Formtimer1_Tick;
             // 
             // toolTip1
             // 
-            this.toolTip1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(225)))));
+            toolTip1.BackColor = Color.FromArgb(255, 255, 225);
             // 
             // chkFilterRegex
             // 
-            this.chkFilterRegex.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.chkFilterRegex.AutoSize = true;
-            this.chkFilterRegex.Location = new System.Drawing.Point(396, 4);
-            this.chkFilterRegex.Margin = new System.Windows.Forms.Padding(8, 4, 3, 3);
-            this.chkFilterRegex.Name = "chkFilterRegex";
-            this.chkFilterRegex.Size = new System.Drawing.Size(57, 17);
-            this.chkFilterRegex.TabIndex = 3;
-            this.chkFilterRegex.Text = "Regex";
-            this.toolTip1.SetToolTip(this.chkFilterRegex, resources.GetString("chkFilterRegex.ToolTip"));
-            this.chkFilterRegex.UseVisualStyleBackColor = true;
-            this.chkFilterRegex.CheckedChanged += new System.EventHandler(this.chkFilterRegex_CheckedChanged);
+            chkFilterRegex.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            chkFilterRegex.AutoSize = true;
+            chkFilterRegex.Location = new Point(392, 4);
+            chkFilterRegex.Margin = new Padding(8, 4, 3, 3);
+            chkFilterRegex.Name = "chkFilterRegex";
+            chkFilterRegex.Size = new Size(57, 17);
+            chkFilterRegex.TabIndex = 3;
+            chkFilterRegex.Text = "Regex";
+            toolTip1.SetToolTip(chkFilterRegex, resources.GetString("chkFilterRegex.ToolTip"));
+            chkFilterRegex.UseVisualStyleBackColor = true;
+            chkFilterRegex.CheckedChanged += chkFilterRegex_CheckedChanged;
             // 
             // chkFilterCaseSensitive
             // 
-            this.chkFilterCaseSensitive.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.chkFilterCaseSensitive.AutoSize = true;
-            this.chkFilterCaseSensitive.Location = new System.Drawing.Point(458, 4);
-            this.chkFilterCaseSensitive.Margin = new System.Windows.Forms.Padding(2, 4, 2, 2);
-            this.chkFilterCaseSensitive.Name = "chkFilterCaseSensitive";
-            this.chkFilterCaseSensitive.Size = new System.Drawing.Size(82, 17);
-            this.chkFilterCaseSensitive.TabIndex = 4;
-            this.chkFilterCaseSensitive.Text = "Match case";
-            this.toolTip1.SetToolTip(this.chkFilterCaseSensitive, "Case sensitive");
-            this.chkFilterCaseSensitive.UseVisualStyleBackColor = true;
-            this.chkFilterCaseSensitive.CheckedChanged += new System.EventHandler(this.ChkFilterCaseSensitive_CheckedChanged);
+            chkFilterCaseSensitive.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            chkFilterCaseSensitive.AutoSize = true;
+            chkFilterCaseSensitive.Location = new Point(454, 4);
+            chkFilterCaseSensitive.Margin = new Padding(2, 4, 2, 2);
+            chkFilterCaseSensitive.Name = "chkFilterCaseSensitive";
+            chkFilterCaseSensitive.Size = new Size(82, 17);
+            chkFilterCaseSensitive.TabIndex = 4;
+            chkFilterCaseSensitive.Text = "Match case";
+            toolTip1.SetToolTip(chkFilterCaseSensitive, "Case sensitive");
+            chkFilterCaseSensitive.UseVisualStyleBackColor = true;
+            chkFilterCaseSensitive.CheckedChanged += ChkFilterCaseSensitive_CheckedChanged;
             // 
             // btnFilterClose
             // 
-            this.btnFilterClose.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnFilterClose.AutoSize = true;
-            this.btnFilterClose.Location = new System.Drawing.Point(544, 2);
-            this.btnFilterClose.Margin = new System.Windows.Forms.Padding(2);
-            this.btnFilterClose.Name = "btnFilterClose";
-            this.btnFilterClose.Size = new System.Drawing.Size(44, 20);
-            this.btnFilterClose.TabIndex = 5;
-            this.btnFilterClose.Text = "Close";
-            this.toolTip1.SetToolTip(this.btnFilterClose, "Close find/filter");
-            this.btnFilterClose.UseVisualStyleBackColor = true;
-            this.btnFilterClose.Click += new System.EventHandler(this.BtnFilterClose_Click);
+            btnFilterClose.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            btnFilterClose.AutoSize = true;
+            btnFilterClose.Location = new Point(540, 2);
+            btnFilterClose.Margin = new Padding(2);
+            btnFilterClose.Name = "btnFilterClose";
+            btnFilterClose.Size = new Size(48, 20);
+            btnFilterClose.TabIndex = 5;
+            btnFilterClose.Text = "Close";
+            toolTip1.SetToolTip(btnFilterClose, "Close find/filter");
+            btnFilterClose.UseVisualStyleBackColor = true;
+            btnFilterClose.Click += BtnFilterClose_Click;
             // 
             // btnFilterClear
             // 
-            this.btnFilterClear.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnFilterClear.AutoSize = true;
-            this.btnFilterClear.Image = ((System.Drawing.Image)(resources.GetObject("btnFilterClear.Image")));
-            this.btnFilterClear.Location = new System.Drawing.Point(361, 2);
-            this.btnFilterClear.Margin = new System.Windows.Forms.Padding(0, 2, 2, 2);
-            this.btnFilterClear.Name = "btnFilterClear";
-            this.btnFilterClear.Size = new System.Drawing.Size(25, 20);
-            this.btnFilterClear.TabIndex = 2;
-            this.toolTip1.SetToolTip(this.btnFilterClear, "Clear search");
-            this.btnFilterClear.UseVisualStyleBackColor = true;
-            this.btnFilterClear.Click += new System.EventHandler(this.BtnFilterClear_Click);
+            btnFilterClear.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            btnFilterClear.AutoSize = true;
+            btnFilterClear.Image = (Image)resources.GetObject("btnFilterClear.Image");
+            btnFilterClear.Location = new Point(357, 2);
+            btnFilterClear.Margin = new Padding(0, 2, 2, 2);
+            btnFilterClear.Name = "btnFilterClear";
+            btnFilterClear.Size = new Size(25, 20);
+            btnFilterClear.TabIndex = 2;
+            toolTip1.SetToolTip(btnFilterClear, "Clear search");
+            btnFilterClear.UseVisualStyleBackColor = true;
+            btnFilterClear.Click += BtnFilterClear_Click;
             // 
             // menuStrip1
             // 
-            this.menuStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
-            this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.fileMenuItem,
-            this.connectionToolStripMenuItem,
-            this.viewToolStripMenuItem,
-            this.extraMenuItem,
-            this.helpMenuItem});
-            this.menuStrip1.Location = new System.Drawing.Point(0, 0);
-            this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Padding = new System.Windows.Forms.Padding(5, 2, 0, 2);
-            this.menuStrip1.Size = new System.Drawing.Size(592, 24);
-            this.menuStrip1.TabIndex = 0;
-            this.menuStrip1.Text = "menuStrip1";
+            menuStrip1.Font = new Font("Segoe UI", 9F);
+            menuStrip1.ImageScalingSize = new Size(20, 20);
+            menuStrip1.Items.AddRange(new ToolStripItem[] { fileMenuItem, connectionToolStripMenuItem, viewToolStripMenuItem, extraMenuItem, helpMenuItem });
+            menuStrip1.Location = new Point(0, 0);
+            menuStrip1.Name = "menuStrip1";
+            menuStrip1.Padding = new Padding(5, 2, 0, 2);
+            menuStrip1.Size = new Size(592, 24);
+            menuStrip1.TabIndex = 0;
+            menuStrip1.Text = "menuStrip1";
             // 
             // fileMenuItem
             // 
-            this.fileMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.openProjectFileMenuItem,
-            this.reloadProjectFileMenuItem,
-            this.editProjectFileMenuItem,
-            this.openFileLocationToolStripMenuItem,
-            this.toolStripSeparator1,
-            this.recentFilesMenuItem,
-            this.toolStripSeparator2,
-            this.saveConfigurationMenuItem,
-            this.toolStripSeparator6,
-            this.importRegistersFromFileToolStripMenuItem,
-            this.exportRegistersToFileToolStripMenuItem,
-            this.toolStripSeparator8,
-            this.exitMenuItem});
-            this.fileMenuItem.Name = "fileMenuItem";
-            this.fileMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.F)));
-            this.fileMenuItem.Size = new System.Drawing.Size(37, 20);
-            this.fileMenuItem.Text = "&File";
+            fileMenuItem.DropDownItems.AddRange(new ToolStripItem[] { openProjectFileMenuItem, reloadProjectFileMenuItem, editProjectFileMenuItem, openFileLocationToolStripMenuItem, toolStripSeparator1, recentsToolStripMenuItem1, toolStripSeparator2, saveConfigurationMenuItem, toolStripSeparator6, importRegistersFromFileToolStripMenuItem, exportRegistersToFileToolStripMenuItem, toolStripSeparator8, exitMenuItem });
+            fileMenuItem.Name = "fileMenuItem";
+            fileMenuItem.ShortcutKeys = Keys.Alt | Keys.F;
+            fileMenuItem.Size = new Size(37, 20);
+            fileMenuItem.Text = "&File";
             // 
             // openProjectFileMenuItem
             // 
-            this.openProjectFileMenuItem.Name = "openProjectFileMenuItem";
-            this.openProjectFileMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.O)));
-            this.openProjectFileMenuItem.Size = new System.Drawing.Size(255, 22);
-            this.openProjectFileMenuItem.Text = "&Open project file...";
-            this.openProjectFileMenuItem.Click += new System.EventHandler(this.OpenProjectFileMenuItem_Click);
+            openProjectFileMenuItem.Name = "openProjectFileMenuItem";
+            openProjectFileMenuItem.ShortcutKeys = Keys.Alt | Keys.O;
+            openProjectFileMenuItem.Size = new Size(255, 22);
+            openProjectFileMenuItem.Text = "&Open project file...";
+            openProjectFileMenuItem.Click += OpenProjectFileMenuItem_Click;
             // 
             // reloadProjectFileMenuItem
             // 
-            this.reloadProjectFileMenuItem.Name = "reloadProjectFileMenuItem";
-            this.reloadProjectFileMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.R)));
-            this.reloadProjectFileMenuItem.Size = new System.Drawing.Size(255, 22);
-            this.reloadProjectFileMenuItem.Text = "&Reload project file";
-            this.reloadProjectFileMenuItem.Click += new System.EventHandler(this.ReloadProjectFileMenuItem_Click);
+            reloadProjectFileMenuItem.Name = "reloadProjectFileMenuItem";
+            reloadProjectFileMenuItem.ShortcutKeys = Keys.Alt | Keys.R;
+            reloadProjectFileMenuItem.Size = new Size(255, 22);
+            reloadProjectFileMenuItem.Text = "&Reload project file";
+            reloadProjectFileMenuItem.Click += ReloadProjectFileMenuItem_Click;
             // 
             // editProjectFileMenuItem
             // 
-            this.editProjectFileMenuItem.Name = "editProjectFileMenuItem";
-            this.editProjectFileMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.E)));
-            this.editProjectFileMenuItem.Size = new System.Drawing.Size(255, 22);
-            this.editProjectFileMenuItem.Text = "&Edit project file";
-            this.editProjectFileMenuItem.Click += new System.EventHandler(this.EditProjectFileMenuItem_Click);
+            editProjectFileMenuItem.Name = "editProjectFileMenuItem";
+            editProjectFileMenuItem.ShortcutKeys = Keys.Alt | Keys.E;
+            editProjectFileMenuItem.Size = new Size(255, 22);
+            editProjectFileMenuItem.Text = "&Edit project file";
+            editProjectFileMenuItem.Click += EditProjectFileMenuItem_Click;
             // 
             // openFileLocationToolStripMenuItem
             // 
-            this.openFileLocationToolStripMenuItem.Name = "openFileLocationToolStripMenuItem";
-            this.openFileLocationToolStripMenuItem.Size = new System.Drawing.Size(255, 22);
-            this.openFileLocationToolStripMenuItem.Text = "Open containing &folder in explorer";
-            this.openFileLocationToolStripMenuItem.Click += new System.EventHandler(this.OpenContainingFolderToolStripMenuItem_Click);
+            openFileLocationToolStripMenuItem.Name = "openFileLocationToolStripMenuItem";
+            openFileLocationToolStripMenuItem.Size = new Size(255, 22);
+            openFileLocationToolStripMenuItem.Text = "Open containing &folder in explorer";
+            openFileLocationToolStripMenuItem.Click += OpenContainingFolderToolStripMenuItem_Click;
             // 
             // toolStripSeparator1
             // 
-            this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(252, 6);
+            toolStripSeparator1.Name = "toolStripSeparator1";
+            toolStripSeparator1.Size = new Size(252, 6);
+            // 
+            // recentsToolStripMenuItem1
+            // 
+            recentsToolStripMenuItem1.Enabled = false;
+            recentsToolStripMenuItem1.Name = "recentsToolStripMenuItem1";
+            recentsToolStripMenuItem1.ShortcutKeys = Keys.Alt | Keys.F;
+            recentsToolStripMenuItem1.Size = new Size(255, 22);
+            recentsToolStripMenuItem1.Text = "Re&cent project files";
+            recentsToolStripMenuItem1.ItemClick += recentsToolStripMenuItem1_ItemClick;
             // 
             // toolStripSeparator2
             // 
-            this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(252, 6);
+            toolStripSeparator2.Name = "toolStripSeparator2";
+            toolStripSeparator2.Size = new Size(252, 6);
             // 
             // saveConfigurationMenuItem
             // 
-            this.saveConfigurationMenuItem.Name = "saveConfigurationMenuItem";
-            this.saveConfigurationMenuItem.Size = new System.Drawing.Size(255, 22);
-            this.saveConfigurationMenuItem.Text = "&Save project file...";
-            this.saveConfigurationMenuItem.Click += new System.EventHandler(this.SaveConfigurationMenuItem_Click);
+            saveConfigurationMenuItem.Name = "saveConfigurationMenuItem";
+            saveConfigurationMenuItem.Size = new Size(255, 22);
+            saveConfigurationMenuItem.Text = "&Save project file...";
+            saveConfigurationMenuItem.Click += SaveConfigurationMenuItem_Click;
             // 
             // toolStripSeparator6
             // 
-            this.toolStripSeparator6.Name = "toolStripSeparator6";
-            this.toolStripSeparator6.Size = new System.Drawing.Size(252, 6);
+            toolStripSeparator6.Name = "toolStripSeparator6";
+            toolStripSeparator6.Size = new Size(252, 6);
             // 
             // importRegistersFromFileToolStripMenuItem
             // 
-            this.importRegistersFromFileToolStripMenuItem.Name = "importRegistersFromFileToolStripMenuItem";
-            this.importRegistersFromFileToolStripMenuItem.Size = new System.Drawing.Size(255, 22);
-            this.importRegistersFromFileToolStripMenuItem.Text = "I&mport registers from file...";
-            this.importRegistersFromFileToolStripMenuItem.Click += new System.EventHandler(this.ImportRegistersFromFileToolStripMenuItem_Click);
+            importRegistersFromFileToolStripMenuItem.Name = "importRegistersFromFileToolStripMenuItem";
+            importRegistersFromFileToolStripMenuItem.Size = new Size(255, 22);
+            importRegistersFromFileToolStripMenuItem.Text = "I&mport registers from file...";
+            importRegistersFromFileToolStripMenuItem.Click += ImportRegistersFromFileToolStripMenuItem_Click;
             // 
             // exportRegistersToFileToolStripMenuItem
             // 
-            this.exportRegistersToFileToolStripMenuItem.Name = "exportRegistersToFileToolStripMenuItem";
-            this.exportRegistersToFileToolStripMenuItem.Size = new System.Drawing.Size(255, 22);
-            this.exportRegistersToFileToolStripMenuItem.Text = "Ex&port registers to file...";
-            this.exportRegistersToFileToolStripMenuItem.Click += new System.EventHandler(this.ExportRegistersToFileToolStripMenuItem_Click);
+            exportRegistersToFileToolStripMenuItem.Name = "exportRegistersToFileToolStripMenuItem";
+            exportRegistersToFileToolStripMenuItem.Size = new Size(255, 22);
+            exportRegistersToFileToolStripMenuItem.Text = "Ex&port registers to file...";
+            exportRegistersToFileToolStripMenuItem.Click += ExportRegistersToFileToolStripMenuItem_Click;
             // 
             // toolStripSeparator8
             // 
-            this.toolStripSeparator8.Name = "toolStripSeparator8";
-            this.toolStripSeparator8.Size = new System.Drawing.Size(252, 6);
+            toolStripSeparator8.Name = "toolStripSeparator8";
+            toolStripSeparator8.Size = new Size(252, 6);
             // 
             // exitMenuItem
             // 
-            this.exitMenuItem.Name = "exitMenuItem";
-            this.exitMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.X)));
-            this.exitMenuItem.Size = new System.Drawing.Size(255, 22);
-            this.exitMenuItem.Text = "E&xit";
-            this.exitMenuItem.Click += new System.EventHandler(this.ExitMenuItem_Click);
+            exitMenuItem.Name = "exitMenuItem";
+            exitMenuItem.ShortcutKeys = Keys.Alt | Keys.X;
+            exitMenuItem.Size = new Size(255, 22);
+            exitMenuItem.Text = "E&xit";
+            exitMenuItem.Click += ExitMenuItem_Click;
             // 
             // connectionToolStripMenuItem
             // 
-            this.connectionToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.openConnectionMenuItem,
-            this.closeConnectionMenuItem,
-            this.toolStripSeparator7,
-            this.startPollingMenuItem,
-            this.stopPollingMenuItem,
-            this.pollOnceMenuItem});
-            this.connectionToolStripMenuItem.Name = "connectionToolStripMenuItem";
-            this.connectionToolStripMenuItem.Size = new System.Drawing.Size(81, 20);
-            this.connectionToolStripMenuItem.Text = "&Connection";
+            connectionToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { openConnectionMenuItem, closeConnectionMenuItem, toolStripSeparator7, startPollingMenuItem, stopPollingMenuItem, pollOnceMenuItem });
+            connectionToolStripMenuItem.Name = "connectionToolStripMenuItem";
+            connectionToolStripMenuItem.Size = new Size(81, 20);
+            connectionToolStripMenuItem.Text = "&Connection";
             // 
             // openConnectionMenuItem
             // 
-            this.openConnectionMenuItem.Name = "openConnectionMenuItem";
-            this.openConnectionMenuItem.Size = new System.Drawing.Size(166, 22);
-            this.openConnectionMenuItem.Text = "&Open connection";
-            this.openConnectionMenuItem.Click += new System.EventHandler(this.OpenConnectionMenuItem_Click);
+            openConnectionMenuItem.Name = "openConnectionMenuItem";
+            openConnectionMenuItem.Size = new Size(166, 22);
+            openConnectionMenuItem.Text = "&Open connection";
+            openConnectionMenuItem.Click += OpenConnectionMenuItem_Click;
             // 
             // closeConnectionMenuItem
             // 
-            this.closeConnectionMenuItem.Name = "closeConnectionMenuItem";
-            this.closeConnectionMenuItem.Size = new System.Drawing.Size(166, 22);
-            this.closeConnectionMenuItem.Text = "&Close connection";
-            this.closeConnectionMenuItem.Click += new System.EventHandler(this.CloseConnectionMenuItem_Click);
+            closeConnectionMenuItem.Name = "closeConnectionMenuItem";
+            closeConnectionMenuItem.Size = new Size(166, 22);
+            closeConnectionMenuItem.Text = "&Close connection";
+            closeConnectionMenuItem.Click += CloseConnectionMenuItem_Click;
             // 
             // toolStripSeparator7
             // 
-            this.toolStripSeparator7.Name = "toolStripSeparator7";
-            this.toolStripSeparator7.Size = new System.Drawing.Size(163, 6);
+            toolStripSeparator7.Name = "toolStripSeparator7";
+            toolStripSeparator7.Size = new Size(163, 6);
             // 
             // startPollingMenuItem
             // 
-            this.startPollingMenuItem.Name = "startPollingMenuItem";
-            this.startPollingMenuItem.Size = new System.Drawing.Size(166, 22);
-            this.startPollingMenuItem.Text = "&Start polling";
-            this.startPollingMenuItem.Click += new System.EventHandler(this.StartPollingMenuItem_Click);
+            startPollingMenuItem.Name = "startPollingMenuItem";
+            startPollingMenuItem.Size = new Size(166, 22);
+            startPollingMenuItem.Text = "&Start polling";
+            startPollingMenuItem.Click += StartPollingMenuItem_Click;
             // 
             // stopPollingMenuItem
             // 
-            this.stopPollingMenuItem.Name = "stopPollingMenuItem";
-            this.stopPollingMenuItem.Size = new System.Drawing.Size(166, 22);
-            this.stopPollingMenuItem.Text = "Sto&p polling";
-            this.stopPollingMenuItem.Click += new System.EventHandler(this.StopPollingMeuItem_Click);
+            stopPollingMenuItem.Name = "stopPollingMenuItem";
+            stopPollingMenuItem.Size = new Size(166, 22);
+            stopPollingMenuItem.Text = "Sto&p polling";
+            stopPollingMenuItem.Click += StopPollingMeuItem_Click;
             // 
             // pollOnceMenuItem
             // 
-            this.pollOnceMenuItem.Name = "pollOnceMenuItem";
-            this.pollOnceMenuItem.Size = new System.Drawing.Size(166, 22);
-            this.pollOnceMenuItem.Text = "Poll on&ce";
-            this.pollOnceMenuItem.Click += new System.EventHandler(this.PollOnceMenuItem_Click);
+            pollOnceMenuItem.Name = "pollOnceMenuItem";
+            pollOnceMenuItem.Size = new Size(166, 22);
+            pollOnceMenuItem.Text = "Poll on&ce";
+            pollOnceMenuItem.Click += PollOnceMenuItem_Click;
             // 
             // viewToolStripMenuItem
             // 
-            this.viewToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.zoomInToolStripMenuItem,
-            this.zoomOutToolStripMenuItem,
-            this.resetZoomToolStripMenuItem,
-            this.toolStripSeparator9,
-            this.findFilterToolStripMenuItem});
-            this.viewToolStripMenuItem.Name = "viewToolStripMenuItem";
-            this.viewToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
-            this.viewToolStripMenuItem.Text = "&View";
+            viewToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { zoomInToolStripMenuItem, zoomOutToolStripMenuItem, resetZoomToolStripMenuItem, toolStripSeparator9, findFilterToolStripMenuItem });
+            viewToolStripMenuItem.Name = "viewToolStripMenuItem";
+            viewToolStripMenuItem.Size = new Size(44, 20);
+            viewToolStripMenuItem.Text = "&View";
             // 
             // zoomInToolStripMenuItem
             // 
-            this.zoomInToolStripMenuItem.Name = "zoomInToolStripMenuItem";
-            this.zoomInToolStripMenuItem.ShortcutKeyDisplayString = "Ctrl+ +";
-            this.zoomInToolStripMenuItem.Size = new System.Drawing.Size(178, 22);
-            this.zoomInToolStripMenuItem.Text = "Zoom &in";
-            this.zoomInToolStripMenuItem.Click += new System.EventHandler(this.ZoomInToolStripMenuItem_Click);
+            zoomInToolStripMenuItem.Name = "zoomInToolStripMenuItem";
+            zoomInToolStripMenuItem.ShortcutKeyDisplayString = "Ctrl+ +";
+            zoomInToolStripMenuItem.Size = new Size(178, 22);
+            zoomInToolStripMenuItem.Text = "Zoom &in";
+            zoomInToolStripMenuItem.Click += ZoomInToolStripMenuItem_Click;
             // 
             // zoomOutToolStripMenuItem
             // 
-            this.zoomOutToolStripMenuItem.Name = "zoomOutToolStripMenuItem";
-            this.zoomOutToolStripMenuItem.ShortcutKeyDisplayString = "Ctrl+ -";
-            this.zoomOutToolStripMenuItem.Size = new System.Drawing.Size(178, 22);
-            this.zoomOutToolStripMenuItem.Text = "Zoom &out";
-            this.zoomOutToolStripMenuItem.Click += new System.EventHandler(this.ZoomOutToolStripMenuItem_Click);
+            zoomOutToolStripMenuItem.Name = "zoomOutToolStripMenuItem";
+            zoomOutToolStripMenuItem.ShortcutKeyDisplayString = "Ctrl+ -";
+            zoomOutToolStripMenuItem.Size = new Size(178, 22);
+            zoomOutToolStripMenuItem.Text = "Zoom &out";
+            zoomOutToolStripMenuItem.Click += ZoomOutToolStripMenuItem_Click;
             // 
             // resetZoomToolStripMenuItem
             // 
-            this.resetZoomToolStripMenuItem.Name = "resetZoomToolStripMenuItem";
-            this.resetZoomToolStripMenuItem.ShortcutKeyDisplayString = "Ctrl+ 0";
-            this.resetZoomToolStripMenuItem.Size = new System.Drawing.Size(178, 22);
-            this.resetZoomToolStripMenuItem.Text = "&Reset zoom";
-            this.resetZoomToolStripMenuItem.Click += new System.EventHandler(this.ResetZoomToolStripMenuItem_Click);
+            resetZoomToolStripMenuItem.Name = "resetZoomToolStripMenuItem";
+            resetZoomToolStripMenuItem.ShortcutKeyDisplayString = "Ctrl+ 0";
+            resetZoomToolStripMenuItem.Size = new Size(178, 22);
+            resetZoomToolStripMenuItem.Text = "&Reset zoom";
+            resetZoomToolStripMenuItem.Click += ResetZoomToolStripMenuItem_Click;
             // 
             // toolStripSeparator9
             // 
-            this.toolStripSeparator9.Name = "toolStripSeparator9";
-            this.toolStripSeparator9.Size = new System.Drawing.Size(175, 6);
+            toolStripSeparator9.Name = "toolStripSeparator9";
+            toolStripSeparator9.Size = new Size(175, 6);
             // 
             // findFilterToolStripMenuItem
             // 
-            this.findFilterToolStripMenuItem.Name = "findFilterToolStripMenuItem";
-            this.findFilterToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.F)));
-            this.findFilterToolStripMenuItem.Size = new System.Drawing.Size(178, 22);
-            this.findFilterToolStripMenuItem.Text = "&Find/Filter";
-            this.findFilterToolStripMenuItem.Click += new System.EventHandler(this.FindFilterToolStripMenuItem_Click);
+            findFilterToolStripMenuItem.Name = "findFilterToolStripMenuItem";
+            findFilterToolStripMenuItem.ShortcutKeys = Keys.Control | Keys.F;
+            findFilterToolStripMenuItem.Size = new Size(178, 22);
+            findFilterToolStripMenuItem.Text = "&Find/Filter";
+            findFilterToolStripMenuItem.Click += FindFilterToolStripMenuItem_Click;
             // 
             // extraMenuItem
             // 
-            this.extraMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.configurationToolStripMenuItem,
-            this.optionsToolStripMenuItem,
-            this.toolStripSeparator5,
-            this.customQueriesMenuItem,
-            this.diagnosticsCountersToolStripMenuItem,
-            this.loggingToolStripMenuItem});
-            this.extraMenuItem.Name = "extraMenuItem";
-            this.extraMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.X)));
-            this.extraMenuItem.Size = new System.Drawing.Size(44, 20);
-            this.extraMenuItem.Text = "E&xtra";
+            extraMenuItem.DropDownItems.AddRange(new ToolStripItem[] { configurationToolStripMenuItem, optionsToolStripMenuItem, toolStripSeparator5, customQueriesMenuItem, diagnosticsCountersToolStripMenuItem, loggingToolStripMenuItem });
+            extraMenuItem.Name = "extraMenuItem";
+            extraMenuItem.ShortcutKeys = Keys.Alt | Keys.X;
+            extraMenuItem.Size = new Size(44, 20);
+            extraMenuItem.Text = "E&xtra";
             // 
             // configurationToolStripMenuItem
             // 
-            this.configurationToolStripMenuItem.Name = "configurationToolStripMenuItem";
-            this.configurationToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.C)));
-            this.configurationToolStripMenuItem.Size = new System.Drawing.Size(224, 22);
-            this.configurationToolStripMenuItem.Text = "Project &configuration";
-            this.configurationToolStripMenuItem.Click += new System.EventHandler(this.ConfigurationToolStripMenuItem_Click);
+            configurationToolStripMenuItem.Name = "configurationToolStripMenuItem";
+            configurationToolStripMenuItem.ShortcutKeys = Keys.Alt | Keys.C;
+            configurationToolStripMenuItem.Size = new Size(224, 22);
+            configurationToolStripMenuItem.Text = "Project &configuration";
+            configurationToolStripMenuItem.Click += ConfigurationToolStripMenuItem_Click;
             // 
             // optionsToolStripMenuItem
             // 
-            this.optionsToolStripMenuItem.Name = "optionsToolStripMenuItem";
-            this.optionsToolStripMenuItem.Size = new System.Drawing.Size(224, 22);
-            this.optionsToolStripMenuItem.Text = "&Options";
-            this.optionsToolStripMenuItem.Click += new System.EventHandler(this.OptionsToolStripMenuItem_Click);
+            optionsToolStripMenuItem.Name = "optionsToolStripMenuItem";
+            optionsToolStripMenuItem.Size = new Size(224, 22);
+            optionsToolStripMenuItem.Text = "&Options";
+            optionsToolStripMenuItem.Click += OptionsToolStripMenuItem_Click;
             // 
             // toolStripSeparator5
             // 
-            this.toolStripSeparator5.Name = "toolStripSeparator5";
-            this.toolStripSeparator5.Size = new System.Drawing.Size(221, 6);
+            toolStripSeparator5.Name = "toolStripSeparator5";
+            toolStripSeparator5.Size = new Size(221, 6);
             // 
             // customQueriesMenuItem
             // 
-            this.customQueriesMenuItem.Name = "customQueriesMenuItem";
-            this.customQueriesMenuItem.Size = new System.Drawing.Size(224, 22);
-            this.customQueriesMenuItem.Text = "Custom modbus &queries";
-            this.customQueriesMenuItem.Click += new System.EventHandler(this.CustomQueriesToolStripMenuItem_Click);
+            customQueriesMenuItem.Name = "customQueriesMenuItem";
+            customQueriesMenuItem.Size = new Size(224, 22);
+            customQueriesMenuItem.Text = "Custom modbus &queries";
+            customQueriesMenuItem.Click += CustomQueriesToolStripMenuItem_Click;
             // 
             // diagnosticsCountersToolStripMenuItem
             // 
-            this.diagnosticsCountersToolStripMenuItem.Name = "diagnosticsCountersToolStripMenuItem";
-            this.diagnosticsCountersToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.D)));
-            this.diagnosticsCountersToolStripMenuItem.Size = new System.Drawing.Size(224, 22);
-            this.diagnosticsCountersToolStripMenuItem.Text = "&Diagnostics counters";
-            this.diagnosticsCountersToolStripMenuItem.Click += new System.EventHandler(this.DiagnosticsCountersToolStripMenuItem_Click);
+            diagnosticsCountersToolStripMenuItem.Name = "diagnosticsCountersToolStripMenuItem";
+            diagnosticsCountersToolStripMenuItem.ShortcutKeys = Keys.Alt | Keys.D;
+            diagnosticsCountersToolStripMenuItem.Size = new Size(224, 22);
+            diagnosticsCountersToolStripMenuItem.Text = "&Diagnostics counters";
+            diagnosticsCountersToolStripMenuItem.Click += DiagnosticsCountersToolStripMenuItem_Click;
             // 
             // loggingToolStripMenuItem
             // 
-            this.loggingToolStripMenuItem.Name = "loggingToolStripMenuItem";
-            this.loggingToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.L)));
-            this.loggingToolStripMenuItem.Size = new System.Drawing.Size(224, 22);
-            this.loggingToolStripMenuItem.Text = "&Logging";
-            this.loggingToolStripMenuItem.Click += new System.EventHandler(this.LoggingToolStripMenuItem_Click);
+            loggingToolStripMenuItem.Name = "loggingToolStripMenuItem";
+            loggingToolStripMenuItem.ShortcutKeys = Keys.Alt | Keys.L;
+            loggingToolStripMenuItem.Size = new Size(224, 22);
+            loggingToolStripMenuItem.Text = "&Logging";
+            loggingToolStripMenuItem.Click += LoggingToolStripMenuItem_Click;
             // 
             // helpMenuItem
             // 
-            this.helpMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.checkForUpdateMenuItem,
-            this.aboutMenuItem});
-            this.helpMenuItem.Name = "helpMenuItem";
-            this.helpMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.H)));
-            this.helpMenuItem.Size = new System.Drawing.Size(44, 20);
-            this.helpMenuItem.Text = "&Help";
+            helpMenuItem.DropDownItems.AddRange(new ToolStripItem[] { checkForUpdateMenuItem, aboutMenuItem });
+            helpMenuItem.Name = "helpMenuItem";
+            helpMenuItem.ShortcutKeys = Keys.Alt | Keys.H;
+            helpMenuItem.Size = new Size(44, 20);
+            helpMenuItem.Text = "&Help";
             // 
             // checkForUpdateMenuItem
             // 
-            this.checkForUpdateMenuItem.Name = "checkForUpdateMenuItem";
-            this.checkForUpdateMenuItem.Size = new System.Drawing.Size(194, 22);
-            this.checkForUpdateMenuItem.Text = "Check for &updates";
-            this.checkForUpdateMenuItem.Click += new System.EventHandler(this.CheckForUpdateMenuItem_Click);
+            checkForUpdateMenuItem.Name = "checkForUpdateMenuItem";
+            checkForUpdateMenuItem.Size = new Size(194, 22);
+            checkForUpdateMenuItem.Text = "Check for &updates";
+            checkForUpdateMenuItem.Click += CheckForUpdateMenuItem_Click;
             // 
             // aboutMenuItem
             // 
-            this.aboutMenuItem.Name = "aboutMenuItem";
-            this.aboutMenuItem.Size = new System.Drawing.Size(194, 22);
-            this.aboutMenuItem.Text = "&About ModbusControl";
-            this.aboutMenuItem.Click += new System.EventHandler(this.AboutMenuItem_Click);
+            aboutMenuItem.Name = "aboutMenuItem";
+            aboutMenuItem.Size = new Size(194, 22);
+            aboutMenuItem.Text = "&About ModbusControl";
+            aboutMenuItem.Click += AboutMenuItem_Click;
             // 
             // toolStrip1
             // 
-            this.toolStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
-            this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.OpenProjectToolbutton,
-            this.ReloadToolbutton,
-            this.toolStripSeparator3,
-            this.OpenConnectionToolbutton,
-            this.CloseConnectionToolbutton,
-            this.toolStripSeparator4,
-            this.StartPollingToolbutton,
-            this.StopPollingToolbutton,
-            this.PollOnceToolbutton});
-            this.toolStrip1.Location = new System.Drawing.Point(0, 24);
-            this.toolStrip1.Name = "toolStrip1";
-            this.toolStrip1.Size = new System.Drawing.Size(592, 27);
-            this.toolStrip1.TabIndex = 1;
-            this.toolStrip1.Text = "toolStrip1";
+            toolStrip1.ImageScalingSize = new Size(20, 20);
+            toolStrip1.Items.AddRange(new ToolStripItem[] { OpenProjectToolbutton, ReloadToolbutton, toolStripSeparator3, OpenConnectionToolbutton, CloseConnectionToolbutton, toolStripSeparator4, StartPollingToolbutton, StopPollingToolbutton, PollOnceToolbutton });
+            toolStrip1.Location = new Point(0, 24);
+            toolStrip1.Name = "toolStrip1";
+            toolStrip1.Size = new Size(592, 27);
+            toolStrip1.TabIndex = 1;
+            toolStrip1.Text = "toolStrip1";
             // 
             // OpenProjectToolbutton
             // 
-            this.OpenProjectToolbutton.AutoToolTip = false;
-            this.OpenProjectToolbutton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.OpenProjectToolbutton.Image = ((System.Drawing.Image)(resources.GetObject("OpenProjectToolbutton.Image")));
-            this.OpenProjectToolbutton.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.OpenProjectToolbutton.Name = "OpenProjectToolbutton";
-            this.OpenProjectToolbutton.Size = new System.Drawing.Size(24, 24);
-            this.OpenProjectToolbutton.Text = "Open project file";
-            this.OpenProjectToolbutton.ToolTipText = "Open project file";
-            this.OpenProjectToolbutton.Click += new System.EventHandler(this.OpenProjectToolbutton_Click);
+            OpenProjectToolbutton.AutoToolTip = false;
+            OpenProjectToolbutton.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            OpenProjectToolbutton.Image = (Image)resources.GetObject("OpenProjectToolbutton.Image");
+            OpenProjectToolbutton.ImageTransparentColor = Color.Magenta;
+            OpenProjectToolbutton.Name = "OpenProjectToolbutton";
+            OpenProjectToolbutton.Size = new Size(24, 24);
+            OpenProjectToolbutton.Text = "Open project file";
+            OpenProjectToolbutton.ToolTipText = "Open project file";
+            OpenProjectToolbutton.Click += OpenProjectToolbutton_Click;
             // 
             // ReloadToolbutton
             // 
-            this.ReloadToolbutton.AutoToolTip = false;
-            this.ReloadToolbutton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.ReloadToolbutton.Enabled = false;
-            this.ReloadToolbutton.Image = ((System.Drawing.Image)(resources.GetObject("ReloadToolbutton.Image")));
-            this.ReloadToolbutton.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.ReloadToolbutton.Name = "ReloadToolbutton";
-            this.ReloadToolbutton.Size = new System.Drawing.Size(24, 24);
-            this.ReloadToolbutton.Text = "Reload project file";
-            this.ReloadToolbutton.ToolTipText = "Reload project file";
-            this.ReloadToolbutton.Click += new System.EventHandler(this.ReloadProjectToolbutton_Click);
+            ReloadToolbutton.AutoToolTip = false;
+            ReloadToolbutton.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            ReloadToolbutton.Enabled = false;
+            ReloadToolbutton.Image = (Image)resources.GetObject("ReloadToolbutton.Image");
+            ReloadToolbutton.ImageTransparentColor = Color.Magenta;
+            ReloadToolbutton.Name = "ReloadToolbutton";
+            ReloadToolbutton.Size = new Size(24, 24);
+            ReloadToolbutton.Text = "Reload project file";
+            ReloadToolbutton.ToolTipText = "Reload project file";
+            ReloadToolbutton.Click += ReloadProjectToolbutton_Click;
             // 
             // toolStripSeparator3
             // 
-            this.toolStripSeparator3.Name = "toolStripSeparator3";
-            this.toolStripSeparator3.Size = new System.Drawing.Size(6, 27);
+            toolStripSeparator3.Name = "toolStripSeparator3";
+            toolStripSeparator3.Size = new Size(6, 27);
             // 
             // OpenConnectionToolbutton
             // 
-            this.OpenConnectionToolbutton.AutoToolTip = false;
-            this.OpenConnectionToolbutton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.OpenConnectionToolbutton.Image = ((System.Drawing.Image)(resources.GetObject("OpenConnectionToolbutton.Image")));
-            this.OpenConnectionToolbutton.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.OpenConnectionToolbutton.Name = "OpenConnectionToolbutton";
-            this.OpenConnectionToolbutton.Size = new System.Drawing.Size(24, 24);
-            this.OpenConnectionToolbutton.Text = "Open connection";
-            this.OpenConnectionToolbutton.ToolTipText = "Open connection";
-            this.OpenConnectionToolbutton.Click += new System.EventHandler(this.OpenConnectionToolbutton_Click);
+            OpenConnectionToolbutton.AutoToolTip = false;
+            OpenConnectionToolbutton.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            OpenConnectionToolbutton.Image = (Image)resources.GetObject("OpenConnectionToolbutton.Image");
+            OpenConnectionToolbutton.ImageTransparentColor = Color.Magenta;
+            OpenConnectionToolbutton.Name = "OpenConnectionToolbutton";
+            OpenConnectionToolbutton.Size = new Size(24, 24);
+            OpenConnectionToolbutton.Text = "Open connection";
+            OpenConnectionToolbutton.ToolTipText = "Open connection";
+            OpenConnectionToolbutton.Click += OpenConnectionToolbutton_Click;
             // 
             // CloseConnectionToolbutton
             // 
-            this.CloseConnectionToolbutton.AutoToolTip = false;
-            this.CloseConnectionToolbutton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.CloseConnectionToolbutton.Image = ((System.Drawing.Image)(resources.GetObject("CloseConnectionToolbutton.Image")));
-            this.CloseConnectionToolbutton.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.CloseConnectionToolbutton.Name = "CloseConnectionToolbutton";
-            this.CloseConnectionToolbutton.Size = new System.Drawing.Size(24, 24);
-            this.CloseConnectionToolbutton.Text = "Close connection";
-            this.CloseConnectionToolbutton.ToolTipText = "Close connection";
-            this.CloseConnectionToolbutton.Click += new System.EventHandler(this.CloseConnectionToolbutton_Click);
+            CloseConnectionToolbutton.AutoToolTip = false;
+            CloseConnectionToolbutton.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            CloseConnectionToolbutton.Image = (Image)resources.GetObject("CloseConnectionToolbutton.Image");
+            CloseConnectionToolbutton.ImageTransparentColor = Color.Magenta;
+            CloseConnectionToolbutton.Name = "CloseConnectionToolbutton";
+            CloseConnectionToolbutton.Size = new Size(24, 24);
+            CloseConnectionToolbutton.Text = "Close connection";
+            CloseConnectionToolbutton.ToolTipText = "Close connection";
+            CloseConnectionToolbutton.Click += CloseConnectionToolbutton_Click;
             // 
             // toolStripSeparator4
             // 
-            this.toolStripSeparator4.Name = "toolStripSeparator4";
-            this.toolStripSeparator4.Size = new System.Drawing.Size(6, 27);
+            toolStripSeparator4.Name = "toolStripSeparator4";
+            toolStripSeparator4.Size = new Size(6, 27);
             // 
             // StartPollingToolbutton
             // 
-            this.StartPollingToolbutton.AutoToolTip = false;
-            this.StartPollingToolbutton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.StartPollingToolbutton.Image = ((System.Drawing.Image)(resources.GetObject("StartPollingToolbutton.Image")));
-            this.StartPollingToolbutton.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.StartPollingToolbutton.Name = "StartPollingToolbutton";
-            this.StartPollingToolbutton.Size = new System.Drawing.Size(24, 24);
-            this.StartPollingToolbutton.Text = "Start polling";
-            this.StartPollingToolbutton.ToolTipText = "Start polling";
-            this.StartPollingToolbutton.Click += new System.EventHandler(this.StartPollingToolbutton_Click);
+            StartPollingToolbutton.AutoToolTip = false;
+            StartPollingToolbutton.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            StartPollingToolbutton.Image = (Image)resources.GetObject("StartPollingToolbutton.Image");
+            StartPollingToolbutton.ImageTransparentColor = Color.Magenta;
+            StartPollingToolbutton.Name = "StartPollingToolbutton";
+            StartPollingToolbutton.Size = new Size(24, 24);
+            StartPollingToolbutton.Text = "Start polling";
+            StartPollingToolbutton.ToolTipText = "Start polling";
+            StartPollingToolbutton.Click += StartPollingToolbutton_Click;
             // 
             // StopPollingToolbutton
             // 
-            this.StopPollingToolbutton.AutoToolTip = false;
-            this.StopPollingToolbutton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.StopPollingToolbutton.Image = ((System.Drawing.Image)(resources.GetObject("StopPollingToolbutton.Image")));
-            this.StopPollingToolbutton.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.StopPollingToolbutton.Name = "StopPollingToolbutton";
-            this.StopPollingToolbutton.Size = new System.Drawing.Size(24, 24);
-            this.StopPollingToolbutton.Text = "Stop polling";
-            this.StopPollingToolbutton.ToolTipText = "Stop polling";
-            this.StopPollingToolbutton.Click += new System.EventHandler(this.StopPollingToolbutton_Click);
+            StopPollingToolbutton.AutoToolTip = false;
+            StopPollingToolbutton.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            StopPollingToolbutton.Image = (Image)resources.GetObject("StopPollingToolbutton.Image");
+            StopPollingToolbutton.ImageTransparentColor = Color.Magenta;
+            StopPollingToolbutton.Name = "StopPollingToolbutton";
+            StopPollingToolbutton.Size = new Size(24, 24);
+            StopPollingToolbutton.Text = "Stop polling";
+            StopPollingToolbutton.ToolTipText = "Stop polling";
+            StopPollingToolbutton.Click += StopPollingToolbutton_Click;
             // 
             // PollOnceToolbutton
             // 
-            this.PollOnceToolbutton.AutoToolTip = false;
-            this.PollOnceToolbutton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.PollOnceToolbutton.Image = ((System.Drawing.Image)(resources.GetObject("PollOnceToolbutton.Image")));
-            this.PollOnceToolbutton.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.PollOnceToolbutton.Name = "PollOnceToolbutton";
-            this.PollOnceToolbutton.Size = new System.Drawing.Size(24, 24);
-            this.PollOnceToolbutton.Text = "Poll current tab once";
-            this.PollOnceToolbutton.ToolTipText = "Poll once";
-            this.PollOnceToolbutton.Click += new System.EventHandler(this.PollOnceToolbutton_Click);
+            PollOnceToolbutton.AutoToolTip = false;
+            PollOnceToolbutton.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            PollOnceToolbutton.Image = (Image)resources.GetObject("PollOnceToolbutton.Image");
+            PollOnceToolbutton.ImageTransparentColor = Color.Magenta;
+            PollOnceToolbutton.Name = "PollOnceToolbutton";
+            PollOnceToolbutton.Size = new Size(24, 24);
+            PollOnceToolbutton.Text = "Poll current tab once";
+            PollOnceToolbutton.ToolTipText = "Poll once";
+            PollOnceToolbutton.Click += PollOnceToolbutton_Click;
             // 
             // tabControl1
             // 
-            this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tabControl1.Location = new System.Drawing.Point(0, 77);
-            this.tabControl1.Name = "tabControl1";
-            this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(592, 363);
-            this.tabControl1.TabIndex = 3;
-            this.tabControl1.Selected += new System.Windows.Forms.TabControlEventHandler(this.TabControl1_Selected);
+            tabControl1.Dock = DockStyle.Fill;
+            tabControl1.Location = new Point(0, 77);
+            tabControl1.Name = "tabControl1";
+            tabControl1.SelectedIndex = 0;
+            tabControl1.Size = new Size(592, 363);
+            tabControl1.TabIndex = 3;
+            tabControl1.Selected += TabControl1_Selected;
             // 
             // StatusbarTimer
             // 
-            this.StatusbarTimer.Tick += new System.EventHandler(this.StatusbarTimerEvent);
+            StatusbarTimer.Tick += StatusbarTimerEvent;
             // 
             // tbFilterText
             // 
-            this.tbFilterText.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tbFilterText.Location = new System.Drawing.Point(63, 2);
-            this.tbFilterText.Margin = new System.Windows.Forms.Padding(2);
-            this.tbFilterText.Name = "tbFilterText";
-            this.tbFilterText.Size = new System.Drawing.Size(296, 20);
-            this.tbFilterText.TabIndex = 1;
-            this.tbFilterText.TextChanged += new System.EventHandler(this.TbFilterText_TextChanged);
+            tbFilterText.Dock = DockStyle.Fill;
+            tbFilterText.Location = new Point(63, 2);
+            tbFilterText.Margin = new Padding(2);
+            tbFilterText.Name = "tbFilterText";
+            tbFilterText.Size = new Size(292, 20);
+            tbFilterText.TabIndex = 1;
+            tbFilterText.TextChanged += TbFilterText_TextChanged;
             // 
             // filterPanel
             // 
-            this.filterPanel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.filterPanel.Controls.Add(this.tableLayoutPanel1);
-            this.filterPanel.Dock = System.Windows.Forms.DockStyle.Top;
-            this.filterPanel.Location = new System.Drawing.Point(0, 51);
-            this.filterPanel.Margin = new System.Windows.Forms.Padding(2);
-            this.filterPanel.MinimumSize = new System.Drawing.Size(400, 2);
-            this.filterPanel.Name = "filterPanel";
-            this.filterPanel.Size = new System.Drawing.Size(592, 26);
-            this.filterPanel.TabIndex = 2;
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(2, 4);
-            this.label1.Margin = new System.Windows.Forms.Padding(2, 4, 2, 0);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(57, 13);
-            this.label1.TabIndex = 0;
-            this.label1.Text = "Find/Filter:";
+            filterPanel.BorderStyle = BorderStyle.FixedSingle;
+            filterPanel.Controls.Add(tableLayoutPanel1);
+            filterPanel.Dock = DockStyle.Top;
+            filterPanel.Location = new Point(0, 51);
+            filterPanel.Margin = new Padding(2);
+            filterPanel.MinimumSize = new Size(400, 2);
+            filterPanel.Name = "filterPanel";
+            filterPanel.Size = new Size(592, 26);
+            filterPanel.TabIndex = 2;
             // 
             // tableLayoutPanel1
             // 
-            this.tableLayoutPanel1.AutoSize = true;
-            this.tableLayoutPanel1.ColumnCount = 6;
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tableLayoutPanel1.Controls.Add(this.tbFilterText, 1, 0);
-            this.tableLayoutPanel1.Controls.Add(this.label1, 0, 0);
-            this.tableLayoutPanel1.Controls.Add(this.btnFilterClose, 5, 0);
-            this.tableLayoutPanel1.Controls.Add(this.chkFilterCaseSensitive, 4, 0);
-            this.tableLayoutPanel1.Controls.Add(this.chkFilterRegex, 3, 0);
-            this.tableLayoutPanel1.Controls.Add(this.btnFilterClear, 2, 0);
-            this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel1.GrowStyle = System.Windows.Forms.TableLayoutPanelGrowStyle.FixedSize;
-            this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
-            this.tableLayoutPanel1.Name = "tableLayoutPanel1";
-            this.tableLayoutPanel1.RowCount = 1;
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(590, 24);
-            this.tableLayoutPanel1.TabIndex = 1;
+            tableLayoutPanel1.AutoSize = true;
+            tableLayoutPanel1.ColumnCount = 6;
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle());
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle());
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle());
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle());
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle());
+            tableLayoutPanel1.Controls.Add(tbFilterText, 1, 0);
+            tableLayoutPanel1.Controls.Add(label1, 0, 0);
+            tableLayoutPanel1.Controls.Add(btnFilterClose, 5, 0);
+            tableLayoutPanel1.Controls.Add(chkFilterCaseSensitive, 4, 0);
+            tableLayoutPanel1.Controls.Add(chkFilterRegex, 3, 0);
+            tableLayoutPanel1.Controls.Add(btnFilterClear, 2, 0);
+            tableLayoutPanel1.Dock = DockStyle.Fill;
+            tableLayoutPanel1.GrowStyle = TableLayoutPanelGrowStyle.FixedSize;
+            tableLayoutPanel1.Location = new Point(0, 0);
+            tableLayoutPanel1.Name = "tableLayoutPanel1";
+            tableLayoutPanel1.RowCount = 1;
+            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
+            tableLayoutPanel1.Size = new Size(590, 24);
+            tableLayoutPanel1.TabIndex = 1;
             // 
-            // recentFilesMenuItem
+            // label1
             // 
-            this.recentFilesMenuItem.Enabled = false;
-            this.recentFilesMenuItem.Name = "recentFilesMenuItem";
-            this.recentFilesMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.F)));
-            this.recentFilesMenuItem.Size = new System.Drawing.Size(255, 22);
-            this.recentFilesMenuItem.Text = "Re&cent project files";
-            this.recentFilesMenuItem.ItemClick += new System.EventHandler(this.RecentFilesMenuItem_ItemClick);
+            label1.AutoSize = true;
+            label1.Location = new Point(2, 5);
+            label1.Margin = new Padding(2, 5, 2, 0);
+            label1.Name = "label1";
+            label1.Size = new Size(57, 13);
+            label1.TabIndex = 0;
+            label1.Text = "Find/Filter:";
+            // 
+            // butDebug
+            // 
+            butDebug.AutoSize = true;
+            butDebug.Location = new Point(301, 2);
+            butDebug.Name = "butDebug";
+            butDebug.Size = new Size(75, 23);
+            butDebug.TabIndex = 4;
+            butDebug.Text = "DEBUG info";
+            butDebug.UseVisualStyleBackColor = true;
+            butDebug.Visible = false;
+            butDebug.Click += button1_Click;
             // 
             // MainForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(592, 462);
-            this.Controls.Add(this.tabControl1);
-            this.Controls.Add(this.filterPanel);
-            this.Controls.Add(this.toolStrip1);
-            this.Controls.Add(this.menuStrip1);
-            this.Controls.Add(this.statusStrip);
-            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.KeyPreview = true;
-            this.MainMenuStrip = this.menuStrip1;
-            this.Name = "MainForm";
-            this.Text = "ModbusControl";
-            this.toolTip1.SetToolTip(this, "Start polling");
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
-            this.Load += new System.EventHandler(this.Form1_Load);
-            this.Shown += new System.EventHandler(this.MainForm_Shown);
-            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.MainForm_KeyDown);
-            this.statusStrip.ResumeLayout(false);
-            this.statusStrip.PerformLayout();
-            this.menuStrip1.ResumeLayout(false);
-            this.menuStrip1.PerformLayout();
-            this.toolStrip1.ResumeLayout(false);
-            this.toolStrip1.PerformLayout();
-            this.filterPanel.ResumeLayout(false);
-            this.filterPanel.PerformLayout();
-            this.tableLayoutPanel1.ResumeLayout(false);
-            this.tableLayoutPanel1.PerformLayout();
-            this.ResumeLayout(false);
-            this.PerformLayout();
+            AutoScaleDimensions = new SizeF(96F, 96F);
+            AutoScaleMode = AutoScaleMode.Dpi;
+            ClientSize = new Size(592, 462);
+            Controls.Add(butDebug);
+            Controls.Add(tabControl1);
+            Controls.Add(filterPanel);
+            Controls.Add(toolStrip1);
+            Controls.Add(menuStrip1);
+            Controls.Add(statusStrip);
+            Icon = (Icon)resources.GetObject("$this.Icon");
+            KeyPreview = true;
+            MainMenuStrip = menuStrip1;
+            Name = "MainForm";
+            Text = "ModbusControl";
+            toolTip1.SetToolTip(this, "Start polling");
+            FormClosing += Form1_FormClosing;
+            Load += Form1_Load;
+            Shown += MainForm_Shown;
+            DpiChanged += MainForm_DpiChanged;
+            KeyDown += MainForm_KeyDown;
+            statusStrip.ResumeLayout(false);
+            statusStrip.PerformLayout();
+            menuStrip1.ResumeLayout(false);
+            menuStrip1.PerformLayout();
+            toolStrip1.ResumeLayout(false);
+            toolStrip1.PerformLayout();
+            filterPanel.ResumeLayout(false);
+            filterPanel.PerformLayout();
+            tableLayoutPanel1.ResumeLayout(false);
+            tableLayoutPanel1.PerformLayout();
+            ResumeLayout(false);
+            PerformLayout();
 
         }
 
@@ -742,7 +711,6 @@ namespace ModbusControl
         private System.Windows.Forms.ToolStripButton StartPollingToolbutton;
         private System.Windows.Forms.ToolStripButton StopPollingToolbutton;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
-        private RecentsToolStripMenuItem recentFilesMenuItem;
         private System.Windows.Forms.ToolStripMenuItem saveConfigurationMenuItem;
         private System.Windows.Forms.ToolStripButton OpenConnectionToolbutton;
         private System.Windows.Forms.ToolStripButton CloseConnectionToolbutton;
@@ -782,6 +750,8 @@ namespace ModbusControl
         private System.Windows.Forms.ToolStripMenuItem exportRegistersToFileToolStripMenuItem;
         private System.Windows.Forms.CheckBox chkFilterRegex;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
+        private Button butDebug;
+        private RecentsToolStripMenuItem recentsToolStripMenuItem1;
     }
 }
 
