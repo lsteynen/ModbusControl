@@ -1,0 +1,40 @@
+<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs">
+
+	<Fragment>
+
+		<!-- Program Files\ModbusControl -->
+		<StandardDirectory Id="ProgramFiles64Folder">
+
+			<Directory
+                Id="INSTALLFOLDER"
+                Name="!(bind.Property.ProductName)" />
+
+		</StandardDirectory>
+
+
+		<!-- ProgramData\ModbusControl -->
+		<StandardDirectory Id="CommonAppDataFolder">
+
+			<Directory
+                Id="PROGRAMDATAFOLDER"
+                Name="!(bind.Property.ProductName)" />
+
+		</StandardDirectory>
+
+
+		<!-- Start Menu\Programs\ModbusControl -->
+		<StandardDirectory Id="ProgramMenuFolder">
+
+			<Directory
+                Id="ModbusControlStartMenuFolder"
+                Name="ModbusControl" />
+
+		</StandardDirectory>
+
+
+		<!-- User Desktop -->
+		<StandardDirectory Id="DesktopFolder" />
+
+	</Fragment>
+
+</Wix>

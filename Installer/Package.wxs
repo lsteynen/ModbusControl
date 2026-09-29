@@ -1,0 +1,60 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs"
+     xmlns:ui="http://wixtoolset.org/schemas/v4/wxs/ui">
+
+	<?define ProductName="ModbusControl" ?>
+	<?define Manufacturer="lsteynen" ?>
+	<?define ProductVersion="3.0.1" ?>
+	<?define UpgradeCode="{F7687BA6-F4F6-4810-808E-FEA0B03F7C50}" ?>
+	
+	<Package Name="$(var.ProductName)"
+		Manufacturer="$(var.Manufacturer)"
+		Version="$(var.ProductVersion)"
+		UpgradeCode="$(var.UpgradeCode)"
+		Scope="perMachine"
+		InstallerVersion="500"
+		Compressed="yes">
+		
+		<MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
+
+		<MediaTemplate EmbedCab="yes"/>
+
+		<!-- =========================================================
+         ADD / REMOVE PROGRAMS ICON
+         ========================================================= -->
+		<Icon Id="ModbusControlAddRemoveIcon"
+		      SourceFile="..\Icon\Ico5.ico"/>
+
+		<Property Id="ARPPRODUCTICON"
+		          Value="ModbusControlAddRemoveIcon"/>
+
+		<!-- =========================================================
+         INSTALLER UI
+         WixUI_InstallDir provides:
+           - Welcome dialog
+           - License/EULA dialog
+           - Install directory dialog
+           - Ready-to-install
+           - Progress
+           - Finish
+         ========================================================= -->
+		<ui:WixUI Id="WixUI_InstallDir"
+		          InstallDirectory="INSTALLFOLDER"/>
+		
+		<!-- Dialog bmp - 493 × 312 pixels -->
+		<WixVariable Id="WixUIDialogBmp"
+			Value=".\DialogBmp.bmp"/>
+
+		<!-- Top banner - 493 × 58 pixels -->
+		<WixVariable Id="WixUIBannerBmp"
+			 Value=".\TopBanner.bmp"/>
+
+		<!-- EULA -->
+		<WixVariable Id="WixUILicenseRtf"
+		             Value="License.rtf"/>
+
+		<Feature Id="MainFeature" Title="ModbusControl">
+			<ComponentGroupRef Id="ModbusControlComponents" />
+		</Feature>
+  </Package>
+</Wix>
