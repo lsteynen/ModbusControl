@@ -77,27 +77,23 @@
             // 
             // buttonCancel
             // 
-            buttonCancel.Anchor = AnchorStyles.Top;
-            buttonCancel.AutoSize = true;
             buttonCancel.DialogResult = DialogResult.Cancel;
-            buttonCancel.Location = new Point(225, 124);
+            buttonCancel.Location = new Point(229, 124);
             buttonCancel.Margin = new Padding(11, 3, 3, 3);
             buttonCancel.Name = "buttonCancel";
-            buttonCancel.Size = new Size(75, 25);
-            buttonCancel.TabIndex = 1;
+            buttonCancel.Size = new Size(75, 23);
+            buttonCancel.TabIndex = 6;
             buttonCancel.Text = "Cancel";
             buttonCancel.UseVisualStyleBackColor = true;
             buttonCancel.Click += buttonCancel_Click;
             // 
             // buttonSave
             // 
-            buttonSave.Anchor = AnchorStyles.Top;
-            buttonSave.AutoSize = true;
-            buttonSave.Location = new Point(137, 124);
+            buttonSave.Location = new Point(141, 124);
             buttonSave.Margin = new Padding(3, 3, 11, 3);
             buttonSave.Name = "buttonSave";
-            buttonSave.Size = new Size(75, 25);
-            buttonSave.TabIndex = 0;
+            buttonSave.Size = new Size(75, 23);
+            buttonSave.TabIndex = 5;
             buttonSave.Text = "Save";
             buttonSave.UseVisualStyleBackColor = true;
             buttonSave.Click += buttonSave_Click;
@@ -148,7 +144,7 @@
             panelWarning.Location = new Point(0, 0);
             panelWarning.Name = "panelWarning";
             panelWarning.Size = new Size(453, 55);
-            panelWarning.TabIndex = 2;
+            panelWarning.TabIndex = 0;
             // 
             // label2
             // 
@@ -182,7 +178,7 @@
             optionsPanel.Location = new Point(0, 55);
             optionsPanel.Name = "optionsPanel";
             optionsPanel.Size = new Size(453, 154);
-            optionsPanel.TabIndex = 5;
+            optionsPanel.TabIndex = 1;
             // 
             // SaveConfigurationForm
             // 
@@ -191,7 +187,6 @@
             AutoSizeMode = AutoSizeMode.GrowAndShrink;
             CancelButton = buttonCancel;
             ClientSize = new Size(453, 210);
-            ControlBox = false;
             Controls.Add(optionsPanel);
             Controls.Add(panelWarning);
             Font = new Font("Microsoft Sans Serif", 8.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
@@ -202,7 +197,7 @@
             Padding = new Padding(0, 0, 0, 6);
             ShowIcon = false;
             ShowInTaskbar = false;
-            StartPosition = FormStartPosition.CenterParent;
+            StartPosition = FormStartPosition.CenterScreen;
             Tag = "";
             Text = "Save project file";
             Load += SaveConfigurationForm_Load;

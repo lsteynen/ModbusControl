@@ -7,10 +7,13 @@ using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.IO.Ports;
+using System.Net;
 using System.Text;
+using System.Text.Unicode;
 using System.Threading;
 using System.Windows.Forms;
 using System.Xml;
+using System.Xml.Linq;
 using System.Xml.Schema;
 using Windows.Data.Pdf;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
@@ -628,8 +631,7 @@ namespace ModbusControl
                                                     || (CommandlineArgs.ArgInterframedelay != null)
                                                     || (CommandlineArgs.ArgWriteholdingregFC != null)
                                                     || (CommandlineArgs.ArgSamplerate != null);
-            //SaveConfigurationForm1.OverridesWarning = true;  //TODO: remove this line, it is for testing only
-
+            
             SaveConfigurationForm1.ShowDialog();
         }
 
@@ -827,7 +829,6 @@ namespace ModbusControl
             configform.BaudrateIsOverride = (CommandlineArgs.ArgBaudrate != null);
             configform.ParityIsOverride = (CommandlineArgs.ArgParity != null);
             configform.EndofmessagetimeoutIsOverride = (CommandlineArgs.ArgEndofmessagetimeout != null);
-            //configform.EndofmessagetimeoutIsOverride = true;   //TODO: remove this line, it is for testing only
             configform.OnewireechosuppressionIsOverride = CommandlineArgs.ArgOnewireechosuppressionSwitch == true;
             configform.IPAddressIsOverride = (CommandlineArgs.ArgIPAddress != null);
             configform.IPPortIsOverride = (CommandlineArgs.ArgIPPort != null);
@@ -985,8 +986,9 @@ namespace ModbusControl
             AboutBox1 about = new AboutBox1();
             about.VersionString = AppHelpers.VersionString;
             about.AppdataPath = Settings1.StoreRoamingPath;
-            about.FormWidth = this.Width;
-            about.FormHeight = this.Height;
+            about.MainFormWidth = this.Width;
+            about.MainFormHeight = this.Height;
+            about.MainFormDpi = this.DeviceDpi;
             about.ShowDialog();
         }
 
@@ -2994,15 +2996,6 @@ namespace ModbusControl
             Debug.Print($" Height={Height}");
             Debug.Print($" SuggestedRectangle.Width={e.SuggestedRectangle.Width}");
             Debug.Print($" SuggestedRectangle.Height={e.SuggestedRectangle.Height}");
-
-            //TODO: probeer de form size beter te houden bij move naar ander scherm
-            /*
-            // Custom logic instead of blindly trusting SuggestedRectangle
-            var newRect = e.SuggestedRectangle;
-            newRect.Width = 200; // adjust as needed
-
-            this.Bounds = newRect; // apply your modified version
-            */
         }
     }
 }

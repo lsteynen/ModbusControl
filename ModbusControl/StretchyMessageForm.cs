@@ -1,5 +1,4 @@
-﻿using LST.Helpers;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -10,7 +9,7 @@ using System.IO.Ports;
 using System.Text;
 using System.Windows.Forms;
 
-namespace ModbusControl
+namespace LST.Helpers
 {
     public partial class StretchyMessageForm : Form
     {
@@ -80,27 +79,83 @@ namespace ModbusControl
 
             // default icon
             pic.Image = SystemIcons.Warning.ToBitmap();
-
         }
 
         private void StretchyMessageForm_Shown(object sender, EventArgs e)
         {
-            AdjustFormSize();
+            AdjustFormLayout();
         }
 
-        private void AdjustFormSize()
+        private void AdjustFormLayout()
         {
-            Debug.Print("AdjustFormSize:");
-            Debug.Print($"DeviceDpi={DeviceDpi}");
+            Debug.Print("AdjustFormLayout:");
+            Debug.Print($" DeviceDpi={DeviceDpi}");
 
-            // get margin, DPI adjusted 
-            int hmargin = AppDpiHelpers.ScaleValueFrom96DpiToThisDpiInt(40, DeviceDpi);
-            int vmargin = AppDpiHelpers.ScaleValueFrom96DpiToThisDpiInt(8, DeviceDpi);
-            // get new form size
-            int newWidth = tableLayoutPanel1.Location.X + tableLayoutPanel1.PreferredSize.Width + hmargin;
-            int newHeight = tableLayoutPanel1.Location.Y + tableLayoutPanel1.Height + vmargin;
-            Debug.Print($"newWidth={newWidth}, newHeight={newHeight}");
+            // labelMessagetext has minimum width and height
+            // labelMessagetext has maximum width, it grows in height as needed, and wraps text
+
+            // get margins, DPI adjusted 
+            int hmargin = AppDpiHelpers.ScaleValueFrom96DpiToThisDpiInt(30, DeviceDpi);
+            int vmargin = AppDpiHelpers.ScaleValueFrom96DpiToThisDpiInt(14, DeviceDpi);
+
+            // vertical space between text and buttons, DPI adjusted
+            int textButtonVertSpace = AppDpiHelpers.ScaleValueFrom96DpiToThisDpiInt(28, DeviceDpi);
+
+            // new form width
+            int newWidth = labelMessagetext.Location.X + labelMessagetext.PreferredSize.Width + hmargin;
+
+            // buttons Y position
+            int buttonsY = labelMessagetext.Location.Y + labelMessagetext.PreferredSize.Height
+                    + textButtonVertSpace;
+            buttonOK.Top = buttonsY;
+            buttonCancel.Top = buttonsY;
+
+            // new form height
+            int newHeight = buttonsY + buttonOK.Height + vmargin;
+
+            Debug.Print($" hmargin={hmargin}, vmargin={vmargin}, textButtonVertSpace={textButtonVertSpace}");
+            Debug.Print($" newWidth={newWidth}");
+            Debug.Print($" buttonsY={buttonsY}");
+            Debug.Print($" newHeight={newHeight}");
+
             ClientSize = new Size(newWidth, newHeight);
+
+            CenterButtons();
         }
+
+        private void CenterButtons()
+        {
+            var visibleButtons = new[] { buttonOK, buttonCancel }
+                .Where(b => b.Visible)
+                .ToList();
+
+            if (visibleButtons.Count == 0)
+                return;
+
+            int buttonSpacing = AppDpiHelpers.ScaleValueFrom96DpiToThisDpiInt(16, DeviceDpi);
+
+            // calculate total width of visible buttons including spacing
+            int totalWidth = 0;
+            foreach (Button b in visibleButtons)
+            {
+                if (totalWidth > 0)
+                {
+                    totalWidth += buttonSpacing;
+                }
+                totalWidth += b.Width;
+            }
+
+            // calculate left position of left button
+            int left = (ClientSize.Width - totalWidth) / 2;
+
+            // locate each button
+            foreach (Button b in visibleButtons)
+            {
+                b.Left = left;
+                left += b.Width + buttonSpacing;
+            }
+        }
+
+        
     }
 }

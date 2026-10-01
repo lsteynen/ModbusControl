@@ -61,7 +61,7 @@
             // checkboxStopOnCommsError
             // 
             checkboxStopOnCommsError.AutoSize = true;
-            checkboxStopOnCommsError.Location = new Point(259, 12);
+            checkboxStopOnCommsError.Location = new Point(263, 12);
             checkboxStopOnCommsError.Name = "checkboxStopOnCommsError";
             checkboxStopOnCommsError.Size = new Size(120, 17);
             checkboxStopOnCommsError.TabIndex = 1;
@@ -72,7 +72,7 @@
             // checkboxBeepOnInputError
             // 
             checkboxBeepOnInputError.AutoSize = true;
-            checkboxBeepOnInputError.Location = new Point(16, 15);
+            checkboxBeepOnInputError.Location = new Point(20, 15);
             checkboxBeepOnInputError.Name = "checkboxBeepOnInputError";
             checkboxBeepOnInputError.Size = new Size(116, 17);
             checkboxBeepOnInputError.TabIndex = 0;
@@ -83,7 +83,7 @@
             // CheckboxCheckForUpdates
             // 
             CheckboxCheckForUpdates.AutoSize = true;
-            CheckboxCheckForUpdates.Location = new Point(16, 268);
+            CheckboxCheckForUpdates.Location = new Point(20, 268);
             CheckboxCheckForUpdates.Name = "CheckboxCheckForUpdates";
             CheckboxCheckForUpdates.Size = new Size(154, 17);
             CheckboxCheckForUpdates.TabIndex = 19;
@@ -94,7 +94,7 @@
             // label1
             // 
             label1.AutoSize = true;
-            label1.Location = new Point(14, 244);
+            label1.Location = new Point(18, 244);
             label1.Margin = new Padding(0, 5, 3, 0);
             label1.Name = "label1";
             label1.Size = new Size(91, 13);
@@ -104,7 +104,7 @@
             // numericLoggerCapacity
             // 
             numericLoggerCapacity.Increment = new decimal(new int[] { 1000, 0, 0, 0 });
-            numericLoggerCapacity.Location = new Point(115, 242);
+            numericLoggerCapacity.Location = new Point(119, 242);
             numericLoggerCapacity.Maximum = new decimal(new int[] { 999999, 0, 0, 0 });
             numericLoggerCapacity.Minimum = new decimal(new int[] { 1000, 0, 0, 0 });
             numericLoggerCapacity.Name = "numericLoggerCapacity";
@@ -116,7 +116,7 @@
             // checkboxNextRowOnEnter
             // 
             checkboxNextRowOnEnter.AutoSize = true;
-            checkboxNextRowOnEnter.Location = new Point(16, 38);
+            checkboxNextRowOnEnter.Location = new Point(20, 38);
             checkboxNextRowOnEnter.Name = "checkboxNextRowOnEnter";
             checkboxNextRowOnEnter.Size = new Size(151, 17);
             checkboxNextRowOnEnter.TabIndex = 2;
@@ -127,7 +127,7 @@
             // checkboxAutostartEdit
             // 
             checkboxAutostartEdit.AutoSize = true;
-            checkboxAutostartEdit.Location = new Point(16, 59);
+            checkboxAutostartEdit.Location = new Point(20, 59);
             checkboxAutostartEdit.Name = "checkboxAutostartEdit";
             checkboxAutostartEdit.Size = new Size(166, 17);
             checkboxAutostartEdit.TabIndex = 4;
@@ -137,7 +137,7 @@
             // 
             // textboxCustomEditor
             // 
-            textboxCustomEditor.Location = new Point(75, 215);
+            textboxCustomEditor.Location = new Point(79, 215);
             textboxCustomEditor.Margin = new Padding(2);
             textboxCustomEditor.Name = "textboxCustomEditor";
             textboxCustomEditor.Size = new Size(346, 20);
@@ -146,7 +146,7 @@
             // checkboxCustomEditor
             // 
             checkboxCustomEditor.AutoSize = true;
-            checkboxCustomEditor.Location = new Point(16, 193);
+            checkboxCustomEditor.Location = new Point(20, 193);
             checkboxCustomEditor.Name = "checkboxCustomEditor";
             checkboxCustomEditor.Size = new Size(111, 17);
             checkboxCustomEditor.TabIndex = 13;
@@ -157,7 +157,7 @@
             // checkboxIgnoreFormSizeOnReload
             // 
             checkboxIgnoreFormSizeOnReload.AutoSize = true;
-            checkboxIgnoreFormSizeOnReload.Location = new Point(259, 38);
+            checkboxIgnoreFormSizeOnReload.Location = new Point(263, 38);
             checkboxIgnoreFormSizeOnReload.Name = "checkboxIgnoreFormSizeOnReload";
             checkboxIgnoreFormSizeOnReload.Size = new Size(182, 17);
             checkboxIgnoreFormSizeOnReload.TabIndex = 3;
@@ -168,7 +168,7 @@
             // checkboxShowVarProperties
             // 
             checkboxShowVarProperties.AutoSize = true;
-            checkboxShowVarProperties.Location = new Point(16, 81);
+            checkboxShowVarProperties.Location = new Point(20, 81);
             checkboxShowVarProperties.Name = "checkboxShowVarProperties";
             checkboxShowVarProperties.Size = new Size(176, 17);
             checkboxShowVarProperties.TabIndex = 5;
@@ -179,7 +179,7 @@
             // checkboxAutoRowSize
             // 
             checkboxAutoRowSize.AutoSize = true;
-            checkboxAutoRowSize.Location = new Point(16, 103);
+            checkboxAutoRowSize.Location = new Point(20, 103);
             checkboxAutoRowSize.Name = "checkboxAutoRowSize";
             checkboxAutoRowSize.Size = new Size(176, 17);
             checkboxAutoRowSize.TabIndex = 6;
@@ -190,7 +190,7 @@
             // checkboxClearFilterOnTabChange
             // 
             checkboxClearFilterOnTabChange.AutoSize = true;
-            checkboxClearFilterOnTabChange.Location = new Point(16, 125);
+            checkboxClearFilterOnTabChange.Location = new Point(20, 125);
             checkboxClearFilterOnTabChange.Name = "checkboxClearFilterOnTabChange";
             checkboxClearFilterOnTabChange.Size = new Size(169, 17);
             checkboxClearFilterOnTabChange.TabIndex = 7;
@@ -201,7 +201,7 @@
             // checkboxUseValidationSchema
             // 
             checkboxUseValidationSchema.AutoSize = true;
-            checkboxUseValidationSchema.Location = new Point(16, 147);
+            checkboxUseValidationSchema.Location = new Point(20, 147);
             checkboxUseValidationSchema.Margin = new Padding(2);
             checkboxUseValidationSchema.Name = "checkboxUseValidationSchema";
             checkboxUseValidationSchema.Size = new Size(231, 17);
@@ -214,7 +214,7 @@
             // 
             butSelectValidationFile.AutoSize = true;
             butSelectValidationFile.BackgroundImageLayout = ImageLayout.Stretch;
-            butSelectValidationFile.Location = new Point(435, 167);
+            butSelectValidationFile.Location = new Point(439, 167);
             butSelectValidationFile.Margin = new Padding(2, 1, 2, 2);
             butSelectValidationFile.Name = "butSelectValidationFile";
             butSelectValidationFile.Size = new Size(26, 23);
@@ -228,7 +228,7 @@
             // 
             butSelectCustomEditor.AutoSize = true;
             butSelectCustomEditor.BackgroundImageLayout = ImageLayout.Stretch;
-            butSelectCustomEditor.Location = new Point(425, 214);
+            butSelectCustomEditor.Location = new Point(429, 214);
             butSelectCustomEditor.Margin = new Padding(2, 1, 2, 2);
             butSelectCustomEditor.Name = "butSelectCustomEditor";
             butSelectCustomEditor.Size = new Size(26, 23);
@@ -242,7 +242,7 @@
             // 
             butResetValidationFile.AutoSize = true;
             butResetValidationFile.Image = (Image)resources.GetObject("butResetValidationFile.Image");
-            butResetValidationFile.Location = new Point(463, 167);
+            butResetValidationFile.Location = new Point(467, 167);
             butResetValidationFile.Margin = new Padding(2, 1, 2, 2);
             butResetValidationFile.Name = "butResetValidationFile";
             butResetValidationFile.Size = new Size(25, 23);
@@ -253,7 +253,7 @@
             // 
             // textboxUseValidationSchema
             // 
-            textboxUseValidationSchema.Location = new Point(87, 168);
+            textboxUseValidationSchema.Location = new Point(91, 168);
             textboxUseValidationSchema.Margin = new Padding(2);
             textboxUseValidationSchema.Name = "textboxUseValidationSchema";
             textboxUseValidationSchema.Size = new Size(344, 20);
@@ -274,7 +274,7 @@
             // label2
             // 
             label2.AutoSize = true;
-            label2.Location = new Point(30, 171);
+            label2.Location = new Point(34, 171);
             label2.Margin = new Padding(2, 5, 2, 0);
             label2.Name = "label2";
             label2.Size = new Size(49, 13);
@@ -284,7 +284,7 @@
             // label3
             // 
             label3.AutoSize = true;
-            label3.Location = new Point(30, 218);
+            label3.Location = new Point(34, 218);
             label3.Margin = new Padding(2, 5, 2, 0);
             label3.Name = "label3";
             label3.Size = new Size(37, 13);
@@ -293,9 +293,8 @@
             // 
             // buttonCancel
             // 
-            buttonCancel.AutoSize = true;
             buttonCancel.DialogResult = DialogResult.Cancel;
-            buttonCancel.Location = new Point(266, 298);
+            buttonCancel.Location = new Point(270, 298);
             buttonCancel.Name = "buttonCancel";
             buttonCancel.Size = new Size(75, 23);
             buttonCancel.TabIndex = 21;
@@ -304,9 +303,8 @@
             // 
             // buttonOK
             // 
-            buttonOK.AutoSize = true;
             buttonOK.DialogResult = DialogResult.OK;
-            buttonOK.Location = new Point(169, 298);
+            buttonOK.Location = new Point(173, 298);
             buttonOK.Name = "buttonOK";
             buttonOK.Size = new Size(75, 23);
             buttonOK.TabIndex = 20;
@@ -319,8 +317,7 @@
             AutoScaleDimensions = new SizeF(96F, 96F);
             AutoScaleMode = AutoScaleMode.Dpi;
             CancelButton = buttonCancel;
-            ClientSize = new Size(511, 329);
-            ControlBox = false;
+            ClientSize = new Size(516, 334);
             Controls.Add(buttonCancel);
             Controls.Add(numericLoggerCapacity);
             Controls.Add(buttonOK);
@@ -350,7 +347,7 @@
             Name = "OptionsForm";
             ShowIcon = false;
             ShowInTaskbar = false;
-            StartPosition = FormStartPosition.CenterParent;
+            StartPosition = FormStartPosition.CenterScreen;
             Tag = "";
             Text = "Options";
             Shown += OptionsForm_Shown;

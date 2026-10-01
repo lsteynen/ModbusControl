@@ -47,10 +47,9 @@
             // 
             // buttonStart
             // 
-            buttonStart.AutoSize = true;
             buttonStart.Location = new Point(12, 61);
             buttonStart.Name = "buttonStart";
-            buttonStart.Size = new Size(150, 25);
+            buttonStart.Size = new Size(150, 23);
             buttonStart.TabIndex = 3;
             buttonStart.Text = "Start";
             toolTip1.SetToolTip(buttonStart, "Start the import");
@@ -79,10 +78,9 @@
             // 
             // SelectFileButton
             // 
-            SelectFileButton.AutoSize = true;
             SelectFileButton.Location = new Point(13, 11);
             SelectFileButton.Name = "SelectFileButton";
-            SelectFileButton.Size = new Size(88, 25);
+            SelectFileButton.Size = new Size(88, 23);
             SelectFileButton.TabIndex = 0;
             SelectFileButton.Text = "Select file...";
             toolTip1.SetToolTip(SelectFileButton, "Select the file to import");
@@ -100,10 +98,9 @@
             // 
             // buttonClearLog
             // 
-            buttonClearLog.AutoSize = true;
             buttonClearLog.Location = new Point(249, 61);
             buttonClearLog.Name = "buttonClearLog";
-            buttonClearLog.Size = new Size(75, 25);
+            buttonClearLog.Size = new Size(75, 23);
             buttonClearLog.TabIndex = 5;
             buttonClearLog.Text = "Clear log";
             toolTip1.SetToolTip(buttonClearLog, "Clear the result log window");
@@ -112,11 +109,10 @@
             // 
             // buttonCancel
             // 
-            buttonCancel.AutoSize = true;
             buttonCancel.Enabled = false;
             buttonCancel.Location = new Point(168, 61);
             buttonCancel.Name = "buttonCancel";
-            buttonCancel.Size = new Size(75, 25);
+            buttonCancel.Size = new Size(75, 23);
             buttonCancel.TabIndex = 4;
             buttonCancel.Text = "Cancel";
             toolTip1.SetToolTip(buttonCancel, "Cancel the current operation");
@@ -168,7 +164,7 @@
             Font = new Font("Microsoft Sans Serif", 8.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
             Icon = (Icon)resources.GetObject("$this.Icon");
             Name = "ImportForm";
-            StartPosition = FormStartPosition.CenterParent;
+            StartPosition = FormStartPosition.CenterScreen;
             Text = "Import registers from file";
             FormClosing += OnFormClosing;
             panel1.ResumeLayout(false);

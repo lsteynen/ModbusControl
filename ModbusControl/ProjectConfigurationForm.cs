@@ -510,27 +510,27 @@ namespace ModbusControl
                                 || picSamplerateIsOverride.Visible
                                 || picwriteregFCIsOverride.Visible;
 
-            AdjustFormSize();
+            AdjustFormLayout();
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
             Debug.Print("Debug: Print info: ");
-            Debug.Print($"buttonPanel.Location.Y={buttonPanel.Location.Y}, buttonPanel.Height={buttonPanel.Height}");
+            Debug.Print($"buttonPanel.Location.Y={panel2.Location.Y}, buttonPanel.Height={panel2.Height}");
             Debug.Print($"form.Height={Height}");
         }
 
-        private void AdjustFormSize()
+        private void AdjustFormLayout()
         {
-            Debug.Print("AdjustFormSize:");
+            Debug.Print("AdjustFormLayout:");
             Debug.Print($"DeviceDpi={DeviceDpi}");
 
-            // get margin, DPI adjusted 
+            // get margins, DPI adjusted 
             int hmargin = AppDpiHelpers.ScaleValueFrom96DpiToThisDpiInt(6, DeviceDpi);
             int vmargin = AppDpiHelpers.ScaleValueFrom96DpiToThisDpiInt(6, DeviceDpi);
             // get new form size
-            int newWidth = ClientSize.Width + hmargin;
-            int newHeight = buttonPanel.Location.Y + buttonPanel.Height + vmargin;
+            int newWidth = ClientSize.Width;
+            int newHeight = panel2.Location.Y + panel2.Height + vmargin;
             Debug.Print($"newWidth={newWidth}, newHeight={newHeight}");
             ClientSize = new Size(newWidth, newHeight);
         }

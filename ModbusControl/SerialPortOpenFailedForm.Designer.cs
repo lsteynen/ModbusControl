@@ -34,9 +34,9 @@
             label2 = new Label();
             pic = new PictureBox();
             comboSerialPort = new SerialPortCombobox();
-            tableLayoutPanel1 = new TableLayoutPanel();
+            flowLayoutPanel1 = new FlowLayoutPanel();
             ((System.ComponentModel.ISupportInitialize)pic).BeginInit();
-            tableLayoutPanel1.SuspendLayout();
+            flowLayoutPanel1.SuspendLayout();
             SuspendLayout();
             // 
             // labelErrortext
@@ -50,23 +50,21 @@
             // 
             // buttonCancel
             // 
-            buttonCancel.AutoSize = true;
             buttonCancel.DialogResult = DialogResult.Cancel;
-            buttonCancel.Location = new Point(155, 105);
+            buttonCancel.Location = new Point(190, 109);
             buttonCancel.Name = "buttonCancel";
             buttonCancel.Size = new Size(75, 23);
-            buttonCancel.TabIndex = 6;
+            buttonCancel.TabIndex = 3;
             buttonCancel.Text = "Cancel";
             buttonCancel.UseVisualStyleBackColor = true;
             // 
             // buttonOK
             // 
-            buttonOK.AutoSize = true;
             buttonOK.DialogResult = DialogResult.OK;
-            buttonOK.Location = new Point(66, 105);
+            buttonOK.Location = new Point(101, 109);
             buttonOK.Name = "buttonOK";
             buttonOK.Size = new Size(75, 23);
-            buttonOK.TabIndex = 5;
+            buttonOK.TabIndex = 2;
             buttonOK.Text = "OK";
             buttonOK.UseVisualStyleBackColor = true;
             // 
@@ -77,7 +75,7 @@
             label2.Margin = new Padding(0, 6, 3, 3);
             label2.Name = "label2";
             label2.Size = new Size(133, 13);
-            label2.TabIndex = 1;
+            label2.TabIndex = 0;
             label2.Text = "Choose another serial port:";
             // 
             // pic
@@ -85,6 +83,7 @@
             pic.Location = new Point(21, 18);
             pic.Name = "pic";
             pic.Size = new Size(40, 40);
+            pic.SizeMode = PictureBoxSizeMode.StretchImage;
             pic.TabIndex = 17;
             pic.TabStop = false;
             // 
@@ -95,22 +94,18 @@
             comboSerialPort.MaxLength = 30;
             comboSerialPort.Name = "comboSerialPort";
             comboSerialPort.Size = new Size(91, 21);
-            comboSerialPort.TabIndex = 4;
+            comboSerialPort.TabIndex = 1;
             // 
-            // tableLayoutPanel1
+            // flowLayoutPanel1
             // 
-            tableLayoutPanel1.AutoSize = true;
-            tableLayoutPanel1.ColumnCount = 2;
-            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle());
-            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle());
-            tableLayoutPanel1.Controls.Add(label2, 0, 0);
-            tableLayoutPanel1.Controls.Add(comboSerialPort, 1, 0);
-            tableLayoutPanel1.Location = new Point(21, 64);
-            tableLayoutPanel1.Name = "tableLayoutPanel1";
-            tableLayoutPanel1.RowCount = 1;
-            tableLayoutPanel1.RowStyles.Add(new RowStyle());
-            tableLayoutPanel1.Size = new Size(236, 30);
-            tableLayoutPanel1.TabIndex = 18;
+            flowLayoutPanel1.AutoSize = true;
+            flowLayoutPanel1.Controls.Add(label2);
+            flowLayoutPanel1.Controls.Add(comboSerialPort);
+            flowLayoutPanel1.Location = new Point(21, 64);
+            flowLayoutPanel1.Name = "flowLayoutPanel1";
+            flowLayoutPanel1.Size = new Size(255, 30);
+            flowLayoutPanel1.TabIndex = 1;
+            flowLayoutPanel1.WrapContents = false;
             // 
             // SerialPortOpenFailedForm
             // 
@@ -118,9 +113,8 @@
             AutoScaleDimensions = new SizeF(96F, 96F);
             AutoScaleMode = AutoScaleMode.Dpi;
             CancelButton = buttonCancel;
-            ClientSize = new Size(297, 136);
-            ControlBox = false;
-            Controls.Add(tableLayoutPanel1);
+            ClientSize = new Size(363, 145);
+            Controls.Add(flowLayoutPanel1);
             Controls.Add(pic);
             Controls.Add(buttonCancel);
             Controls.Add(buttonOK);
@@ -133,12 +127,12 @@
             Padding = new Padding(0, 0, 0, 6);
             ShowIcon = false;
             ShowInTaskbar = false;
-            StartPosition = FormStartPosition.CenterParent;
+            StartPosition = FormStartPosition.CenterScreen;
             Text = "ModbusControl - Error";
             Shown += SerialPortOpenFailedForm_Shown;
             ((System.ComponentModel.ISupportInitialize)pic).EndInit();
-            tableLayoutPanel1.ResumeLayout(false);
-            tableLayoutPanel1.PerformLayout();
+            flowLayoutPanel1.ResumeLayout(false);
+            flowLayoutPanel1.PerformLayout();
             ResumeLayout(false);
             PerformLayout();
 
@@ -151,6 +145,6 @@
         private System.Windows.Forms.PictureBox pic;
         private System.Windows.Forms.Label label2;
         private SerialPortCombobox comboSerialPort;
-        private TableLayoutPanel tableLayoutPanel1;
+        private FlowLayoutPanel flowLayoutPanel1;
     }
 }

@@ -1,0 +1,14 @@
+{
+  "profiles": {
+    "ModbusControl": {
+      "commandName": "Project",
+      "commandLineArgs": "demo.mbc ",
+      "hotReloadEnabled": false
+    },
+    "Profile 1": {
+      "commandName": "Project",
+      "commandLineArgs": "/?",
+      "hotReloadEnabled": false
+    }
+  }
+}

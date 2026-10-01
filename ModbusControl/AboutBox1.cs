@@ -17,8 +17,9 @@ namespace ModbusControl
 
         public string VersionString { get; set; }
         public string AppdataPath { get; set; }
-        public int FormWidth { get; set; }
-        public int FormHeight { get; set; }
+        public int MainFormWidth { get; set; }
+        public int MainFormHeight { get; set; }
+        public int MainFormDpi { get; set; }
 
         public AboutBox1()
         {
@@ -37,12 +38,12 @@ namespace ModbusControl
             string dotnetcoreVersion = System.Runtime.InteropServices.RuntimeInformation.FrameworkDescription;
             labelDotNetVersion.Text = $".NET (core) version: {dotnetcoreVersion}";
 
-            labelFormSize.Text = "Main window size: " + FormWidth + " x " + FormHeight;
+            labelFormSize.Text = $"Main window size: {MainFormWidth} x {MainFormHeight} (at {MainFormDpi} DPI)";
         }
 
         private void AboutBox1_Shown(object sender, EventArgs e)
         {
-            AdjustFormSize();
+            AdjustLayout();
 
             /*
             // test 
@@ -55,22 +56,23 @@ namespace ModbusControl
             */
         }
 
-        private void AdjustFormSize()
+        private void AdjustLayout()
         {
-            Debug.Print("AdjustFormSize:");
+            Debug.Print("AdjustLayout:");
             Debug.Print($"DeviceDpi={DeviceDpi}");
 
-            PerformLayout();
+            // adjust form width to fit labelAppdata text
 
             // get margin, DPI adjusted 
-            int hmargin = AppDpiHelpers.ScaleValueFrom96DpiToThisDpiInt(40, DeviceDpi);
-            int vmargin = AppDpiHelpers.ScaleValueFrom96DpiToThisDpiInt(8, DeviceDpi);
-            // get new form size
-            int newWidth = tableLayoutPanel1.PreferredSize.Width + hmargin;
-            int newHeight = panel1.Location.Y + panel1.Height + vmargin;
-            panel1.Width = newWidth;
-            Debug.Print($"newWidth={newWidth}, newHeight={newHeight}");
-            ClientSize = new Size(newWidth, newHeight);
+            int hmargin = AppDpiHelpers.ScaleValueFrom96DpiToThisDpiInt(30, DeviceDpi);
+            // get new form width
+            int newWidth = labelAppdata.Left + labelAppdata.Width + hmargin;
+            Debug.Print($"new ClientSize Width={newWidth}");
+            ClientSize = new Size(newWidth, ClientSize.Height);
+
+            // center OK button (auto-center issues on scaling systems)
+            int newOkButtonLeft = (ClientSize.Width - okButton.Width) / 2;
+            okButton.Left = newOkButtonLeft;
         }
 
         #region Assembly Attribute Accessors

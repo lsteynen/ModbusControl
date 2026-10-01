@@ -33,8 +33,8 @@
             statusStrip1 = new StatusStrip();
             toolStripStatusLabel1 = new ToolStripStatusLabel();
             toolStripStatusLabel2 = new ToolStripStatusLabel();
+            toolStripStatusLabel3 = new ToolStripStatusLabel();
             panel1 = new Panel();
-            tableLayoutPanel1 = new TableLayoutPanel();
             buttonSaveToFile = new Button();
             buttonCopyToClipboard = new Button();
             buttonBottom = new Button();
@@ -53,15 +53,16 @@
             dataGridViewTextBoxColumn1 = new DataGridViewTextBoxColumn();
             dataGridViewTextBoxColumn2 = new DataGridViewTextBoxColumn();
             dataGridViewTextBoxColumn3 = new DataGridViewTextBoxColumn();
+            flowLayoutPanel1 = new FlowLayoutPanel();
             statusStrip1.SuspendLayout();
             panel1.SuspendLayout();
-            tableLayoutPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)logGridView).BeginInit();
+            flowLayoutPanel1.SuspendLayout();
             SuspendLayout();
             // 
             // statusStrip1
             // 
-            statusStrip1.Items.AddRange(new ToolStripItem[] { toolStripStatusLabel1, toolStripStatusLabel2 });
+            statusStrip1.Items.AddRange(new ToolStripItem[] { toolStripStatusLabel1, toolStripStatusLabel2, toolStripStatusLabel3 });
             resources.ApplyResources(statusStrip1, "statusStrip1");
             statusStrip1.Name = "statusStrip1";
             // 
@@ -76,24 +77,16 @@
             resources.ApplyResources(toolStripStatusLabel2, "toolStripStatusLabel2");
             toolStripStatusLabel2.Name = "toolStripStatusLabel2";
             // 
+            // toolStripStatusLabel3
+            // 
+            toolStripStatusLabel3.Name = "toolStripStatusLabel3";
+            resources.ApplyResources(toolStripStatusLabel3, "toolStripStatusLabel3");
+            // 
             // panel1
             // 
+            panel1.Controls.Add(flowLayoutPanel1);
             resources.ApplyResources(panel1, "panel1");
-            panel1.Controls.Add(tableLayoutPanel1);
             panel1.Name = "panel1";
-            // 
-            // tableLayoutPanel1
-            // 
-            resources.ApplyResources(tableLayoutPanel1, "tableLayoutPanel1");
-            tableLayoutPanel1.Controls.Add(buttonSaveToFile, 7, 0);
-            tableLayoutPanel1.Controls.Add(buttonCopyToClipboard, 6, 0);
-            tableLayoutPanel1.Controls.Add(buttonBottom, 5, 0);
-            tableLayoutPanel1.Controls.Add(buttonTop, 4, 0);
-            tableLayoutPanel1.Controls.Add(chkAutoScroll, 3, 0);
-            tableLayoutPanel1.Controls.Add(buttonClear, 2, 0);
-            tableLayoutPanel1.Controls.Add(logFilter, 1, 0);
-            tableLayoutPanel1.Controls.Add(checkboxEnable, 0, 0);
-            tableLayoutPanel1.Name = "tableLayoutPanel1";
             // 
             // buttonSaveToFile
             // 
@@ -235,6 +228,19 @@
             dataGridViewTextBoxColumn3.Name = "dataGridViewTextBoxColumn3";
             dataGridViewTextBoxColumn3.ReadOnly = true;
             // 
+            // flowLayoutPanel1
+            // 
+            resources.ApplyResources(flowLayoutPanel1, "flowLayoutPanel1");
+            flowLayoutPanel1.Controls.Add(checkboxEnable);
+            flowLayoutPanel1.Controls.Add(logFilter);
+            flowLayoutPanel1.Controls.Add(buttonClear);
+            flowLayoutPanel1.Controls.Add(chkAutoScroll);
+            flowLayoutPanel1.Controls.Add(buttonTop);
+            flowLayoutPanel1.Controls.Add(buttonBottom);
+            flowLayoutPanel1.Controls.Add(buttonCopyToClipboard);
+            flowLayoutPanel1.Controls.Add(buttonSaveToFile);
+            flowLayoutPanel1.Name = "flowLayoutPanel1";
+            // 
             // Logger
             // 
             resources.ApplyResources(this, "$this");
@@ -249,9 +255,9 @@
             statusStrip1.PerformLayout();
             panel1.ResumeLayout(false);
             panel1.PerformLayout();
-            tableLayoutPanel1.ResumeLayout(false);
-            tableLayoutPanel1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)logGridView).EndInit();
+            flowLayoutPanel1.ResumeLayout(false);
+            flowLayoutPanel1.PerformLayout();
             ResumeLayout(false);
             PerformLayout();
 
@@ -281,7 +287,8 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn Time;
         private System.Windows.Forms.DataGridViewTextBoxColumn Type;
         private System.Windows.Forms.DataGridViewTextBoxColumn Logtext;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
+        private ToolStripStatusLabel toolStripStatusLabel3;
+        private FlowLayoutPanel flowLayoutPanel1;
     }
 }
 

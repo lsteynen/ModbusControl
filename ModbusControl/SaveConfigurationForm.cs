@@ -94,22 +94,21 @@ namespace ModbusControl
 
         private void SaveConfigurationForm_Shown(object sender, EventArgs e)
         {
-            AdjustFormSize();
+            AdjustFormLayout();
         }
 
-        private void AdjustFormSize()
+        private void AdjustFormLayout()
         {
-            Debug.Print("AdjustFormSize:");
+            Debug.Print("AdjustFormLayout:");
             Debug.Print($"DeviceDpi={DeviceDpi}");
 
             // get margin, DPI adjusted 
             int hmargin = AppDpiHelpers.ScaleValueFrom96DpiToThisDpiInt(6, DeviceDpi);
             int vmargin = AppDpiHelpers.ScaleValueFrom96DpiToThisDpiInt(6, DeviceDpi);
             // get new form size
-            int newWidth = ClientSize.Width+ hmargin;
             int newHeight = optionsPanel.Location.Y + optionsPanel.Height + vmargin;
-            Debug.Print($"newWidth={newWidth}, newHeight={newHeight}");
-            ClientSize = new Size(newWidth, newHeight);
+            Debug.Print($"newWidth={ClientSize.Width}, newHeight={newHeight}");
+            ClientSize = new Size(ClientSize.Width, newHeight);
         }
     }
 }

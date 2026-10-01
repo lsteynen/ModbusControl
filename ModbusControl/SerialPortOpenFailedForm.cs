@@ -37,22 +37,15 @@ namespace ModbusControl
 
         private void SerialPortOpenFailedForm_Shown(object sender, EventArgs e)
         {
-            AdjustFormSize();
+            AdjustFormLayout();
         }
 
-        private void AdjustFormSize()
+        private void AdjustFormLayout()
         {
-            Debug.Print("AdjustFormSize:");
+            Debug.Print("AdjustFormLayout:");
             Debug.Print($"DeviceDpi={DeviceDpi}");
 
-            // get margin, DPI adjusted 
-            int hmargin = AppDpiHelpers.ScaleValueFrom96DpiToThisDpiInt(50, DeviceDpi);
-            int vmargin = AppDpiHelpers.ScaleValueFrom96DpiToThisDpiInt(12, DeviceDpi);
-            // get new form size
-            int newWidth = buttonCancel.Left + buttonCancel.Width + hmargin;
-            int newHeight = buttonCancel.Top + buttonCancel.Height + vmargin;
-            Debug.Print($"newWidth={newWidth}, newHeight={newHeight}");
-            ClientSize = new Size(newWidth, newHeight);
+            // nothing to do here
         }
     }
 }

@@ -2050,7 +2050,7 @@ namespace ModbusControl
                     grid.Rows[rowIndex].Selected = true;
                 }
 
-                DialogResult result = MessageBox.Show($"Delete {selectedRows.Count} rows. Are you sure?",
+                DialogResult result = MessageBox.Show($"Delete {selectedRows.Count} row(s)?",
                                                       "Confirmation",
                                                       MessageBoxButtons.YesNo,
                                                       MessageBoxIcon.Warning);

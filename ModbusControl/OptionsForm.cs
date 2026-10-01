@@ -164,24 +164,14 @@ namespace ModbusControl
             }
         }
 
-        private void AdjustFormSize()
-        {
-            Debug.Print("AdjustFormSize:");
-            Debug.Print($"DeviceDpi={DeviceDpi}");
-
-            // get margin, DPI adjusted 
-            int hmargin = AppDpiHelpers.ScaleValueFrom96DpiToThisDpiInt(6, DeviceDpi);
-            int vmargin = AppDpiHelpers.ScaleValueFrom96DpiToThisDpiInt(10, DeviceDpi);
-            // get new form size
-            int newWidth = ClientSize.Width + hmargin;
-            int newHeight = buttonOK.Location.Y + buttonOK.Height + vmargin;
-            Debug.Print($"newWidth={newWidth}, newHeight={newHeight}");
-            ClientSize = new Size(newWidth, newHeight);
-        }
-
         private void OptionsForm_Shown(object sender, EventArgs e)
         {
-            AdjustFormSize();
+            AdjustLayout();
+        }
+
+        private void AdjustLayout()
+        {
+            // nothing to do
         }
     }
 }

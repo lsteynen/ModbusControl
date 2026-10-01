@@ -74,8 +74,12 @@
             label5 = new Label();
             backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
             panel2 = new Panel();
+            butDebugInfo = new Button();
             label17 = new Label();
+            buttonApply = new Button();
             comboStringEncoding = new ComboBox();
+            buttonCancel = new Button();
+            buttonOK = new Button();
             label6 = new Label();
             groupBox3 = new GroupBox();
             groupBox4 = new GroupBox();
@@ -99,14 +103,9 @@
             label8 = new Label();
             label3 = new Label();
             label7 = new Label();
-            butDebugInfo = new Button();
             pictureBox1 = new PictureBox();
             label16 = new Label();
             warningPanel = new Panel();
-            buttonPanel = new Panel();
-            buttonApply = new Button();
-            buttonCancel = new Button();
-            buttonOK = new Button();
             ((System.ComponentModel.ISupportInitialize)numericSamplerate).BeginInit();
             ((System.ComponentModel.ISupportInitialize)numericTcpServerPort).BeginInit();
             ((System.ComponentModel.ISupportInitialize)numericMaximumFrameSize).BeginInit();
@@ -140,13 +139,12 @@
             groupBoxSerialInterface.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             warningPanel.SuspendLayout();
-            buttonPanel.SuspendLayout();
             SuspendLayout();
             // 
             // numericSamplerate
             // 
             numericSamplerate.Increment = new decimal(new int[] { 100, 0, 0, 0 });
-            numericSamplerate.Location = new Point(574, 16);
+            numericSamplerate.Location = new Point(610, 16);
             numericSamplerate.Maximum = new decimal(new int[] { int.MaxValue, 0, 0, 0 });
             numericSamplerate.Name = "numericSamplerate";
             numericSamplerate.Size = new Size(82, 20);
@@ -156,11 +154,10 @@
             // 
             // radFloat32LittleEndian
             // 
-            radFloat32LittleEndian.AutoSize = true;
             radFloat32LittleEndian.Checked = true;
             radFloat32LittleEndian.Location = new Point(6, 16);
             radFloat32LittleEndian.Name = "radFloat32LittleEndian";
-            radFloat32LittleEndian.Size = new Size(70, 17);
+            radFloat32LittleEndian.Size = new Size(80, 17);
             radFloat32LittleEndian.TabIndex = 0;
             radFloat32LittleEndian.TabStop = true;
             radFloat32LittleEndian.Text = "Low-High";
@@ -169,10 +166,9 @@
             // 
             // radFloat32BigEndian
             // 
-            radFloat32BigEndian.AutoSize = true;
-            radFloat32BigEndian.Location = new Point(87, 16);
+            radFloat32BigEndian.Location = new Point(92, 16);
             radFloat32BigEndian.Name = "radFloat32BigEndian";
-            radFloat32BigEndian.Size = new Size(70, 17);
+            radFloat32BigEndian.Size = new Size(78, 17);
             radFloat32BigEndian.TabIndex = 1;
             radFloat32BigEndian.Text = "High-Low";
             toolTip1.SetToolTip(radFloat32BigEndian, "First register is higher 16 bits of 32-bit float");
@@ -180,10 +176,9 @@
             // 
             // radStringLittleEndian
             // 
-            radStringLittleEndian.AutoSize = true;
             radStringLittleEndian.Location = new Point(6, 33);
             radStringLittleEndian.Name = "radStringLittleEndian";
-            radStringLittleEndian.Size = new Size(68, 17);
+            radStringLittleEndian.Size = new Size(79, 17);
             radStringLittleEndian.TabIndex = 1;
             radStringLittleEndian.Text = "Low byte";
             toolTip1.SetToolTip(radStringLittleEndian, "Register with value 0x4241 is shown as 'AB'");
@@ -191,11 +186,10 @@
             // 
             // radStringBigEndian
             // 
-            radStringBigEndian.AutoSize = true;
             radStringBigEndian.Checked = true;
-            radStringBigEndian.Location = new Point(87, 33);
+            radStringBigEndian.Location = new Point(91, 33);
             radStringBigEndian.Name = "radStringBigEndian";
-            radStringBigEndian.Size = new Size(70, 17);
+            radStringBigEndian.Size = new Size(79, 17);
             radStringBigEndian.TabIndex = 2;
             radStringBigEndian.TabStop = true;
             radStringBigEndian.Text = "High byte";
@@ -226,11 +220,10 @@
             // 
             // radInt32LittleEndian
             // 
-            radInt32LittleEndian.AutoSize = true;
             radInt32LittleEndian.Checked = true;
-            radInt32LittleEndian.Location = new Point(6, 16);
+            radInt32LittleEndian.Location = new Point(6, 15);
             radInt32LittleEndian.Name = "radInt32LittleEndian";
-            radInt32LittleEndian.Size = new Size(70, 17);
+            radInt32LittleEndian.Size = new Size(80, 17);
             radInt32LittleEndian.TabIndex = 0;
             radInt32LittleEndian.TabStop = true;
             radInt32LittleEndian.Text = "Low-High";
@@ -239,10 +232,9 @@
             // 
             // radInt32BigEndian
             // 
-            radInt32BigEndian.AutoSize = true;
-            radInt32BigEndian.Location = new Point(87, 16);
+            radInt32BigEndian.Location = new Point(92, 16);
             radInt32BigEndian.Name = "radInt32BigEndian";
-            radInt32BigEndian.Size = new Size(70, 17);
+            radInt32BigEndian.Size = new Size(78, 17);
             radInt32BigEndian.TabIndex = 1;
             radInt32BigEndian.Text = "High-Low";
             toolTip1.SetToolTip(radInt32BigEndian, "First register is higher 16 bits of 32-bit value");
@@ -250,10 +242,9 @@
             // 
             // radWriteFC6
             // 
-            radWriteFC6.AutoSize = true;
             radWriteFC6.Location = new Point(6, 16);
             radWriteFC6.Name = "radWriteFC6";
-            radWriteFC6.Size = new Size(167, 17);
+            radWriteFC6.Size = new Size(191, 17);
             radWriteFC6.TabIndex = 0;
             radWriteFC6.TabStop = true;
             radWriteFC6.Text = "Use FC6 only (write single reg)";
@@ -262,11 +253,10 @@
             // 
             // radWriteFC16
             // 
-            radWriteFC16.AutoSize = true;
             radWriteFC16.Checked = true;
-            radWriteFC16.Location = new Point(6, 34);
+            radWriteFC16.Location = new Point(6, 37);
             radWriteFC16.Name = "radWriteFC16";
-            radWriteFC16.Size = new Size(181, 17);
+            radWriteFC16.Size = new Size(202, 17);
             radWriteFC16.TabIndex = 1;
             radWriteFC16.TabStop = true;
             radWriteFC16.Text = "Use FC16 only (write multiple reg)";
@@ -275,10 +265,9 @@
             // 
             // radWriteFCAuto
             // 
-            radWriteFCAuto.AutoSize = true;
-            radWriteFCAuto.Location = new Point(6, 52);
+            radWriteFCAuto.Location = new Point(6, 58);
             radWriteFCAuto.Name = "radWriteFCAuto";
-            radWriteFCAuto.Size = new Size(140, 17);
+            radWriteFCAuto.Size = new Size(191, 17);
             radWriteFCAuto.TabIndex = 2;
             radWriteFCAuto.TabStop = true;
             radWriteFCAuto.Tag = "";
@@ -288,11 +277,11 @@
             // 
             // numericMaximumFrameSize
             // 
-            numericMaximumFrameSize.Location = new Point(136, 318);
+            numericMaximumFrameSize.Location = new Point(136, 324);
             numericMaximumFrameSize.Maximum = new decimal(new int[] { 256, 0, 0, 0 });
             numericMaximumFrameSize.Minimum = new decimal(new int[] { 13, 0, 0, 0 });
             numericMaximumFrameSize.Name = "numericMaximumFrameSize";
-            numericMaximumFrameSize.Size = new Size(61, 20);
+            numericMaximumFrameSize.Size = new Size(72, 20);
             numericMaximumFrameSize.TabIndex = 9;
             toolTip1.SetToolTip(numericMaximumFrameSize, "Maximum number of bytes of query or response frame in RTU format ");
             numericMaximumFrameSize.Value = new decimal(new int[] { 256, 0, 0, 0 });
@@ -300,21 +289,21 @@
             // numericResponseTimeout
             // 
             numericResponseTimeout.Increment = new decimal(new int[] { 100, 0, 0, 0 });
-            numericResponseTimeout.Location = new Point(135, 295);
+            numericResponseTimeout.Location = new Point(135, 301);
             numericResponseTimeout.Maximum = new decimal(new int[] { int.MaxValue, 0, 0, 0 });
             numericResponseTimeout.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
             numericResponseTimeout.Name = "numericResponseTimeout";
-            numericResponseTimeout.Size = new Size(62, 20);
+            numericResponseTimeout.Size = new Size(72, 20);
             numericResponseTimeout.TabIndex = 7;
             toolTip1.SetToolTip(numericResponseTimeout, "Response timeout, in milliseconds");
             numericResponseTimeout.Value = new decimal(new int[] { 1000, 0, 0, 0 });
             // 
             // numericSlaveAddress
             // 
-            numericSlaveAddress.Location = new Point(136, 272);
+            numericSlaveAddress.Location = new Point(136, 278);
             numericSlaveAddress.Maximum = new decimal(new int[] { 255, 0, 0, 0 });
             numericSlaveAddress.Name = "numericSlaveAddress";
-            numericSlaveAddress.Size = new Size(61, 20);
+            numericSlaveAddress.Size = new Size(72, 20);
             numericSlaveAddress.TabIndex = 5;
             toolTip1.SetToolTip(numericSlaveAddress, "Slave ID (or slave address or unit identifier) 0-255");
             numericSlaveAddress.Value = new decimal(new int[] { 1, 0, 0, 0 });
@@ -367,7 +356,7 @@
             // checkboxSerialOneWireEchoSuppression
             // 
             checkboxSerialOneWireEchoSuppression.CheckAlign = ContentAlignment.MiddleRight;
-            checkboxSerialOneWireEchoSuppression.Location = new Point(12, 108);
+            checkboxSerialOneWireEchoSuppression.Location = new Point(12, 111);
             checkboxSerialOneWireEchoSuppression.Name = "checkboxSerialOneWireEchoSuppression";
             checkboxSerialOneWireEchoSuppression.Size = new Size(170, 17);
             checkboxSerialOneWireEchoSuppression.TabIndex = 8;
@@ -411,7 +400,7 @@
             // 
             // textboxHoldingRegistersStart
             // 
-            textboxHoldingRegistersStart.Location = new Point(475, 58);
+            textboxHoldingRegistersStart.Location = new Point(511, 58);
             textboxHoldingRegistersStart.Name = "textboxHoldingRegistersStart";
             textboxHoldingRegistersStart.ReadOnly = true;
             textboxHoldingRegistersStart.Size = new Size(181, 20);
@@ -507,7 +496,7 @@
             // picOnewireechosuppressionIsOverride
             // 
             picOnewireechosuppressionIsOverride.Image = (Image)resources.GetObject("picOnewireechosuppressionIsOverride.Image");
-            picOnewireechosuppressionIsOverride.Location = new Point(185, 105);
+            picOnewireechosuppressionIsOverride.Location = new Point(185, 108);
             picOnewireechosuppressionIsOverride.Name = "picOnewireechosuppressionIsOverride";
             picOnewireechosuppressionIsOverride.Size = new Size(20, 20);
             picOnewireechosuppressionIsOverride.SizeMode = PictureBoxSizeMode.StretchImage;
@@ -519,7 +508,7 @@
             // picSlaveIDIsOverride
             // 
             picSlaveIDIsOverride.Image = (Image)resources.GetObject("picSlaveIDIsOverride.Image");
-            picSlaveIDIsOverride.Location = new Point(199, 272);
+            picSlaveIDIsOverride.Location = new Point(212, 278);
             picSlaveIDIsOverride.Name = "picSlaveIDIsOverride";
             picSlaveIDIsOverride.Size = new Size(20, 20);
             picSlaveIDIsOverride.SizeMode = PictureBoxSizeMode.StretchImage;
@@ -531,7 +520,7 @@
             // picResponsetimeoutIsOverride
             // 
             picResponsetimeoutIsOverride.Image = (Image)resources.GetObject("picResponsetimeoutIsOverride.Image");
-            picResponsetimeoutIsOverride.Location = new Point(199, 295);
+            picResponsetimeoutIsOverride.Location = new Point(212, 301);
             picResponsetimeoutIsOverride.Name = "picResponsetimeoutIsOverride";
             picResponsetimeoutIsOverride.Size = new Size(20, 20);
             picResponsetimeoutIsOverride.SizeMode = PictureBoxSizeMode.StretchImage;
@@ -543,7 +532,7 @@
             // picInterframedelayIsOverride
             // 
             picInterframedelayIsOverride.Image = (Image)resources.GetObject("picInterframedelayIsOverride.Image");
-            picInterframedelayIsOverride.Location = new Point(199, 341);
+            picInterframedelayIsOverride.Location = new Point(212, 347);
             picInterframedelayIsOverride.Name = "picInterframedelayIsOverride";
             picInterframedelayIsOverride.Size = new Size(20, 20);
             picInterframedelayIsOverride.SizeMode = PictureBoxSizeMode.StretchImage;
@@ -555,7 +544,7 @@
             // picSamplerateIsOverride
             // 
             picSamplerateIsOverride.Image = (Image)resources.GetObject("picSamplerateIsOverride.Image");
-            picSamplerateIsOverride.Location = new Point(658, 16);
+            picSamplerateIsOverride.Location = new Point(694, 16);
             picSamplerateIsOverride.Name = "picSamplerateIsOverride";
             picSamplerateIsOverride.Size = new Size(20, 20);
             picSamplerateIsOverride.SizeMode = PictureBoxSizeMode.StretchImage;
@@ -567,7 +556,7 @@
             // picMaxFrameSizeIsOverride
             // 
             picMaxFrameSizeIsOverride.Image = (Image)resources.GetObject("picMaxFrameSizeIsOverride.Image");
-            picMaxFrameSizeIsOverride.Location = new Point(199, 318);
+            picMaxFrameSizeIsOverride.Location = new Point(212, 324);
             picMaxFrameSizeIsOverride.Name = "picMaxFrameSizeIsOverride";
             picMaxFrameSizeIsOverride.Size = new Size(20, 20);
             picMaxFrameSizeIsOverride.SizeMode = PictureBoxSizeMode.StretchImage;
@@ -590,10 +579,10 @@
             // 
             // numericInterFrameDelay
             // 
-            numericInterFrameDelay.Location = new Point(137, 341);
+            numericInterFrameDelay.Location = new Point(137, 347);
             numericInterFrameDelay.Maximum = new decimal(new int[] { int.MaxValue, 0, 0, 0 });
             numericInterFrameDelay.Name = "numericInterFrameDelay";
-            numericInterFrameDelay.Size = new Size(61, 20);
+            numericInterFrameDelay.Size = new Size(72, 20);
             numericInterFrameDelay.TabIndex = 11;
             toolTip1.SetToolTip(numericInterFrameDelay, "Delay between response and next query, in milliseconds, 0 is auto, auto is 4Tchar for serial channels and 0ms for TCP channels");
             // 
@@ -610,7 +599,7 @@
             // label5
             // 
             label5.AutoSize = true;
-            label5.Location = new Point(471, 44);
+            label5.Location = new Point(507, 44);
             label5.Name = "label5";
             label5.Size = new Size(141, 13);
             label5.TabIndex = 9;
@@ -618,9 +607,13 @@
             // 
             // panel2
             // 
+            panel2.Controls.Add(butDebugInfo);
             panel2.Controls.Add(label17);
+            panel2.Controls.Add(buttonApply);
             panel2.Controls.Add(comboStringEncoding);
+            panel2.Controls.Add(buttonCancel);
             panel2.Controls.Add(picSamplerateIsOverride);
+            panel2.Controls.Add(buttonOK);
             panel2.Controls.Add(textboxHoldingRegistersStart);
             panel2.Controls.Add(label5);
             panel2.Controls.Add(numericSamplerate);
@@ -632,33 +625,74 @@
             panel2.Controls.Add(groupBox1);
             panel2.Controls.Add(groupboxConnection);
             panel2.Dock = DockStyle.Top;
-            panel2.Location = new Point(0, 38);
+            panel2.Location = new Point(0, 42);
             panel2.Name = "panel2";
-            panel2.Size = new Size(699, 382);
+            panel2.Size = new Size(735, 422);
             panel2.TabIndex = 1;
+            // 
+            // butDebugInfo
+            // 
+            butDebugInfo.Location = new Point(587, 394);
+            butDebugInfo.Name = "butDebugInfo";
+            butDebugInfo.Size = new Size(100, 23);
+            butDebugInfo.TabIndex = 15;
+            butDebugInfo.Text = "DEBUG info";
+            butDebugInfo.UseVisualStyleBackColor = true;
+            butDebugInfo.Visible = false;
+            butDebugInfo.Click += button1_Click;
             // 
             // label17
             // 
             label17.AutoSize = true;
-            label17.Location = new Point(241, 252);
+            label17.Location = new Point(268, 259);
             label17.Name = "label17";
             label17.Size = new Size(133, 13);
             label17.TabIndex = 5;
             label17.Text = "String encoding/decoding:";
             // 
+            // buttonApply
+            // 
+            buttonApply.Location = new Point(338, 394);
+            buttonApply.Name = "buttonApply";
+            buttonApply.Size = new Size(75, 23);
+            buttonApply.TabIndex = 13;
+            buttonApply.Text = "Apply";
+            buttonApply.UseVisualStyleBackColor = true;
+            buttonApply.Click += ButtonApply_Click;
+            // 
             // comboStringEncoding
             // 
             comboStringEncoding.DropDownStyle = ComboBoxStyle.DropDownList;
             comboStringEncoding.FormattingEnabled = true;
-            comboStringEncoding.Location = new Point(243, 268);
+            comboStringEncoding.Location = new Point(270, 276);
             comboStringEncoding.Name = "comboStringEncoding";
             comboStringEncoding.Size = new Size(218, 21);
             comboStringEncoding.TabIndex = 6;
             // 
+            // buttonCancel
+            // 
+            buttonCancel.DialogResult = DialogResult.Cancel;
+            buttonCancel.Location = new Point(429, 394);
+            buttonCancel.Name = "buttonCancel";
+            buttonCancel.Size = new Size(75, 23);
+            buttonCancel.TabIndex = 14;
+            buttonCancel.Text = "Cancel";
+            buttonCancel.UseVisualStyleBackColor = true;
+            // 
+            // buttonOK
+            // 
+            buttonOK.DialogResult = DialogResult.OK;
+            buttonOK.Location = new Point(247, 394);
+            buttonOK.Name = "buttonOK";
+            buttonOK.Size = new Size(75, 23);
+            buttonOK.TabIndex = 12;
+            buttonOK.Text = "OK";
+            buttonOK.UseVisualStyleBackColor = true;
+            // 
             // label6
             // 
             label6.AutoSize = true;
-            label6.Location = new Point(471, 18);
+            label6.Location = new Point(507, 18);
             label6.Name = "label6";
             label6.Size = new Size(88, 13);
             label6.TabIndex = 7;
@@ -668,7 +702,7 @@
             // 
             groupBox3.Controls.Add(radFloat32BigEndian);
             groupBox3.Controls.Add(radFloat32LittleEndian);
-            groupBox3.Location = new Point(243, 137);
+            groupBox3.Location = new Point(270, 144);
             groupBox3.Name = "groupBox3";
             groupBox3.Size = new Size(218, 39);
             groupBox3.TabIndex = 3;
@@ -680,7 +714,7 @@
             groupBox4.Controls.Add(radStringBigEndian);
             groupBox4.Controls.Add(radStringLittleEndian);
             groupBox4.Controls.Add(label14);
-            groupBox4.Location = new Point(243, 184);
+            groupBox4.Location = new Point(270, 191);
             groupBox4.Name = "groupBox4";
             groupBox4.Size = new Size(218, 55);
             groupBox4.TabIndex = 4;
@@ -701,7 +735,7 @@
             groupboxModbusTcpServer.Controls.Add(numericTcpServerPort);
             groupboxModbusTcpServer.Controls.Add(checkboxTcpServerEnable);
             groupboxModbusTcpServer.Controls.Add(label13);
-            groupboxModbusTcpServer.Location = new Point(475, 93);
+            groupboxModbusTcpServer.Location = new Point(511, 93);
             groupboxModbusTcpServer.Name = "groupboxModbusTcpServer";
             groupboxModbusTcpServer.Size = new Size(178, 67);
             groupboxModbusTcpServer.TabIndex = 11;
@@ -721,7 +755,7 @@
             // 
             groupBox2.Controls.Add(radInt32BigEndian);
             groupBox2.Controls.Add(radInt32LittleEndian);
-            groupBox2.Location = new Point(243, 93);
+            groupBox2.Location = new Point(270, 100);
             groupBox2.Name = "groupBox2";
             groupBox2.Size = new Size(218, 38);
             groupBox2.TabIndex = 2;
@@ -734,9 +768,9 @@
             groupBox1.Controls.Add(radWriteFC6);
             groupBox1.Controls.Add(radWriteFC16);
             groupBox1.Controls.Add(radWriteFCAuto);
-            groupBox1.Location = new Point(243, 10);
+            groupBox1.Location = new Point(270, 10);
             groupBox1.Name = "groupBox1";
-            groupBox1.Size = new Size(218, 74);
+            groupBox1.Size = new Size(218, 84);
             groupBox1.TabIndex = 1;
             groupBox1.TabStop = false;
             groupBox1.Text = "Functioncode to write holding registers";
@@ -762,7 +796,7 @@
             groupboxConnection.Controls.Add(label7);
             groupboxConnection.Location = new Point(9, 10);
             groupboxConnection.Name = "groupboxConnection";
-            groupboxConnection.Size = new Size(224, 366);
+            groupboxConnection.Size = new Size(237, 379);
             groupboxConnection.TabIndex = 0;
             groupboxConnection.TabStop = false;
             groupboxConnection.Text = "Connection / Protocol";
@@ -770,7 +804,7 @@
             // label15
             // 
             label15.AutoSize = true;
-            label15.Location = new Point(6, 343);
+            label15.Location = new Point(6, 349);
             label15.Name = "label15";
             label15.Size = new Size(110, 13);
             label15.TabIndex = 10;
@@ -787,9 +821,9 @@
             groupBoxTcpInterface.Controls.Add(label11);
             groupBoxTcpInterface.Controls.Add(label10);
             groupBoxTcpInterface.Enabled = false;
-            groupBoxTcpInterface.Location = new Point(0, 175);
+            groupBoxTcpInterface.Location = new Point(0, 184);
             groupBoxTcpInterface.Name = "groupBoxTcpInterface";
-            groupBoxTcpInterface.Size = new Size(212, 94);
+            groupBoxTcpInterface.Size = new Size(212, 73);
             groupBoxTcpInterface.TabIndex = 3;
             groupBoxTcpInterface.TabStop = false;
             groupBoxTcpInterface.Text = "TCP connection";
@@ -840,7 +874,7 @@
             groupBoxSerialInterface.Controls.Add(comboSerialBaudrate);
             groupBoxSerialInterface.Location = new Point(0, 45);
             groupBoxSerialInterface.Name = "groupBoxSerialInterface";
-            groupBoxSerialInterface.Size = new Size(212, 128);
+            groupBoxSerialInterface.Size = new Size(212, 133);
             groupBoxSerialInterface.TabIndex = 2;
             groupBoxSerialInterface.TabStop = false;
             groupBoxSerialInterface.Text = "Serial interface";
@@ -893,7 +927,7 @@
             // label8
             // 
             label8.AutoSize = true;
-            label8.Location = new Point(6, 297);
+            label8.Location = new Point(6, 303);
             label8.Name = "label8";
             label8.Size = new Size(117, 13);
             label8.TabIndex = 6;
@@ -902,7 +936,7 @@
             // label3
             // 
             label3.AutoSize = true;
-            label3.Location = new Point(6, 274);
+            label3.Location = new Point(6, 280);
             label3.Name = "label3";
             label3.Size = new Size(51, 13);
             label3.TabIndex = 4;
@@ -911,23 +945,11 @@
             // label7
             // 
             label7.AutoSize = true;
-            label7.Location = new Point(6, 320);
+            label7.Location = new Point(6, 326);
             label7.Name = "label7";
             label7.Size = new Size(104, 13);
             label7.TabIndex = 8;
             label7.Text = "Maximum frame size:";
-            // 
-            // butDebugInfo
-            // 
-            butDebugInfo.AutoSize = true;
-            butDebugInfo.Location = new Point(529, 6);
-            butDebugInfo.Name = "butDebugInfo";
-            butDebugInfo.Size = new Size(100, 25);
-            butDebugInfo.TabIndex = 24;
-            butDebugInfo.Text = "DEBUG info";
-            butDebugInfo.UseVisualStyleBackColor = true;
-            butDebugInfo.Visible = false;
-            butDebugInfo.Click += button1_Click;
             // 
             // pictureBox1
             // 
@@ -956,66 +978,16 @@
             warningPanel.Dock = DockStyle.Top;
             warningPanel.Location = new Point(0, 0);
             warningPanel.Name = "warningPanel";
-            warningPanel.Size = new Size(699, 38);
+            warningPanel.Size = new Size(735, 42);
             warningPanel.TabIndex = 0;
             warningPanel.Visible = false;
-            // 
-            // buttonPanel
-            // 
-            buttonPanel.Controls.Add(butDebugInfo);
-            buttonPanel.Controls.Add(buttonApply);
-            buttonPanel.Controls.Add(buttonCancel);
-            buttonPanel.Controls.Add(buttonOK);
-            buttonPanel.Dock = DockStyle.Top;
-            buttonPanel.Location = new Point(0, 420);
-            buttonPanel.Name = "buttonPanel";
-            buttonPanel.Size = new Size(699, 35);
-            buttonPanel.TabIndex = 2;
-            // 
-            // buttonApply
-            // 
-            buttonApply.Anchor = AnchorStyles.Top;
-            buttonApply.AutoSize = true;
-            buttonApply.Location = new Point(401, 6);
-            buttonApply.Name = "buttonApply";
-            buttonApply.Size = new Size(75, 25);
-            buttonApply.TabIndex = 2;
-            buttonApply.Text = "Apply";
-            buttonApply.UseVisualStyleBackColor = true;
-            buttonApply.Click += ButtonApply_Click;
-            // 
-            // buttonCancel
-            // 
-            buttonCancel.Anchor = AnchorStyles.Top;
-            buttonCancel.AutoSize = true;
-            buttonCancel.DialogResult = DialogResult.Cancel;
-            buttonCancel.Location = new Point(312, 6);
-            buttonCancel.Name = "buttonCancel";
-            buttonCancel.Size = new Size(75, 25);
-            buttonCancel.TabIndex = 1;
-            buttonCancel.Text = "Cancel";
-            buttonCancel.UseVisualStyleBackColor = true;
-            // 
-            // buttonOK
-            // 
-            buttonOK.Anchor = AnchorStyles.Top;
-            buttonOK.AutoSize = true;
-            buttonOK.DialogResult = DialogResult.OK;
-            buttonOK.Location = new Point(223, 6);
-            buttonOK.Name = "buttonOK";
-            buttonOK.Size = new Size(75, 25);
-            buttonOK.TabIndex = 0;
-            buttonOK.Text = "OK";
-            buttonOK.UseVisualStyleBackColor = true;
             // 
             // ProjectConfigurationForm
             // 
             AutoScaleDimensions = new SizeF(96F, 96F);
             AutoScaleMode = AutoScaleMode.Dpi;
             AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            ClientSize = new Size(699, 457);
-            ControlBox = false;
-            Controls.Add(buttonPanel);
+            ClientSize = new Size(735, 468);
             Controls.Add(panel2);
             Controls.Add(warningPanel);
             Font = new Font("Microsoft Sans Serif", 8.25F, FontStyle.Regular, GraphicsUnit.Point, 177);
@@ -1026,7 +998,7 @@
             Name = "ProjectConfigurationForm";
             ShowIcon = false;
             ShowInTaskbar = false;
-            StartPosition = FormStartPosition.CenterParent;
+            StartPosition = FormStartPosition.CenterScreen;
             Text = "Project configuration";
             Shown += ConfigForm_Shown;
             ((System.ComponentModel.ISupportInitialize)numericSamplerate).EndInit();
@@ -1054,15 +1026,12 @@
             panel2.ResumeLayout(false);
             panel2.PerformLayout();
             groupBox3.ResumeLayout(false);
-            groupBox3.PerformLayout();
             groupBox4.ResumeLayout(false);
             groupBox4.PerformLayout();
             groupboxModbusTcpServer.ResumeLayout(false);
             groupboxModbusTcpServer.PerformLayout();
             groupBox2.ResumeLayout(false);
-            groupBox2.PerformLayout();
             groupBox1.ResumeLayout(false);
-            groupBox1.PerformLayout();
             groupboxConnection.ResumeLayout(false);
             groupboxConnection.PerformLayout();
             groupBoxTcpInterface.ResumeLayout(false);
@@ -1072,8 +1041,6 @@
             ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
             warningPanel.ResumeLayout(false);
             warningPanel.PerformLayout();
-            buttonPanel.ResumeLayout(false);
-            buttonPanel.PerformLayout();
             ResumeLayout(false);
 
         }
@@ -1151,7 +1118,6 @@
         private System.Windows.Forms.PictureBox picwriteregFCIsOverride;
         private System.Windows.Forms.Label label17;
         private System.Windows.Forms.ComboBox comboStringEncoding;
-        private System.Windows.Forms.Panel buttonPanel;
         private System.Windows.Forms.Button buttonApply;
         private System.Windows.Forms.Button buttonCancel;
         private System.Windows.Forms.Button buttonOK;

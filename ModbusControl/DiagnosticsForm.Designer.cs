@@ -30,14 +30,12 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DiagnosticsForm));
             label1 = new Label();
-            lRwSuccessCount = new Label();
-            tableLayoutPanel1 = new TableLayoutPanel();
+            buttonReset = new Button();
             label9 = new Label();
             label5 = new Label();
             lResponseProtocolErrorCount = new Label();
             label3 = new Label();
             lNoResponseCount = new Label();
-            lOnewireEchoErrorCount = new Label();
             label37 = new Label();
             label35 = new Label();
             label33 = new Label();
@@ -74,114 +72,35 @@
             label50 = new Label();
             lResponseCrcErrorCount = new Label();
             lResponseShortAndCrcErrorCount = new Label();
-            buttonReset = new Button();
-            panel1 = new Panel();
-            tableLayoutPanel1.SuspendLayout();
-            panel1.SuspendLayout();
+            lOnewireEchoErrorCount = new Label();
+            lRwSuccessCount = new Label();
             SuspendLayout();
             // 
             // label1
             // 
             label1.AutoSize = true;
-            label1.Location = new Point(3, 0);
-            label1.Margin = new Padding(3, 0, 3, 2);
+            label1.Location = new Point(16, 13);
+            label1.Margin = new Padding(3, 0, 3, 4);
             label1.Name = "label1";
             label1.Size = new Size(105, 13);
             label1.TabIndex = 0;
             label1.Text = "Read/write success:";
             // 
-            // lRwSuccessCount
+            // buttonReset
             // 
-            lRwSuccessCount.AutoSize = true;
-            lRwSuccessCount.Dock = DockStyle.Right;
-            lRwSuccessCount.Location = new Point(263, 0);
-            lRwSuccessCount.Name = "lRwSuccessCount";
-            lRwSuccessCount.Size = new Size(13, 15);
-            lRwSuccessCount.TabIndex = 1;
-            lRwSuccessCount.Text = "0";
-            // 
-            // tableLayoutPanel1
-            // 
-            tableLayoutPanel1.ColumnCount = 2;
-            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle());
-            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle());
-            tableLayoutPanel1.Controls.Add(label1, 0, 0);
-            tableLayoutPanel1.Controls.Add(lRwSuccessCount, 1, 0);
-            tableLayoutPanel1.Controls.Add(label9, 0, 1);
-            tableLayoutPanel1.Controls.Add(label5, 0, 3);
-            tableLayoutPanel1.Controls.Add(lResponseProtocolErrorCount, 1, 3);
-            tableLayoutPanel1.Controls.Add(label3, 0, 2);
-            tableLayoutPanel1.Controls.Add(lNoResponseCount, 1, 2);
-            tableLayoutPanel1.Controls.Add(lOnewireEchoErrorCount, 1, 1);
-            tableLayoutPanel1.Controls.Add(label37, 0, 21);
-            tableLayoutPanel1.Controls.Add(label35, 0, 20);
-            tableLayoutPanel1.Controls.Add(label33, 0, 19);
-            tableLayoutPanel1.Controls.Add(label31, 0, 18);
-            tableLayoutPanel1.Controls.Add(label29, 0, 17);
-            tableLayoutPanel1.Controls.Add(label27, 0, 16);
-            tableLayoutPanel1.Controls.Add(label25, 0, 15);
-            tableLayoutPanel1.Controls.Add(lBridgeErrorsCount, 1, 21);
-            tableLayoutPanel1.Controls.Add(lBridgeQueriesReceivedCount, 1, 20);
-            tableLayoutPanel1.Controls.Add(lBridgeOpenConnections, 1, 19);
-            tableLayoutPanel1.Controls.Add(lBridgeConnectCount, 1, 18);
-            tableLayoutPanel1.Controls.Add(lOtherExceptionCount, 1, 17);
-            tableLayoutPanel1.Controls.Add(lGatewayDeviceFailedToRespondExceptionCount, 1, 16);
-            tableLayoutPanel1.Controls.Add(label2, 0, 14);
-            tableLayoutPanel1.Controls.Add(label23, 0, 13);
-            tableLayoutPanel1.Controls.Add(label21, 0, 12);
-            tableLayoutPanel1.Controls.Add(lGatewayPathUnavailableExceptionCount, 1, 15);
-            tableLayoutPanel1.Controls.Add(lIllegalDataExceptionCount, 1, 14);
-            tableLayoutPanel1.Controls.Add(lIllegalAddressExceptionCount, 1, 13);
-            tableLayoutPanel1.Controls.Add(label19, 0, 11);
-            tableLayoutPanel1.Controls.Add(label17, 0, 10);
-            tableLayoutPanel1.Controls.Add(label15, 0, 9);
-            tableLayoutPanel1.Controls.Add(label13, 0, 8);
-            tableLayoutPanel1.Controls.Add(lIllegalFunctionExceptionCount, 1, 12);
-            tableLayoutPanel1.Controls.Add(lTcpClosedOnErrorCount, 1, 11);
-            tableLayoutPanel1.Controls.Add(lTcpConnectionLostCount, 1, 10);
-            tableLayoutPanel1.Controls.Add(lTcpConnectFailCount, 1, 9);
-            tableLayoutPanel1.Controls.Add(label4, 0, 7);
-            tableLayoutPanel1.Controls.Add(label11, 0, 6);
-            tableLayoutPanel1.Controls.Add(label7, 0, 5);
-            tableLayoutPanel1.Controls.Add(lTcpConnectCount, 1, 8);
-            tableLayoutPanel1.Controls.Add(lResponseDataErrorCount, 1, 7);
-            tableLayoutPanel1.Controls.Add(lRespMbapErrorCount, 1, 6);
-            tableLayoutPanel1.Controls.Add(label50, 0, 4);
-            tableLayoutPanel1.Controls.Add(lResponseCrcErrorCount, 1, 5);
-            tableLayoutPanel1.Controls.Add(lResponseShortAndCrcErrorCount, 1, 4);
-            tableLayoutPanel1.Location = new Point(16, 12);
-            tableLayoutPanel1.Name = "tableLayoutPanel1";
-            tableLayoutPanel1.RowCount = 22;
-            tableLayoutPanel1.RowStyles.Add(new RowStyle());
-            tableLayoutPanel1.RowStyles.Add(new RowStyle());
-            tableLayoutPanel1.RowStyles.Add(new RowStyle());
-            tableLayoutPanel1.RowStyles.Add(new RowStyle());
-            tableLayoutPanel1.RowStyles.Add(new RowStyle());
-            tableLayoutPanel1.RowStyles.Add(new RowStyle());
-            tableLayoutPanel1.RowStyles.Add(new RowStyle());
-            tableLayoutPanel1.RowStyles.Add(new RowStyle());
-            tableLayoutPanel1.RowStyles.Add(new RowStyle());
-            tableLayoutPanel1.RowStyles.Add(new RowStyle());
-            tableLayoutPanel1.RowStyles.Add(new RowStyle());
-            tableLayoutPanel1.RowStyles.Add(new RowStyle());
-            tableLayoutPanel1.RowStyles.Add(new RowStyle());
-            tableLayoutPanel1.RowStyles.Add(new RowStyle());
-            tableLayoutPanel1.RowStyles.Add(new RowStyle());
-            tableLayoutPanel1.RowStyles.Add(new RowStyle());
-            tableLayoutPanel1.RowStyles.Add(new RowStyle());
-            tableLayoutPanel1.RowStyles.Add(new RowStyle());
-            tableLayoutPanel1.RowStyles.Add(new RowStyle());
-            tableLayoutPanel1.RowStyles.Add(new RowStyle());
-            tableLayoutPanel1.RowStyles.Add(new RowStyle());
-            tableLayoutPanel1.RowStyles.Add(new RowStyle());
-            tableLayoutPanel1.Size = new Size(279, 339);
-            tableLayoutPanel1.TabIndex = 0;
+            buttonReset.Location = new Point(135, 347);
+            buttonReset.Margin = new Padding(3, 13, 3, 3);
+            buttonReset.Name = "buttonReset";
+            buttonReset.Size = new Size(69, 23);
+            buttonReset.TabIndex = 1;
+            buttonReset.Text = "Reset";
+            buttonReset.UseVisualStyleBackColor = true;
+            buttonReset.Click += buttonReset_Click;
             // 
             // label9
             // 
             label9.AutoSize = true;
-            label9.Location = new Point(3, 15);
-            label9.Margin = new Padding(3, 0, 3, 2);
+            label9.Location = new Point(16, 31);
             label9.Name = "label9";
             label9.Size = new Size(105, 13);
             label9.TabIndex = 2;
@@ -190,8 +109,7 @@
             // label5
             // 
             label5.AutoSize = true;
-            label5.Location = new Point(3, 45);
-            label5.Margin = new Padding(3, 0, 3, 2);
+            label5.Location = new Point(16, 59);
             label5.Name = "label5";
             label5.Size = new Size(128, 13);
             label5.TabIndex = 6;
@@ -199,19 +117,17 @@
             // 
             // lResponseProtocolErrorCount
             // 
-            lResponseProtocolErrorCount.AutoSize = true;
-            lResponseProtocolErrorCount.Dock = DockStyle.Right;
-            lResponseProtocolErrorCount.Location = new Point(263, 45);
+            lResponseProtocolErrorCount.Location = new Point(220, 59);
             lResponseProtocolErrorCount.Name = "lResponseProtocolErrorCount";
-            lResponseProtocolErrorCount.Size = new Size(13, 15);
+            lResponseProtocolErrorCount.Size = new Size(80, 13);
             lResponseProtocolErrorCount.TabIndex = 7;
             lResponseProtocolErrorCount.Text = "0";
+            lResponseProtocolErrorCount.TextAlign = ContentAlignment.TopRight;
             // 
             // label3
             // 
             label3.AutoSize = true;
-            label3.Location = new Point(3, 30);
-            label3.Margin = new Padding(3, 0, 3, 2);
+            label3.Location = new Point(16, 45);
             label3.Name = "label3";
             label3.Size = new Size(70, 13);
             label3.TabIndex = 4;
@@ -219,29 +135,17 @@
             // 
             // lNoResponseCount
             // 
-            lNoResponseCount.AutoSize = true;
-            lNoResponseCount.Dock = DockStyle.Right;
-            lNoResponseCount.Location = new Point(263, 30);
+            lNoResponseCount.Location = new Point(220, 44);
             lNoResponseCount.Name = "lNoResponseCount";
-            lNoResponseCount.Size = new Size(13, 15);
+            lNoResponseCount.Size = new Size(80, 13);
             lNoResponseCount.TabIndex = 5;
             lNoResponseCount.Text = "0";
-            // 
-            // lOnewireEchoErrorCount
-            // 
-            lOnewireEchoErrorCount.AutoSize = true;
-            lOnewireEchoErrorCount.Dock = DockStyle.Right;
-            lOnewireEchoErrorCount.Location = new Point(263, 15);
-            lOnewireEchoErrorCount.Name = "lOnewireEchoErrorCount";
-            lOnewireEchoErrorCount.Size = new Size(13, 15);
-            lOnewireEchoErrorCount.TabIndex = 3;
-            lOnewireEchoErrorCount.Text = "0";
+            lNoResponseCount.TextAlign = ContentAlignment.TopRight;
             // 
             // label37
             // 
             label37.AutoSize = true;
-            label37.Location = new Point(3, 315);
-            label37.Margin = new Padding(3, 0, 3, 2);
+            label37.Location = new Point(16, 322);
             label37.Name = "label37";
             label37.Size = new Size(135, 13);
             label37.TabIndex = 42;
@@ -250,8 +154,7 @@
             // label35
             // 
             label35.AutoSize = true;
-            label35.Location = new Point(3, 300);
-            label35.Margin = new Padding(3, 0, 3, 2);
+            label35.Location = new Point(16, 308);
             label35.Name = "label35";
             label35.Size = new Size(143, 13);
             label35.TabIndex = 40;
@@ -260,8 +163,7 @@
             // label33
             // 
             label33.AutoSize = true;
-            label33.Location = new Point(3, 285);
-            label33.Margin = new Padding(3, 0, 3, 2);
+            label33.Location = new Point(16, 294);
             label33.Name = "label33";
             label33.Size = new Size(194, 13);
             label33.TabIndex = 38;
@@ -270,8 +172,7 @@
             // label31
             // 
             label31.AutoSize = true;
-            label31.Location = new Point(3, 270);
-            label31.Margin = new Padding(3, 0, 3, 2);
+            label31.Location = new Point(16, 280);
             label31.Name = "label31";
             label31.Size = new Size(153, 13);
             label31.TabIndex = 36;
@@ -280,8 +181,8 @@
             // label29
             // 
             label29.AutoSize = true;
-            label29.Location = new Point(3, 255);
-            label29.Margin = new Padding(3, 0, 3, 2);
+            label29.Location = new Point(16, 262);
+            label29.Margin = new Padding(3, 0, 3, 4);
             label29.Name = "label29";
             label29.Size = new Size(137, 13);
             label29.TabIndex = 34;
@@ -290,8 +191,7 @@
             // label27
             // 
             label27.AutoSize = true;
-            label27.Location = new Point(3, 240);
-            label27.Margin = new Padding(3, 0, 3, 2);
+            label27.Location = new Point(16, 249);
             label27.Name = "label27";
             label27.Size = new Size(188, 13);
             label27.TabIndex = 32;
@@ -300,78 +200,70 @@
             // label25
             // 
             label25.AutoSize = true;
-            label25.Location = new Point(3, 225);
-            label25.Margin = new Padding(3, 0, 3, 2);
+            label25.Location = new Point(16, 236);
             label25.Name = "label25";
-            label25.Size = new Size(167, 13);
+            label25.Size = new Size(187, 13);
             label25.TabIndex = 30;
-            label25.Text = "Gateway path unavail exceptions:";
+            label25.Text = "Gateway path unavailable exceptions:";
             // 
             // lBridgeErrorsCount
             // 
-            lBridgeErrorsCount.AutoSize = true;
-            lBridgeErrorsCount.Dock = DockStyle.Right;
-            lBridgeErrorsCount.Location = new Point(263, 315);
+            lBridgeErrorsCount.Location = new Point(220, 322);
             lBridgeErrorsCount.Name = "lBridgeErrorsCount";
-            lBridgeErrorsCount.Size = new Size(13, 24);
+            lBridgeErrorsCount.Size = new Size(80, 13);
             lBridgeErrorsCount.TabIndex = 43;
             lBridgeErrorsCount.Text = "0";
+            lBridgeErrorsCount.TextAlign = ContentAlignment.TopRight;
             // 
             // lBridgeQueriesReceivedCount
             // 
-            lBridgeQueriesReceivedCount.AutoSize = true;
-            lBridgeQueriesReceivedCount.Dock = DockStyle.Right;
-            lBridgeQueriesReceivedCount.Location = new Point(263, 300);
+            lBridgeQueriesReceivedCount.Location = new Point(220, 308);
             lBridgeQueriesReceivedCount.Name = "lBridgeQueriesReceivedCount";
-            lBridgeQueriesReceivedCount.Size = new Size(13, 15);
+            lBridgeQueriesReceivedCount.Size = new Size(80, 13);
             lBridgeQueriesReceivedCount.TabIndex = 41;
             lBridgeQueriesReceivedCount.Text = "0";
+            lBridgeQueriesReceivedCount.TextAlign = ContentAlignment.TopRight;
             // 
             // lBridgeOpenConnections
             // 
-            lBridgeOpenConnections.AutoSize = true;
-            lBridgeOpenConnections.Dock = DockStyle.Right;
-            lBridgeOpenConnections.Location = new Point(263, 285);
+            lBridgeOpenConnections.Location = new Point(220, 294);
             lBridgeOpenConnections.Name = "lBridgeOpenConnections";
-            lBridgeOpenConnections.Size = new Size(13, 15);
+            lBridgeOpenConnections.Size = new Size(80, 13);
             lBridgeOpenConnections.TabIndex = 39;
             lBridgeOpenConnections.Text = "0";
+            lBridgeOpenConnections.TextAlign = ContentAlignment.TopRight;
             // 
             // lBridgeConnectCount
             // 
-            lBridgeConnectCount.AutoSize = true;
-            lBridgeConnectCount.Dock = DockStyle.Right;
-            lBridgeConnectCount.Location = new Point(263, 270);
+            lBridgeConnectCount.Location = new Point(220, 280);
             lBridgeConnectCount.Name = "lBridgeConnectCount";
-            lBridgeConnectCount.Size = new Size(13, 15);
+            lBridgeConnectCount.Size = new Size(80, 13);
             lBridgeConnectCount.TabIndex = 37;
             lBridgeConnectCount.Text = "0";
+            lBridgeConnectCount.TextAlign = ContentAlignment.TopRight;
             // 
             // lOtherExceptionCount
             // 
-            lOtherExceptionCount.AutoSize = true;
-            lOtherExceptionCount.Dock = DockStyle.Right;
-            lOtherExceptionCount.Location = new Point(263, 255);
+            lOtherExceptionCount.Location = new Point(220, 262);
             lOtherExceptionCount.Name = "lOtherExceptionCount";
-            lOtherExceptionCount.Size = new Size(13, 15);
+            lOtherExceptionCount.Size = new Size(80, 13);
             lOtherExceptionCount.TabIndex = 35;
             lOtherExceptionCount.Text = "0";
+            lOtherExceptionCount.TextAlign = ContentAlignment.TopRight;
             // 
             // lGatewayDeviceFailedToRespondExceptionCount
             // 
-            lGatewayDeviceFailedToRespondExceptionCount.AutoSize = true;
-            lGatewayDeviceFailedToRespondExceptionCount.Dock = DockStyle.Right;
-            lGatewayDeviceFailedToRespondExceptionCount.Location = new Point(263, 240);
+            lGatewayDeviceFailedToRespondExceptionCount.Location = new Point(220, 249);
             lGatewayDeviceFailedToRespondExceptionCount.Name = "lGatewayDeviceFailedToRespondExceptionCount";
-            lGatewayDeviceFailedToRespondExceptionCount.Size = new Size(13, 15);
+            lGatewayDeviceFailedToRespondExceptionCount.Size = new Size(80, 13);
             lGatewayDeviceFailedToRespondExceptionCount.TabIndex = 33;
             lGatewayDeviceFailedToRespondExceptionCount.Text = "0";
+            lGatewayDeviceFailedToRespondExceptionCount.TextAlign = ContentAlignment.TopRight;
             // 
             // label2
             // 
             label2.AutoSize = true;
-            label2.Location = new Point(3, 210);
-            label2.Margin = new Padding(3, 0, 3, 2);
+            label2.Location = new Point(16, 222);
             label2.Name = "label2";
             label2.Size = new Size(115, 13);
             label2.TabIndex = 28;
@@ -380,8 +272,7 @@
             // label23
             // 
             label23.AutoSize = true;
-            label23.Location = new Point(3, 195);
-            label23.Margin = new Padding(3, 0, 3, 2);
+            label23.Location = new Point(16, 208);
             label23.Name = "label23";
             label23.Size = new Size(131, 13);
             label23.TabIndex = 26;
@@ -390,8 +281,7 @@
             // label21
             // 
             label21.AutoSize = true;
-            label21.Location = new Point(3, 180);
-            label21.Margin = new Padding(3, 0, 3, 2);
+            label21.Location = new Point(16, 193);
             label21.Name = "label21";
             label21.Size = new Size(132, 13);
             label21.TabIndex = 24;
@@ -399,39 +289,36 @@
             // 
             // lGatewayPathUnavailableExceptionCount
             // 
-            lGatewayPathUnavailableExceptionCount.AutoSize = true;
-            lGatewayPathUnavailableExceptionCount.Dock = DockStyle.Right;
-            lGatewayPathUnavailableExceptionCount.Location = new Point(263, 225);
+            lGatewayPathUnavailableExceptionCount.Location = new Point(220, 236);
             lGatewayPathUnavailableExceptionCount.Name = "lGatewayPathUnavailableExceptionCount";
-            lGatewayPathUnavailableExceptionCount.Size = new Size(13, 15);
+            lGatewayPathUnavailableExceptionCount.Size = new Size(80, 13);
             lGatewayPathUnavailableExceptionCount.TabIndex = 31;
             lGatewayPathUnavailableExceptionCount.Text = "0";
+            lGatewayPathUnavailableExceptionCount.TextAlign = ContentAlignment.TopRight;
             // 
             // lIllegalDataExceptionCount
             // 
-            lIllegalDataExceptionCount.AutoSize = true;
-            lIllegalDataExceptionCount.Dock = DockStyle.Right;
-            lIllegalDataExceptionCount.Location = new Point(263, 210);
+            lIllegalDataExceptionCount.Location = new Point(220, 222);
             lIllegalDataExceptionCount.Name = "lIllegalDataExceptionCount";
-            lIllegalDataExceptionCount.Size = new Size(13, 15);
+            lIllegalDataExceptionCount.Size = new Size(80, 13);
             lIllegalDataExceptionCount.TabIndex = 29;
             lIllegalDataExceptionCount.Text = "0";
+            lIllegalDataExceptionCount.TextAlign = ContentAlignment.TopRight;
             // 
             // lIllegalAddressExceptionCount
             // 
-            lIllegalAddressExceptionCount.AutoSize = true;
-            lIllegalAddressExceptionCount.Dock = DockStyle.Right;
-            lIllegalAddressExceptionCount.Location = new Point(263, 195);
+            lIllegalAddressExceptionCount.Location = new Point(220, 208);
             lIllegalAddressExceptionCount.Name = "lIllegalAddressExceptionCount";
-            lIllegalAddressExceptionCount.Size = new Size(13, 15);
+            lIllegalAddressExceptionCount.Size = new Size(80, 13);
             lIllegalAddressExceptionCount.TabIndex = 27;
             lIllegalAddressExceptionCount.Text = "0";
+            lIllegalAddressExceptionCount.TextAlign = ContentAlignment.TopRight;
             // 
             // label19
             // 
             label19.AutoSize = true;
-            label19.Location = new Point(3, 165);
-            label19.Margin = new Padding(3, 0, 3, 2);
+            label19.Location = new Point(16, 175);
+            label19.Margin = new Padding(3, 0, 3, 4);
             label19.Name = "label19";
             label19.Size = new Size(154, 13);
             label19.TabIndex = 22;
@@ -440,8 +327,7 @@
             // label17
             // 
             label17.AutoSize = true;
-            label17.Location = new Point(3, 150);
-            label17.Margin = new Padding(3, 0, 3, 2);
+            label17.Location = new Point(16, 161);
             label17.Name = "label17";
             label17.Size = new Size(139, 13);
             label17.TabIndex = 20;
@@ -450,8 +336,7 @@
             // label15
             // 
             label15.AutoSize = true;
-            label15.Location = new Point(3, 135);
-            label15.Margin = new Padding(3, 0, 3, 2);
+            label15.Location = new Point(16, 147);
             label15.Name = "label15";
             label15.Size = new Size(119, 13);
             label15.TabIndex = 18;
@@ -460,8 +345,7 @@
             // label13
             // 
             label13.AutoSize = true;
-            label13.Location = new Point(3, 120);
-            label13.Margin = new Padding(3, 0, 3, 2);
+            label13.Location = new Point(16, 133);
             label13.Name = "label13";
             label13.Size = new Size(103, 13);
             label13.TabIndex = 16;
@@ -469,49 +353,45 @@
             // 
             // lIllegalFunctionExceptionCount
             // 
-            lIllegalFunctionExceptionCount.AutoSize = true;
-            lIllegalFunctionExceptionCount.Dock = DockStyle.Right;
-            lIllegalFunctionExceptionCount.Location = new Point(263, 180);
+            lIllegalFunctionExceptionCount.Location = new Point(220, 193);
             lIllegalFunctionExceptionCount.Name = "lIllegalFunctionExceptionCount";
-            lIllegalFunctionExceptionCount.Size = new Size(13, 15);
+            lIllegalFunctionExceptionCount.Size = new Size(80, 13);
             lIllegalFunctionExceptionCount.TabIndex = 25;
             lIllegalFunctionExceptionCount.Text = "0";
+            lIllegalFunctionExceptionCount.TextAlign = ContentAlignment.TopRight;
             // 
             // lTcpClosedOnErrorCount
             // 
-            lTcpClosedOnErrorCount.AutoSize = true;
-            lTcpClosedOnErrorCount.Dock = DockStyle.Right;
-            lTcpClosedOnErrorCount.Location = new Point(263, 165);
+            lTcpClosedOnErrorCount.Location = new Point(220, 175);
             lTcpClosedOnErrorCount.Name = "lTcpClosedOnErrorCount";
-            lTcpClosedOnErrorCount.Size = new Size(13, 15);
+            lTcpClosedOnErrorCount.Size = new Size(80, 13);
             lTcpClosedOnErrorCount.TabIndex = 23;
             lTcpClosedOnErrorCount.Text = "0";
+            lTcpClosedOnErrorCount.TextAlign = ContentAlignment.TopRight;
             // 
             // lTcpConnectionLostCount
             // 
-            lTcpConnectionLostCount.AutoSize = true;
-            lTcpConnectionLostCount.Dock = DockStyle.Right;
-            lTcpConnectionLostCount.Location = new Point(263, 150);
+            lTcpConnectionLostCount.Location = new Point(220, 161);
             lTcpConnectionLostCount.Name = "lTcpConnectionLostCount";
-            lTcpConnectionLostCount.Size = new Size(13, 15);
+            lTcpConnectionLostCount.Size = new Size(80, 13);
             lTcpConnectionLostCount.TabIndex = 21;
             lTcpConnectionLostCount.Text = "0";
+            lTcpConnectionLostCount.TextAlign = ContentAlignment.TopRight;
             // 
             // lTcpConnectFailCount
             // 
-            lTcpConnectFailCount.AutoSize = true;
-            lTcpConnectFailCount.Dock = DockStyle.Right;
-            lTcpConnectFailCount.Location = new Point(263, 135);
+            lTcpConnectFailCount.Location = new Point(220, 147);
             lTcpConnectFailCount.Name = "lTcpConnectFailCount";
-            lTcpConnectFailCount.Size = new Size(13, 15);
+            lTcpConnectFailCount.Size = new Size(80, 13);
             lTcpConnectFailCount.TabIndex = 19;
             lTcpConnectFailCount.Text = "0";
+            lTcpConnectFailCount.TextAlign = ContentAlignment.TopRight;
             // 
             // label4
             // 
             label4.AutoSize = true;
-            label4.Location = new Point(3, 105);
-            label4.Margin = new Padding(3, 0, 3, 2);
+            label4.Location = new Point(16, 115);
+            label4.Margin = new Padding(3, 0, 3, 4);
             label4.Name = "label4";
             label4.Size = new Size(106, 13);
             label4.TabIndex = 14;
@@ -520,8 +400,7 @@
             // label11
             // 
             label11.AutoSize = true;
-            label11.Location = new Point(3, 90);
-            label11.Margin = new Padding(3, 0, 3, 2);
+            label11.Location = new Point(16, 101);
             label11.Name = "label11";
             label11.Size = new Size(156, 13);
             label11.TabIndex = 12;
@@ -530,8 +409,7 @@
             // label7
             // 
             label7.AutoSize = true;
-            label7.Location = new Point(3, 75);
-            label7.Margin = new Padding(3, 0, 3, 2);
+            label7.Location = new Point(16, 87);
             label7.Name = "label7";
             label7.Size = new Size(112, 13);
             label7.TabIndex = 10;
@@ -539,39 +417,35 @@
             // 
             // lTcpConnectCount
             // 
-            lTcpConnectCount.AutoSize = true;
-            lTcpConnectCount.Dock = DockStyle.Right;
-            lTcpConnectCount.Location = new Point(263, 120);
+            lTcpConnectCount.Location = new Point(220, 133);
             lTcpConnectCount.Name = "lTcpConnectCount";
-            lTcpConnectCount.Size = new Size(13, 15);
+            lTcpConnectCount.Size = new Size(80, 13);
             lTcpConnectCount.TabIndex = 17;
             lTcpConnectCount.Text = "0";
+            lTcpConnectCount.TextAlign = ContentAlignment.TopRight;
             // 
             // lResponseDataErrorCount
             // 
-            lResponseDataErrorCount.AutoSize = true;
-            lResponseDataErrorCount.Dock = DockStyle.Right;
-            lResponseDataErrorCount.Location = new Point(263, 105);
+            lResponseDataErrorCount.Location = new Point(220, 115);
             lResponseDataErrorCount.Name = "lResponseDataErrorCount";
-            lResponseDataErrorCount.Size = new Size(13, 15);
+            lResponseDataErrorCount.Size = new Size(80, 13);
             lResponseDataErrorCount.TabIndex = 15;
             lResponseDataErrorCount.Text = "0";
+            lResponseDataErrorCount.TextAlign = ContentAlignment.TopRight;
             // 
             // lRespMbapErrorCount
             // 
-            lRespMbapErrorCount.AutoSize = true;
-            lRespMbapErrorCount.Dock = DockStyle.Right;
-            lRespMbapErrorCount.Location = new Point(263, 90);
+            lRespMbapErrorCount.Location = new Point(220, 101);
             lRespMbapErrorCount.Name = "lRespMbapErrorCount";
-            lRespMbapErrorCount.Size = new Size(13, 15);
+            lRespMbapErrorCount.Size = new Size(80, 13);
             lRespMbapErrorCount.TabIndex = 13;
             lRespMbapErrorCount.Text = "0";
+            lRespMbapErrorCount.TextAlign = ContentAlignment.TopRight;
             // 
             // label50
             // 
             label50.AutoSize = true;
-            label50.Location = new Point(3, 60);
-            label50.Margin = new Padding(3, 0, 3, 2);
+            label50.Location = new Point(16, 73);
             label50.Name = "label50";
             label50.Size = new Size(177, 13);
             label50.TabIndex = 8;
@@ -579,85 +453,117 @@
             // 
             // lResponseCrcErrorCount
             // 
-            lResponseCrcErrorCount.AutoSize = true;
-            lResponseCrcErrorCount.Dock = DockStyle.Right;
-            lResponseCrcErrorCount.Location = new Point(263, 75);
+            lResponseCrcErrorCount.Location = new Point(220, 87);
             lResponseCrcErrorCount.Name = "lResponseCrcErrorCount";
-            lResponseCrcErrorCount.Size = new Size(13, 15);
+            lResponseCrcErrorCount.Size = new Size(80, 13);
             lResponseCrcErrorCount.TabIndex = 11;
             lResponseCrcErrorCount.Text = "0";
+            lResponseCrcErrorCount.TextAlign = ContentAlignment.TopRight;
             // 
             // lResponseShortAndCrcErrorCount
             // 
-            lResponseShortAndCrcErrorCount.AutoSize = true;
-            lResponseShortAndCrcErrorCount.Dock = DockStyle.Right;
-            lResponseShortAndCrcErrorCount.Location = new Point(263, 60);
+            lResponseShortAndCrcErrorCount.Location = new Point(220, 73);
             lResponseShortAndCrcErrorCount.Name = "lResponseShortAndCrcErrorCount";
-            lResponseShortAndCrcErrorCount.Size = new Size(13, 15);
+            lResponseShortAndCrcErrorCount.Size = new Size(80, 13);
             lResponseShortAndCrcErrorCount.TabIndex = 9;
             lResponseShortAndCrcErrorCount.Text = "0";
+            lResponseShortAndCrcErrorCount.TextAlign = ContentAlignment.TopRight;
             // 
-            // buttonReset
+            // lOnewireEchoErrorCount
             // 
-            buttonReset.Anchor = AnchorStyles.Top;
-            buttonReset.AutoSize = true;
-            buttonReset.Location = new Point(104, 3);
-            buttonReset.Name = "buttonReset";
-            buttonReset.Size = new Size(75, 25);
-            buttonReset.TabIndex = 1;
-            buttonReset.Text = "Reset";
-            buttonReset.UseVisualStyleBackColor = true;
-            buttonReset.Click += buttonReset_Click;
+            lOnewireEchoErrorCount.Location = new Point(220, 31);
+            lOnewireEchoErrorCount.Name = "lOnewireEchoErrorCount";
+            lOnewireEchoErrorCount.Size = new Size(80, 13);
+            lOnewireEchoErrorCount.TabIndex = 3;
+            lOnewireEchoErrorCount.Text = "0";
+            lOnewireEchoErrorCount.TextAlign = ContentAlignment.TopRight;
             // 
-            // panel1
+            // lRwSuccessCount
             // 
-            panel1.Controls.Add(buttonReset);
-            panel1.Location = new Point(13, 357);
-            panel1.Name = "panel1";
-            panel1.Size = new Size(282, 32);
-            panel1.TabIndex = 2;
+            lRwSuccessCount.Location = new Point(220, 13);
+            lRwSuccessCount.Name = "lRwSuccessCount";
+            lRwSuccessCount.Size = new Size(80, 13);
+            lRwSuccessCount.TabIndex = 1;
+            lRwSuccessCount.Text = "0";
+            lRwSuccessCount.TextAlign = ContentAlignment.TopRight;
             // 
             // DiagnosticsForm
             // 
             AutoScaleDimensions = new SizeF(96F, 96F);
             AutoScaleMode = AutoScaleMode.Dpi;
-            ClientSize = new Size(307, 396);
-            Controls.Add(panel1);
-            Controls.Add(tableLayoutPanel1);
+            ClientSize = new Size(323, 382);
+            Controls.Add(label37);
+            Controls.Add(lResponseProtocolErrorCount);
+            Controls.Add(label35);
+            Controls.Add(lRwSuccessCount);
+            Controls.Add(label33);
+            Controls.Add(lNoResponseCount);
+            Controls.Add(label31);
+            Controls.Add(label1);
+            Controls.Add(label29);
+            Controls.Add(lOnewireEchoErrorCount);
+            Controls.Add(label27);
+            Controls.Add(buttonReset);
+            Controls.Add(lBridgeErrorsCount);
+            Controls.Add(label25);
+            Controls.Add(lBridgeQueriesReceivedCount);
+            Controls.Add(label9);
+            Controls.Add(lBridgeOpenConnections);
+            Controls.Add(lBridgeConnectCount);
+            Controls.Add(label5);
+            Controls.Add(lOtherExceptionCount);
+            Controls.Add(label50);
+            Controls.Add(lGatewayDeviceFailedToRespondExceptionCount);
+            Controls.Add(label7);
+            Controls.Add(label3);
+            Controls.Add(label2);
+            Controls.Add(label11);
+            Controls.Add(label23);
+            Controls.Add(label4);
+            Controls.Add(label21);
+            Controls.Add(label13);
+            Controls.Add(lGatewayPathUnavailableExceptionCount);
+            Controls.Add(label15);
+            Controls.Add(lIllegalDataExceptionCount);
+            Controls.Add(label17);
+            Controls.Add(lIllegalAddressExceptionCount);
+            Controls.Add(label19);
+            Controls.Add(lIllegalFunctionExceptionCount);
+            Controls.Add(lResponseShortAndCrcErrorCount);
+            Controls.Add(lResponseCrcErrorCount);
+            Controls.Add(lTcpClosedOnErrorCount);
+            Controls.Add(lRespMbapErrorCount);
+            Controls.Add(lTcpConnectionLostCount);
+            Controls.Add(lResponseDataErrorCount);
+            Controls.Add(lTcpConnectFailCount);
+            Controls.Add(lTcpConnectCount);
             Font = new Font("Microsoft Sans Serif", 8.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
             FormBorderStyle = FormBorderStyle.FixedDialog;
             Icon = (Icon)resources.GetObject("$this.Icon");
             MaximizeBox = false;
             MinimizeBox = false;
             Name = "DiagnosticsForm";
-            StartPosition = FormStartPosition.CenterParent;
+            StartPosition = FormStartPosition.CenterScreen;
             Text = "ModbusControl diagnostics counters";
-            tableLayoutPanel1.ResumeLayout(false);
-            tableLayoutPanel1.PerformLayout();
-            panel1.ResumeLayout(false);
-            panel1.PerformLayout();
             ResumeLayout(false);
+            PerformLayout();
 
         }
 
         #endregion
 
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Label lRwSuccessCount;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
         private System.Windows.Forms.Label lTcpConnectFailCount;
         private System.Windows.Forms.Label label15;
         private System.Windows.Forms.Label lTcpConnectCount;
         private System.Windows.Forms.Label label13;
         private System.Windows.Forms.Label lRespMbapErrorCount;
         private System.Windows.Forms.Label label11;
-        private System.Windows.Forms.Label lOnewireEchoErrorCount;
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.Label lResponseCrcErrorCount;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Label lResponseProtocolErrorCount;
         private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.Label lNoResponseCount;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label lIllegalAddressExceptionCount;
         private System.Windows.Forms.Label label23;
@@ -688,6 +594,8 @@
         private System.Windows.Forms.Label lResponseDataErrorCount;
         private System.Windows.Forms.Label label50;
         private System.Windows.Forms.Label lResponseShortAndCrcErrorCount;
-        private Panel panel1;
+        private Label lNoResponseCount;
+        private Label lOnewireEchoErrorCount;
+        private Label lRwSuccessCount;
     }
 }

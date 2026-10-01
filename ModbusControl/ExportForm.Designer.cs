@@ -65,10 +65,9 @@
             // 
             // buttonStart
             // 
-            buttonStart.AutoSize = true;
             buttonStart.Location = new Point(12, 113);
             buttonStart.Name = "buttonStart";
-            buttonStart.Size = new Size(150, 25);
+            buttonStart.Size = new Size(150, 23);
             buttonStart.TabIndex = 5;
             buttonStart.Text = "Start";
             toolTip1.SetToolTip(buttonStart, "Start the export");
@@ -84,7 +83,7 @@
             textboxLog.Name = "textboxLog";
             textboxLog.ReadOnly = true;
             textboxLog.ScrollBars = ScrollBars.Both;
-            textboxLog.Size = new Size(632, 238);
+            textboxLog.Size = new Size(603, 238);
             textboxLog.TabIndex = 0;
             textboxLog.WordWrap = false;
             // 
@@ -110,10 +109,9 @@
             // 
             // SelectFileButton
             // 
-            SelectFileButton.AutoSize = true;
             SelectFileButton.Location = new Point(12, 85);
             SelectFileButton.Name = "SelectFileButton";
-            SelectFileButton.Size = new Size(88, 25);
+            SelectFileButton.Size = new Size(88, 23);
             SelectFileButton.TabIndex = 3;
             SelectFileButton.Text = "Select file...";
             toolTip1.SetToolTip(SelectFileButton, "Select the file to export to");
@@ -147,15 +145,14 @@
             textboxFilename.Location = new Point(106, 88);
             textboxFilename.Name = "textboxFilename";
             textboxFilename.RightToLeft = RightToLeft.No;
-            textboxFilename.Size = new Size(514, 20);
+            textboxFilename.Size = new Size(485, 20);
             textboxFilename.TabIndex = 4;
             // 
             // buttonClearLog
             // 
-            buttonClearLog.AutoSize = true;
             buttonClearLog.Location = new Point(250, 113);
             buttonClearLog.Name = "buttonClearLog";
-            buttonClearLog.Size = new Size(75, 25);
+            buttonClearLog.Size = new Size(75, 23);
             buttonClearLog.TabIndex = 7;
             buttonClearLog.Text = "Clear log";
             toolTip1.SetToolTip(buttonClearLog, "Clear the result log window");
@@ -171,7 +168,7 @@
             groupboxExportFormat.Controls.Add(StringFormatPanel);
             groupboxExportFormat.Location = new Point(201, 5);
             groupboxExportFormat.Name = "groupboxExportFormat";
-            groupboxExportFormat.Size = new Size(419, 62);
+            groupboxExportFormat.Size = new Size(389, 62);
             groupboxExportFormat.TabIndex = 1;
             groupboxExportFormat.TabStop = false;
             groupboxExportFormat.Text = "Export values format:";
@@ -182,11 +179,11 @@
             radFormatDefault.Checked = true;
             radFormatDefault.Location = new Point(7, 17);
             radFormatDefault.Name = "radFormatDefault";
-            radFormatDefault.Size = new Size(68, 17);
+            radFormatDefault.Size = new Size(67, 17);
             radFormatDefault.TabIndex = 0;
             radFormatDefault.TabStop = true;
             radFormatDefault.Tag = "";
-            radFormatDefault.Text = "As in grid";
+            radFormatDefault.Text = "as in grid";
             toolTip1.SetToolTip(radFormatDefault, "Export register values with the format as defined in the project");
             radFormatDefault.UseVisualStyleBackColor = true;
             radFormatDefault.CheckedChanged += radFormat_CheckedChanged;
@@ -196,10 +193,10 @@
             radFormatAsHex.AutoSize = true;
             radFormatAsHex.Location = new Point(227, 17);
             radFormatAsHex.Name = "radFormatAsHex";
-            radFormatAsHex.Size = new Size(59, 17);
+            radFormatAsHex.Size = new Size(58, 17);
             radFormatAsHex.TabIndex = 3;
             radFormatAsHex.Tag = "";
-            radFormatAsHex.Text = "As Hex";
+            radFormatAsHex.Text = "as Hex";
             toolTip1.SetToolTip(radFormatAsHex, "Export all register values in hexadecimal");
             radFormatAsHex.UseVisualStyleBackColor = true;
             radFormatAsHex.CheckedChanged += radFormat_CheckedChanged;
@@ -209,10 +206,10 @@
             radFormatAsInt.AutoSize = true;
             radFormatAsInt.Location = new Point(88, 17);
             radFormatAsInt.Name = "radFormatAsInt";
-            radFormatAsInt.Size = new Size(52, 17);
+            radFormatAsInt.Size = new Size(51, 17);
             radFormatAsInt.TabIndex = 1;
             radFormatAsInt.Tag = "";
-            radFormatAsInt.Text = "As Int";
+            radFormatAsInt.Text = "as Int";
             toolTip1.SetToolTip(radFormatAsInt, "Export all register values as signed integers");
             radFormatAsInt.UseVisualStyleBackColor = true;
             radFormatAsInt.CheckedChanged += radFormat_CheckedChanged;
@@ -222,10 +219,10 @@
             radFormatAsUInt.AutoSize = true;
             radFormatAsUInt.Location = new Point(153, 17);
             radFormatAsUInt.Name = "radFormatAsUInt";
-            radFormatAsUInt.Size = new Size(60, 17);
+            radFormatAsUInt.Size = new Size(59, 17);
             radFormatAsUInt.TabIndex = 2;
             radFormatAsUInt.Tag = "";
-            radFormatAsUInt.Text = "As UInt";
+            radFormatAsUInt.Text = "as UInt";
             toolTip1.SetToolTip(radFormatAsUInt, "Export all register values as unsigned integers");
             radFormatAsUInt.UseVisualStyleBackColor = true;
             radFormatAsUInt.CheckedChanged += radFormat_CheckedChanged;
@@ -239,18 +236,18 @@
             StringFormatPanel.Controls.Add(radStringFormatAsHex);
             StringFormatPanel.Location = new Point(1, 35);
             StringFormatPanel.Name = "StringFormatPanel";
-            StringFormatPanel.Size = new Size(418, 21);
+            StringFormatPanel.Size = new Size(382, 21);
             StringFormatPanel.TabIndex = 4;
             // 
             // radStringFormatAsUInt
             // 
             radStringFormatAsUInt.AutoSize = true;
-            radStringFormatAsUInt.Location = new Point(280, 3);
+            radStringFormatAsUInt.Location = new Point(267, 3);
             radStringFormatAsUInt.Name = "radStringFormatAsUInt";
-            radStringFormatAsUInt.Size = new Size(60, 17);
+            radStringFormatAsUInt.Size = new Size(45, 17);
             radStringFormatAsUInt.TabIndex = 3;
             radStringFormatAsUInt.Tag = "";
-            radStringFormatAsUInt.Text = "As UInt";
+            radStringFormatAsUInt.Text = "UInt";
             toolTip1.SetToolTip(radStringFormatAsUInt, "Export all register values as signed integers");
             radStringFormatAsUInt.UseVisualStyleBackColor = true;
             // 
@@ -280,34 +277,33 @@
             // radStringFormatAsInt
             // 
             radStringFormatAsInt.AutoSize = true;
-            radStringFormatAsInt.Location = new Point(219, 3);
+            radStringFormatAsInt.Location = new Point(220, 3);
             radStringFormatAsInt.Name = "radStringFormatAsInt";
-            radStringFormatAsInt.Size = new Size(52, 17);
+            radStringFormatAsInt.Size = new Size(37, 17);
             radStringFormatAsInt.TabIndex = 2;
             radStringFormatAsInt.Tag = "";
-            radStringFormatAsInt.Text = "As Int";
+            radStringFormatAsInt.Text = "Int";
             toolTip1.SetToolTip(radStringFormatAsInt, "Export all register values as signed integers");
             radStringFormatAsInt.UseVisualStyleBackColor = true;
             // 
             // radStringFormatAsHex
             // 
             radStringFormatAsHex.AutoSize = true;
-            radStringFormatAsHex.Location = new Point(349, 3);
+            radStringFormatAsHex.Location = new Point(322, 3);
             radStringFormatAsHex.Name = "radStringFormatAsHex";
-            radStringFormatAsHex.Size = new Size(59, 17);
+            radStringFormatAsHex.Size = new Size(44, 17);
             radStringFormatAsHex.TabIndex = 4;
             radStringFormatAsHex.Tag = "";
-            radStringFormatAsHex.Text = "As Hex";
+            radStringFormatAsHex.Text = "Hex";
             toolTip1.SetToolTip(radStringFormatAsHex, "Export all register values as unsigned integers");
             radStringFormatAsHex.UseVisualStyleBackColor = true;
             // 
             // buttonCancel
             // 
-            buttonCancel.AutoSize = true;
             buttonCancel.Enabled = false;
             buttonCancel.Location = new Point(169, 113);
             buttonCancel.Name = "buttonCancel";
-            buttonCancel.Size = new Size(75, 25);
+            buttonCancel.Size = new Size(75, 23);
             buttonCancel.TabIndex = 6;
             buttonCancel.Text = "Cancel";
             toolTip1.SetToolTip(buttonCancel, "Cancel the current operation");
@@ -316,10 +312,9 @@
             // 
             // butRunTests
             // 
-            butRunTests.AutoSize = true;
             butRunTests.Location = new Point(331, 113);
             butRunTests.Name = "butRunTests";
-            butRunTests.Size = new Size(75, 25);
+            butRunTests.Size = new Size(75, 23);
             butRunTests.TabIndex = 8;
             butRunTests.Text = "Run test";
             butRunTests.UseVisualStyleBackColor = true;
@@ -351,7 +346,7 @@
             panel1.Dock = DockStyle.Top;
             panel1.Location = new Point(0, 0);
             panel1.Name = "panel1";
-            panel1.Size = new Size(632, 144);
+            panel1.Size = new Size(603, 144);
             panel1.TabIndex = 10;
             // 
             // panel2
@@ -360,20 +355,20 @@
             panel2.Dock = DockStyle.Fill;
             panel2.Location = new Point(0, 144);
             panel2.Name = "panel2";
-            panel2.Size = new Size(632, 238);
+            panel2.Size = new Size(603, 238);
             panel2.TabIndex = 11;
             // 
             // ExportForm
             // 
             AutoScaleDimensions = new SizeF(96F, 96F);
             AutoScaleMode = AutoScaleMode.Dpi;
-            ClientSize = new Size(632, 382);
+            ClientSize = new Size(603, 382);
             Controls.Add(panel2);
             Controls.Add(panel1);
             Font = new Font("Microsoft Sans Serif", 8.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
             Icon = (Icon)resources.GetObject("$this.Icon");
             Name = "ExportForm";
-            StartPosition = FormStartPosition.CenterParent;
+            StartPosition = FormStartPosition.CenterScreen;
             Text = "Export registers to file";
             FormClosing += OnFormClosing;
             panelTab.ResumeLayout(false);
