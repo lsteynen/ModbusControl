@@ -124,13 +124,13 @@
             AutoScaleDimensions = new SizeF(96F, 96F);
             AutoScaleMode = AutoScaleMode.Dpi;
             ClientSize = new Size(383, 154);
-            Controls.Add(labelName);
-            Controls.Add(labelVersion);
+            Controls.Add(labelFormSize);
+            Controls.Add(labelDotNetVersion);
             Controls.Add(labelAppdata);
+            Controls.Add(labelVersion);
+            Controls.Add(labelName);
             Controls.Add(okButton);
             Controls.Add(logoPictureBox);
-            Controls.Add(labelDotNetVersion);
-            Controls.Add(labelFormSize);
             Font = new Font("Microsoft Sans Serif", 8.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
             FormBorderStyle = FormBorderStyle.FixedDialog;
             Icon = (Icon)resources.GetObject("$this.Icon");

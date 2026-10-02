@@ -161,10 +161,10 @@
             // 
             // groupboxExportFormat
             // 
-            groupboxExportFormat.Controls.Add(radFormatDefault);
             groupboxExportFormat.Controls.Add(radFormatAsHex);
-            groupboxExportFormat.Controls.Add(radFormatAsInt);
             groupboxExportFormat.Controls.Add(radFormatAsUInt);
+            groupboxExportFormat.Controls.Add(radFormatAsInt);
+            groupboxExportFormat.Controls.Add(radFormatDefault);
             groupboxExportFormat.Controls.Add(StringFormatPanel);
             groupboxExportFormat.Location = new Point(201, 5);
             groupboxExportFormat.Name = "groupboxExportFormat";
@@ -229,11 +229,11 @@
             // 
             // StringFormatPanel
             // 
-            StringFormatPanel.Controls.Add(radStringFormatAsUInt);
-            StringFormatPanel.Controls.Add(label1);
-            StringFormatPanel.Controls.Add(radStringFormatDefault);
-            StringFormatPanel.Controls.Add(radStringFormatAsInt);
             StringFormatPanel.Controls.Add(radStringFormatAsHex);
+            StringFormatPanel.Controls.Add(radStringFormatAsUInt);
+            StringFormatPanel.Controls.Add(radStringFormatAsInt);
+            StringFormatPanel.Controls.Add(radStringFormatDefault);
+            StringFormatPanel.Controls.Add(label1);
             StringFormatPanel.Location = new Point(1, 35);
             StringFormatPanel.Name = "StringFormatPanel";
             StringFormatPanel.Size = new Size(382, 21);
@@ -312,7 +312,7 @@
             // 
             // butRunTests
             // 
-            butRunTests.Location = new Point(331, 113);
+            butRunTests.Location = new Point(339, 113);
             butRunTests.Name = "butRunTests";
             butRunTests.Size = new Size(75, 23);
             butRunTests.TabIndex = 8;

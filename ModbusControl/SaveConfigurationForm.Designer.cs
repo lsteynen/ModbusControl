@@ -167,13 +167,13 @@
             // 
             // optionsPanel
             // 
-            optionsPanel.Controls.Add(label1);
             optionsPanel.Controls.Add(buttonCancel);
             optionsPanel.Controls.Add(buttonSave);
-            optionsPanel.Controls.Add(checkboxProjectConfig);
+            optionsPanel.Controls.Add(checkboxUpdateXML);
             optionsPanel.Controls.Add(checkboxFormSize);
             optionsPanel.Controls.Add(checkboxBridge);
-            optionsPanel.Controls.Add(checkboxUpdateXML);
+            optionsPanel.Controls.Add(checkboxProjectConfig);
+            optionsPanel.Controls.Add(label1);
             optionsPanel.Dock = DockStyle.Top;
             optionsPanel.Location = new Point(0, 55);
             optionsPanel.Name = "optionsPanel";

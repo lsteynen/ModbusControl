@@ -319,6 +319,5 @@ namespace ModbusControl
                 OnReset(this);
             }
         }
-
     }
 }

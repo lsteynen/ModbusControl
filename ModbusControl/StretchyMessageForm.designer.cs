@@ -85,9 +85,9 @@
             CancelButton = buttonCancel;
             ClientSize = new Size(331, 127);
             Controls.Add(buttonCancel);
-            Controls.Add(pic);
             Controls.Add(buttonOK);
             Controls.Add(labelMessagetext);
+            Controls.Add(pic);
             Font = new Font("Microsoft Sans Serif", 8.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
             FormBorderStyle = FormBorderStyle.FixedDialog;
             MaximizeBox = false;

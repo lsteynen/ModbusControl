@@ -187,7 +187,7 @@
             // radStringBigEndian
             // 
             radStringBigEndian.Checked = true;
-            radStringBigEndian.Location = new Point(91, 33);
+            radStringBigEndian.Location = new Point(92, 33);
             radStringBigEndian.Name = "radStringBigEndian";
             radStringBigEndian.Size = new Size(79, 17);
             radStringBigEndian.TabIndex = 2;
@@ -254,7 +254,7 @@
             // radWriteFC16
             // 
             radWriteFC16.Checked = true;
-            radWriteFC16.Location = new Point(6, 37);
+            radWriteFC16.Location = new Point(6, 36);
             radWriteFC16.Name = "radWriteFC16";
             radWriteFC16.Size = new Size(202, 17);
             radWriteFC16.TabIndex = 1;
@@ -265,7 +265,7 @@
             // 
             // radWriteFCAuto
             // 
-            radWriteFCAuto.Location = new Point(6, 58);
+            radWriteFCAuto.Location = new Point(6, 56);
             radWriteFCAuto.Name = "radWriteFCAuto";
             radWriteFCAuto.Size = new Size(191, 17);
             radWriteFCAuto.TabIndex = 2;
@@ -644,7 +644,7 @@
             // label17
             // 
             label17.AutoSize = true;
-            label17.Location = new Point(268, 259);
+            label17.Location = new Point(268, 252);
             label17.Name = "label17";
             label17.Size = new Size(133, 13);
             label17.TabIndex = 5;
@@ -664,7 +664,7 @@
             // 
             comboStringEncoding.DropDownStyle = ComboBoxStyle.DropDownList;
             comboStringEncoding.FormattingEnabled = true;
-            comboStringEncoding.Location = new Point(270, 276);
+            comboStringEncoding.Location = new Point(270, 269);
             comboStringEncoding.Name = "comboStringEncoding";
             comboStringEncoding.Size = new Size(218, 21);
             comboStringEncoding.TabIndex = 6;
@@ -702,7 +702,7 @@
             // 
             groupBox3.Controls.Add(radFloat32BigEndian);
             groupBox3.Controls.Add(radFloat32LittleEndian);
-            groupBox3.Location = new Point(270, 144);
+            groupBox3.Location = new Point(270, 143);
             groupBox3.Name = "groupBox3";
             groupBox3.Size = new Size(218, 39);
             groupBox3.TabIndex = 3;
@@ -714,7 +714,7 @@
             groupBox4.Controls.Add(radStringBigEndian);
             groupBox4.Controls.Add(radStringLittleEndian);
             groupBox4.Controls.Add(label14);
-            groupBox4.Location = new Point(270, 191);
+            groupBox4.Location = new Point(270, 190);
             groupBox4.Name = "groupBox4";
             groupBox4.Size = new Size(218, 55);
             groupBox4.TabIndex = 4;
@@ -755,7 +755,7 @@
             // 
             groupBox2.Controls.Add(radInt32BigEndian);
             groupBox2.Controls.Add(radInt32LittleEndian);
-            groupBox2.Location = new Point(270, 100);
+            groupBox2.Location = new Point(270, 97);
             groupBox2.Name = "groupBox2";
             groupBox2.Size = new Size(218, 38);
             groupBox2.TabIndex = 2;
@@ -765,12 +765,12 @@
             // groupBox1
             // 
             groupBox1.Controls.Add(picwriteregFCIsOverride);
-            groupBox1.Controls.Add(radWriteFC6);
-            groupBox1.Controls.Add(radWriteFC16);
             groupBox1.Controls.Add(radWriteFCAuto);
+            groupBox1.Controls.Add(radWriteFC16);
+            groupBox1.Controls.Add(radWriteFC6);
             groupBox1.Location = new Point(270, 10);
             groupBox1.Name = "groupBox1";
-            groupBox1.Size = new Size(218, 84);
+            groupBox1.Size = new Size(218, 79);
             groupBox1.TabIndex = 1;
             groupBox1.TabStop = false;
             groupBox1.Text = "Functioncode to write holding registers";
