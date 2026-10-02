@@ -192,7 +192,7 @@ namespace LST.Modbus
             }
 
             // on the forums, some say it is best to close the underlying connection explicitly
-            if (mConnection.Client.Connected)
+            if ((mConnection.Client != null) && (mConnection.Client.Connected))
             {
                 mConnection.Client.Disconnect(false);
             }

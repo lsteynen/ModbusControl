@@ -62,7 +62,8 @@ namespace ModbusControl
         private float zoomFactorStep = 1.10f;
         private float zoomFactorMaximum = 10.0f;
         private ModbusServer TcpBridge;
-        private Thread UpdaterThread;   // Updater thread
+        private Thread? updaterThread;   // Updater thread
+        private readonly CancellationTokenSource updaterCancellationToken = new();   // Updater thread cancellation token
         private Object UpdaterLock = new Object();  // lock for safely terminating the updater thread
         private CommandlineProc CommandlineArgs;
         private float CurrentRegisterColumnWidthWeight;
@@ -306,8 +307,12 @@ namespace ModbusControl
             if (Options.CheckForUpdates && (DateTime.Now >= NextCheckDate))
             {
                 // do the update check after a few seconds
-                UpdaterThread = new Thread(UpdaterThread_Work);
-                UpdaterThread.Start();
+                updaterThread = new Thread(UpdaterThread_Work)
+                    {
+                        Name = "UpdaterThread",
+                        IsBackground = true
+                    };
+                updaterThread.Start();
             }
 #endif
 
@@ -385,15 +390,9 @@ namespace ModbusControl
             StatusbarTimer.Enabled = false;
 
             // Stop the updater thread
-            if (UpdaterThread != null)
-            {
-                lock (UpdaterLock)
-                {
-                    UpdaterThread.Interrupt();
-                    UpdaterThread.Join();
-                    UpdaterThread = null;
-                }
-            }
+            updaterCancellationToken.Cancel();
+            updaterThread?.Join(TimeSpan.FromSeconds(3));
+            updaterThread = null;
 
             // stop all comms stuff
             StopAllComms();
@@ -2912,19 +2911,16 @@ namespace ModbusControl
         // Thread that starts the updater tool after a delay
         private void UpdaterThread_Work()
         {
-            // Catch unhandled exceptions in this non-GUI thread
-            try
+            // Wait 5 seconds to start updater
+            // Closing this app before that will cancel the updater thread
+            // Returns true if cancelled, false if 5 seconds elapsed
+            if (updaterCancellationToken.Token.WaitHandle.WaitOne(TimeSpan.FromSeconds(5)))
             {
-                // Do a delay before checking for update
-                Thread.Sleep(5000);
+                return;
+            }
 
-                // Start the updater, silent auto-check
-                StartUpdater(false);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message, "Exception");
-            }
+            // Start the updater, silent auto-check
+            StartUpdater(false);
         }
 
         /// <summary>
