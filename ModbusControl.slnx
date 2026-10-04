@@ -8,15 +8,14 @@
   <Folder Name="/Solution Items/">
     <File Path=".editorconfig" />
   </Folder>
-  <Project Path="../Updater-net-core/Updater.csproj" Id="81b78161-787e-4ebb-984f-632bab0cde00">
-    <Platform Project="x86" />
-  </Project>
   <Project Path="Installer/Wix-Installer.wixproj" Type="b7dd6f7e-def8-4e67-b5b7-07ef123db6f0">
     <Platform Solution="*|Any CPU" Project="x64" />
   </Project>
   <Project Path="ModbusControl/ModbusControl.csproj">
     <Build Solution="Release|x64" Project="false" />
   </Project>
+  <Project Path="ModbusExport/ModbusExport.csproj" Id="892d80b9-1916-4fd4-ab29-03a248cf0d55" />
+  <Project Path="ModbusImport/ModbusImport.csproj" Id="c8d9e9d7-e9ed-4a2d-b06c-237879bd6ca0" />
   <Project Path="Tests/Tests.csproj" Id="91bfffb0-8da1-4a33-8af3-0a6b77caf7a2">
     <Build Solution="Release|Any CPU" Project="false" />
     <Build Solution="Release|x64" Project="false" />

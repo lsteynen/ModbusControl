@@ -91,9 +91,6 @@
     <Compile Include="..\Shared\AppHelpers.cs">
       <Link>Shared\AppHelpers.cs</Link>
     </Compile>
-    <Compile Include="..\Shared\AssemblyInfoShared.cs">
-      <Link>Shared\AssemblyInfoShared.cs</Link>
-    </Compile>
     <Compile Include="..\Shared\BytesToString.cs">
       <Link>Shared\BytesToString.cs</Link>
     </Compile>
@@ -146,4 +143,7 @@
     <Content Include="ico5cmd.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PreBuildEvent>"$(ProjectDir)\Properties\IncrementBuildNumber.bat" "$(ProjectDir)\Properties\AssemblyInfo.cs" $(ConfigurationName)</PreBuildEvent>
+  </PropertyGroup>
 </Project>

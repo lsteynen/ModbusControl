@@ -47,7 +47,6 @@
     <Compile Include="..\Modbus_net\TcpChannel.cs" Link="v_Modbus_net\TcpChannel.cs" />
     <Compile Include="..\Shared\AppDpiHelpers.cs" Link="v_Shared\AppDpiHelpers.cs" />
     <Compile Include="..\Shared\AppHelpers.cs" Link="v_Shared\AppHelpers.cs" />
-    <Compile Include="..\Shared\AssemblyInfoShared.cs" Link="v_Shared\AssemblyInfoShared.cs" />
     <Compile Include="..\Shared\BytesToString.cs" Link="v_Shared\BytesToString.cs" />
     <Compile Include="..\Shared\CLogger.cs" Link="v_Shared\CLogger.cs" />
     <Compile Include="..\Shared\ColorFromString.cs" Link="v_Shared\ColorFromString.cs" />
@@ -69,7 +68,7 @@
   </ItemGroup>
 
   <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
-    <Exec Command="&quot;$(ProjectDir)\Properties\IncBuildNo.exe&quot; &quot;$(ProjectDir)..\Shared\AssemblyInfoShared.cs&quot; $(ConfigurationName)" />
+    <Exec Command="&quot;$(ProjectDir)\Properties\IncrementBuildNumber.bat&quot; &quot;$(ProjectDir)\Properties\AssemblyInfo.cs&quot; $(ConfigurationName)" />
   </Target>
 
 </Project>

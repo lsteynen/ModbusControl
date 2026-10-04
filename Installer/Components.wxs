@@ -22,15 +22,14 @@
 					 Double-clicking a .mbc file starts ModbusControl.exe
 					 ========================================================= -->
 				<ProgId Id="lsteynen.ModbusControl"
-					Description="ModbusControl Document"
-					Icon="ModbusControl_exe"
-					IconIndex="0">
-						<Extension Id="mbc" Advertise="no">
-							<Verb Id="open"
-									Command="Open"
-									TargetFile="ModbusControl_exe"
-									Argument="&quot;%1&quot;" />
-						</Extension>
+						Description="ModbusControl project file"
+						Icon="ModbusControl_exe" IconIndex="0">
+					<Extension Id="mbc" Advertise="no">
+						<Verb Id="open"
+							  Command="Open"
+							  TargetFile="ModbusControl_exe"
+							  Argument="&quot;%1&quot;" />
+					</Extension>
 				</ProgId>
 			</Component>
 
