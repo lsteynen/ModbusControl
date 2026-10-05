@@ -52,26 +52,27 @@
             checkboxUpdateXML.AutoSize = true;
             checkboxUpdateXML.Checked = true;
             checkboxUpdateXML.CheckState = CheckState.Checked;
-            checkboxUpdateXML.Location = new Point(32, 95);
+            checkboxUpdateXML.ForeColor = SystemColors.ControlText;
+            checkboxUpdateXML.Location = new Point(22, 96);
             checkboxUpdateXML.Margin = new Padding(16, 3, 3, 3);
             checkboxUpdateXML.Name = "checkboxUpdateXML";
-            checkboxUpdateXML.Size = new Size(171, 17);
+            checkboxUpdateXML.Size = new Size(258, 17);
             checkboxUpdateXML.TabIndex = 4;
-            checkboxUpdateXML.Text = "Update XML to current version";
-            toolTip1.SetToolTip(checkboxUpdateXML, "Update the project file XML to the current version, convert XML tags to lower case, remove obsolete tags, etc");
+            checkboxUpdateXML.Text = "Update the project file XML to the current version";
+            toolTip1.SetToolTip(checkboxUpdateXML, "Upgrade the XML in the project file to the current version. Tags are converted to lowercase, obsolete tags are removed, etc.");
             checkboxUpdateXML.UseVisualStyleBackColor = true;
             checkboxUpdateXML.CheckedChanged += checkbox_CheckedChanged;
             // 
             // checkboxBridge
             // 
             checkboxBridge.AutoSize = true;
-            checkboxBridge.Location = new Point(32, 51);
+            checkboxBridge.Location = new Point(36, 51);
             checkboxBridge.Margin = new Padding(16, 3, 3, 3);
             checkboxBridge.Name = "checkboxBridge";
             checkboxBridge.Size = new Size(161, 17);
             checkboxBridge.TabIndex = 2;
             checkboxBridge.Text = "Modbus/TCP bridge settings";
-            toolTip1.SetToolTip(checkboxBridge, "Save the Modbus/TCP bridge server settings");
+            toolTip1.SetToolTip(checkboxBridge, "Save the current Modbus/TCP bridge settings to the project file");
             checkboxBridge.UseVisualStyleBackColor = true;
             checkboxBridge.CheckedChanged += checkbox_CheckedChanged;
             // 
@@ -100,38 +101,39 @@
             // 
             // label1
             // 
+            label1.AutoSize = true;
             label1.Location = new Point(17, 8);
             label1.Margin = new Padding(8, 8, 3, 0);
             label1.Name = "label1";
-            label1.Size = new Size(285, 13);
+            label1.Size = new Size(214, 13);
             label1.TabIndex = 0;
-            label1.Text = "Save the following items to the project file:";
+            label1.Text = "Update the following items in the project file:";
             // 
             // checkboxProjectConfig
             // 
             checkboxProjectConfig.AutoSize = true;
             checkboxProjectConfig.Checked = true;
             checkboxProjectConfig.CheckState = CheckState.Checked;
-            checkboxProjectConfig.Location = new Point(32, 29);
+            checkboxProjectConfig.Location = new Point(36, 29);
             checkboxProjectConfig.Margin = new Padding(16, 8, 3, 3);
             checkboxProjectConfig.Name = "checkboxProjectConfig";
             checkboxProjectConfig.Size = new Size(162, 17);
             checkboxProjectConfig.TabIndex = 1;
             checkboxProjectConfig.Text = "Project configuration settings";
-            toolTip1.SetToolTip(checkboxProjectConfig, "Save the current connection and protocol settings");
+            toolTip1.SetToolTip(checkboxProjectConfig, "Save the current connection and protocol settings to the project file");
             checkboxProjectConfig.UseVisualStyleBackColor = true;
             checkboxProjectConfig.CheckedChanged += checkbox_CheckedChanged;
             // 
             // checkboxFormSize
             // 
             checkboxFormSize.AutoSize = true;
-            checkboxFormSize.Location = new Point(32, 73);
+            checkboxFormSize.Location = new Point(36, 73);
             checkboxFormSize.Margin = new Padding(16, 3, 3, 3);
             checkboxFormSize.Name = "checkboxFormSize";
             checkboxFormSize.Size = new Size(109, 17);
             checkboxFormSize.TabIndex = 3;
             checkboxFormSize.Text = "Main window size";
-            toolTip1.SetToolTip(checkboxFormSize, "Save the current form size ");
+            toolTip1.SetToolTip(checkboxFormSize, "Save the current size of the main window to the project file");
             checkboxFormSize.UseVisualStyleBackColor = true;
             checkboxFormSize.CheckedChanged += checkbox_CheckedChanged;
             // 

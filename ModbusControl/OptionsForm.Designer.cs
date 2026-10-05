@@ -159,10 +159,10 @@
             checkboxIgnoreFormSizeOnReload.AutoSize = true;
             checkboxIgnoreFormSizeOnReload.Location = new Point(263, 38);
             checkboxIgnoreFormSizeOnReload.Name = "checkboxIgnoreFormSizeOnReload";
-            checkboxIgnoreFormSizeOnReload.Size = new Size(182, 17);
+            checkboxIgnoreFormSizeOnReload.Size = new Size(198, 17);
             checkboxIgnoreFormSizeOnReload.TabIndex = 3;
-            checkboxIgnoreFormSizeOnReload.Text = "Ignore form size on project reload";
-            toolTip1.SetToolTip(checkboxIgnoreFormSizeOnReload, "Do not use the form size specified in the mbc file on project reload");
+            checkboxIgnoreFormSizeOnReload.Text = "Ignore window size on project reload";
+            toolTip1.SetToolTip(checkboxIgnoreFormSizeOnReload, "Do not use the window size specified in the mbc file on project reload");
             checkboxIgnoreFormSizeOnReload.UseVisualStyleBackColor = true;
             // 
             // checkboxShowVarProperties
