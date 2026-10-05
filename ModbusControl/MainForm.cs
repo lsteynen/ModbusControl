@@ -1,22 +1,11 @@
 using LST.Helpers;
 using LST.Modbus;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.Drawing;
-using System.IO;
 using System.IO.Ports;
-using System.Net;
 using System.Text;
-using System.Text.Unicode;
-using System.Threading;
-using System.Windows.Forms;
 using System.Xml;
-using System.Xml.Linq;
 using System.Xml.Schema;
-using Windows.Data.Pdf;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace ModbusControl
 {

@@ -1,13 +1,11 @@
-﻿using LST.Helpers;
-using Microsoft.Win32;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
+﻿using System;
 using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
 using System.Reflection;
 using System.Windows.Forms;
+
+using LST.Helpers;
 
 namespace ModbusControl
 {

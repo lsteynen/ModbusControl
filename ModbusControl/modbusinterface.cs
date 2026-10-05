@@ -1,14 +1,10 @@
 using System;
 using System.Diagnostics;
 using System.IO.Ports;
-using System.Text;
-using System.Threading;
 using System.Net;
-using System.Net.Sockets;
 
 using LST.Modbus;
 using LST.Helpers;
-using LST.Controls;
 
 namespace ModbusControl
 {

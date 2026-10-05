@@ -4,9 +4,7 @@
 using System;
 using System.Windows.Forms;
 using System.Windows.Forms.Design;
-using Microsoft.Win32;
 using System.ComponentModel;
-using System.Collections.Generic;
 
 namespace ModbusControl
 {

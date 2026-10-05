@@ -1,7 +1,5 @@
 ﻿using System;
-using System.IO;
 using System.IO.Ports;
-using System.Collections.Generic;
 using System.Net;
 
 // Handle command line arguments.

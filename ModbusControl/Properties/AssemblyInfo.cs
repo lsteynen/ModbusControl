@@ -1,5 +1,4 @@
 ﻿using System.Reflection;
-using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 // General Information about an assembly is controlled through the following 
@@ -16,7 +15,7 @@ using System.Runtime.InteropServices;
 
 // Version information for an assembly consists of the following four values:
 //      Major.Minor.Patch.Build
-[assembly: AssemblyVersion("3.0.1.1585")]
+[assembly: AssemblyVersion("3.0.1.1587")]
 //AssemblyFileVersion removed so Visual Studio sets AssemblyFileVersion = AssemblyVersion
 //[assembly: AssemblyFileVersion("1.0.0.0")]
 
