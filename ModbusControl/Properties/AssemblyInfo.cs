@@ -16,7 +16,7 @@ using System.Runtime.InteropServices;
 
 // Version information for an assembly consists of the following four values:
 //      Major.Minor.Patch.Build
-[assembly: AssemblyVersion("3.0.1.1584")]
+[assembly: AssemblyVersion("3.0.1.1585")]
 //AssemblyFileVersion removed so Visual Studio sets AssemblyFileVersion = AssemblyVersion
 //[assembly: AssemblyFileVersion("1.0.0.0")]
 

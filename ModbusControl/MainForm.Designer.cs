@@ -77,6 +77,7 @@ namespace ModbusControl
             helpMenuItem = new ToolStripMenuItem();
             checkForUpdateMenuItem = new ToolStripMenuItem();
             aboutMenuItem = new ToolStripMenuItem();
+            debugInfoOutputToolStripMenuItem = new ToolStripMenuItem();
             toolStrip1 = new ToolStrip();
             OpenProjectToolbutton = new ToolStripButton();
             ReloadToolbutton = new ToolStripButton();
@@ -91,31 +92,30 @@ namespace ModbusControl
             StatusbarTimer = new System.Windows.Forms.Timer(components);
             tbFilterText = new TextBox();
             filterPanel = new Panel();
-            flowLayoutPanel1 = new FlowLayoutPanel();
+            tableLayoutPanel1 = new TableLayoutPanel();
             label1 = new Label();
-            butDebug = new Button();
             statusStrip.SuspendLayout();
             menuStrip1.SuspendLayout();
             toolStrip1.SuspendLayout();
             filterPanel.SuspendLayout();
-            flowLayoutPanel1.SuspendLayout();
+            tableLayoutPanel1.SuspendLayout();
             SuspendLayout();
             // 
             // statusStrip
             // 
             statusStrip.ImageScalingSize = new Size(20, 20);
             statusStrip.Items.AddRange(new ToolStripItem[] { lblStatus });
-            statusStrip.Location = new Point(0, 440);
+            statusStrip.Location = new Point(0, 442);
             statusStrip.Name = "statusStrip";
             statusStrip.ShowItemToolTips = true;
-            statusStrip.Size = new Size(592, 22);
+            statusStrip.Size = new Size(614, 22);
             statusStrip.TabIndex = 0;
             statusStrip.Text = "statusStrip";
             // 
             // lblStatus
             // 
             lblStatus.Name = "lblStatus";
-            lblStatus.Size = new Size(577, 17);
+            lblStatus.Size = new Size(599, 17);
             lblStatus.Spring = true;
             lblStatus.TextAlign = ContentAlignment.MiddleLeft;
             // 
@@ -136,7 +136,7 @@ namespace ModbusControl
             // 
             chkFilterRegex.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             chkFilterRegex.AutoSize = true;
-            chkFilterRegex.Location = new Point(453, 4);
+            chkFilterRegex.Location = new Point(410, 4);
             chkFilterRegex.Margin = new Padding(8, 4, 3, 3);
             chkFilterRegex.Name = "chkFilterRegex";
             chkFilterRegex.Size = new Size(57, 17);
@@ -150,7 +150,7 @@ namespace ModbusControl
             // 
             chkFilterCaseSensitive.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             chkFilterCaseSensitive.AutoSize = true;
-            chkFilterCaseSensitive.Location = new Point(515, 4);
+            chkFilterCaseSensitive.Location = new Point(472, 4);
             chkFilterCaseSensitive.Margin = new Padding(2, 4, 2, 2);
             chkFilterCaseSensitive.Name = "chkFilterCaseSensitive";
             chkFilterCaseSensitive.Size = new Size(82, 17);
@@ -163,8 +163,8 @@ namespace ModbusControl
             // btnFilterClose
             // 
             btnFilterClose.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            btnFilterClose.Location = new Point(601, 2);
-            btnFilterClose.Margin = new Padding(2);
+            btnFilterClose.Location = new Point(558, 1);
+            btnFilterClose.Margin = new Padding(2, 1, 6, 2);
             btnFilterClose.Name = "btnFilterClose";
             btnFilterClose.Size = new Size(48, 22);
             btnFilterClose.TabIndex = 5;
@@ -177,7 +177,7 @@ namespace ModbusControl
             // 
             btnFilterClear.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             btnFilterClear.Image = (Image)resources.GetObject("btnFilterClear.Image");
-            btnFilterClear.Location = new Point(418, 2);
+            btnFilterClear.Location = new Point(375, 2);
             btnFilterClear.Margin = new Padding(0, 2, 2, 2);
             btnFilterClear.Name = "btnFilterClear";
             btnFilterClear.Size = new Size(25, 22);
@@ -194,7 +194,7 @@ namespace ModbusControl
             menuStrip1.Location = new Point(0, 0);
             menuStrip1.Name = "menuStrip1";
             menuStrip1.Padding = new Padding(5, 2, 0, 2);
-            menuStrip1.Size = new Size(592, 24);
+            menuStrip1.Size = new Size(614, 24);
             menuStrip1.TabIndex = 0;
             menuStrip1.Text = "menuStrip1";
             // 
@@ -439,7 +439,7 @@ namespace ModbusControl
             // 
             // helpMenuItem
             // 
-            helpMenuItem.DropDownItems.AddRange(new ToolStripItem[] { checkForUpdateMenuItem, aboutMenuItem });
+            helpMenuItem.DropDownItems.AddRange(new ToolStripItem[] { checkForUpdateMenuItem, aboutMenuItem, debugInfoOutputToolStripMenuItem });
             helpMenuItem.Name = "helpMenuItem";
             helpMenuItem.ShortcutKeys = Keys.Alt | Keys.H;
             helpMenuItem.Size = new Size(44, 20);
@@ -459,13 +459,21 @@ namespace ModbusControl
             aboutMenuItem.Text = "&About ModbusControl";
             aboutMenuItem.Click += AboutMenuItem_Click;
             // 
+            // debugInfoOutputToolStripMenuItem
+            // 
+            debugInfoOutputToolStripMenuItem.Name = "debugInfoOutputToolStripMenuItem";
+            debugInfoOutputToolStripMenuItem.Size = new Size(194, 22);
+            debugInfoOutputToolStripMenuItem.Text = "Debug info output";
+            debugInfoOutputToolStripMenuItem.Visible = false;
+            debugInfoOutputToolStripMenuItem.Click += debugInfoOutputToolStripMenuItem_Click;
+            // 
             // toolStrip1
             // 
             toolStrip1.ImageScalingSize = new Size(20, 20);
             toolStrip1.Items.AddRange(new ToolStripItem[] { OpenProjectToolbutton, ReloadToolbutton, toolStripSeparator3, OpenConnectionToolbutton, CloseConnectionToolbutton, toolStripSeparator4, StartPollingToolbutton, StopPollingToolbutton, PollOnceToolbutton });
             toolStrip1.Location = new Point(0, 24);
             toolStrip1.Name = "toolStrip1";
-            toolStrip1.Size = new Size(592, 27);
+            toolStrip1.Size = new Size(614, 27);
             toolStrip1.TabIndex = 1;
             toolStrip1.Text = "toolStrip1";
             // 
@@ -567,10 +575,10 @@ namespace ModbusControl
             // tabControl1
             // 
             tabControl1.Dock = DockStyle.Fill;
-            tabControl1.Location = new Point(0, 82);
+            tabControl1.Location = new Point(0, 78);
             tabControl1.Name = "tabControl1";
             tabControl1.SelectedIndex = 0;
-            tabControl1.Size = new Size(592, 358);
+            tabControl1.Size = new Size(614, 364);
             tabControl1.TabIndex = 3;
             tabControl1.Selected += TabControl1_Selected;
             // 
@@ -580,40 +588,47 @@ namespace ModbusControl
             // 
             // tbFilterText
             // 
-            tbFilterText.Dock = DockStyle.Fill;
             tbFilterText.Location = new Point(63, 2);
             tbFilterText.Margin = new Padding(2);
             tbFilterText.Name = "tbFilterText";
-            tbFilterText.Size = new Size(353, 20);
+            tbFilterText.Size = new Size(310, 20);
             tbFilterText.TabIndex = 1;
             tbFilterText.TextChanged += TbFilterText_TextChanged;
             // 
             // filterPanel
             // 
             filterPanel.BorderStyle = BorderStyle.FixedSingle;
-            filterPanel.Controls.Add(flowLayoutPanel1);
+            filterPanel.Controls.Add(tableLayoutPanel1);
             filterPanel.Dock = DockStyle.Top;
             filterPanel.Location = new Point(0, 51);
             filterPanel.Margin = new Padding(2);
             filterPanel.MinimumSize = new Size(400, 2);
             filterPanel.Name = "filterPanel";
-            filterPanel.Size = new Size(592, 31);
+            filterPanel.Size = new Size(614, 27);
             filterPanel.TabIndex = 2;
             // 
-            // flowLayoutPanel1
+            // tableLayoutPanel1
             // 
-            flowLayoutPanel1.AutoSize = true;
-            flowLayoutPanel1.Controls.Add(label1);
-            flowLayoutPanel1.Controls.Add(tbFilterText);
-            flowLayoutPanel1.Controls.Add(btnFilterClear);
-            flowLayoutPanel1.Controls.Add(chkFilterRegex);
-            flowLayoutPanel1.Controls.Add(chkFilterCaseSensitive);
-            flowLayoutPanel1.Controls.Add(btnFilterClose);
-            flowLayoutPanel1.Location = new Point(-1, 2);
-            flowLayoutPanel1.Name = "flowLayoutPanel1";
-            flowLayoutPanel1.Size = new Size(662, 27);
-            flowLayoutPanel1.TabIndex = 2;
-            flowLayoutPanel1.WrapContents = false;
+            tableLayoutPanel1.ColumnCount = 6;
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle());
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle());
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle());
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle());
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle());
+            tableLayoutPanel1.Controls.Add(tbFilterText, 1, 0);
+            tableLayoutPanel1.Controls.Add(label1, 0, 0);
+            tableLayoutPanel1.Controls.Add(btnFilterClose, 5, 0);
+            tableLayoutPanel1.Controls.Add(chkFilterCaseSensitive, 4, 0);
+            tableLayoutPanel1.Controls.Add(chkFilterRegex, 3, 0);
+            tableLayoutPanel1.Controls.Add(btnFilterClear, 2, 0);
+            tableLayoutPanel1.Dock = DockStyle.Fill;
+            tableLayoutPanel1.Location = new Point(0, 0);
+            tableLayoutPanel1.Name = "tableLayoutPanel1";
+            tableLayoutPanel1.RowCount = 1;
+            tableLayoutPanel1.RowStyles.Add(new RowStyle());
+            tableLayoutPanel1.Size = new Size(612, 25);
+            tableLayoutPanel1.TabIndex = 3;
             // 
             // label1
             // 
@@ -625,23 +640,11 @@ namespace ModbusControl
             label1.TabIndex = 0;
             label1.Text = "Find/Filter:";
             // 
-            // butDebug
-            // 
-            butDebug.Location = new Point(301, 2);
-            butDebug.Name = "butDebug";
-            butDebug.Size = new Size(82, 23);
-            butDebug.TabIndex = 4;
-            butDebug.Text = "DEBUG info";
-            butDebug.UseVisualStyleBackColor = true;
-            butDebug.Visible = false;
-            butDebug.Click += button1_Click;
-            // 
             // MainForm
             // 
             AutoScaleDimensions = new SizeF(96F, 96F);
             AutoScaleMode = AutoScaleMode.Dpi;
-            ClientSize = new Size(592, 462);
-            Controls.Add(butDebug);
+            ClientSize = new Size(614, 464);
             Controls.Add(tabControl1);
             Controls.Add(filterPanel);
             Controls.Add(toolStrip1);
@@ -665,9 +668,8 @@ namespace ModbusControl
             toolStrip1.ResumeLayout(false);
             toolStrip1.PerformLayout();
             filterPanel.ResumeLayout(false);
-            filterPanel.PerformLayout();
-            flowLayoutPanel1.ResumeLayout(false);
-            flowLayoutPanel1.PerformLayout();
+            tableLayoutPanel1.ResumeLayout(false);
+            tableLayoutPanel1.PerformLayout();
             ResumeLayout(false);
             PerformLayout();
 
@@ -736,9 +738,9 @@ namespace ModbusControl
         private System.Windows.Forms.ToolStripMenuItem importRegistersFromFileToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem exportRegistersToFileToolStripMenuItem;
         private System.Windows.Forms.CheckBox chkFilterRegex;
-        private Button butDebug;
         private RecentsToolStripMenuItem recentsToolStripMenuItem1;
-        private FlowLayoutPanel flowLayoutPanel1;
+        private TableLayoutPanel tableLayoutPanel1;
+        private ToolStripMenuItem debugInfoOutputToolStripMenuItem;
     }
 }
 

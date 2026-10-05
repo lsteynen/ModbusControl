@@ -95,6 +95,10 @@ namespace ModbusControl
         {
             InitializeComponent();
 
+            // Set in code, not the designer
+            // doing it in the designer makes MainForm show as modified every time it's opened
+            tbFilterText.Dock = DockStyle.Fill;
+
             // Add the legacy Windows/ code - page encodings to the encodings that the System.Text.Encoding class knows how to provide.
             // needed in .net core 3.0 and later, because some of the legacy encodings are used in this app
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
@@ -150,7 +154,8 @@ namespace ModbusControl
             tabControl1.DragDrop += new DragEventHandler(Form1_DragDrop);
 
 #if DEBUG
-            butDebug.Visible = true;
+            // show debug item only in debug build
+            debugInfoOutputToolStripMenuItem.Visible = true;
 #endif
         }
 
@@ -630,7 +635,7 @@ namespace ModbusControl
                                                     || (CommandlineArgs.ArgInterframedelay != null)
                                                     || (CommandlineArgs.ArgWriteholdingregFC != null)
                                                     || (CommandlineArgs.ArgSamplerate != null);
-            
+
             SaveConfigurationForm1.ShowDialog();
         }
 
@@ -2969,20 +2974,6 @@ namespace ModbusControl
             }
         }
 
-        private void button1_Click(object sender, EventArgs e)
-        {
-            Debug.Print($"Button debug info:");
-            Debug.Print($" DeviceDpi={DeviceDpi}");
-            Debug.Print($" Form.Width={this.Width}, Form.Height={this.Height}");
-            if (CurrentTabPage != null)
-            {
-                ModbusGridView mgv = CurrentTabPage.Tag as ModbusGridView;
-                DataGridView dgv = mgv.TheGrid;
-                Debug.Print($" DataGridView1.Font: {dgv.Rows[1].Cells[1].InheritedStyle.Font}");
-                Debug.Print($" DataGridView1 cell(1,1) Inherited Font: {dgv.Rows[1].Cells[1].InheritedStyle.Font}");
-            }
-        }
-
         private void MainForm_DpiChanged(object sender, DpiChangedEventArgs e)
         {
             Debug.Print($"MainForm_DpiChanged:");
@@ -2992,6 +2983,20 @@ namespace ModbusControl
             Debug.Print($" Height={Height}");
             Debug.Print($" SuggestedRectangle.Width={e.SuggestedRectangle.Width}");
             Debug.Print($" SuggestedRectangle.Height={e.SuggestedRectangle.Height}");
+        }
+
+        private void debugInfoOutputToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Debug.Print($"debug Info Output:");
+            Debug.Print($" DeviceDpi={DeviceDpi}");
+            Debug.Print($" Form.Width={this.Width}, Form.Height={this.Height}");
+            if (CurrentTabPage != null)
+            {
+                ModbusGridView mgv = CurrentTabPage.Tag as ModbusGridView;
+                DataGridView dgv = mgv.TheGrid;
+                Debug.Print($" DataGridView1.Font: {dgv.Rows[1].Cells[1].InheritedStyle.Font}");
+                Debug.Print($" DataGridView1 cell(1,1) Inherited Font: {dgv.Rows[1].Cells[1].InheritedStyle.Font}");
+            }
         }
     }
 }
