@@ -4,6 +4,8 @@
 	<?define SourceAppPdfDir = "..\Manuals" ?>
 	<?define SourceDemoMbc = "..\mbc" ?>
 	<?define SourceXsd = "..\xsd" ?>
+	<?define SourceModbusExport = "..\ModbusExport\bin\Release" ?>
+	<?define SourceModbusImport = "..\ModbusImport\bin\Release" ?>
 	<?define SourceUpdater = "..\Updater" ?>
 
 	<Fragment>
@@ -57,6 +59,23 @@
 				   Directory="INSTALLFOLDER">
 			</Files>
 
+			<!-- Harvest ModbusExport.exe -->
+			<Files Include="$(var.SourceModbusExport)\*"
+				   Directory="INSTALLFOLDER">
+			</Files>
+
+			<!-- Harvest ModbusImport.exe -->
+			<Files Include="$(var.SourceModbusImport)\*"
+				   Directory="INSTALLFOLDER">
+			</Files>
+
+			<!-- Add LICENSE as LICENSE.txt -->
+			<Component Id="LicenseComponent">
+				<File Id="LicenseFile"
+					  Source="..\LICENSE"
+					  Name="LICENSE.txt" />
+			</Component>
+			
 			<!-- Harvest the Updater --> 
 			<Files Include="$(var.SourceUpdater)\*.*"
 				   Directory="INSTALLFOLDER">

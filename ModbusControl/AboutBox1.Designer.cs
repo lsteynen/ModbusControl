@@ -35,13 +35,15 @@
             labelName = new Label();
             okButton = new Button();
             labelDotNetVersion = new Label();
+            licenseLinkLabel = new LinkLabel();
+            linkLabel2 = new LinkLabel();
             ((System.ComponentModel.ISupportInitialize)logoPictureBox).BeginInit();
             SuspendLayout();
             // 
             // labelFormSize
             // 
             labelFormSize.AutoSize = true;
-            labelFormSize.Location = new Point(126, 88);
+            labelFormSize.Location = new Point(126, 80);
             labelFormSize.MaximumSize = new Size(0, 17);
             labelFormSize.Name = "labelFormSize";
             labelFormSize.Size = new Size(72, 13);
@@ -65,7 +67,7 @@
             // labelVersion
             // 
             labelVersion.AutoSize = true;
-            labelVersion.Location = new Point(126, 31);
+            labelVersion.Location = new Point(126, 28);
             labelVersion.MaximumSize = new Size(0, 17);
             labelVersion.Name = "labelVersion";
             labelVersion.Size = new Size(64, 13);
@@ -101,7 +103,7 @@
             // okButton
             // 
             okButton.DialogResult = DialogResult.Cancel;
-            okButton.Location = new Point(160, 118);
+            okButton.Location = new Point(160, 145);
             okButton.Name = "okButton";
             okButton.Size = new Size(62, 23);
             okButton.TabIndex = 5;
@@ -110,7 +112,7 @@
             // labelDotNetVersion
             // 
             labelDotNetVersion.AutoSize = true;
-            labelDotNetVersion.Location = new Point(126, 68);
+            labelDotNetVersion.Location = new Point(126, 66);
             labelDotNetVersion.MaximumSize = new Size(0, 17);
             labelDotNetVersion.Name = "labelDotNetVersion";
             labelDotNetVersion.Size = new Size(98, 13);
@@ -119,11 +121,38 @@
             labelDotNetVersion.TextAlign = ContentAlignment.MiddleLeft;
             labelDotNetVersion.UseMnemonic = false;
             // 
+            // licenseLinkLabel
+            // 
+            licenseLinkLabel.AutoSize = true;
+            licenseLinkLabel.LinkArea = new LinkArea(50, 14);
+            licenseLinkLabel.Location = new Point(126, 117);
+            licenseLinkLabel.Name = "licenseLinkLabel";
+            licenseLinkLabel.Size = new Size(348, 17);
+            licenseLinkLabel.TabIndex = 35;
+            licenseLinkLabel.TabStop = true;
+            licenseLinkLabel.Text = "The source code is released under the open source GPL v3 License.";
+            licenseLinkLabel.UseCompatibleTextRendering = true;
+            licenseLinkLabel.LinkClicked += licenseLinkLabel_LinkClicked;
+            // 
+            // linkLabel2
+            // 
+            linkLabel2.AutoSize = true;
+            linkLabel2.LinkArea = new LinkArea(103, 14);
+            linkLabel2.Location = new Point(126, 103);
+            linkLabel2.MaximumSize = new Size(280, 0);
+            linkLabel2.Name = "linkLabel2";
+            linkLabel2.Size = new Size(277, 17);
+            linkLabel2.TabIndex = 36;
+            linkLabel2.Text = "ModbusControl is created and maintained by lsteynen.";
+            linkLabel2.UseCompatibleTextRendering = true;
+            // 
             // AboutBox1
             // 
             AutoScaleDimensions = new SizeF(96F, 96F);
             AutoScaleMode = AutoScaleMode.Dpi;
-            ClientSize = new Size(383, 154);
+            ClientSize = new Size(476, 181);
+            Controls.Add(licenseLinkLabel);
+            Controls.Add(linkLabel2);
             Controls.Add(labelFormSize);
             Controls.Add(labelDotNetVersion);
             Controls.Add(labelAppdata);
@@ -158,5 +187,7 @@
         private System.Windows.Forms.Label labelName;
         private System.Windows.Forms.Label labelDotNetVersion;
         private Button okButton;
+        private LinkLabel licenseLinkLabel;
+        private LinkLabel linkLabel2;
     }
 }

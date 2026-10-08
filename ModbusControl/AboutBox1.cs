@@ -1,11 +1,12 @@
-﻿using System;
+﻿using LST.Helpers;
+using System;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
 using System.Reflection;
 using System.Windows.Forms;
-
-using LST.Helpers;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace ModbusControl
 {
@@ -62,9 +63,15 @@ namespace ModbusControl
             // adjust form width to fit labelAppdata text
 
             // get margin, DPI adjusted 
-            int hmargin = AppDpiHelpers.ScaleValueFrom96DpiToThisDpiInt(30, DeviceDpi);
+            int hmargin = AppDpiHelpers.ScaleValueFrom96DpiToThisDpiInt(24, DeviceDpi);
             // get new form width
-            int newWidth = labelAppdata.Left + labelAppdata.Width + hmargin;
+            int maxRight = 300;
+            foreach (Control c in Controls)
+            {
+                if (c.Right > maxRight)
+                    maxRight = c.Right;
+            }
+            int newWidth = maxRight + hmargin;
             Debug.Print($"new ClientSize Width={newWidth}");
             ClientSize = new Size(newWidth, ClientSize.Height);
 
@@ -73,13 +80,42 @@ namespace ModbusControl
             okButton.Left = newOkButtonLeft;
         }
 
+        private void licenseLinkLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            try
+            {
+                string pathToLicenseFile = Path.Combine(AppHelpers.ApplicationStartupPath, "LICENSE.txt");
+
+                if (!File.Exists(pathToLicenseFile))
+                    throw new FileNotFoundException("The license file could not be found.", pathToLicenseFile);
+
+                Process.Start(new ProcessStartInfo
+                    {
+                        FileName = pathToLicenseFile,
+                        UseShellExecute = true   // required in .NET Core/5+ to open with the default app
+                    });
+
+                licenseLinkLabel.LinkVisited = true;
+            }
+            catch (FileNotFoundException ex)
+            {
+                MessageBox.Show($"License file not found:\n{ex.FileName}",
+                    "File Not Found", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"An unexpected error occurred:\n{ex.Message}",
+                    "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
         #region Assembly Attribute Accessors
 
         public string AssemblyTitle
         {
             get
             {
-                var title = Assembly.GetExecutingAssembly().GetCustomAttribute<AssemblyTitleAttribute>() ?.Title;
+                var title = Assembly.GetExecutingAssembly().GetCustomAttribute<AssemblyTitleAttribute>()?.Title;
                 return title ?? "";
             }
         }
@@ -88,7 +124,7 @@ namespace ModbusControl
         {
             get
             {
-                var description = Assembly.GetExecutingAssembly().GetCustomAttribute<AssemblyDescriptionAttribute>() ?.Description;
+                var description = Assembly.GetExecutingAssembly().GetCustomAttribute<AssemblyDescriptionAttribute>()?.Description;
                 return description ?? "";
             }
         }
@@ -116,7 +152,7 @@ namespace ModbusControl
             get
             {
                 var company = Assembly.GetExecutingAssembly().GetCustomAttribute<AssemblyCompanyAttribute>()?.Company;
-                return company ?? ""; 
+                return company ?? "";
             }
         }
 
@@ -127,7 +163,6 @@ namespace ModbusControl
                 return Assembly.GetExecutingAssembly().GetName().Version.ToString();
             }
         }
-
 
         #endregion
 
