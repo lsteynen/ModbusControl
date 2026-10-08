@@ -4,7 +4,7 @@
 
 	<?define ProductName="ModbusControl" ?>
 	<?define Manufacturer="lsteynen" ?>
-	<?define ProductVersion="3.0.1" ?>
+	<?define ProductVersion="3.0.2" ?>
 	<?define UpgradeCode="{F7687BA6-F4F6-4810-808E-FEA0B03F7C50}" ?>
 	
 	<Package Name="$(var.ProductName)"
