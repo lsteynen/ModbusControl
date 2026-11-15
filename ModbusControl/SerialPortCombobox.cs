@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
-using System.IO.Ports;
 using System.Diagnostics;
+using RJCP.IO.Ports;
 
 namespace ModbusControl
 {
@@ -24,13 +24,12 @@ namespace ModbusControl
         private void SerialPortCombobox_DropDown(object sender, EventArgs e)
         {
             ComboBox box = (ComboBox)sender;
-            Debug.Print(DateTime.Now.TimeOfDay + ": SerialPortCombobox_DropDown()");
-
+            //Debug.Print(DateTime.Now.TimeOfDay + ": SerialPortCombobox_DropDown()");
             // fill/refresh listbox with available serial ports
             // keep the previously selected port selected, if possible
             string PrevSelected = box.Text;
             box.Items.Clear();
-            box.Items.AddRange(SerialPort.GetPortNames());
+            box.Items.AddRange(GetAvailableSerialPortNames());
             box.SelectedIndex = box.Items.IndexOf(PrevSelected);
         }
 
@@ -39,12 +38,25 @@ namespace ModbusControl
             // fill listbox with available serial ports
             this.Items.Clear();
             this.Text = string.Empty;
-            this.Items.AddRange(SerialPort.GetPortNames());
+            this.Items.AddRange(GetAvailableSerialPortNames());
             // select first port if we have any
             if (this.Items.Count > 0)
             {
                 this.SelectedIndex = 0;
             }
+        }
+
+        public string[] GetAvailableSerialPortNames()
+        {
+            string[] names;
+            PortDescription[] portDescriptions;
+            using (var sp = new SerialPortStream())
+            {
+                names = sp.GetPortNames();
+                portDescriptions = sp.GetPortDescriptions();
+            }
+
+            return names;
         }
     }
 }

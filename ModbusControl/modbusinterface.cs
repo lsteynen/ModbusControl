@@ -1,8 +1,7 @@
 using System;
 using System.Diagnostics;
-using System.IO.Ports;
 using System.Net;
-
+using RJCP.IO.Ports;
 using LST.Modbus;
 using LST.Helpers;
 
@@ -56,7 +55,7 @@ namespace ModbusControl
         {
             get
             {
-                return (mb != null) && mb.IsOpen;
+                return (mb != null) && mb.IsOpen && !mClosing;
             }
         }
 
@@ -430,19 +429,11 @@ namespace ModbusControl
             mb.Open();
         }
 
-        public void PrepareForClose()
-        {
-            //Debug.Print(DateTime.Now.TimeOfDay + ": Modbusinterface: PrepareForClose()");
-
-            // Commands the connection will be closed. Threads waiting for mQueryLock will quickly be released.
-            // Must be followed by Close() lateron
-            mClosing = true;
-        }
-
         public void Close()
         {
             Debug.Print(DateTime.Now.TimeOfDay + ": Modbusinterface: Close()");
 
+            mClosing = true;
             if ((mb != null) && mb.IsOpen)
             {
                 // can throw exception!
@@ -450,6 +441,7 @@ namespace ModbusControl
                 // prevent that the autoreconnect for TCP channels reopens the connection, we are officially closed
                 mb = null;
             }
+            mClosing = false;
         }
 
         ///<summary>
@@ -461,8 +453,8 @@ namespace ModbusControl
             // must assign
             values = null;
 
-            // modbus connection object created?
-            if (mb == null)
+            // modbus connection open?
+            if (mb == null || !mb.IsOpen || mClosing) 
             {
                 return ModbusProtocol.Result.CHANNELNOTOPEN;
             }
@@ -470,8 +462,6 @@ namespace ModbusControl
             // make it threadsafe here to keep logging synced with queries/responses
             lock (mQueryLock)
             {
-                if (mClosing) return ModbusProtocol.Result.CHANNELNOTOPEN;
-
                 if (mLogger.LogReads)
                 {
                     mLogger.Log(Logger.LogType.Read, "Read holding reg: slave=" + address + ", addr=" + mRegisterToOffset.ConvertHoldingregisterOffsetToRegisterNumber(startreg).ToString() + ", quant=" + regcount);
@@ -490,7 +480,7 @@ namespace ModbusControl
                 {
                     if (mLogger.LogErrors)
                     {
-                        if (ModbusProtocol.IsExceptionResponse(result))
+                        if (ModbusProtocol.ResultIsExceptionResponse(result))
                         {
                             mLogger.Log(Logger.LogType.Error, "Read error: Response is exception: " + ModbusProtocol.GetResultText(result));
                         }
@@ -545,8 +535,8 @@ namespace ModbusControl
         /// </summary>
         public ModbusProtocol.Result MifWriteSingleHoldingRegister(byte address, UInt16 startreg, Int16 value)
         {
-            // modbus connection object created?
-            if (mb == null)
+            // modbus connection open?
+            if (mb == null || !mb.IsOpen || mClosing)
             {
                 return ModbusProtocol.Result.CHANNELNOTOPEN;
             }
@@ -554,8 +544,6 @@ namespace ModbusControl
             // make it threadsafe here to keep logging synced with queries/responses
             lock (mQueryLock)
             {
-                if (mClosing) return ModbusProtocol.Result.CHANNELNOTOPEN;
-
                 if (mLogger.LogWrites)
                 {
                     mLogger.Log(Logger.LogType.Write, "Write single holding reg: slave=" + address + ", addr=" + mRegisterToOffset.ConvertHoldingregisterOffsetToRegisterNumber(startreg).ToString() + ", value=" + value);
@@ -574,7 +562,7 @@ namespace ModbusControl
                 {
                     if (mLogger.LogErrors)
                     {
-                        if (ModbusProtocol.IsExceptionResponse(result))
+                        if (ModbusProtocol.ResultIsExceptionResponse(result))
                         {
                             mLogger.Log(Logger.LogType.Error, "Write error: Response is exception: " + ModbusProtocol.GetResultText(result));
                         }
@@ -594,8 +582,8 @@ namespace ModbusControl
         /// </summary>
         public ModbusProtocol.Result MifWriteMultipleHoldingRegisters(byte address, UInt16 startreg, UInt16 regcount, Int16[] values)
         {
-            // modbus connection object created?
-            if (mb == null)
+            // modbus connection open?
+            if (mb == null || !mb.IsOpen || mClosing)
             {
                 return ModbusProtocol.Result.CHANNELNOTOPEN;
             }
@@ -603,8 +591,6 @@ namespace ModbusControl
             // make it threadsafe here to keep logging synced with queries/responses
             lock (mQueryLock)
             {
-                if (mClosing) return ModbusProtocol.Result.CHANNELNOTOPEN;
-
                 if (mLogger.LogWrites)
                 {
                     mLogger.Log(Logger.LogType.Write, "Write multiple holding reg: slave=" + address + ", addr=" + mRegisterToOffset.ConvertHoldingregisterOffsetToRegisterNumber(startreg).ToString() + ", quant=" + regcount + ", values=" + Converts.Int16ArrayToStringOfValues(values));
@@ -623,7 +609,7 @@ namespace ModbusControl
                 {
                     if (mLogger.LogErrors)
                     {
-                        if (ModbusProtocol.IsExceptionResponse(result))
+                        if (ModbusProtocol.ResultIsExceptionResponse(result))
                         {
                             mLogger.Log(Logger.LogType.Error, "Write error: Response is exception: " + ModbusProtocol.GetResultText(result));
                         }
@@ -704,8 +690,8 @@ namespace ModbusControl
             // must assign
             values = null;
 
-            // modbus connection object created?
-            if (mb == null)
+            // modbus connection open?
+            if (mb == null || !mb.IsOpen || mClosing)
             {
                 return ModbusProtocol.Result.CHANNELNOTOPEN;
             }
@@ -713,8 +699,6 @@ namespace ModbusControl
             // make it threadsafe here to keep logging synced with queries/responses
             lock (mQueryLock)
             {
-                if (mClosing) return ModbusProtocol.Result.CHANNELNOTOPEN;
-
                 if (mLogger.LogReads)
                 {
                     mLogger.Log(Logger.LogType.Read, "Read input reg: slave=" + address + ", addr=" + mRegisterToOffset.ConvertInputregisterOffsetToRegisterNumber(startreg).ToString() + ", quant=" + regcount);
@@ -733,7 +717,7 @@ namespace ModbusControl
                 {
                     if (mLogger.LogErrors)
                     {
-                        if (ModbusProtocol.IsExceptionResponse(result))
+                        if (ModbusProtocol.ResultIsExceptionResponse(result))
                         {
                             mLogger.Log(Logger.LogType.Error, "Read error: Response is exception: " + ModbusProtocol.GetResultText(result));
                         }
@@ -757,8 +741,8 @@ namespace ModbusControl
             // must assign
             values = null;
 
-            // modbus connection object created?
-            if (mb == null)
+            // modbus connection open?
+            if (mb == null || !mb.IsOpen || mClosing)
             {
                 return ModbusProtocol.Result.CHANNELNOTOPEN;
             }
@@ -766,8 +750,6 @@ namespace ModbusControl
             // make it threadsafe here to keep logging synced with queries/responses
             lock (mQueryLock)
             {
-                if (mClosing) return ModbusProtocol.Result.CHANNELNOTOPEN;
-
                 if (mLogger.LogReads)
                 {
                     mLogger.Log(Logger.LogType.Read, "Read coils: slave=" + address + ", addr=" + mRegisterToOffset.ConvertCoilOffsetToNumber(startreg).ToString() + ", quant=" + regcount);
@@ -786,7 +768,7 @@ namespace ModbusControl
                 {
                     if (mLogger.LogErrors)
                     {
-                        if (ModbusProtocol.IsExceptionResponse(result))
+                        if (ModbusProtocol.ResultIsExceptionResponse(result))
                         {
                             mLogger.Log(Logger.LogType.Error, "Read error: Response is exception: " + ModbusProtocol.GetResultText(result));
                         }
@@ -806,8 +788,8 @@ namespace ModbusControl
         /// </summary>
         public ModbusProtocol.Result MifWriteSingleCoil(byte address, UInt16 startreg, int value, bool allowAll = true)
         {
-            // modbus connection object created?
-            if (mb == null)
+            // modbus connection open?
+            if (mb == null || !mb.IsOpen || mClosing)
             {
                 return ModbusProtocol.Result.CHANNELNOTOPEN;
             }
@@ -815,8 +797,6 @@ namespace ModbusControl
             // make it threadsafe here to keep logging synced with queries/responses
             lock (mQueryLock)
             {
-                if (mClosing) return ModbusProtocol.Result.CHANNELNOTOPEN;
-
                 if (mLogger.LogWrites)
                 {
                     mLogger.Log(Logger.LogType.Write, "Write single coil: slave=" + address + ", addr=" + mRegisterToOffset.ConvertCoilOffsetToNumber(startreg).ToString() + ", value=" + value);
@@ -835,7 +815,7 @@ namespace ModbusControl
                 {
                     if (mLogger.LogErrors)
                     {
-                        if (ModbusProtocol.IsExceptionResponse(result))
+                        if (ModbusProtocol.ResultIsExceptionResponse(result))
                         {
                             mLogger.Log(Logger.LogType.Error, "Write error: Response is exception: " + ModbusProtocol.GetResultText(result));
                         }
@@ -855,8 +835,8 @@ namespace ModbusControl
         /// </summary>
         public ModbusProtocol.Result MifWriteMultipleCoils(byte address, UInt16 startreg, UInt16 regcount, byte[] values, bool allowAll = true)
         {
-            // modbus connection object created?
-            if (mb == null)
+            // modbus connection open?
+            if (mb == null || !mb.IsOpen || mClosing)
             {
                 return ModbusProtocol.Result.CHANNELNOTOPEN;
             }
@@ -864,8 +844,6 @@ namespace ModbusControl
             // make it threadsafe here to keep logging synced with queries/responses
             lock (mQueryLock)
             {
-                if (mClosing) return ModbusProtocol.Result.CHANNELNOTOPEN;
-
                 if (mLogger.LogWrites)
                 {
                     mLogger.Log(Logger.LogType.Write, "Write multiple coils: slave=" + address + ", addr=" + mRegisterToOffset.ConvertCoilOffsetToNumber(startreg).ToString() + ", quant=" + regcount + ", values=" + BytesToString.Convert(values));
@@ -884,7 +862,7 @@ namespace ModbusControl
                 {
                     if (mLogger.LogErrors)
                     {
-                        if (ModbusProtocol.IsExceptionResponse(result))
+                        if (ModbusProtocol.ResultIsExceptionResponse(result))
                         {
                             mLogger.Log(Logger.LogType.Error, "Write error: Response is exception: " + ModbusProtocol.GetResultText(result));
                         }
@@ -908,8 +886,8 @@ namespace ModbusControl
             // must assign
             values = null;
 
-            // modbus connection object created?
-            if (mb == null)
+            // modbus connection open?
+            if (mb == null || !mb.IsOpen || mClosing)
             {
                 return ModbusProtocol.Result.CHANNELNOTOPEN;
             }
@@ -917,8 +895,6 @@ namespace ModbusControl
             // make it threadsafe here to keep logging synced with queries/responses
             lock (mQueryLock)
             {
-                if (mClosing) return ModbusProtocol.Result.CHANNELNOTOPEN;
-
                 if (mLogger.LogReads)
                 {
                     mLogger.Log(Logger.LogType.Read, "Read discrete inputs: slave=" + address + ", addr=" + mRegisterToOffset.ConvertDiscreteInputOffsetToNumber(startreg).ToString() + ", quant=" + regcount);
@@ -937,7 +913,7 @@ namespace ModbusControl
                 {
                     if (mLogger.LogErrors)
                     {
-                        if (ModbusProtocol.IsExceptionResponse(result))
+                        if (ModbusProtocol.ResultIsExceptionResponse(result))
                         {
                             mLogger.Log(Logger.LogType.Error, "Read error: Response is exception: " + ModbusProtocol.GetResultText(result));
                         }
@@ -961,8 +937,8 @@ namespace ModbusControl
             // must assign
             responseBuf = null;
 
-            // modbus connection object created?
-            if (mb == null)
+            // modbus connection open?
+            if (mb == null || !mb.IsOpen || mClosing)
             {
                 return ModbusProtocol.Result.CHANNELNOTOPEN;
             }
@@ -970,8 +946,6 @@ namespace ModbusControl
             // make it threadsafe here to keep logging synced with queries/responses
             lock (mQueryLock)
             {
-                if (mClosing) return ModbusProtocol.Result.CHANNELNOTOPEN;
-
                 if (mLogger.LogReads)
                 {
                     int actQueryLen = Math.Min(queryLen, queryBuf.Length);
@@ -991,7 +965,7 @@ namespace ModbusControl
                 {
                     if (mLogger.LogErrors)
                     {
-                        if (ModbusProtocol.IsExceptionResponse(result))
+                        if (ModbusProtocol.ResultIsExceptionResponse(result))
                         {
                             mLogger.Log(Logger.LogType.Error, "Read error: Response is exception: " + ModbusProtocol.GetResultText(result));
                         }
@@ -1011,8 +985,8 @@ namespace ModbusControl
             // must assign
             ResponseBuffer = null;
 
-            // modbus connection object created?
-            if (mb == null)
+            // modbus connection open?
+            if (mb == null || !mb.IsOpen || mClosing)
             {
                 return ModbusProtocol.Result.CHANNELNOTOPEN;
             }
@@ -1021,8 +995,6 @@ namespace ModbusControl
             // make it threadsafe here to keep logging synced with queries/responses
             lock (mQueryLock)
             {
-                if (mClosing) return ModbusProtocol.Result.CHANNELNOTOPEN;
-
                 // send query, get response
                 ModbusProtocol.Result result = mb.SendQuery(QueryBuffer, QueryLength, out ResponseBuffer);
 

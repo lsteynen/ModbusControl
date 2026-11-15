@@ -1,6 +1,6 @@
 ﻿using System;
-using System.IO.Ports;
 using System.Net;
+using RJCP.IO.Ports;
 
 // Handle command line arguments.
 // may have filenames

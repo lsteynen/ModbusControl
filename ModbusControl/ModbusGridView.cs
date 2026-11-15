@@ -1,5 +1,4 @@
-﻿using LST.Helpers;
-using System;
+﻿using System;
 using System.Data;
 using System.Diagnostics;
 using System.Drawing;
@@ -7,6 +6,7 @@ using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
+using LST.Helpers;
 
 //#define DEBUG_VISIBILITY
 
@@ -1674,12 +1674,12 @@ namespace ModbusControl
 
         public void SetZoomFactor(float newZoomFactor)
         {
-            Debug.Print($"SetZoomFactor={newZoomFactor}");
+            //Debug.Print($"SetZoomFactor={newZoomFactor}");
 
             zoomFactor = newZoomFactor;
 
             float newFontSize = AppDpiHelpers.ScaleValueFrom96DpiToThisDpi(baseGridFontSizeAt96Dpi * zoomFactor, DeviceDpi);
-            Debug.Print($"Set new font size = {newFontSize}, DeviceDpi={DeviceDpi}");
+            //Debug.Print($"Set new font size = {newFontSize}, DeviceDpi={DeviceDpi}");
             grid.Font = new Font(grid.Font.FontFamily, newFontSize, grid.Font.Style, grid.Font.Unit);
             //grid.Font = new Font(
             //    "Microsoft Sans Serif",

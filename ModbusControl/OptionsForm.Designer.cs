@@ -30,7 +30,7 @@
         {
             components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(OptionsForm));
-            checkboxStopOnCommsError = new CheckBox();
+            checkboxStopOnPollingError = new CheckBox();
             checkboxBeepOnInputError = new CheckBox();
             CheckboxCheckForUpdates = new CheckBox();
             label1 = new Label();
@@ -58,16 +58,16 @@
             ((System.ComponentModel.ISupportInitialize)numericLoggerCapacity).BeginInit();
             SuspendLayout();
             // 
-            // checkboxStopOnCommsError
+            // checkboxStopOnPollingError
             // 
-            checkboxStopOnCommsError.AutoSize = true;
-            checkboxStopOnCommsError.Location = new Point(263, 12);
-            checkboxStopOnCommsError.Name = "checkboxStopOnCommsError";
-            checkboxStopOnCommsError.Size = new Size(120, 17);
-            checkboxStopOnCommsError.TabIndex = 1;
-            checkboxStopOnCommsError.Text = "Stop polling on error";
-            toolTip1.SetToolTip(checkboxStopOnCommsError, "Stop polling on read error, show message if stopped");
-            checkboxStopOnCommsError.UseVisualStyleBackColor = true;
+            checkboxStopOnPollingError.AutoSize = true;
+            checkboxStopOnPollingError.Location = new Point(263, 12);
+            checkboxStopOnPollingError.Name = "checkboxStopOnPollingError";
+            checkboxStopOnPollingError.Size = new Size(120, 17);
+            checkboxStopOnPollingError.TabIndex = 1;
+            checkboxStopOnPollingError.Text = "Stop polling on error";
+            toolTip1.SetToolTip(checkboxStopOnPollingError, "Stop polling on read error, show message if stopped");
+            checkboxStopOnPollingError.UseVisualStyleBackColor = true;
             // 
             // checkboxBeepOnInputError
             // 
@@ -328,7 +328,7 @@
             Controls.Add(textboxCustomEditor);
             Controls.Add(label3);
             Controls.Add(butSelectValidationFile);
-            Controls.Add(checkboxStopOnCommsError);
+            Controls.Add(checkboxStopOnPollingError);
             Controls.Add(checkboxCustomEditor);
             Controls.Add(textboxUseValidationSchema);
             Controls.Add(label2);
@@ -358,7 +358,7 @@
         }
 
         #endregion
-        private System.Windows.Forms.CheckBox checkboxStopOnCommsError;
+        private System.Windows.Forms.CheckBox checkboxStopOnPollingError;
         private System.Windows.Forms.CheckBox checkboxBeepOnInputError;
         private System.Windows.Forms.CheckBox CheckboxCheckForUpdates;
         private System.Windows.Forms.Label label1;

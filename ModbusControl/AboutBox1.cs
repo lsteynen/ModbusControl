@@ -1,12 +1,6 @@
-﻿using LST.Helpers;
-using System;
-using System.ComponentModel;
-using System.Diagnostics;
-using System.Drawing;
-using System.Globalization;
+﻿using System.Diagnostics;
 using System.Reflection;
-using System.Windows.Forms;
-using static System.Net.Mime.MediaTypeNames;
+using LST.Helpers;
 
 namespace ModbusControl
 {

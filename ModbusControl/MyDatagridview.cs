@@ -1,5 +1,5 @@
-﻿// Afgeleide class van DataGtridView
-// Om ProcessDialogKey te kunnen overriden
+﻿// Class derived from DataGridView
+// To override ProcessDialogKey 
 
 using System;
 using System.Windows.Forms;

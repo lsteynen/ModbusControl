@@ -14,10 +14,9 @@ namespace LST.Modbus
         void Close();
         bool BeforeTransaction();
         void AfterTransaction();
-
         void Write(byte[] data, int start, int length);
-        int Read(ref byte[] data, int start, int maxSize);
-        int ReadWait(ref byte[] data, int count);
+        int ReadWait(ref byte[] data, int count, bool useResponseTimeout);
+        int GetAvailableCount();
 
         // properties
 
@@ -53,7 +52,7 @@ namespace LST.Modbus
             set; 
         }
 
-        uint CharacterTimeout
+        uint MoreTimeout
         {   
             get; 
             set; 
@@ -85,6 +84,6 @@ namespace LST.Modbus
 
         event TxRxCallbackHandler OnDataSent;
         event TxRxCallbackHandler OnDataReceived;
-        event LogCallbackString OnWarning;
+        //event LogCallbackString OnWarning;
     }
 }

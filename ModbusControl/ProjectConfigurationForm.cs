@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Diagnostics;
-using System.IO.Ports;
 using System.Text;
 using System.Windows.Forms;
-
+using RJCP.IO.Ports;
 using LST.Helpers;
 
 namespace ModbusControl

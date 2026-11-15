@@ -5,7 +5,6 @@ using System.Text;
 using System.Threading;
 using System.Diagnostics;
 using System.Windows.Forms;
-
 using LST.Helpers;
 using LST.Modbus;
 

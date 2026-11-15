@@ -333,7 +333,7 @@ namespace ModbusControl
             stopPollingMenuItem.Name = "stopPollingMenuItem";
             stopPollingMenuItem.Size = new Size(166, 22);
             stopPollingMenuItem.Text = "Sto&p polling";
-            stopPollingMenuItem.Click += StopPollingMeuItem_Click;
+            stopPollingMenuItem.Click += StopPollingMenuItem_Click;
             // 
             // pollOnceMenuItem
             // 

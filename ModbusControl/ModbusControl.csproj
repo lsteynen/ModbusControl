@@ -28,16 +28,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Modbus_netx\**" />
-    <Compile Remove="Sharedx\**" />
-    <EmbeddedResource Remove="Modbus_netx\**" />
-    <EmbeddedResource Remove="Sharedx\**" />
-    <None Remove="Modbus_netx\**" />
-    <None Remove="Sharedx\**" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Compile Include="..\Modbus_net\ByteQueue.cs" Link="v_Modbus_net\ByteQueue.cs" />
     <Compile Include="..\Modbus_net\ICommChannel.cs" Link="v_Modbus_net\ICommChannel.cs" />
     <Compile Include="..\Modbus_net\IModbusProtocol.cs" Link="v_Modbus_net\IModbusProtocol.cs" />
     <Compile Include="..\Modbus_net\ModbusProtocol.cs" Link="v_Modbus_net\ModbusProtocol.cs" />
@@ -64,7 +54,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="System.IO.Ports" Version="10.0.11" />
+    <PackageReference Include="RJCP.SerialPortStream" Version="3.0.5" />
   </ItemGroup>
 
   <Target Name="PreBuild" BeforeTargets="PreBuildEvent">

@@ -2,7 +2,6 @@ using System;
 using System.Text;
 using System.Xml;
 using System.Diagnostics;
-
 using LST.Helpers;
 
 // Note: Installer maakt geen default settings file, app doet dat bij eerste close.

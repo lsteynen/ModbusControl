@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Text;
 using System.Windows.Forms;
-
 using LST.Helpers;
 
 namespace ModbusControl
@@ -15,10 +14,10 @@ namespace ModbusControl
 
         public bool StopOnError
         {
-            get { return checkboxStopOnCommsError.Checked; }
+            get { return checkboxStopOnPollingError.Checked; }
             set
             {
-                checkboxStopOnCommsError.Checked = value;
+                checkboxStopOnPollingError.Checked = value;
             }
         }
 

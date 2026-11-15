@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.IO.Ports;
 using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -11,7 +10,7 @@ using System.Xml.Linq;
 using System.Xml.Schema;
 using System.Linq;
 using System.Diagnostics;
-
+using RJCP.IO.Ports;
 using LST.Helpers;
 
 namespace ModbusControl

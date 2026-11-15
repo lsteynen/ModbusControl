@@ -1,11 +1,11 @@
-using LST.Helpers;
-using LST.Modbus;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.IO.Ports;
 using System.Text;
 using System.Xml;
 using System.Xml.Schema;
+using RJCP.IO.Ports;
+using LST.Helpers;
+using LST.Modbus;
 
 namespace ModbusControl
 {
@@ -42,8 +42,9 @@ namespace ModbusControl
         private Logger Logger1;
         private SaveConfigurationForm SaveConfigurationForm1;
         private DiagnosticsForm DiagnosticscountersForm1;
-        private Thread CommsThread;
-        private volatile bool CommsThread_StopFlag;
+        private Thread PollingThread;
+        private CancellationTokenSource PollingThread_CancelTokenSource;
+        private CancellationToken PollingThread_CancelToken;
         private TabPage CurrentTabPage; // null if none
         public bool MainPollingIsEnabled = true;
         private bool TabIsChanged;
@@ -388,8 +389,8 @@ namespace ModbusControl
             updaterThread?.Join(TimeSpan.FromSeconds(3));
             updaterThread = null;
 
-            // stop all comms stuff
-            StopAllComms();
+            // stop all polling stuff
+            StopAllCommunications();
 
             //Debug.Print(DateTime.Now.TimeOfDay + ": Form1_FormClosing()-5");
 
@@ -573,8 +574,8 @@ namespace ModbusControl
         {
             string path = sender.ToString();
 
-            // Stop comms
-            StopAllComms();
+            // Stop polling
+            StopAllCommunications();
             // Reset some stuff
             ResetBeforeLoad();
             // open new project
@@ -653,7 +654,7 @@ namespace ModbusControl
             StartPolling();
         }
 
-        private void StopPollingMeuItem_Click(object sender, EventArgs e)
+        private void StopPollingMenuItem_Click(object sender, EventArgs e)
         {
             StopPolling();
         }
@@ -707,8 +708,8 @@ namespace ModbusControl
         {
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
             {
-                // Stop comms
-                StopAllComms();
+                // Stop polling
+                StopAllCommunications();
                 // Reset some stuff
                 ResetBeforeLoad();
                 // load new project
@@ -740,8 +741,8 @@ namespace ModbusControl
                 bool SavedConnectionIsOpen = ConnectionIsOpen;
                 bool SavedPollingIsStarted = PollingIsStarted;
 
-                // Stop comms
-                StopAllComms();
+                // Stop polling
+                StopAllCommunications();
 
                 // Reset some stuff
                 ResetBeforeLoad();
@@ -872,8 +873,8 @@ namespace ModbusControl
 
             if (ReopenConnection)
             {
-                // Stop comms
-                StopAllComms();
+                // Stop polling
+                StopAllCommunications();
             }
 
             // Save new settings
@@ -1002,7 +1003,7 @@ namespace ModbusControl
 
         private void StopPollingToolbutton_Click(object sender, EventArgs e)
         {
-            StopPollingMeuItem_Click(sender, null);
+            StopPollingMenuItem_Click(sender, null);
         }
 
         private void PollOnceToolbutton_Click(object sender, EventArgs e)
@@ -1379,7 +1380,7 @@ namespace ModbusControl
                 && (CurrentPropertiesColumnWidthWeight > 0)
                 && (CurrentValueColumnWidthWeight > 0))
             {
-                Debug.Print(DateTime.Now.TimeOfDay + ": 3) PassOptionsToClientTab");
+                //Debug.Print(DateTime.Now.TimeOfDay + ": 3) PassOptionsToClientTab");
                 mgv.RegisterColumnWidthWeight = CurrentRegisterColumnWidthWeight;
                 mgv.DescriptionColumnWidthWeight = CurrentDescriptionColumnWidthWeight;
                 mgv.PropertiesColumnWidthWeight = CurrentPropertiesColumnWidthWeight;
@@ -1425,11 +1426,12 @@ namespace ModbusControl
             // connection opened?
             if (ConnectionIsOpen)
             {
-                // Start comms thread
-                CommsThread = new Thread(CommsThread_Work);
-                CommsThread_StopFlag = false;
-                CommsThread.Name = "CommsThread";
-                CommsThread.Start();
+                // Start polling thread
+                PollingThread = new Thread(PollingThread_Work);
+                PollingThread.Name = "PollingThread";
+                PollingThread_CancelTokenSource = new CancellationTokenSource();
+                PollingThread_CancelToken = PollingThread_CancelTokenSource.Token;
+                PollingThread.Start();
             }
 
             // update grid readonly
@@ -1663,14 +1665,11 @@ namespace ModbusControl
         }
 
         // stop all communications
-        private void StopAllComms()
+        private void StopAllCommunications()
         {
-            //Debug.Print(DateTime.Now.TimeOfDay + ": StopAllComms()-1");
+            //Debug.Print(DateTime.Now.TimeOfDay + ": StopAllPolling()-1");
 
-            // Do this first. This will make blocked threads of TcpBridge release quickly.
-            mb.PrepareForClose();
-
-            //Debug.Print(DateTime.Now.TimeOfDay + ": StopAllComms()-2");
+            //Debug.Print(DateTime.Now.TimeOfDay + ": StopAllPolling()-2");
 
             // stop bridge threads
             if (TcpBridge.IsRunning)
@@ -1678,31 +1677,30 @@ namespace ModbusControl
                 TcpBridge.Stop();
             }
 
-            //Debug.Print(DateTime.Now.TimeOfDay + ": StopAllComms()-3");
+            //Debug.Print(DateTime.Now.TimeOfDay + ": StopAllPolling()-3");
 
-            // Stop comms thread
-            StopCommsThread();
-
-            //Debug.Print(DateTime.Now.TimeOfDay + ": StopAllComms()-4");
+            //Debug.Print(DateTime.Now.TimeOfDay + ": StopAllPolling()-4");
 
             // close interface
             CloseConnection();
 
-            //Debug.Print(DateTime.Now.TimeOfDay + ": StopAllComms()-5");
+            //Debug.Print(DateTime.Now.TimeOfDay + ": StopAllPolling()-5");
         }
 
 
         /// <summary>
-        /// Close the connection
+        /// Close the connection, stop polling thread
         /// </summary>
         private void CloseConnection()
         {
+            Debug.Print(DateTime.Now.TimeOfDay + ": CloseConnection() 1");
+
             // update menu's
             ConnectionIsOpen = false;
             UpdateMenus();
 
-            // Stop communication thread
-            StopCommsThread();
+            // Request to stop communication thread
+            InitiateStopPollingThread();
 
             // close modbus interface
             if (mb.IsOpen)
@@ -1710,6 +1708,7 @@ namespace ModbusControl
                 try
                 {
                     mb.Close();
+                    Debug.Print(DateTime.Now.TimeOfDay + ": CloseConnection() 21");
                 }
                 catch (Exception)
                 {
@@ -1734,6 +1733,11 @@ namespace ModbusControl
                 }
             }
 
+            Debug.Print(DateTime.Now.TimeOfDay + ": CloseConnection() 31");
+            // Stop communication thread
+            StopPollingThread();
+            Debug.Print(DateTime.Now.TimeOfDay + ": CloseConnection() 32");
+
             // update grid readonly
             PassOptionsToCurrentClientTab();
 
@@ -1755,13 +1759,13 @@ namespace ModbusControl
         }
 
         // background communications thread
-        private void CommsThread_Work()
+        private void PollingThread_Work()
         {
             // catch unhandled exceptions in this non-GUI thread
             try
             {
                 Stopwatch Timer = new Stopwatch();
-                do
+                while (!PollingThread_CancelToken.IsCancellationRequested)
                 {
                     // make a threadsafe poll once flag, so it can't be set between reading and resetting
                     bool safePollOnce = PollOnceIsStarted;
@@ -1794,27 +1798,19 @@ namespace ModbusControl
                         // update status bar counters
                         UpdateStatusBar();
                     }
+
                     // now wait for the sample time to pass
-                    // abort quickly if cancel flag (CommsThread_StopFlag) is set
-                    // abort quickly if user changed tab
-                    int TimePassed = (int)Timer.ElapsedMilliseconds;
-                    while ((TimePassed < Project.Options.Samplerate) && ContinuePolling())
+                    // abort quickly if pollingthread canceled or user tab change or other reason
+                    int timeToWait = 10;
+                    while ((timeToWait > 0) && ContinuePolling())
                     {
                         // do possible pending writes
                         DoPendingWrites();
-
-                        int TimeToSleep = (int)Math.Min(Project.Options.Samplerate - TimePassed, 50);
-                        Thread.Sleep(TimeToSleep);
-                        TimePassed = (int)Timer.ElapsedMilliseconds;
+                        // sleep  a bit to avoid hogging the CPU, but not too long to avoid missing the next sample time
+                        Thread.Sleep(10);
+                        timeToWait = Project.Options.Samplerate - (int)Timer.ElapsedMilliseconds;
                     }
-
-                    // do possible pending writes
-                    DoPendingWrites();
-
-                    // do a minimal sleep to avoid hogging the cpu
-                    Thread.Sleep(10);
                 }
-                while (CommsThread_StopFlag == false);
             }
             catch (Exception ex)
             {
@@ -1833,30 +1829,39 @@ namespace ModbusControl
         // returns false to stop polling or waiting for next poll
         private bool ContinuePolling()
         {
-            return (CommsThread_StopFlag == false)
+            return (   !PollingThread_CancelToken.IsCancellationRequested)
                     && (PollingIsStarted || PollOnceIsStarted)
                     && MainPollingIsEnabled
                     && (TabIsChanged == false);
         }
 
-        private void StopCommsThread()
+        private void InitiateStopPollingThread()
+        {
+            // request to stop backgroundworker if it runs
+            if (PollingThread != null)
+            {
+                PollingThread_CancelTokenSource.Cancel();
+            }
+        }
+
+        private void StopPollingThread()
         {
             // stop backgroundworker if it runs
-            if (CommsThread != null)
+            if (PollingThread != null)
             {
-                CommsThread_StopFlag = true;
+                PollingThread_CancelTokenSource.Cancel();
 
                 // wait for thread to end
                 // call Application.DoEvents() because the logger calls the GUI and that may block all
-                while (CommsThread.IsAlive)
+                while (PollingThread.IsAlive)
                 {
-                    Application.DoEvents();
+                    Application.DoEvents(); 
                     Thread.Sleep(50);
                 }
                 Application.DoEvents();
 
-                CommsThread.Join();
-                CommsThread = null;
+                PollingThread.Join();
+                PollingThread = null;
             }
         }
 
@@ -1912,6 +1917,10 @@ namespace ModbusControl
                     // update grid
                     mrv.SetRegistersReadData(grp.lineIndex, grp.lineCount, tmpdata);
                 }
+                else if (result == ModbusProtocol.Result.CHANNELCLOSING)
+                {
+                    // channel closed by user, stop polling, ignore error
+                }
                 else
                 {
                     // error
@@ -1944,6 +1953,11 @@ namespace ModbusControl
 
                                 // update grid
                                 mrv.SetRegistersReadData(lineIndex, 1, tmpdata);
+                            }
+                            else if (result == ModbusProtocol.Result.CHANNELCLOSING)
+                            {
+                                // channel closed by user, stop polling, ignore error
+                                break;
                             }
                             else
                             {
@@ -2092,8 +2106,8 @@ namespace ModbusControl
             // other file: start windows associated process
             if (Path.GetExtension(file).ToLower() == ".mbc")
             {
-                // Stop comms
-                StopAllComms();
+                // Stop polling
+                StopAllCommunications();
                 // Reset some stuff
                 ResetBeforeLoad();
                 // open new project
@@ -2872,8 +2886,8 @@ namespace ModbusControl
             //Debug.Print(DateTime.Now.TimeOfDay + ": Form1_DragDrop(): file=" + file);
             if (Path.GetExtension(file).ToLower() == ".mbc")
             {
-                // Stop comms
-                StopAllComms();
+                // Stop polling
+                StopAllCommunications();
                 // Reset some stuff
                 ResetBeforeLoad();
                 // open new project

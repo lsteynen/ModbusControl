@@ -64,7 +64,7 @@ namespace LST.Modbus
 
             // Set channel timeouts
             Channel.ResponseTimeout = ResponseTimeout;
-            Channel.CharacterTimeout = EndOfMessageTimeout;
+            Channel.MoreTimeout = EndOfMessageTimeout;
 
             // prepare channel (may also reconnect on connection-oriented channels)
             if (Channel.BeforeTransaction() == false)
@@ -142,8 +142,9 @@ namespace LST.Modbus
             response = new byte[3000];       // buffer for response
             int readCnt = 0;                // nr of bytes received
 
-            // get MBAP header, always 6 bytes
-            readCnt = ReceiveBytes(ref header, header.Length);
+            // get MBAP header, with responsetimeout,
+            // always 6 bytes
+            readCnt = Channel.ReadWait(ref header, header.Length, true);
             if (readCnt < 6)
             {
                 // Timeout on read
@@ -164,7 +165,7 @@ namespace LST.Modbus
                     ushort messageLength = ToUShort(header[4], header[5]);
 
                     // get the PDU
-                    readCnt = ReceiveBytes(ref response, messageLength);
+                    readCnt = Channel.ReadWait(ref response, messageLength, false);
                     if( readCnt < messageLength)
                     {
                         // Timeout on read
@@ -226,15 +227,6 @@ namespace LST.Modbus
                         || (result == ModbusProtocol.Result.CHANNELNOTOPEN);
 
             return bClose;
-        }
-
-        private int ReceiveBytes(ref byte[] buffer, int ntoread)
-        {
-            // read 'ntoread' bytes
-            // or stop on timeout
-            // returns number of bytes read
-            
-            return Channel.ReadWait(ref buffer, ntoread);
         }
 
         private ushort ToUShort(byte high, byte low)

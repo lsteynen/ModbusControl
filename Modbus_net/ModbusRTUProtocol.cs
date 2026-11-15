@@ -56,7 +56,7 @@ namespace LST.Modbus
 
             // Set channel timeouts
             Channel.ResponseTimeout = ResponseTimeout;
-            Channel.CharacterTimeout = EndOfMessageTimeout;
+            Channel.MoreTimeout = EndOfMessageTimeout;
 
             byte[] txframe = BuildQueryFrame(query, querylength);
 
@@ -91,7 +91,7 @@ namespace LST.Modbus
                 // remove the echo bytes from the input
                 // we don't check the bytes
                 byte[] echobuffer = new byte[300];
-                int byteCnt = ReceiveBytes(ref echobuffer, txframe.Length);
+                int byteCnt = Channel.ReadWait(ref echobuffer, txframe.Length, false);
                 if (byteCnt < txframe.Length)
                 {
                     // Echo error
@@ -135,14 +135,14 @@ namespace LST.Modbus
                 expectedlength = 900;
             }
 
-            response = new byte[1000];          // buffer for response
-            byte[] tmpresponse = new byte[1000];  // buffer for response part 2
-            int byteCnt;                    // nr of bytes received
-            bool protocolError = false;         // is set in case of error
+            response = new byte[1000];              // buffer for response
+            byte[] tmpresponse = new byte[1000];    // buffer for response part 2
+            int byteCnt;                            // nr of bytes received
+            bool protocolError = false;             // is set in case of error
 
-            // get first 2 bytes, then we know if it is the expected response or an exception response
-            // ReceiveBytes() can read less bytes than wanted
-            byteCnt = ReceiveBytes(ref response, 2);
+            // get first 2 bytes, with responsetimeout,
+            // then we know if it is the expected response or an exception response,
+            byteCnt = Channel.ReadWait(ref response, 2, true);
             if (byteCnt == 0)
             {
                 return ModbusProtocol.Result.NORESPONSE;
@@ -187,7 +187,7 @@ namespace LST.Modbus
             // If expectedlength is unknown, as with unrecognized function codes, receive bytes till end-of-frame timeout.
             // The bridge client may use function codes we don't recognize.
             // Get remaining bytes in temp buffer and append them to response[]
-            int tmpcount = ReceiveBytes(ref tmpresponse, expectedlength - 2);
+            int tmpcount = Channel.ReadWait(ref tmpresponse, expectedlength - 2, false);
             Array.Copy(tmpresponse, 0, response, 2, tmpcount);
             byteCnt += tmpcount;
 
@@ -252,15 +252,6 @@ namespace LST.Modbus
                 // Invalid response
                 return ModbusProtocol.Result.RESPONSEPROTOCOLERROR;
             }
-        }
-
-        private int ReceiveBytes(ref byte[] buffer, int ntoread)
-        {
-            // read 'ntoread' bytes
-            // or stop on timeout
-            // returns number of bytes read
-
-            return Channel.ReadWait(ref buffer, ntoread);
         }
 
         #region CRC Computation

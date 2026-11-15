@@ -2,7 +2,7 @@
   "profiles": {
     "ModbusControl": {
       "commandName": "Project",
-      "commandLineArgs": "demo.mbc ",
+      "commandLineArgs": "\"C:\\Users\\lucbi\\Projecten\\Csharp\\ModbusControl\\mbc\\Test-Demo.mbc\"",
       "hotReloadEnabled": false
     },
     "Profile 1": {

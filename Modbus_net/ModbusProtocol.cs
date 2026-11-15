@@ -10,6 +10,7 @@ namespace LST.Modbus
         private IModbusProtocol mProtocol;
         private ICommChannel mChannel;
         private bool mIsOpen;
+        private bool mIsClosing;
         private uint mInterFrameDelay;
 
         // all these result codes must be supported in AdjustResultCounters() and GetResultText()
@@ -17,6 +18,7 @@ namespace LST.Modbus
         {
             // successful operation
             SUCCESS = 0,
+
             // modbus exception codes (but a valid response)
             ILLEGALFUNCTIONEXCEPTION = 1,
             ILLEGALADDRESSEXCEPTION = 2,
@@ -29,6 +31,7 @@ namespace LST.Modbus
             GATEWAYPATHUNAVAILABLEEXCEPTION = 10,
             GATEWAYTARGETDEVICEFAILEDTORESPONDEXCEPTION = 11,
             UNDEFINEDEXCEPTION = 12,
+
             // response fails
             ONEWIREECHOERROR,
             NORESPONSE,
@@ -37,10 +40,12 @@ namespace LST.Modbus
             RESPONSECRCERROR,
             RESPONSEMBAPHEADERERROR,
             RESPONSEDATAERROR,
+
             // internal errors
             CHANNELNOTOPEN,
+            CHANNELCLOSING,
             UNSUPPORTED,
-            INVALIDARGUMENT,
+            INVALIDARGUMENT
         }
 
         #region constructors
@@ -247,19 +252,20 @@ namespace LST.Modbus
         {
             // throws exception on fail!
 
-            mChannel.ConnectTimeout = ConnectTimeout;
-
-            // throws exception on fail!
-            mChannel.Open();
-
+            mIsClosing = false;
+            mChannel.ConnectTimeout = ConnectTimeout;     
+           
+            mChannel.Open(); 
             mIsOpen = true;
         }
 
         public void Close()
         {
             mIsOpen = false;
+            mIsClosing = true;
 
             mChannel.Close();
+            mIsClosing = false;
         }
 
         public void ClearCounters()
@@ -289,7 +295,7 @@ namespace LST.Modbus
 
         #endregion
 
-        protected void AdjustResultCounters(Result result)
+        protected void UpdateResultCounters(Result result)
         {
             switch (result)
             {
@@ -347,6 +353,7 @@ namespace LST.Modbus
                     ++ResponseDataErrorCount;
                     break;
                 case Result.CHANNELNOTOPEN:
+                case Result.CHANNELCLOSING:
                 case Result.UNSUPPORTED:
                 case Result.INVALIDARGUMENT:
                 default:
@@ -405,9 +412,14 @@ namespace LST.Modbus
                     }
 
                     // update statistics counters
-                    AdjustResultCounters(retVal);
+                    UpdateResultCounters(retVal);
                 }
-
+                else
+                {
+                    if (mIsClosing)
+                        retVal = Result.CHANNELCLOSING;
+                }
+                
                 return retVal;
             }
             else
@@ -457,7 +469,12 @@ namespace LST.Modbus
                 }
 
                 // update statistics counters
-                AdjustResultCounters(retVal);
+                UpdateResultCounters(retVal);
+            }
+            else
+            {
+                if (mIsClosing)
+                    retVal = Result.CHANNELCLOSING;
             }
 
             return retVal;
@@ -514,7 +531,12 @@ namespace LST.Modbus
                     }
 
                     // update statistics counters
-                    AdjustResultCounters(retVal);
+                    UpdateResultCounters(retVal);
+                }
+                else
+                {
+                    if (mIsClosing)
+                        retVal = Result.CHANNELCLOSING;
                 }
 
                 return retVal;
@@ -573,7 +595,12 @@ namespace LST.Modbus
                     }
 
                     // update statistics counters
-                    AdjustResultCounters(retVal);
+                    UpdateResultCounters(retVal);
+                }
+                else
+                {
+                    if (mIsClosing)
+                        retVal = Result.CHANNELCLOSING;
                 }
 
                 return retVal;
@@ -627,7 +654,12 @@ namespace LST.Modbus
                     }
 
                     // update statistics counters
-                    AdjustResultCounters(retVal);
+                    UpdateResultCounters(retVal);
+                }
+                else
+                {
+                    if (mIsClosing)
+                        retVal = Result.CHANNELCLOSING;
                 }
 
                 return retVal;
@@ -690,7 +722,12 @@ namespace LST.Modbus
                     }
 
                     // update statistics counters
-                    AdjustResultCounters(retVal);
+                    UpdateResultCounters(retVal);
+                }
+                else
+                {
+                    if (mIsClosing)
+                        retVal = Result.CHANNELCLOSING;
                 }
 
                 return retVal;
@@ -751,7 +788,12 @@ namespace LST.Modbus
                     }
 
                     // update statistics counters
-                    AdjustResultCounters(retVal);
+                    UpdateResultCounters(retVal);
+                }
+                else
+                {
+                    if (mIsClosing)
+                        retVal = Result.CHANNELCLOSING;
                 }
 
                 return retVal;
@@ -805,7 +847,12 @@ namespace LST.Modbus
                     }
 
                     // update statistics counters
-                    AdjustResultCounters(retVal);
+                    UpdateResultCounters(retVal);
+                }
+                else
+                {
+                    if (mIsClosing)
+                        retVal = Result.CHANNELCLOSING;
                 }
 
                 return retVal;
@@ -850,8 +897,14 @@ namespace LST.Modbus
                     responseBuf = new byte[0];
                 }
 
+                if (!ResultIsValidResponse(retVal))
+                {
+                    if (mIsClosing)
+                        retVal = Result.CHANNELCLOSING;
+                }
+
                 // update statistics counters
-                AdjustResultCounters(retVal);
+                UpdateResultCounters(retVal);
 
                 return  retVal;
             }
@@ -888,9 +941,9 @@ namespace LST.Modbus
                     // success response
 
                     // update statistics counters
-                    AdjustResultCounters(retVal);
+                    UpdateResultCounters(retVal);
                 }
-                else if (IsExceptionResponse(retVal))
+                else if (ResultIsExceptionResponse(retVal))
                 {
                     // exception response
                 }
@@ -910,9 +963,35 @@ namespace LST.Modbus
 
         #endregion
 
-        public static bool IsExceptionResponse(Result resultCode)
+        public static bool ResultIsValidResponse(Result resultCode)
         {
-            return ((resultCode >= Result.ILLEGALFUNCTIONEXCEPTION) && (resultCode <= Result.UNDEFINEDEXCEPTION));
+            return (    (resultCode == Result.SUCCESS)
+                     || (resultCode == Result.ILLEGALFUNCTIONEXCEPTION)
+                     || (resultCode == Result.ILLEGALADDRESSEXCEPTION)
+                     || (resultCode == Result.ILLEGALDATAVALUEEXCEPTION)
+                     || (resultCode == Result.SLAVEDEVICEFAILUREEXCEPTION)
+                     || (resultCode == Result.ACKFORLONGDURATIONEXCEPTION)
+                     || (resultCode == Result.SLAVEDEVICEBUSYEXCEPTION)
+                     || (resultCode == Result.NEGATIVEACKEXCEPTION)
+                     || (resultCode == Result.MEMORYPARITYERROREXCEPTION)
+                     || (resultCode == Result.GATEWAYPATHUNAVAILABLEEXCEPTION)
+                     || (resultCode == Result.GATEWAYTARGETDEVICEFAILEDTORESPONDEXCEPTION)
+                     || (resultCode == Result.UNDEFINEDEXCEPTION));
+        }
+
+        public static bool ResultIsExceptionResponse(Result resultCode)
+        {
+            return (   (resultCode == Result.ILLEGALFUNCTIONEXCEPTION)
+                    || (resultCode == Result.ILLEGALADDRESSEXCEPTION)
+                    || (resultCode == Result.ILLEGALDATAVALUEEXCEPTION)
+                    || (resultCode == Result.SLAVEDEVICEFAILUREEXCEPTION)
+                    || (resultCode == Result.ACKFORLONGDURATIONEXCEPTION)
+                    || (resultCode == Result.SLAVEDEVICEBUSYEXCEPTION)
+                    || (resultCode == Result.NEGATIVEACKEXCEPTION)
+                    || (resultCode == Result.MEMORYPARITYERROREXCEPTION)
+                    || (resultCode == Result.GATEWAYPATHUNAVAILABLEEXCEPTION)
+                    || (resultCode == Result.GATEWAYTARGETDEVICEFAILEDTORESPONDEXCEPTION)
+                    || (resultCode == Result.UNDEFINEDEXCEPTION));
         }
 
         // convert resultcode to text
@@ -981,6 +1060,9 @@ namespace LST.Modbus
                     break;
                 case Result.CHANNELNOTOPEN:
                     ReturnValue = "CHANNEL NOT OPEN";
+                    break;
+                case Result.CHANNELCLOSING:
+                    ReturnValue = "CHANNEL CLOSING";
                     break;
                 case Result.UNSUPPORTED:
                     ReturnValue = "UNSUPPORTED";
@@ -1115,7 +1197,7 @@ namespace LST.Modbus
                 // must do here to count the errors of first tries
                 if (result != Result.SUCCESS)
                 {
-                    AdjustResultCounters(result);
+                    UpdateResultCounters(result);
                 }
             }
             while (ResultNeedsRetry(result) && (mytries < Tries));
