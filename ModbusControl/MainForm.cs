@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Text;
 using System.Xml;
 using System.Xml.Schema;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 using RJCP.IO.Ports;
 using LST.Helpers;
 using LST.Modbus;
@@ -35,8 +36,8 @@ namespace ModbusControl
         private bool ProjectIsOpen; // true if project is successully opened
         private bool ConnectionInUse; // true while connecting, connected or disconnecting
         private bool ConnectionIsOpen; // true while having a successful connection
-        private bool PollingIsStarted; // default: start polling if connection is opened
-        private bool PollOnceIsStarted;
+        private bool PollingIsRunning; // default: start polling if connection is opened
+        private int PollOnceState;  // poll once status: 0=none, 1=request, 2=running
         private TOptions Options; // Some options, not in project file
         public ModbusInterface mb;
         private Logger Logger1;
@@ -664,8 +665,11 @@ namespace ModbusControl
             // poll tab page once
             // button and menu will be disabled 
 
-            PollOnceIsStarted = true;
-            UpdateMenus();
+            if (PollOnceState == 0)
+            {
+                PollOnceState = 1;
+                UpdateMenus();
+            }
 
             // button and menu will be re-enabled after poll once
         }
@@ -689,14 +693,14 @@ namespace ModbusControl
 
         private void StartPolling()
         {
-            PollingIsStarted = true;
+            PollingIsRunning = true;
             UpdateMenus();
             UpdateStatusBar();
         }
 
         private void StopPolling()
         {
-            PollingIsStarted = false;
+            PollingIsRunning = false;
             UpdateMenus();
             UpdateStatusBar();
         }
@@ -739,7 +743,7 @@ namespace ModbusControl
             {
                 // save status
                 bool SavedConnectionIsOpen = ConnectionIsOpen;
-                bool SavedPollingIsStarted = PollingIsStarted;
+                bool SavedPollingIsRunning = PollingIsRunning;
 
                 // Stop polling
                 StopAllCommunications();
@@ -761,7 +765,7 @@ namespace ModbusControl
                     // autostart communication
                     // if configured in mbc: use that
                     // if not configured: use saved state
-                    CheckAutoStart(SavedConnectionIsOpen, SavedPollingIsStarted);
+                    CheckAutoStart(SavedConnectionIsOpen, SavedPollingIsRunning);
                 }
             }
         }
@@ -869,7 +873,7 @@ namespace ModbusControl
                    || (configform.ConnectionInterFrameDelay != Project.Connection.InterFrameDelay));
 
             bool ReopenConnection = ConnectionIsOpen && ConnectionChange;
-            bool SavedPollingIsStarted = PollingIsStarted;
+            bool SavedPollingIsRunning = PollingIsRunning;
 
             if (ReopenConnection)
             {
@@ -914,7 +918,7 @@ namespace ModbusControl
             {
                 OpenConnection();
 
-                if (ConnectionIsOpen && SavedPollingIsStarted)
+                if (ConnectionIsOpen && SavedPollingIsRunning)
                 {
                     StartPolling();
                 }
@@ -1089,11 +1093,11 @@ namespace ModbusControl
                 OpenConnectionToolbutton.Enabled = openConnectionMenuItem.Enabled;
                 closeConnectionMenuItem.Enabled = ConnectionIsOpen;
                 CloseConnectionToolbutton.Enabled = closeConnectionMenuItem.Enabled;
-                startPollingMenuItem.Enabled = ConnectionIsOpen && (tabControl1.TabPages.Count > 0) && !PollingIsStarted;
+                startPollingMenuItem.Enabled = ConnectionIsOpen && (tabControl1.TabPages.Count > 0) && !PollingIsRunning && (PollOnceState == 0);
                 StartPollingToolbutton.Enabled = startPollingMenuItem.Enabled;
-                stopPollingMenuItem.Enabled = ConnectionIsOpen && PollingIsStarted;
+                stopPollingMenuItem.Enabled = ConnectionIsOpen && PollingIsRunning;
                 StopPollingToolbutton.Enabled = stopPollingMenuItem.Enabled;
-                pollOnceMenuItem.Enabled = ConnectionIsOpen && (tabControl1.TabPages.Count > 0) && !PollingIsStarted && !PollOnceIsStarted;
+                pollOnceMenuItem.Enabled = ConnectionIsOpen && (tabControl1.TabPages.Count > 0) && !PollingIsRunning && (PollOnceState == 0);
                 PollOnceToolbutton.Enabled = pollOnceMenuItem.Enabled;
 
                 // Action items
@@ -1767,8 +1771,9 @@ namespace ModbusControl
                 Stopwatch Timer = new Stopwatch();
                 while (!PollingThread_CancelToken.IsCancellationRequested)
                 {
-                    // make a threadsafe poll once flag, so it can't be set between reading and resetting
-                    bool safePollOnce = PollOnceIsStarted;
+                    // Poll-once requested? Then start it (synced with PollingThread)
+                    if (PollOnceState == 1)
+                        PollOnceState = 2;
 
                     // measure the time used by the reads
                     Timer.Restart();
@@ -1777,7 +1782,7 @@ namespace ModbusControl
                     TabIsChanged = false;
 
                     // Polling enabled?
-                    if (PollingIsStarted || safePollOnce)
+                    if (PollingIsRunning || (PollOnceState == 2))
                     {
                         // do reads 
                         // also handles pending writes because otherwise they would be delayed too much
@@ -1789,9 +1794,9 @@ namespace ModbusControl
                         }
 
                         // if poll-once ended: update menus
-                        if (safePollOnce)
+                        if (PollOnceState == 2)
                         {
-                            PollOnceIsStarted = false;
+                            PollOnceState = 0;
                             UpdateMenus();
                         }
 
@@ -1801,15 +1806,17 @@ namespace ModbusControl
 
                     // now wait for the sample time to pass
                     // abort quickly if pollingthread canceled or user tab change or other reason
-                    int timeToWait = 10;
-                    while ((timeToWait > 0) && ContinuePolling())
+                    // do the DoPendingWrites() and Sleep at least once
+                    int timeToWait = 0;                    
+                    do
                     {
                         // do possible pending writes
                         DoPendingWrites();
-                        // sleep  a bit to avoid hogging the CPU, but not too long to avoid missing the next sample time
-                        Thread.Sleep(10);
+                        // sleep  a bit to avoid hogging the CPU
+                        Thread.Sleep(10);  
                         timeToWait = Project.Options.Samplerate - (int)Timer.ElapsedMilliseconds;
                     }
+                    while ((timeToWait > 0) && ContinuePolling());
                 }
             }
             catch (Exception ex)
@@ -1829,10 +1836,10 @@ namespace ModbusControl
         // returns false to stop polling or waiting for next poll
         private bool ContinuePolling()
         {
-            return (   !PollingThread_CancelToken.IsCancellationRequested)
-                    && (PollingIsStarted || PollOnceIsStarted)
-                    && MainPollingIsEnabled
-                    && (TabIsChanged == false);
+            return !PollingThread_CancelToken.IsCancellationRequested
+                && (PollingIsRunning || (PollOnceState == 2))
+                && MainPollingIsEnabled
+                && !TabIsChanged;
         }
 
         private void InitiateStopPollingThread()
@@ -1973,8 +1980,8 @@ namespace ModbusControl
                                 if (Options.StopOnError)
                                 {
                                     // stop polling immediately
-                                    PollingIsStarted = false;
-                                    PollOnceIsStarted = false;
+                                    PollingIsRunning = false;
+                                    PollOnceState = 0;
                                     // tell the user
                                     string msg = "Polling stopped because of 'Stop polling on error' option!" + Environment.NewLine
                                                + "Read failed: Slave=" + Project.Connection.SlaveID + ", reg=" + varp.Reg + ", quant=" + varp.Size + Environment.NewLine
@@ -2001,8 +2008,8 @@ namespace ModbusControl
                         if (Options.StopOnError)
                         {
                             // stop polling immediately
-                            PollingIsStarted = false;
-                            PollOnceIsStarted = false;
+                            PollingIsRunning = false;
+                            PollOnceState = 0;
                             // tell the user
                             string msg = "Polling stopped because of 'Stop polling on error' option!" + Environment.NewLine
                                        + "Read failed: Slave=" + Project.Connection.SlaveID + ", reg=" + grp.readFirstReg + ", quant=" + grp.readRegCount + Environment.NewLine
@@ -2748,8 +2755,9 @@ namespace ModbusControl
                 Color col = StatusbarDefaultBackColor;
                 if (ConnectionIsOpen)
                 {
-                    if (PollingIsStarted)
+                    if (PollingIsRunning)
                     {
+                        // polling is running
                     }
                     else
                     {
