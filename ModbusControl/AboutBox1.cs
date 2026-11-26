@@ -84,10 +84,10 @@ namespace ModbusControl
                     throw new FileNotFoundException("The license file could not be found.", pathToLicenseFile);
 
                 Process.Start(new ProcessStartInfo
-                    {
-                        FileName = pathToLicenseFile,
-                        UseShellExecute = true   // required in .NET Core/5+ to open with the default app
-                    });
+                {
+                    FileName = pathToLicenseFile,
+                    UseShellExecute = true   // required in .NET Core/5+ to open with the default app
+                });
 
                 LicenseLinkLbl.LinkVisited = true;
             }
@@ -100,6 +100,24 @@ namespace ModbusControl
             {
                 MessageBox.Show($"An unexpected error occurred:\n{ex.Message}",
                     "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void HomepageLinklbl_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            try
+            {
+                Process.Start(new ProcessStartInfo
+                {
+                    FileName = "https://github.com/lsteynen/ModbusControl",
+                    UseShellExecute = true
+                });
+
+                HomepageLinklbl.LinkVisited = true;   
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Could not open the link: " + ex.Message);
             }
         }
 

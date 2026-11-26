@@ -37,6 +37,7 @@
             DotNetVersionLbl = new Label();
             LicenseLinkLbl = new LinkLabel();
             LinkLbl2 = new LinkLabel();
+            HomepageLinklbl = new LinkLabel();
             ((System.ComponentModel.ISupportInitialize)LogoPicbox).BeginInit();
             SuspendLayout();
             // 
@@ -103,7 +104,7 @@
             // OKBtn
             // 
             OKBtn.DialogResult = DialogResult.Cancel;
-            OKBtn.Location = new Point(160, 145);
+            OKBtn.Location = new Point(160, 159);
             OKBtn.Name = "OKBtn";
             OKBtn.Size = new Size(62, 23);
             OKBtn.TabIndex = 5;
@@ -125,7 +126,7 @@
             // 
             LicenseLinkLbl.AutoSize = true;
             LicenseLinkLbl.LinkArea = new LinkArea(50, 14);
-            LicenseLinkLbl.Location = new Point(126, 117);
+            LicenseLinkLbl.Location = new Point(126, 133);
             LicenseLinkLbl.Name = "LicenseLinkLbl";
             LicenseLinkLbl.Size = new Size(348, 17);
             LicenseLinkLbl.TabIndex = 35;
@@ -146,12 +147,26 @@
             LinkLbl2.Text = "ModbusControl is created and maintained by lsteynen.";
             LinkLbl2.UseCompatibleTextRendering = true;
             // 
+            // HomepageLinklbl
+            // 
+            HomepageLinklbl.AutoSize = true;
+            HomepageLinklbl.LinkArea = new LinkArea(10, 35);
+            HomepageLinklbl.Location = new Point(125, 118);
+            HomepageLinklbl.Name = "HomepageLinklbl";
+            HomepageLinklbl.Size = new Size(253, 17);
+            HomepageLinklbl.TabIndex = 37;
+            HomepageLinklbl.TabStop = true;
+            HomepageLinklbl.Text = "Homepage: //github.com/lsteynen/ModbusControl";
+            HomepageLinklbl.UseCompatibleTextRendering = true;
+            HomepageLinklbl.LinkClicked += HomepageLinklbl_LinkClicked;
+            // 
             // AboutBox1
             // 
             AutoScaleDimensions = new SizeF(96F, 96F);
             AutoScaleMode = AutoScaleMode.Dpi;
-            ClientSize = new Size(476, 181);
+            ClientSize = new Size(476, 192);
             Controls.Add(LicenseLinkLbl);
+            Controls.Add(HomepageLinklbl);
             Controls.Add(LinkLbl2);
             Controls.Add(FormSizeLbl);
             Controls.Add(DotNetVersionLbl);
@@ -189,5 +204,6 @@
         private Button OKBtn;
         private LinkLabel LicenseLinkLbl;
         private LinkLabel LinkLbl2;
+        private LinkLabel HomepageLinklbl;
     }
 }
