@@ -38,7 +38,7 @@
             // CancelBtn
             // 
             CancelBtn.DialogResult = DialogResult.Cancel;
-            CancelBtn.Location = new Point(179, 92);
+            CancelBtn.Location = new Point(179, 84);
             CancelBtn.Name = "CancelBtn";
             CancelBtn.Size = new Size(75, 23);
             CancelBtn.TabIndex = 2;
@@ -48,7 +48,7 @@
             // MessageLabel
             // 
             MessageLabel.AutoSize = true;
-            MessageLabel.Location = new Point(84, 24);
+            MessageLabel.Location = new Point(84, 16);
             MessageLabel.Margin = new Padding(0, 0, 0, 12);
             MessageLabel.MaximumSize = new Size(400, 0);
             MessageLabel.MinimumSize = new Size(200, 40);
@@ -59,7 +59,7 @@
             // 
             // Pict
             // 
-            Pict.Location = new Point(24, 24);
+            Pict.Location = new Point(24, 16);
             Pict.Margin = new Padding(12, 12, 20, 12);
             Pict.Name = "Pict";
             Pict.Size = new Size(40, 40);
@@ -70,7 +70,7 @@
             // OKBtn
             // 
             OKBtn.DialogResult = DialogResult.OK;
-            OKBtn.Location = new Point(84, 92);
+            OKBtn.Location = new Point(84, 84);
             OKBtn.Name = "OKBtn";
             OKBtn.Size = new Size(75, 23);
             OKBtn.TabIndex = 1;
@@ -83,7 +83,7 @@
             AutoScaleDimensions = new SizeF(96F, 96F);
             AutoScaleMode = AutoScaleMode.Dpi;
             CancelButton = CancelBtn;
-            ClientSize = new Size(331, 127);
+            ClientSize = new Size(388, 119);
             Controls.Add(CancelBtn);
             Controls.Add(OKBtn);
             Controls.Add(MessageLabel);

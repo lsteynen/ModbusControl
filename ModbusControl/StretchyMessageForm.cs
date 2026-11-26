@@ -89,18 +89,18 @@ namespace LST.Helpers
             // labelMessagetext has maximum width, it grows in height as needed, and wraps text
 
             // get margins, DPI adjusted 
+            int hgap = AppDpiHelpers.ScaleValueFrom96DpiToThisDpiInt(20, DeviceDpi);
             int hmargin = AppDpiHelpers.ScaleValueFrom96DpiToThisDpiInt(30, DeviceDpi);
             int vmargin = AppDpiHelpers.ScaleValueFrom96DpiToThisDpiInt(14, DeviceDpi);
 
             // vertical space between text and buttons, DPI adjusted
-            int textButtonVertSpace = AppDpiHelpers.ScaleValueFrom96DpiToThisDpiInt(28, DeviceDpi);
+            int textButtonVertSpace = AppDpiHelpers.ScaleValueFrom96DpiToThisDpiInt(22, DeviceDpi);
 
             // new form width
             int newWidth = MessageLabel.Location.X + MessageLabel.PreferredSize.Width + hmargin;
 
             // buttons Y position
-            int buttonsY = MessageLabel.Location.Y + MessageLabel.PreferredSize.Height
-                    + textButtonVertSpace;
+            int buttonsY = MessageLabel.Location.Y + MessageLabel.PreferredSize.Height + textButtonVertSpace;
             OKBtn.Top = buttonsY;
             CancelBtn.Top = buttonsY;
 
@@ -114,11 +114,12 @@ namespace LST.Helpers
 
             ClientSize = new Size(newWidth, newHeight);
 
-            CenterButtons();
+            CenterVisibleButtons();
         }
 
-        private void CenterButtons()
+        private void CenterVisibleButtons()
         {
+            // list of visible buttons, left to right order
             var visibleButtons = new[] { OKBtn, CancelBtn }
                 .Where(b => b.Visible)
                 .ToList();
@@ -126,7 +127,12 @@ namespace LST.Helpers
             if (visibleButtons.Count == 0)
                 return;
 
-            int buttonSpacing = AppDpiHelpers.ScaleValueFrom96DpiToThisDpiInt(16, DeviceDpi);
+            // Fit each button to its text
+            OKBtn.Width = OKBtn.GetPreferredSize(Size.Empty).Width;
+            CancelBtn.Width = CancelBtn.GetPreferredSize(Size.Empty).Width;
+
+            // gap between buttons, DPI adjusted
+            int gap = AppDpiHelpers.ScaleValueFrom96DpiToThisDpiInt(16, DeviceDpi);
 
             // calculate total width of visible buttons including spacing
             int totalWidth = 0;
@@ -134,7 +140,7 @@ namespace LST.Helpers
             {
                 if (totalWidth > 0)
                 {
-                    totalWidth += buttonSpacing;
+                    totalWidth += gap;
                 }
                 totalWidth += b.Width;
             }
@@ -146,7 +152,7 @@ namespace LST.Helpers
             foreach (Button b in visibleButtons)
             {
                 b.Left = left;
-                left += b.Width + buttonSpacing;
+                left += b.Width + gap;
             }
         }
 

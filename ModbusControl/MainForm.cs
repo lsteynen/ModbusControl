@@ -1169,7 +1169,7 @@ namespace ModbusControl
                         + Environment.NewLine
                         + ex.Message + Environment.NewLine
                         + Environment.NewLine
-                        + "Or maybe you need to update ModbusControl to a newer version...";
+                        + "(Or maybe you need to update ModbusControl to a newer version...)";
 
                     System.Windows.Forms.DialogResult Result = form.ShowDialog();
                     form.Dispose();
