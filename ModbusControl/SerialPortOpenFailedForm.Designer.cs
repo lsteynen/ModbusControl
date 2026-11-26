@@ -28,45 +28,45 @@
         /// </summary>
         private void InitializeComponent()
         {
-            labelErrortext = new Label();
-            buttonCancel = new Button();
-            buttonOK = new Button();
+            ErrortextLabel = new Label();
+            CancelBtn = new Button();
+            OkBtn = new Button();
             label2 = new Label();
-            pic = new PictureBox();
-            comboSerialPort = new SerialPortCombobox();
+            Pict = new PictureBox();
+            SerialPortCombo = new SerialPortCombobox();
             flowLayoutPanel1 = new FlowLayoutPanel();
-            ((System.ComponentModel.ISupportInitialize)pic).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)Pict).BeginInit();
             flowLayoutPanel1.SuspendLayout();
             SuspendLayout();
             // 
-            // labelErrortext
+            // ErrortextLabel
             // 
-            labelErrortext.AutoSize = true;
-            labelErrortext.Location = new Point(69, 18);
-            labelErrortext.Name = "labelErrortext";
-            labelErrortext.Size = new Size(58, 13);
-            labelErrortext.TabIndex = 0;
-            labelErrortext.Text = "Error text...";
+            ErrortextLabel.AutoSize = true;
+            ErrortextLabel.Location = new Point(69, 18);
+            ErrortextLabel.Name = "ErrortextLabel";
+            ErrortextLabel.Size = new Size(58, 13);
+            ErrortextLabel.TabIndex = 0;
+            ErrortextLabel.Text = "Error text...";
             // 
-            // buttonCancel
+            // CancelBtn
             // 
-            buttonCancel.DialogResult = DialogResult.Cancel;
-            buttonCancel.Location = new Point(190, 109);
-            buttonCancel.Name = "buttonCancel";
-            buttonCancel.Size = new Size(75, 23);
-            buttonCancel.TabIndex = 3;
-            buttonCancel.Text = "Cancel";
-            buttonCancel.UseVisualStyleBackColor = true;
+            CancelBtn.DialogResult = DialogResult.Cancel;
+            CancelBtn.Location = new Point(190, 109);
+            CancelBtn.Name = "CancelBtn";
+            CancelBtn.Size = new Size(75, 23);
+            CancelBtn.TabIndex = 3;
+            CancelBtn.Text = "Cancel";
+            CancelBtn.UseVisualStyleBackColor = true;
             // 
-            // buttonOK
+            // OkBtn
             // 
-            buttonOK.DialogResult = DialogResult.OK;
-            buttonOK.Location = new Point(101, 109);
-            buttonOK.Name = "buttonOK";
-            buttonOK.Size = new Size(75, 23);
-            buttonOK.TabIndex = 2;
-            buttonOK.Text = "OK";
-            buttonOK.UseVisualStyleBackColor = true;
+            OkBtn.DialogResult = DialogResult.OK;
+            OkBtn.Location = new Point(101, 109);
+            OkBtn.Name = "OkBtn";
+            OkBtn.Size = new Size(75, 23);
+            OkBtn.TabIndex = 2;
+            OkBtn.Text = "OK";
+            OkBtn.UseVisualStyleBackColor = true;
             // 
             // label2
             // 
@@ -78,29 +78,29 @@
             label2.TabIndex = 0;
             label2.Text = "Choose another serial port:";
             // 
-            // pic
+            // Pict
             // 
-            pic.Location = new Point(21, 18);
-            pic.Name = "pic";
-            pic.Size = new Size(40, 40);
-            pic.SizeMode = PictureBoxSizeMode.StretchImage;
-            pic.TabIndex = 17;
-            pic.TabStop = false;
+            Pict.Location = new Point(21, 18);
+            Pict.Name = "Pict";
+            Pict.Size = new Size(40, 40);
+            Pict.SizeMode = PictureBoxSizeMode.StretchImage;
+            Pict.TabIndex = 17;
+            Pict.TabStop = false;
             // 
-            // comboSerialPort
+            // SerialPortCombo
             // 
-            comboSerialPort.FormattingEnabled = true;
-            comboSerialPort.Location = new Point(139, 3);
-            comboSerialPort.MaxLength = 30;
-            comboSerialPort.Name = "comboSerialPort";
-            comboSerialPort.Size = new Size(91, 21);
-            comboSerialPort.TabIndex = 1;
+            SerialPortCombo.FormattingEnabled = true;
+            SerialPortCombo.Location = new Point(139, 3);
+            SerialPortCombo.MaxLength = 30;
+            SerialPortCombo.Name = "SerialPortCombo";
+            SerialPortCombo.Size = new Size(91, 21);
+            SerialPortCombo.TabIndex = 1;
             // 
             // flowLayoutPanel1
             // 
             flowLayoutPanel1.AutoSize = true;
             flowLayoutPanel1.Controls.Add(label2);
-            flowLayoutPanel1.Controls.Add(comboSerialPort);
+            flowLayoutPanel1.Controls.Add(SerialPortCombo);
             flowLayoutPanel1.Location = new Point(21, 64);
             flowLayoutPanel1.Name = "flowLayoutPanel1";
             flowLayoutPanel1.Size = new Size(255, 30);
@@ -109,16 +109,16 @@
             // 
             // SerialPortOpenFailedForm
             // 
-            AcceptButton = buttonOK;
+            AcceptButton = OkBtn;
             AutoScaleDimensions = new SizeF(96F, 96F);
             AutoScaleMode = AutoScaleMode.Dpi;
-            CancelButton = buttonCancel;
+            CancelButton = CancelBtn;
             ClientSize = new Size(363, 145);
             Controls.Add(flowLayoutPanel1);
-            Controls.Add(pic);
-            Controls.Add(buttonCancel);
-            Controls.Add(buttonOK);
-            Controls.Add(labelErrortext);
+            Controls.Add(Pict);
+            Controls.Add(CancelBtn);
+            Controls.Add(OkBtn);
+            Controls.Add(ErrortextLabel);
             Font = new Font("Microsoft Sans Serif", 8.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
             FormBorderStyle = FormBorderStyle.FixedDialog;
             MaximizeBox = false;
@@ -130,7 +130,7 @@
             StartPosition = FormStartPosition.CenterScreen;
             Text = "ModbusControl - Error";
             Shown += SerialPortOpenFailedForm_Shown;
-            ((System.ComponentModel.ISupportInitialize)pic).EndInit();
+            ((System.ComponentModel.ISupportInitialize)Pict).EndInit();
             flowLayoutPanel1.ResumeLayout(false);
             flowLayoutPanel1.PerformLayout();
             ResumeLayout(false);
@@ -139,12 +139,12 @@
         }
 
         #endregion
-        private System.Windows.Forms.Label labelErrortext;
-        private System.Windows.Forms.Button buttonCancel;
-        private System.Windows.Forms.Button buttonOK;
-        private System.Windows.Forms.PictureBox pic;
+        private System.Windows.Forms.Label ErrortextLabel;
+        private System.Windows.Forms.Button CancelBtn;
+        private System.Windows.Forms.Button OkBtn;
+        private System.Windows.Forms.PictureBox Pict;
         private System.Windows.Forms.Label label2;
-        private SerialPortCombobox comboSerialPort;
+        private SerialPortCombobox SerialPortCombo;
         private FlowLayoutPanel flowLayoutPanel1;
     }
 }

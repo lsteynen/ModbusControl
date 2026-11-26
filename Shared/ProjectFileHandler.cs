@@ -10,7 +10,6 @@ using System.Xml.Linq;
 using System.Xml.Schema;
 using System.Linq;
 using System.Diagnostics;
-using RJCP.IO.Ports;
 using LST.Helpers;
 
 namespace ModbusControl
@@ -22,7 +21,7 @@ namespace ModbusControl
     {
         // Types
 
-        private string[] ConnectionTypeTexts = new string[] { "serial/rtu", "modbus/tcp", "rtu/tcp" }; // Must be order of Global.eConnectionType.SerialRTU
+        private readonly string[] ConnectionTypeTexts = new string[] { "serial/rtu", "modbus/tcp", "rtu/tcp" }; // Must be order of Global.eConnectionType.SerialRTU
 
         public struct TSize
         {
@@ -38,7 +37,7 @@ namespace ModbusControl
             public string SerialPort;
             public int SerialBaudrate;
             public int SerialNrOfBits;
-            public Parity SerialParity;
+            public LST.Helpers.Parity.EParity SerialParity;              
             public int SerialEndOfMessageTimeout;
             public bool SerialOneWireEchoSuppression;
             public string IPAddress;
@@ -119,7 +118,7 @@ namespace ModbusControl
         }
 
         // list of XML tags to convert to lower case
-        List<string> TagsToConvertValueToLowerList = new List<string> { "connection", "parity", "writeholdingregisterfc",
+        readonly List<string> TagsToConvertValueToLowerList = new List<string> { "connection", "parity", "writeholdingregisterfc",
                                         "int32endian", "float32endian", "onewireechosuppression",
                                         "showinfo", "enable", "rw", "expandfields", "type"};
 
@@ -154,7 +153,7 @@ namespace ModbusControl
             Connection.SerialPort = "COM1";
             Connection.SerialBaudrate = 9600;
             Connection.SerialNrOfBits = 8;
-            Connection.SerialParity = Parity.None;
+            Connection.SerialParity = LST.Helpers.Parity.EParity.None;
             Connection.SerialEndOfMessageTimeout = 100;
             Connection.SerialOneWireEchoSuppression = false;
             Connection.IPAddress = "";
@@ -320,7 +319,7 @@ namespace ModbusControl
         /// <summary>
         /// See if a filename matches a mask string like 'file*.mbc'
         /// </summary>
-        private bool WildcardMatch(String s, String wildcard, bool case_sensitive)
+        private static bool WildcardMatch(String s, String wildcard, bool case_sensitive)
         {
             // Replace the * with an .* and the ? with a dot. Put ^ at the
             // beginning and a $ at the end
@@ -479,10 +478,10 @@ namespace ModbusControl
                 {
                     Seen = true;
                     string TmpString = xe.Value.Trim();
-                    Parity TmpParity;
-                    if (Enum.TryParse<Parity>(TmpString, true, out TmpParity))
+                    LST.Helpers.Parity.EParity tmpParity;
+                    if (LST.Helpers.Parity.TryParseParity(TmpString, out tmpParity))
                     {
-                        Connection.SerialParity = TmpParity;
+                        Connection.SerialParity = tmpParity;
                     }
                     else
                     {
@@ -785,6 +784,7 @@ namespace ModbusControl
             return Seen;
         }
 
+        
 
         /// <summary>
         /// Process a <tab> element
@@ -1352,7 +1352,7 @@ namespace ModbusControl
         /// </summary>
         /// <param name="pxe"></param>
         /// <returns>Dictionary with items. Null if there are no items or Elsetext. </returns>
-        private Global.CEnum ProcessEnumElementIntoCEnum(XElement pxe)
+        private static Global.CEnum ProcessEnumElementIntoCEnum(XElement pxe)
         {
             Global.CEnum myEnum = new Global.CEnum();
             myEnum.Dict = new Dictionary<Int64, string>();
@@ -1705,7 +1705,7 @@ namespace ModbusControl
 
             if (fileSeen && (string.IsNullOrEmpty(fileName) == false))
             {
-                string incFilePath = System.IO.Path.GetFullPath(fileName);
+                string incFilePath;
 
                 // get path of include file
                 // if it is absolute (rooted) take that
@@ -1805,7 +1805,7 @@ namespace ModbusControl
         /// Finds elements with the given case and in lower case.
         /// </summary>
         /// <return>null if not found</return>
-        private XElement FindElement(XElement parent, string name)
+        private static XElement FindElement(XElement parent, string name)
         {
             // get elements with this name
             XElement xel = parent.Element(name);
@@ -1822,7 +1822,7 @@ namespace ModbusControl
         /// <summary>
         /// Remove whitespace and limit the string in length
         /// </summary>
-        private string LimitXmlTextLength(string text)
+        private static string LimitXmlTextLength(string text)
         {
             const int maxlen = 180;
             char[] outs = new char[maxlen];
@@ -1858,7 +1858,7 @@ namespace ModbusControl
         /// <param name="s">string</param>
         /// <param name="result">result value</param>
         /// <returns>true if valid, false if not</returns>
-        private bool TryParseBool(string s, out bool result)
+        private static bool TryParseBool(string s, out bool result)
         {
             result = false;
             if (string.Compare(s, "true", StringComparison.OrdinalIgnoreCase) == 0)
@@ -1882,7 +1882,7 @@ namespace ModbusControl
         /// <param name="s">string</param>
         /// <param name="result">result value</param>
         /// <returns>true if valid, false if not</returns>
-        private bool TryParseEndian(string s, out Global.eEndian result)
+        private static bool TryParseEndian(string s, out Global.eEndian result)
         {
             result = Global.eEndian.Little;
             if (string.Compare(s, "little", StringComparison.OrdinalIgnoreCase) == 0)
@@ -1939,7 +1939,7 @@ namespace ModbusControl
         }
 
 
-        private bool GetReadWriteFlags(string text, out bool bRead, out bool bWrite)
+        private static bool GetReadWriteFlags(string text, out bool bRead, out bool bWrite)
         {
             // allow "r", "w", "rw", "wr" or ""
             // allow upper and lower case
@@ -1970,7 +1970,7 @@ namespace ModbusControl
         }
 
 
-        private bool GetVarTypestringToFormatAndSize(string text, out Global.eFormat Format, out int Size)
+        private static bool GetVarTypestringToFormatAndSize(string text, out Global.eFormat Format, out int Size)
         {
             text = text.ToLower();
 
@@ -2057,7 +2057,7 @@ namespace ModbusControl
             return false;
         }
 
-        private bool GetBitfieldTypestringToFormat(string text, out Global.eFormat Format)
+        private static bool GetBitfieldTypestringToFormat(string text, out Global.eFormat Format)
         {
             text = text.ToLower();
 
@@ -2090,7 +2090,7 @@ namespace ModbusControl
         /// Get the number from a string like "string200"
         /// Return 0 on error
         /// </summary>
-        private int GetNumberFromElementValue(string text, string prefix)
+        private static int GetNumberFromElementValue(string text, string prefix)
         {
             int number = 0;
 
@@ -2114,7 +2114,7 @@ namespace ModbusControl
             return number;
         }
 
-        private TFilePosition GetFilePos(XElement xe)
+        private static TFilePosition GetFilePos(XElement xe)
         {
             TFilePosition result;
             result.Line = 0;
@@ -2433,7 +2433,7 @@ namespace ModbusControl
         /// <summary>
         /// Iterate all XML nodes and call a handler for each
         /// </summary>
-        private void XMLIterateAllNodesForHandler(XDocument doc, XMLIterateAllNodesCallback handler)
+        private static void XMLIterateAllNodesForHandler(XDocument doc, XMLIterateAllNodesCallback handler)
         {
             foreach (XElement xe in doc.Elements())
             {
@@ -2444,7 +2444,7 @@ namespace ModbusControl
         /// <summary>
         /// Helper for XMLIterateAllNodesForHandler recursivity
         /// </summary>
-        private void XMLIterateAllNodesForHandlerRec(XElement xe, XMLIterateAllNodesCallback handler)
+        private static void XMLIterateAllNodesForHandlerRec(XElement xe, XMLIterateAllNodesCallback handler)
         {
             // call the handler 
             handler(xe);
@@ -2573,7 +2573,7 @@ namespace ModbusControl
         /// Iterate through XML elements, recursive
         /// Return null if not found
         /// </summary>
-        private XElement XmlFindElement(XElement xe, string name)
+        private static XElement XmlFindElement(XElement xe, string name)
         {
             // found?
             if (xe.Name == name)
@@ -2630,7 +2630,7 @@ namespace ModbusControl
             }
         }
 
-        private void DumpXMLElementRec(XElement xel, int level)
+        private static void DumpXMLElementRec(XElement xel, int level)
         {
             string s;
 
@@ -2638,8 +2638,6 @@ namespace ModbusControl
             //s += ", " + xel.NodeType.ToString();
             //s += ", " + xel.HasElements.ToString();
             s += ", " + LeftStr(xel.Value.ToString(), 20);
-
-            XmlNodeType t = xel.NodeType;
 
             Debug.Print(s);
 
@@ -2649,7 +2647,7 @@ namespace ModbusControl
             }
         }
 
-        private string LeftStr(string s, int len)
+        private static string LeftStr(string s, int len)
         {
             int fraglen = Math.Min(len, s.Length);
             return s.Substring(0, fraglen);
@@ -2661,12 +2659,12 @@ namespace ModbusControl
         /// <param name="elemName">Name that was found</param>
         /// <param name="name">Name we are looking for</param>
         /// <returns></returns>
-        private bool CheckElementNameMatch(string elemName, string name)
+        private static bool CheckElementNameMatch(string elemName, string name)
         {
             if (elemName == name)
                 return true;
 
-            if (elemName == name.ToLower())
+            if (elemName.Equals(name, StringComparison.CurrentCultureIgnoreCase))
                 return true;
 
             return false;

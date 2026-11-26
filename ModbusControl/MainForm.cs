@@ -4,7 +4,6 @@ using System.Text;
 using System.Xml;
 using System.Xml.Schema;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
-using RJCP.IO.Ports;
 using LST.Helpers;
 using LST.Modbus;
 
@@ -30,7 +29,7 @@ namespace ModbusControl
             public bool CheckForUpdates;
         }
 
-        private CSettings Settings1;
+        private readonly CSettings Settings1;
         public string ProjectPath; // Path of current project file (null if none, assigned if open or tried to open)
         public CProject Project; // Loaded project
         private bool ProjectIsOpen; // true if project is successully opened
@@ -40,7 +39,7 @@ namespace ModbusControl
         private int PollOnceState;  // poll once status: 0=none, 1=request, 2=running
         private TOptions Options; // Some options, not in project file
         public ModbusInterface mb;
-        private Logger Logger1;
+        private readonly Logger Logger1;
         private SaveConfigurationForm SaveConfigurationForm1;
         private DiagnosticsForm DiagnosticscountersForm1;
         private Thread PollingThread;
@@ -50,12 +49,12 @@ namespace ModbusControl
         public bool MainPollingIsEnabled = true;
         private bool TabIsChanged;
         private float zoomFactor = 1.0f;
-        private float zoomFactorStep = 1.10f;
-        private float zoomFactorMaximum = 10.0f;
-        private ModbusServer TcpBridge;
-        private Thread? updaterThread;   // Updater thread
+        private readonly float zoomFactorStep = 1.10f;
+        private readonly float zoomFactorMaximum = 10.0f;
+        private readonly ModbusServer TcpBridge;
+        private Thread updaterThread;   // Updater thread
         private readonly CancellationTokenSource updaterCancellationToken = new();   // Updater thread cancellation token
-        private Object UpdaterLock = new Object();  // lock for safely terminating the updater thread
+        private readonly Lock UpdaterLock = new();  // lock for safely terminating the updater thread
         private CommandlineProc CommandlineArgs;
         private float CurrentRegisterColumnWidthWeight;
         private float CurrentDescriptionColumnWidthWeight;
@@ -71,8 +70,8 @@ namespace ModbusControl
             public Int16[] Data;
         };
         // list of pending write entries
-        private List<WriteEntry> WriteList = new List<WriteEntry>();
-        private readonly object WriteListLock = new object();
+        private readonly List<WriteEntry> WriteList = [];
+        private readonly Lock WriteListLock = new();
 
         // the import form, make it global and use show/hide to keep the settings
         ImportForm ImportForm;
@@ -88,7 +87,7 @@ namespace ModbusControl
 
             // Set in code, not the designer
             // doing it in the designer makes MainForm show as modified every time it's opened
-            tbFilterText.Dock = DockStyle.Fill;
+            FilterTextTextbox.Dock = DockStyle.Fill;
 
             // Add the legacy Windows/ code - page encodings to the encodings that the System.Text.Encoding class knows how to provide.
             // needed in .net core 3.0 and later, because some of the legacy encodings are used in this app
@@ -115,17 +114,17 @@ namespace ModbusControl
             this.MouseWheel += new MouseEventHandler(Form_MouseWheel);
 
             // Create logger
-            Logger1 = new Logger();
+            Logger1 = new();
             Logger1.Text = "ModbusControl logging";
             Logger1.Capacity = 5000;
 
             // Create modbus interface
-            mb = new ModbusInterface();
+            mb = new();
             mb.RegisterToOffset1 = registerToOffset;    // attach RegisterToOffset conversion
             mb.Logger = Logger1;                        // attach logger 
 
             // create modbus/tcp server
-            TcpBridge = new ModbusServer();
+            TcpBridge = new();
             // attach logger
             TcpBridge.Logger = Logger1;
             // connect it to our modbus interface
@@ -204,7 +203,7 @@ namespace ModbusControl
             Options.CheckForUpdates = Settings1.Shared.Updater.CheckForUpdates;
 
             // Findbox
-            filterPanel.Visible = Options.ShowFindBox;
+            FilterPanel.Visible = Options.ShowFindBox;
 
             // MRU list
             recentsToolStripMenuItem1.LoadList(Settings1.Roaming.MbcMruList);
@@ -236,7 +235,7 @@ namespace ModbusControl
                 {
                     for (int i = 0; i < files.Length; ++i)
                     {
-                        ToolStripMenuItem tmi = new ToolStripMenuItem();
+                        ToolStripMenuItem tmi = new();
                         tmi.Text = System.IO.Path.GetFileName(files[i]);
                         tmi.Tag = files[i];
                         tmi.Click += ToolStrip1_HelpFileMenuItemClick;
@@ -262,7 +261,7 @@ namespace ModbusControl
                 {
                     for (int i = 0; i < files.Length; ++i)
                     {
-                        ToolStripMenuItem tmi = new ToolStripMenuItem();
+                        ToolStripMenuItem tmi = new();
                         tmi.Text = "Open demo project " + System.IO.Path.GetFileName(files[i]);
                         tmi.Tag = files[i];
                         tmi.Click += ToolStrip1_HelpFileMenuItemClick;
@@ -286,8 +285,8 @@ namespace ModbusControl
         {
             // Is dit een nieuwe release? Vraag dan om de release notes te tonen.
             // We negeren Revision om te voorkomen dat gebruikers deze dialog krijgen als ze een pre-release nieuwe exe kregen.
-            Version CurVers = new Version(AppHelpers.VersionNum.Major, AppHelpers.VersionNum.Minor, AppHelpers.VersionNum.Build);
-            Version PrevVers = new Version(Settings1.Shared.LastRunVersion.Major, Settings1.Shared.LastRunVersion.Minor, Settings1.Shared.LastRunVersion.Build);
+            Version CurVers = new(AppHelpers.VersionNum.Major, AppHelpers.VersionNum.Minor, AppHelpers.VersionNum.Build);
+            Version PrevVers = new(Settings1.Shared.LastRunVersion.Major, Settings1.Shared.LastRunVersion.Minor, Settings1.Shared.LastRunVersion.Build);
             if (CurVers.CompareTo(PrevVers) > 0)
             {
                 // show release notes, if any
@@ -313,7 +312,7 @@ namespace ModbusControl
 #endif
 
             // process command line parameters
-            CommandlineArgs = new CommandlineProc();
+            CommandlineArgs = new();
             CommandlineArgs.versionString = AppHelpers.VersionString;
             try
             {
@@ -322,7 +321,7 @@ namespace ModbusControl
                 if (CommandlineArgs.ArgHelpSwitch == true)
                 {
                     // show command line usage
-                    StretchyMessageForm form = new StretchyMessageForm();
+                    StretchyMessageForm form = new();
                     form.Title = "ModbusControl";
                     form.MessageIcon = SystemIcons.Information;
                     form.MessageText = CommandlineArgs.GetUsageString();
@@ -407,7 +406,7 @@ namespace ModbusControl
             Settings1.Roaming.ClearFilterOnTabChange = Options.ClearFilterOnTabChange;
             Settings1.Roaming.MbcfileValidationEnable = Options.MbcfileValidationEnable;
             Settings1.Roaming.MbcfileValidationXSDFile = Options.MbcfileValidationXSDFile;
-            Settings1.Roaming.ShowFindFilterBox = filterPanel.Visible;
+            Settings1.Roaming.ShowFindFilterBox = FilterPanel.Visible;
             Settings1.Roaming.CustomEditorEnable = Options.CustomEditorEnable;
             Settings1.Roaming.CustomEditorCommand = Options.CustomEditorCommand;
             Debug.Print(DateTime.Now.TimeOfDay + ": 9) Save settings into Settings1");
@@ -494,11 +493,13 @@ namespace ModbusControl
         /// <returns></returns>
         private CSettings.ColumnWidthsType GetColumnWidthsInWeights()
         {
-            CSettings.ColumnWidthsType cw = new CSettings.ColumnWidthsType();
-            cw.registerWidthWeight = CurrentRegisterColumnWidthWeight;
-            cw.descriptionWidthWeight = CurrentDescriptionColumnWidthWeight;
-            cw.propertiesWidthWeight = CurrentPropertiesColumnWidthWeight;
-            cw.valueWidthWeight = CurrentValueColumnWidthWeight;
+            CSettings.ColumnWidthsType cw = new()
+            {
+                registerWidthWeight = CurrentRegisterColumnWidthWeight,
+                descriptionWidthWeight = CurrentDescriptionColumnWidthWeight,
+                propertiesWidthWeight = CurrentPropertiesColumnWidthWeight,
+                valueWidthWeight = CurrentValueColumnWidthWeight
+            };
             return cw;
         }
 
@@ -571,7 +572,7 @@ namespace ModbusControl
         /// <summary>
         /// Open recent file
         /// </summary>
-        private void recentsToolStripMenuItem1_ItemClick(object sender, EventArgs e)
+        private void RecentsToolStripMenuItem1_ItemClick(object sender, EventArgs e)
         {
             string path = sender.ToString();
 
@@ -793,8 +794,7 @@ namespace ModbusControl
         /// </summary>
         private void ConfigurationToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            ProjectConfigurationForm configform = new ProjectConfigurationForm();
-
+            ProjectConfigurationForm configform = new();
             // pass project values to form
             configform.ConnectionInUse = ConnectionInUse;
             configform.ConnectionType = Project.Connection.ConnectionType;
@@ -937,8 +937,7 @@ namespace ModbusControl
         /// </summary>
         private void OptionsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            OptionsForm optionsForm = new OptionsForm();
-
+            OptionsForm optionsForm = new();
             optionsForm.StopOnError = Options.StopOnError;
             optionsForm.BeepOnInputError = Options.BeepOnInputError;
             optionsForm.AutoNextRowOnEnter = Options.AutoNextRowOnEnter;
@@ -981,7 +980,7 @@ namespace ModbusControl
 
         private void AboutMenuItem_Click(object sender, EventArgs e)
         {
-            AboutBox1 about = new AboutBox1();
+            AboutBox1 about = new();
             about.VersionString = AppHelpers.VersionString;
             about.AppdataPath = Settings1.StoreRoamingPath;
             about.MainFormWidth = this.Width;
@@ -1024,7 +1023,7 @@ namespace ModbusControl
             if (CommandlineArgs.ArgBaudrate != null)
                 Project.Connection.SerialBaudrate = (int)CommandlineArgs.ArgBaudrate;
             if (CommandlineArgs.ArgParity != null)
-                Project.Connection.SerialParity = (Parity)CommandlineArgs.ArgParity;
+                Project.Connection.SerialParity = (LST.Helpers.Parity.EParity)CommandlineArgs.ArgParity;
             if (CommandlineArgs.ArgEndofmessagetimeout != null)
                 Project.Connection.SerialEndOfMessageTimeout = (int)CommandlineArgs.ArgEndofmessagetimeout;
             Project.Connection.SerialOneWireEchoSuppression = CommandlineArgs.ArgOnewireechosuppressionSwitch;
@@ -1075,30 +1074,30 @@ namespace ModbusControl
         {
             if (this.InvokeRequired)
             {
-                DelegateUpdateMenus del = new DelegateUpdateMenus(UpdateMenus);
+                DelegateUpdateMenus del = new(UpdateMenus);
                 this.BeginInvoke(del);
             }
             else
             {
                 // Project items
-                OpenProjectToolbutton.Enabled = true;
+                OpenProjectToolbtn.Enabled = true;
                 reloadProjectFileMenuItem.Enabled = !String.IsNullOrEmpty(ProjectPath);
-                ReloadToolbutton.Enabled = reloadProjectFileMenuItem.Enabled;
+                ReloadToolbtn.Enabled = reloadProjectFileMenuItem.Enabled;
                 editProjectFileMenuItem.Enabled = (!String.IsNullOrEmpty(ProjectPath)) && File.Exists(ProjectPath);
                 openFileLocationToolStripMenuItem.Enabled = !String.IsNullOrEmpty(System.IO.Path.GetDirectoryName(ProjectPath));
                 saveConfigurationMenuItem.Enabled = ProjectIsOpen;
 
                 // Connection items
                 openConnectionMenuItem.Enabled = !ConnectionInUse;
-                OpenConnectionToolbutton.Enabled = openConnectionMenuItem.Enabled;
+                OpenConnectionToolbtn.Enabled = openConnectionMenuItem.Enabled;
                 closeConnectionMenuItem.Enabled = ConnectionIsOpen;
-                CloseConnectionToolbutton.Enabled = closeConnectionMenuItem.Enabled;
+                CloseConnectionToolbtn.Enabled = closeConnectionMenuItem.Enabled;
                 startPollingMenuItem.Enabled = ConnectionIsOpen && (tabControl1.TabPages.Count > 0) && !PollingIsRunning && (PollOnceState == 0);
-                StartPollingToolbutton.Enabled = startPollingMenuItem.Enabled;
+                StartPollingToolbtn.Enabled = startPollingMenuItem.Enabled;
                 stopPollingMenuItem.Enabled = ConnectionIsOpen && PollingIsRunning;
-                StopPollingToolbutton.Enabled = stopPollingMenuItem.Enabled;
+                StopPollingToolbtn.Enabled = stopPollingMenuItem.Enabled;
                 pollOnceMenuItem.Enabled = ConnectionIsOpen && (tabControl1.TabPages.Count > 0) && !PollingIsRunning && (PollOnceState == 0);
-                PollOnceToolbutton.Enabled = pollOnceMenuItem.Enabled;
+                PollOnceToolbtn.Enabled = pollOnceMenuItem.Enabled;
 
                 // Action items
                 importRegistersFromFileToolStripMenuItem.Enabled = ConnectionIsOpen;
@@ -1141,7 +1140,7 @@ namespace ModbusControl
             FilterClear();
 
             bool bUseValidation = true;
-            bool bRetry = false;
+            bool bRetry;
             do
             {
                 // New project
@@ -1162,7 +1161,7 @@ namespace ModbusControl
                 catch (XmlSchemaException ex)
                 {
                     // schema validation failed
-                    StretchyMessageForm form = new StretchyMessageForm();
+                    StretchyMessageForm form = new();
                     form.Title = "ModbusControl - Error";
                     form.MessageIcon = SystemIcons.Error;
                     form.OkButtonText = "Load without schema validation";
@@ -1188,7 +1187,7 @@ namespace ModbusControl
                 catch (XmlException ex)
                 {
                     // XML error
-                    StretchyMessageForm form = new StretchyMessageForm();
+                    StretchyMessageForm form = new();
                     form.Title = "ModbusControl - Error";
                     form.MessageIcon = SystemIcons.Error;
                     form.MessageText = "Cannot load .mbc project file because it has an error: " + Environment.NewLine
@@ -1207,7 +1206,7 @@ namespace ModbusControl
                 catch (Exception ex)
                 {
                     // other error
-                    StretchyMessageForm form = new StretchyMessageForm();
+                    StretchyMessageForm form = new();
                     form.Title = "ModbusControl";
                     form.MessageIcon = SystemIcons.Error;
                     form.MessageText = "Cannot load .mbc project file: " + Environment.NewLine
@@ -1279,8 +1278,8 @@ namespace ModbusControl
             // Add new tabs and populate
             foreach (CProject.TTab ptab in Project.TabsList)
             {
-                TabPage newTab = new System.Windows.Forms.TabPage();
-                ModbusGridView newRegView = new ModbusGridView();
+                TabPage newTab = new();
+                ModbusGridView newRegView = new();
 
                 // init new tabpage
                 newTab.SuspendLayout();
@@ -1394,7 +1393,7 @@ namespace ModbusControl
             // set some more properties
             //mgv.AutosizeAndWrapRows = Options.AutoRowSize;
             mgv.WrapRows = Options.AutoRowSize;
-            mgv.SetFilter(tbFilterText.Text, chkFilterRegex.Checked, chkFilterCaseSensitive.Checked);
+            mgv.SetFilter(FilterTextTextbox.Text, FilterRegexChkb.Checked, FilterCaseSensitiveChkb.Checked);
             mgv.SetZoomFactor(zoomFactor);
 
             isLoading = false;
@@ -1431,7 +1430,7 @@ namespace ModbusControl
             if (ConnectionIsOpen)
             {
                 // Start polling thread
-                PollingThread = new Thread(PollingThread_Work);
+                PollingThread = new(PollingThread_Work);
                 PollingThread.Name = "PollingThread";
                 PollingThread_CancelTokenSource = new CancellationTokenSource();
                 PollingThread_CancelToken = PollingThread_CancelTokenSource.Token;
@@ -1457,8 +1456,8 @@ namespace ModbusControl
             // Open serial port, RTU protocol
 
             string Portname = Project.Connection.SerialPort;
-            string ErrorText = string.Empty;
-            bool Opened = false;
+            string ErrorText;
+            bool Opened;
             bool Continue = true;
 
             while (Continue)
@@ -1493,7 +1492,7 @@ namespace ModbusControl
                 else
                 {
                     // failed
-                    SerialPortOpenFailedForm form = new SerialPortOpenFailedForm();
+                    SerialPortOpenFailedForm form = new();
                     form.ErrorText = "Error opening serial port " + Portname + ":" + Environment.NewLine + ErrorText;
                     if (form.ShowDialog() == System.Windows.Forms.DialogResult.OK)
                     {
@@ -1524,7 +1523,7 @@ namespace ModbusControl
             // open
             try
             {
-                mb.OpenSerialRtu(Portname, (uint)Project.Connection.SerialBaudrate, Project.Connection.SerialParity, StopBits.One);
+                mb.OpenSerialRtu(Portname, (uint)Project.Connection.SerialBaudrate, Project.Connection.SerialParity);
                 // success
                 Logger1.Log(Logger.LogType.Info, "Serial port " + Portname + " opened");
                 SetStatusBarMessage("Serial port " + Portname + " opened");
@@ -1768,7 +1767,7 @@ namespace ModbusControl
             // catch unhandled exceptions in this non-GUI thread
             try
             {
-                Stopwatch Timer = new Stopwatch();
+                Stopwatch Timer = new();
                 while (!PollingThread_CancelToken.IsCancellationRequested)
                 {
                     // Poll-once requested? Then start it (synced with PollingThread)
@@ -1782,7 +1781,8 @@ namespace ModbusControl
                     TabIsChanged = false;
 
                     // Polling enabled?
-                    if (PollingIsRunning || (PollOnceState == 2))
+                    bool pollingWasActive = PollingIsRunning || (PollOnceState == 2);
+                    if (pollingWasActive)
                     {
                         // do reads 
                         // also handles pending writes because otherwise they would be delayed too much
@@ -1807,16 +1807,16 @@ namespace ModbusControl
                     // now wait for the sample time to pass
                     // abort quickly if pollingthread canceled or user tab change or other reason
                     // do the DoPendingWrites() and Sleep at least once
-                    int timeToWait = 0;                    
+                    int timeToWait = 0;
                     do
                     {
                         // do possible pending writes
                         DoPendingWrites();
-                        // sleep  a bit to avoid hogging the CPU
-                        Thread.Sleep(10);  
+                        // sleep a minimal time to avoid hogging the CPU
+                        Thread.Sleep(10);
                         timeToWait = Project.Options.Samplerate - (int)Timer.ElapsedMilliseconds;
                     }
-                    while ((timeToWait > 0) && ContinuePolling());
+                    while ((timeToWait > 0) && pollingWasActive && ContinuePolling());
                 }
             }
             catch (Exception ex)
@@ -1862,7 +1862,7 @@ namespace ModbusControl
                 // call Application.DoEvents() because the logger calls the GUI and that may block all
                 while (PollingThread.IsAlive)
                 {
-                    Application.DoEvents(); 
+                    Application.DoEvents();
                     Thread.Sleep(50);
                 }
                 Application.DoEvents();
@@ -1880,7 +1880,7 @@ namespace ModbusControl
             if (Options.ClearFilterOnTabChange)
             {
                 isLoading = true;
-                tbFilterText.Text = "";
+                FilterTextTextbox.Text = "";
                 isLoading = false;
             }
 
@@ -2111,7 +2111,7 @@ namespace ModbusControl
 
             // mbc file: open it
             // other file: start windows associated process
-            if (Path.GetExtension(file).ToLower() == ".mbc")
+            if (Path.GetExtension(file).Equals(".mbc", StringComparison.CurrentCultureIgnoreCase))
             {
                 // Stop polling
                 StopAllCommunications();
@@ -2328,7 +2328,7 @@ namespace ModbusControl
         {
             if (this.InvokeRequired)
             {
-                DelegateStopOnError delegateMethod = new DelegateStopOnError(this.StopOnError);
+                DelegateStopOnError delegateMethod = new(this.StopOnError);
                 this.BeginInvoke(delegateMethod, msg);
             }
             else
@@ -2375,8 +2375,7 @@ namespace ModbusControl
         // Add a write to the writelist
         private void OnRegisterWrite(object sender, ModbusGridView.RegisterWriteEventArgs e)
         {
-            WriteEntry w = new WriteEntry();
-
+            WriteEntry w = new();
             w.Reg = e.Reg;
             w.Data = e.Values;
 
@@ -2528,7 +2527,7 @@ namespace ModbusControl
             if (CurrentTabPage != null)
             {
                 ModbusGridView mgv = CurrentTabPage.Tag as ModbusGridView;
-                bool isValid = mgv.SetFilter(tbFilterText.Text, chkFilterRegex.Checked, chkFilterCaseSensitive.Checked);
+                bool isValid = mgv.SetFilter(FilterTextTextbox.Text, FilterRegexChkb.Checked, FilterCaseSensitiveChkb.Checked);
                 SetFilterColor(isValid);
             }
         }
@@ -2543,25 +2542,25 @@ namespace ModbusControl
             if (CurrentTabPage != null)
             {
                 ModbusGridView mgv = CurrentTabPage.Tag as ModbusGridView;
-                bool isValid = mgv.SetFilter(tbFilterText.Text, chkFilterRegex.Checked, chkFilterCaseSensitive.Checked);
+                bool isValid = mgv.SetFilter(FilterTextTextbox.Text, FilterRegexChkb.Checked, FilterCaseSensitiveChkb.Checked);
                 SetFilterColor(isValid);
             }
         }
         private void BtnFilterClose_Click(object sender, EventArgs e)
         {
             FilterClear();
-            filterPanel.Hide();
+            FilterPanel.Hide();
         }
 
         private void SetFilterColor(bool valid)
         {
             if (valid)
             {
-                tbFilterText.BackColor = SystemColors.Window;
+                FilterTextTextbox.BackColor = SystemColors.Window;
             }
             else
             {
-                tbFilterText.BackColor = Color.FromArgb(255, 204, 204); // light red
+                FilterTextTextbox.BackColor = Color.FromArgb(255, 204, 204); // light red
             }
         }
 
@@ -2575,7 +2574,7 @@ namespace ModbusControl
         /// </summary>
         private void FilterClear()
         {
-            tbFilterText.Clear();
+            FilterTextTextbox.Clear();
         }
 
         /// <summary>
@@ -2584,9 +2583,9 @@ namespace ModbusControl
         /// </summary>
         private void FilterStartFind()
         {
-            filterPanel.Show();
-            tbFilterText.SelectAll();
-            tbFilterText.Focus();
+            FilterPanel.Show();
+            FilterTextTextbox.SelectAll();
+            FilterTextTextbox.Focus();
         }
 
         #endregion
@@ -2659,7 +2658,7 @@ namespace ModbusControl
             // create if needed, else show and hide
             if (CustomQueriesForm == null)
             {
-                CustomQueriesForm = new CustomQueriesForm(this);
+                CustomQueriesForm = new(this);
 
                 // load settings
 
@@ -2680,7 +2679,7 @@ namespace ModbusControl
 
         #endregion
 
-        private void ShowForm(Form f)
+        private static void ShowForm(Form f)
         {
             f.Show();
             if (f.WindowState == FormWindowState.Minimized)
@@ -2692,9 +2691,9 @@ namespace ModbusControl
 
         #region Status bar message system
 
-        Color StatusbarDefaultBackColor;
-        Color StatusbarNoPollingBackColor = Color.FromArgb(135, 206, 250); // kind of blue;
-        Color StatusbarErrorBackColor = Color.FromArgb(255, 150, 150); // kind of red;
+        private Color StatusbarDefaultBackColor;
+        private readonly Color StatusbarNoPollingBackColor = Color.FromArgb(135, 206, 250); // kind of blue;
+        private readonly Color StatusbarErrorBackColor = Color.FromArgb(255, 150, 150); // kind of red;
         string StatusbarText;
         bool StatusbarTextIsError;
 
@@ -2716,7 +2715,7 @@ namespace ModbusControl
         {
             if (this.InvokeRequired)
             {
-                DelegateSetStatusBarMessage del = new DelegateSetStatusBarMessage(this.SetStatusBarMessage);
+                DelegateSetStatusBarMessage del = new(this.SetStatusBarMessage);
                 this.Invoke(del, text, IsError);
             }
             else
@@ -2745,7 +2744,7 @@ namespace ModbusControl
         {
             if (this.InvokeRequired)
             {
-                DelegateUpdateStatusBar del = new DelegateUpdateStatusBar(this.UpdateStatusBar);
+                DelegateUpdateStatusBar del = new(this.UpdateStatusBar);
                 this.Invoke(del);
             }
             else
@@ -2808,8 +2807,8 @@ namespace ModbusControl
 
         private void StartEditor(string file)
         {
-            string EdCommand = String.Empty;
-            string EdArg = String.Empty;
+            string EdCommand;
+            string EdArg;
 
             // custom editor enabled?
             if (Options.CustomEditorEnable)
@@ -2892,7 +2891,7 @@ namespace ModbusControl
             // we accept only 1 file
             string file = files[0];
             //Debug.Print(DateTime.Now.TimeOfDay + ": Form1_DragDrop(): file=" + file);
-            if (Path.GetExtension(file).ToLower() == ".mbc")
+            if (Path.GetExtension(file).Equals(".mbc", StringComparison.CurrentCultureIgnoreCase))
             {
                 // Stop polling
                 StopAllCommunications();
@@ -2948,7 +2947,7 @@ namespace ModbusControl
             lock (UpdaterLock)
             {
                 // Make sure we start Updater.exe in our directory
-                ProcessStartInfo psi = new ProcessStartInfo();
+                ProcessStartInfo psi = new();
                 psi.FileName = Path.Combine(Application.StartupPath, "Updater.exe");
                 psi.Arguments = "-v " + Application.ProductVersion.ToString();
                 if (bUserInterface)
@@ -2975,12 +2974,12 @@ namespace ModbusControl
 
         #endregion
 
-        private void chkFilterRegex_CheckedChanged(object sender, EventArgs e)
+        private void FilterRegexChkb_CheckedChanged(object sender, EventArgs e)
         {
             if (CurrentTabPage != null)
             {
                 ModbusGridView mgv = CurrentTabPage.Tag as ModbusGridView;
-                bool isValid = mgv.SetFilter(tbFilterText.Text, chkFilterRegex.Checked, chkFilterCaseSensitive.Checked);
+                bool isValid = mgv.SetFilter(FilterTextTextbox.Text, FilterRegexChkb.Checked, FilterCaseSensitiveChkb.Checked);
                 SetFilterColor(isValid);
             }
         }
@@ -2996,7 +2995,7 @@ namespace ModbusControl
             Debug.Print($" SuggestedRectangle.Height={e.SuggestedRectangle.Height}");
         }
 
-        private void debugInfoOutputToolStripMenuItem_Click(object sender, EventArgs e)
+        private void DebugInfoOutputToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Debug.Print($"debug Info Output:");
             Debug.Print($" DeviceDpi={DeviceDpi}");
@@ -3009,5 +3008,6 @@ namespace ModbusControl
                 Debug.Print($" DataGridView1 cell(1,1) Inherited Font: {dgv.Rows[1].Cells[1].InheritedStyle.Font}");
             }
         }
+
     }
 }

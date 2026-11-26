@@ -22,16 +22,16 @@ namespace ModbusControl
         private void AboutBox1_Load(object sender, EventArgs e)
         {
             Text = String.Format("About {0}", AssemblyTitle);
-            labelName.Text = AssemblyProduct;
-            labelVersion.Text = "Version " + VersionString;
+            NameLbl.Text = AssemblyProduct;
+            VersionLbl.Text = "Version " + VersionString;
 
-            labelAppdata.Text = "User application data folder: " + AppdataPath;
+            AppdataLbl.Text = "User application data folder: " + AppdataPath;
 
             // show the .net core version
             string dotnetcoreVersion = System.Runtime.InteropServices.RuntimeInformation.FrameworkDescription;
-            labelDotNetVersion.Text = $".NET (core) version: {dotnetcoreVersion}";
+            DotNetVersionLbl.Text = $".NET (core) version: {dotnetcoreVersion}";
 
-            labelFormSize.Text = $"Main window size: {MainFormWidth} x {MainFormHeight} (at {MainFormDpi} DPI)";
+            FormSizeLbl.Text = $"Main window size: {MainFormWidth} x {MainFormHeight} (at {MainFormDpi} DPI)";
         }
 
         private void AboutBox1_Shown(object sender, EventArgs e)
@@ -70,11 +70,11 @@ namespace ModbusControl
             ClientSize = new Size(newWidth, ClientSize.Height);
 
             // center OK button (auto-center issues on scaling systems)
-            int newOkButtonLeft = (ClientSize.Width - okButton.Width) / 2;
-            okButton.Left = newOkButtonLeft;
+            int newOkButtonLeft = (ClientSize.Width - OKBtn.Width) / 2;
+            OKBtn.Left = newOkButtonLeft;
         }
 
-        private void licenseLinkLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        private void LicenseLinkLbl_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             try
             {
@@ -89,7 +89,7 @@ namespace ModbusControl
                         UseShellExecute = true   // required in .NET Core/5+ to open with the default app
                     });
 
-                licenseLinkLabel.LinkVisited = true;
+                LicenseLinkLbl.LinkVisited = true;
             }
             catch (FileNotFoundException ex)
             {

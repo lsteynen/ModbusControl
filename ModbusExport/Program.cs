@@ -1,9 +1,8 @@
 ﻿using System;
 using System.IO;
 using System.IO.Ports;
-
-using ModbusControl;
 using LST.Helpers;
+using ModbusControl;
 
 namespace ModbusExport
 {
@@ -227,7 +226,7 @@ namespace ModbusExport
             if (CommandlineArgs.ArgBaudrate != null)
                 Project.Connection.SerialBaudrate = (int)CommandlineArgs.ArgBaudrate;
             if (CommandlineArgs.ArgParity != null)
-                Project.Connection.SerialParity = (Parity)CommandlineArgs.ArgParity;
+                Project.Connection.SerialParity = (LST.Helpers.Parity.EParity)CommandlineArgs.ArgParity;
             if (CommandlineArgs.ArgEndofmessagetimeout != null)
                 Project.Connection.SerialEndOfMessageTimeout = (int)CommandlineArgs.ArgEndofmessagetimeout;
             Project.Connection.SerialOneWireEchoSuppression = CommandlineArgs.ArgOnewireechosuppressionSwitch;
@@ -272,7 +271,6 @@ namespace ModbusExport
         /// </summary>
         private static void OpenConnection()
         {
-            bool IsOpen = false;
             isSerialOpenPortError = false;
 
             // which interface/protocol to use?
@@ -280,13 +278,13 @@ namespace ModbusExport
             {
                 case Global.eConnectionType.SerialRTU:
                     isSerialOpenPortError = true;
-                    IsOpen = OpenConnectionForSerialRtu();
+                    OpenConnectionForSerialRtu();
                     break;
                 case Global.eConnectionType.ModbusTcp:
-                    IsOpen = OpenConnectionForModbusTcp();
+                    OpenConnectionForModbusTcp();
                     break;
                 case Global.eConnectionType.RtuOverTcp:
-                    IsOpen = OpenConnectionForRtuOverTcp();
+                    OpenConnectionForRtuOverTcp();
                     break;
                 default:
                     throw new InvalidOperationException("Connection.ConnectionType has an invalid value");
@@ -302,7 +300,7 @@ namespace ModbusExport
             // Open serial port, RTU protocol
 
             string Portname = Project.Connection.SerialPort;
-            bool Opened = false;
+            bool Opened;
 
             // got serial port name?
             if (string.IsNullOrEmpty(Portname))
@@ -311,7 +309,7 @@ namespace ModbusExport
             }
             else
             {
-                mb.OpenSerialRtu(Portname, (uint)Project.Connection.SerialBaudrate, Project.Connection.SerialParity, StopBits.One);
+                mb.OpenSerialRtu(Portname, (uint)Project.Connection.SerialBaudrate, Project.Connection.SerialParity);
                 Opened = true;
             }
 
@@ -344,7 +342,7 @@ namespace ModbusExport
         {
             // Open TCP connection, Modbus/TCP protocol
 
-            string ConnectionName = Project.Connection.IPAddress + ":" + Project.Connection.IPPort.ToString();
+            //string ConnectionName = Project.Connection.IPAddress + ":" + Project.Connection.IPPort.ToString();
 
             // valid IP address?
             System.Net.IPAddress TargetIP;
@@ -380,7 +378,7 @@ namespace ModbusExport
         {
             // Open TCP connection, RTU protocol
 
-            string ConnectionName = Project.Connection.IPAddress + ":" + Project.Connection.IPPort.ToString();
+            //string ConnectionName = Project.Connection.IPAddress + ":" + Project.Connection.IPPort.ToString();
 
             // valid IP address?
             System.Net.IPAddress TargetIP;
@@ -409,7 +407,7 @@ namespace ModbusExport
 
         public static string GetConnectionInfoString()
         {
-            string result = "";
+            string result;
 
             switch (Project.Connection.ConnectionType)
             {
@@ -470,7 +468,7 @@ namespace ModbusExport
         /// <returns></returns>
         private static string GetDetectedSerialPortsString()
         {
-            string result = "";
+            string result;
 
             string[] array = SerialPort.GetPortNames();
 

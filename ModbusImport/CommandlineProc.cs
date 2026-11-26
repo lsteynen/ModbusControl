@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using System.IO.Ports;
 using System.Collections.Generic;
 using System.Net;
 using System.Diagnostics;
@@ -28,7 +27,7 @@ namespace ModbusImport
         public eConnectionType? ArgConnectionType;
         public string ArgPort;                  // string is already nullable
         public int? ArgBaudrate;
-        public Parity? ArgParity;
+        public LST.Helpers.Parity.EParity? ArgParity; 
         public int? ArgEndofmessagetimeout;
         public bool ArgOnewireechosuppressionSwitch;
         public string ArgIPAddress;             // string is already nullable
@@ -148,10 +147,10 @@ namespace ModbusImport
                         ++i;
                         string val = GetOptString(arg, i);
 
-                        Parity TmpParity;
-                        if (Enum.TryParse<Parity>(val, true, out TmpParity))
+                        LST.Helpers.Parity.EParity tmpParity;
+                        if (LST.Helpers.Parity.TryParseParity(val, out tmpParity))
                         {
-                            ArgParity = TmpParity;
+                            ArgParity = tmpParity;
                         }
                         else
                         {
@@ -170,9 +169,8 @@ namespace ModbusImport
                     else if (optlow == "ipaddress")
                     {
                         ++i;
-                        System.Net.IPAddress TmpIPaddress;
                         string val = GetOptString(arg, i);
-                        if (IPAddress.TryParse(val, out TmpIPaddress))
+                        if (IPAddress.TryParse(val, out _))
                         {
                             // valid IP addres
                             ArgIPAddress = val;
@@ -416,7 +414,7 @@ namespace ModbusImport
         /// <returns>0 for little, 1 for big</returns>
         private int GetOptEndian(string optName, int i)
         {
-            int retval = 0;
+            int retval;
 
             string val = ArgValue(i);
             string vallow = val.ToLower();

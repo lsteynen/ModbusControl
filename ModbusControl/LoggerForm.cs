@@ -61,7 +61,7 @@ namespace LST.Helpers
         {
             InitializeComponent();
 
-            mAutoScroll = chkAutoScroll.Checked;
+            mAutoScroll = AutoScrollCheckbox.Checked;
 
             RefreshView();
         }
@@ -79,7 +79,7 @@ namespace LST.Helpers
             set
             {
                 mEnable = value;
-                timerView.Enabled = mEnable;
+                ViewTimer.Enabled = mEnable;
 
                 // repaint if timer doesn't
                 if (mEnable == false)
@@ -120,7 +120,7 @@ namespace LST.Helpers
         {
             get
             {
-                return mEnable && logFilter.LogErrors;
+                return mEnable && LogFilter.LogErrors;
             }
         }
 
@@ -128,7 +128,7 @@ namespace LST.Helpers
         {
             get
             {
-                return mEnable && logFilter.LogWarnings;
+                return mEnable && LogFilter.LogWarnings;
             }
         }
 
@@ -136,7 +136,7 @@ namespace LST.Helpers
         {
             get
             {
-                return mEnable && logFilter.LogInfo;
+                return mEnable && LogFilter.LogInfo;
             }
         }
 
@@ -144,7 +144,7 @@ namespace LST.Helpers
         {
             get
             {
-                return mEnable && logFilter.LogTrace;
+                return mEnable && LogFilter.LogTrace;
             }
         }
 
@@ -152,7 +152,7 @@ namespace LST.Helpers
         {
             get
             {
-                return mEnable && logFilter.LogReads;
+                return mEnable && LogFilter.LogReads;
             }
         }
 
@@ -160,7 +160,7 @@ namespace LST.Helpers
         {
             get
             {
-                return mEnable && logFilter.LogWrites;
+                return mEnable && LogFilter.LogWrites;
             }
         }
 
@@ -168,7 +168,7 @@ namespace LST.Helpers
         {
             get
             {
-                return mEnable && logFilter.LogBridgeInfo;
+                return mEnable && LogFilter.LogBridgeInfo;
             }
         }
 
@@ -176,7 +176,7 @@ namespace LST.Helpers
         {
             get
             {
-                return mEnable && logFilter.LogBridgeData;
+                return mEnable && LogFilter.LogBridgeData;
             }
         }
 
@@ -184,7 +184,7 @@ namespace LST.Helpers
         {
             get
             {
-                return mEnable && logFilter.LogBridgeDecode;
+                return mEnable && LogFilter.LogBridgeDecode;
             }
         }
 
@@ -192,7 +192,7 @@ namespace LST.Helpers
         {
             get
             {
-                return logFilter;
+                return LogFilter;
             }
         }
 
@@ -200,8 +200,8 @@ namespace LST.Helpers
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            timerView.Interval = mViewUpdateInterval;
-            timerView.Enabled = false;
+            ViewTimer.Interval = mViewUpdateInterval;
+            ViewTimer.Enabled = false;
         }
 
         private void AdjustLoggerCapacity( int newCapacity)
@@ -239,13 +239,13 @@ namespace LST.Helpers
         }
 
 
-        private void timerView_Tick(object sender, EventArgs e)
+        private void ViewTimer_Tick(object sender, EventArgs e)
         {
-            timerView.Enabled = false;
+            ViewTimer.Enabled = false;
 
             RefreshView();
 
-            timerView.Enabled = true;
+            ViewTimer.Enabled = true;
         }
 
         private void RefreshView()
@@ -254,15 +254,15 @@ namespace LST.Helpers
             // threadsafe exchange
             if (Interlocked.Exchange(ref logDataChanged, 0) == 1)
             {
-                logGridView.RowCount = logQueue.Count;
+                LogGrid.RowCount = logQueue.Count;
                 
                 // if auto-scrolling
-                if (mAutoScroll && (logGridView.RowCount > 0))
+                if (mAutoScroll && (LogGrid.RowCount > 0))
                 {
                     try
                     {
-                        int last = logGridView.RowCount - 1;
-                        logGridView.FirstDisplayedScrollingRowIndex = last;
+                        int last = LogGrid.RowCount - 1;
+                        LogGrid.FirstDisplayedScrollingRowIndex = last;
                     }
                     catch
                     {
@@ -270,7 +270,7 @@ namespace LST.Helpers
                     }
                 }
 
-                logGridView.Invalidate();
+                LogGrid.Invalidate();
             }
 
             // update status line
@@ -301,13 +301,13 @@ namespace LST.Helpers
             }
         }
 
-        private void checkboxEnable_CheckedChanged(object sender, EventArgs e)
+        private void EnableCheckbox_CheckedChanged(object sender, EventArgs e)
         {
             // Enable/disable logging, use the property for side effects
-            Enable = checkboxEnable.Checked;
+            Enable = EnableCheckbox.Checked;
         }
 
-        private void buttonClear_Click(object sender, EventArgs e)
+        private void ClearBtn_Click(object sender, EventArgs e)
         {
             lock (logLock)
             {
@@ -326,9 +326,9 @@ namespace LST.Helpers
         /// <summary>
         /// Auto-scrolling enabled/disable
         /// </summary>
-        private void chkAutoScroll_CheckedChanged(object sender, EventArgs e)
+        private void AutoScrollCheckbox_CheckedChanged(object sender, EventArgs e)
         {
-            mAutoScroll = chkAutoScroll.Checked;
+            mAutoScroll = AutoScrollCheckbox.Checked;
 
             if (mAutoScroll)
             {
@@ -337,8 +337,8 @@ namespace LST.Helpers
                 {
                     try
                     {
-                        int last = logGridView.RowCount - 1;
-                        logGridView.FirstDisplayedScrollingRowIndex = last;
+                        int last = LogGrid.RowCount - 1;
+                        LogGrid.FirstDisplayedScrollingRowIndex = last;
                     }
                     catch
                     {
@@ -357,14 +357,14 @@ namespace LST.Helpers
         private void buttonTop_Click(object sender, EventArgs e)
         {
             // Stop auto-scroll
-            chkAutoScroll.Checked = false;
+            AutoScrollCheckbox.Checked = false;
 
             // Show top (oldest) log entries
-            if (logGridView.RowCount > 0)
+            if (LogGrid.RowCount > 0)
             {
                 try
                 {
-                    logGridView.FirstDisplayedScrollingRowIndex = 0;
+                    LogGrid.FirstDisplayedScrollingRowIndex = 0;
                 }
                 catch
                 {
@@ -376,17 +376,17 @@ namespace LST.Helpers
             //RefreshView();
         }
 
-        private void buttonBottom_Click(object sender, EventArgs e)
+        private void BottomBtn_Click(object sender, EventArgs e)
         {
             // Resume auto-scrolling
-            chkAutoScroll.Checked = true;
+            AutoScrollCheckbox.Checked = true;
 
-            if (mAutoScroll && (logGridView.RowCount > 0))
+            if (mAutoScroll && (LogGrid.RowCount > 0))
             {
                 try
                 {
-                    int last = logGridView.RowCount - 1;
-                    logGridView.FirstDisplayedScrollingRowIndex = last;
+                    int last = LogGrid.RowCount - 1;
+                    LogGrid.FirstDisplayedScrollingRowIndex = last;
                 }
                 catch
                 {
@@ -402,7 +402,7 @@ namespace LST.Helpers
         /// User clicked in the grid
         /// Using CellMouseDown because CellClick is unreliable, probably because of auto-scrolling
         /// </summary>
-        private void logGridView_CellMouseDown(object sender, DataGridViewCellMouseEventArgs e)
+        private void LogGrid_CellMouseDown(object sender, DataGridViewCellMouseEventArgs e)
         {
             // accept left mouse button
             // accept rows, not column headers
@@ -410,7 +410,7 @@ namespace LST.Helpers
                  && (e.Button == MouseButtons.Left))
             {
                 // pause at current position
-                chkAutoScroll.Checked = false;
+                AutoScrollCheckbox.Checked = false;
 
                 // chkAutoScroll change forces RefreshView
                 //RefreshView();
@@ -482,7 +482,7 @@ namespace LST.Helpers
             }
         }
 
-        private void buttonCopyToClipboard_Click(object sender, EventArgs e)
+        private void CopyToClipboardBtn_Click(object sender, EventArgs e)
         {
             // copy logger content to clipboard
 
@@ -519,7 +519,7 @@ namespace LST.Helpers
             }
         }
 
-        private void buttonSaveToFile_Click(object sender, EventArgs e)
+        private void SaveToFileBtn_Click(object sender, EventArgs e)
         {
             if (logQueue.Count > 0)
             {

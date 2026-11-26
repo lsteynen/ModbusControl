@@ -21,7 +21,7 @@ namespace LST.Helpers
         {
             set
             {
-                pic.Image = value.ToBitmap();
+                Pict.Image = value.ToBitmap();
             }
         }
 
@@ -29,7 +29,7 @@ namespace LST.Helpers
         {
             set
             {
-                labelMessagetext.Text = value;
+                MessageLabel.Text = value;
             }
         }
 
@@ -37,7 +37,7 @@ namespace LST.Helpers
         {
             set
             {
-                buttonOK.Text = value;
+                OKBtn.Text = value;
             }
         }
 
@@ -45,7 +45,7 @@ namespace LST.Helpers
         {
             set
             {
-                buttonOK.Visible = value;
+                OKBtn.Visible = value;
             }
         }
 
@@ -53,7 +53,7 @@ namespace LST.Helpers
         {
             set
             {
-                buttonCancel.Text = value;
+                CancelBtn.Text = value;
             }
         }
 
@@ -61,7 +61,7 @@ namespace LST.Helpers
         {
             set
             {
-                buttonCancel.Visible = value;
+                CancelBtn.Visible = value;
             }
         }
 
@@ -72,7 +72,7 @@ namespace LST.Helpers
             InitializeComponent();
 
             // default icon
-            pic.Image = SystemIcons.Warning.ToBitmap();
+            Pict.Image = SystemIcons.Warning.ToBitmap();
         }
 
         private void StretchyMessageForm_Shown(object sender, EventArgs e)
@@ -96,16 +96,16 @@ namespace LST.Helpers
             int textButtonVertSpace = AppDpiHelpers.ScaleValueFrom96DpiToThisDpiInt(28, DeviceDpi);
 
             // new form width
-            int newWidth = labelMessagetext.Location.X + labelMessagetext.PreferredSize.Width + hmargin;
+            int newWidth = MessageLabel.Location.X + MessageLabel.PreferredSize.Width + hmargin;
 
             // buttons Y position
-            int buttonsY = labelMessagetext.Location.Y + labelMessagetext.PreferredSize.Height
+            int buttonsY = MessageLabel.Location.Y + MessageLabel.PreferredSize.Height
                     + textButtonVertSpace;
-            buttonOK.Top = buttonsY;
-            buttonCancel.Top = buttonsY;
+            OKBtn.Top = buttonsY;
+            CancelBtn.Top = buttonsY;
 
             // new form height
-            int newHeight = buttonsY + buttonOK.Height + vmargin;
+            int newHeight = buttonsY + OKBtn.Height + vmargin;
 
             Debug.Print($" hmargin={hmargin}, vmargin={vmargin}, textButtonVertSpace={textButtonVertSpace}");
             Debug.Print($" newWidth={newWidth}");
@@ -119,7 +119,7 @@ namespace LST.Helpers
 
         private void CenterButtons()
         {
-            var visibleButtons = new[] { buttonOK, buttonCancel }
+            var visibleButtons = new[] { OKBtn, CancelBtn }
                 .Where(b => b.Visible)
                 .ToList();
 

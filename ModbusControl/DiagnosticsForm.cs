@@ -306,7 +306,7 @@ namespace ModbusControl
             InitializeComponent();
         }
 
-        private void buttonReset_Click(object sender, EventArgs e)
+        private void ResetBtn_Click(object sender, EventArgs e)
         {
             // event 
             if (OnReset != null)

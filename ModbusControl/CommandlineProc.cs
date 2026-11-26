@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Net;
-using RJCP.IO.Ports;
+using System.Security.Cryptography;
 
 // Handle command line arguments.
 // may have filenames
@@ -24,7 +24,7 @@ namespace ModbusControl
         public EConnectionType? ArgConnectionType;
         public string ArgPort;                  // string is already nullable
         public int? ArgBaudrate;
-        public Parity? ArgParity;
+        public LST.Helpers.Parity.EParity? ArgParity;   
         public int? ArgEndofmessagetimeout;
         public bool ArgOnewireechosuppressionSwitch;
         public string ArgIPAddress;             // string is already nullable
@@ -124,10 +124,10 @@ namespace ModbusControl
                         ++i;
                         string val = GetOptString(arg, i);
 
-                        Parity TmpParity;
-                        if (Enum.TryParse<Parity>(val, true, out TmpParity))
+                        LST.Helpers.Parity.EParity tmpParity;
+                        if (LST.Helpers.Parity.TryParseParity(val, out tmpParity))
                         {
-                            ArgParity = TmpParity;
+                            ArgParity = tmpParity;
                         }
                         else
                         {
@@ -146,9 +146,8 @@ namespace ModbusControl
                     else if (optlow == "ipaddress")
                     {
                         ++i;
-                        System.Net.IPAddress TmpIPaddress;
                         string val = GetOptString(arg, i);
-                        if (IPAddress.TryParse(val, out TmpIPaddress))
+                        if (IPAddress.TryParse(val, out _))
                         {
                             // valid IP addres
                             ArgIPAddress = val;
@@ -237,7 +236,7 @@ namespace ModbusControl
                     }
                 }
             }
-       }
+        }
 
         /// <summary>
         /// Get an option value, type string

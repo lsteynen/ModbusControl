@@ -16,47 +16,46 @@ namespace ModbusControl
 
         private void SaveConfigurationForm_Load(object sender, EventArgs e)
         {
-            panelWarning.Visible = OverridesWarning;
+            WarningPanel.Visible = OverridesWarning;
         }
 
         public SaveConfigurationForm()
         {
             InitializeComponent();
 
-            // and update
-            checkbox_CheckedChanged(null, null);
+            UpdateSaveBtnEnabled();
         }
 
-        private void checkbox_CheckedChanged(object sender, EventArgs e)
+        private void UpdateSaveBtnEnabled()
         {
-            buttonSave.Enabled = (checkboxProjectConfig.Checked
-                || checkboxBridge.Checked
-                || checkboxFormSize.Checked
-                || checkboxUpdateXML.Checked);
+            SaveBtn.Enabled = (ProjectConfigCheckbox.Checked
+                || BridgeCheckbox.Checked
+                || FormSizeCheckbox.Checked
+                || UpdateXMLCheckbox.Checked);
         }
 
-        private void buttonSave_Click(object sender, EventArgs e)
+        private void SaveBtn_Click(object sender, EventArgs e)
         {
             // Got project?
             if (Project != null)
             {
                 bool Changed = false;
 
-                if (checkboxProjectConfig.Checked)
+                if (ProjectConfigCheckbox.Checked)
                 {
                     // new parameters already in Project
                     Project.WriteConnection();
                     Changed = true;
                 }
 
-                if (checkboxBridge.Checked)
+                if (BridgeCheckbox.Checked)
                 {
                     // new parameters already in Project
                     Project.WriteBridgeSettings();
                     Changed = true;
                 }
 
-                if (checkboxFormSize.Checked)
+                if (FormSizeCheckbox.Checked)
                 {
                     // put new size in Project
                     // Project holds width in 96DPI, scale MainForm_DPI
@@ -66,7 +65,7 @@ namespace ModbusControl
                     Changed = true;
                 }
 
-                if (checkboxUpdateXML.Checked)
+                if (UpdateXMLCheckbox.Checked)
                 {
                     // update XML to current version, like convert all XML tags to lowercase, ...
                     Project.UpdateXML();
@@ -82,9 +81,29 @@ namespace ModbusControl
             }
         }
 
-        private void buttonCancel_Click(object sender, EventArgs e)
+        private void CancelBtn_Click(object sender, EventArgs e)
         {
             Close();
+        }
+
+        private void ProjectConfigCheckbox_CheckedChanged(object sender, EventArgs e)
+        {
+            UpdateSaveBtnEnabled();
+        }
+
+        private void BridgeCheckbox_CheckedChanged(object sender, EventArgs e)
+        {
+            UpdateSaveBtnEnabled();
+        }
+
+        private void FormSizeCheckbox_CheckedChanged(object sender, EventArgs e)
+        {
+            UpdateSaveBtnEnabled();
+        }
+
+        private void UpdateXMLCheckbox_CheckedChanged(object sender, EventArgs e)
+        {
+            UpdateSaveBtnEnabled();
         }
 
         private void SaveConfigurationForm_Shown(object sender, EventArgs e)
@@ -105,5 +124,6 @@ namespace ModbusControl
             Debug.Print($"newWidth={ClientSize.Width}, newHeight={newHeight}");
             ClientSize = new Size(ClientSize.Width, newHeight);
         }
+
     }
 }

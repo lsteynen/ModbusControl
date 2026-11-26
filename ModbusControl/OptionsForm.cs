@@ -14,86 +14,86 @@ namespace ModbusControl
 
         public bool StopOnError
         {
-            get { return checkboxStopOnPollingError.Checked; }
+            get { return StopOnPollingErrorCheckbox.Checked; }
             set
             {
-                checkboxStopOnPollingError.Checked = value;
+                StopOnPollingErrorCheckbox.Checked = value;
             }
         }
 
         public bool BeepOnInputError
         {
-            get { return checkboxBeepOnInputError.Checked; }
+            get { return BeepOnInputErrorCheckbox.Checked; }
             set
             {
-                checkboxBeepOnInputError.Checked = value;
+                BeepOnInputErrorCheckbox.Checked = value;
             }
         }
 
         public bool AutoNextRowOnEnter
         {
-            get { return checkboxNextRowOnEnter.Checked; }
+            get { return NextRowOnEnterCheckbox.Checked; }
             set
             {
-                checkboxNextRowOnEnter.Checked = value;
+                NextRowOnEnterCheckbox.Checked = value;
             }
         }
 
         public bool AutoStartEdit
         {
-            get { return checkboxAutostartEdit.Checked; }
+            get { return AutostartEditCheckbox.Checked; }
             set
             {
-                checkboxAutostartEdit.Checked = value;
+                AutostartEditCheckbox.Checked = value;
             }
         }
 
         public bool IgnoreSizeOnReload
         {
-            get { return checkboxIgnoreFormSizeOnReload.Checked; }
+            get { return IgnoreFormSizeOnReloadCheckbox.Checked; }
             set
             {
-                checkboxIgnoreFormSizeOnReload.Checked = value;
+                IgnoreFormSizeOnReloadCheckbox.Checked = value;
             }
         }
 
         public bool ShowVarProperties
         {
-            get { return checkboxShowVarProperties.Checked; }
+            get { return ShowVarPropertiesCheckbox.Checked; }
             set
             {
-                checkboxShowVarProperties.Checked = value;
+                ShowVarPropertiesCheckbox.Checked = value;
             }
         }
 
         public bool AutoRowSize
         {
-            get { return checkboxAutoRowSize.Checked; }
+            get { return AutoRowSizeCheckbox.Checked; }
             set
             {
-                checkboxAutoRowSize.Checked = value;
+                AutoRowSizeCheckbox.Checked = value;
             }
         }
 
         public bool ClearFilterOnTabChange
         {
-            get { return checkboxClearFilterOnTabChange.Checked; }
+            get { return ClearFilterOnTabChangeCheckbox.Checked; }
             set
             {
-                checkboxClearFilterOnTabChange.Checked = value;
+                ClearFilterOnTabChangeCheckbox.Checked = value;
             }
         }
 
         public bool MbcfileValidationEnable
         {
-            get { return checkboxUseValidationSchema.Checked; }
-            set { checkboxUseValidationSchema.Checked = value; }
+            get { return UseValidationSchemaCheckbox.Checked; }
+            set { UseValidationSchemaCheckbox.Checked = value; }
         }
 
         public string MbcfileValidationFile
         {
-            get { return textboxUseValidationSchema.Text; }
-            set { textboxUseValidationSchema.Text = value; }
+            get { return UseValidationSchemaTextbox.Text; }
+            set { UseValidationSchemaTextbox.Text = value; }
         }
 
         public string DefaultMbcfileValidationFile
@@ -102,34 +102,34 @@ namespace ModbusControl
             set
             {
                 mDefaultMbcfileValidationFile = value;
-                butResetValidationFile.Enabled = !string.IsNullOrEmpty(DefaultMbcfileValidationFile);
+                DefaultValidationFileBtn.Enabled = !string.IsNullOrEmpty(DefaultMbcfileValidationFile);
             }
         }
 
         public int LoggerCapacity
         {
-            get { return (int)numericLoggerCapacity.Value; }
-            set { numericLoggerCapacity.Value = value; }
+            get { return (int)LoggerCapacityNumeric.Value; }
+            set { LoggerCapacityNumeric.Value = value; }
         }
 
         public bool CustomEditorEnable
         {
-            get { return checkboxCustomEditor.Checked; }
-            set { checkboxCustomEditor.Checked = value; }
+            get { return CustomEditorCheckbox.Checked; }
+            set { CustomEditorCheckbox.Checked = value; }
         }
 
         public string CustomEditorCommand
         {
-            get { return textboxCustomEditor.Text; }
-            set { textboxCustomEditor.Text = value; }
+            get { return CustomEditorTextbox.Text; }
+            set { CustomEditorTextbox.Text = value; }
         }
 
         public bool CheckForUpdates
         {
-            get { return CheckboxCheckForUpdates.Checked; }
+            get { return CheckForUpdatesCheckbox.Checked; }
             set
             {
-                CheckboxCheckForUpdates.Checked = value;
+                CheckForUpdatesCheckbox.Checked = value;
             }
         }
 
@@ -138,24 +138,24 @@ namespace ModbusControl
             InitializeComponent();
         }
 
-        private void butSelectValidationFile_Click(object sender, EventArgs e)
+        private void SelectValidationFileBtn_Click(object sender, EventArgs e)
         {
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
             {
-                textboxUseValidationSchema.Text = openFileDialog1.FileName;
+                UseValidationSchemaTextbox.Text = openFileDialog1.FileName;
             }
         }
 
-        private void butResetValidationFile_Click(object sender, EventArgs e)
+        private void DefaultValidationFileBtn_Click(object sender, EventArgs e)
         {
-            textboxUseValidationSchema.Text = DefaultMbcfileValidationFile;
+            UseValidationSchemaTextbox.Text = DefaultMbcfileValidationFile;
         }
 
-        private void butSelectCustomEditor_Click(object sender, EventArgs e)
+        private void SelectCustomEditorBtn_Click(object sender, EventArgs e)
         {
             if (openFileDialog2.ShowDialog() == DialogResult.OK)
             {
-                textboxCustomEditor.Text = openFileDialog2.FileName;
+                CustomEditorTextbox.Text = openFileDialog2.FileName;
             }
         }
 

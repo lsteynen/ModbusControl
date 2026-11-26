@@ -35,10 +35,10 @@ namespace ModbusControl
             openFileDialog1 = new OpenFileDialog();
             DiagnosticsTimer = new System.Windows.Forms.Timer(components);
             toolTip1 = new ToolTip(components);
-            chkFilterRegex = new CheckBox();
-            chkFilterCaseSensitive = new CheckBox();
-            btnFilterClose = new Button();
-            btnFilterClear = new Button();
+            FilterRegexChkb = new CheckBox();
+            FilterCaseSensitiveChkb = new CheckBox();
+            FilterCloseBtn = new Button();
+            FilterClearBtn = new Button();
             menuStrip1 = new MenuStrip();
             fileMenuItem = new ToolStripMenuItem();
             openProjectFileMenuItem = new ToolStripMenuItem();
@@ -79,25 +79,25 @@ namespace ModbusControl
             aboutMenuItem = new ToolStripMenuItem();
             debugInfoOutputToolStripMenuItem = new ToolStripMenuItem();
             toolStrip1 = new ToolStrip();
-            OpenProjectToolbutton = new ToolStripButton();
-            ReloadToolbutton = new ToolStripButton();
+            OpenProjectToolbtn = new ToolStripButton();
+            ReloadToolbtn = new ToolStripButton();
             toolStripSeparator3 = new ToolStripSeparator();
-            OpenConnectionToolbutton = new ToolStripButton();
-            CloseConnectionToolbutton = new ToolStripButton();
+            OpenConnectionToolbtn = new ToolStripButton();
+            CloseConnectionToolbtn = new ToolStripButton();
             toolStripSeparator4 = new ToolStripSeparator();
-            StartPollingToolbutton = new ToolStripButton();
-            StopPollingToolbutton = new ToolStripButton();
-            PollOnceToolbutton = new ToolStripButton();
+            StartPollingToolbtn = new ToolStripButton();
+            StopPollingToolbtn = new ToolStripButton();
+            PollOnceToolbtn = new ToolStripButton();
             tabControl1 = new TabControl();
             StatusbarTimer = new System.Windows.Forms.Timer(components);
-            tbFilterText = new TextBox();
-            filterPanel = new Panel();
+            FilterTextTextbox = new TextBox();
+            FilterPanel = new Panel();
             tableLayoutPanel1 = new TableLayoutPanel();
             label1 = new Label();
             statusStrip.SuspendLayout();
             menuStrip1.SuspendLayout();
             toolStrip1.SuspendLayout();
-            filterPanel.SuspendLayout();
+            FilterPanel.SuspendLayout();
             tableLayoutPanel1.SuspendLayout();
             SuspendLayout();
             // 
@@ -132,59 +132,59 @@ namespace ModbusControl
             // 
             toolTip1.BackColor = Color.FromArgb(255, 255, 225);
             // 
-            // chkFilterRegex
+            // FilterRegexChkb
             // 
-            chkFilterRegex.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            chkFilterRegex.AutoSize = true;
-            chkFilterRegex.Location = new Point(410, 4);
-            chkFilterRegex.Margin = new Padding(8, 4, 3, 3);
-            chkFilterRegex.Name = "chkFilterRegex";
-            chkFilterRegex.Size = new Size(57, 17);
-            chkFilterRegex.TabIndex = 3;
-            chkFilterRegex.Text = "Regex";
-            toolTip1.SetToolTip(chkFilterRegex, resources.GetString("chkFilterRegex.ToolTip"));
-            chkFilterRegex.UseVisualStyleBackColor = true;
-            chkFilterRegex.CheckedChanged += chkFilterRegex_CheckedChanged;
+            FilterRegexChkb.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            FilterRegexChkb.AutoSize = true;
+            FilterRegexChkb.Location = new Point(410, 4);
+            FilterRegexChkb.Margin = new Padding(8, 4, 3, 3);
+            FilterRegexChkb.Name = "FilterRegexChkb";
+            FilterRegexChkb.Size = new Size(57, 17);
+            FilterRegexChkb.TabIndex = 3;
+            FilterRegexChkb.Text = "Regex";
+            toolTip1.SetToolTip(FilterRegexChkb, resources.GetString("FilterRegexChkb.ToolTip"));
+            FilterRegexChkb.UseVisualStyleBackColor = true;
+            FilterRegexChkb.CheckedChanged += FilterRegexChkb_CheckedChanged;
             // 
-            // chkFilterCaseSensitive
+            // FilterCaseSensitiveChkb
             // 
-            chkFilterCaseSensitive.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            chkFilterCaseSensitive.AutoSize = true;
-            chkFilterCaseSensitive.Location = new Point(472, 4);
-            chkFilterCaseSensitive.Margin = new Padding(2, 4, 2, 2);
-            chkFilterCaseSensitive.Name = "chkFilterCaseSensitive";
-            chkFilterCaseSensitive.Size = new Size(82, 17);
-            chkFilterCaseSensitive.TabIndex = 4;
-            chkFilterCaseSensitive.Text = "Match case";
-            toolTip1.SetToolTip(chkFilterCaseSensitive, "Case sensitive");
-            chkFilterCaseSensitive.UseVisualStyleBackColor = true;
-            chkFilterCaseSensitive.CheckedChanged += ChkFilterCaseSensitive_CheckedChanged;
+            FilterCaseSensitiveChkb.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            FilterCaseSensitiveChkb.AutoSize = true;
+            FilterCaseSensitiveChkb.Location = new Point(472, 4);
+            FilterCaseSensitiveChkb.Margin = new Padding(2, 4, 2, 2);
+            FilterCaseSensitiveChkb.Name = "FilterCaseSensitiveChkb";
+            FilterCaseSensitiveChkb.Size = new Size(82, 17);
+            FilterCaseSensitiveChkb.TabIndex = 4;
+            FilterCaseSensitiveChkb.Text = "Match case";
+            toolTip1.SetToolTip(FilterCaseSensitiveChkb, "Case sensitive");
+            FilterCaseSensitiveChkb.UseVisualStyleBackColor = true;
+            FilterCaseSensitiveChkb.CheckedChanged += ChkFilterCaseSensitive_CheckedChanged;
             // 
-            // btnFilterClose
+            // FilterCloseBtn
             // 
-            btnFilterClose.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            btnFilterClose.Location = new Point(558, 1);
-            btnFilterClose.Margin = new Padding(2, 1, 6, 2);
-            btnFilterClose.Name = "btnFilterClose";
-            btnFilterClose.Size = new Size(48, 22);
-            btnFilterClose.TabIndex = 5;
-            btnFilterClose.Text = "Close";
-            toolTip1.SetToolTip(btnFilterClose, "Close find/filter");
-            btnFilterClose.UseVisualStyleBackColor = true;
-            btnFilterClose.Click += BtnFilterClose_Click;
+            FilterCloseBtn.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            FilterCloseBtn.Location = new Point(558, 1);
+            FilterCloseBtn.Margin = new Padding(2, 1, 6, 2);
+            FilterCloseBtn.Name = "FilterCloseBtn";
+            FilterCloseBtn.Size = new Size(48, 22);
+            FilterCloseBtn.TabIndex = 5;
+            FilterCloseBtn.Text = "Close";
+            toolTip1.SetToolTip(FilterCloseBtn, "Close find/filter");
+            FilterCloseBtn.UseVisualStyleBackColor = true;
+            FilterCloseBtn.Click += BtnFilterClose_Click;
             // 
-            // btnFilterClear
+            // FilterClearBtn
             // 
-            btnFilterClear.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            btnFilterClear.Image = (Image)resources.GetObject("btnFilterClear.Image");
-            btnFilterClear.Location = new Point(375, 2);
-            btnFilterClear.Margin = new Padding(0, 2, 2, 2);
-            btnFilterClear.Name = "btnFilterClear";
-            btnFilterClear.Size = new Size(25, 22);
-            btnFilterClear.TabIndex = 2;
-            toolTip1.SetToolTip(btnFilterClear, "Clear search");
-            btnFilterClear.UseVisualStyleBackColor = true;
-            btnFilterClear.Click += BtnFilterClear_Click;
+            FilterClearBtn.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            FilterClearBtn.Image = (Image)resources.GetObject("FilterClearBtn.Image");
+            FilterClearBtn.Location = new Point(375, 2);
+            FilterClearBtn.Margin = new Padding(0, 2, 2, 2);
+            FilterClearBtn.Name = "FilterClearBtn";
+            FilterClearBtn.Size = new Size(25, 22);
+            FilterClearBtn.TabIndex = 2;
+            toolTip1.SetToolTip(FilterClearBtn, "Clear search");
+            FilterClearBtn.UseVisualStyleBackColor = true;
+            FilterClearBtn.Click += BtnFilterClear_Click;
             // 
             // menuStrip1
             // 
@@ -249,7 +249,7 @@ namespace ModbusControl
             recentsToolStripMenuItem1.ShortcutKeys = Keys.Alt | Keys.F;
             recentsToolStripMenuItem1.Size = new Size(255, 22);
             recentsToolStripMenuItem1.Text = "Re&cent project files";
-            recentsToolStripMenuItem1.ItemClick += recentsToolStripMenuItem1_ItemClick;
+            recentsToolStripMenuItem1.ItemClick += RecentsToolStripMenuItem1_ItemClick;
             // 
             // toolStripSeparator2
             // 
@@ -465,112 +465,112 @@ namespace ModbusControl
             debugInfoOutputToolStripMenuItem.Size = new Size(194, 22);
             debugInfoOutputToolStripMenuItem.Text = "Debug info output";
             debugInfoOutputToolStripMenuItem.Visible = false;
-            debugInfoOutputToolStripMenuItem.Click += debugInfoOutputToolStripMenuItem_Click;
+            debugInfoOutputToolStripMenuItem.Click += DebugInfoOutputToolStripMenuItem_Click;
             // 
             // toolStrip1
             // 
             toolStrip1.ImageScalingSize = new Size(20, 20);
-            toolStrip1.Items.AddRange(new ToolStripItem[] { OpenProjectToolbutton, ReloadToolbutton, toolStripSeparator3, OpenConnectionToolbutton, CloseConnectionToolbutton, toolStripSeparator4, StartPollingToolbutton, StopPollingToolbutton, PollOnceToolbutton });
+            toolStrip1.Items.AddRange(new ToolStripItem[] { OpenProjectToolbtn, ReloadToolbtn, toolStripSeparator3, OpenConnectionToolbtn, CloseConnectionToolbtn, toolStripSeparator4, StartPollingToolbtn, StopPollingToolbtn, PollOnceToolbtn });
             toolStrip1.Location = new Point(0, 24);
             toolStrip1.Name = "toolStrip1";
             toolStrip1.Size = new Size(614, 27);
             toolStrip1.TabIndex = 1;
             toolStrip1.Text = "toolStrip1";
             // 
-            // OpenProjectToolbutton
+            // OpenProjectToolbtn
             // 
-            OpenProjectToolbutton.AutoToolTip = false;
-            OpenProjectToolbutton.DisplayStyle = ToolStripItemDisplayStyle.Image;
-            OpenProjectToolbutton.Image = (Image)resources.GetObject("OpenProjectToolbutton.Image");
-            OpenProjectToolbutton.ImageTransparentColor = Color.Magenta;
-            OpenProjectToolbutton.Name = "OpenProjectToolbutton";
-            OpenProjectToolbutton.Size = new Size(24, 24);
-            OpenProjectToolbutton.Text = "Open project file";
-            OpenProjectToolbutton.ToolTipText = "Open project file";
-            OpenProjectToolbutton.Click += OpenProjectToolbutton_Click;
+            OpenProjectToolbtn.AutoToolTip = false;
+            OpenProjectToolbtn.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            OpenProjectToolbtn.Image = (Image)resources.GetObject("OpenProjectToolbtn.Image");
+            OpenProjectToolbtn.ImageTransparentColor = Color.Magenta;
+            OpenProjectToolbtn.Name = "OpenProjectToolbtn";
+            OpenProjectToolbtn.Size = new Size(24, 24);
+            OpenProjectToolbtn.Text = "Open project file";
+            OpenProjectToolbtn.ToolTipText = "Open project file";
+            OpenProjectToolbtn.Click += OpenProjectToolbutton_Click;
             // 
-            // ReloadToolbutton
+            // ReloadToolbtn
             // 
-            ReloadToolbutton.AutoToolTip = false;
-            ReloadToolbutton.DisplayStyle = ToolStripItemDisplayStyle.Image;
-            ReloadToolbutton.Enabled = false;
-            ReloadToolbutton.Image = (Image)resources.GetObject("ReloadToolbutton.Image");
-            ReloadToolbutton.ImageTransparentColor = Color.Magenta;
-            ReloadToolbutton.Name = "ReloadToolbutton";
-            ReloadToolbutton.Size = new Size(24, 24);
-            ReloadToolbutton.Text = "Reload project file";
-            ReloadToolbutton.ToolTipText = "Reload project file";
-            ReloadToolbutton.Click += ReloadProjectToolbutton_Click;
+            ReloadToolbtn.AutoToolTip = false;
+            ReloadToolbtn.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            ReloadToolbtn.Enabled = false;
+            ReloadToolbtn.Image = (Image)resources.GetObject("ReloadToolbtn.Image");
+            ReloadToolbtn.ImageTransparentColor = Color.Magenta;
+            ReloadToolbtn.Name = "ReloadToolbtn";
+            ReloadToolbtn.Size = new Size(24, 24);
+            ReloadToolbtn.Text = "Reload project file";
+            ReloadToolbtn.ToolTipText = "Reload project file";
+            ReloadToolbtn.Click += ReloadProjectToolbutton_Click;
             // 
             // toolStripSeparator3
             // 
             toolStripSeparator3.Name = "toolStripSeparator3";
             toolStripSeparator3.Size = new Size(6, 27);
             // 
-            // OpenConnectionToolbutton
+            // OpenConnectionToolbtn
             // 
-            OpenConnectionToolbutton.AutoToolTip = false;
-            OpenConnectionToolbutton.DisplayStyle = ToolStripItemDisplayStyle.Image;
-            OpenConnectionToolbutton.Image = (Image)resources.GetObject("OpenConnectionToolbutton.Image");
-            OpenConnectionToolbutton.ImageTransparentColor = Color.Magenta;
-            OpenConnectionToolbutton.Name = "OpenConnectionToolbutton";
-            OpenConnectionToolbutton.Size = new Size(24, 24);
-            OpenConnectionToolbutton.Text = "Open connection";
-            OpenConnectionToolbutton.ToolTipText = "Open connection";
-            OpenConnectionToolbutton.Click += OpenConnectionToolbutton_Click;
+            OpenConnectionToolbtn.AutoToolTip = false;
+            OpenConnectionToolbtn.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            OpenConnectionToolbtn.Image = (Image)resources.GetObject("OpenConnectionToolbtn.Image");
+            OpenConnectionToolbtn.ImageTransparentColor = Color.Magenta;
+            OpenConnectionToolbtn.Name = "OpenConnectionToolbtn";
+            OpenConnectionToolbtn.Size = new Size(24, 24);
+            OpenConnectionToolbtn.Text = "Open connection";
+            OpenConnectionToolbtn.ToolTipText = "Open connection";
+            OpenConnectionToolbtn.Click += OpenConnectionToolbutton_Click;
             // 
-            // CloseConnectionToolbutton
+            // CloseConnectionToolbtn
             // 
-            CloseConnectionToolbutton.AutoToolTip = false;
-            CloseConnectionToolbutton.DisplayStyle = ToolStripItemDisplayStyle.Image;
-            CloseConnectionToolbutton.Image = (Image)resources.GetObject("CloseConnectionToolbutton.Image");
-            CloseConnectionToolbutton.ImageTransparentColor = Color.Magenta;
-            CloseConnectionToolbutton.Name = "CloseConnectionToolbutton";
-            CloseConnectionToolbutton.Size = new Size(24, 24);
-            CloseConnectionToolbutton.Text = "Close connection";
-            CloseConnectionToolbutton.ToolTipText = "Close connection";
-            CloseConnectionToolbutton.Click += CloseConnectionToolbutton_Click;
+            CloseConnectionToolbtn.AutoToolTip = false;
+            CloseConnectionToolbtn.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            CloseConnectionToolbtn.Image = (Image)resources.GetObject("CloseConnectionToolbtn.Image");
+            CloseConnectionToolbtn.ImageTransparentColor = Color.Magenta;
+            CloseConnectionToolbtn.Name = "CloseConnectionToolbtn";
+            CloseConnectionToolbtn.Size = new Size(24, 24);
+            CloseConnectionToolbtn.Text = "Close connection";
+            CloseConnectionToolbtn.ToolTipText = "Close connection";
+            CloseConnectionToolbtn.Click += CloseConnectionToolbutton_Click;
             // 
             // toolStripSeparator4
             // 
             toolStripSeparator4.Name = "toolStripSeparator4";
             toolStripSeparator4.Size = new Size(6, 27);
             // 
-            // StartPollingToolbutton
+            // StartPollingToolbtn
             // 
-            StartPollingToolbutton.AutoToolTip = false;
-            StartPollingToolbutton.DisplayStyle = ToolStripItemDisplayStyle.Image;
-            StartPollingToolbutton.Image = (Image)resources.GetObject("StartPollingToolbutton.Image");
-            StartPollingToolbutton.ImageTransparentColor = Color.Magenta;
-            StartPollingToolbutton.Name = "StartPollingToolbutton";
-            StartPollingToolbutton.Size = new Size(24, 24);
-            StartPollingToolbutton.Text = "Start polling";
-            StartPollingToolbutton.ToolTipText = "Start polling";
-            StartPollingToolbutton.Click += StartPollingToolbutton_Click;
+            StartPollingToolbtn.AutoToolTip = false;
+            StartPollingToolbtn.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            StartPollingToolbtn.Image = (Image)resources.GetObject("StartPollingToolbtn.Image");
+            StartPollingToolbtn.ImageTransparentColor = Color.Magenta;
+            StartPollingToolbtn.Name = "StartPollingToolbtn";
+            StartPollingToolbtn.Size = new Size(24, 24);
+            StartPollingToolbtn.Text = "Start polling";
+            StartPollingToolbtn.ToolTipText = "Start polling";
+            StartPollingToolbtn.Click += StartPollingToolbutton_Click;
             // 
-            // StopPollingToolbutton
+            // StopPollingToolbtn
             // 
-            StopPollingToolbutton.AutoToolTip = false;
-            StopPollingToolbutton.DisplayStyle = ToolStripItemDisplayStyle.Image;
-            StopPollingToolbutton.Image = (Image)resources.GetObject("StopPollingToolbutton.Image");
-            StopPollingToolbutton.ImageTransparentColor = Color.Magenta;
-            StopPollingToolbutton.Name = "StopPollingToolbutton";
-            StopPollingToolbutton.Size = new Size(24, 24);
-            StopPollingToolbutton.Text = "Stop polling";
-            StopPollingToolbutton.ToolTipText = "Stop polling";
-            StopPollingToolbutton.Click += StopPollingToolbutton_Click;
+            StopPollingToolbtn.AutoToolTip = false;
+            StopPollingToolbtn.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            StopPollingToolbtn.Image = (Image)resources.GetObject("StopPollingToolbtn.Image");
+            StopPollingToolbtn.ImageTransparentColor = Color.Magenta;
+            StopPollingToolbtn.Name = "StopPollingToolbtn";
+            StopPollingToolbtn.Size = new Size(24, 24);
+            StopPollingToolbtn.Text = "Stop polling";
+            StopPollingToolbtn.ToolTipText = "Stop polling";
+            StopPollingToolbtn.Click += StopPollingToolbutton_Click;
             // 
-            // PollOnceToolbutton
+            // PollOnceToolbtn
             // 
-            PollOnceToolbutton.AutoToolTip = false;
-            PollOnceToolbutton.DisplayStyle = ToolStripItemDisplayStyle.Image;
-            PollOnceToolbutton.Image = (Image)resources.GetObject("PollOnceToolbutton.Image");
-            PollOnceToolbutton.ImageTransparentColor = Color.Magenta;
-            PollOnceToolbutton.Name = "PollOnceToolbutton";
-            PollOnceToolbutton.Size = new Size(24, 24);
-            PollOnceToolbutton.Text = "Poll current tab once";
-            PollOnceToolbutton.ToolTipText = "Poll once";
-            PollOnceToolbutton.Click += PollOnceToolbutton_Click;
+            PollOnceToolbtn.AutoToolTip = false;
+            PollOnceToolbtn.DisplayStyle = ToolStripItemDisplayStyle.Image;
+            PollOnceToolbtn.Image = (Image)resources.GetObject("PollOnceToolbtn.Image");
+            PollOnceToolbtn.ImageTransparentColor = Color.Magenta;
+            PollOnceToolbtn.Name = "PollOnceToolbtn";
+            PollOnceToolbtn.Size = new Size(24, 24);
+            PollOnceToolbtn.Text = "Poll current tab once";
+            PollOnceToolbtn.ToolTipText = "Poll once";
+            PollOnceToolbtn.Click += PollOnceToolbutton_Click;
             // 
             // tabControl1
             // 
@@ -586,26 +586,26 @@ namespace ModbusControl
             // 
             StatusbarTimer.Tick += StatusbarTimerEvent;
             // 
-            // tbFilterText
+            // FilterTextTextbox
             // 
-            tbFilterText.Location = new Point(63, 2);
-            tbFilterText.Margin = new Padding(2);
-            tbFilterText.Name = "tbFilterText";
-            tbFilterText.Size = new Size(310, 20);
-            tbFilterText.TabIndex = 1;
-            tbFilterText.TextChanged += TbFilterText_TextChanged;
+            FilterTextTextbox.Location = new Point(63, 2);
+            FilterTextTextbox.Margin = new Padding(2);
+            FilterTextTextbox.Name = "FilterTextTextbox";
+            FilterTextTextbox.Size = new Size(310, 20);
+            FilterTextTextbox.TabIndex = 1;
+            FilterTextTextbox.TextChanged += TbFilterText_TextChanged;
             // 
-            // filterPanel
+            // FilterPanel
             // 
-            filterPanel.BorderStyle = BorderStyle.FixedSingle;
-            filterPanel.Controls.Add(tableLayoutPanel1);
-            filterPanel.Dock = DockStyle.Top;
-            filterPanel.Location = new Point(0, 51);
-            filterPanel.Margin = new Padding(2);
-            filterPanel.MinimumSize = new Size(400, 2);
-            filterPanel.Name = "filterPanel";
-            filterPanel.Size = new Size(614, 27);
-            filterPanel.TabIndex = 2;
+            FilterPanel.BorderStyle = BorderStyle.FixedSingle;
+            FilterPanel.Controls.Add(tableLayoutPanel1);
+            FilterPanel.Dock = DockStyle.Top;
+            FilterPanel.Location = new Point(0, 51);
+            FilterPanel.Margin = new Padding(2);
+            FilterPanel.MinimumSize = new Size(400, 2);
+            FilterPanel.Name = "FilterPanel";
+            FilterPanel.Size = new Size(614, 27);
+            FilterPanel.TabIndex = 2;
             // 
             // tableLayoutPanel1
             // 
@@ -616,12 +616,12 @@ namespace ModbusControl
             tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle());
             tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle());
             tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle());
-            tableLayoutPanel1.Controls.Add(tbFilterText, 1, 0);
+            tableLayoutPanel1.Controls.Add(FilterTextTextbox, 1, 0);
             tableLayoutPanel1.Controls.Add(label1, 0, 0);
-            tableLayoutPanel1.Controls.Add(btnFilterClose, 5, 0);
-            tableLayoutPanel1.Controls.Add(chkFilterCaseSensitive, 4, 0);
-            tableLayoutPanel1.Controls.Add(chkFilterRegex, 3, 0);
-            tableLayoutPanel1.Controls.Add(btnFilterClear, 2, 0);
+            tableLayoutPanel1.Controls.Add(FilterCloseBtn, 5, 0);
+            tableLayoutPanel1.Controls.Add(FilterCaseSensitiveChkb, 4, 0);
+            tableLayoutPanel1.Controls.Add(FilterRegexChkb, 3, 0);
+            tableLayoutPanel1.Controls.Add(FilterClearBtn, 2, 0);
             tableLayoutPanel1.Dock = DockStyle.Fill;
             tableLayoutPanel1.Location = new Point(0, 0);
             tableLayoutPanel1.Name = "tableLayoutPanel1";
@@ -646,7 +646,7 @@ namespace ModbusControl
             AutoScaleMode = AutoScaleMode.Dpi;
             ClientSize = new Size(614, 464);
             Controls.Add(tabControl1);
-            Controls.Add(filterPanel);
+            Controls.Add(FilterPanel);
             Controls.Add(toolStrip1);
             Controls.Add(menuStrip1);
             Controls.Add(statusStrip);
@@ -667,7 +667,7 @@ namespace ModbusControl
             menuStrip1.PerformLayout();
             toolStrip1.ResumeLayout(false);
             toolStrip1.PerformLayout();
-            filterPanel.ResumeLayout(false);
+            FilterPanel.ResumeLayout(false);
             tableLayoutPanel1.ResumeLayout(false);
             tableLayoutPanel1.PerformLayout();
             ResumeLayout(false);
@@ -694,16 +694,16 @@ namespace ModbusControl
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
         private System.Windows.Forms.ToolStripMenuItem checkForUpdateMenuItem;
-        private System.Windows.Forms.ToolStripButton OpenProjectToolbutton;
-        private System.Windows.Forms.ToolStripButton ReloadToolbutton;
+        private System.Windows.Forms.ToolStripButton OpenProjectToolbtn;
+        private System.Windows.Forms.ToolStripButton ReloadToolbtn;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
-        private System.Windows.Forms.ToolStripButton StartPollingToolbutton;
-        private System.Windows.Forms.ToolStripButton StopPollingToolbutton;
+        private System.Windows.Forms.ToolStripButton StartPollingToolbtn;
+        private System.Windows.Forms.ToolStripButton StopPollingToolbtn;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
         private System.Windows.Forms.ToolStripMenuItem saveConfigurationMenuItem;
-        private System.Windows.Forms.ToolStripButton OpenConnectionToolbutton;
-        private System.Windows.Forms.ToolStripButton CloseConnectionToolbutton;
-        private System.Windows.Forms.ToolStripButton PollOnceToolbutton;
+        private System.Windows.Forms.ToolStripButton OpenConnectionToolbtn;
+        private System.Windows.Forms.ToolStripButton CloseConnectionToolbtn;
+        private System.Windows.Forms.ToolStripButton PollOnceToolbtn;
         private System.Windows.Forms.TabControl tabControl1;
         private System.Windows.Forms.ToolStripMenuItem extraMenuItem;
         private System.Windows.Forms.ToolStripMenuItem configurationToolStripMenuItem;
@@ -724,12 +724,12 @@ namespace ModbusControl
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator8;
         private System.Windows.Forms.ToolStripMenuItem openFileLocationToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator9;
-        private System.Windows.Forms.TextBox tbFilterText;
-        private System.Windows.Forms.Panel filterPanel;
-        private System.Windows.Forms.Button btnFilterClear;
+        private System.Windows.Forms.TextBox FilterTextTextbox;
+        private System.Windows.Forms.Panel FilterPanel;
+        private System.Windows.Forms.Button FilterClearBtn;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.CheckBox chkFilterCaseSensitive;
-        private System.Windows.Forms.Button btnFilterClose;
+        private System.Windows.Forms.CheckBox FilterCaseSensitiveChkb;
+        private System.Windows.Forms.Button FilterCloseBtn;
         private System.Windows.Forms.ToolStripMenuItem findFilterToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem customQueriesMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator5;
@@ -737,7 +737,7 @@ namespace ModbusControl
         private System.Windows.Forms.ToolStripMenuItem loggingToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem importRegistersFromFileToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem exportRegistersToFileToolStripMenuItem;
-        private System.Windows.Forms.CheckBox chkFilterRegex;
+        private System.Windows.Forms.CheckBox FilterRegexChkb;
         private RecentsToolStripMenuItem recentsToolStripMenuItem1;
         private TableLayoutPanel tableLayoutPanel1;
         private ToolStripMenuItem debugInfoOutputToolStripMenuItem;

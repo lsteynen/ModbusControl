@@ -1,9 +1,10 @@
-﻿using System;
+﻿using LST.Helpers;
+using System.IO.Ports;
+using System;
 using System.Diagnostics;
 using System.Text;
 using System.Windows.Forms;
-using RJCP.IO.Ports;
-using LST.Helpers;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace ModbusControl
 {
@@ -22,20 +23,20 @@ namespace ModbusControl
 
         public Global.eConnectionType ConnectionType
         {
-            get { return (Global.eConnectionType)comboConnection.SelectedIndex; }
+            get { return (Global.eConnectionType)ConnectionCombo.SelectedIndex; }
             set
             {
-                comboConnection.SelectedIndex = (int)value;
+                ConnectionCombo.SelectedIndex = (int)value;
             }
         }
 
         public string ConnectionSerialPort
         {
-            get { return comboSerialPort.Text; }
+            get { return SerialPortCombo.Text; }
             set
             {
-                comboSerialPort.Text = value;
-                comboSerialPort.SelectedIndex = comboSerialPort.Items.IndexOf(value);
+                SerialPortCombo.Text = value;
+                SerialPortCombo.SelectedIndex = SerialPortCombo.Items.IndexOf(value);
             }
         }
 
@@ -43,108 +44,114 @@ namespace ModbusControl
         {
             get
             {
-                UInt32 TmpBaudrate = 0;
-                UInt32.TryParse(comboSerialBaudrate.Text, out TmpBaudrate);
+                UInt32 TmpBaudrate;
+                UInt32.TryParse(SerialBaudrateCombo.Text, out TmpBaudrate);
                 return (int)TmpBaudrate;
             }
             set
             {
-                comboSerialBaudrate.Text = value.ToString();
-                comboSerialBaudrate.SelectedIndex = comboSerialBaudrate.Items.IndexOf(value.ToString());
+                SerialBaudrateCombo.Text = value.ToString();
+                SerialBaudrateCombo.SelectedIndex = SerialBaudrateCombo.Items.IndexOf(value.ToString());
             }
         }
 
-        public Parity ConnectionSerialParity
+        public LST.Helpers.Parity.EParity ConnectionSerialParity
         {
             get
             {
-                // get parity enum
-                return (Parity)Enum.Parse(typeof(Parity), comboSerialParity.Text, true);
+                // convert to parity code 
+                string text = SerialParityCombo.Text;
+                LST.Helpers.Parity.EParity tmpParity;
+                if (LST.Helpers.Parity.TryParseParity(text, out tmpParity))
+                    return tmpParity;
+
+                throw new InvalidOperationException($"Invalid serial parity selection: '{text}'.");
             }
             set
             {
-                comboSerialParity.SelectedIndex = comboSerialParity.Items.IndexOf(value.ToString());
+                string text = LST.Helpers.Parity.ParityToName(value);
+                SerialParityCombo.SelectedIndex = SerialParityCombo.Items.IndexOf(text);
             }
         }
 
         public int ConnectionSerialEndOfMessageTimeout
         {
-            get { return (int)numericSerialEndOfMessageTimeout.Value; }
+            get { return (int)SerialEndOfMessageTimeoutNumeric.Value; }
             set
             {
-                numericSerialEndOfMessageTimeout.Value = value;
+                SerialEndOfMessageTimeoutNumeric.Value = value;
             }
         }
 
         public bool ConnectionSerialOneWireEchoSuppression
         {
-            get { return checkboxSerialOneWireEchoSuppression.Checked; }
+            get { return SerialOneWireEchoSuppressionCheckbox.Checked; }
             set
             {
-                checkboxSerialOneWireEchoSuppression.Checked = value;
+                SerialOneWireEchoSuppressionCheckbox.Checked = value;
             }
         }
 
         public string ConnectionIPAddress
         {
-            get { return textboxIpAddress.Text; }
+            get { return IpAddressTextbox.Text; }
             set
             {
-                textboxIpAddress.Text = value;
+                IpAddressTextbox.Text = value;
             }
         }
 
         public UInt16 ConnectionIPPort
         {
-            get { return (UInt16)numericIpPort.Value; }
+            get { return (UInt16)IpPortNumeric.Value; }
             set
             {
-                numericIpPort.Value = value;
+                IpPortNumeric.Value = value;
             }
         }
 
         public Global.eTcpConnectMode ConnectionTcpConnectMode
         {
-            get { return (Global.eTcpConnectMode)comboTcpConnectMode.SelectedIndex; }
+            get { return (Global.eTcpConnectMode)TcpConnectModeCombo.SelectedIndex; }
             set
             {
-                comboTcpConnectMode.SelectedIndex = (int)value;
+                TcpConnectModeCombo.SelectedIndex = (int)value;
             }
         }
 
         public Byte ConnectionSlaveID
         {
-            get { return (Byte)numericSlaveAddress.Value; }
+            get { return (Byte)SlaveAddressNumeric.Value; }
             set
             {
-                numericSlaveAddress.Value = value;
+                SlaveAddressNumeric.Value = value;
             }
         }
 
         public int ConnectionMaximumFrameSize
         {
-            get { return (int)numericMaximumFrameSize.Value; }
+            get { return (int)MaximumFrameSizeNumeric.Value; }
             set
             {
-                numericMaximumFrameSize.Value = value;
+                MaximumFrameSizeNumeric.Value = value;
             }
         }
 
         public int ConnectionResponseTimeout
         {
-            get { return (int)numericResponseTimeout.Value; }
+            get { return (int)ResponseTimeoutNumeric.Value; }
             set
             {
-                numericResponseTimeout.Value = value;
+                ResponseTimeoutNumeric.Value = value;
             }
         }
 
         public int ConnectionInterFrameDelay
         {
-            get { return (int)numericInterFrameDelay.Value; }
+            get { return (int)InterFrameDelayNumeric.Value; }
             set
             {
-                numericInterFrameDelay.Value = value;
+                InterFrameDelayNumeric.Value = value;
             }
         }
 
@@ -153,15 +160,15 @@ namespace ModbusControl
             // 6=write_single, 16=write_multiple, 0=auto
             get
             {
-                if (radWriteFC6.Checked) return 6;
-                if (radWriteFC16.Checked) return 16;
+                if (WriteFC6Radiobtn.Checked) return 6;
+                if (WriteFC16Radiobtn.Checked) return 16;
                 return 0;
             }
             set
             {
-                if (value == 6) radWriteFC6.Checked = true;
-                else if (value == 16) radWriteFC16.Checked = true;
-                else radWriteFCAuto.Checked = true;
+                if (value == 6) WriteFC6Radiobtn.Checked = true;
+                else if (value == 16) WriteFC16Radiobtn.Checked = true;
+                else WriteFCAutoRadiobtn.Checked = true;
             }
         }
 
@@ -169,13 +176,13 @@ namespace ModbusControl
         {
             get
             {
-                if (radInt32LittleEndian.Checked) return Global.eEndian.Little;
+                if (Int32LittleEndianRadiobtn.Checked) return Global.eEndian.Little;
                 return Global.eEndian.Big;
             }
             set
             {
-                radInt32LittleEndian.Checked = (value == Global.eEndian.Little);
-                radInt32BigEndian.Checked = (value == Global.eEndian.Big);
+                Int32LittleEndianRadiobtn.Checked = (value == Global.eEndian.Little);
+                Int32BigEndianRadiobtn.Checked = (value == Global.eEndian.Big);
             }
         }
 
@@ -183,13 +190,13 @@ namespace ModbusControl
         {
             get
             {
-                if (radFloat32LittleEndian.Checked) return Global.eEndian.Little;
+                if (Float32LittleEndianRadiobtn.Checked) return Global.eEndian.Little;
                 return Global.eEndian.Big;
             }
             set
             {
-                radFloat32LittleEndian.Checked = (value == Global.eEndian.Little);
-                radFloat32BigEndian.Checked = (value == Global.eEndian.Big);
+                Float32LittleEndianRadiobtn.Checked = (value == Global.eEndian.Little);
+                Float32BigEndianRadiobtn.Checked = (value == Global.eEndian.Big);
             }
         }
 
@@ -197,13 +204,13 @@ namespace ModbusControl
         {
             get
             {
-                if (radStringLittleEndian.Checked) return Global.eEndian.Little;
+                if (StringLittleEndianRadiobtn.Checked) return Global.eEndian.Little;
                 return Global.eEndian.Big;
             }
             set
             {
-                radStringLittleEndian.Checked = (value == Global.eEndian.Little);
-                radStringBigEndian.Checked = (value == Global.eEndian.Big);
+                StringLittleEndianRadiobtn.Checked = (value == Global.eEndian.Little);
+                StringBigEndianRadiobtn.Checked = (value == Global.eEndian.Big);
             }
         }
 
@@ -224,7 +231,7 @@ namespace ModbusControl
             }
         }
 
-        public bool SetComboboxSelectedValueIgnoreCase(ComboBox combo, string value)
+        public static bool SetComboboxSelectedValueIgnoreCase(ComboBox combo, string value)
         {
             if (combo == null)
             {
@@ -253,13 +260,12 @@ namespace ModbusControl
             return false;
         }
 
-
         public int OptionsHoldingregistersStart
         {
             // is write only
             set
             {
-                string text = string.Empty;
+                string text;
 
                 switch (value)
                 {
@@ -287,10 +293,10 @@ namespace ModbusControl
 
         public int OptionsSamplerate
         {
-            get { return (int)numericSamplerate.Value; }
+            get { return (int)SamplerateNumeric.Value; }
             set
             {
-                numericSamplerate.Value = value;
+                SamplerateNumeric.Value = value;
             }
         }
 
@@ -298,7 +304,7 @@ namespace ModbusControl
         {
             set
             {
-                picConnectionTypeIsOverride.Visible = value;
+                ConnectionTypeIsOverrideIcon.Visible = value;
             }
         }
 
@@ -306,7 +312,7 @@ namespace ModbusControl
         {
             set
             {
-                picPortIsOverride.Visible = value;
+                PortIsOverrideIcon.Visible = value;
             }
         }
 
@@ -314,7 +320,7 @@ namespace ModbusControl
         {
             set
             {
-                picBaudrateIsOverride.Visible = value;
+                BaudrateIsOverrideIcon.Visible = value;
             }
         }
 
@@ -322,7 +328,7 @@ namespace ModbusControl
         {
             set
             {
-                picParityIsOverride.Visible = value;
+                ParityIsOverrideIcon.Visible = value;
             }
         }
 
@@ -330,7 +336,7 @@ namespace ModbusControl
         {
             set
             {
-                picEndofmessagetimeoutIsOverride.Visible = value;
+                EndofmessagetimeoutIsOverrideIcon.Visible = value;
             }
         }
 
@@ -338,7 +344,7 @@ namespace ModbusControl
         {
             set
             {
-                picOnewireechosuppressionIsOverride.Visible = value;
+                OnewireechosuppressionIsOverrideIcon.Visible = value;
             }
         }
 
@@ -346,7 +352,7 @@ namespace ModbusControl
         {
             set
             {
-                picIPAddressIsOverride.Visible = value;
+                IPAddressIsOverrideIcon.Visible = value;
             }
         }
 
@@ -354,7 +360,7 @@ namespace ModbusControl
         {
             set
             {
-                picIPPortIsOverride.Visible = value;
+                IPPortIsOverrideIcon.Visible = value;
             }
         }
 
@@ -362,7 +368,7 @@ namespace ModbusControl
         {
             set
             {
-                picSlaveIDIsOverride.Visible = value;
+                SlaveIDIsOverrideIcon.Visible = value;
             }
         }
 
@@ -370,7 +376,7 @@ namespace ModbusControl
         {
             set
             {
-                picMaxFrameSizeIsOverride.Visible = value;
+                MaxFrameSizeIsOverrideIcon.Visible = value;
             }
         }
 
@@ -378,7 +384,7 @@ namespace ModbusControl
         {
             set
             {
-                picResponsetimeoutIsOverride.Visible = value;
+                ResponsetimeoutIsOverrideIcon.Visible = value;
             }
         }
 
@@ -386,7 +392,7 @@ namespace ModbusControl
         {
             set
             {
-                picInterframedelayIsOverride.Visible = value;
+                InterframedelayIsOverrideIcon.Visible = value;
             }
         }
 
@@ -394,7 +400,7 @@ namespace ModbusControl
         {
             set
             {
-                picSamplerateIsOverride.Visible = value;
+                SamplerateIsOverrideIcon.Visible = value;
             }
         }
 
@@ -402,26 +408,26 @@ namespace ModbusControl
         {
             set
             {
-                picwriteregFCIsOverride.Visible = value;
+                WriteregFCIsOverrideIcon.Visible = value;
             }
         }
 
 
         public bool ModbusTcpBridgeEnable
         {
-            get { return checkboxTcpServerEnable.Checked; }
+            get { return TcpServerEnableCheckbox.Checked; }
             set
             {
-                checkboxTcpServerEnable.Checked = value;
+                TcpServerEnableCheckbox.Checked = value;
             }
         }
 
         public UInt16 ModbusTcpBridgeIPPort
         {
-            get { return (UInt16)numericTcpServerPort.Value; }
+            get { return (UInt16)TcpServerPortNumeric.Value; }
             set
             {
-                numericTcpServerPort.Value = value;
+                TcpServerPortNumeric.Value = value;
             }
         }
 
@@ -436,21 +442,21 @@ namespace ModbusControl
             InitializeComponent();
 
             // limit number of digits that can be typed in numericupdowns
-            ((TextBox)numericMaximumFrameSize.Controls[1]).MaxLength = numericMaximumFrameSize.Maximum.ToString().Length;
-            ((TextBox)numericResponseTimeout.Controls[1]).MaxLength = numericResponseTimeout.Maximum.ToString().Length;
-            ((TextBox)numericSlaveAddress.Controls[1]).MaxLength = numericSlaveAddress.Maximum.ToString().Length;
-            ((TextBox)numericIpPort.Controls[1]).MaxLength = numericIpPort.Maximum.ToString().Length;
-            ((TextBox)numericSerialEndOfMessageTimeout.Controls[1]).MaxLength = numericSerialEndOfMessageTimeout.Maximum.ToString().Length;
-            ((TextBox)numericTcpServerPort.Controls[1]).MaxLength = numericTcpServerPort.Maximum.ToString().Length;
-            ((TextBox)numericSamplerate.Controls[1]).MaxLength = numericSamplerate.Maximum.ToString().Length;
+            ((TextBox)MaximumFrameSizeNumeric.Controls[1]).MaxLength = MaximumFrameSizeNumeric.Maximum.ToString().Length;
+            ((TextBox)ResponseTimeoutNumeric.Controls[1]).MaxLength = ResponseTimeoutNumeric.Maximum.ToString().Length;
+            ((TextBox)SlaveAddressNumeric.Controls[1]).MaxLength = SlaveAddressNumeric.Maximum.ToString().Length;
+            ((TextBox)IpPortNumeric.Controls[1]).MaxLength = IpPortNumeric.Maximum.ToString().Length;
+            ((TextBox)SerialEndOfMessageTimeoutNumeric.Controls[1]).MaxLength = SerialEndOfMessageTimeoutNumeric.Maximum.ToString().Length;
+            ((TextBox)TcpServerPortNumeric.Controls[1]).MaxLength = TcpServerPortNumeric.Maximum.ToString().Length;
+            ((TextBox)SamplerateNumeric.Controls[1]).MaxLength = SamplerateNumeric.Maximum.ToString().Length;
 
             // fill combobox with available serial ports
-            comboSerialPort.LoadWithFirstSerialPort();
+            SerialPortCombo.LoadWithFirstSerialPort();
 
             // load a dictionary with the supported string encodings
             // use a dictionary to have 2 values per item: key/name and displaytext
             // get the displayname of each encoding
-            Dictionary<string, string> encodingDict = new Dictionary<string, string>();
+            Dictionary<string, string> encodingDict = new();
             string[] listOfSupportedStringEncodings = Converts.GetListOfSupportedStringEncodings();
             foreach (string encName in listOfSupportedStringEncodings)
             {
@@ -471,18 +477,18 @@ namespace ModbusControl
             comboStringEncoding.ValueMember = "Key";     // Encoding name
 
 #if DEBUG
-            butDebugInfo.Visible = true;
+            DebugInfoBtn.Visible = true;
 #endif
 
         }
 
-        private void ComboConnection_SelectedIndexChanged(object sender, EventArgs e)
+        private void ConnectionCombo_SelectedIndexChanged(object sender, EventArgs e)
         {
-            groupBoxSerialInterface.Enabled = (comboConnection.SelectedIndex == (int)Global.eConnectionType.SerialRTU);
-            groupBoxTcpInterface.Enabled = ((comboConnection.SelectedIndex == (int)Global.eConnectionType.ModbusTcp) || (comboConnection.SelectedIndex == (int)Global.eConnectionType.RtuOverTcp));
+            SerialInterfaceGroupbox.Enabled = (ConnectionCombo.SelectedIndex == (int)Global.eConnectionType.SerialRTU);
+            TcpInterfaceGroupbox.Enabled = ((ConnectionCombo.SelectedIndex == (int)Global.eConnectionType.ModbusTcp) || (ConnectionCombo.SelectedIndex == (int)Global.eConnectionType.RtuOverTcp));
         }
 
-        private void ButtonApply_Click(object sender, EventArgs e)
+        private void ApplyBtn_Click(object sender, EventArgs e)
         {
             if (this.OnApply != null)
             {
@@ -494,30 +500,31 @@ namespace ModbusControl
         {
             // show warning panel if any of the warning icons is shown
             // can't do that earlier because the visibility of the icons is set after the properties are set by the caller
-            warningPanel.Visible = picConnectionTypeIsOverride.Visible
-                                || picPortIsOverride.Visible
-                                || picBaudrateIsOverride.Visible
-                                || picParityIsOverride.Visible
-                                || picEndofmessagetimeoutIsOverride.Visible
-                                || picOnewireechosuppressionIsOverride.Visible
-                                || picIPAddressIsOverride.Visible
-                                || picIPPortIsOverride.Visible
-                                || picSlaveIDIsOverride.Visible
-                                || picMaxFrameSizeIsOverride.Visible
-                                || picResponsetimeoutIsOverride.Visible
-                                || picInterframedelayIsOverride.Visible
-                                || picSamplerateIsOverride.Visible
-                                || picwriteregFCIsOverride.Visible;
+            WarningPanel.Visible = ConnectionTypeIsOverrideIcon.Visible
+                                || PortIsOverrideIcon.Visible
+                                || BaudrateIsOverrideIcon.Visible
+                                || ParityIsOverrideIcon.Visible
+                                || EndofmessagetimeoutIsOverrideIcon.Visible
+                                || OnewireechosuppressionIsOverrideIcon.Visible
+                                || IPAddressIsOverrideIcon.Visible
+                                || IPPortIsOverrideIcon.Visible
+                                || SlaveIDIsOverrideIcon.Visible
+                                || MaxFrameSizeIsOverrideIcon.Visible
+                                || ResponsetimeoutIsOverrideIcon.Visible
+                                || InterframedelayIsOverrideIcon.Visible
+                                || SamplerateIsOverrideIcon.Visible
+                                || WriteregFCIsOverrideIcon.Visible;
 
             AdjustFormLayout();
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void DebugInfoBtn_Click(object sender, EventArgs e)
         {
             Debug.Print("Debug: Print info: ");
             Debug.Print($"buttonPanel.Location.Y={panel2.Location.Y}, buttonPanel.Height={panel2.Height}");
             Debug.Print($"form.Height={Height}");
         }
+              
 
         private void AdjustFormLayout()
         {
@@ -525,7 +532,7 @@ namespace ModbusControl
             Debug.Print($"DeviceDpi={DeviceDpi}");
 
             // get margins, DPI adjusted 
-            int hmargin = AppDpiHelpers.ScaleValueFrom96DpiToThisDpiInt(6, DeviceDpi);
+            //int hmargin = AppDpiHelpers.ScaleValueFrom96DpiToThisDpiInt(6, DeviceDpi);
             int vmargin = AppDpiHelpers.ScaleValueFrom96DpiToThisDpiInt(6, DeviceDpi);
             // get new form size
             int newWidth = ClientSize.Width;

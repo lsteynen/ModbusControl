@@ -1,7 +1,6 @@
 using System;
 using System.Diagnostics;
 using System.Net;
-using RJCP.IO.Ports;
 using LST.Modbus;
 using LST.Helpers;
 
@@ -354,10 +353,10 @@ namespace ModbusControl
         /// <summary>
         /// Open connection over serial port, using RTU protocol
         /// </summary>
-        public void OpenSerialRtu(string portName, uint baudRate, Parity parity, StopBits stopBits)
+        public void OpenSerialRtu(string portName, uint baudRate, LST.Helpers.Parity.EParity parity)
         {
             mClosing = false;
-            mbSerChannel = new SerialChannel(portName, baudRate, 8U, parity, stopBits);
+            mbSerChannel = new SerialChannel(portName, baudRate, parity);
             mbSerChannel.OnDataSent += LogChannelSent;
             mbSerChannel.OnDataReceived += LogChannelReceived;
             mbSerChannel.OnWarning += LogWarning;
@@ -504,7 +503,7 @@ namespace ModbusControl
         {
             ModbusProtocol.Result result = ModbusProtocol.Result.SUCCESS;
             values = new Int16[regcount];
-            Int16[] pageValuesBuf = null;
+            Int16[] pageValuesBuf;
             int pagePos = 0;
             int maxRegistersInPage = GetMaxRegisterToReadInFrame();
 

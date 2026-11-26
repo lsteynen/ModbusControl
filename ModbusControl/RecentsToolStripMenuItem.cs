@@ -41,7 +41,7 @@ namespace ModbusControl
         /// </example>
         [Category("Action")]
         [Description("This is the function that is executed when a file name is selected from the list. ((ToolStripDropDownItem)sender).Text can be used to find the value of the one that was clicked.")]
-        public event EventHandler? ItemClick;
+        public event EventHandler ItemClick;
 
         /// <summary>
         /// Maximum number of items in the list.

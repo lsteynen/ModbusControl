@@ -719,10 +719,14 @@ namespace ModbusControl
 
             switch ((int)dRow[(int)dtColIndex.RowType])
             {
-                case (int)eRowType.Group: s += "T=G; "; break;
-                case (int)eRowType.Reg: s += "T=R; "; break;
-                case (int)eRowType.Field: s += "T=F; "; break;
-                default: s += "T=?; "; break;
+                case (int)eRowType.Group: s += "T=G; "; 
+                    break;
+                case (int)eRowType.Reg: s += "T=R; "; 
+                    break;
+                case (int)eRowType.Field: s += "T=F; "; 
+                    break;
+                default: s += "T=?; "; 
+                    break;
             }
 
             s += "L=" + ((int)dRow[(int)dtColIndex.RowLevel]).ToString() + "; ";
@@ -850,7 +854,6 @@ namespace ModbusControl
                 e.PaintBackground(e.ClipBounds, true);
 
                 // paint text
-                Rectangle trec = e.CellBounds;
                 TextRenderer.DrawText(e.Graphics, e.Value.ToString(), e.CellStyle.Font, e.CellBounds, e.CellStyle.ForeColor, TextFormatFlags.Left | TextFormatFlags.VerticalCenter);
 
                 // Paint enum indicator icon
@@ -1115,8 +1118,8 @@ namespace ModbusControl
                         else
                         {
                             // simple string search
-                            if ((regStr.IndexOf(mFilterString, compareMode) >= 0)            
-                                ||  (descStr.IndexOf(mFilterString, compareMode) >= 0))
+                            if ((regStr.Contains(mFilterString, compareMode))
+                                ||  (descStr.Contains(mFilterString, compareMode)))
                             {
                                 // mark this row
                                 bufRowsVisible[ri.dataRowIndex] = true;
@@ -1147,7 +1150,7 @@ namespace ModbusControl
                                 else
                                 {
                                     // simple string search
-                                    if (descStr.IndexOf(mFilterString, compareMode) >= 0)
+                                    if (descStr.Contains(mFilterString, compareMode))
                                     {
                                         // mark this row
                                         bufRowsVisible[fi.dataRowIndex] = true;
@@ -1648,7 +1651,7 @@ namespace ModbusControl
             }
         }
 
-        private void DGV_TextBoxEditor_Enter(object? sender, EventArgs e)
+        private void DGV_TextBoxEditor_Enter(object sender, EventArgs e)
         {
             // fix to set the correct font when the editor starts the first time on the 100% screen, otherwise the font is too small, scaling issue
             Debug.WriteLine($"--- TextBoxEditor_Enter");
@@ -1660,7 +1663,7 @@ namespace ModbusControl
             }
         }
 
-        private void DGV_EnumValueEditingControl_Enter(object? sender, EventArgs e)
+        private void DGV_EnumValueEditingControl_Enter(object sender, EventArgs e)
         {
             // fix to set the correct font when the editor starts the first time on the 100% screen, otherwise the font is too small, scaling issue
             Debug.WriteLine($"--- EnumValueEditingControl");
@@ -2101,7 +2104,7 @@ namespace ModbusControl
         {
             cleanedStr = "";
 
-            if (input.StartsWith("<"))
+            if (input.StartsWith('<'))
             {
                 int closingIndex = input.IndexOf('>');
                 if (closingIndex > 0)
@@ -2168,10 +2171,10 @@ namespace ModbusControl
             {
                 //editReg and editRegfield were set in TryBeginEdit
 
-                Global.eFormat edFormat = 0;
-                int edWidth = 0;
-                int edDecimals = 0;
-                bool edIsEnum = false;
+                Global.eFormat edFormat;
+                int edWidth;
+                int edDecimals;
+                bool edIsEnum;
                 bool bIsValid = true;
                 string errorString = "error";
 
@@ -2622,11 +2625,10 @@ namespace ModbusControl
 
         private bool GetLineIsBitfield(DataRow dRow)
         {
-            RegItem selReg;
             RegfieldItem selRegfield;
             bool isBitfield = false;
 
-            FindListItemsByRow(dRow, out selReg, out selRegfield);
+            FindListItemsByRow(dRow, out _, out selRegfield);
             if (selRegfield != null)
             {
                 isBitfield = true;
@@ -2637,7 +2639,7 @@ namespace ModbusControl
 
         private Global.eFormat GetLineValueFormat(DataRow dRow)
         {
-            Global.eFormat result = Global.eFormat.Int;
+            Global.eFormat result;
             RegItem selReg;
             RegfieldItem selRegfield;
 
@@ -2660,7 +2662,7 @@ namespace ModbusControl
 
         private Global.eFormat GetLineValueDisplayFormat(DataRow dRow)
         {
-            Global.eFormat result = Global.eFormat.Int;
+            Global.eFormat result;
             RegItem selReg;
             RegfieldItem selRegfield;
 
@@ -2683,7 +2685,7 @@ namespace ModbusControl
 
         private int GetLineValueWidth(DataRow dRow)
         {
-            int result = 0;
+            int result;
             RegItem selReg;
             RegfieldItem selRegfield;
 
@@ -2729,7 +2731,7 @@ namespace ModbusControl
 
         private void CopyValueStringToClipboard(int row)
         {
-            DataRow dRow = (grid.Rows[rightclickRowIndex].DataBoundItem as DataRowView).Row;
+            DataRow dRow = (grid.Rows[row].DataBoundItem as DataRowView).Row;
 
             string s = dRow[(int)dtColIndex.ValueStr].ToString();
 

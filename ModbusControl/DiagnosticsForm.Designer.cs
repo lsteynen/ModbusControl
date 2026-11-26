@@ -30,7 +30,7 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DiagnosticsForm));
             label1 = new Label();
-            buttonReset = new Button();
+            ResetBtn = new Button();
             label9 = new Label();
             label5 = new Label();
             lResponseProtocolErrorCount = new Label();
@@ -86,16 +86,16 @@
             label1.TabIndex = 0;
             label1.Text = "Read/write success:";
             // 
-            // buttonReset
+            // ResetBtn
             // 
-            buttonReset.Location = new Point(126, 367);
-            buttonReset.Margin = new Padding(3, 13, 3, 3);
-            buttonReset.Name = "buttonReset";
-            buttonReset.Size = new Size(69, 23);
-            buttonReset.TabIndex = 1;
-            buttonReset.Text = "Reset";
-            buttonReset.UseVisualStyleBackColor = true;
-            buttonReset.Click += buttonReset_Click;
+            ResetBtn.Location = new Point(126, 367);
+            ResetBtn.Margin = new Padding(3, 13, 3, 3);
+            ResetBtn.Name = "ResetBtn";
+            ResetBtn.Size = new Size(69, 23);
+            ResetBtn.TabIndex = 1;
+            ResetBtn.Text = "Reset";
+            ResetBtn.UseVisualStyleBackColor = true;
+            ResetBtn.Click += ResetBtn_Click;
             // 
             // label9
             // 
@@ -518,7 +518,7 @@
             Controls.Add(lRwSuccessCount);
             Controls.Add(lNoResponseCount);
             Controls.Add(lOnewireEchoErrorCount);
-            Controls.Add(buttonReset);
+            Controls.Add(ResetBtn);
             Controls.Add(lBridgeErrorsCount);
             Controls.Add(lBridgeQueriesReceivedCount);
             Controls.Add(lBridgeOpenConnections);
@@ -573,7 +573,7 @@
         private System.Windows.Forms.Label label19;
         private System.Windows.Forms.Label lTcpConnectionLostCount;
         private System.Windows.Forms.Label label17;
-        private System.Windows.Forms.Button buttonReset;
+        private System.Windows.Forms.Button ResetBtn;
         private System.Windows.Forms.Label label37;
         private System.Windows.Forms.Label lBridgeErrorsCount;
         private System.Windows.Forms.Label lBridgeQueriesReceivedCount;

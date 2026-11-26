@@ -11,14 +11,14 @@ namespace ModbusControl
     {
         public ModbusInterface mModbus;
 
-        private MainForm mParent;
+        private readonly MainForm mParent;
         private float zoomFactor = 1.0f;
-        private float zoomFactorStep = 1.10f;
-        private float zoomFactorMaximum = 10.0f;
-        private float baseGridFontSizeAt96Dpi;          // default gridfont size 
+        private readonly float zoomFactorStep = 1.10f;
+        private readonly float zoomFactorMaximum = 10.0f;
+        private readonly float baseGridFontSizeAt96Dpi;          // default gridfont size 
         // CustomQueries are global, not per project, so we use standard register numbering
         private int mRegisterNumberingScheme = 40001;
-        private RegisterToOffset mRegisterToOffset = new RegisterToOffset(40001);
+        private readonly RegisterToOffset mRegisterToOffset = new(40001);
 
         // command enums
         // Must match the order of the texts in the Command dropdown!
@@ -48,13 +48,13 @@ namespace ModbusControl
         {
             get
             {
-                return chkMultilineRows.Checked;
+                return MultilineRowsChkb.Checked;
             }
 
             set
             {
-                chkMultilineRows.Checked = value;
-                SetMultilineRows(chkMultilineRows.Checked);
+                MultilineRowsChkb.Checked = value;
+                SetMultilineRows(MultilineRowsChkb.Checked);
             }
         }
 
@@ -71,7 +71,7 @@ namespace ModbusControl
             }
         }
 
-        public List<CustomQueryItem> QueriesList
+        public static List<CustomQueryItem> QueriesList
         {
             get
             {
@@ -117,25 +117,25 @@ namespace ModbusControl
             InitializeComponent();
 
 #if TESTBUILD
-            butRunTests.Visible = true;
+            RunTestsBtn.Visible = true;
 #endif
 
             mParent = parent;
             mModbus = parent.mb;
 
             // get default font size
-            baseGridFontSizeAt96Dpi = AppDpiHelpers.ScaleValueFromThisDpiTo96Dpi(grid.Font.Size, DeviceDpi);
+            baseGridFontSizeAt96Dpi = AppDpiHelpers.ScaleValueFromThisDpiTo96Dpi(Grid.Font.Size, DeviceDpi);
 
             //grid.RowTemplate.Height = 25;
             SetAutoSizeRows(true);
-            SetMultilineRows(chkMultilineRows.Checked);
+            SetMultilineRows(MultilineRowsChkb.Checked);
             this.DoubleBuffered = true;
 
             // enable mousewheel zoom
             this.MouseWheel += new MouseEventHandler(Form_MouseWheel);
 
 #if DEBUG
-            butDebug.Visible = true;
+            DebugBtn.Visible = true;
 #endif
 
 #if TESTBUILD
@@ -389,21 +389,19 @@ namespace ModbusControl
 
         private void AddQueryRow(string commandCode, string slaveid, string reg, string qty, string formatCode, string data, string comment, int pos = -1)
         {
-            int rowIndex = grid.Rows.Count;
-
-            ECommand cmd = (ECommand)Enum.Parse(typeof(ECommand), commandCode);
+            ECommand cmd = Enum.Parse<ECommand>(commandCode);
             string commandString = GetCommandTextFromEnum(cmd);
 
-            EFormat fmt = (EFormat)Enum.Parse(typeof(EFormat), formatCode);
+            EFormat fmt = Enum.Parse<EFormat>(formatCode);
             string formatString = GetFormatTextFromEnum(fmt);
 
             if (pos >= 0)
             {
-                grid.Rows.Insert(pos, "", slaveid, commandString, reg, qty, formatString, data, "", comment);
+                Grid.Rows.Insert(pos, "", slaveid, commandString, reg, qty, formatString, data, "", comment);
             }
             else
             {
-                grid.Rows.Add("", slaveid, commandString, reg, qty, formatString, data, "", comment);
+                Grid.Rows.Add("", slaveid, commandString, reg, qty, formatString, data, "", comment);
             }
         }
 
@@ -479,9 +477,9 @@ namespace ModbusControl
             // zoom this grid
             float newFontSize = AppDpiHelpers.ScaleValueFrom96DpiToThisDpi(baseGridFontSizeAt96Dpi * zoomFactor, DeviceDpi);
             Debug.Print($"Set new font size = {newFontSize}, DeviceDpi={DeviceDpi}");
-            Font newFont = new Font(Font.FontFamily, newFontSize, Font.Style, Font.Unit);
-            grid.ColumnHeadersDefaultCellStyle.Font = newFont;
-            grid.DefaultCellStyle.Font = newFont;
+            Font newFont = new(Font.FontFamily, newFontSize, Font.Style, Font.Unit);
+            Grid.ColumnHeadersDefaultCellStyle.Font = newFont;
+            Grid.DefaultCellStyle.Font = newFont;
         }
 
         private void MyDataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
@@ -498,32 +496,30 @@ namespace ModbusControl
         {
             Debug.Print(DateTime.Now.TimeOfDay + ": SendRow: " + rowIndex.ToString());
 
-            string slaveidStr = IsNull(grid.Rows[rowIndex].Cells[SlaveidColumn.Index].Value, "");
-            string commandStr = IsNull(grid.Rows[rowIndex].Cells[CommandColumn.Index].Value, "");
+            string slaveidStr = IsNull(Grid.Rows[rowIndex].Cells[SlaveidColumn.Index].Value, "");
+            string commandStr = IsNull(Grid.Rows[rowIndex].Cells[CommandColumn.Index].Value, "");
             ECommand command = GetCommandEnumFromText(commandStr);
-            string registerStr = IsNull(grid.Rows[rowIndex].Cells[RegisterColumn.Index].Value, "");
-            string qtyStr = IsNull(grid.Rows[rowIndex].Cells[QtyColumn.Index].Value, "");
-            string formatStr = IsNull(grid.Rows[rowIndex].Cells[FormatColumn.Index].Value, "");
+            string registerStr = IsNull(Grid.Rows[rowIndex].Cells[RegisterColumn.Index].Value, "");
+            string qtyStr = IsNull(Grid.Rows[rowIndex].Cells[QtyColumn.Index].Value, "");
+            string formatStr = IsNull(Grid.Rows[rowIndex].Cells[FormatColumn.Index].Value, "");
             EFormat format = GetFormatEnumFromText(formatStr);
-            string dataStr = IsNull(grid.Rows[rowIndex].Cells[DataColumn.Index].Value, "");
+            string dataStr = IsNull(Grid.Rows[rowIndex].Cells[DataColumn.Index].Value, "");
 
             string ResultStr = "INTERNAL ERROR";
 
             if (command == ECommand.RIR)
             {
                 // data empty 
-                grid.Rows[rowIndex].Cells[DataColumn.Index].Value = string.Empty;
-                dataStr = string.Empty;
+                Grid.Rows[rowIndex].Cells[DataColumn.Index].Value = string.Empty;
 
-                ResultStr = SendReadInputreg(slaveidStr, registerStr, qtyStr, format, dataStr);
+                ResultStr = SendReadInputreg(slaveidStr, registerStr, qtyStr, format);
             }
             else if (command == ECommand.RHR)
             {
                 // data empty 
-                grid.Rows[rowIndex].Cells[DataColumn.Index].Value = string.Empty;
-                dataStr = string.Empty;
+                Grid.Rows[rowIndex].Cells[DataColumn.Index].Value = string.Empty;
 
-                ResultStr = SendReadHoldingreg(slaveidStr, registerStr, qtyStr, format, dataStr);
+                ResultStr = SendReadHoldingreg(slaveidStr, registerStr, qtyStr, format);
 
                 /*
                 // update count
@@ -537,7 +533,7 @@ namespace ModbusControl
             else if (command == ECommand.WSHR)
             {
                 // qty = 1
-                grid.Rows[rowIndex].Cells[QtyColumn.Index].Value = "1";
+                Grid.Rows[rowIndex].Cells[QtyColumn.Index].Value = "1";
                 qtyStr = "1";
 
                 ResultStr = SendWriteSingleHoldingreg(slaveidStr, registerStr, qtyStr, format, dataStr);
@@ -549,23 +545,21 @@ namespace ModbusControl
             else if (command == ECommand.RDI)
             {
                 // data empty 
-                grid.Rows[rowIndex].Cells[DataColumn.Index].Value = string.Empty;
-                dataStr = string.Empty;
+                Grid.Rows[rowIndex].Cells[DataColumn.Index].Value = string.Empty;
 
-                ResultStr = SendReadDiscreteinputs(slaveidStr, registerStr, qtyStr, format, dataStr);
+                ResultStr = SendReadDiscreteinputs(slaveidStr, registerStr, qtyStr, format);
             }
             else if (command == ECommand.RC)
             {
                 // data empty 
-                grid.Rows[rowIndex].Cells[DataColumn.Index].Value = string.Empty;
-                dataStr = string.Empty;
+                Grid.Rows[rowIndex].Cells[DataColumn.Index].Value = string.Empty;
 
-                ResultStr = SendReadCoils(slaveidStr, registerStr, qtyStr, format, dataStr);
+                ResultStr = SendReadCoils(slaveidStr, registerStr, qtyStr, format);
             }
             else if (command == ECommand.WSC)
             {
                 // qty = 1
-                grid.Rows[rowIndex].Cells[QtyColumn.Index].Value = "1";
+                Grid.Rows[rowIndex].Cells[QtyColumn.Index].Value = "1";
                 qtyStr = "1";
 
                 ResultStr = SendWriteSingleCoil(slaveidStr, registerStr, qtyStr, format, dataStr);
@@ -577,18 +571,16 @@ namespace ModbusControl
             else if (command == ECommand.CUSTQ)
             {
                 // register empty
-                grid.Rows[rowIndex].Cells[RegisterColumn.Index].Value = string.Empty;
-                registerStr = string.Empty;
+                Grid.Rows[rowIndex].Cells[RegisterColumn.Index].Value = string.Empty;
 
                 // qty empty
-                grid.Rows[rowIndex].Cells[QtyColumn.Index].Value = string.Empty;
-                qtyStr = string.Empty;
+                Grid.Rows[rowIndex].Cells[QtyColumn.Index].Value = string.Empty;
 
-                ResultStr = SendCustomQuery(slaveidStr, registerStr, qtyStr, format, dataStr);
+                ResultStr = SendCustomQuery(slaveidStr, format, dataStr);
             }
 
             // show result
-            grid.Rows[rowIndex].Cells[ResultColumn.Index].Value = ResultStr;
+            Grid.Rows[rowIndex].Cells[ResultColumn.Index].Value = ResultStr;
         }
 
         private static string IsNull(object v, string repl)
@@ -598,16 +590,15 @@ namespace ModbusControl
             return repl;
         }
 
-        private string SendReadInputreg(string slaveIDStr, string registerStr, string qtyStr, EFormat format, string dataStr)
+        private string SendReadInputreg(string slaveIDStr, string registerStr, string qtyStr, EFormat format)
         {
             string ResultStr = "ERROR";
-            byte slaveID = 1;
             UInt16 regOffset = 0;
             UInt16 regQuantity = 0;
             bool Continue = true;
 
             // check slaveID
-            if (byte.TryParse(slaveIDStr, out slaveID))
+            if (byte.TryParse(slaveIDStr, out byte slaveID))
             {
                 // okay
             }
@@ -678,10 +669,10 @@ namespace ModbusControl
             return ResultStr;
         }
 
-        private string SendReadHoldingreg(string slaveIDStr, string registerStr, string qtyStr, EFormat format, string dataStr)
+        private string SendReadHoldingreg(string slaveIDStr, string registerStr, string qtyStr, EFormat format)
         {
             string ResultStr = "ERROR";
-            byte slaveID = 1;
+            byte slaveID;
             UInt16 regOffset = 0;
             UInt16 regQuantity = 0;
             bool Continue = true;
@@ -761,7 +752,7 @@ namespace ModbusControl
         private string SendWriteSingleHoldingreg(string slaveIDStr, string registerStr, string qtyStr, EFormat format, string dataStr)
         {
             string ResultStr = "ERROR";
-            byte slaveID = 1;
+            byte slaveID;
             UInt16 regOffset = 0;
             UInt16 regQuantity = 0;
             Int16 value16 = 0;
@@ -869,7 +860,7 @@ namespace ModbusControl
         private string SendWriteMultipleHoldingreg(string slaveIDStr, string registerStr, string qtyStr, EFormat format, string dataStr)
         {
             string ResultStr = "ERROR";
-            byte slaveID = 1;
+            byte slaveID;
             UInt16 regOffset = 0;
             UInt16 regQuantity = 0;
             Int16[] aValues16 = null;
@@ -987,10 +978,10 @@ namespace ModbusControl
             return ResultStr;
         }
 
-        private string SendReadDiscreteinputs(string slaveIDStr, string registerStr, string qtyStr, EFormat format, string dataStr)
+        private string SendReadDiscreteinputs(string slaveIDStr, string registerStr, string qtyStr, EFormat format)
         {
             string ResultStr = "ERROR";
-            byte slaveID = 1;
+            byte slaveID;
             UInt16 regOffset = 0;
             UInt16 regQuantity = 0;
             bool Continue = true;
@@ -1052,7 +1043,6 @@ namespace ModbusControl
                     else
                     {
                         ResultStr = "Error: Invalid format";
-                        Continue = false;
                     }
                 }
                 else
@@ -1065,10 +1055,10 @@ namespace ModbusControl
             return ResultStr;
         }
 
-        private string SendReadCoils(string slaveIDStr, string registerStr, string qtyStr, EFormat format, string dataStr)
+        private string SendReadCoils(string slaveIDStr, string registerStr, string qtyStr, EFormat format)
         {
             string ResultStr = "ERROR";
-            byte slaveID = 1;
+            byte slaveID;
             UInt16 regOffset = 0;
             UInt16 regQuantity = 0;
             bool Continue = true;
@@ -1157,7 +1147,6 @@ namespace ModbusControl
                     else
                     {
                         ResultStr = "Error: Invalid format";
-                        Continue = false;
                     }
                 }
                 else
@@ -1173,7 +1162,7 @@ namespace ModbusControl
         private string SendWriteSingleCoil(string slaveIDStr, string registerStr, string qtyStr, EFormat format, string dataStr)
         {
             string ResultStr = "ERROR";
-            byte slaveID = 1;
+            byte slaveID;
             UInt16 regOffset = 0;
             UInt16 regQuantity = 0;
             byte[] aBytes = null;
@@ -1296,7 +1285,7 @@ namespace ModbusControl
         private string SendWriteMultipleCoils(string slaveIDStr, string registerStr, string qtyStr, EFormat format, string dataStr)
         {
             string ResultStr = "ERROR";
-            byte slaveID = 1;
+            byte slaveID;
             UInt16 regOffset = 0;
             UInt16 regQuantity = 0;
             byte[] aBytes = null;
@@ -1407,10 +1396,10 @@ namespace ModbusControl
             return ResultStr;
         }
 
-        private string SendCustomQuery(string slaveIDStr, string registerStr, string qtyStr, EFormat format, string dataStr)
+        private string SendCustomQuery(string slaveIDStr, EFormat format, string dataStr)
         {
             string ResultStr = "ERROR";
-            byte slaveID = 1;
+            byte slaveID;
             bool Continue = true;
 
             // check slaveID
@@ -1438,7 +1427,7 @@ namespace ModbusControl
             }
 
             byte[] aQueryBytes = null;
-            byte[] aResponseBuf = null;
+            byte[] aResponseBuf;
 
             if (Continue)
             {
@@ -1488,7 +1477,6 @@ namespace ModbusControl
                     else
                     {
                         ResultStr = "Error: Invalid format";
-                        Continue = false;
                     }
                 }
                 else
@@ -1501,9 +1489,9 @@ namespace ModbusControl
             return ResultStr;
         }
 
-        private string ConvertPackedBitsToResultString(byte[] aBytes, int qty = int.MinValue)
+        private static string ConvertPackedBitsToResultString(byte[] aBytes, int qty = int.MinValue)
         {
-            StringBuilder sb = new StringBuilder(7000);     // 2000 * "0, "
+            StringBuilder sb = new(7000);     // room for 2000 * "0, "
 
             // coil and discreteinputs are packed in bytes
             // first coil/discreteinput is in bit0 of first byte
@@ -1517,7 +1505,7 @@ namespace ModbusControl
             // qty OK?
             if (qty > (aBytes.Length * 8))
             {
-                throw new ArgumentException("qty > (aBytes[].Length * 8)", "qty");
+                throw new ArgumentException("qty > (aBytes[].Length * 8)", nameof(qty));
             }
 
             // no data?
@@ -1531,19 +1519,19 @@ namespace ModbusControl
             {
                 if (biti > 0)
                 {
-                    sb.Append(",");
+                    sb.Append(',');
 
                     if ((biti % 8) == 0)
                     {
-                        sb.Append(" ");
+                        sb.Append(' ');
                     }
                 }
 
                 int bit = (aBytes[biti / 8] >> (biti % 8)) & 1;
                 if (bit > 0)
-                    sb.Append("1");
+                    sb.Append('1');
                 else
-                    sb.Append("0");
+                    sb.Append('0');
             }
 
             return sb.ToString();
@@ -1554,7 +1542,7 @@ namespace ModbusControl
         /// Accepts signed and unsigned decimal values, hex and binary values
         /// Throws exception on error
         /// </summary>
-        private Int16[] ParseValuesStringInto16bitValues(string str, int expectedCount)
+        private static Int16[] ParseValuesStringInto16bitValues(string str, int expectedCount)
         {
             // get data
             string[] aFields = MySplit(str, ',');
@@ -1593,7 +1581,7 @@ namespace ModbusControl
         /// Accepts decimal, hex and binary values
         /// Throws exception on error
         /// </summary>
-        private Int32[] ParseValuesStringInto32bitValues(string str, int expectedCount)
+        private static Int32[] ParseValuesStringInto32bitValues(string str, int expectedCount)
         {
             // get data
             string[] aFields = MySplit(str, ',');
@@ -1630,7 +1618,7 @@ namespace ModbusControl
         /// Accept values 0-255, 0x00-0xFF
         /// Throws exception on error
         /// </summary>
-        private byte[] ParseValuesStringIntoByteValues(string str, int expectedCount = int.MinValue)
+        private static byte[] ParseValuesStringIntoByteValues(string str, int expectedCount = int.MinValue)
         {
             // get data
             string[] aFields = MySplit(str, ',');
@@ -1681,7 +1669,7 @@ namespace ModbusControl
         /// Accept values 0/1 only
         /// Throws exception on error
         /// </summary>
-        private byte[] ParseValuesStringIntoPackedBits(string str, int expectedCount)
+        private static byte[] ParseValuesStringIntoPackedBits(string str, int expectedCount)
         {
             // get data
             string[] aFields = MySplit(str, ',');
@@ -1727,7 +1715,7 @@ namespace ModbusControl
             return aBytes;
         }
 
-        private Int16[] ConvertInt32ArrayToInt16Array(Int32[] aInt32)
+        private static Int16[] ConvertInt32ArrayToInt16Array(Int32[] aInt32)
         {
             Int16[] result = new Int16[aInt32.Length * 2];
 
@@ -1745,7 +1733,7 @@ namespace ModbusControl
         {
             if ((aValues.Length % 2) != 0)
             {
-                throw new ArgumentException("Int16[].Length is not multiple of 2", "aValues");
+                throw new ArgumentException("Int16[].Length is not multiple of 2", nameof(aValues));
             }
 
             Int32[] aValues32 = new Int32[aValues.Length / 2];
@@ -1762,7 +1750,7 @@ namespace ModbusControl
         {
             if ((aValues.Length % 2) != 0)
             {
-                throw new ArgumentException("Int16[].Length is not multiple of 2", "aValues");
+                throw new ArgumentException("Int16[].Length is not multiple of 2", nameof(aValues));
             }
 
             UInt32[] aValues32 = new UInt32[aValues.Length / 2];
@@ -1789,7 +1777,7 @@ namespace ModbusControl
                 }
             }
 
-            throw new ArgumentException("Invalid value", "commandText");
+            throw new ArgumentException("Invalid value", nameof(commandText));
         }
 
         /// <summary>
@@ -1803,7 +1791,7 @@ namespace ModbusControl
                 return (string)CommandColumn.Items[index];
             }
 
-            throw new ArgumentException("Invalid value", "command");
+            throw new ArgumentException("Invalid value", nameof(command));
         }
 
         /// <summary>
@@ -1819,7 +1807,7 @@ namespace ModbusControl
                 }
             }
 
-            throw new ArgumentException("Invalid value", "formatText");
+            throw new ArgumentException("Invalid value", nameof(formatText));
         }
 
         /// <summary>
@@ -1833,14 +1821,14 @@ namespace ModbusControl
                 return (string)FormatColumn.Items[index];
             }
 
-            throw new ArgumentException("Invalid value", "format");
+            throw new ArgumentException("Invalid value", nameof(format));
         }
 
-        private string GetErrorTextFromQueryResult(ModbusProtocol.Result result)
+        private static string GetErrorTextFromQueryResult(ModbusProtocol.Result result)
         {
-            string headstr = "";
+            string headstr;
             string tmpErrorText = result.ToString();
-            if (tmpErrorText.IndexOf("EXCEPTION", StringComparison.OrdinalIgnoreCase) >= 0)
+            if (tmpErrorText.Contains("EXCEPTION", StringComparison.OrdinalIgnoreCase))
             {
                 headstr = "Error response: ";
             }
@@ -1851,10 +1839,10 @@ namespace ModbusControl
             return headstr + ModbusProtocol.GetResultText(result);
         }
 
-        private void ChkMultilineRows_CheckedChanged(object sender, EventArgs e)
+        private void MultilineRowsChkb_CheckedChanged(object sender, EventArgs e)
         {
             //SetAutoSizeRows(chkMultilineRows.Checked);
-            SetMultilineRows(chkMultilineRows.Checked);
+            SetMultilineRows(MultilineRowsChkb.Checked);
         }
 
         private void SetAutoSizeRows(bool value)
@@ -1862,18 +1850,18 @@ namespace ModbusControl
             if (value)
             {
                 // set autosize
-                grid.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.DisplayedCellsExceptHeaders;
+                Grid.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.DisplayedCellsExceptHeaders;
             }
             else
             {
                 // autosize off
                 // change row heights manually
-                grid.SuspendLayout();
+                Grid.SuspendLayout();
                 // set autosize
-                for (int gri = 0; gri < grid.Rows.Count; ++gri)
-                    grid.Rows[gri].Height = grid.RowTemplate.Height;
-                grid.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.None;
-                grid.ResumeLayout(true);
+                for (int gri = 0; gri < Grid.Rows.Count; ++gri)
+                    Grid.Rows[gri].Height = Grid.RowTemplate.Height;
+                Grid.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.None;
+                Grid.ResumeLayout(true);
             }
         }
 
@@ -1881,27 +1869,27 @@ namespace ModbusControl
         {
             if (value)
             {
-                grid.SuspendLayout();
+                Grid.SuspendLayout();
 
                 // set wrap
-                grid.DefaultCellStyle.WrapMode = DataGridViewTriState.True;
+                Grid.DefaultCellStyle.WrapMode = DataGridViewTriState.True;
                 DataColumn.DefaultCellStyle.WrapMode = DataGridViewTriState.True;
                 ResultColumn.DefaultCellStyle.WrapMode = DataGridViewTriState.True;
                 CommentColumn.DefaultCellStyle.WrapMode = DataGridViewTriState.True;
 
-                grid.ResumeLayout(true);
+                Grid.ResumeLayout(true);
             }
             else
             {
-                grid.SuspendLayout();
+                Grid.SuspendLayout();
 
                 // set wrap
-                grid.DefaultCellStyle.WrapMode = DataGridViewTriState.False;
+                Grid.DefaultCellStyle.WrapMode = DataGridViewTriState.False;
                 DataColumn.DefaultCellStyle.WrapMode = DataGridViewTriState.False;
                 ResultColumn.DefaultCellStyle.WrapMode = DataGridViewTriState.False;
                 CommentColumn.DefaultCellStyle.WrapMode = DataGridViewTriState.False;
 
-                grid.ResumeLayout(true);
+                Grid.ResumeLayout(true);
             }
         }
 
@@ -1910,16 +1898,16 @@ namespace ModbusControl
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void ButMoveUp_Click(object sender, EventArgs e)
+        private void MoveUpBtn_Click(object sender, EventArgs e)
         {
-            if (grid.SelectedCells.Count > 0)
+            if (Grid.SelectedCells.Count > 0)
             {
                 // get selected rows, sorted
-                List<int> selectedRows = GetGridSelectedRowsOrderedList(grid.SelectedCells);
+                List<int> selectedRows = GetGridSelectedRowsOrderedList(Grid.SelectedCells);
 
                 try
                 {
-                    grid.SuspendLayout();
+                    Grid.SuspendLayout();
 
                     // move each line
                     for (int selIndex = 0; selIndex < selectedRows.Count; ++selIndex)
@@ -1928,23 +1916,23 @@ namespace ModbusControl
                         // if there is room to move it up
                         if (rowIndex > selIndex)
                         {
-                            DataGridViewRow row = grid.Rows[rowIndex];
-                            grid.Rows.RemoveAt(rowIndex);
-                            grid.Rows.Insert(rowIndex - 1, row);
+                            DataGridViewRow row = Grid.Rows[rowIndex];
+                            Grid.Rows.RemoveAt(rowIndex);
+                            Grid.Rows.Insert(rowIndex - 1, row);
                             selectedRows[selIndex] -= 1;
                         }
                     }
 
                     // restore selection
-                    grid.ClearSelection();
+                    Grid.ClearSelection();
                     foreach (int rowIndex in selectedRows)
                     {
-                        grid.Rows[rowIndex].Selected = true;
+                        Grid.Rows[rowIndex].Selected = true;
                     }
                 }
                 finally
                 {
-                    grid.ResumeLayout();
+                    Grid.ResumeLayout();
                 }
             }
         }
@@ -1954,42 +1942,42 @@ namespace ModbusControl
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void ButMoveDown_Click(object sender, EventArgs e)
+        private void MoveDownBtn_Click(object sender, EventArgs e)
         {
-            if (grid.SelectedCells.Count > 0)
+            if (Grid.SelectedCells.Count > 0)
             {
                 // get selected rows, sorted descending
-                List<int> selectedRows = GetGridSelectedRowsOrderedList(grid.SelectedCells);
+                List<int> selectedRows = GetGridSelectedRowsOrderedList(Grid.SelectedCells);
                 selectedRows.Reverse();
 
                 try
                 {
-                    grid.SuspendLayout();
+                    Grid.SuspendLayout();
 
                     // move each line
                     for (int selIndex = 0; selIndex < selectedRows.Count; ++selIndex)
                     {
                         int rowIndex = selectedRows[selIndex];
                         // if there is room to move it down
-                        if (rowIndex < (grid.Rows.Count - selIndex - 1))
+                        if (rowIndex < (Grid.Rows.Count - selIndex - 1))
                         {
-                            DataGridViewRow row = grid.Rows[rowIndex];
-                            grid.Rows.RemoveAt(rowIndex);
-                            grid.Rows.Insert(rowIndex + 1, row);
+                            DataGridViewRow row = Grid.Rows[rowIndex];
+                            Grid.Rows.RemoveAt(rowIndex);
+                            Grid.Rows.Insert(rowIndex + 1, row);
                             selectedRows[selIndex] += 1;
                         }
                     }
 
                     // restore selection
-                    grid.ClearSelection();
+                    Grid.ClearSelection();
                     foreach (int rowIndex in selectedRows)
                     {
-                        grid.Rows[rowIndex].Selected = true;
+                        Grid.Rows[rowIndex].Selected = true;
                     }
                 }
                 finally
                 {
-                    grid.ResumeLayout();
+                    Grid.ResumeLayout();
                 }
             }
         }
@@ -2000,30 +1988,30 @@ namespace ModbusControl
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void ButAddRow_Click(object sender, EventArgs e)
+        private void AddRowBtn_Click(object sender, EventArgs e)
         {
-            int insertRowIndex = 0;
+            int insertRowIndex;
 
             // if we have selected rows: add after last selected row
-            if (grid.SelectedCells.Count > 0)
+            if (Grid.SelectedCells.Count > 0)
             {
                 // get selected rows, sorted
-                List<int> selectedRows = GetGridSelectedRowsOrderedList(grid.SelectedCells);
+                List<int> selectedRows = GetGridSelectedRowsOrderedList(Grid.SelectedCells);
                 int selectRowIndex = selectedRows[selectedRows.Count - 1];
                 insertRowIndex = selectRowIndex + 1;
             }
             else
             {
                 // add at the end
-                insertRowIndex = grid.Rows.Count;
+                insertRowIndex = Grid.Rows.Count;
             }
 
             // Add row at position
             AddQueryRow("RIR", "1", "", "", "INT16", "", "", insertRowIndex);
 
             // make it selected
-            grid.ClearSelection();
-            grid.Rows[insertRowIndex].Selected = true;
+            Grid.ClearSelection();
+            Grid.Rows[insertRowIndex].Selected = true;
         }
 
 
@@ -2032,17 +2020,17 @@ namespace ModbusControl
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void ButDeleteRows_Click(object sender, EventArgs e)
+        private void DeleteRowsBtn_Click(object sender, EventArgs e)
         {
-            if (grid.SelectedCells.Count > 0)
+            if (Grid.SelectedCells.Count > 0)
             {
                 // mark the rows that are about to be deleted
                 // get selected rows, sorted
-                List<int> selectedRows = GetGridSelectedRowsOrderedList(grid.SelectedCells);
-                grid.ClearSelection();
+                List<int> selectedRows = GetGridSelectedRowsOrderedList(Grid.SelectedCells);
+                Grid.ClearSelection();
                 foreach (int rowIndex in selectedRows)
                 {
-                    grid.Rows[rowIndex].Selected = true;
+                    Grid.Rows[rowIndex].Selected = true;
                 }
 
                 DialogResult result = MessageBox.Show($"Delete {selectedRows.Count} row(s)?",
@@ -2056,14 +2044,14 @@ namespace ModbusControl
                     selectedRows.Reverse();
 
                     // Proceed with deletion
-                    grid.SuspendLayout();
+                    Grid.SuspendLayout();
 
                     foreach (int rowIndex in selectedRows)
                     {
-                        grid.Rows.RemoveAt(rowIndex);
+                        Grid.Rows.RemoveAt(rowIndex);
                     }
 
-                    grid.ResumeLayout();
+                    Grid.ResumeLayout();
                 }
             }
         }
@@ -2072,9 +2060,9 @@ namespace ModbusControl
         /// Return list with row indexes, sorted
         /// </summary>
         /// <returns></returns>
-        List<int> GetGridSelectedRowsOrderedList(DataGridViewSelectedCellCollection selectedCells)
+        private static List<int> GetGridSelectedRowsOrderedList(DataGridViewSelectedCellCollection selectedCells)
         {
-            List<int> rowNums = new List<int>();
+            List<int> rowNums = [];
 
             foreach (DataGridViewCell cell in selectedCells)
             {
@@ -2093,7 +2081,7 @@ namespace ModbusControl
         /// Improved split
         /// We allow a comma at the end, in standard split that results in an extra empty data field, we allow that and remote it
         /// </summary>
-        private string[] MySplit(string str, char sep)
+        private static string[] MySplit(string str, char sep)
         {
             // get data
             string[] aValues = str.Split(sep);
@@ -2107,9 +2095,9 @@ namespace ModbusControl
         }
 
 
-        private string ConvertRegistersToResultString(Int16[] aRegisters, EFormat format)
+        private static string ConvertRegistersToResultString(Int16[] aRegisters, EFormat format)
         {
-            StringBuilder result = new StringBuilder(1500);     // 126 * "-32000, "
+            StringBuilder result = new(1500);     // 126 * "-32000, "
             string separatorStr = ", ";
 
             // no data?
@@ -2342,9 +2330,9 @@ namespace ModbusControl
             return ret;
         }
 
-        private void ButSendAll_Click(object sender, EventArgs e)
+        private void SendAllBtn_Click(object sender, EventArgs e)
         {
-            int lineCount = grid.RowCount;
+            int lineCount = Grid.RowCount;
 
             Cursor.Current = Cursors.WaitCursor;
 
@@ -2353,7 +2341,7 @@ namespace ModbusControl
                 for (int i = 0; i < lineCount; ++i)
                 {
                     SendRow(i);
-                    grid.Update();
+                    Grid.Update();
                 }
             }
             finally
@@ -2362,16 +2350,16 @@ namespace ModbusControl
             }
         }
 
-        private void ButClearResults_Click(object sender, EventArgs e)
+        private void ClearResultsBtn_Click(object sender, EventArgs e)
         {
-            int lineCount = grid.RowCount;
+            int lineCount = Grid.RowCount;
 
-            grid.SuspendLayout();
+            Grid.SuspendLayout();
             for (int i = 0; i < lineCount; ++i)
             {
-                grid.Rows[i].Cells[ResultColumn.Index].Value = string.Empty;
+                Grid.Rows[i].Cells[ResultColumn.Index].Value = string.Empty;
             }
-            grid.ResumeLayout(true);
+            Grid.ResumeLayout(true);
 
         }
 
@@ -2383,32 +2371,31 @@ namespace ModbusControl
         /// <returns></returns>
         private ColumnWidthsType GetColumnWidthsInWeights()
         {
-            ColumnWidthsType cw = new ColumnWidthsType();
-
-            cw.sendWidth = grid.Columns["SendColumn"].FillWeight;
-            cw.slaveIDWidth = grid.Columns["SlaveidColumn"].FillWeight;
-            cw.commandWidth = grid.Columns["CommandColumn"].FillWeight;
-            cw.registerWidth = grid.Columns["RegisterColumn"].FillWeight;
-            cw.qtyWidth = grid.Columns["QtyColumn"].FillWeight;
-            cw.formatWidth = grid.Columns["FormatColumn"].FillWeight;
-            cw.dataWidth = grid.Columns["DataColumn"].FillWeight;
-            cw.resultWidth = grid.Columns["ResultColumn"].FillWeight;
-            cw.commentWidth = grid.Columns["CommentColumn"].FillWeight;
+            ColumnWidthsType cw = new();
+            cw.sendWidth = Grid.Columns["SendColumn"].FillWeight;
+            cw.slaveIDWidth = Grid.Columns["SlaveidColumn"].FillWeight;
+            cw.commandWidth = Grid.Columns["CommandColumn"].FillWeight;
+            cw.registerWidth = Grid.Columns["RegisterColumn"].FillWeight;
+            cw.qtyWidth = Grid.Columns["QtyColumn"].FillWeight;
+            cw.formatWidth = Grid.Columns["FormatColumn"].FillWeight;
+            cw.dataWidth = Grid.Columns["DataColumn"].FillWeight;
+            cw.resultWidth = Grid.Columns["ResultColumn"].FillWeight;
+            cw.commentWidth = Grid.Columns["CommentColumn"].FillWeight;
 
             return cw;
         }
 
         private void SetColumnWidthsInWeights(ColumnWidthsType cw)
         {
-            grid.Columns["SendColumn"].FillWeight = cw.sendWidth;
-            grid.Columns["SlaveidColumn"].FillWeight = cw.slaveIDWidth;
-            grid.Columns["CommandColumn"].FillWeight = cw.commandWidth;
-            grid.Columns["RegisterColumn"].FillWeight = cw.registerWidth;
-            grid.Columns["QtyColumn"].FillWeight = cw.qtyWidth;
-            grid.Columns["FormatColumn"].FillWeight = cw.formatWidth;
-            grid.Columns["DataColumn"].FillWeight = cw.dataWidth;
-            grid.Columns["ResultColumn"].FillWeight = cw.resultWidth;
-            grid.Columns["CommentColumn"].FillWeight = cw.commentWidth;
+            Grid.Columns["SendColumn"].FillWeight = cw.sendWidth;
+            Grid.Columns["SlaveidColumn"].FillWeight = cw.slaveIDWidth;
+            Grid.Columns["CommandColumn"].FillWeight = cw.commandWidth;
+            Grid.Columns["RegisterColumn"].FillWeight = cw.registerWidth;
+            Grid.Columns["QtyColumn"].FillWeight = cw.qtyWidth;
+            Grid.Columns["FormatColumn"].FillWeight = cw.formatWidth;
+            Grid.Columns["DataColumn"].FillWeight = cw.dataWidth;
+            Grid.Columns["ResultColumn"].FillWeight = cw.resultWidth;
+            Grid.Columns["CommentColumn"].FillWeight = cw.commentWidth;
         }
 
         /// <summary>
@@ -2417,7 +2404,7 @@ namespace ModbusControl
         /// Returns null if list must not be saved
         /// </summary>
         /// <returns></returns>
-        private List<CustomQueryItem> GetQueriesList()
+        private static List<CustomQueryItem> GetQueriesList()
         {
 #if TESTBUILD
             // do not save the list
@@ -2446,7 +2433,7 @@ namespace ModbusControl
 #endif
         }
 
-        private void SetQueriesList(List<CustomQueryItem> qlist)
+        private static void SetQueriesList(List<CustomQueryItem> qlist)
         {
 #if !TESTBUILD
             grid.Rows.Clear();
@@ -2484,7 +2471,7 @@ namespace ModbusControl
         /// Integration test
         /// ButRunTests appears in test-build
         /// </summary>
-        private void ButRunTests_Click(object sender, EventArgs e)
+        private void RunTestsBtn_Click(object sender, EventArgs e)
         {
             /* test all, for dev test
              * 
@@ -2620,7 +2607,7 @@ namespace ModbusControl
             // Test ReadCoils, WriteSingleCoil, WriteMultipleCoils
 
             byte slaveID = 1;
-            UInt16 regOffset = 0;
+            UInt16 regOffset;
             UInt16 regQuantity = 1976;
             byte[] aBytesW = new byte[1976 / 8];
             byte[] aBytesR1;
@@ -2779,19 +2766,19 @@ namespace ModbusControl
                 throw new Exception("TEST FAILED");
             }
 
-            result = mModbus.MifReadCoils(slaveID, (UInt16)(regOffset + 1), 30, out aBytesR1, true);
+            result = mModbus.MifReadCoils(slaveID, (UInt16)(regOffset + 1), 30, out _, true);
             if (result != ModbusProtocol.Result.SUCCESS)
             {
                 throw new Exception("TEST FAILED");
             }
 
-            result = mModbus.MifReadCoils(slaveID, (UInt16)(regOffset + 2), 30, out aBytesR1, true);
+            result = mModbus.MifReadCoils(slaveID, (UInt16)(regOffset + 2), 30, out _, true);
             if (result != ModbusProtocol.Result.SUCCESS)
             {
                 throw new Exception("TEST FAILED");
             }
 
-            result = mModbus.MifReadCoils(slaveID, (UInt16)(regOffset + 8), 30, out aBytesR1, true);
+            result = mModbus.MifReadCoils(slaveID, (UInt16)(regOffset + 8), 30, out _, true);
             if (result != ModbusProtocol.Result.SUCCESS)
             {
                 throw new Exception("TEST FAILED");
@@ -2822,85 +2809,85 @@ namespace ModbusControl
 
             Test_WriteTestData();
 
-            rs = SendReadInputreg("", "30001", "10", EFormat.INT16, "");
+            rs = SendReadInputreg("", "30001", "10", EFormat.INT16);
             Test_TestResultStrContains("invalid slaveid", rs);
 
-            rs = SendReadInputreg("1", "", "1", EFormat.INT16, "");
+            rs = SendReadInputreg("1", "", "1", EFormat.INT16);
             Test_TestResultStrContains("invalid input register", rs);
 
-            rs = SendReadInputreg("1", "a", "1", EFormat.INT16, "");
+            rs = SendReadInputreg("1", "a", "1", EFormat.INT16);
             Test_TestResultStrContains("invalid input register", rs);
 
-            rs = SendReadInputreg("1", "30000", "10", EFormat.INT16, "");
+            rs = SendReadInputreg("1", "30000", "10", EFormat.INT16);
             Test_TestResultStrContains("invalid input register", rs);
 
-            rs = SendReadInputreg("1", "30001", "10", EFormat.INT16, "");
+            rs = SendReadInputreg("1", "30001", "10", EFormat.INT16);
             Test_TestResultStrEquals("10000, 15751, 21502, 27253, -32532, -26781, -21030, -15279, -9528, -3777", rs);
 
-            rs = SendReadInputreg("1", "39999", "10", EFormat.INT16, "");
+            rs = SendReadInputreg("1", "39999", "10", EFormat.INT16);
             Test_TestResultStrEquals("-15025, -9274, 10000, 15751, 21502, 27253, -32532, -26781, -21030, -15279", rs);
 
-            rs = SendReadInputreg("1", "40000", "10", EFormat.INT16, "");
+            rs = SendReadInputreg("1", "40000", "10", EFormat.INT16);
             Test_TestResultStrContains("invalid input register", rs);
 
-            rs = SendReadInputreg("1", "40001", "10", EFormat.INT16, "");
+            rs = SendReadInputreg("1", "40001", "10", EFormat.INT16);
             Test_TestResultStrContains("invalid input register", rs);
 
-            rs = SendReadInputreg("1", "300000", "10", EFormat.INT16, "");
+            rs = SendReadInputreg("1", "300000", "10", EFormat.INT16);
             Test_TestResultStrContains("invalid input register", rs);
 
-            rs = SendReadInputreg("1", "300001", "10", EFormat.INT16, "");
+            rs = SendReadInputreg("1", "300001", "10", EFormat.INT16);
             Test_TestResultStrEquals("10000, 15751, 21502, 27253, -32532, -26781, -21030, -15279, -9528, -3777", rs);
 
-            rs = SendReadInputreg("1", "365536", "1", EFormat.INT16, "");
+            rs = SendReadInputreg("1", "365536", "1", EFormat.INT16);
             Test_TestResultStrEquals("0", rs);
 
-            rs = SendReadInputreg("1", "365537", "1", EFormat.INT16, "");
+            rs = SendReadInputreg("1", "365537", "1", EFormat.INT16);
             Test_TestResultStrContains("invalid input register", rs);
 
-            rs = SendReadInputreg("1", "30001", "", EFormat.INT16, "");
+            rs = SendReadInputreg("1", "30001", "", EFormat.INT16);
             Test_TestResultStrContains("invalid qty", rs);
 
-            rs = SendReadInputreg("1", "30001", "0", EFormat.INT16, "");
+            rs = SendReadInputreg("1", "30001", "0", EFormat.INT16);
             Test_TestResultStrContains("no data", rs);
 
-            rs = SendReadInputreg("1", "30001", "1", EFormat.INT16, "");
+            rs = SendReadInputreg("1", "30001", "1", EFormat.INT16);
             Test_TestResultStrEquals("10000", rs);
 
-            rs = SendReadInputreg("1", "30001", "10", EFormat.INT16, "");
+            rs = SendReadInputreg("1", "30001", "10", EFormat.INT16);
             Test_TestResultStrEquals("10000, 15751, 21502, 27253, -32532, -26781, -21030, -15279, -9528, -3777", rs);
 
-            rs = SendReadInputreg("1", "30001", "125", EFormat.INT16, "");
+            rs = SendReadInputreg("1", "30001", "125", EFormat.INT16);
             Test_TestResultStrEquals("10000, 15751, 21502, 27253, -32532, -26781, -21030, -15279, -9528, -3777, 1974, 7725, 13476, 19227, 24978, 30729, -29056, -23305, -17554, -11803, -6052, -301, 5450, 11201, 16952, 22703, 28454, -31331, -25580, -19829, -14078, -8327, -2576, 3175, 8926, 14677, 20428, 26179, 31930, -27855, -22104, -16353, -10602, -4851, 900, 6651, 12402, 18153, 23904, 29655, -30130, -24379, -18628, -12877, -7126, -1375, 4376, 10127, 15878, 21629, 27380, -32405, -26654, -20903, -15152, -9401, -3650, 2101, 7852, 13603, 19354, 25105, 30856, -28929, -23178, -17427, -11676, -5925, -174, 5577, 11328, 17079, 22830, 28581, -31204, -25453, -19702, -13951, -8200, -2449, 3302, 9053, 14804, 20555, 26306, 32057, -27728, -21977, -16226, -10475, -4724, 1027, 6778, 12529, 18280, 24031, 29782, -30003, -24252, -18501, -12750, -6999, -1248, 4503, 10254, 16005, 21756, 27507, -32278, -26527, -20776, -15025, -9274, 0, 0", rs);
 
-            rs = SendReadInputreg("1", "30001", "200", EFormat.INT16, "");
+            rs = SendReadInputreg("1", "30001", "200", EFormat.INT16);
             Test_TestResultStrContains("RESPONSE DATA ERROR", rs);
 
-            rs = SendReadInputreg("1", "30001", "10", EFormat.UINT16, "");
+            rs = SendReadInputreg("1", "30001", "10", EFormat.UINT16);
             Test_TestResultStrEquals("10000, 15751, 21502, 27253, 33004, 38755, 44506, 50257, 56008, 61759", rs);
 
-            rs = SendReadInputreg("1", "30001", "10", EFormat.HEX16, "");
+            rs = SendReadInputreg("1", "30001", "10", EFormat.HEX16);
             Test_TestResultStrEquals("0x2710, 0x3D87, 0x53FE, 0x6A75, 0x80EC, 0x9763, 0xADDA, 0xC451, 0xDAC8, 0xF13F", rs);
 
-            rs = SendReadInputreg("1", "30001", "10", EFormat.INT32, "");
+            rs = SendReadInputreg("1", "30001", "10", EFormat.INT32);
             Test_TestResultStrEquals("1032267536, 1786074110, -1755086612, -1001280038, -247473464", rs);
 
-            rs = SendReadInputreg("1", "30001", "10", EFormat.UINT32, "");
+            rs = SendReadInputreg("1", "30001", "10", EFormat.UINT32);
             Test_TestResultStrEquals("1032267536, 1786074110, 2539880684, 3293687258, 4047493832", rs);
 
-            rs = SendReadInputreg("1", "30001", "10", EFormat.HEX32, "");
+            rs = SendReadInputreg("1", "30001", "10", EFormat.HEX32);
             Test_TestResultStrEquals("0x3D872710, 0x6A7553FE, 0x976380EC, 0xC451ADDA, 0xF13FDAC8", rs);
 
-            rs = SendReadInputreg("1", "30001", "9", EFormat.HEX32, "");
+            rs = SendReadInputreg("1", "30001", "9", EFormat.HEX32);
             Test_TestResultStrContains("Qty must be multiple of 2", rs);
 
-            rs = SendReadInputreg("1", "30001", "1", EFormat.HEXBYTES, "");
+            rs = SendReadInputreg("1", "30001", "1", EFormat.HEXBYTES);
             Test_TestResultStrContains("0x27, 0x10", rs);
 
-            rs = SendReadInputreg("1", "30001", "6", EFormat.HEXBYTES, "");
+            rs = SendReadInputreg("1", "30001", "6", EFormat.HEXBYTES);
             Test_TestResultStrContains("0x27, 0x10, 0x3D, 0x87, 0x53, 0xFE, 0x6A, 0x75, 0x80, 0xEC, 0x97, 0x63", rs);
 
-            rs = SendReadInputreg("1", "30001", "1", EFormat.BITS, "");
+            rs = SendReadInputreg("1", "30001", "1", EFormat.BITS);
             Test_TestResultStrContains("invalid format", rs);
 
         }
@@ -2911,85 +2898,85 @@ namespace ModbusControl
 
             Test_WriteTestData();
 
-            rs = SendReadHoldingreg("", "40001", "1", EFormat.INT16, "");
+            rs = SendReadHoldingreg("", "40001", "1", EFormat.INT16);
             Test_TestResultStrContains("invalid slaveid", rs);
 
-            rs = SendReadHoldingreg("1", "", "1", EFormat.INT16, "");
+            rs = SendReadHoldingreg("1", "", "1", EFormat.INT16);
             Test_TestResultStrContains("invalid holding register number", rs);
 
-            rs = SendReadHoldingreg("1", "a", "1", EFormat.INT16, "");
+            rs = SendReadHoldingreg("1", "a", "1", EFormat.INT16);
             Test_TestResultStrContains("invalid holding register number", rs);
 
-            rs = SendReadHoldingreg("1", "40000", "10", EFormat.INT16, "");
+            rs = SendReadHoldingreg("1", "40000", "10", EFormat.INT16);
             Test_TestResultStrContains("invalid holding register number", rs);
 
-            rs = SendReadHoldingreg("1", "40001", "10", EFormat.INT16, "");
+            rs = SendReadHoldingreg("1", "40001", "10", EFormat.INT16);
             Test_TestResultStrEquals("10000, 15751, 21502, 27253, -32532, -26781, -21030, -15279, -9528, -3777", rs);
 
-            rs = SendReadHoldingreg("1", "49999", "10", EFormat.INT16, "");
+            rs = SendReadHoldingreg("1", "49999", "10", EFormat.INT16);
             Test_TestResultStrEquals("-15025, -9274, 10000, 15751, 21502, 27253, -32532, -26781, -21030, -15279", rs);
 
-            rs = SendReadHoldingreg("1", "50000", "10", EFormat.INT16, "");
+            rs = SendReadHoldingreg("1", "50000", "10", EFormat.INT16);
             Test_TestResultStrContains("invalid holding register number", rs);
 
-            rs = SendReadHoldingreg("1", "30001", "10", EFormat.INT16, "");
+            rs = SendReadHoldingreg("1", "30001", "10", EFormat.INT16);
             Test_TestResultStrContains("invalid holding register number", rs);
 
-            rs = SendReadHoldingreg("1", "400000", "10", EFormat.INT16, "");
+            rs = SendReadHoldingreg("1", "400000", "10", EFormat.INT16);
             Test_TestResultStrContains("invalid holding register number", rs);
 
-            rs = SendReadHoldingreg("1", "400001", "10", EFormat.INT16, "");
+            rs = SendReadHoldingreg("1", "400001", "10", EFormat.INT16);
             Test_TestResultStrEquals("10000, 15751, 21502, 27253, -32532, -26781, -21030, -15279, -9528, -3777", rs);
 
-            rs = SendReadHoldingreg("1", "465536", "10", EFormat.INT16, "");
+            rs = SendReadHoldingreg("1", "465536", "10", EFormat.INT16);
             Test_TestResultStrContains("ILLEGAL ADDRESS EXCEPTION", rs);
 
-            rs = SendReadHoldingreg("1", "465537", "10", EFormat.INT16, "");
+            rs = SendReadHoldingreg("1", "465537", "10", EFormat.INT16);
             Test_TestResultStrContains("invalid holding register number", rs);
 
-            rs = SendReadHoldingreg("1", "40001", "", EFormat.INT16, "");
+            rs = SendReadHoldingreg("1", "40001", "", EFormat.INT16);
             Test_TestResultStrContains("invalid qty", rs);
 
-            rs = SendReadHoldingreg("1", "40001", "0", EFormat.INT16, "");
+            rs = SendReadHoldingreg("1", "40001", "0", EFormat.INT16);
             Test_TestResultStrContains("no data", rs);
 
-            rs = SendReadHoldingreg("1", "40001", "1", EFormat.INT16, "");
+            rs = SendReadHoldingreg("1", "40001", "1", EFormat.INT16);
             Test_TestResultStrEquals("10000", rs);
 
-            rs = SendReadHoldingreg("1", "40001", "10", EFormat.INT16, "");
+            rs = SendReadHoldingreg("1", "40001", "10", EFormat.INT16);
             Test_TestResultStrEquals("10000, 15751, 21502, 27253, -32532, -26781, -21030, -15279, -9528, -3777", rs);
 
-            rs = SendReadHoldingreg("1", "40001", "125", EFormat.INT16, "");
+            rs = SendReadHoldingreg("1", "40001", "125", EFormat.INT16);
             Test_TestResultStrEquals("10000, 15751, 21502, 27253, -32532, -26781, -21030, -15279, -9528, -3777, 1974, 7725, 13476, 19227, 24978, 30729, -29056, -23305, -17554, -11803, -6052, -301, 5450, 11201, 16952, 22703, 28454, -31331, -25580, -19829, -14078, -8327, -2576, 3175, 8926, 14677, 20428, 26179, 31930, -27855, -22104, -16353, -10602, -4851, 900, 6651, 12402, 18153, 23904, 29655, -30130, -24379, -18628, -12877, -7126, -1375, 4376, 10127, 15878, 21629, 27380, -32405, -26654, -20903, -15152, -9401, -3650, 2101, 7852, 13603, 19354, 25105, 30856, -28929, -23178, -17427, -11676, -5925, -174, 5577, 11328, 17079, 22830, 28581, -31204, -25453, -19702, -13951, -8200, -2449, 3302, 9053, 14804, 20555, 26306, 32057, -27728, -21977, -16226, -10475, -4724, 1027, 6778, 12529, 18280, 24031, 29782, -30003, -24252, -18501, -12750, -6999, -1248, 4503, 10254, 16005, 21756, 27507, -32278, -26527, -20776, -15025, -9274, 0, 0", rs);
 
-            rs = SendReadHoldingreg("1", "40001", "200", EFormat.INT16, "");
+            rs = SendReadHoldingreg("1", "40001", "200", EFormat.INT16);
             Test_TestResultStrContains("RESPONSE DATA ERROR", rs);
 
-            rs = SendReadHoldingreg("1", "40001", "10", EFormat.UINT16, "");
+            rs = SendReadHoldingreg("1", "40001", "10", EFormat.UINT16);
             Test_TestResultStrEquals("10000, 15751, 21502, 27253, 33004, 38755, 44506, 50257, 56008, 61759", rs);
 
-            rs = SendReadHoldingreg("1", "40001", "10", EFormat.HEX16, "");
+            rs = SendReadHoldingreg("1", "40001", "10", EFormat.HEX16);
             Test_TestResultStrEquals("0x2710, 0x3D87, 0x53FE, 0x6A75, 0x80EC, 0x9763, 0xADDA, 0xC451, 0xDAC8, 0xF13F", rs);
 
-            rs = SendReadHoldingreg("1", "40001", "10", EFormat.INT32, "");
+            rs = SendReadHoldingreg("1", "40001", "10", EFormat.INT32);
             Test_TestResultStrEquals("1032267536, 1786074110, -1755086612, -1001280038, -247473464", rs);
 
-            rs = SendReadHoldingreg("1", "40001", "10", EFormat.UINT32, "");
+            rs = SendReadHoldingreg("1", "40001", "10", EFormat.UINT32);
             Test_TestResultStrEquals("1032267536, 1786074110, 2539880684, 3293687258, 4047493832", rs);
 
-            rs = SendReadHoldingreg("1", "40001", "10", EFormat.HEX32, "");
+            rs = SendReadHoldingreg("1", "40001", "10", EFormat.HEX32);
             Test_TestResultStrEquals("0x3D872710, 0x6A7553FE, 0x976380EC, 0xC451ADDA, 0xF13FDAC8", rs);
 
-            rs = SendReadHoldingreg("1", "40001", "9", EFormat.HEX32, "");
+            rs = SendReadHoldingreg("1", "40001", "9", EFormat.HEX32);
             Test_TestResultStrContains("must be multiple of 2", rs);
 
-            rs = SendReadHoldingreg("1", "40001", "1", EFormat.HEXBYTES, "");
+            rs = SendReadHoldingreg("1", "40001", "1", EFormat.HEXBYTES);
             Test_TestResultStrContains("0x27, 0x10", rs);
 
-            rs = SendReadHoldingreg("1", "40001", "6", EFormat.HEXBYTES, "");
+            rs = SendReadHoldingreg("1", "40001", "6", EFormat.HEXBYTES);
             Test_TestResultStrContains("0x27, 0x10, 0x3D, 0x87, 0x53, 0xFE, 0x6A, 0x75, 0x80, 0xEC, 0x97, 0x63", rs);
 
-            rs = SendReadHoldingreg("1", "40001", "1", EFormat.BITS, "");
+            rs = SendReadHoldingreg("1", "40001", "1", EFormat.BITS);
             Test_TestResultStrContains("invalid format", rs);
         }
 
@@ -3303,100 +3290,100 @@ namespace ModbusControl
 
             Test_WriteTestData();
 
-            rs = SendReadDiscreteinputs("", "10001", "1", EFormat.HEXBYTES, "");
+            rs = SendReadDiscreteinputs("", "10001", "1", EFormat.HEXBYTES);
             Test_TestResultStrContains("invalid slaveid", rs);
 
-            rs = SendReadDiscreteinputs("1", "", "1", EFormat.HEXBYTES, "");
+            rs = SendReadDiscreteinputs("1", "", "1", EFormat.HEXBYTES);
             Test_TestResultStrContains("invalid discrete input number", rs);
 
-            rs = SendReadDiscreteinputs("1", "a", "1", EFormat.HEXBYTES, "");
+            rs = SendReadDiscreteinputs("1", "a", "1", EFormat.HEXBYTES);
             Test_TestResultStrContains("invalid discrete input number", rs);
 
-            rs = SendReadDiscreteinputs("1", "10000", "10", EFormat.HEXBYTES, "");
+            rs = SendReadDiscreteinputs("1", "10000", "10", EFormat.HEXBYTES);
             Test_TestResultStrContains("invalid discrete input number", rs);
 
-            rs = SendReadDiscreteinputs("1", "10001", "10", EFormat.HEXBYTES, "");
+            rs = SendReadDiscreteinputs("1", "10001", "10", EFormat.HEXBYTES);
             Test_TestResultStrEquals("0x10, 0x03", rs);
 
-            rs = SendReadDiscreteinputs("1", "19999", "10", EFormat.HEXBYTES, "");
+            rs = SendReadDiscreteinputs("1", "19999", "10", EFormat.HEXBYTES);
             Test_TestResultStrContains("0x00, 0x00", rs);
 
-            rs = SendReadDiscreteinputs("1", "20000", "10", EFormat.HEXBYTES, "");
+            rs = SendReadDiscreteinputs("1", "20000", "10", EFormat.HEXBYTES);
             Test_TestResultStrContains("invalid discrete input number", rs);
 
-            rs = SendReadDiscreteinputs("1", "40001", "10", EFormat.HEXBYTES, "");
+            rs = SendReadDiscreteinputs("1", "40001", "10", EFormat.HEXBYTES);
             Test_TestResultStrContains("invalid discrete input number", rs);
 
-            rs = SendReadDiscreteinputs("1", "100000", "10", EFormat.HEXBYTES, "");
+            rs = SendReadDiscreteinputs("1", "100000", "10", EFormat.HEXBYTES);
             Test_TestResultStrContains("invalid discrete input number", rs);
 
-            rs = SendReadDiscreteinputs("1", "100001", "10", EFormat.HEXBYTES, "");
+            rs = SendReadDiscreteinputs("1", "100001", "10", EFormat.HEXBYTES);
             Test_TestResultStrEquals("0x10, 0x03", rs);
 
-            rs = SendReadDiscreteinputs("1", "165536", "10", EFormat.HEXBYTES, "");
+            rs = SendReadDiscreteinputs("1", "165536", "10", EFormat.HEXBYTES);
             Test_TestResultStrContains("ILLEGAL ADDRESS EXCEPTION", rs);
 
-            rs = SendReadDiscreteinputs("1", "165537", "10", EFormat.HEXBYTES, "");
+            rs = SendReadDiscreteinputs("1", "165537", "10", EFormat.HEXBYTES);
             Test_TestResultStrContains("invalid discrete input number", rs);
 
-            rs = SendReadDiscreteinputs("1", "10001", "", EFormat.HEXBYTES, "");
+            rs = SendReadDiscreteinputs("1", "10001", "", EFormat.HEXBYTES);
             Test_TestResultStrContains("invalid qty", rs);
 
-            rs = SendReadDiscreteinputs("1", "10001", "0", EFormat.HEXBYTES, "");
+            rs = SendReadDiscreteinputs("1", "10001", "0", EFormat.HEXBYTES);
             Test_TestResultStrEquals("", rs);
 
-            rs = SendReadDiscreteinputs("1", "10001", "1", EFormat.HEXBYTES, "");
+            rs = SendReadDiscreteinputs("1", "10001", "1", EFormat.HEXBYTES);
             Test_TestResultStrEquals("0x00", rs);
 
-            rs = SendReadDiscreteinputs("1", "10001", "10", EFormat.HEXBYTES, "");
+            rs = SendReadDiscreteinputs("1", "10001", "10", EFormat.HEXBYTES);
             Test_TestResultStrEquals("0x10, 0x03", rs);
 
-            rs = SendReadDiscreteinputs("1", "10001", "100", EFormat.HEXBYTES, "");
+            rs = SendReadDiscreteinputs("1", "10001", "100", EFormat.HEXBYTES);
             Test_TestResultStrEquals("0x10, 0x27, 0x87, 0x3D, 0xFE, 0x53, 0x75, 0x6A, 0xEC, 0x80, 0x63, 0x97, 0x0A", rs);
 
-            rs = SendReadDiscreteinputs("1", "10001", "2000", EFormat.HEXBYTES, "");
+            rs = SendReadDiscreteinputs("1", "10001", "2000", EFormat.HEXBYTES);
             Test_TestResultStrEquals("0x10, 0x27, 0x87, 0x3D, 0xFE, 0x53, 0x75, 0x6A, 0xEC, 0x80, 0x63, 0x97, 0xDA, 0xAD, 0x51, 0xC4, 0xC8, 0xDA, 0x3F, 0xF1, 0xB6, 0x07, 0x2D, 0x1E, 0xA4, 0x34, 0x1B, 0x4B, 0x92, 0x61, 0x09, 0x78, 0x80, 0x8E, 0xF7, 0xA4, 0x6E, 0xBB, 0xE5, 0xD1, 0x5C, 0xE8, 0xD3, 0xFE, 0x4A, 0x15, 0xC1, 0x2B, 0x38, 0x42, 0xAF, 0x58, 0x26, 0x6F, 0x9D, 0x85, 0x14, 0x9C, 0x8B, 0xB2, 0x02, 0xC9, 0x79, 0xDF, 0xF0, 0xF5, 0x67, 0x0C, 0xDE, 0x22, 0x55, 0x39, 0xCC, 0x4F, 0x43, 0x66, 0xBA, 0x7C, 0x31, 0x93, 0xA8, 0xA9, 0x1F, 0xC0, 0x96, 0xD6, 0x0D, 0xED, 0x84, 0x03, 0xFB, 0x19, 0x72, 0x30, 0xE9, 0x46, 0x60, 0x5D, 0xD7, 0x73, 0x4E, 0x8A, 0xC5, 0xA0, 0x3C, 0xB7, 0xB3, 0xCD, 0x2A, 0xE4, 0xA1, 0xFA, 0x18, 0x11, 0x8F, 0x27, 0x06, 0x3E, 0x7D, 0x54, 0xF4, 0x6A, 0x6B, 0x81, 0xE2, 0x97, 0x59, 0xAE, 0xD0, 0xC4, 0x47, 0xDB, 0xBE, 0xF1, 0x35, 0x08, 0xAC, 0x1E, 0x23, 0x35, 0x9A, 0x4B, 0x11, 0x62, 0x88, 0x78, 0xFF, 0x8E, 0x76, 0xA5, 0xED, 0xBB, 0x64, 0xD2, 0xDB, 0xE8, 0x52, 0xFF, 0xC9, 0x15, 0x40, 0x2C, 0xB7, 0x42, 0x2E, 0x59, 0xA5, 0x6F, 0x1C, 0x86, 0x93, 0x9C, 0x0A, 0xB3, 0x81, 0xC9, 0xF8, 0xDF, 0x6F, 0xF6, 0xE6, 0x0C, 0x5D, 0x23, 0xD4, 0x39, 0x4B, 0x50, 0xC2, 0x66, 0x39, 0x7D, 0xB0, 0x93, 0x27, 0xAA, 0x9E, 0xC0, 0x15, 0xD7, 0x8C, 0xED, 0x03, 0x04, 0x7A, 0x1A, 0xF1, 0x30, 0x68, 0x47, 0xDF, 0x5D, 0x56, 0x74, 0xCD, 0x8A, 0x44, 0xA1, 0xBB, 0xB7, 0x32, 0xCE, 0xA9, 0xE4, 0x20, 0xFB, 0x97, 0x11, 0x0E, 0x28, 0x85, 0x3E, 0xFC, 0x54, 0x73, 0x6B, 0xEA, 0x81, 0x61, 0x98, 0xD8, 0xAE, 0x4F, 0xC5, 0xC6, 0xDB, 0x00, 0x00, 0x00, 0x00", rs);
 
-            rs = SendReadDiscreteinputs("1", "10001", "3000", EFormat.HEXBYTES, "");
+            rs = SendReadDiscreteinputs("1", "10001", "3000", EFormat.HEXBYTES);
             Test_TestResultStrContains("RESPONSE DATA ERROR", rs);
 
-            rs = SendReadDiscreteinputs("1", "10001", "0", EFormat.BITS, "");
+            rs = SendReadDiscreteinputs("1", "10001", "0", EFormat.BITS);
             Test_TestResultStrContains("no data", rs);
 
-            rs = SendReadDiscreteinputs("1", "10001", "1", EFormat.BITS, "");
+            rs = SendReadDiscreteinputs("1", "10001", "1", EFormat.BITS);
             Test_TestResultStrEquals("0", rs);
 
-            rs = SendReadDiscreteinputs("1", "10001", "7", EFormat.BITS, "");
+            rs = SendReadDiscreteinputs("1", "10001", "7", EFormat.BITS);
             Test_TestResultStrEquals("0,0,0,0,1,0,0", rs);
 
-            rs = SendReadDiscreteinputs("1", "10001", "8", EFormat.BITS, "");
+            rs = SendReadDiscreteinputs("1", "10001", "8", EFormat.BITS);
             Test_TestResultStrEquals("0,0,0,0,1,0,0,0", rs);
 
-            rs = SendReadDiscreteinputs("1", "10001", "9", EFormat.BITS, "");
+            rs = SendReadDiscreteinputs("1", "10001", "9", EFormat.BITS);
             Test_TestResultStrEquals("0,0,0,0,1,0,0,0, 1", rs);
 
-            rs = SendReadDiscreteinputs("1", "10001", "100", EFormat.BITS, "");
+            rs = SendReadDiscreteinputs("1", "10001", "100", EFormat.BITS);
             Test_TestResultStrEquals("0,0,0,0,1,0,0,0, 1,1,1,0,0,1,0,0, 1,1,1,0,0,0,0,1, 1,0,1,1,1,1,0,0, 0,1,1,1,1,1,1,1, 1,1,0,0,1,0,1,0, 1,0,1,0,1,1,1,0, 0,1,0,1,0,1,1,0, 0,0,1,1,0,1,1,1, 0,0,0,0,0,0,0,1, 1,1,0,0,0,1,1,0, 1,1,1,0,1,0,0,1, 0,1,0,1", rs);
 
-            rs = SendReadDiscreteinputs("1", "10001", "1000", EFormat.BITS, "");
+            rs = SendReadDiscreteinputs("1", "10001", "1000", EFormat.BITS);
             Test_TestResultStrEquals("0,0,0,0,1,0,0,0, 1,1,1,0,0,1,0,0, 1,1,1,0,0,0,0,1, 1,0,1,1,1,1,0,0, 0,1,1,1,1,1,1,1, 1,1,0,0,1,0,1,0, 1,0,1,0,1,1,1,0, 0,1,0,1,0,1,1,0, 0,0,1,1,0,1,1,1, 0,0,0,0,0,0,0,1, 1,1,0,0,0,1,1,0, 1,1,1,0,1,0,0,1, 0,1,0,1,1,0,1,1, 1,0,1,1,0,1,0,1, 1,0,0,0,1,0,1,0, 0,0,1,0,0,0,1,1, 0,0,0,1,0,0,1,1, 0,1,0,1,1,0,1,1, 1,1,1,1,1,1,0,0, 1,0,0,0,1,1,1,1, 0,1,1,0,1,1,0,1, 1,1,1,0,0,0,0,0, 1,0,1,1,0,1,0,0, 0,1,1,1,1,0,0,0, 0,0,1,0,0,1,0,1, 0,0,1,0,1,1,0,0, 1,1,0,1,1,0,0,0, 1,1,0,1,0,0,1,0, 0,1,0,0,1,0,0,1, 1,0,0,0,0,1,1,0, 1,0,0,1,0,0,0,0, 0,0,0,1,1,1,1,0, 0,0,0,0,0,0,0,1, 0,1,1,1,0,0,0,1, 1,1,1,0,1,1,1,1, 0,0,1,0,0,1,0,1, 0,1,1,1,0,1,1,0, 1,1,0,1,1,1,0,1, 1,0,1,0,0,1,1,1, 1,0,0,0,1,0,1,1, 0,0,1,1,1,0,1,0, 0,0,0,1,0,1,1,1, 1,1,0,0,1,0,1,1, 0,1,1,1,1,1,1,1, 0,1,0,1,0,0,1,0, 1,0,1,0,1,0,0,0, 1,0,0,0,0,0,1,1, 1,1,0,1,0,1,0,0, 0,0,0,1,1,1,0,0, 0,1,0,0,0,0,1,0, 1,1,1,1,0,1,0,1, 0,0,0,1,1,0,1,0, 0,1,1,0,0,1,0,0, 1,1,1,1,0,1,1,0, 1,0,1,1,1,0,0,1, 1,0,1,0,0,0,0,1, 0,0,1,0,1,0,0,0, 0,0,1,1,1,0,0,1, 1,1,0,1,0,0,0,1, 0,1,0,0,1,1,0,1, 0,1,0,0,0,0,0,0, 1,0,0,1,0,0,1,1, 1,0,0,1,1,1,1,0, 1,1,1,1,1,0,1,1, 0,0,0,0,1,1,1,1, 1,0,1,0,1,1,1,1, 1,1,1,0,0,1,1,0, 0,0,1,1,0,0,0,0, 0,1,1,1,1,0,1,1, 0,1,0,0,0,1,0,0, 1,0,1,0,1,0,1,0, 1,0,0,1,1,1,0,0, 0,0,1,1,0,0,1,1, 1,1,1,1,0,0,1,0, 1,1,0,0,0,0,1,0, 0,1,1,0,0,1,1,0, 0,1,0,1,1,1,0,1, 0,0,1,1,1,1,1,0, 1,0,0,0,1,1,0,0, 1,1,0,0,1,0,0,1, 0,0,0,1,0,1,0,1, 1,0,0,1,0,1,0,1, 1,1,1,1,1,0,0,0, 0,0,0,0,0,0,1,1, 0,1,1,0,1,0,0,1, 0,1,1,0,1,0,1,1, 1,0,1,1,0,0,0,0, 1,0,1,1,0,1,1,1, 0,0,1,0,0,0,0,1, 1,1,0,0,0,0,0,0, 1,1,0,1,1,1,1,1, 1,0,0,1,1,0,0,0, 0,1,0,0,1,1,1,0, 0,0,0,0,1,1,0,0, 1,0,0,1,0,1,1,1, 0,1,1,0,0,0,1,0, 0,0,0,0,0,1,1,0, 1,0,1,1,1,0,1,0, 1,1,1,0,1,0,1,1, 1,1,0,0,1,1,1,0, 0,1,1,1,0,0,1,0, 0,1,0,1,0,0,0,1, 1,0,1,0,0,0,1,1, 0,0,0,0,0,1,0,1, 0,0,1,1,1,1,0,0, 1,1,1,0,1,1,0,1, 1,1,0,0,1,1,0,1, 1,0,1,1,0,0,1,1, 0,1,0,1,0,1,0,0, 0,0,1,0,0,1,1,1, 1,0,0,0,0,1,0,1, 0,1,0,1,1,1,1,1, 0,0,0,1,1,0,0,0, 1,0,0,0,1,0,0,0, 1,1,1,1,0,0,0,1, 1,1,1,0,0,1,0,0, 0,1,1,0,0,0,0,0, 0,1,1,1,1,1,0,0, 1,0,1,1,1,1,1,0, 0,0,1,0,1,0,1,0, 0,0,1,0,1,1,1,1, 0,1,0,1,0,1,1,0, 1,1,0,1,0,1,1,0, 1,0,0,0,0,0,0,1, 0,1,0,0,0,1,1,1", rs);
 
-            rs = SendReadDiscreteinputs("1", "10001", "9", EFormat.INT16, "");
+            rs = SendReadDiscreteinputs("1", "10001", "9", EFormat.INT16);
             Test_TestResultStrContains("invalid format", rs);
 
-            rs = SendReadDiscreteinputs("1", "10001", "9", EFormat.UINT16, "");
+            rs = SendReadDiscreteinputs("1", "10001", "9", EFormat.UINT16);
             Test_TestResultStrContains("invalid format", rs);
 
-            rs = SendReadDiscreteinputs("1", "10001", "9", EFormat.HEX16, "");
+            rs = SendReadDiscreteinputs("1", "10001", "9", EFormat.HEX16);
             Test_TestResultStrContains("invalid format", rs);
 
-            rs = SendReadDiscreteinputs("1", "10001", "9", EFormat.INT32, "");
+            rs = SendReadDiscreteinputs("1", "10001", "9", EFormat.INT32);
             Test_TestResultStrContains("invalid format", rs);
 
-            rs = SendReadDiscreteinputs("1", "10001", "9", EFormat.UINT32, "");
+            rs = SendReadDiscreteinputs("1", "10001", "9", EFormat.UINT32);
             Test_TestResultStrContains("invalid format", rs);
 
-            rs = SendReadDiscreteinputs("1", "10001", "9", EFormat.HEX32, "");
+            rs = SendReadDiscreteinputs("1", "10001", "9", EFormat.HEX32);
             Test_TestResultStrContains("invalid format", rs);
 
         }
@@ -3407,94 +3394,94 @@ namespace ModbusControl
 
             Test_WriteTestData();
 
-            rs = SendReadCoils("", "1", "1", EFormat.HEXBYTES, "");
+            rs = SendReadCoils("", "1", "1", EFormat.HEXBYTES);
             Test_TestResultStrContains("invalid slaveid", rs);
 
-            rs = SendReadCoils("1", "", "1", EFormat.HEXBYTES, "");
+            rs = SendReadCoils("1", "", "1", EFormat.HEXBYTES);
             Test_TestResultStrContains("invalid coil number", rs);
 
-            rs = SendReadCoils("1", "a", "1", EFormat.HEXBYTES, "");
+            rs = SendReadCoils("1", "a", "1", EFormat.HEXBYTES);
             Test_TestResultStrContains("invalid coil number", rs);
 
-            rs = SendReadCoils("1", "1", "10", EFormat.HEXBYTES, "");
+            rs = SendReadCoils("1", "1", "10", EFormat.HEXBYTES);
             Test_TestResultStrContains("0x10, 0x03", rs);
 
-            rs = SendReadCoils("1", "9999", "1", EFormat.HEXBYTES, "");
+            rs = SendReadCoils("1", "9999", "1", EFormat.HEXBYTES);
             Test_TestResultStrContains("0x00", rs);
 
-            rs = SendReadCoils("1", "10001", "10", EFormat.HEXBYTES, "");
+            rs = SendReadCoils("1", "10001", "10", EFormat.HEXBYTES);
             Test_TestResultStrContains("invalid coil number", rs);
 
-            rs = SendReadCoils("1", "40001", "10", EFormat.HEXBYTES, "");
+            rs = SendReadCoils("1", "40001", "10", EFormat.HEXBYTES);
             Test_TestResultStrContains("invalid coil number", rs);
 
-            rs = SendReadCoils("1", "100000", "10", EFormat.HEXBYTES, "");
+            rs = SendReadCoils("1", "100000", "10", EFormat.HEXBYTES);
             Test_TestResultStrContains("invalid coil number", rs);
 
-            rs = SendReadCoils("1", "1", "10", EFormat.HEXBYTES, "");
+            rs = SendReadCoils("1", "1", "10", EFormat.HEXBYTES);
             Test_TestResultStrEquals("0x10, 0x03", rs);
 
-            rs = SendReadCoils("1", "9999", "100", EFormat.HEXBYTES, "");
+            rs = SendReadCoils("1", "9999", "100", EFormat.HEXBYTES);
             Test_TestResultStrContains("0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00", rs);
 
-            rs = SendReadCoils("1", "1", "", EFormat.HEXBYTES, "");
+            rs = SendReadCoils("1", "1", "", EFormat.HEXBYTES);
             Test_TestResultStrContains("invalid qty", rs);
 
-            rs = SendReadCoils("1", "1", "0", EFormat.HEXBYTES, "");
+            rs = SendReadCoils("1", "1", "0", EFormat.HEXBYTES);
             Test_TestResultStrContains("no data", rs);
 
-            rs = SendReadCoils("1", "1", "1", EFormat.HEXBYTES, "");
+            rs = SendReadCoils("1", "1", "1", EFormat.HEXBYTES);
             Test_TestResultStrEquals("0x00", rs);
 
-            rs = SendReadCoils("1", "1", "10", EFormat.HEXBYTES, "");
+            rs = SendReadCoils("1", "1", "10", EFormat.HEXBYTES);
             Test_TestResultStrEquals("0x10, 0x03", rs);
 
-            rs = SendReadCoils("1", "1", "100", EFormat.HEXBYTES, "");
+            rs = SendReadCoils("1", "1", "100", EFormat.HEXBYTES);
             Test_TestResultStrEquals("0x10, 0x27, 0x87, 0x3D, 0xFE, 0x53, 0x75, 0x6A, 0xEC, 0x80, 0x63, 0x97, 0x0A", rs);
 
-            rs = SendReadCoils("1", "1", "2000", EFormat.HEXBYTES, "");
+            rs = SendReadCoils("1", "1", "2000", EFormat.HEXBYTES);
             Test_TestResultStrEquals("0x10, 0x27, 0x87, 0x3D, 0xFE, 0x53, 0x75, 0x6A, 0xEC, 0x80, 0x63, 0x97, 0xDA, 0xAD, 0x51, 0xC4, 0xC8, 0xDA, 0x3F, 0xF1, 0xB6, 0x07, 0x2D, 0x1E, 0xA4, 0x34, 0x1B, 0x4B, 0x92, 0x61, 0x09, 0x78, 0x80, 0x8E, 0xF7, 0xA4, 0x6E, 0xBB, 0xE5, 0xD1, 0x5C, 0xE8, 0xD3, 0xFE, 0x4A, 0x15, 0xC1, 0x2B, 0x38, 0x42, 0xAF, 0x58, 0x26, 0x6F, 0x9D, 0x85, 0x14, 0x9C, 0x8B, 0xB2, 0x02, 0xC9, 0x79, 0xDF, 0xF0, 0xF5, 0x67, 0x0C, 0xDE, 0x22, 0x55, 0x39, 0xCC, 0x4F, 0x43, 0x66, 0xBA, 0x7C, 0x31, 0x93, 0xA8, 0xA9, 0x1F, 0xC0, 0x96, 0xD6, 0x0D, 0xED, 0x84, 0x03, 0xFB, 0x19, 0x72, 0x30, 0xE9, 0x46, 0x60, 0x5D, 0xD7, 0x73, 0x4E, 0x8A, 0xC5, 0xA0, 0x3C, 0xB7, 0xB3, 0xCD, 0x2A, 0xE4, 0xA1, 0xFA, 0x18, 0x11, 0x8F, 0x27, 0x06, 0x3E, 0x7D, 0x54, 0xF4, 0x6A, 0x6B, 0x81, 0xE2, 0x97, 0x59, 0xAE, 0xD0, 0xC4, 0x47, 0xDB, 0xBE, 0xF1, 0x35, 0x08, 0xAC, 0x1E, 0x23, 0x35, 0x9A, 0x4B, 0x11, 0x62, 0x88, 0x78, 0xFF, 0x8E, 0x76, 0xA5, 0xED, 0xBB, 0x64, 0xD2, 0xDB, 0xE8, 0x52, 0xFF, 0xC9, 0x15, 0x40, 0x2C, 0xB7, 0x42, 0x2E, 0x59, 0xA5, 0x6F, 0x1C, 0x86, 0x93, 0x9C, 0x0A, 0xB3, 0x81, 0xC9, 0xF8, 0xDF, 0x6F, 0xF6, 0xE6, 0x0C, 0x5D, 0x23, 0xD4, 0x39, 0x4B, 0x50, 0xC2, 0x66, 0x39, 0x7D, 0xB0, 0x93, 0x27, 0xAA, 0x9E, 0xC0, 0x15, 0xD7, 0x8C, 0xED, 0x03, 0x04, 0x7A, 0x1A, 0xF1, 0x30, 0x68, 0x47, 0xDF, 0x5D, 0x56, 0x74, 0xCD, 0x8A, 0x44, 0xA1, 0xBB, 0xB7, 0x32, 0xCE, 0xA9, 0xE4, 0x20, 0xFB, 0x97, 0x11, 0x0E, 0x28, 0x85, 0x3E, 0xFC, 0x54, 0x73, 0x6B, 0xEA, 0x81, 0x61, 0x98, 0xD8, 0xAE, 0x4F, 0xC5, 0xC6, 0xDB, 0x00, 0x00, 0x00, 0x00", rs);
 
-            rs = SendReadCoils("1", "1", "3000", EFormat.HEXBYTES, "");
+            rs = SendReadCoils("1", "1", "3000", EFormat.HEXBYTES);
             Test_TestResultStrContains("RESPONSE DATA ERROR", rs);
 
-            rs = SendReadCoils("1", "1", "0", EFormat.BITS, "");
+            rs = SendReadCoils("1", "1", "0", EFormat.BITS);
             Test_TestResultStrContains("no data", rs);
 
-            rs = SendReadCoils("1", "1", "1", EFormat.BITS, "");
+            rs = SendReadCoils("1", "1", "1", EFormat.BITS);
             Test_TestResultStrEquals("0", rs);
 
-            rs = SendReadCoils("1", "1", "7", EFormat.BITS, "");
+            rs = SendReadCoils("1", "1", "7", EFormat.BITS);
             Test_TestResultStrEquals("0,0,0,0,1,0,0", rs);
 
-            rs = SendReadCoils("1", "1", "8", EFormat.BITS, "");
+            rs = SendReadCoils("1", "1", "8", EFormat.BITS);
             Test_TestResultStrEquals("0,0,0,0,1,0,0,0", rs);
 
-            rs = SendReadCoils("1", "1", "9", EFormat.BITS, "");
+            rs = SendReadCoils("1", "1", "9", EFormat.BITS);
             Test_TestResultStrEquals("0,0,0,0,1,0,0,0, 1", rs);
 
-            rs = SendReadCoils("1", "1", "100", EFormat.BITS, "");
+            rs = SendReadCoils("1", "1", "100", EFormat.BITS);
             Test_TestResultStrEquals("0,0,0,0,1,0,0,0, 1,1,1,0,0,1,0,0, 1,1,1,0,0,0,0,1, 1,0,1,1,1,1,0,0, 0,1,1,1,1,1,1,1, 1,1,0,0,1,0,1,0, 1,0,1,0,1,1,1,0, 0,1,0,1,0,1,1,0, 0,0,1,1,0,1,1,1, 0,0,0,0,0,0,0,1, 1,1,0,0,0,1,1,0, 1,1,1,0,1,0,0,1, 0,1,0,1", rs);
-
-            rs = SendReadCoils("1", "1", "1000", EFormat.BITS, "");
+           
+            rs = SendReadCoils("1", "1", "1000", EFormat.BITS);
             Test_TestResultStrEquals("0,0,0,0,1,0,0,0, 1,1,1,0,0,1,0,0, 1,1,1,0,0,0,0,1, 1,0,1,1,1,1,0,0, 0,1,1,1,1,1,1,1, 1,1,0,0,1,0,1,0, 1,0,1,0,1,1,1,0, 0,1,0,1,0,1,1,0, 0,0,1,1,0,1,1,1, 0,0,0,0,0,0,0,1, 1,1,0,0,0,1,1,0, 1,1,1,0,1,0,0,1, 0,1,0,1,1,0,1,1, 1,0,1,1,0,1,0,1, 1,0,0,0,1,0,1,0, 0,0,1,0,0,0,1,1, 0,0,0,1,0,0,1,1, 0,1,0,1,1,0,1,1, 1,1,1,1,1,1,0,0, 1,0,0,0,1,1,1,1, 0,1,1,0,1,1,0,1, 1,1,1,0,0,0,0,0, 1,0,1,1,0,1,0,0, 0,1,1,1,1,0,0,0, 0,0,1,0,0,1,0,1, 0,0,1,0,1,1,0,0, 1,1,0,1,1,0,0,0, 1,1,0,1,0,0,1,0, 0,1,0,0,1,0,0,1, 1,0,0,0,0,1,1,0, 1,0,0,1,0,0,0,0, 0,0,0,1,1,1,1,0, 0,0,0,0,0,0,0,1, 0,1,1,1,0,0,0,1, 1,1,1,0,1,1,1,1, 0,0,1,0,0,1,0,1, 0,1,1,1,0,1,1,0, 1,1,0,1,1,1,0,1, 1,0,1,0,0,1,1,1, 1,0,0,0,1,0,1,1, 0,0,1,1,1,0,1,0, 0,0,0,1,0,1,1,1, 1,1,0,0,1,0,1,1, 0,1,1,1,1,1,1,1, 0,1,0,1,0,0,1,0, 1,0,1,0,1,0,0,0, 1,0,0,0,0,0,1,1, 1,1,0,1,0,1,0,0, 0,0,0,1,1,1,0,0, 0,1,0,0,0,0,1,0, 1,1,1,1,0,1,0,1, 0,0,0,1,1,0,1,0, 0,1,1,0,0,1,0,0, 1,1,1,1,0,1,1,0, 1,0,1,1,1,0,0,1, 1,0,1,0,0,0,0,1, 0,0,1,0,1,0,0,0, 0,0,1,1,1,0,0,1, 1,1,0,1,0,0,0,1, 0,1,0,0,1,1,0,1, 0,1,0,0,0,0,0,0, 1,0,0,1,0,0,1,1, 1,0,0,1,1,1,1,0, 1,1,1,1,1,0,1,1, 0,0,0,0,1,1,1,1, 1,0,1,0,1,1,1,1, 1,1,1,0,0,1,1,0, 0,0,1,1,0,0,0,0, 0,1,1,1,1,0,1,1, 0,1,0,0,0,1,0,0, 1,0,1,0,1,0,1,0, 1,0,0,1,1,1,0,0, 0,0,1,1,0,0,1,1, 1,1,1,1,0,0,1,0, 1,1,0,0,0,0,1,0, 0,1,1,0,0,1,1,0, 0,1,0,1,1,1,0,1, 0,0,1,1,1,1,1,0, 1,0,0,0,1,1,0,0, 1,1,0,0,1,0,0,1, 0,0,0,1,0,1,0,1, 1,0,0,1,0,1,0,1, 1,1,1,1,1,0,0,0, 0,0,0,0,0,0,1,1, 0,1,1,0,1,0,0,1, 0,1,1,0,1,0,1,1, 1,0,1,1,0,0,0,0, 1,0,1,1,0,1,1,1, 0,0,1,0,0,0,0,1, 1,1,0,0,0,0,0,0, 1,1,0,1,1,1,1,1, 1,0,0,1,1,0,0,0, 0,1,0,0,1,1,1,0, 0,0,0,0,1,1,0,0, 1,0,0,1,0,1,1,1, 0,1,1,0,0,0,1,0, 0,0,0,0,0,1,1,0, 1,0,1,1,1,0,1,0, 1,1,1,0,1,0,1,1, 1,1,0,0,1,1,1,0, 0,1,1,1,0,0,1,0, 0,1,0,1,0,0,0,1, 1,0,1,0,0,0,1,1, 0,0,0,0,0,1,0,1, 0,0,1,1,1,1,0,0, 1,1,1,0,1,1,0,1, 1,1,0,0,1,1,0,1, 1,0,1,1,0,0,1,1, 0,1,0,1,0,1,0,0, 0,0,1,0,0,1,1,1, 1,0,0,0,0,1,0,1, 0,1,0,1,1,1,1,1, 0,0,0,1,1,0,0,0, 1,0,0,0,1,0,0,0, 1,1,1,1,0,0,0,1, 1,1,1,0,0,1,0,0, 0,1,1,0,0,0,0,0, 0,1,1,1,1,1,0,0, 1,0,1,1,1,1,1,0, 0,0,1,0,1,0,1,0, 0,0,1,0,1,1,1,1, 0,1,0,1,0,1,1,0, 1,1,0,1,0,1,1,0, 1,0,0,0,0,0,0,1, 0,1,0,0,0,1,1,1", rs);
 
-            rs = SendReadCoils("1", "1", "1000", EFormat.INT16, "");
+            rs = SendReadCoils("1", "1", "1000", EFormat.INT16);
             Test_TestResultStrContains("invalid format", rs);
 
-            rs = SendReadCoils("1", "1", "1000", EFormat.UINT16, "");
+            rs = SendReadCoils("1", "1", "1000", EFormat.UINT16);
             Test_TestResultStrContains("invalid format", rs);
 
-            rs = SendReadCoils("1", "1", "1000", EFormat.HEX16, "");
+            rs = SendReadCoils("1", "1", "1000", EFormat.HEX16);
             Test_TestResultStrContains("invalid format", rs);
 
-            rs = SendReadCoils("1", "1", "1000", EFormat.INT32, "");
+            rs = SendReadCoils("1", "1", "1000", EFormat.INT32);
             Test_TestResultStrContains("invalid format", rs);
 
-            rs = SendReadCoils("1", "1", "1000", EFormat.UINT32, "");
+            rs = SendReadCoils("1", "1", "1000", EFormat.UINT32);
             Test_TestResultStrContains("invalid format", rs);
 
-            rs = SendReadCoils("1", "1", "1000", EFormat.HEX32, "");
+            rs = SendReadCoils("1", "1", "1000", EFormat.HEX32);
             Test_TestResultStrContains("invalid format", rs);
 
         }
@@ -3738,39 +3725,39 @@ namespace ModbusControl
             rs = SendWriteMultipleHoldingreg("1", "40011", "6", EFormat.INT16, "11001 , 12002, 13003, 14004, 15005, 16006");
             Test_TestResultStrContains("success", rs);
 
-            rs = SendCustomQuery("", "", "", EFormat.HEXBYTES, "0x03, 0x01, 0x02, 0x00, 0x006");
+            rs = SendCustomQuery("", EFormat.HEXBYTES, "0x03, 0x01, 0x02, 0x00, 0x006");
             Test_TestResultStrContains("invalid slaveid", rs);
 
-            rs = SendCustomQuery("1", "", "", EFormat.HEXBYTES, "0x03, 0x00, 0x0A, 0x00, 0x06");
+            rs = SendCustomQuery("1", EFormat.HEXBYTES, "0x03, 0x00, 0x0A, 0x00, 0x06");
             Test_TestResultStrEquals("0x03, 0x0C, 0x2A, 0xF9, 0x2E, 0xE2, 0x32, 0xCB, 0x36, 0xB4, 0x3A, 0x9D, 0x3E, 0x86", rs);
 
-            rs = SendCustomQuery("1", "", "", EFormat.HEXBYTES, " 0x03 , 0  , 0x00A, 0x0000, 0x06,");
+            rs = SendCustomQuery("1", EFormat.HEXBYTES, " 0x03 , 0  , 0x00A, 0x0000, 0x06,");
             Test_TestResultStrEquals("0x03, 0x0C, 0x2A, 0xF9, 0x2E, 0xE2, 0x32, 0xCB, 0x36, 0xB4, 0x3A, 0x9D, 0x3E, 0x86", rs);
 
-            rs = SendCustomQuery("1", "", "", EFormat.HEXBYTES, " 0x03 , 0  , 0x00A, 0x0000, 0x06,");
+            rs = SendCustomQuery("1", EFormat.HEXBYTES, " 0x03 , 0  , 0x00A, 0x0000, 0x06,");
             Test_TestResultStrEquals("0x03, 0x0C, 0x2A, 0xF9, 0x2E, 0xE2, 0x32, 0xCB, 0x36, 0xB4, 0x3A, 0x9D, 0x3E, 0x86", rs);
 
-            rs = SendCustomQuery("1", "", "", EFormat.INT16, "0x03, 0x00, 0x0A, 0x00, 0x06");
+            rs = SendCustomQuery("1", EFormat.INT16, "0x03, 0x00, 0x0A, 0x00, 0x06");
             Test_TestResultStrContains("invalid format", rs);
 
-            rs = SendCustomQuery("1", "", "", EFormat.UINT16, "0x03, 0x00, 0x0A, 0x00, 0x06");
+            rs = SendCustomQuery("1", EFormat.UINT16, "0x03, 0x00, 0x0A, 0x00, 0x06");
             Test_TestResultStrContains("invalid format", rs);
 
-            rs = SendCustomQuery("1", "", "", EFormat.HEX16, "0x03, 0x00, 0x0A, 0x00, 0x06");
+            rs = SendCustomQuery("1", EFormat.HEX16, "0x03, 0x00, 0x0A, 0x00, 0x06");
             Test_TestResultStrContains("invalid format", rs);
 
-            rs = SendCustomQuery("1", "", "", EFormat.INT32, "0x03, 0x00, 0x0A, 0x00, 0x06");
+            rs = SendCustomQuery("1", EFormat.INT32, "0x03, 0x00, 0x0A, 0x00, 0x06");
             Test_TestResultStrContains("invalid format", rs);
 
-            rs = SendCustomQuery("1", "", "", EFormat.UINT32, "0x03, 0x00, 0x0A, 0x00, 0x06");
+            rs = SendCustomQuery("1", EFormat.UINT32, "0x03, 0x00, 0x0A, 0x00, 0x06");
             Test_TestResultStrContains("invalid format", rs);
 
-            rs = SendCustomQuery("1", "", "", EFormat.HEX32, "0x03, 0x00, 0x0A, 0x00, 0x06");
+            rs = SendCustomQuery("1", EFormat.HEX32, "0x03, 0x00, 0x0A, 0x00, 0x06");
             Test_TestResultStrContains("invalid format", rs);
 
         }
 
-        private void Test_TestResultStrEquals(string exp, string actual)
+        private static void Test_TestResultStrEquals(string exp, string actual)
         {
             // equal?
             if (exp == actual)
@@ -3783,10 +3770,10 @@ namespace ModbusControl
             }
         }
 
-        private void Test_TestResultStrContains(string exp, string actual)
+        private static void Test_TestResultStrContains(string exp, string actual)
         {
             // string in string? case insensitive
-            if (actual.IndexOf(exp, StringComparison.OrdinalIgnoreCase) >= 0)
+            if (actual.Contains(exp, StringComparison.OrdinalIgnoreCase))
             {
                 // OK
             }
@@ -3800,7 +3787,7 @@ namespace ModbusControl
         {
             UInt16 regOffset = mRegisterToOffset.GetHoldingregisterOffset(register);
 
-            Int16[] aValues = null;
+            Int16[] aValues;
             ModbusProtocol.Result result = mModbus.MifReadHoldingRegisters(1, regOffset, 1, out aValues);
             if (result == ModbusProtocol.Result.SUCCESS)
             {
@@ -3832,7 +3819,7 @@ namespace ModbusControl
             UInt16 nrOfCoils = (UInt16)aRefValues.Length;
             UInt16 regOffset = mRegisterToOffset.GetCoilOffset(register);
 
-            byte[] aBytes = null;
+            byte[] aBytes;
             ModbusProtocol.Result result = mModbus.MifReadCoils(1, regOffset, nrOfCoils, out aBytes);
             if (result == ModbusProtocol.Result.SUCCESS)
             {
@@ -3864,7 +3851,7 @@ namespace ModbusControl
             UInt16 nrOfRegisters = (UInt16)aRefValues.Length;
             UInt16 regOffset = mRegisterToOffset.GetHoldingregisterOffset(register);
 
-            Int16[] aReadValues = null;
+            Int16[] aReadValues;
             ModbusProtocol.Result result = mModbus.MifReadHoldingRegisters(1, regOffset, nrOfRegisters, out aReadValues);
             if (result == ModbusProtocol.Result.SUCCESS)
             {
@@ -3910,16 +3897,16 @@ namespace ModbusControl
             }
         }
 
-        private void butDebug_Click(object sender, EventArgs e)
+        private void DebugBtn_Click(object sender, EventArgs e)
         {
             Debug.Print($"Button debug info:");
             Debug.Print($"DeviceDpi={DeviceDpi}");
             Debug.Print($"Form.Width={this.Width}, Form.Height={this.Height}");
-            Debug.Print($"DataGridView1.Font: {grid.Rows[1].Cells[1].InheritedStyle.Font}");
-            Debug.Print($"DataGridView1 cell(1,1) Inherited Font: {grid.Rows[1].Cells[1].InheritedStyle.Font}");
+            Debug.Print($"DataGridView1.Font: {Grid.Rows[1].Cells[1].InheritedStyle.Font}");
+            Debug.Print($"DataGridView1 cell(1,1) Inherited Font: {Grid.Rows[1].Cells[1].InheritedStyle.Font}");
         }
 
-        private void grid_EditingControlShowing(object sender, DataGridViewEditingControlShowingEventArgs e)
+        private void Grid_EditingControlShowing(object sender, DataGridViewEditingControlShowingEventArgs e)
         {
             // fix to set the correct font when the editor starts the first time on the 100% screen, otherwise the font is too small, scaling issue
             
@@ -3928,38 +3915,38 @@ namespace ModbusControl
             // is it a TextBoxEditingControl?
             if (e.Control is DataGridViewTextBoxEditingControl ed)
             {
-                ed.Enter -= DGV_TextBoxEditor_Enter;
-                ed.Enter += DGV_TextBoxEditor_Enter;
+                ed.Enter -= Grid_TextBoxEditor_Enter;
+                ed.Enter += Grid_TextBoxEditor_Enter;
             }
 
             if (e.Control is DataGridViewComboBoxEditingControl cb)
             {
-                cb.Enter -= DGV_ComboBoxEditor_Enter;
-                cb.Enter += DGV_ComboBoxEditor_Enter;
+                cb.Enter -= Grid_ComboBoxEditor_Enter;
+                cb.Enter += Grid_ComboBoxEditor_Enter;
             }            
         }
 
-        private void DGV_TextBoxEditor_Enter(object? sender, EventArgs e)
+        private void Grid_TextBoxEditor_Enter(object sender, EventArgs e)
         {
             // fix to set the correct font when the editor starts the first time on the 100% screen, otherwise the font is too small, scaling issue
             Debug.WriteLine($"  DGV_TextBoxEditor_Enter");
 
             if (sender is DataGridViewTextBoxEditingControl ed)
             {
-                ed.Font = grid.DefaultCellStyle.Font;
+                ed.Font = Grid.DefaultCellStyle.Font;
                 //ed.BackColor = Color.Yellow;
                 //ed.ForeColor = Color.Red;
             }
         }
 
-        private void DGV_ComboBoxEditor_Enter(object? sender, EventArgs e)
+        private void Grid_ComboBoxEditor_Enter(object sender, EventArgs e)
         {
             // fix to set the correct font when the editor starts the first time on the 100% screen, otherwise the font is too small, scaling issue
             Debug.WriteLine($"  DGV_ComboBoxEditor_Enter");
 
             if (sender is DataGridViewComboBoxEditingControl ed)
             {
-                ed.Font = grid.DefaultCellStyle.Font;
+                ed.Font = Grid.DefaultCellStyle.Font;
                 //ed.BackColor = Color.Yellow;
                 //ed.ForeColor = Color.Red;
             }

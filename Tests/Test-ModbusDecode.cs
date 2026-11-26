@@ -3,8 +3,6 @@ using System;
 using LST.Helpers;
 using ModbusControl;
 
-using LST.Helpers;
-
 namespace UnitTests
 {
     [TestClass]
@@ -80,13 +78,14 @@ namespace UnitTests
         {
             byte[] Buf = new byte[] { 0x01, 16, 0x02, 0x00, 0x00, 8, 16, 1,2,3,4,5,6,7,8,9,10,11,12,13,14,0x90,0xA0 };
             string s = ModbusDecoder.DecodeQuery(Buf, Buf.Length);
+            Assert.AreEqual("Slave=1, Write multiple registers: addr=40513, quant=8, values=258,772,1286,1800,2314,2828,3342,-28512", s);
         }
 
         [TestMethod]
         public void Test0200()
         {
             // too short
-            byte[] Buf = new byte[] {};
+            byte[] Buf = Array.Empty<byte>();
             string s = ModbusDecoder.DecodeQuery(Buf, Buf.Length);
             Assert.AreEqual("DECODE: ERROR: QUERY TOO SHORT!", s);
         }
@@ -474,7 +473,7 @@ namespace UnitTests
         [TestMethod]
         public void Test050001()
         {
-            byte[] Buf = new byte[] { };
+            byte[] Buf = Array.Empty<byte>();
             string s = ModbusDecoder.DecodeResponse(Buf, Buf.Length);
             Assert.AreEqual("DECODE: ERROR: RESPONSE TOO SHORT!", s);
         }

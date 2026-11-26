@@ -30,76 +30,76 @@
         {
             components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ExportForm));
-            buttonStart = new Button();
-            textboxLog = new TextBox();
-            radExportCurrentTab = new RadioButton();
+            StartBtn = new Button();
+            LogTextbox = new TextBox();
+            ExportCurrentTabRadiobtn = new RadioButton();
             SaveFileDialog1 = new SaveFileDialog();
-            SelectFileButton = new Button();
-            panelTab = new Panel();
-            radExportAllTabs = new RadioButton();
-            textboxFilename = new TextBox();
-            buttonClearLog = new Button();
-            groupboxExportFormat = new GroupBox();
-            radFormatDefault = new RadioButton();
-            radFormatAsHex = new RadioButton();
-            radFormatAsInt = new RadioButton();
-            radFormatAsUInt = new RadioButton();
+            SelectFileBtn = new Button();
+            TabPanel = new Panel();
+            ExportAllTabsRadiobtn = new RadioButton();
+            FilenameTextbox = new TextBox();
+            ClearLogBtn = new Button();
+            ExportFormatGroupbox = new GroupBox();
+            FormatAsHexRadiobtn = new RadioButton();
+            FormatAsUIntRadiobtn = new RadioButton();
+            FormatAsIntRadiobtn = new RadioButton();
+            FormatDefaultRadiobtn = new RadioButton();
             StringFormatPanel = new Panel();
-            radStringFormatAsUInt = new RadioButton();
+            StringFormatAsHexRadiobtn = new RadioButton();
+            StringFormatAsUIntRadiobtn = new RadioButton();
+            StringFormatAsIntRadiobtn = new RadioButton();
+            StringFormatDefaultRadiobtn = new RadioButton();
             label1 = new Label();
-            radStringFormatDefault = new RadioButton();
-            radStringFormatAsInt = new RadioButton();
-            radStringFormatAsHex = new RadioButton();
-            buttonCancel = new Button();
+            CancelBtn = new Button();
             toolTip1 = new ToolTip(components);
-            butRunTests = new Button();
-            chkContinueOnError = new CheckBox();
+            RunTestsBtn = new Button();
+            ContinueOnErrorCheckbox = new CheckBox();
             panel1 = new Panel();
             panel2 = new Panel();
-            panelTab.SuspendLayout();
-            groupboxExportFormat.SuspendLayout();
+            TabPanel.SuspendLayout();
+            ExportFormatGroupbox.SuspendLayout();
             StringFormatPanel.SuspendLayout();
             panel1.SuspendLayout();
             panel2.SuspendLayout();
             SuspendLayout();
             // 
-            // buttonStart
+            // StartBtn
             // 
-            buttonStart.Location = new Point(12, 113);
-            buttonStart.Name = "buttonStart";
-            buttonStart.Size = new Size(150, 23);
-            buttonStart.TabIndex = 5;
-            buttonStart.Text = "Start";
-            toolTip1.SetToolTip(buttonStart, "Start the export");
-            buttonStart.UseVisualStyleBackColor = true;
-            buttonStart.Click += buttonStart_Click;
+            StartBtn.Location = new Point(12, 113);
+            StartBtn.Name = "StartBtn";
+            StartBtn.Size = new Size(150, 23);
+            StartBtn.TabIndex = 5;
+            StartBtn.Text = "Start";
+            toolTip1.SetToolTip(StartBtn, "Start the export");
+            StartBtn.UseVisualStyleBackColor = true;
+            StartBtn.Click += StartBtn_Click;
             // 
-            // textboxLog
+            // LogTextbox
             // 
-            textboxLog.BorderStyle = BorderStyle.FixedSingle;
-            textboxLog.Dock = DockStyle.Fill;
-            textboxLog.Location = new Point(0, 0);
-            textboxLog.Multiline = true;
-            textboxLog.Name = "textboxLog";
-            textboxLog.ReadOnly = true;
-            textboxLog.ScrollBars = ScrollBars.Both;
-            textboxLog.Size = new Size(603, 238);
-            textboxLog.TabIndex = 0;
-            textboxLog.WordWrap = false;
+            LogTextbox.BorderStyle = BorderStyle.FixedSingle;
+            LogTextbox.Dock = DockStyle.Fill;
+            LogTextbox.Location = new Point(0, 0);
+            LogTextbox.Multiline = true;
+            LogTextbox.Name = "LogTextbox";
+            LogTextbox.ReadOnly = true;
+            LogTextbox.ScrollBars = ScrollBars.Both;
+            LogTextbox.Size = new Size(603, 238);
+            LogTextbox.TabIndex = 0;
+            LogTextbox.WordWrap = false;
             // 
-            // radExportCurrentTab
+            // ExportCurrentTabRadiobtn
             // 
-            radExportCurrentTab.AutoSize = true;
-            radExportCurrentTab.Checked = true;
-            radExportCurrentTab.Location = new Point(6, 6);
-            radExportCurrentTab.Name = "radExportCurrentTab";
-            radExportCurrentTab.Size = new Size(163, 17);
-            radExportCurrentTab.TabIndex = 0;
-            radExportCurrentTab.TabStop = true;
-            radExportCurrentTab.Tag = "";
-            radExportCurrentTab.Text = "Export registers of current tab";
-            toolTip1.SetToolTip(radExportCurrentTab, "Export only the registers of the currently active tab page");
-            radExportCurrentTab.UseVisualStyleBackColor = true;
+            ExportCurrentTabRadiobtn.AutoSize = true;
+            ExportCurrentTabRadiobtn.Checked = true;
+            ExportCurrentTabRadiobtn.Location = new Point(6, 6);
+            ExportCurrentTabRadiobtn.Name = "ExportCurrentTabRadiobtn";
+            ExportCurrentTabRadiobtn.Size = new Size(163, 17);
+            ExportCurrentTabRadiobtn.TabIndex = 0;
+            ExportCurrentTabRadiobtn.TabStop = true;
+            ExportCurrentTabRadiobtn.Tag = "";
+            ExportCurrentTabRadiobtn.Text = "Export registers of current tab";
+            toolTip1.SetToolTip(ExportCurrentTabRadiobtn, "Export only the registers of the currently active tab page");
+            ExportCurrentTabRadiobtn.UseVisualStyleBackColor = true;
             // 
             // SaveFileDialog1
             // 
@@ -107,149 +107,187 @@
             SaveFileDialog1.DefaultExt = "csv";
             SaveFileDialog1.Filter = "CSV files (*.csv)|*.csv|All files (*.*)|*.*";
             // 
-            // SelectFileButton
+            // SelectFileBtn
             // 
-            SelectFileButton.Location = new Point(12, 85);
-            SelectFileButton.Name = "SelectFileButton";
-            SelectFileButton.Size = new Size(88, 23);
-            SelectFileButton.TabIndex = 3;
-            SelectFileButton.Text = "Select file...";
-            toolTip1.SetToolTip(SelectFileButton, "Select the file to export to");
-            SelectFileButton.UseVisualStyleBackColor = true;
-            SelectFileButton.Click += buttonSelectFile_Click;
+            SelectFileBtn.Location = new Point(12, 85);
+            SelectFileBtn.Name = "SelectFileBtn";
+            SelectFileBtn.Size = new Size(88, 23);
+            SelectFileBtn.TabIndex = 3;
+            SelectFileBtn.Text = "Select file...";
+            toolTip1.SetToolTip(SelectFileBtn, "Select the file to export to");
+            SelectFileBtn.UseVisualStyleBackColor = true;
+            SelectFileBtn.Click += SelectFileBtn_Click;
             // 
-            // panelTab
+            // TabPanel
             // 
-            panelTab.Controls.Add(radExportAllTabs);
-            panelTab.Controls.Add(radExportCurrentTab);
-            panelTab.Location = new Point(7, 11);
-            panelTab.Name = "panelTab";
-            panelTab.Size = new Size(189, 51);
-            panelTab.TabIndex = 0;
+            TabPanel.Controls.Add(ExportAllTabsRadiobtn);
+            TabPanel.Controls.Add(ExportCurrentTabRadiobtn);
+            TabPanel.Location = new Point(7, 11);
+            TabPanel.Name = "TabPanel";
+            TabPanel.Size = new Size(189, 51);
+            TabPanel.TabIndex = 0;
             // 
-            // radExportAllTabs
+            // ExportAllTabsRadiobtn
             // 
-            radExportAllTabs.AutoSize = true;
-            radExportAllTabs.Location = new Point(6, 27);
-            radExportAllTabs.Name = "radExportAllTabs";
-            radExportAllTabs.Size = new Size(145, 17);
-            radExportAllTabs.TabIndex = 1;
-            radExportAllTabs.Tag = "";
-            radExportAllTabs.Text = "Export registers of all tabs";
-            toolTip1.SetToolTip(radExportAllTabs, "Export the registers of all tab pages");
-            radExportAllTabs.UseVisualStyleBackColor = true;
+            ExportAllTabsRadiobtn.AutoSize = true;
+            ExportAllTabsRadiobtn.Location = new Point(6, 27);
+            ExportAllTabsRadiobtn.Name = "ExportAllTabsRadiobtn";
+            ExportAllTabsRadiobtn.Size = new Size(145, 17);
+            ExportAllTabsRadiobtn.TabIndex = 1;
+            ExportAllTabsRadiobtn.Tag = "";
+            ExportAllTabsRadiobtn.Text = "Export registers of all tabs";
+            toolTip1.SetToolTip(ExportAllTabsRadiobtn, "Export the registers of all tab pages");
+            ExportAllTabsRadiobtn.UseVisualStyleBackColor = true;
             // 
-            // textboxFilename
+            // FilenameTextbox
             // 
-            textboxFilename.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-            textboxFilename.Location = new Point(106, 88);
-            textboxFilename.Name = "textboxFilename";
-            textboxFilename.RightToLeft = RightToLeft.No;
-            textboxFilename.Size = new Size(485, 20);
-            textboxFilename.TabIndex = 4;
+            FilenameTextbox.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            FilenameTextbox.Location = new Point(106, 88);
+            FilenameTextbox.Name = "FilenameTextbox";
+            FilenameTextbox.RightToLeft = RightToLeft.No;
+            FilenameTextbox.Size = new Size(485, 20);
+            FilenameTextbox.TabIndex = 4;
             // 
-            // buttonClearLog
+            // ClearLogBtn
             // 
-            buttonClearLog.Location = new Point(250, 113);
-            buttonClearLog.Name = "buttonClearLog";
-            buttonClearLog.Size = new Size(75, 23);
-            buttonClearLog.TabIndex = 7;
-            buttonClearLog.Text = "Clear log";
-            toolTip1.SetToolTip(buttonClearLog, "Clear the result log window");
-            buttonClearLog.UseVisualStyleBackColor = true;
-            buttonClearLog.Click += buttonClearLog_Click;
+            ClearLogBtn.Location = new Point(250, 113);
+            ClearLogBtn.Name = "ClearLogBtn";
+            ClearLogBtn.Size = new Size(75, 23);
+            ClearLogBtn.TabIndex = 7;
+            ClearLogBtn.Text = "Clear log";
+            toolTip1.SetToolTip(ClearLogBtn, "Clear the result log window");
+            ClearLogBtn.UseVisualStyleBackColor = true;
+            ClearLogBtn.Click += ClearLogBtn_Click;
             // 
-            // groupboxExportFormat
+            // ExportFormatGroupbox
             // 
-            groupboxExportFormat.Controls.Add(radFormatAsHex);
-            groupboxExportFormat.Controls.Add(radFormatAsUInt);
-            groupboxExportFormat.Controls.Add(radFormatAsInt);
-            groupboxExportFormat.Controls.Add(radFormatDefault);
-            groupboxExportFormat.Controls.Add(StringFormatPanel);
-            groupboxExportFormat.Location = new Point(201, 5);
-            groupboxExportFormat.Name = "groupboxExportFormat";
-            groupboxExportFormat.Size = new Size(389, 62);
-            groupboxExportFormat.TabIndex = 1;
-            groupboxExportFormat.TabStop = false;
-            groupboxExportFormat.Text = "Export values format:";
+            ExportFormatGroupbox.Controls.Add(FormatAsHexRadiobtn);
+            ExportFormatGroupbox.Controls.Add(FormatAsUIntRadiobtn);
+            ExportFormatGroupbox.Controls.Add(FormatAsIntRadiobtn);
+            ExportFormatGroupbox.Controls.Add(FormatDefaultRadiobtn);
+            ExportFormatGroupbox.Controls.Add(StringFormatPanel);
+            ExportFormatGroupbox.Location = new Point(201, 5);
+            ExportFormatGroupbox.Name = "ExportFormatGroupbox";
+            ExportFormatGroupbox.Size = new Size(389, 62);
+            ExportFormatGroupbox.TabIndex = 1;
+            ExportFormatGroupbox.TabStop = false;
+            ExportFormatGroupbox.Text = "Export values format:";
             // 
-            // radFormatDefault
+            // FormatAsHexRadiobtn
             // 
-            radFormatDefault.AutoSize = true;
-            radFormatDefault.Checked = true;
-            radFormatDefault.Location = new Point(7, 17);
-            radFormatDefault.Name = "radFormatDefault";
-            radFormatDefault.Size = new Size(67, 17);
-            radFormatDefault.TabIndex = 0;
-            radFormatDefault.TabStop = true;
-            radFormatDefault.Tag = "";
-            radFormatDefault.Text = "as in grid";
-            toolTip1.SetToolTip(radFormatDefault, "Export register values with the format as defined in the project");
-            radFormatDefault.UseVisualStyleBackColor = true;
-            radFormatDefault.CheckedChanged += radFormat_CheckedChanged;
+            FormatAsHexRadiobtn.AutoSize = true;
+            FormatAsHexRadiobtn.Location = new Point(227, 17);
+            FormatAsHexRadiobtn.Name = "FormatAsHexRadiobtn";
+            FormatAsHexRadiobtn.Size = new Size(58, 17);
+            FormatAsHexRadiobtn.TabIndex = 3;
+            FormatAsHexRadiobtn.Tag = "";
+            FormatAsHexRadiobtn.Text = "as Hex";
+            toolTip1.SetToolTip(FormatAsHexRadiobtn, "Export all register values in hexadecimal");
+            FormatAsHexRadiobtn.UseVisualStyleBackColor = true;
+            FormatAsHexRadiobtn.CheckedChanged += FormatRadiobtn_CheckedChanged;
             // 
-            // radFormatAsHex
+            // FormatAsUIntRadiobtn
             // 
-            radFormatAsHex.AutoSize = true;
-            radFormatAsHex.Location = new Point(227, 17);
-            radFormatAsHex.Name = "radFormatAsHex";
-            radFormatAsHex.Size = new Size(58, 17);
-            radFormatAsHex.TabIndex = 3;
-            radFormatAsHex.Tag = "";
-            radFormatAsHex.Text = "as Hex";
-            toolTip1.SetToolTip(radFormatAsHex, "Export all register values in hexadecimal");
-            radFormatAsHex.UseVisualStyleBackColor = true;
-            radFormatAsHex.CheckedChanged += radFormat_CheckedChanged;
+            FormatAsUIntRadiobtn.AutoSize = true;
+            FormatAsUIntRadiobtn.Location = new Point(153, 17);
+            FormatAsUIntRadiobtn.Name = "FormatAsUIntRadiobtn";
+            FormatAsUIntRadiobtn.Size = new Size(59, 17);
+            FormatAsUIntRadiobtn.TabIndex = 2;
+            FormatAsUIntRadiobtn.Tag = "";
+            FormatAsUIntRadiobtn.Text = "as UInt";
+            toolTip1.SetToolTip(FormatAsUIntRadiobtn, "Export all register values as unsigned integers");
+            FormatAsUIntRadiobtn.UseVisualStyleBackColor = true;
+            FormatAsUIntRadiobtn.CheckedChanged += FormatRadiobtn_CheckedChanged;
             // 
-            // radFormatAsInt
+            // FormatAsIntRadiobtn
             // 
-            radFormatAsInt.AutoSize = true;
-            radFormatAsInt.Location = new Point(88, 17);
-            radFormatAsInt.Name = "radFormatAsInt";
-            radFormatAsInt.Size = new Size(51, 17);
-            radFormatAsInt.TabIndex = 1;
-            radFormatAsInt.Tag = "";
-            radFormatAsInt.Text = "as Int";
-            toolTip1.SetToolTip(radFormatAsInt, "Export all register values as signed integers");
-            radFormatAsInt.UseVisualStyleBackColor = true;
-            radFormatAsInt.CheckedChanged += radFormat_CheckedChanged;
+            FormatAsIntRadiobtn.AutoSize = true;
+            FormatAsIntRadiobtn.Location = new Point(88, 17);
+            FormatAsIntRadiobtn.Name = "FormatAsIntRadiobtn";
+            FormatAsIntRadiobtn.Size = new Size(51, 17);
+            FormatAsIntRadiobtn.TabIndex = 1;
+            FormatAsIntRadiobtn.Tag = "";
+            FormatAsIntRadiobtn.Text = "as Int";
+            toolTip1.SetToolTip(FormatAsIntRadiobtn, "Export all register values as signed integers");
+            FormatAsIntRadiobtn.UseVisualStyleBackColor = true;
+            FormatAsIntRadiobtn.CheckedChanged += FormatRadiobtn_CheckedChanged;
             // 
-            // radFormatAsUInt
+            // FormatDefaultRadiobtn
             // 
-            radFormatAsUInt.AutoSize = true;
-            radFormatAsUInt.Location = new Point(153, 17);
-            radFormatAsUInt.Name = "radFormatAsUInt";
-            radFormatAsUInt.Size = new Size(59, 17);
-            radFormatAsUInt.TabIndex = 2;
-            radFormatAsUInt.Tag = "";
-            radFormatAsUInt.Text = "as UInt";
-            toolTip1.SetToolTip(radFormatAsUInt, "Export all register values as unsigned integers");
-            radFormatAsUInt.UseVisualStyleBackColor = true;
-            radFormatAsUInt.CheckedChanged += radFormat_CheckedChanged;
+            FormatDefaultRadiobtn.AutoSize = true;
+            FormatDefaultRadiobtn.Checked = true;
+            FormatDefaultRadiobtn.Location = new Point(7, 17);
+            FormatDefaultRadiobtn.Name = "FormatDefaultRadiobtn";
+            FormatDefaultRadiobtn.Size = new Size(67, 17);
+            FormatDefaultRadiobtn.TabIndex = 0;
+            FormatDefaultRadiobtn.TabStop = true;
+            FormatDefaultRadiobtn.Tag = "";
+            FormatDefaultRadiobtn.Text = "as in grid";
+            toolTip1.SetToolTip(FormatDefaultRadiobtn, "Export register values with the format as defined in the project");
+            FormatDefaultRadiobtn.UseVisualStyleBackColor = true;
+            FormatDefaultRadiobtn.CheckedChanged += FormatRadiobtn_CheckedChanged;
             // 
             // StringFormatPanel
             // 
-            StringFormatPanel.Controls.Add(radStringFormatAsHex);
-            StringFormatPanel.Controls.Add(radStringFormatAsUInt);
-            StringFormatPanel.Controls.Add(radStringFormatAsInt);
-            StringFormatPanel.Controls.Add(radStringFormatDefault);
+            StringFormatPanel.Controls.Add(StringFormatAsHexRadiobtn);
+            StringFormatPanel.Controls.Add(StringFormatAsUIntRadiobtn);
+            StringFormatPanel.Controls.Add(StringFormatAsIntRadiobtn);
+            StringFormatPanel.Controls.Add(StringFormatDefaultRadiobtn);
             StringFormatPanel.Controls.Add(label1);
             StringFormatPanel.Location = new Point(1, 35);
             StringFormatPanel.Name = "StringFormatPanel";
             StringFormatPanel.Size = new Size(382, 21);
             StringFormatPanel.TabIndex = 4;
             // 
-            // radStringFormatAsUInt
+            // StringFormatAsHexRadiobtn
             // 
-            radStringFormatAsUInt.AutoSize = true;
-            radStringFormatAsUInt.Location = new Point(267, 3);
-            radStringFormatAsUInt.Name = "radStringFormatAsUInt";
-            radStringFormatAsUInt.Size = new Size(45, 17);
-            radStringFormatAsUInt.TabIndex = 3;
-            radStringFormatAsUInt.Tag = "";
-            radStringFormatAsUInt.Text = "UInt";
-            toolTip1.SetToolTip(radStringFormatAsUInt, "Export all register values as signed integers");
-            radStringFormatAsUInt.UseVisualStyleBackColor = true;
+            StringFormatAsHexRadiobtn.AutoSize = true;
+            StringFormatAsHexRadiobtn.Location = new Point(322, 3);
+            StringFormatAsHexRadiobtn.Name = "StringFormatAsHexRadiobtn";
+            StringFormatAsHexRadiobtn.Size = new Size(44, 17);
+            StringFormatAsHexRadiobtn.TabIndex = 4;
+            StringFormatAsHexRadiobtn.Tag = "";
+            StringFormatAsHexRadiobtn.Text = "Hex";
+            toolTip1.SetToolTip(StringFormatAsHexRadiobtn, "Export all register values as unsigned integers");
+            StringFormatAsHexRadiobtn.UseVisualStyleBackColor = true;
+            // 
+            // StringFormatAsUIntRadiobtn
+            // 
+            StringFormatAsUIntRadiobtn.AutoSize = true;
+            StringFormatAsUIntRadiobtn.Location = new Point(267, 3);
+            StringFormatAsUIntRadiobtn.Name = "StringFormatAsUIntRadiobtn";
+            StringFormatAsUIntRadiobtn.Size = new Size(45, 17);
+            StringFormatAsUIntRadiobtn.TabIndex = 3;
+            StringFormatAsUIntRadiobtn.Tag = "";
+            StringFormatAsUIntRadiobtn.Text = "UInt";
+            toolTip1.SetToolTip(StringFormatAsUIntRadiobtn, "Export all register values as signed integers");
+            StringFormatAsUIntRadiobtn.UseVisualStyleBackColor = true;
+            // 
+            // StringFormatAsIntRadiobtn
+            // 
+            StringFormatAsIntRadiobtn.AutoSize = true;
+            StringFormatAsIntRadiobtn.Location = new Point(220, 3);
+            StringFormatAsIntRadiobtn.Name = "StringFormatAsIntRadiobtn";
+            StringFormatAsIntRadiobtn.Size = new Size(37, 17);
+            StringFormatAsIntRadiobtn.TabIndex = 2;
+            StringFormatAsIntRadiobtn.Tag = "";
+            StringFormatAsIntRadiobtn.Text = "Int";
+            toolTip1.SetToolTip(StringFormatAsIntRadiobtn, "Export all register values as signed integers");
+            StringFormatAsIntRadiobtn.UseVisualStyleBackColor = true;
+            // 
+            // StringFormatDefaultRadiobtn
+            // 
+            StringFormatDefaultRadiobtn.AutoSize = true;
+            StringFormatDefaultRadiobtn.Checked = true;
+            StringFormatDefaultRadiobtn.Location = new Point(126, 3);
+            StringFormatDefaultRadiobtn.Name = "StringFormatDefaultRadiobtn";
+            StringFormatDefaultRadiobtn.Size = new Size(84, 17);
+            StringFormatDefaultRadiobtn.TabIndex = 1;
+            StringFormatDefaultRadiobtn.TabStop = true;
+            StringFormatDefaultRadiobtn.Tag = "";
+            StringFormatDefaultRadiobtn.Text = "String/ASCII";
+            toolTip1.SetToolTip(StringFormatDefaultRadiobtn, "Export register values with the format as defined in the project");
+            StringFormatDefaultRadiobtn.UseVisualStyleBackColor = true;
             // 
             // label1
             // 
@@ -260,89 +298,51 @@
             label1.TabIndex = 0;
             label1.Text = "Export string/ASCII as:";
             // 
-            // radStringFormatDefault
+            // CancelBtn
             // 
-            radStringFormatDefault.AutoSize = true;
-            radStringFormatDefault.Checked = true;
-            radStringFormatDefault.Location = new Point(126, 3);
-            radStringFormatDefault.Name = "radStringFormatDefault";
-            radStringFormatDefault.Size = new Size(84, 17);
-            radStringFormatDefault.TabIndex = 1;
-            radStringFormatDefault.TabStop = true;
-            radStringFormatDefault.Tag = "";
-            radStringFormatDefault.Text = "String/ASCII";
-            toolTip1.SetToolTip(radStringFormatDefault, "Export register values with the format as defined in the project");
-            radStringFormatDefault.UseVisualStyleBackColor = true;
+            CancelBtn.Enabled = false;
+            CancelBtn.Location = new Point(169, 113);
+            CancelBtn.Name = "CancelBtn";
+            CancelBtn.Size = new Size(75, 23);
+            CancelBtn.TabIndex = 6;
+            CancelBtn.Text = "Cancel";
+            toolTip1.SetToolTip(CancelBtn, "Cancel the current operation");
+            CancelBtn.UseVisualStyleBackColor = true;
+            CancelBtn.Click += CancelBtn_Click;
             // 
-            // radStringFormatAsInt
+            // RunTestsBtn
             // 
-            radStringFormatAsInt.AutoSize = true;
-            radStringFormatAsInt.Location = new Point(220, 3);
-            radStringFormatAsInt.Name = "radStringFormatAsInt";
-            radStringFormatAsInt.Size = new Size(37, 17);
-            radStringFormatAsInt.TabIndex = 2;
-            radStringFormatAsInt.Tag = "";
-            radStringFormatAsInt.Text = "Int";
-            toolTip1.SetToolTip(radStringFormatAsInt, "Export all register values as signed integers");
-            radStringFormatAsInt.UseVisualStyleBackColor = true;
+            RunTestsBtn.Location = new Point(339, 113);
+            RunTestsBtn.Name = "RunTestsBtn";
+            RunTestsBtn.Size = new Size(75, 23);
+            RunTestsBtn.TabIndex = 8;
+            RunTestsBtn.Text = "Run test";
+            RunTestsBtn.UseVisualStyleBackColor = true;
+            RunTestsBtn.Visible = false;
+            RunTestsBtn.Click += TestBtn_Click;
             // 
-            // radStringFormatAsHex
+            // ContinueOnErrorCheckbox
             // 
-            radStringFormatAsHex.AutoSize = true;
-            radStringFormatAsHex.Location = new Point(322, 3);
-            radStringFormatAsHex.Name = "radStringFormatAsHex";
-            radStringFormatAsHex.Size = new Size(44, 17);
-            radStringFormatAsHex.TabIndex = 4;
-            radStringFormatAsHex.Tag = "";
-            radStringFormatAsHex.Text = "Hex";
-            toolTip1.SetToolTip(radStringFormatAsHex, "Export all register values as unsigned integers");
-            radStringFormatAsHex.UseVisualStyleBackColor = true;
-            // 
-            // buttonCancel
-            // 
-            buttonCancel.Enabled = false;
-            buttonCancel.Location = new Point(169, 113);
-            buttonCancel.Name = "buttonCancel";
-            buttonCancel.Size = new Size(75, 23);
-            buttonCancel.TabIndex = 6;
-            buttonCancel.Text = "Cancel";
-            toolTip1.SetToolTip(buttonCancel, "Cancel the current operation");
-            buttonCancel.UseVisualStyleBackColor = true;
-            buttonCancel.Click += buttonCancel_Click;
-            // 
-            // butRunTests
-            // 
-            butRunTests.Location = new Point(339, 113);
-            butRunTests.Name = "butRunTests";
-            butRunTests.Size = new Size(75, 23);
-            butRunTests.TabIndex = 8;
-            butRunTests.Text = "Run test";
-            butRunTests.UseVisualStyleBackColor = true;
-            butRunTests.Visible = false;
-            butRunTests.Click += buttonTest_Click;
-            // 
-            // chkContinueOnError
-            // 
-            chkContinueOnError.AutoSize = true;
-            chkContinueOnError.Location = new Point(13, 65);
-            chkContinueOnError.Name = "chkContinueOnError";
-            chkContinueOnError.Size = new Size(107, 17);
-            chkContinueOnError.TabIndex = 2;
-            chkContinueOnError.Text = "Continue on error";
-            chkContinueOnError.UseVisualStyleBackColor = true;
-            chkContinueOnError.CheckedChanged += chkContinueOnError_CheckedChanged;
+            ContinueOnErrorCheckbox.AutoSize = true;
+            ContinueOnErrorCheckbox.Location = new Point(13, 65);
+            ContinueOnErrorCheckbox.Name = "ContinueOnErrorCheckbox";
+            ContinueOnErrorCheckbox.Size = new Size(107, 17);
+            ContinueOnErrorCheckbox.TabIndex = 2;
+            ContinueOnErrorCheckbox.Text = "Continue on error";
+            ContinueOnErrorCheckbox.UseVisualStyleBackColor = true;
+            ContinueOnErrorCheckbox.CheckedChanged += ContinueOnErrorCheckbox_CheckedChanged;
             // 
             // panel1
             // 
-            panel1.Controls.Add(buttonStart);
-            panel1.Controls.Add(chkContinueOnError);
-            panel1.Controls.Add(SelectFileButton);
-            panel1.Controls.Add(butRunTests);
-            panel1.Controls.Add(panelTab);
-            panel1.Controls.Add(groupboxExportFormat);
-            panel1.Controls.Add(textboxFilename);
-            panel1.Controls.Add(buttonCancel);
-            panel1.Controls.Add(buttonClearLog);
+            panel1.Controls.Add(StartBtn);
+            panel1.Controls.Add(ContinueOnErrorCheckbox);
+            panel1.Controls.Add(SelectFileBtn);
+            panel1.Controls.Add(RunTestsBtn);
+            panel1.Controls.Add(TabPanel);
+            panel1.Controls.Add(ExportFormatGroupbox);
+            panel1.Controls.Add(FilenameTextbox);
+            panel1.Controls.Add(CancelBtn);
+            panel1.Controls.Add(ClearLogBtn);
             panel1.Dock = DockStyle.Top;
             panel1.Location = new Point(0, 0);
             panel1.Name = "panel1";
@@ -351,7 +351,7 @@
             // 
             // panel2
             // 
-            panel2.Controls.Add(textboxLog);
+            panel2.Controls.Add(LogTextbox);
             panel2.Dock = DockStyle.Fill;
             panel2.Location = new Point(0, 144);
             panel2.Name = "panel2";
@@ -371,10 +371,10 @@
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Export registers to file";
             FormClosing += OnFormClosing;
-            panelTab.ResumeLayout(false);
-            panelTab.PerformLayout();
-            groupboxExportFormat.ResumeLayout(false);
-            groupboxExportFormat.PerformLayout();
+            TabPanel.ResumeLayout(false);
+            TabPanel.PerformLayout();
+            ExportFormatGroupbox.ResumeLayout(false);
+            ExportFormatGroupbox.PerformLayout();
             StringFormatPanel.ResumeLayout(false);
             StringFormatPanel.PerformLayout();
             panel1.ResumeLayout(false);
@@ -387,30 +387,30 @@
 
         #endregion
 
-        private System.Windows.Forms.Button buttonStart;
-        private System.Windows.Forms.TextBox textboxLog;
-        private System.Windows.Forms.RadioButton radExportCurrentTab;
+        private System.Windows.Forms.Button StartBtn;
+        private System.Windows.Forms.TextBox LogTextbox;
+        private System.Windows.Forms.RadioButton ExportCurrentTabRadiobtn;
         private System.Windows.Forms.SaveFileDialog SaveFileDialog1;
-        private System.Windows.Forms.Button SelectFileButton;
-        private System.Windows.Forms.Panel panelTab;
-        private System.Windows.Forms.RadioButton radExportAllTabs;
-        private System.Windows.Forms.TextBox textboxFilename;
-        private System.Windows.Forms.Button buttonClearLog;
-        private System.Windows.Forms.GroupBox groupboxExportFormat;
-        private System.Windows.Forms.RadioButton radFormatDefault;
-        private System.Windows.Forms.RadioButton radFormatAsHex;
-        private System.Windows.Forms.RadioButton radFormatAsInt;
-        private System.Windows.Forms.RadioButton radFormatAsUInt;
-        private System.Windows.Forms.Button buttonCancel;
+        private System.Windows.Forms.Button SelectFileBtn;
+        private System.Windows.Forms.Panel TabPanel;
+        private System.Windows.Forms.RadioButton ExportAllTabsRadiobtn;
+        private System.Windows.Forms.TextBox FilenameTextbox;
+        private System.Windows.Forms.Button ClearLogBtn;
+        private System.Windows.Forms.GroupBox ExportFormatGroupbox;
+        private System.Windows.Forms.RadioButton FormatDefaultRadiobtn;
+        private System.Windows.Forms.RadioButton FormatAsHexRadiobtn;
+        private System.Windows.Forms.RadioButton FormatAsIntRadiobtn;
+        private System.Windows.Forms.RadioButton FormatAsUIntRadiobtn;
+        private System.Windows.Forms.Button CancelBtn;
         private System.Windows.Forms.ToolTip toolTip1;
         private System.Windows.Forms.Panel StringFormatPanel;
-        private System.Windows.Forms.RadioButton radStringFormatDefault;
-        private System.Windows.Forms.RadioButton radStringFormatAsInt;
-        private System.Windows.Forms.RadioButton radStringFormatAsHex;
+        private System.Windows.Forms.RadioButton StringFormatDefaultRadiobtn;
+        private System.Windows.Forms.RadioButton StringFormatAsIntRadiobtn;
+        private System.Windows.Forms.RadioButton StringFormatAsHexRadiobtn;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.RadioButton radStringFormatAsUInt;
-        private System.Windows.Forms.Button butRunTests;
-        private System.Windows.Forms.CheckBox chkContinueOnError;
+        private System.Windows.Forms.RadioButton StringFormatAsUIntRadiobtn;
+        private System.Windows.Forms.Button RunTestsBtn;
+        private System.Windows.Forms.CheckBox ContinueOnErrorCheckbox;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Panel panel2;
     }

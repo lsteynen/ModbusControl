@@ -11,7 +11,7 @@ namespace UnitTests
     {
         public static Int16 ConvToInt16(UInt16 Uval)
         {
-            Int16 res = 0;
+            Int16 res;
             unchecked
             {
                 res = (Int16)Uval;
@@ -21,7 +21,7 @@ namespace UnitTests
 
         public static Int32 ConvToInt32(UInt32 Uval)
         {
-            Int32 res = 0;
+            Int32 res;
             unchecked
             {
                 res = (Int32)Uval;
@@ -31,7 +31,7 @@ namespace UnitTests
 
         public static void TestByteArraysAreEqual(byte[] ba1, byte[] ba2)
         {
-            Assert.AreEqual<int>(ba1.Length, ba2.Length);
+            Assert.HasCount(ba1.Length, ba2);
 
             if (ba1.Length > 1)
             {

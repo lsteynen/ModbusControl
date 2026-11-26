@@ -1,6 +1,5 @@
 using System;
 using System.Diagnostics;
-using System.IO.Ports;
 using System.Text;
 using System.Threading;
 using System.Net;
@@ -329,9 +328,9 @@ namespace ModbusImport
         /// <summary>
         /// Open connection over serial port, using RTU protocol
         /// </summary>
-        public void OpenSerialRtu(string portName, uint baudRate, Parity parity, StopBits stopBits)
+        public void OpenSerialRtu(string portName, uint baudRate, LST.Helpers.Parity.EParity parity)
         {
-            mbSerChannel = new SerialChannel(portName, baudRate, 8U, parity, stopBits);
+            mbSerChannel = new SerialChannel(portName, baudRate, parity);
             mbRtuProtocol = new ModbusRtuProtocol();
             mb = new ModbusProtocol(mbRtuProtocol, mbSerChannel);
             mb.OneWireEchoSuppression = mOneWireEchoSuppression;
@@ -426,7 +425,7 @@ namespace ModbusImport
         {
             ModbusProtocol.Result result = ModbusProtocol.Result.SUCCESS;
             values = new Int16[regcount];
-            Int16[] pageValuesBuf = null;
+            Int16[] pageValuesBuf;
             int pagePos = 0;
             int maxRegistersInPage = GetMaxRegisterToReadInFrame();
 

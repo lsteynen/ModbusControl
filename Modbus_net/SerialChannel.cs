@@ -4,23 +4,21 @@ using System.Diagnostics;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
-using RJCP.IO.Ports;
+using System.IO.Ports;
 using LST.Helpers;
 
 namespace LST.Modbus
 {
     public class SerialChannel : ICommChannel, IDisposable
     {
-        // Port settings (a fresh SerialPortStream object is created on every Open())
+        // Port settings (a fresh SerialPort object is created on every Open())
         private readonly string _portName;
         private readonly int _baudrate;
-        private readonly Parity _parity;
-        private readonly int _dataBits;
-        private readonly StopBits _stopBits;
+        private readonly LST.Helpers.Parity.EParity _parity;
 
         // Session state. Open()/Close() are serialized by _stateLock.
         private readonly object _stateLock = new object();
-        private volatile SerialPortStream mPort;
+        private volatile SerialPort mPort;
         private Thread ReaderThread;
         private CancellationTokenSource _cts;
         private volatile bool _running;
@@ -37,17 +35,12 @@ namespace LST.Modbus
         
         private volatile bool _disposed;
 
-        /// <summary>Raised (on the reader thread) when the port fails, e.g. USB adapter unplugged. Call Close() to clean up.</summary>
-        public event Action<Exception> Faulted;
-
         // constructor
-        public SerialChannel(string portName, uint baudrate, uint dataBits, Parity parity, StopBits stopBits)
+        public SerialChannel(string portName, uint baudrate, LST.Helpers.Parity.EParity parity)
         {
             _portName = portName;
             _baudrate = (int)baudrate;
-            _dataBits = (int)dataBits;
             _parity = parity;
-            _stopBits = stopBits;
         }
 
         // properties
@@ -62,7 +55,7 @@ namespace LST.Modbus
         {
             get
             {
-                SerialPortStream port = mPort;
+                SerialPort port = mPort;
                 return _running && (port != null) && port.IsOpen;
             }
         }
@@ -134,6 +127,7 @@ namespace LST.Modbus
         public event TxRxCallbackHandler OnDataSent;
         public event TxRxCallbackHandler OnDataReceived;
         public event LogCallbackString OnWarning;
+        public event Action<Exception> OnError;
 
         // methods
 
@@ -151,15 +145,15 @@ namespace LST.Modbus
                     throw new InvalidOperationException("SerialChannel is already open.");
 
                 // Use a local until everything succeeded, so a failure leaves no half-initialized state behind
-                SerialPortStream port = new SerialPortStream();
+                SerialPort port = new SerialPort();
                 port.PortName = _portName;
                 port.BaudRate = _baudrate;
-                port.DataBits = _dataBits;
-                port.Parity = _parity;
-                port.StopBits = _stopBits;
+                port.Parity = ConvertMyParityToSerialPortParity(_parity);
                 port.ReadTimeout = ReaderPollTimeoutMs;
                 port.ReadBufferSize = 16384;
                 port.WriteTimeout = 1000;
+
+                Debug.Print($"{DateTime.Now.TimeOfDay}: SerialChannel Open(): _parity={_parity}, port.Parity={port.Parity}");
 
                 try
                 {
@@ -191,9 +185,28 @@ namespace LST.Modbus
             }
         }
 
+        private static System.IO.Ports.Parity ConvertMyParityToSerialPortParity(LST.Helpers.Parity.EParity parity)
+        {
+            switch (parity)
+            {
+                case LST.Helpers.Parity.EParity.None:
+                    return System.IO.Ports.Parity.None;
+                case LST.Helpers.Parity.EParity.Even:
+                    return System.IO.Ports.Parity.Even;
+                case LST.Helpers.Parity.EParity.Odd:
+                    return System.IO.Ports.Parity.Odd;
+                case LST.Helpers.Parity.EParity.Mark:
+                    return System.IO.Ports.Parity.Mark;
+                case LST.Helpers.Parity.EParity.Space:
+                    return System.IO.Ports.Parity.Space;
+                default:
+                    throw new ArgumentException("Invalid parity: " + parity.ToString());
+            }
+        }
+
         /// <summary>
         /// Stops the reader thread and closes the port. Safe to call multiple times and from any thread
-        /// (including the Faulted handler). Returns within a few seconds even if the driver hangs.
+        /// (including the OnError handler). Returns within a few seconds even if the driver hangs.
         /// </summary>
         public void Close()
         {
@@ -201,11 +214,11 @@ namespace LST.Modbus
 
             lock (_stateLock)
             {
-                SerialPortStream port = mPort;
+                SerialPort port = mPort;
                 if (port == null)
                     return;
 
-                // 1) Tell the reader to stop and wake any ReadWait() callers
+                // Tell the reader to stop and wake any ReadWait() callers
                 _running = false;
                 _cts.Cancel();
                 lock (RxQueueLock)
@@ -213,8 +226,8 @@ namespace LST.Modbus
 
                 Debug.Print(DateTime.Now.TimeOfDay + ": SerialChannel Close() 2");
 
-                // 2) Wait for the reader to leave Read() (it polls every ReaderPollTimeoutMs).
-                //    Skip if we ARE the reader thread (Close() called from the Faulted handler).
+                // Wait for the reader to leave Read() (it polls every ReaderPollTimeoutMs).
+                // Skip if we ARE the reader thread (Close() called from the OnError handler).
                 Thread reader = ReaderThread;
                 if (reader != null
                     && reader.IsAlive
@@ -224,17 +237,15 @@ namespace LST.Modbus
                 }
 
                 // delay between stopping the reader and closing the port, to avoid a race condition in the driver (USB adapter unplugged). The reader may still be in Read() for a few ms after Join() returns.
-                Thread.Sleep(50);  
+                Thread.Sleep(100);
 
-                // 3) Close the port, 
+                Debug.Print(DateTime.Now.TimeOfDay + ": SerialChannel Close() 3");
+
+                // Close the port
                 try
                 {
-                    Debug.Print(DateTime.Now.TimeOfDay + ": SerialChannel Close() 3");
                     port.Close();
-                    Debug.Print(DateTime.Now.TimeOfDay + ": SerialChannel Close() 4");
                     port.Dispose();
-                    Debug.Print(DateTime.Now.TimeOfDay + ": SerialChannel Close() 5");
-
                 }
                 catch
                 {
@@ -242,34 +253,9 @@ namespace LST.Modbus
                     Debug.Print(DateTime.Now.TimeOfDay + ": SerialChannel Close() EXCEPTION");
                 }
                 
-                /*
-                // 3) Close the port, in separate thread and guarded by a timeout so a misbehaving driver can't hang the app.
-                //    Uses the LOCAL 'port', so an abandoned task still closes the right object.                																				
-                Task closeTask = Task.Run(() =>
-                {
-                    try
-                    {
-                        port.Close();
-                        port.Dispose();
-                    }
-                    catch
-                    {
-                        // ignore errors during shutdown
-                    }
-                });
+                Debug.Print(DateTime.Now.TimeOfDay + ": SerialChannel Close() 4");
 
-                if (!closeTask.Wait(PortCloseTimeoutMs))
-                {
-                    // Driver is stuck in Close(). Abandon this SerialPortStream object (a new one is created on
-                    // the next Open()). The task runs on a pool (background) thread, so it will not
-                    // keep the process alive.
-                    Debug.WriteLine("SerialChannel: port.Close() timed out, abandoning port.");
-                }
-                */
-
-                Debug.Print(DateTime.Now.TimeOfDay + ": SerialChannel Close() 6");
-
-                // 4) Reset session state
+                // Reset session state
                 mPort = null;
                 ReaderThread = null;
                 _cts.Dispose();
@@ -288,6 +274,8 @@ namespace LST.Modbus
             _disposed = true;
 
             Close();
+
+            GC.SuppressFinalize(this);
         }
 
         public void ClearReceiveBuffer()
@@ -355,7 +343,7 @@ namespace LST.Modbus
         {
             ThrowIfDisposed();
 
-            SerialPortStream port = mPort;      // local copy: Close() may null the field at any time
+            SerialPort port = mPort;      // local copy: Close() may null the field at any time
             if (port == null || !_running)
                 throw new InvalidOperationException("SerialChannel is not open.");
 
@@ -451,13 +439,13 @@ namespace LST.Modbus
         /// <summary>
         /// The reader thread. Uses only its own port/token (see Open()).
         /// </summary>
-        private void ReaderThread_Work(SerialPortStream port, CancellationToken token)
+        private void ReaderThread_Work(SerialPort port, CancellationToken token)
         {
             byte[] buffer = new byte[ReaderChunkSize];
 
             while (!token.IsCancellationRequested)
             {
-                int n = 0;
+                int n;
                 try
                 {
                     // Blocks until at least 1 byte is available or ReadTimeout expires,
@@ -474,7 +462,7 @@ namespace LST.Modbus
                 {
                     // If for example a USB adapter is unplugged, Read throws on a background thread, catch here.
                     if (!token.IsCancellationRequested)
-                        RaiseFaulted(ex);
+                        RaiseError(ex);
                     return;
                 }
 
@@ -522,9 +510,9 @@ namespace LST.Modbus
             try { OnWarning?.Invoke(message); } catch { }
         }
 
-        private void RaiseFaulted(Exception ex)
+        private void RaiseError(Exception ex)
         {
-            try { Faulted?.Invoke(ex); } catch { }
+            try { OnError?.Invoke(ex); } catch { }
         }
 
         private void ThrowIfDisposed()

@@ -121,7 +121,7 @@
     <value>17, 17</value>
   </metadata>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-  <data name="picConnectionTypeIsOverride.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+  <data name="ConnectionTypeIsOverrideIcon.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAABGdBTUEAALGPC/xhBQAABFNJREFUWEfF
         lmtI3XUYx/+62movCoJFMahYNFS0zLtTp86Z183UdKLHzOmc0+bIReJl04gu1At7Fb6pKIJg2Ugm0+XU
@@ -145,7 +145,7 @@
         hyzX/oW38024uyUBHiS2NHYb/wLnHtNcVvw9NAAAAABJRU5ErkJggg==
 </value>
   </data>
-  <data name="picPortIsOverride.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+  <data name="PortIsOverrideIcon.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAABGdBTUEAALGPC/xhBQAABFNJREFUWEfF
         lmtI3XUYx/+62movCoJFMahYNFS0zLtTp86Z183UdKLHzOmc0+bIReJl04gu1At7Fb6pKIJg2Ugm0+XU
@@ -169,7 +169,7 @@
         hyzX/oW38024uyUBHiS2NHYb/wLnHtNcVvw9NAAAAABJRU5ErkJggg==
 </value>
   </data>
-  <data name="picBaudrateIsOverride.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+  <data name="BaudrateIsOverrideIcon.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAABGdBTUEAALGPC/xhBQAABFNJREFUWEfF
         lmtI3XUYx/+62movCoJFMahYNFS0zLtTp86Z183UdKLHzOmc0+bIReJl04gu1At7Fb6pKIJg2Ugm0+XU
@@ -193,7 +193,7 @@
         hyzX/oW38024uyUBHiS2NHYb/wLnHtNcVvw9NAAAAABJRU5ErkJggg==
 </value>
   </data>
-  <data name="picParityIsOverride.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+  <data name="ParityIsOverrideIcon.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAABGdBTUEAALGPC/xhBQAABFNJREFUWEfF
         lmtI3XUYx/+62movCoJFMahYNFS0zLtTp86Z183UdKLHzOmc0+bIReJl04gu1At7Fb6pKIJg2Ugm0+XU
@@ -217,7 +217,7 @@
         hyzX/oW38024uyUBHiS2NHYb/wLnHtNcVvw9NAAAAABJRU5ErkJggg==
 </value>
   </data>
-  <data name="picEndofmessagetimeoutIsOverride.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+  <data name="EndofmessagetimeoutIsOverrideIcon.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAABGdBTUEAALGPC/xhBQAABFNJREFUWEfF
         lmtI3XUYx/+62movCoJFMahYNFS0zLtTp86Z183UdKLHzOmc0+bIReJl04gu1At7Fb6pKIJg2Ugm0+XU
@@ -241,7 +241,7 @@
         hyzX/oW38024uyUBHiS2NHYb/wLnHtNcVvw9NAAAAABJRU5ErkJggg==
 </value>
   </data>
-  <data name="picIPAddressIsOverride.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+  <data name="IPAddressIsOverrideIcon.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAABGdBTUEAALGPC/xhBQAABFNJREFUWEfF
         lmtI3XUYx/+62movCoJFMahYNFS0zLtTp86Z183UdKLHzOmc0+bIReJl04gu1At7Fb6pKIJg2Ugm0+XU
@@ -265,7 +265,7 @@
         hyzX/oW38024uyUBHiS2NHYb/wLnHtNcVvw9NAAAAABJRU5ErkJggg==
 </value>
   </data>
-  <data name="picIPPortIsOverride.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+  <data name="IPPortIsOverrideIcon.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAABGdBTUEAALGPC/xhBQAABFNJREFUWEfF
         lmtI3XUYx/+62movCoJFMahYNFS0zLtTp86Z183UdKLHzOmc0+bIReJl04gu1At7Fb6pKIJg2Ugm0+XU
@@ -289,7 +289,7 @@
         hyzX/oW38024uyUBHiS2NHYb/wLnHtNcVvw9NAAAAABJRU5ErkJggg==
 </value>
   </data>
-  <data name="picOnewireechosuppressionIsOverride.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+  <data name="OnewireechosuppressionIsOverrideIcon.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAABGdBTUEAALGPC/xhBQAABFNJREFUWEfF
         lmtI3XUYx/+62movCoJFMahYNFS0zLtTp86Z183UdKLHzOmc0+bIReJl04gu1At7Fb6pKIJg2Ugm0+XU
@@ -313,7 +313,7 @@
         hyzX/oW38024uyUBHiS2NHYb/wLnHtNcVvw9NAAAAABJRU5ErkJggg==
 </value>
   </data>
-  <data name="picSlaveIDIsOverride.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+  <data name="SlaveIDIsOverrideIcon.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAABGdBTUEAALGPC/xhBQAABFNJREFUWEfF
         lmtI3XUYx/+62movCoJFMahYNFS0zLtTp86Z183UdKLHzOmc0+bIReJl04gu1At7Fb6pKIJg2Ugm0+XU
@@ -337,7 +337,7 @@
         hyzX/oW38024uyUBHiS2NHYb/wLnHtNcVvw9NAAAAABJRU5ErkJggg==
 </value>
   </data>
-  <data name="picResponsetimeoutIsOverride.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+  <data name="ResponsetimeoutIsOverrideIcon.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAABGdBTUEAALGPC/xhBQAABFNJREFUWEfF
         lmtI3XUYx/+62movCoJFMahYNFS0zLtTp86Z183UdKLHzOmc0+bIReJl04gu1At7Fb6pKIJg2Ugm0+XU
@@ -361,7 +361,7 @@
         hyzX/oW38024uyUBHiS2NHYb/wLnHtNcVvw9NAAAAABJRU5ErkJggg==
 </value>
   </data>
-  <data name="picInterframedelayIsOverride.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+  <data name="InterframedelayIsOverrideIcon.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAABGdBTUEAALGPC/xhBQAABFNJREFUWEfF
         lmtI3XUYx/+62movCoJFMahYNFS0zLtTp86Z183UdKLHzOmc0+bIReJl04gu1At7Fb6pKIJg2Ugm0+XU
@@ -385,7 +385,7 @@
         hyzX/oW38024uyUBHiS2NHYb/wLnHtNcVvw9NAAAAABJRU5ErkJggg==
 </value>
   </data>
-  <data name="picSamplerateIsOverride.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+  <data name="SamplerateIsOverrideIcon.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAABGdBTUEAALGPC/xhBQAABFNJREFUWEfF
         lmtI3XUYx/+62movCoJFMahYNFS0zLtTp86Z183UdKLHzOmc0+bIReJl04gu1At7Fb6pKIJg2Ugm0+XU
@@ -409,7 +409,7 @@
         hyzX/oW38024uyUBHiS2NHYb/wLnHtNcVvw9NAAAAABJRU5ErkJggg==
 </value>
   </data>
-  <data name="picMaxFrameSizeIsOverride.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+  <data name="MaxFrameSizeIsOverrideIcon.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAABGdBTUEAALGPC/xhBQAABFNJREFUWEfF
         lmtI3XUYx/+62movCoJFMahYNFS0zLtTp86Z183UdKLHzOmc0+bIReJl04gu1At7Fb6pKIJg2Ugm0+XU
@@ -433,7 +433,7 @@
         hyzX/oW38024uyUBHiS2NHYb/wLnHtNcVvw9NAAAAABJRU5ErkJggg==
 </value>
   </data>
-  <data name="picwriteregFCIsOverride.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+  <data name="WriteregFCIsOverrideIcon.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAABGdBTUEAALGPC/xhBQAABFNJREFUWEfF
         lmtI3XUYx/+62movCoJFMahYNFS0zLtTp86Z183UdKLHzOmc0+bIReJl04gu1At7Fb6pKIJg2Ugm0+XU

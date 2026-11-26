@@ -3,18 +3,19 @@
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <TargetFramework>net9.0-windows10.0.17763.0</TargetFramework>
-	  <RuntimeIdentifier>win-x64</RuntimeIdentifier>
-	  <SelfContained>true</SelfContained>
-	  <!-- Keep only the languages you actually support -->
-	  <SatelliteResourceLanguages>en</SatelliteResourceLanguages>
-	  <Nullable>disable</Nullable>
+	<RuntimeIdentifier>win-x64</RuntimeIdentifier>
+	<SelfContained>true</SelfContained>
+	<!-- Keep only the languages you actually support -->
+	<SatelliteResourceLanguages>en</SatelliteResourceLanguages>
+	<Nullable>disable</Nullable>
     <UseWindowsForms>true</UseWindowsForms>
     <ImplicitUsings>enable</ImplicitUsings>
-	 <ApplicationHighDpiMode>PerMonitorV2</ApplicationHighDpiMode>
-	 <ApplicationDefaultFont>Microsoft Sans Serif, 8.25pt</ApplicationDefaultFont>
-	 <ForceDesignerDPIUnaware>true</ForceDesignerDPIUnaware>
-	 <ApplicationIcon>Ico5.ico</ApplicationIcon>
-	 <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+	<ApplicationHighDpiMode>PerMonitorV2</ApplicationHighDpiMode>
+	<ApplicationDefaultFont>Microsoft Sans Serif, 8.25pt</ApplicationDefaultFont>
+	<ForceDesignerDPIUnaware>true</ForceDesignerDPIUnaware>
+	<ApplicationIcon>Ico5.ico</ApplicationIcon>
+	<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+	<NoWarn>$(NoWarn);CA1416</NoWarn>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -47,6 +48,7 @@
     <Compile Include="..\Shared\ProjectFileHandler.cs" Link="v_Shared\ProjectFileHandler.cs" />
     <Compile Include="..\Shared\RegisterToOffset.cs" Link="v_Shared\RegisterToOffset.cs" />
     <Compile Include="..\Shared\ValueToString.cs" Link="v_Shared\ValueToString.cs" />
+	  <Compile Include="..\Shared\Parity.cs" Link="v_Shared\Parity.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -54,7 +56,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="RJCP.SerialPortStream" Version="3.0.5" />
+    <PackageReference Include="System.IO.Ports" Version="10.0.15" />
   </ItemGroup>
 
   <Target Name="PreBuild" BeforeTargets="PreBuildEvent">

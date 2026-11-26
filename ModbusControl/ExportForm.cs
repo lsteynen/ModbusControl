@@ -46,14 +46,14 @@ namespace ModbusControl
 
        public string TabSelect
         {
-            get { if (radExportCurrentTab.Checked) return "current";
-                else if (radExportAllTabs.Checked) return "all";
+            get { if (ExportCurrentTabRadiobtn.Checked) return "current";
+                else if (ExportAllTabsRadiobtn.Checked) return "all";
                 else return null;
             }
 
             set {   
-                if (value == "current") radExportCurrentTab.Checked = true;
-                else if (value == "all") radExportAllTabs.Checked = true;
+                if (value == "current") ExportCurrentTabRadiobtn.Checked = true;
+                else if (value == "all") ExportAllTabsRadiobtn.Checked = true;
             }
         }
 
@@ -61,18 +61,18 @@ namespace ModbusControl
         {
             get
             {
-                if (radFormatDefault.Checked) return "default";
-                else if (radFormatAsInt.Checked) return "int";
-                else if (radFormatAsUInt.Checked) return "uint";
-                else if (radFormatAsHex.Checked) return "hex";
+                if (FormatDefaultRadiobtn.Checked) return "default";
+                else if (FormatAsIntRadiobtn.Checked) return "int";
+                else if (FormatAsUIntRadiobtn.Checked) return "uint";
+                else if (FormatAsHexRadiobtn.Checked) return "hex";
                 else return null;
             }
 
             set {
-                if (value == "default") radFormatDefault.Checked = true;
-                else if (value == "int") radFormatAsInt.Checked = true;
-                else if (value == "uint") radFormatAsUInt.Checked = true;
-                else if (value == "hex") radFormatAsHex.Checked = true;
+                if (value == "default") FormatDefaultRadiobtn.Checked = true;
+                else if (value == "int") FormatAsIntRadiobtn.Checked = true;
+                else if (value == "uint") FormatAsUIntRadiobtn.Checked = true;
+                else if (value == "hex") FormatAsHexRadiobtn.Checked = true;
             }
         }
 
@@ -80,18 +80,18 @@ namespace ModbusControl
         {
             get
             {
-                if (radStringFormatDefault.Checked) return "string";
-                else if (radStringFormatAsInt.Checked) return "int";
-                else if (radStringFormatAsUInt.Checked) return "uint";
-                else if (radStringFormatAsHex.Checked) return "hex";
+                if (StringFormatDefaultRadiobtn.Checked) return "string";
+                else if (StringFormatAsIntRadiobtn.Checked) return "int";
+                else if (StringFormatAsUIntRadiobtn.Checked) return "uint";
+                else if (StringFormatAsHexRadiobtn.Checked) return "hex";
                 else return null;
             }
 
             set {
-                if (value == "string") radStringFormatDefault.Checked = true;
-                else if (value == "int") radStringFormatAsInt.Checked = true;
-                else if (value == "uint") radStringFormatAsUInt.Checked = true;
-                else if (value == "hex") radStringFormatAsHex.Checked = true;
+                if (value == "string") StringFormatDefaultRadiobtn.Checked = true;
+                else if (value == "int") StringFormatAsIntRadiobtn.Checked = true;
+                else if (value == "uint") StringFormatAsUIntRadiobtn.Checked = true;
+                else if (value == "hex") StringFormatAsHexRadiobtn.Checked = true;
             }
         }
 
@@ -104,7 +104,7 @@ namespace ModbusControl
             set
             {
                 mContinueOnError = value;
-                chkContinueOnError.Checked = value;
+                ContinueOnErrorCheckbox.Checked = value;
             }
         }
 
@@ -130,68 +130,68 @@ namespace ModbusControl
             InitializeComponent();
 
             mParent = parent;
-            mContinueOnError = chkContinueOnError.Checked;
+            mContinueOnError = ContinueOnErrorCheckbox.Checked;
             UpdateStringFormatPanel();
 
 #if TESTBUILD
-            butRunTests.Visible = true;
+            RunTestsBtn.Visible = true;
 #endif
         }
 
-        private void buttonStart_Click(object sender, EventArgs e)
+        private void StartBtn_Click(object sender, EventArgs e)
         {
             // trim the filename
-            textboxFilename.Text = textboxFilename.Text.Trim();
+            FilenameTextbox.Text = FilenameTextbox.Text.Trim();
 
             // got filename?
-            if (textboxFilename.Text.Length == 0)
+            if (FilenameTextbox.Text.Length == 0)
             {
-                textboxLog.AppendText("ERROR: No file name." + Environment.NewLine);
+                LogTextbox.AppendText("ERROR: No file name." + Environment.NewLine);
                 return;
             }
 
             // set export mode, current tab or all tabs
-            if (radExportCurrentTab.Checked)
+            if (ExportCurrentTabRadiobtn.Checked)
             {
                 mExportMode = EExportMode.CurrentTab;
             }
-            else if (radExportAllTabs.Checked)
+            else if (ExportAllTabsRadiobtn.Checked)
             {
                 mExportMode = EExportMode.AllTabs;
             }
 
             // set export format
-            if (radFormatDefault.Checked)
+            if (FormatDefaultRadiobtn.Checked)
             {
                 mExportFormat = EExportFormat.Default;
             }
-            else if (radFormatAsInt.Checked)
+            else if (FormatAsIntRadiobtn.Checked)
             {
                 mExportFormat = EExportFormat.AsInt;
             }
-            else if (radFormatAsUInt.Checked)
+            else if (FormatAsUIntRadiobtn.Checked)
             {
                 mExportFormat = EExportFormat.AsUInt;
             }
-            else if (radFormatAsHex.Checked)
+            else if (FormatAsHexRadiobtn.Checked)
             {
                 mExportFormat = EExportFormat.AsHex;
             }
 
             // set string/ascii export format
-            if (radStringFormatDefault.Checked)
+            if (StringFormatDefaultRadiobtn.Checked)
             {
                 mStringExportFormat = EExportFormat.Default;
             }
-            else if (radStringFormatAsInt.Checked)
+            else if (StringFormatAsIntRadiobtn.Checked)
             {
                 mStringExportFormat = EExportFormat.AsInt;
             }
-            else if (radStringFormatAsUInt.Checked)
+            else if (StringFormatAsUIntRadiobtn.Checked)
             {
                 mStringExportFormat = EExportFormat.AsUInt;
             }
-            else if (radStringFormatAsHex.Checked)
+            else if (StringFormatAsHexRadiobtn.Checked)
             {
                 mStringExportFormat = EExportFormat.AsHex;
             }
@@ -199,7 +199,7 @@ namespace ModbusControl
             // check if we have tab pages
             if (mParent.GetTabPageCount() == 0)
             {
-                textboxLog.AppendText("ERROR: No tab pages." + Environment.NewLine);
+                LogTextbox.AppendText("ERROR: No tab pages." + Environment.NewLine);
                 return;
             }
 
@@ -215,12 +215,12 @@ namespace ModbusControl
             }
             catch( Exception ex)
             {
-                textboxLog.AppendText("ERROR: " + ex.Message + Environment.NewLine); 
+                LogTextbox.AppendText("ERROR: " + ex.Message + Environment.NewLine); 
             }
 
         }
 
-        private void buttonCancel_Click(object sender, EventArgs e)
+        private void CancelBtn_Click(object sender, EventArgs e)
         {
             // cancel the backgroundworker
             if (mWorker.IsBusy)
@@ -259,16 +259,16 @@ namespace ModbusControl
             //            Use "new UTF8Encoding(false)" for UTF-8 encoding without BOM
             // See http://www.science.co.il/Language/Locale-codes.asp for a list of languages/countries and codepages.
 
-            mCsvWriter = new CsvWriter(textboxFilename.Text, new UTF8Encoding(false));
+            mCsvWriter = new CsvWriter(FilenameTextbox.Text, new UTF8Encoding(false));
             mCsvWriter.CommentHeader = "#";
             mCsvWriter.Separator = ';';
             // always put quotes around the description field
             mCsvWriter.QuoteSelectedFields = new bool[] { false, false, true }; // we choose to always quote the description field
 
-            textboxLog.AppendText("Opened file: " + textboxFilename.Text + Environment.NewLine);
+            LogTextbox.AppendText("Opened file: " + FilenameTextbox.Text + Environment.NewLine);
             
-            buttonStart.Enabled = false;
-            buttonCancel.Enabled = true;
+            StartBtn.Enabled = false;
+            CancelBtn.Enabled = true;
             mParent.MainPollingIsEnabled = false;
 
             // start backgroundworker to do the export, to make the export cancelable
@@ -384,7 +384,7 @@ namespace ModbusControl
         private void Worker_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
             // ProgressChanged callback is used to display progress strings in textboxLog
-            textboxLog.AppendText((e.UserState as String) + Environment.NewLine);
+            LogTextbox.AppendText((e.UserState as String) + Environment.NewLine);
         }
 
         private void Worker_Completed(object sender, RunWorkerCompletedEventArgs e)
@@ -401,41 +401,41 @@ namespace ModbusControl
             resultStr += " " + SuccessCount.ToString() + " registers exported."
                        + " " + FileErrorCount.ToString() + " file errors."
                        + " " + CommErrorCount.ToString() + " read errors.";
-            textboxLog.AppendText(resultStr + Environment.NewLine);
+            LogTextbox.AppendText(resultStr + Environment.NewLine);
 
             // update the buttons
-            buttonStart.Enabled = true;
-            buttonCancel.Enabled = false;
+            StartBtn.Enabled = true;
+            CancelBtn.Enabled = false;
 
             mParent.MainPollingIsEnabled = true;
         }
 
-        private void buttonClearLog_Click(object sender, EventArgs e)
+        private void ClearLogBtn_Click(object sender, EventArgs e)
         {
-            textboxLog.Clear();
-            textboxLog.Update();
+            LogTextbox.Clear();
+            LogTextbox.Update();
         }
 
-        private void buttonSelectFile_Click(object sender, EventArgs e)
+        private void SelectFileBtn_Click(object sender, EventArgs e)
         {
             if (SaveFileDialog1.ShowDialog() == DialogResult.OK)
             {
-                textboxFilename.Text = SaveFileDialog1.FileName;
+                FilenameTextbox.Text = SaveFileDialog1.FileName;
             }
         }
 
-        private void chkContinueOnError_CheckedChanged(object sender, EventArgs e)
+        private void ContinueOnErrorCheckbox_CheckedChanged(object sender, EventArgs e)
         {
-            mContinueOnError = chkContinueOnError.Checked;
+            mContinueOnError = ContinueOnErrorCheckbox.Checked;
         }
 
         private void UpdateStringFormatPanel()
         {
             // Ascii format selection is only valid with 'format as in grid'
-            StringFormatPanel.Enabled = radFormatDefault.Checked;
+            StringFormatPanel.Enabled = FormatDefaultRadiobtn.Checked;
         }
 
-        private void radFormat_CheckedChanged(object sender, EventArgs e)
+        private void FormatRadiobtn_CheckedChanged(object sender, EventArgs e)
         {
             UpdateStringFormatPanel();
         }
@@ -743,79 +743,79 @@ namespace ModbusControl
         /// Integration test
         /// buttonTest appears in test-build
         /// </summary>
-        private void buttonTest_Click(object sender, EventArgs e)
+        private void TestBtn_Click(object sender, EventArgs e)
         {
-            radExportAllTabs.Checked = true;
+            ExportAllTabsRadiobtn.Checked = true;
 
-            radFormatDefault.Checked = true;
-            radStringFormatDefault.Checked = true;
-            textboxFilename.Text = @"export_as_in_grid.csv";
+            FormatDefaultRadiobtn.Checked = true;
+            StringFormatDefaultRadiobtn.Checked = true;
+            FilenameTextbox.Text = @"export_as_in_grid.csv";
             Update();
-            buttonStart_Click(null, null);
-            while (buttonStart.Enabled == false)
+            StartBtn_Click(null, null);
+            while (StartBtn.Enabled == false)
             {
                 Application.DoEvents();
                 Thread.Sleep(100);
             }
 
-            radFormatAsInt.Checked = true;
-            textboxFilename.Text = @"export_as_int.csv";
+            FormatAsIntRadiobtn.Checked = true;
+            FilenameTextbox.Text = @"export_as_int.csv";
             Update();
-            buttonStart_Click(null, null);
-            while (buttonStart.Enabled == false)
+            StartBtn_Click(null, null);
+            while (StartBtn.Enabled == false)
             {
                 Application.DoEvents();
                 Thread.Sleep(100);
             }
 
-            radFormatAsUInt.Checked = true;
-            textboxFilename.Text = @"export_as_uint.csv";
+            FormatAsUIntRadiobtn.Checked = true;
+            FilenameTextbox.Text = @"export_as_uint.csv";
             Update();
-            buttonStart_Click(null, null);
-            while (buttonStart.Enabled == false)
+            StartBtn_Click(null, null);
+            while (StartBtn.Enabled == false)
             {
                 Application.DoEvents();
                 Thread.Sleep(100);
             }
 
-            radFormatAsHex.Checked = true;
-            textboxFilename.Text = @"export_as_hex.csv";
+            FormatAsHexRadiobtn.Checked = true;
+            FilenameTextbox.Text = @"export_as_hex.csv";
             Update();
-            buttonStart_Click(null, null);
-            while (buttonStart.Enabled == false)
+            StartBtn_Click(null, null);
+            while (StartBtn.Enabled == false)
             {
                 Application.DoEvents();
                 Thread.Sleep(100);
             }
 
-            radFormatDefault.Checked = true;
-            radStringFormatAsInt.Checked = true;
-            textboxFilename.Text = @"export_string_as_int.csv";
+            FormatDefaultRadiobtn.Checked = true;
+            StringFormatAsIntRadiobtn.Checked = true;
+            FilenameTextbox.Text = @"export_string_as_int.csv";
             Update();
-            buttonStart_Click(null, null);
-            while (buttonStart.Enabled == false)
+            StartBtn_Click(null, null);
+            while (StartBtn.Enabled == false)
             {
                 Application.DoEvents();
                 Thread.Sleep(100);
             }
 
-            radFormatDefault.Checked = true;
-            radStringFormatAsUInt.Checked = true;
-            textboxFilename.Text = @"export_string_as_uint.csv";
+            FormatDefaultRadiobtn.Checked = true;
+            StringFormatAsUIntRadiobtn.Checked = true;
+            FilenameTextbox.Text = @"export_string_as_uint.csv";
             Update();
-            buttonStart_Click(null, null);
-            while (buttonStart.Enabled == false)
+            StartBtn_Click(null, null);
+            while (StartBtn.Enabled == false)
             {
                 Application.DoEvents();
                 Thread.Sleep(100);
             }
 
-            radFormatDefault.Checked = true;
-            radStringFormatAsHex.Checked = true;
-            textboxFilename.Text = @"export_string_as_hex.csv";
+            FormatDefaultRadiobtn.Checked = true;
+            StringFormatAsHexRadiobtn.Checked = true;
+            FilenameTextbox.Text = @"export_string_as_hex.csv";
             Update();
-            buttonStart_Click(null, null);
-            while (buttonStart.Enabled == false)
+            StartBtn_Click(null, null);
+            while (StartBtn.Enabled == false)
             {
                 Application.DoEvents();
                 Thread.Sleep(100);

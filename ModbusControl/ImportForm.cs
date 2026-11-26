@@ -89,7 +89,7 @@ namespace ModbusControl
             set
             {
                 mContinueOnError = value;
-                chkContinueOnError.Checked = value;
+                ContinueOnErrorCheckbox.Checked = value;
             }
         }
 
@@ -111,31 +111,31 @@ namespace ModbusControl
             InitializeComponent();
 
             mParent = parent;
-            mContinueOnError = chkContinueOnError.Checked;            
+            mContinueOnError = ContinueOnErrorCheckbox.Checked;            
         }
 
-        private void buttonSelectFile_Click(object sender, EventArgs e)
+        private void SelectFileBtn_Click(object sender, EventArgs e)
         {
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
             {
-                textboxFilename.Text = openFileDialog1.FileName;
+                FilenameTextbox.Text = openFileDialog1.FileName;
             }
         }
 		
-		private void chkContinueOnError_CheckedChanged(object sender, EventArgs e)
+		private void ContinueOnErrorCheckbox_CheckedChanged(object sender, EventArgs e)
         {
-            mContinueOnError = chkContinueOnError.Checked;
+            mContinueOnError = ContinueOnErrorCheckbox.Checked;
         }
 
-        private void buttonStart_Click(object sender, EventArgs e)
+        private void StartBtn_Click(object sender, EventArgs e)
         {
             // trim the filename
-            textboxFilename.Text = textboxFilename.Text.Trim();
+            FilenameTextbox.Text = FilenameTextbox.Text.Trim();
 
             // got filename?
-            if (textboxFilename.Text.Length == 0)
+            if (FilenameTextbox.Text.Length == 0)
             {
-                textboxLog.AppendText("ERROR: No file name." + Environment.NewLine);
+                LogTextbox.AppendText("ERROR: No file name." + Environment.NewLine);
                 return;
             }
 
@@ -151,11 +151,11 @@ namespace ModbusControl
 			}
 			catch( Exception ex)
 			{
-				textboxLog.AppendText("ERROR: " + ex.Message + Environment.NewLine);
+				LogTextbox.AppendText("ERROR: " + ex.Message + Environment.NewLine);
 			}
         }
 
-        private void buttonCancel_Click(object sender, EventArgs e)
+        private void CancelBtn_Click(object sender, EventArgs e)
         {
             // cancel the backgroundworker
             if (mWorker.IsBusy)
@@ -164,10 +164,10 @@ namespace ModbusControl
             }
         }
 		
-		private void buttonClearLog_Click(object sender, EventArgs e)
+		private void ClearLogBtn_Click(object sender, EventArgs e)
         {
-            textboxLog.Clear();
-            textboxLog.Update();
+            LogTextbox.Clear();
+            LogTextbox.Update();
         }
         
         private void OnFormClosing(object sender, FormClosingEventArgs e)
@@ -189,7 +189,7 @@ namespace ModbusControl
 			Cursor.Current = Cursors.WaitCursor;
             try
             {
-                LoadImportFile(textboxFilename.Text);
+                LoadImportFile(FilenameTextbox.Text);
             }
             finally
             {
@@ -197,8 +197,8 @@ namespace ModbusControl
             }
 			
 			// update buttons
-            buttonStart.Enabled = false;
-            buttonCancel.Enabled = true;
+            StartBtn.Enabled = false;
+            CancelBtn.Enabled = true;
 			// stop main form polling, for import speed
             mParent.MainPollingIsEnabled = false;
 
@@ -281,7 +281,7 @@ namespace ModbusControl
 		private void Worker_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
             // ProgressChanged callback is used to display progress strings in textboxLog
-            textboxLog.AppendText((e.UserState as String) + Environment.NewLine);
+            LogTextbox.AppendText((e.UserState as String) + Environment.NewLine);
         }
 		
 		private void Worker_ImportWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
@@ -294,11 +294,11 @@ namespace ModbusControl
             }
 
             // show counters
-            textboxLog.AppendText(ResultString + " " + SuccessCount + " registers written. " + NotWriteableCount + " registers non-writeable. " + (FileErrorCount + CommErrorCount) + " errors." + Environment.NewLine);
+            LogTextbox.AppendText(ResultString + " " + SuccessCount + " registers written. " + NotWriteableCount + " registers non-writeable. " + (FileErrorCount + CommErrorCount) + " errors." + Environment.NewLine);
 
             //Change the status of the buttons on the UI accordingly
-            buttonStart.Enabled = true;
-            buttonCancel.Enabled = false;
+            StartBtn.Enabled = true;
+            CancelBtn.Enabled = false;
 
             mParent.MainPollingIsEnabled = true;
         }        

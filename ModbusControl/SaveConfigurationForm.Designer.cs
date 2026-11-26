@@ -30,74 +30,74 @@
         {
             components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SaveConfigurationForm));
-            checkboxUpdateXML = new CheckBox();
-            checkboxBridge = new CheckBox();
-            buttonCancel = new Button();
-            buttonSave = new Button();
+            UpdateXMLCheckbox = new CheckBox();
+            BridgeCheckbox = new CheckBox();
+            CancelBtn = new Button();
+            SaveBtn = new Button();
             label1 = new Label();
-            checkboxProjectConfig = new CheckBox();
-            checkboxFormSize = new CheckBox();
+            ProjectConfigCheckbox = new CheckBox();
+            FormSizeCheckbox = new CheckBox();
             toolTip1 = new ToolTip(components);
-            panelWarning = new Panel();
+            WarningPanel = new Panel();
             label2 = new Label();
             pictureBox1 = new PictureBox();
             optionsPanel = new Panel();
-            panelWarning.SuspendLayout();
+            WarningPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             optionsPanel.SuspendLayout();
             SuspendLayout();
             // 
-            // checkboxUpdateXML
+            // UpdateXMLCheckbox
             // 
-            checkboxUpdateXML.AutoSize = true;
-            checkboxUpdateXML.Checked = true;
-            checkboxUpdateXML.CheckState = CheckState.Checked;
-            checkboxUpdateXML.ForeColor = SystemColors.ControlText;
-            checkboxUpdateXML.Location = new Point(22, 96);
-            checkboxUpdateXML.Margin = new Padding(16, 3, 3, 3);
-            checkboxUpdateXML.Name = "checkboxUpdateXML";
-            checkboxUpdateXML.Size = new Size(258, 17);
-            checkboxUpdateXML.TabIndex = 4;
-            checkboxUpdateXML.Text = "Update the project file XML to the current version";
-            toolTip1.SetToolTip(checkboxUpdateXML, "Upgrade the XML in the project file to the current version. Tags are converted to lowercase, obsolete tags are removed, etc.");
-            checkboxUpdateXML.UseVisualStyleBackColor = true;
-            checkboxUpdateXML.CheckedChanged += checkbox_CheckedChanged;
+            UpdateXMLCheckbox.AutoSize = true;
+            UpdateXMLCheckbox.Checked = true;
+            UpdateXMLCheckbox.CheckState = CheckState.Checked;
+            UpdateXMLCheckbox.ForeColor = SystemColors.ControlText;
+            UpdateXMLCheckbox.Location = new Point(22, 96);
+            UpdateXMLCheckbox.Margin = new Padding(16, 3, 3, 3);
+            UpdateXMLCheckbox.Name = "UpdateXMLCheckbox";
+            UpdateXMLCheckbox.Size = new Size(258, 17);
+            UpdateXMLCheckbox.TabIndex = 4;
+            UpdateXMLCheckbox.Text = "Update the project file XML to the current version";
+            toolTip1.SetToolTip(UpdateXMLCheckbox, "Upgrade the XML in the project file to the current version. Tags are converted to lowercase, obsolete tags are removed, etc.");
+            UpdateXMLCheckbox.UseVisualStyleBackColor = true;
+            UpdateXMLCheckbox.CheckedChanged += UpdateXMLCheckbox_CheckedChanged;
             // 
-            // checkboxBridge
+            // BridgeCheckbox
             // 
-            checkboxBridge.AutoSize = true;
-            checkboxBridge.Location = new Point(36, 51);
-            checkboxBridge.Margin = new Padding(16, 3, 3, 3);
-            checkboxBridge.Name = "checkboxBridge";
-            checkboxBridge.Size = new Size(161, 17);
-            checkboxBridge.TabIndex = 2;
-            checkboxBridge.Text = "Modbus/TCP bridge settings";
-            toolTip1.SetToolTip(checkboxBridge, "Save the current Modbus/TCP bridge settings to the project file");
-            checkboxBridge.UseVisualStyleBackColor = true;
-            checkboxBridge.CheckedChanged += checkbox_CheckedChanged;
+            BridgeCheckbox.AutoSize = true;
+            BridgeCheckbox.Location = new Point(36, 51);
+            BridgeCheckbox.Margin = new Padding(16, 3, 3, 3);
+            BridgeCheckbox.Name = "BridgeCheckbox";
+            BridgeCheckbox.Size = new Size(161, 17);
+            BridgeCheckbox.TabIndex = 2;
+            BridgeCheckbox.Text = "Modbus/TCP bridge settings";
+            toolTip1.SetToolTip(BridgeCheckbox, "Save the current Modbus/TCP bridge settings to the project file");
+            BridgeCheckbox.UseVisualStyleBackColor = true;
+            BridgeCheckbox.CheckedChanged += BridgeCheckbox_CheckedChanged;
             // 
-            // buttonCancel
+            // CancelBtn
             // 
-            buttonCancel.DialogResult = DialogResult.Cancel;
-            buttonCancel.Location = new Point(229, 124);
-            buttonCancel.Margin = new Padding(11, 3, 3, 3);
-            buttonCancel.Name = "buttonCancel";
-            buttonCancel.Size = new Size(75, 23);
-            buttonCancel.TabIndex = 6;
-            buttonCancel.Text = "Cancel";
-            buttonCancel.UseVisualStyleBackColor = true;
-            buttonCancel.Click += buttonCancel_Click;
+            CancelBtn.DialogResult = DialogResult.Cancel;
+            CancelBtn.Location = new Point(229, 124);
+            CancelBtn.Margin = new Padding(11, 3, 3, 3);
+            CancelBtn.Name = "CancelBtn";
+            CancelBtn.Size = new Size(75, 23);
+            CancelBtn.TabIndex = 6;
+            CancelBtn.Text = "Cancel";
+            CancelBtn.UseVisualStyleBackColor = true;
+            CancelBtn.Click += CancelBtn_Click;
             // 
-            // buttonSave
+            // SaveBtn
             // 
-            buttonSave.Location = new Point(141, 124);
-            buttonSave.Margin = new Padding(3, 3, 11, 3);
-            buttonSave.Name = "buttonSave";
-            buttonSave.Size = new Size(75, 23);
-            buttonSave.TabIndex = 5;
-            buttonSave.Text = "Save";
-            buttonSave.UseVisualStyleBackColor = true;
-            buttonSave.Click += buttonSave_Click;
+            SaveBtn.Location = new Point(141, 124);
+            SaveBtn.Margin = new Padding(3, 3, 11, 3);
+            SaveBtn.Name = "SaveBtn";
+            SaveBtn.Size = new Size(75, 23);
+            SaveBtn.TabIndex = 5;
+            SaveBtn.Text = "Save";
+            SaveBtn.UseVisualStyleBackColor = true;
+            SaveBtn.Click += SaveBtn_Click;
             // 
             // label1
             // 
@@ -109,44 +109,44 @@
             label1.TabIndex = 0;
             label1.Text = "Update the following items in the project file:";
             // 
-            // checkboxProjectConfig
+            // ProjectConfigCheckbox
             // 
-            checkboxProjectConfig.AutoSize = true;
-            checkboxProjectConfig.Checked = true;
-            checkboxProjectConfig.CheckState = CheckState.Checked;
-            checkboxProjectConfig.Location = new Point(36, 29);
-            checkboxProjectConfig.Margin = new Padding(16, 8, 3, 3);
-            checkboxProjectConfig.Name = "checkboxProjectConfig";
-            checkboxProjectConfig.Size = new Size(162, 17);
-            checkboxProjectConfig.TabIndex = 1;
-            checkboxProjectConfig.Text = "Project configuration settings";
-            toolTip1.SetToolTip(checkboxProjectConfig, "Save the current connection and protocol settings to the project file");
-            checkboxProjectConfig.UseVisualStyleBackColor = true;
-            checkboxProjectConfig.CheckedChanged += checkbox_CheckedChanged;
+            ProjectConfigCheckbox.AutoSize = true;
+            ProjectConfigCheckbox.Checked = true;
+            ProjectConfigCheckbox.CheckState = CheckState.Checked;
+            ProjectConfigCheckbox.Location = new Point(36, 29);
+            ProjectConfigCheckbox.Margin = new Padding(16, 8, 3, 3);
+            ProjectConfigCheckbox.Name = "ProjectConfigCheckbox";
+            ProjectConfigCheckbox.Size = new Size(162, 17);
+            ProjectConfigCheckbox.TabIndex = 1;
+            ProjectConfigCheckbox.Text = "Project configuration settings";
+            toolTip1.SetToolTip(ProjectConfigCheckbox, "Save the current connection and protocol settings to the project file");
+            ProjectConfigCheckbox.UseVisualStyleBackColor = true;
+            ProjectConfigCheckbox.CheckedChanged += ProjectConfigCheckbox_CheckedChanged;
             // 
-            // checkboxFormSize
+            // FormSizeCheckbox
             // 
-            checkboxFormSize.AutoSize = true;
-            checkboxFormSize.Location = new Point(36, 73);
-            checkboxFormSize.Margin = new Padding(16, 3, 3, 3);
-            checkboxFormSize.Name = "checkboxFormSize";
-            checkboxFormSize.Size = new Size(109, 17);
-            checkboxFormSize.TabIndex = 3;
-            checkboxFormSize.Text = "Main window size";
-            toolTip1.SetToolTip(checkboxFormSize, "Save the current size of the main window to the project file");
-            checkboxFormSize.UseVisualStyleBackColor = true;
-            checkboxFormSize.CheckedChanged += checkbox_CheckedChanged;
+            FormSizeCheckbox.AutoSize = true;
+            FormSizeCheckbox.Location = new Point(36, 73);
+            FormSizeCheckbox.Margin = new Padding(16, 3, 3, 3);
+            FormSizeCheckbox.Name = "FormSizeCheckbox";
+            FormSizeCheckbox.Size = new Size(109, 17);
+            FormSizeCheckbox.TabIndex = 3;
+            FormSizeCheckbox.Text = "Main window size";
+            toolTip1.SetToolTip(FormSizeCheckbox, "Save the current size of the main window to the project file");
+            FormSizeCheckbox.UseVisualStyleBackColor = true;
+            FormSizeCheckbox.CheckedChanged += FormSizeCheckbox_CheckedChanged;
             // 
-            // panelWarning
+            // WarningPanel
             // 
-            panelWarning.BorderStyle = BorderStyle.FixedSingle;
-            panelWarning.Controls.Add(label2);
-            panelWarning.Controls.Add(pictureBox1);
-            panelWarning.Dock = DockStyle.Top;
-            panelWarning.Location = new Point(0, 0);
-            panelWarning.Name = "panelWarning";
-            panelWarning.Size = new Size(453, 55);
-            panelWarning.TabIndex = 0;
+            WarningPanel.BorderStyle = BorderStyle.FixedSingle;
+            WarningPanel.Controls.Add(label2);
+            WarningPanel.Controls.Add(pictureBox1);
+            WarningPanel.Dock = DockStyle.Top;
+            WarningPanel.Location = new Point(0, 0);
+            WarningPanel.Name = "WarningPanel";
+            WarningPanel.Size = new Size(453, 55);
+            WarningPanel.TabIndex = 0;
             // 
             // label2
             // 
@@ -169,12 +169,12 @@
             // 
             // optionsPanel
             // 
-            optionsPanel.Controls.Add(buttonCancel);
-            optionsPanel.Controls.Add(buttonSave);
-            optionsPanel.Controls.Add(checkboxUpdateXML);
-            optionsPanel.Controls.Add(checkboxFormSize);
-            optionsPanel.Controls.Add(checkboxBridge);
-            optionsPanel.Controls.Add(checkboxProjectConfig);
+            optionsPanel.Controls.Add(CancelBtn);
+            optionsPanel.Controls.Add(SaveBtn);
+            optionsPanel.Controls.Add(UpdateXMLCheckbox);
+            optionsPanel.Controls.Add(FormSizeCheckbox);
+            optionsPanel.Controls.Add(BridgeCheckbox);
+            optionsPanel.Controls.Add(ProjectConfigCheckbox);
             optionsPanel.Controls.Add(label1);
             optionsPanel.Dock = DockStyle.Top;
             optionsPanel.Location = new Point(0, 55);
@@ -187,10 +187,10 @@
             AutoScaleDimensions = new SizeF(96F, 96F);
             AutoScaleMode = AutoScaleMode.Dpi;
             AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            CancelButton = buttonCancel;
+            CancelButton = CancelBtn;
             ClientSize = new Size(453, 210);
             Controls.Add(optionsPanel);
-            Controls.Add(panelWarning);
+            Controls.Add(WarningPanel);
             Font = new Font("Microsoft Sans Serif", 8.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
             FormBorderStyle = FormBorderStyle.FixedDialog;
             MaximizeBox = false;
@@ -204,7 +204,7 @@
             Text = "Save project file";
             Load += SaveConfigurationForm_Load;
             Shown += SaveConfigurationForm_Shown;
-            panelWarning.ResumeLayout(false);
+            WarningPanel.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
             optionsPanel.ResumeLayout(false);
             optionsPanel.PerformLayout();
@@ -213,15 +213,15 @@
         }
 
         #endregion
-        private System.Windows.Forms.CheckBox checkboxBridge;
-        private System.Windows.Forms.Button buttonCancel;
-        private System.Windows.Forms.Button buttonSave;
+        private System.Windows.Forms.CheckBox BridgeCheckbox;
+        private System.Windows.Forms.Button CancelBtn;
+        private System.Windows.Forms.Button SaveBtn;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.CheckBox checkboxProjectConfig;
-        private System.Windows.Forms.CheckBox checkboxFormSize;
-        private System.Windows.Forms.CheckBox checkboxUpdateXML;
+        private System.Windows.Forms.CheckBox ProjectConfigCheckbox;
+        private System.Windows.Forms.CheckBox FormSizeCheckbox;
+        private System.Windows.Forms.CheckBox UpdateXMLCheckbox;
         private System.Windows.Forms.ToolTip toolTip1;
-        private Panel panelWarning;
+        private Panel WarningPanel;
         private Label label2;
         private PictureBox pictureBox1;
         private Panel optionsPanel;

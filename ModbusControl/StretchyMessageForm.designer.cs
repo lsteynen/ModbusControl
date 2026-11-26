@@ -28,66 +28,66 @@
         /// </summary>
         private void InitializeComponent()
         {
-            buttonCancel = new Button();
-            labelMessagetext = new Label();
-            pic = new PictureBox();
-            buttonOK = new Button();
-            ((System.ComponentModel.ISupportInitialize)pic).BeginInit();
+            CancelBtn = new Button();
+            MessageLabel = new Label();
+            Pict = new PictureBox();
+            OKBtn = new Button();
+            ((System.ComponentModel.ISupportInitialize)Pict).BeginInit();
             SuspendLayout();
             // 
-            // buttonCancel
+            // CancelBtn
             // 
-            buttonCancel.DialogResult = DialogResult.Cancel;
-            buttonCancel.Location = new Point(179, 92);
-            buttonCancel.Name = "buttonCancel";
-            buttonCancel.Size = new Size(75, 23);
-            buttonCancel.TabIndex = 2;
-            buttonCancel.Text = "Cancel";
-            buttonCancel.UseVisualStyleBackColor = true;
+            CancelBtn.DialogResult = DialogResult.Cancel;
+            CancelBtn.Location = new Point(179, 92);
+            CancelBtn.Name = "CancelBtn";
+            CancelBtn.Size = new Size(75, 23);
+            CancelBtn.TabIndex = 2;
+            CancelBtn.Text = "Cancel";
+            CancelBtn.UseVisualStyleBackColor = true;
             // 
-            // labelMessagetext
+            // MessageLabel
             // 
-            labelMessagetext.AutoSize = true;
-            labelMessagetext.Location = new Point(84, 24);
-            labelMessagetext.Margin = new Padding(0, 0, 0, 12);
-            labelMessagetext.MaximumSize = new Size(400, 0);
-            labelMessagetext.MinimumSize = new Size(200, 40);
-            labelMessagetext.Name = "labelMessagetext";
-            labelMessagetext.Size = new Size(200, 40);
-            labelMessagetext.TabIndex = 0;
-            labelMessagetext.Text = "Message text...";
+            MessageLabel.AutoSize = true;
+            MessageLabel.Location = new Point(84, 24);
+            MessageLabel.Margin = new Padding(0, 0, 0, 12);
+            MessageLabel.MaximumSize = new Size(400, 0);
+            MessageLabel.MinimumSize = new Size(200, 40);
+            MessageLabel.Name = "MessageLabel";
+            MessageLabel.Size = new Size(200, 40);
+            MessageLabel.TabIndex = 0;
+            MessageLabel.Text = "Message text...";
             // 
-            // pic
+            // Pict
             // 
-            pic.Location = new Point(24, 24);
-            pic.Margin = new Padding(12, 12, 20, 12);
-            pic.Name = "pic";
-            pic.Size = new Size(40, 40);
-            pic.SizeMode = PictureBoxSizeMode.StretchImage;
-            pic.TabIndex = 18;
-            pic.TabStop = false;
+            Pict.Location = new Point(24, 24);
+            Pict.Margin = new Padding(12, 12, 20, 12);
+            Pict.Name = "Pict";
+            Pict.Size = new Size(40, 40);
+            Pict.SizeMode = PictureBoxSizeMode.StretchImage;
+            Pict.TabIndex = 18;
+            Pict.TabStop = false;
             // 
-            // buttonOK
+            // OKBtn
             // 
-            buttonOK.DialogResult = DialogResult.OK;
-            buttonOK.Location = new Point(84, 92);
-            buttonOK.Name = "buttonOK";
-            buttonOK.Size = new Size(75, 23);
-            buttonOK.TabIndex = 1;
-            buttonOK.Text = "OK";
-            buttonOK.UseVisualStyleBackColor = true;
+            OKBtn.DialogResult = DialogResult.OK;
+            OKBtn.Location = new Point(84, 92);
+            OKBtn.Name = "OKBtn";
+            OKBtn.Size = new Size(75, 23);
+            OKBtn.TabIndex = 1;
+            OKBtn.Text = "OK";
+            OKBtn.UseVisualStyleBackColor = true;
             // 
             // StretchyMessageForm
             // 
-            AcceptButton = buttonOK;
+            AcceptButton = OKBtn;
             AutoScaleDimensions = new SizeF(96F, 96F);
             AutoScaleMode = AutoScaleMode.Dpi;
-            CancelButton = buttonCancel;
+            CancelButton = CancelBtn;
             ClientSize = new Size(331, 127);
-            Controls.Add(buttonCancel);
-            Controls.Add(buttonOK);
-            Controls.Add(labelMessagetext);
-            Controls.Add(pic);
+            Controls.Add(CancelBtn);
+            Controls.Add(OKBtn);
+            Controls.Add(MessageLabel);
+            Controls.Add(Pict);
             Font = new Font("Microsoft Sans Serif", 8.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
             FormBorderStyle = FormBorderStyle.FixedDialog;
             MaximizeBox = false;
@@ -99,16 +99,16 @@
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Title";
             Shown += StretchyMessageForm_Shown;
-            ((System.ComponentModel.ISupportInitialize)pic).EndInit();
+            ((System.ComponentModel.ISupportInitialize)Pict).EndInit();
             ResumeLayout(false);
             PerformLayout();
 
         }
 
         #endregion
-        private System.Windows.Forms.Button buttonCancel;
-        private System.Windows.Forms.PictureBox pic;
-        private System.Windows.Forms.Label labelMessagetext;
-        private System.Windows.Forms.Button buttonOK;
+        private System.Windows.Forms.Button CancelBtn;
+        private System.Windows.Forms.PictureBox Pict;
+        private System.Windows.Forms.Label MessageLabel;
+        private System.Windows.Forms.Button OKBtn;
     }
 }

@@ -53,27 +53,12 @@
     <ApplicationIcon>ico5cmd.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="RJCP.Core.Environment, Version=0.3.1.0, Culture=neutral, PublicKeyToken=5f5e7b70c6a74deb, processorArchitecture=MSIL">
-      <HintPath>..\packages\RJCP.Core.Environment.0.3.1\lib\net40\RJCP.Core.Environment.dll</HintPath>
-    </Reference>
-    <Reference Include="RJCP.Core.SysCompat, Version=0.2.1.0, Culture=neutral, PublicKeyToken=5f5e7b70c6a74deb, processorArchitecture=MSIL">
-      <HintPath>..\packages\RJCP.Core.SysCompat.0.2.1\lib\net462\RJCP.Core.SysCompat.dll</HintPath>
-    </Reference>
-    <Reference Include="RJCP.Diagnostics.Trace, Version=0.2.2.0, Culture=neutral, PublicKeyToken=5f5e7b70c6a74deb, processorArchitecture=MSIL">
-      <HintPath>..\packages\RJCP.Diagnostics.Trace.0.2.2\lib\net40\RJCP.Diagnostics.Trace.dll</HintPath>
-    </Reference>
-    <Reference Include="RJCP.IO.Buffer, Version=0.2.3.0, Culture=neutral, PublicKeyToken=5f5e7b70c6a74deb, processorArchitecture=MSIL">
-      <HintPath>..\packages\RJCP.IO.Buffer.0.2.3\lib\net462\RJCP.IO.Buffer.dll</HintPath>
-    </Reference>
-    <Reference Include="RJCP.IO.Device, Version=0.8.4.0, Culture=neutral, PublicKeyToken=5f5e7b70c6a74deb, processorArchitecture=MSIL">
-      <HintPath>..\packages\RJCP.IO.Device.0.8.4\lib\net462\RJCP.IO.Device.dll</HintPath>
-    </Reference>
-    <Reference Include="RJCP.SerialPortStream, Version=3.0.5.0, Culture=neutral, PublicKeyToken=5f5e7b70c6a74deb, processorArchitecture=MSIL">
-      <HintPath>..\packages\RJCP.SerialPortStream.3.0.5\lib\net462\RJCP.SerialPortStream.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.IO.Ports, Version=10.0.0.15, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.IO.Ports.10.0.15\lib\net462\System.IO.Ports.dll</HintPath>
+    </Reference>
     <Reference Include="System.Management" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -83,9 +68,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\Modbus_net\ByteQueue.cs">
-      <Link>Modbus_net\ByteQueue.cs</Link>
-    </Compile>
     <Compile Include="..\Modbus_net\ICommChannel.cs">
       <Link>Modbus_net\ICommChannel.cs</Link>
     </Compile>
@@ -127,6 +109,9 @@
     </Compile>
     <Compile Include="..\Shared\Global.cs">
       <Link>Shared\Global.cs</Link>
+    </Compile>
+    <Compile Include="..\Shared\Parity.cs">
+      <Link>Shared\Parity.cs</Link>
     </Compile>
     <Compile Include="..\Shared\ProjectFileHandler.cs">
       <Link>Shared\ProjectFileHandler.cs</Link>

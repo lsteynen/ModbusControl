@@ -3,8 +3,8 @@ using System.Text;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using ModbusControl;
 
-// Make sure tests are not executed in parallel, because the Converts class has static properties that are changed in the tests
-// Check MSTestSettings.cs: do not activate [assembly: Parallelize(Scope = ExecutionScope.MethodLevel)]
+// Make sure tests are not executed in parallel, because the Converts class has static properties that are changed in the tests.
+// Check MSTestSettings.cs.
 
 namespace UnitTests
 {

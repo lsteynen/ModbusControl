@@ -42,12 +42,6 @@ namespace LST.Modbus
         private readonly int RxQueueMaxSize = 2000;
         private readonly object RxQueueLock = new object();
 
-        /// <summary>
-        /// Raised (on the reader thread) when the connection is lost (remote closed, reset, network down).
-        /// Informational only: the channel stays open and BeforeTransaction() reconnects automatically.
-        /// </summary>
-        public event Action<Exception> Faulted;
-
         // constructor
         public TcpChannel(IPAddress ServerIp, UInt16 Port)
         {
@@ -142,6 +136,7 @@ namespace LST.Modbus
         public event TxRxCallbackHandler OnDataSent;
         public event TxRxCallbackHandler OnDataReceived;
         public event LogCallbackString OnWarning;
+        public event Action<Exception> OnError;
 
         // methods
 
@@ -175,7 +170,7 @@ namespace LST.Modbus
 
         /// <summary>
         /// Stops the reader thread and closes the connection. Safe to call multiple times and from any thread
-        /// (including the Faulted handler). Note: if a (re)connect is in progress on another thread, this waits for it (max ConnectTimeout).
+        /// (including the OnError handler). Note: if a (re)connect is in progress on another thread, this waits for it (max ConnectTimeout).
         /// </summary>
         public void Close()
         {
@@ -196,6 +191,8 @@ namespace LST.Modbus
             _disposed = true;
 
             Close();
+
+            GC.SuppressFinalize(this);
         }
 
         /// <summary>
@@ -428,7 +425,7 @@ namespace LST.Modbus
                 Monitor.PulseAll(RxQueueLock);
 
             // 2) Wait for the reader to leave its poll (it polls every ReaderPollTimeoutMs).
-            //    Skip if we ARE the reader thread (Close() called from the Faulted handler).
+            //    Skip if we ARE the reader thread (Close() called from the OnError handler).
             Thread reader = s.Reader;
             if (reader != null
                 && reader.IsAlive
@@ -543,7 +540,7 @@ namespace LST.Modbus
             lock (RxQueueLock)
                 Monitor.PulseAll(RxQueueLock);
 
-            RaiseFaulted(ex);
+            RaiseError(ex);
         }
 
         // ------------------------------------------------------------------------------------------
@@ -588,9 +585,9 @@ namespace LST.Modbus
             try { OnWarning?.Invoke(message); } catch { }
         }
 
-        private void RaiseFaulted(Exception ex)
+        private void RaiseError(Exception ex)
         {
-            try { Faulted?.Invoke(ex); } catch { }
+            try { OnError?.Invoke(ex); } catch { }
         }
 
         private void ThrowIfDisposed()

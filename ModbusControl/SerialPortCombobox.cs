@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 using System.Diagnostics;
-using RJCP.IO.Ports;
+using System.IO.Ports;
 
 namespace ModbusControl
 {
@@ -29,7 +29,7 @@ namespace ModbusControl
             // keep the previously selected port selected, if possible
             string PrevSelected = box.Text;
             box.Items.Clear();
-            box.Items.AddRange(GetAvailableSerialPortNames());
+            box.Items.AddRange(SerialPort.GetPortNames());
             box.SelectedIndex = box.Items.IndexOf(PrevSelected);
         }
 
@@ -38,7 +38,7 @@ namespace ModbusControl
             // fill listbox with available serial ports
             this.Items.Clear();
             this.Text = string.Empty;
-            this.Items.AddRange(GetAvailableSerialPortNames());
+            this.Items.AddRange(SerialPort.GetPortNames());
             // select first port if we have any
             if (this.Items.Count > 0)
             {
@@ -46,17 +46,5 @@ namespace ModbusControl
             }
         }
 
-        public string[] GetAvailableSerialPortNames()
-        {
-            string[] names;
-            PortDescription[] portDescriptions;
-            using (var sp = new SerialPortStream())
-            {
-                names = sp.GetPortNames();
-                portDescriptions = sp.GetPortDescriptions();
-            }
-
-            return names;
-        }
     }
 }

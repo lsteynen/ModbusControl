@@ -35,29 +35,29 @@
             toolStripStatusLabel2 = new ToolStripStatusLabel();
             toolStripStatusLabel3 = new ToolStripStatusLabel();
             panel1 = new Panel();
-            buttonSaveToFile = new Button();
-            buttonCopyToClipboard = new Button();
-            buttonBottom = new Button();
-            buttonTop = new Button();
-            chkAutoScroll = new CheckBox();
-            buttonClear = new Button();
-            logFilter = new LogFilter();
-            checkboxEnable = new CheckBox();
-            timerView = new System.Windows.Forms.Timer(components);
+            flowLayoutPanel1 = new FlowLayoutPanel();
+            EnableCheckbox = new CheckBox();
+            LogFilter = new LogFilter();
+            ClearBtn = new Button();
+            AutoScrollCheckbox = new CheckBox();
+            TopBtn = new Button();
+            BottomBtn = new Button();
+            CopyToClipboardBtn = new Button();
+            SaveToFileBtn = new Button();
+            ViewTimer = new System.Windows.Forms.Timer(components);
             toolTip1 = new ToolTip(components);
             SaveFileDialog1 = new SaveFileDialog();
-            logGridView = new DataGridView();
+            LogGrid = new DataGridView();
             Time = new DataGridViewTextBoxColumn();
             Type = new DataGridViewTextBoxColumn();
             Logtext = new DataGridViewTextBoxColumn();
             dataGridViewTextBoxColumn1 = new DataGridViewTextBoxColumn();
             dataGridViewTextBoxColumn2 = new DataGridViewTextBoxColumn();
             dataGridViewTextBoxColumn3 = new DataGridViewTextBoxColumn();
-            flowLayoutPanel1 = new FlowLayoutPanel();
             statusStrip1.SuspendLayout();
             panel1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)logGridView).BeginInit();
             flowLayoutPanel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)LogGrid).BeginInit();
             SuspendLayout();
             // 
             // statusStrip1
@@ -88,86 +88,99 @@
             resources.ApplyResources(panel1, "panel1");
             panel1.Name = "panel1";
             // 
-            // buttonSaveToFile
+            // flowLayoutPanel1
             // 
-            resources.ApplyResources(buttonSaveToFile, "buttonSaveToFile");
-            buttonSaveToFile.Name = "buttonSaveToFile";
-            toolTip1.SetToolTip(buttonSaveToFile, resources.GetString("buttonSaveToFile.ToolTip"));
-            buttonSaveToFile.UseVisualStyleBackColor = true;
-            buttonSaveToFile.Click += buttonSaveToFile_Click;
+            resources.ApplyResources(flowLayoutPanel1, "flowLayoutPanel1");
+            flowLayoutPanel1.Controls.Add(EnableCheckbox);
+            flowLayoutPanel1.Controls.Add(LogFilter);
+            flowLayoutPanel1.Controls.Add(ClearBtn);
+            flowLayoutPanel1.Controls.Add(AutoScrollCheckbox);
+            flowLayoutPanel1.Controls.Add(TopBtn);
+            flowLayoutPanel1.Controls.Add(BottomBtn);
+            flowLayoutPanel1.Controls.Add(CopyToClipboardBtn);
+            flowLayoutPanel1.Controls.Add(SaveToFileBtn);
+            flowLayoutPanel1.Name = "flowLayoutPanel1";
             // 
-            // buttonCopyToClipboard
+            // EnableCheckbox
             // 
-            resources.ApplyResources(buttonCopyToClipboard, "buttonCopyToClipboard");
-            buttonCopyToClipboard.Name = "buttonCopyToClipboard";
-            toolTip1.SetToolTip(buttonCopyToClipboard, resources.GetString("buttonCopyToClipboard.ToolTip"));
-            buttonCopyToClipboard.UseVisualStyleBackColor = true;
-            buttonCopyToClipboard.Click += buttonCopyToClipboard_Click;
+            resources.ApplyResources(EnableCheckbox, "EnableCheckbox");
+            EnableCheckbox.Name = "EnableCheckbox";
+            toolTip1.SetToolTip(EnableCheckbox, resources.GetString("EnableCheckbox.ToolTip"));
+            EnableCheckbox.UseVisualStyleBackColor = true;
+            EnableCheckbox.CheckedChanged += EnableCheckbox_CheckedChanged;
             // 
-            // buttonBottom
+            // LogFilter
             // 
-            resources.ApplyResources(buttonBottom, "buttonBottom");
-            buttonBottom.Name = "buttonBottom";
-            toolTip1.SetToolTip(buttonBottom, resources.GetString("buttonBottom.ToolTip"));
-            buttonBottom.UseVisualStyleBackColor = true;
-            buttonBottom.Click += buttonBottom_Click;
+            LogFilter.AnchorSize = new Size(122, 21);
+            LogFilter.BackColor = Color.White;
+            LogFilter.DockSide = LST.Controls.DropDownControl.eDockSide.Left;
+            resources.ApplyResources(LogFilter, "LogFilter");
+            LogFilter.LogBridgeData = false;
+            LogFilter.LogBridgeDecode = false;
+            LogFilter.LogBridgeInfo = false;
+            LogFilter.LogErrors = true;
+            LogFilter.LogInfo = true;
+            LogFilter.LogReads = false;
+            LogFilter.LogTrace = true;
+            LogFilter.LogWarnings = true;
+            LogFilter.LogWrites = false;
+            LogFilter.Name = "LogFilter";
+            LogFilter.Tag = "What to log";
             // 
-            // buttonTop
+            // ClearBtn
             // 
-            resources.ApplyResources(buttonTop, "buttonTop");
-            buttonTop.Name = "buttonTop";
-            toolTip1.SetToolTip(buttonTop, resources.GetString("buttonTop.ToolTip"));
-            buttonTop.UseVisualStyleBackColor = true;
-            buttonTop.Click += buttonTop_Click;
+            resources.ApplyResources(ClearBtn, "ClearBtn");
+            ClearBtn.Name = "ClearBtn";
+            toolTip1.SetToolTip(ClearBtn, resources.GetString("ClearBtn.ToolTip"));
+            ClearBtn.UseVisualStyleBackColor = true;
+            ClearBtn.Click += ClearBtn_Click;
             // 
-            // chkAutoScroll
+            // AutoScrollCheckbox
             // 
-            resources.ApplyResources(chkAutoScroll, "chkAutoScroll");
-            chkAutoScroll.Checked = true;
-            chkAutoScroll.CheckState = CheckState.Checked;
-            chkAutoScroll.Name = "chkAutoScroll";
-            toolTip1.SetToolTip(chkAutoScroll, resources.GetString("chkAutoScroll.ToolTip"));
-            chkAutoScroll.UseVisualStyleBackColor = true;
-            chkAutoScroll.CheckedChanged += chkAutoScroll_CheckedChanged;
+            resources.ApplyResources(AutoScrollCheckbox, "AutoScrollCheckbox");
+            AutoScrollCheckbox.Checked = true;
+            AutoScrollCheckbox.CheckState = CheckState.Checked;
+            AutoScrollCheckbox.Name = "AutoScrollCheckbox";
+            toolTip1.SetToolTip(AutoScrollCheckbox, resources.GetString("AutoScrollCheckbox.ToolTip"));
+            AutoScrollCheckbox.UseVisualStyleBackColor = true;
+            AutoScrollCheckbox.CheckedChanged += AutoScrollCheckbox_CheckedChanged;
             // 
-            // buttonClear
+            // TopBtn
             // 
-            resources.ApplyResources(buttonClear, "buttonClear");
-            buttonClear.Name = "buttonClear";
-            toolTip1.SetToolTip(buttonClear, resources.GetString("buttonClear.ToolTip"));
-            buttonClear.UseVisualStyleBackColor = true;
-            buttonClear.Click += buttonClear_Click;
+            resources.ApplyResources(TopBtn, "TopBtn");
+            TopBtn.Name = "TopBtn";
+            toolTip1.SetToolTip(TopBtn, resources.GetString("TopBtn.ToolTip"));
+            TopBtn.UseVisualStyleBackColor = true;
+            TopBtn.Click += buttonTop_Click;
             // 
-            // logFilter
+            // BottomBtn
             // 
-            logFilter.AnchorSize = new Size(122, 21);
-            logFilter.BackColor = Color.White;
-            logFilter.DockSide = LST.Controls.DropDownControl.eDockSide.Left;
-            resources.ApplyResources(logFilter, "logFilter");
-            logFilter.LogBridgeData = false;
-            logFilter.LogBridgeDecode = false;
-            logFilter.LogBridgeInfo = false;
-            logFilter.LogErrors = true;
-            logFilter.LogInfo = true;
-            logFilter.LogReads = false;
-            logFilter.LogTrace = true;
-            logFilter.LogWarnings = true;
-            logFilter.LogWrites = false;
-            logFilter.Name = "logFilter";
-            logFilter.Tag = "What to log";
+            resources.ApplyResources(BottomBtn, "BottomBtn");
+            BottomBtn.Name = "BottomBtn";
+            toolTip1.SetToolTip(BottomBtn, resources.GetString("BottomBtn.ToolTip"));
+            BottomBtn.UseVisualStyleBackColor = true;
+            BottomBtn.Click += BottomBtn_Click;
             // 
-            // checkboxEnable
+            // CopyToClipboardBtn
             // 
-            resources.ApplyResources(checkboxEnable, "checkboxEnable");
-            checkboxEnable.Name = "checkboxEnable";
-            toolTip1.SetToolTip(checkboxEnable, resources.GetString("checkboxEnable.ToolTip"));
-            checkboxEnable.UseVisualStyleBackColor = true;
-            checkboxEnable.CheckedChanged += checkboxEnable_CheckedChanged;
+            resources.ApplyResources(CopyToClipboardBtn, "CopyToClipboardBtn");
+            CopyToClipboardBtn.Name = "CopyToClipboardBtn";
+            toolTip1.SetToolTip(CopyToClipboardBtn, resources.GetString("CopyToClipboardBtn.ToolTip"));
+            CopyToClipboardBtn.UseVisualStyleBackColor = true;
+            CopyToClipboardBtn.Click += CopyToClipboardBtn_Click;
             // 
-            // timerView
+            // SaveToFileBtn
             // 
-            timerView.Interval = 150;
-            timerView.Tick += timerView_Tick;
+            resources.ApplyResources(SaveToFileBtn, "SaveToFileBtn");
+            SaveToFileBtn.Name = "SaveToFileBtn";
+            toolTip1.SetToolTip(SaveToFileBtn, resources.GetString("SaveToFileBtn.ToolTip"));
+            SaveToFileBtn.UseVisualStyleBackColor = true;
+            SaveToFileBtn.Click += SaveToFileBtn_Click;
+            // 
+            // ViewTimer
+            // 
+            ViewTimer.Interval = 150;
+            ViewTimer.Tick += ViewTimer_Tick;
             // 
             // SaveFileDialog1
             // 
@@ -175,20 +188,20 @@
             SaveFileDialog1.DefaultExt = "csv";
             resources.ApplyResources(SaveFileDialog1, "SaveFileDialog1");
             // 
-            // logGridView
+            // LogGrid
             // 
-            logGridView.AllowUserToAddRows = false;
-            logGridView.AllowUserToDeleteRows = false;
-            logGridView.AllowUserToResizeRows = false;
-            logGridView.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            logGridView.Columns.AddRange(new DataGridViewColumn[] { Time, Type, Logtext });
-            resources.ApplyResources(logGridView, "logGridView");
-            logGridView.Name = "logGridView";
-            logGridView.ReadOnly = true;
-            logGridView.RowHeadersVisible = false;
-            logGridView.VirtualMode = true;
-            logGridView.CellMouseDown += logGridView_CellMouseDown;
-            logGridView.CellValueNeeded += dataGridView1_CellValueNeeded;
+            LogGrid.AllowUserToAddRows = false;
+            LogGrid.AllowUserToDeleteRows = false;
+            LogGrid.AllowUserToResizeRows = false;
+            LogGrid.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            LogGrid.Columns.AddRange(new DataGridViewColumn[] { Time, Type, Logtext });
+            resources.ApplyResources(LogGrid, "LogGrid");
+            LogGrid.Name = "LogGrid";
+            LogGrid.ReadOnly = true;
+            LogGrid.RowHeadersVisible = false;
+            LogGrid.VirtualMode = true;
+            LogGrid.CellMouseDown += LogGrid_CellMouseDown;
+            LogGrid.CellValueNeeded += dataGridView1_CellValueNeeded;
             // 
             // Time
             // 
@@ -228,24 +241,11 @@
             dataGridViewTextBoxColumn3.Name = "dataGridViewTextBoxColumn3";
             dataGridViewTextBoxColumn3.ReadOnly = true;
             // 
-            // flowLayoutPanel1
-            // 
-            resources.ApplyResources(flowLayoutPanel1, "flowLayoutPanel1");
-            flowLayoutPanel1.Controls.Add(checkboxEnable);
-            flowLayoutPanel1.Controls.Add(logFilter);
-            flowLayoutPanel1.Controls.Add(buttonClear);
-            flowLayoutPanel1.Controls.Add(chkAutoScroll);
-            flowLayoutPanel1.Controls.Add(buttonTop);
-            flowLayoutPanel1.Controls.Add(buttonBottom);
-            flowLayoutPanel1.Controls.Add(buttonCopyToClipboard);
-            flowLayoutPanel1.Controls.Add(buttonSaveToFile);
-            flowLayoutPanel1.Name = "flowLayoutPanel1";
-            // 
             // Logger
             // 
             resources.ApplyResources(this, "$this");
             AutoScaleMode = AutoScaleMode.Dpi;
-            Controls.Add(logGridView);
+            Controls.Add(LogGrid);
             Controls.Add(panel1);
             Controls.Add(statusStrip1);
             Name = "Logger";
@@ -255,9 +255,9 @@
             statusStrip1.PerformLayout();
             panel1.ResumeLayout(false);
             panel1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)logGridView).EndInit();
             flowLayoutPanel1.ResumeLayout(false);
             flowLayoutPanel1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)LogGrid).EndInit();
             ResumeLayout(false);
             PerformLayout();
 
@@ -268,19 +268,19 @@
         private System.Windows.Forms.StatusStrip statusStrip1;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
         private System.Windows.Forms.Panel panel1;
-        private System.Windows.Forms.Timer timerView;
-        private System.Windows.Forms.Button buttonCopyToClipboard;
+        private System.Windows.Forms.Timer ViewTimer;
+        private System.Windows.Forms.Button CopyToClipboardBtn;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel2;
-        private System.Windows.Forms.Button buttonClear;
-        private LogFilter logFilter;
+        private System.Windows.Forms.Button ClearBtn;
+        private LogFilter LogFilter;
         private System.Windows.Forms.ToolTip toolTip1;
-        private System.Windows.Forms.Button buttonSaveToFile;
+        private System.Windows.Forms.Button SaveToFileBtn;
         private System.Windows.Forms.SaveFileDialog SaveFileDialog1;
-        private System.Windows.Forms.CheckBox chkAutoScroll;
-        private System.Windows.Forms.Button buttonBottom;
-        private System.Windows.Forms.Button buttonTop;
-        private System.Windows.Forms.CheckBox checkboxEnable;
-        private System.Windows.Forms.DataGridView logGridView;
+        private System.Windows.Forms.CheckBox AutoScrollCheckbox;
+        private System.Windows.Forms.Button BottomBtn;
+        private System.Windows.Forms.Button TopBtn;
+        private System.Windows.Forms.CheckBox EnableCheckbox;
+        private System.Windows.Forms.DataGridView LogGrid;
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn1;
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn2;
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn3;

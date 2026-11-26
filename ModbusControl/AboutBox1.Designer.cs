@@ -28,138 +28,138 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(AboutBox1));
-            labelFormSize = new Label();
-            labelAppdata = new Label();
-            labelVersion = new Label();
-            logoPictureBox = new PictureBox();
-            labelName = new Label();
-            okButton = new Button();
-            labelDotNetVersion = new Label();
-            licenseLinkLabel = new LinkLabel();
-            linkLabel2 = new LinkLabel();
-            ((System.ComponentModel.ISupportInitialize)logoPictureBox).BeginInit();
+            FormSizeLbl = new Label();
+            AppdataLbl = new Label();
+            VersionLbl = new Label();
+            LogoPicbox = new PictureBox();
+            NameLbl = new Label();
+            OKBtn = new Button();
+            DotNetVersionLbl = new Label();
+            LicenseLinkLbl = new LinkLabel();
+            LinkLbl2 = new LinkLabel();
+            ((System.ComponentModel.ISupportInitialize)LogoPicbox).BeginInit();
             SuspendLayout();
             // 
-            // labelFormSize
+            // FormSizeLbl
             // 
-            labelFormSize.AutoSize = true;
-            labelFormSize.Location = new Point(126, 80);
-            labelFormSize.MaximumSize = new Size(0, 17);
-            labelFormSize.Name = "labelFormSize";
-            labelFormSize.Size = new Size(72, 13);
-            labelFormSize.TabIndex = 4;
-            labelFormSize.Text = "labelFormSize";
-            labelFormSize.TextAlign = ContentAlignment.MiddleLeft;
-            labelFormSize.UseMnemonic = false;
+            FormSizeLbl.AutoSize = true;
+            FormSizeLbl.Location = new Point(126, 80);
+            FormSizeLbl.MaximumSize = new Size(0, 17);
+            FormSizeLbl.Name = "FormSizeLbl";
+            FormSizeLbl.Size = new Size(72, 13);
+            FormSizeLbl.TabIndex = 4;
+            FormSizeLbl.Text = "labelFormSize";
+            FormSizeLbl.TextAlign = ContentAlignment.MiddleLeft;
+            FormSizeLbl.UseMnemonic = false;
             // 
-            // labelAppdata
+            // AppdataLbl
             // 
-            labelAppdata.AutoSize = true;
-            labelAppdata.Location = new Point(126, 52);
-            labelAppdata.MaximumSize = new Size(0, 17);
-            labelAppdata.Name = "labelAppdata";
-            labelAppdata.Size = new Size(97, 13);
-            labelAppdata.TabIndex = 2;
-            labelAppdata.Text = "labelMyDocuments";
-            labelAppdata.TextAlign = ContentAlignment.MiddleLeft;
-            labelAppdata.UseMnemonic = false;
+            AppdataLbl.AutoSize = true;
+            AppdataLbl.Location = new Point(126, 52);
+            AppdataLbl.MaximumSize = new Size(0, 17);
+            AppdataLbl.Name = "AppdataLbl";
+            AppdataLbl.Size = new Size(97, 13);
+            AppdataLbl.TabIndex = 2;
+            AppdataLbl.Text = "labelMyDocuments";
+            AppdataLbl.TextAlign = ContentAlignment.MiddleLeft;
+            AppdataLbl.UseMnemonic = false;
             // 
-            // labelVersion
+            // VersionLbl
             // 
-            labelVersion.AutoSize = true;
-            labelVersion.Location = new Point(126, 28);
-            labelVersion.MaximumSize = new Size(0, 17);
-            labelVersion.Name = "labelVersion";
-            labelVersion.Size = new Size(64, 13);
-            labelVersion.TabIndex = 1;
-            labelVersion.Text = "labelVersion";
-            labelVersion.TextAlign = ContentAlignment.MiddleLeft;
-            labelVersion.UseMnemonic = false;
+            VersionLbl.AutoSize = true;
+            VersionLbl.Location = new Point(126, 28);
+            VersionLbl.MaximumSize = new Size(0, 17);
+            VersionLbl.Name = "VersionLbl";
+            VersionLbl.Size = new Size(64, 13);
+            VersionLbl.TabIndex = 1;
+            VersionLbl.Text = "labelVersion";
+            VersionLbl.TextAlign = ContentAlignment.MiddleLeft;
+            VersionLbl.UseMnemonic = false;
             // 
-            // logoPictureBox
+            // LogoPicbox
             // 
-            logoPictureBox.Image = (Image)resources.GetObject("logoPictureBox.Image");
-            logoPictureBox.Location = new Point(21, 19);
-            logoPictureBox.Name = "logoPictureBox";
-            logoPictureBox.Size = new Size(76, 73);
-            logoPictureBox.SizeMode = PictureBoxSizeMode.StretchImage;
-            logoPictureBox.TabIndex = 33;
-            logoPictureBox.TabStop = false;
+            LogoPicbox.Image = (Image)resources.GetObject("LogoPicbox.Image");
+            LogoPicbox.Location = new Point(21, 19);
+            LogoPicbox.Name = "LogoPicbox";
+            LogoPicbox.Size = new Size(76, 73);
+            LogoPicbox.SizeMode = PictureBoxSizeMode.StretchImage;
+            LogoPicbox.TabIndex = 33;
+            LogoPicbox.TabStop = false;
             // 
-            // labelName
+            // NameLbl
             // 
-            labelName.AutoSize = true;
-            labelName.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            labelName.Location = new Point(125, 9);
-            labelName.Margin = new Padding(0, 0, 3, 0);
-            labelName.MaximumSize = new Size(0, 17);
-            labelName.Name = "labelName";
-            labelName.Size = new Size(84, 17);
-            labelName.TabIndex = 0;
-            labelName.Text = "labelName";
-            labelName.TextAlign = ContentAlignment.MiddleLeft;
-            labelName.UseMnemonic = false;
+            NameLbl.AutoSize = true;
+            NameLbl.Font = new Font("Microsoft Sans Serif", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            NameLbl.Location = new Point(125, 9);
+            NameLbl.Margin = new Padding(0, 0, 3, 0);
+            NameLbl.MaximumSize = new Size(0, 17);
+            NameLbl.Name = "NameLbl";
+            NameLbl.Size = new Size(84, 17);
+            NameLbl.TabIndex = 0;
+            NameLbl.Text = "labelName";
+            NameLbl.TextAlign = ContentAlignment.MiddleLeft;
+            NameLbl.UseMnemonic = false;
             // 
-            // okButton
+            // OKBtn
             // 
-            okButton.DialogResult = DialogResult.Cancel;
-            okButton.Location = new Point(160, 145);
-            okButton.Name = "okButton";
-            okButton.Size = new Size(62, 23);
-            okButton.TabIndex = 5;
-            okButton.Text = "&OK";
+            OKBtn.DialogResult = DialogResult.Cancel;
+            OKBtn.Location = new Point(160, 145);
+            OKBtn.Name = "OKBtn";
+            OKBtn.Size = new Size(62, 23);
+            OKBtn.TabIndex = 5;
+            OKBtn.Text = "&OK";
             // 
-            // labelDotNetVersion
+            // DotNetVersionLbl
             // 
-            labelDotNetVersion.AutoSize = true;
-            labelDotNetVersion.Location = new Point(126, 66);
-            labelDotNetVersion.MaximumSize = new Size(0, 17);
-            labelDotNetVersion.Name = "labelDotNetVersion";
-            labelDotNetVersion.Size = new Size(98, 13);
-            labelDotNetVersion.TabIndex = 3;
-            labelDotNetVersion.Text = "labelDotNetVersion";
-            labelDotNetVersion.TextAlign = ContentAlignment.MiddleLeft;
-            labelDotNetVersion.UseMnemonic = false;
+            DotNetVersionLbl.AutoSize = true;
+            DotNetVersionLbl.Location = new Point(126, 66);
+            DotNetVersionLbl.MaximumSize = new Size(0, 17);
+            DotNetVersionLbl.Name = "DotNetVersionLbl";
+            DotNetVersionLbl.Size = new Size(98, 13);
+            DotNetVersionLbl.TabIndex = 3;
+            DotNetVersionLbl.Text = "labelDotNetVersion";
+            DotNetVersionLbl.TextAlign = ContentAlignment.MiddleLeft;
+            DotNetVersionLbl.UseMnemonic = false;
             // 
-            // licenseLinkLabel
+            // LicenseLinkLbl
             // 
-            licenseLinkLabel.AutoSize = true;
-            licenseLinkLabel.LinkArea = new LinkArea(50, 14);
-            licenseLinkLabel.Location = new Point(126, 117);
-            licenseLinkLabel.Name = "licenseLinkLabel";
-            licenseLinkLabel.Size = new Size(348, 17);
-            licenseLinkLabel.TabIndex = 35;
-            licenseLinkLabel.TabStop = true;
-            licenseLinkLabel.Text = "The source code is released under the open source GPL v3 License.";
-            licenseLinkLabel.UseCompatibleTextRendering = true;
-            licenseLinkLabel.LinkClicked += licenseLinkLabel_LinkClicked;
+            LicenseLinkLbl.AutoSize = true;
+            LicenseLinkLbl.LinkArea = new LinkArea(50, 14);
+            LicenseLinkLbl.Location = new Point(126, 117);
+            LicenseLinkLbl.Name = "LicenseLinkLbl";
+            LicenseLinkLbl.Size = new Size(348, 17);
+            LicenseLinkLbl.TabIndex = 35;
+            LicenseLinkLbl.TabStop = true;
+            LicenseLinkLbl.Text = "The source code is released under the open source GPL v3 License.";
+            LicenseLinkLbl.UseCompatibleTextRendering = true;
+            LicenseLinkLbl.LinkClicked += LicenseLinkLbl_LinkClicked;
             // 
-            // linkLabel2
+            // LinkLbl2
             // 
-            linkLabel2.AutoSize = true;
-            linkLabel2.LinkArea = new LinkArea(103, 14);
-            linkLabel2.Location = new Point(126, 103);
-            linkLabel2.MaximumSize = new Size(280, 0);
-            linkLabel2.Name = "linkLabel2";
-            linkLabel2.Size = new Size(277, 17);
-            linkLabel2.TabIndex = 36;
-            linkLabel2.Text = "ModbusControl is created and maintained by lsteynen.";
-            linkLabel2.UseCompatibleTextRendering = true;
+            LinkLbl2.AutoSize = true;
+            LinkLbl2.LinkArea = new LinkArea(103, 14);
+            LinkLbl2.Location = new Point(126, 103);
+            LinkLbl2.MaximumSize = new Size(280, 0);
+            LinkLbl2.Name = "LinkLbl2";
+            LinkLbl2.Size = new Size(277, 17);
+            LinkLbl2.TabIndex = 36;
+            LinkLbl2.Text = "ModbusControl is created and maintained by lsteynen.";
+            LinkLbl2.UseCompatibleTextRendering = true;
             // 
             // AboutBox1
             // 
             AutoScaleDimensions = new SizeF(96F, 96F);
             AutoScaleMode = AutoScaleMode.Dpi;
             ClientSize = new Size(476, 181);
-            Controls.Add(licenseLinkLabel);
-            Controls.Add(linkLabel2);
-            Controls.Add(labelFormSize);
-            Controls.Add(labelDotNetVersion);
-            Controls.Add(labelAppdata);
-            Controls.Add(labelVersion);
-            Controls.Add(labelName);
-            Controls.Add(okButton);
-            Controls.Add(logoPictureBox);
+            Controls.Add(LicenseLinkLbl);
+            Controls.Add(LinkLbl2);
+            Controls.Add(FormSizeLbl);
+            Controls.Add(DotNetVersionLbl);
+            Controls.Add(AppdataLbl);
+            Controls.Add(VersionLbl);
+            Controls.Add(NameLbl);
+            Controls.Add(OKBtn);
+            Controls.Add(LogoPicbox);
             Font = new Font("Microsoft Sans Serif", 8.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
             FormBorderStyle = FormBorderStyle.FixedDialog;
             Icon = (Icon)resources.GetObject("$this.Icon");
@@ -173,21 +173,21 @@
             Text = "About ModbusControl";
             Load += AboutBox1_Load;
             Shown += AboutBox1_Shown;
-            ((System.ComponentModel.ISupportInitialize)logoPictureBox).EndInit();
+            ((System.ComponentModel.ISupportInitialize)LogoPicbox).EndInit();
             ResumeLayout(false);
             PerformLayout();
 
         }
 
         #endregion
-        private System.Windows.Forms.Label labelFormSize;
-        private System.Windows.Forms.Label labelAppdata;
-        private System.Windows.Forms.Label labelVersion;
-        private System.Windows.Forms.PictureBox logoPictureBox;
-        private System.Windows.Forms.Label labelName;
-        private System.Windows.Forms.Label labelDotNetVersion;
-        private Button okButton;
-        private LinkLabel licenseLinkLabel;
-        private LinkLabel linkLabel2;
+        private System.Windows.Forms.Label FormSizeLbl;
+        private System.Windows.Forms.Label AppdataLbl;
+        private System.Windows.Forms.Label VersionLbl;
+        private System.Windows.Forms.PictureBox LogoPicbox;
+        private System.Windows.Forms.Label NameLbl;
+        private System.Windows.Forms.Label DotNetVersionLbl;
+        private Button OKBtn;
+        private LinkLabel LicenseLinkLbl;
+        private LinkLabel LinkLbl2;
     }
 }

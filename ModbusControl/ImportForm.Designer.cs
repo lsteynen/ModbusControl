@@ -30,44 +30,44 @@
         {
             components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ImportForm));
-            buttonStart = new Button();
-            textboxLog = new TextBox();
+            StartBtn = new Button();
+            LogTextbox = new TextBox();
             openFileDialog1 = new OpenFileDialog();
-            SelectFileButton = new Button();
-            textboxFilename = new TextBox();
-            buttonClearLog = new Button();
-            buttonCancel = new Button();
+            SelectFileBtn = new Button();
+            FilenameTextbox = new TextBox();
+            ClearLogBtn = new Button();
+            CancelBtn = new Button();
             toolTip1 = new ToolTip(components);
             panel1 = new Panel();
-            chkContinueOnError = new CheckBox();
+            ContinueOnErrorCheckbox = new CheckBox();
             panel2 = new Panel();
             panel1.SuspendLayout();
             panel2.SuspendLayout();
             SuspendLayout();
             // 
-            // buttonStart
+            // StartBtn
             // 
-            buttonStart.Location = new Point(12, 61);
-            buttonStart.Name = "buttonStart";
-            buttonStart.Size = new Size(150, 23);
-            buttonStart.TabIndex = 3;
-            buttonStart.Text = "Start";
-            toolTip1.SetToolTip(buttonStart, "Start the import");
-            buttonStart.UseVisualStyleBackColor = true;
-            buttonStart.Click += buttonStart_Click;
+            StartBtn.Location = new Point(12, 61);
+            StartBtn.Name = "StartBtn";
+            StartBtn.Size = new Size(150, 23);
+            StartBtn.TabIndex = 3;
+            StartBtn.Text = "Start";
+            toolTip1.SetToolTip(StartBtn, "Start the import");
+            StartBtn.UseVisualStyleBackColor = true;
+            StartBtn.Click += StartBtn_Click;
             // 
-            // textboxLog
+            // LogTextbox
             // 
-            textboxLog.BorderStyle = BorderStyle.FixedSingle;
-            textboxLog.Dock = DockStyle.Fill;
-            textboxLog.Location = new Point(0, 0);
-            textboxLog.Multiline = true;
-            textboxLog.Name = "textboxLog";
-            textboxLog.ReadOnly = true;
-            textboxLog.ScrollBars = ScrollBars.Both;
-            textboxLog.Size = new Size(544, 270);
-            textboxLog.TabIndex = 0;
-            textboxLog.WordWrap = false;
+            LogTextbox.BorderStyle = BorderStyle.FixedSingle;
+            LogTextbox.Dock = DockStyle.Fill;
+            LogTextbox.Location = new Point(0, 0);
+            LogTextbox.Multiline = true;
+            LogTextbox.Name = "LogTextbox";
+            LogTextbox.ReadOnly = true;
+            LogTextbox.ScrollBars = ScrollBars.Both;
+            LogTextbox.Size = new Size(544, 270);
+            LogTextbox.TabIndex = 0;
+            LogTextbox.WordWrap = false;
             // 
             // openFileDialog1
             // 
@@ -76,57 +76,57 @@
             openFileDialog1.DefaultExt = "csv";
             openFileDialog1.Filter = "CSV files (*.csv)|*.csv|All files (*.*)|*.*";
             // 
-            // SelectFileButton
+            // SelectFileBtn
             // 
-            SelectFileButton.Location = new Point(13, 11);
-            SelectFileButton.Name = "SelectFileButton";
-            SelectFileButton.Size = new Size(88, 23);
-            SelectFileButton.TabIndex = 0;
-            SelectFileButton.Text = "Select file...";
-            toolTip1.SetToolTip(SelectFileButton, "Select the file to import");
-            SelectFileButton.UseVisualStyleBackColor = true;
-            SelectFileButton.Click += buttonSelectFile_Click;
+            SelectFileBtn.Location = new Point(13, 11);
+            SelectFileBtn.Name = "SelectFileBtn";
+            SelectFileBtn.Size = new Size(88, 23);
+            SelectFileBtn.TabIndex = 0;
+            SelectFileBtn.Text = "Select file...";
+            toolTip1.SetToolTip(SelectFileBtn, "Select the file to import");
+            SelectFileBtn.UseVisualStyleBackColor = true;
+            SelectFileBtn.Click += SelectFileBtn_Click;
             // 
-            // textboxFilename
+            // FilenameTextbox
             // 
-            textboxFilename.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-            textboxFilename.Location = new Point(107, 14);
-            textboxFilename.Name = "textboxFilename";
-            textboxFilename.Size = new Size(425, 20);
-            textboxFilename.TabIndex = 1;
-            textboxFilename.Text = "Aaaa";
+            FilenameTextbox.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            FilenameTextbox.Location = new Point(107, 14);
+            FilenameTextbox.Name = "FilenameTextbox";
+            FilenameTextbox.Size = new Size(425, 20);
+            FilenameTextbox.TabIndex = 1;
+            FilenameTextbox.Text = "Aaaa";
             // 
-            // buttonClearLog
+            // ClearLogBtn
             // 
-            buttonClearLog.Location = new Point(249, 61);
-            buttonClearLog.Name = "buttonClearLog";
-            buttonClearLog.Size = new Size(75, 23);
-            buttonClearLog.TabIndex = 5;
-            buttonClearLog.Text = "Clear log";
-            toolTip1.SetToolTip(buttonClearLog, "Clear the result log window");
-            buttonClearLog.UseVisualStyleBackColor = true;
-            buttonClearLog.Click += buttonClearLog_Click;
+            ClearLogBtn.Location = new Point(249, 61);
+            ClearLogBtn.Name = "ClearLogBtn";
+            ClearLogBtn.Size = new Size(75, 23);
+            ClearLogBtn.TabIndex = 5;
+            ClearLogBtn.Text = "Clear log";
+            toolTip1.SetToolTip(ClearLogBtn, "Clear the result log window");
+            ClearLogBtn.UseVisualStyleBackColor = true;
+            ClearLogBtn.Click += ClearLogBtn_Click;
             // 
-            // buttonCancel
+            // CancelBtn
             // 
-            buttonCancel.Enabled = false;
-            buttonCancel.Location = new Point(168, 61);
-            buttonCancel.Name = "buttonCancel";
-            buttonCancel.Size = new Size(75, 23);
-            buttonCancel.TabIndex = 4;
-            buttonCancel.Text = "Cancel";
-            toolTip1.SetToolTip(buttonCancel, "Cancel the current operation");
-            buttonCancel.UseVisualStyleBackColor = true;
-            buttonCancel.Click += buttonCancel_Click;
+            CancelBtn.Enabled = false;
+            CancelBtn.Location = new Point(168, 61);
+            CancelBtn.Name = "CancelBtn";
+            CancelBtn.Size = new Size(75, 23);
+            CancelBtn.TabIndex = 4;
+            CancelBtn.Text = "Cancel";
+            toolTip1.SetToolTip(CancelBtn, "Cancel the current operation");
+            CancelBtn.UseVisualStyleBackColor = true;
+            CancelBtn.Click += CancelBtn_Click;
             // 
             // panel1
             // 
-            panel1.Controls.Add(chkContinueOnError);
-            panel1.Controls.Add(buttonStart);
-            panel1.Controls.Add(buttonCancel);
-            panel1.Controls.Add(SelectFileButton);
-            panel1.Controls.Add(buttonClearLog);
-            panel1.Controls.Add(textboxFilename);
+            panel1.Controls.Add(ContinueOnErrorCheckbox);
+            panel1.Controls.Add(StartBtn);
+            panel1.Controls.Add(CancelBtn);
+            panel1.Controls.Add(SelectFileBtn);
+            panel1.Controls.Add(ClearLogBtn);
+            panel1.Controls.Add(FilenameTextbox);
             panel1.Dock = DockStyle.Top;
             panel1.Location = new Point(0, 0);
             panel1.Margin = new Padding(0);
@@ -134,20 +134,20 @@
             panel1.Size = new Size(544, 92);
             panel1.TabIndex = 0;
             // 
-            // chkContinueOnError
+            // ContinueOnErrorCheckbox
             // 
-            chkContinueOnError.AutoSize = true;
-            chkContinueOnError.Location = new Point(14, 41);
-            chkContinueOnError.Name = "chkContinueOnError";
-            chkContinueOnError.Size = new Size(107, 17);
-            chkContinueOnError.TabIndex = 2;
-            chkContinueOnError.Text = "Continue on error";
-            chkContinueOnError.UseVisualStyleBackColor = true;
-            chkContinueOnError.CheckedChanged += chkContinueOnError_CheckedChanged;
+            ContinueOnErrorCheckbox.AutoSize = true;
+            ContinueOnErrorCheckbox.Location = new Point(14, 41);
+            ContinueOnErrorCheckbox.Name = "ContinueOnErrorCheckbox";
+            ContinueOnErrorCheckbox.Size = new Size(107, 17);
+            ContinueOnErrorCheckbox.TabIndex = 2;
+            ContinueOnErrorCheckbox.Text = "Continue on error";
+            ContinueOnErrorCheckbox.UseVisualStyleBackColor = true;
+            ContinueOnErrorCheckbox.CheckedChanged += ContinueOnErrorCheckbox_CheckedChanged;
             // 
             // panel2
             // 
-            panel2.Controls.Add(textboxLog);
+            panel2.Controls.Add(LogTextbox);
             panel2.Dock = DockStyle.Fill;
             panel2.Location = new Point(0, 92);
             panel2.Name = "panel2";
@@ -177,16 +177,16 @@
 
         #endregion
 
-        private System.Windows.Forms.Button buttonStart;
-        private System.Windows.Forms.TextBox textboxLog;
+        private System.Windows.Forms.Button StartBtn;
+        private System.Windows.Forms.TextBox LogTextbox;
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
-        private System.Windows.Forms.Button SelectFileButton;
-        private System.Windows.Forms.TextBox textboxFilename;
-        private System.Windows.Forms.Button buttonClearLog;
-        private System.Windows.Forms.Button buttonCancel;
+        private System.Windows.Forms.Button SelectFileBtn;
+        private System.Windows.Forms.TextBox FilenameTextbox;
+        private System.Windows.Forms.Button ClearLogBtn;
+        private System.Windows.Forms.Button CancelBtn;
         private System.Windows.Forms.ToolTip toolTip1;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Panel panel2;
-        private System.Windows.Forms.CheckBox chkContinueOnError;
+        private System.Windows.Forms.CheckBox ContinueOnErrorCheckbox;
     }
 }
